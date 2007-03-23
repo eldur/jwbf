@@ -52,6 +52,8 @@ import net.sourceforge.jwbf.contentRep.mw.EditContentAccessable;
  */
 public class MediaWikiBot extends HttpBot {
 
+	
+	private boolean loggedIn = false;
 	/**
 	 * @param u wikihosturl like "http://www.mediawiki.org/wiki/index.php"
 	 */
@@ -69,6 +71,7 @@ public class MediaWikiBot extends HttpBot {
 	public final void login(final String username, final String passwd) 
 		throws ActionException {			
 			performAction(new PostLogin(username, passwd));
+			loggedIn = true;
 
 	}
 	
@@ -82,7 +85,7 @@ public class MediaWikiBot extends HttpBot {
 		MwContentHelper a = null;
 		
 			a = new MwContentHelper(performAction(new GetPageContent(name)), name);
-
+			
 		return a;
 	}
 	/**
@@ -107,6 +110,10 @@ public class MediaWikiBot extends HttpBot {
 				e.printStackTrace();
 			}
 			
+			if (av.isEmpty()) {
+				throw new ActionException("Category: \"" + title + "\" is empty");
+			}
+			
 		return av.iterator();
 	}
 	/**
@@ -115,10 +122,13 @@ public class MediaWikiBot extends HttpBot {
 	 * @throws ActionException on problems
 	 */
 	public final void writeContent(final EditContentAccessable a) throws ActionException {
-		
-			Hashtable<String, String> tab = new Hashtable<String, String>(); 
-			 performAction(new GetEnvironmentVars(a.getLabel(), tab));
-			 performAction(new PostModifyContent(a, tab));
+			
+		if (!loggedIn) {
+			throw new ActionException("Please login first");
+		}
+		Hashtable<String, String> tab = new Hashtable<String, String>(); 
+		performAction(new GetEnvironmentVars(a.getLabel(), tab));
+		performAction(new PostModifyContent(a, tab));
 		
 	}
 	/**
