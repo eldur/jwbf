@@ -1,0 +1,13 @@
+--------------------------------------------------------------------------------
+JWBF-1.1.0.1                                                      March 26, 2007
+--------------------------------------------------------------------------------
+  Fixed
+  * forgotten Nullpointerexception
+--------------------------------------------------------------------------------
+JWBF-1.1.0.0 - Initial sf.net release                             March 22, 2007
+--------------------------------------------------------------------------------
+  Supported Mediawiki Functions
+  * get all articles from a category
+  * read/write article content
+  * login
+  * delete article

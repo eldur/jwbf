@@ -27,6 +27,10 @@ import net.sourceforge.jwbf.actions.http.Action;
  */
 public class GetWhatlinkshereElements extends Action {
 
+	/**
+	 * 
+	 *
+	 */
 	GetWhatlinkshereElements() {
 		
 	}
