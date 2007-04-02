@@ -39,97 +39,19 @@ import org.apache.commons.httpclient.methods.GetMethod;
  * @author Thomas Stock
  * 
  */
-public class GetCategoryElements extends Action implements NamingEnumeration {
+public class GetCategoryElements extends GetMultipageNames {
 
-	private Collection<String> content = new Vector<String>();
-
-	private int moreCount;
-
-	private boolean isContent = false;
-
-	private boolean hasNoChiled = true;
-
-	private String nextPage = "";
-
-	/**
-	 * 
-	 * @param categoryname name category 
-	 * @param c conent of previous category page
-	 */
+	private boolean subContent = false;
+	
 	public GetCategoryElements(final String categoryname, Collection<String> c) {
-
-		this.content = c;
-		addCatPage(categoryname);
+		super(categoryname, c);
 	}
-	/**
-	 * 
-	 * @param categoryname name of category
-	 * @param from where to begin the collection of content articles
-	 * @param c conent of previous category page
-	 */
+
+	
 	public GetCategoryElements(final String categoryname, final String from,
 			Collection<String> c) {
 
-		this.content = c;
-		addCatPage(categoryname, from);
-	}
-	/**
-	 * creates the GET request for the action.
-	 * @param catname name of the category 
-	 */
-	private void addCatPage(final String catname) { 
-		addCatPage(catname, "");
-	}
-	/**
-	 * creates the GET request for the action.
-	 * @param catname name of the category 
-	 * @param from start bye article
-	 */
-	
-	private void addCatPage(final String catname, final String from) {
-		String uS = "";
-		String fromEl = "";
-
-		try {
-			if (from.length() > 0) {
-				fromEl = "&from=" + from;
-			}
-			uS = "/index.php?title=" + URLEncoder.encode(catname, "UTF-8")
-					+ fromEl + "&dontcountme=s";
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
-		msgs.add(new GetMethod(uS));
-	}
-	/**
-	 * @param s whole html text
-	 * @return text of this page
-	 * @see Action#processAllReturningText(String)
-	 */
-	public final String processAllReturningText(final String s) {
-		return read(s);
-	}
-	/**
-	 * 
-	 * @param s the whole html file
-	 * @return an empty string, because it reads only the category elements not
-	 * the content.
-	 */
-	private String read(final String s) {
-
-		moreCount = 0;
-		String[] lines = s.split("\n");
-
-		for (int i = 0; i < lines.length; i++) {
-			parsePageLinks(lines[i]);
-
-			parseHasMore(lines[i]);
-
-		}
-
-		log.debug("Pagecount: " + content.size());
-
-		return "";
+		super(categoryname, from, c);
 	}
 
 	
@@ -139,25 +61,50 @@ public class GetCategoryElements extends Action implements NamingEnumeration {
 	 * 
 	 * @param s line of html file
 	 */
-	private void checkIsContent(final String s) {
+	protected void checkIsContent(final String s) {
 
 		if (s.indexOf("<!-- start content -->") > 1) {
-			isContent = true;
+			subContent = true;
+			
 		} else if (s.indexOf("<!-- end content -->") > 1) {
 			isContent = false;
+		} 
+		// no subcategories
+		if (s.indexOf("mw-pages") > 1 && subContent) {
+			isContent = true;
 		}
 
+	}
+	/**
+	 * creates the GET request for the action.
+	 * @param pagename name of a next 
+	 * @param from start bye article
+	 */
+	protected void addNextPage(final String pagename, final String from) {
+		String uS = "";
+		String fromEl = "";
+
+		try {
+			if (from.length() > 0) {
+				fromEl = "&from=" + from;
+			}
+			uS = "/index.php?title=" + URLEncoder.encode(pagename, "UTF-8")
+					+ fromEl + "&dontcountme=s";
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		msgs.add(new GetMethod(uS));
 	}
 	/**
 	 * 
 	 * @param line of html text
 	 */
-	private void parseHasMore(final String line) {
+	protected void parseHasMore(final String line) {
 		String xLine = line.replace("\n", "");
 		checkIsContent(xLine);
-		if (xLine.contains("from") && xLine.contains("(") && isContent) {
+		if (xLine.contains("from") && xLine.contains("(")) {
 
-			String urlEl = getUrl(xLine);
+			String urlEl = getNextPageId(xLine);
 
 			if (urlEl.indexOf("from") > 1 && hasNoChiled) {
 
@@ -171,58 +118,11 @@ public class GetCategoryElements extends Action implements NamingEnumeration {
 	}
 	/**
 	 * 
-	 * @param line of html
-	 */
-	private void parsePageLinks(final String line) {
-		String ms = "<li><a href=\"(.*)\" title=\"(.*)\">(.*)</a></li>";
-		StringBuffer myStringBuffer = new StringBuffer();
-		String tempLine = line.replace("</li><li>", "</li>\n<li>");
-		Matcher myMatcher = Pattern.compile(ms).matcher(tempLine);
-		while (myMatcher.find()) {
-			String temp = myMatcher.group(1);
-			if (temp.length() > 0) {
-				try {
-
-					content.add(URLDecoder.decode(stripUrlElements(temp), "UTF-8"));
-				} catch (UnsupportedEncodingException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-		myMatcher.appendTail(myStringBuffer);
-	}
-	/**
-	 * 
-	 * @param s with url elements
-	 * @return without url elements
-	 */
-	final String stripUrlElements(final String s) {
-
-		String temp = s;
-		int phpSlashPos = temp.indexOf(".php/") + 5;
-
-		if (phpSlashPos > 5) {
-			temp = temp.substring(phpSlashPos, temp.length());
-		}
-		int equalPos = temp.indexOf("=") + 1;
-		if (equalPos > 1) {
-			temp = temp.substring(equalPos, temp.length());
-		}
-		int slashPos = temp.indexOf("/") + 1;
-		if (slashPos >= 1) {
-			temp = temp.substring(slashPos, temp.length());
-		}
-
-		return temp;
-	}
-
-	/**
-	 * 
 	 * @param s
 	 *            a
 	 * @return a url with includes a "from" variable or an empty string
 	 */
-	private String getUrl(final String s) {
+	protected String getNextPageId(final String s) {
 		String ms = "<a href=\"(.*)\" title(.*)</a>";
 		ms = "<a[^>]*href=\"([^(>| )]*\")?[^>]*>[^<]*</a>";
 		String tempLine = s.replace("&amp;", "&");
@@ -257,50 +157,4 @@ public class GetCategoryElements extends Action implements NamingEnumeration {
 		}
 		return "";
 	}
-	/**
-	 * 
-	 * @return all article names
-	 */
-	
-	final Collection< ? extends String> getContent() {
-		return content;
-	}
-	/**
-	 * is unused.
-	 * @see NamingEnumeration#close()
-	 * @throws NamingException on problems
-	 */
-	public void close() throws NamingException {
-		// do notihng
-	}
-	/**
-	 * @see NamingEnumeration#hasMore()
-	 * @throws NamingException on problems
-	 * @return true, if has more
-	 */
-	public final boolean hasMore() throws NamingException {
-		return !hasNoChiled;
-	}
-	/**
-	 * @see NamingEnumeration#next()
-	 * @throws NamingException on problems
-	 * @return a
-	 */
-	public final Object next() throws NamingException {
-		return nextPage;
-	}
-	/**
-	 * @see NamingEnumeration#hasMore()
-	 * @return true if has more
-	 */
-	public final boolean hasMoreElements() {
-		return !hasNoChiled;
-	}
-	/**
-	 * @return a
-	 */
-	public final Object nextElement() {
-		return nextPage;
-	}
-
 }
