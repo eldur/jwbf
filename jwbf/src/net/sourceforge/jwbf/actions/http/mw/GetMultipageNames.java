@@ -149,7 +149,7 @@ public abstract class GetMultipageNames extends Action implements NamingEnumerat
 	 * 
 	 * @param line of html
 	 */
-	private void parsePageLinks(final String line) {
+	 void parsePageLinks(final String line) {
 		String ms = "<li><a href=\"(.*)\" title=\"(.*)\">(.*)</a></li>";
 		StringBuffer myStringBuffer = new StringBuffer();
 		String tempLine = line.replace("</li><li>", "</li>\n<li>");
@@ -200,7 +200,7 @@ public abstract class GetMultipageNames extends Action implements NamingEnumerat
 	 * @return all article names
 	 */
 	
-	final Collection< ? extends String> getContent() {
+	final Collection<String> getContent() {
 		return content;
 	}
 	/**
