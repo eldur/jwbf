@@ -18,7 +18,6 @@
  */
 package net.sourceforge.jwbf.bots;
 
-
 import java.net.URL;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -27,6 +26,7 @@ import java.util.Vector;
 import javax.naming.NamingException;
 
 import net.sourceforge.jwbf.actions.http.ActionException;
+import net.sourceforge.jwbf.actions.http.mw.GetAllPages;
 import net.sourceforge.jwbf.actions.http.mw.GetCategoryElements;
 import net.sourceforge.jwbf.actions.http.mw.GetEnvironmentVars;
 import net.sourceforge.jwbf.actions.http.mw.GetPageContent;
@@ -42,177 +42,229 @@ import net.sourceforge.jwbf.contentRep.mw.EditContentAccessable;
  * This class helps you to interact with each mediawiki.
  * 
  * How to use:
+ * 
  * <pre>
- * MediaWikiBot b = new MediaWikiBot("http://yourwiki.org");
- * b.login("Username", "Password");
- * System.out.writeln(b.readContentOf("Main Page").getText());
+ * MediaWikiBot b = new MediaWikiBot(&quot;http://yourwiki.org&quot;);
+ * b.login(&quot;Username&quot;, &quot;Password&quot;);
+ * System.out.writeln(b.readContentOf(&quot;Main Page&quot;).getText());
  * </pre>
  * 
  * @author Thomas Stock
- *
+ * 
  */
 public class MediaWikiBot extends HttpBot {
 
-	
 	private boolean loggedIn = false;
+
 	/**
-	 * @param u wikihosturl like "http://www.mediawiki.org/wiki/index.php"
+	 * @param u
+	 *            wikihosturl like "http://www.mediawiki.org/wiki/index.php"
 	 */
 	public MediaWikiBot(final URL u) {
 		super();
 		setConnection(u);
 	}
-	
+
 	/**
 	 * Performs a Login.
-	 * @param username the username
-	 * @param passwd the password
-	 * @throws ActionException on problems
+	 * 
+	 * @param username
+	 *            the username
+	 * @param passwd
+	 *            the password
+	 * @throws ActionException
+	 *             on problems
 	 */
-	public final void login(final String username, final String passwd) 
-		throws ActionException {			
-			performAction(new PostLogin(username, passwd));
-			loggedIn = true;
+	public final void login(final String username, final String passwd)
+			throws ActionException {
+		performAction(new PostLogin(username, passwd));
+		loggedIn = true;
 
 	}
-	
+
 	/**
 	 * 
-	 * @param name of article in a mediawiki like "Main Page"
+	 * @param name
+	 *            of article in a mediawiki like "Main Page"
 	 * @return a content representation of requested article, never null
-	 * @throws ActionException on problems or if conent null
+	 * @throws ActionException
+	 *             on problems or if conent null
 	 */
-	public final ContentAccessable readContentOf(final String name) throws ActionException {
+	public final ContentAccessable readContentOf(final String name)
+			throws ActionException {
 		MwContentHelper a = null;
-		
-			a = new MwContentHelper(performAction(new GetPageContent(name)), name);
-			
+
+		a = new MwContentHelper(performAction(new GetPageContent(name)), name);
+
 		return a;
 	}
+
 	/**
 	 * 
-	 * @param title of category in a mediawiki like "Category:Small Things"
+	 * @param title
+	 *            of category in a mediawiki like "Category:Small Things"
 	 * @return with all article names in the requestet category
-	 * @throws ActionException on problems
+	 * @throws ActionException
+	 *             on problems
 	 */
-	public final Iterator<String> readCategory(final String title) throws ActionException {
+	public final Iterator<String> readCategory(final String title)
+			throws ActionException {
 		Vector<String> av = new Vector<String>();
-		
-			
-			
-			GetCategoryElements cel = new GetCategoryElements(title, av);
-			performAction(cel);
-			try {
-				while (cel.hasMore()) {
-					cel = new GetCategoryElements(title, cel.next().toString(), av);
-					performAction(cel);
-				}
-			} catch (NamingException e) {
-				e.printStackTrace();
+
+		GetCategoryElements cel = new GetCategoryElements(title, av);
+		performAction(cel);
+		try {
+			while (cel.hasMore()) {
+				cel = new GetCategoryElements(title, cel.next().toString(), av);
+				performAction(cel);
 			}
-			
-			if (av.isEmpty()) {
-				throw new ActionException("Category: \"" + title + "\" is empty");
-			}
-			
+		} catch (NamingException e) {
+			e.printStackTrace();
+		}
+
+		if (av.isEmpty()) {
+			throw new ActionException("Category: \"" + title + "\" is empty");
+		}
+
 		return av.iterator();
 	}
+
 	/**
 	 * TODO infinite loop in GetWhatlinkshereElements.
-	 * @param title of page in a mediawiki like "Main Page"
+	 * 
+	 * @param title
+	 *            of page in a mediawiki like "Main Page"
 	 * @return with all article names what links to the page
-	 * @throws ActionException on problems
+	 * @throws ActionException
+	 *             on problems
 	 */
-	public final Iterator<String> readWhatLinksHere(final String title) throws ActionException {
+	public final Iterator<String> readWhatLinksHere(final String title)
+			throws ActionException {
 		Vector<String> av = new Vector<String>();
-		
-			
-			
-			GetWhatlinkshereElements cel = new GetWhatlinkshereElements(title, av);
-			performAction(cel);
-			try {
-				while (cel.hasMore()) {
-					cel = new GetWhatlinkshereElements(title, cel.next().toString(), av);
-					performAction(cel);
-				}
-			} catch (NamingException e) {
-				e.printStackTrace();
+
+		GetWhatlinkshereElements cel = new GetWhatlinkshereElements(title, av);
+		performAction(cel);
+		try {
+			while (cel.hasMore()) {
+				cel = new GetWhatlinkshereElements(title,
+						cel.next().toString(), av);
+				performAction(cel);
 			}
-			
-			if (av.isEmpty()) {
-				throw new ActionException("\"" + title + "\" is empty");
-			}
-			
+		} catch (NamingException e) {
+			e.printStackTrace();
+		}
+
+		if (av.isEmpty()) {
+			throw new ActionException("\"" + title + "\" is empty");
+		}
+
 		return av.iterator();
 	}
+
 	/**
 	 * 
-	 * @param a write the article (if already exists) in the mediawiki
-	 * @throws ActionException on problems
+	 * @param a
+	 *            write the article (if already exists) in the mediawiki
+	 * @throws ActionException
+	 *             on problems
 	 */
-	public final void writeContent(final EditContentAccessable a) throws ActionException {
-			
+	public final void writeContent(final EditContentAccessable a)
+			throws ActionException {
+
 		if (!loggedIn) {
 			throw new ActionException("Please login first");
 		}
-		Hashtable<String, String> tab = new Hashtable<String, String>(); 
+		Hashtable<String, String> tab = new Hashtable<String, String>();
 		performAction(new GetEnvironmentVars(a.getLabel(), tab));
 		performAction(new PostModifyContent(a, tab));
-		
+
 	}
+
 	/**
 	 * Writes an iteration of ContentAccessables to the mediawiki.
-	 * @param cav a
-	 * @throws ActionException on problems
+	 * 
+	 * @param cav
+	 *            a
+	 * @throws ActionException
+	 *             on problems
 	 */
-	public final void writeMultContent(final Iterator<EditContentAccessable> cav) throws ActionException {
+	public final void writeMultContent(final Iterator<EditContentAccessable> cav)
+			throws ActionException {
 		while (cav.hasNext()) {
 			writeContent(cav.next());
-			
-			
+
 		}
 	}
+
 	/**
 	 * 
-	 * @param label like "Tamplate:FooBar" or "Main Page"
-	 * @throws ActionException on problems
+	 * @param label
+	 *            like "Tamplate:FooBar" or "Main Page"
+	 * @throws ActionException
+	 *             on problems
 	 */
 	public final void deleteArticle(final String label) throws ActionException {
-		
-		
-			Hashtable<String, String> tab = new Hashtable<String, String>(); 
-			 performAction(new GetEnvironmentVars(label, tab));
-			 
-			 performAction(new PostDelete(label, tab));
-		
+
+		Hashtable<String, String> tab = new Hashtable<String, String>();
+		performAction(new GetEnvironmentVars(label, tab));
+
+		performAction(new PostDelete(label, tab));
+
 	}
-	
+
+	public Iterator<String> readAllPages(String string) throws ActionException {
+		Vector<String> av = new Vector<String>();
+
+		GetAllPages cel = new GetAllPages(av);
+		performAction(cel);
+		try {
+			while (cel.hasMore()) {
+				cel = new GetAllPages(cel.next().toString(), av);
+				performAction(cel);
+			}
+		} catch (NamingException e) {
+			e.printStackTrace();
+		}
+
+		if (av.isEmpty()) {
+			throw new ActionException("Allpages is empty");
+		}
+
+		return av.iterator();
+	}
+
 	/**
 	 * 
 	 * @author Thomas Stock
-	 *
+	 * 
 	 */
 	private class MwContentHelper implements ContentAccessable {
 
 		private String text = "";
+
 		private String label = "";
+
 		/**
 		 * 
-		 * @param text of article
-		 * @param label of article
+		 * @param text
+		 *            of article
+		 * @param label
+		 *            of article
 		 */
 		MwContentHelper(final String text, final String label) {
 			this.text = text;
 			this.label = label;
 		}
+
 		/**
-		 *
+		 * 
 		 * @see net.sourceforge.jwbf.contentRep.ContentAccessable#getLabel()
 		 * @return the
 		 */
 		public String getLabel() {
 			return label;
 		}
+
 		/**
 		 * @see net.sourceforge.jwbf.contentRep.ContentAccessable#getText()
 		 * @return the
@@ -220,7 +272,7 @@ public class MediaWikiBot extends HttpBot {
 		public String getText() {
 			return text;
 		}
-		
+
 	}
 
 }
