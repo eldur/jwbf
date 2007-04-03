@@ -38,6 +38,7 @@ import org.apache.commons.httpclient.HttpClient;
 public abstract class HttpBot {
 
 	private HttpActionClient cc;
+	private HttpClient _client=new HttpClient();
 	
 	/**
 	 * protected because abstract.
@@ -75,13 +76,16 @@ public abstract class HttpBot {
 	 */
 	protected void setConnection(final String hostUrl) {
 		try {
-			HttpClient client = new HttpClient();
+			HttpClient client = getClient();
 			client.getParams().setParameter("http.useragent", "JWBF " + JWBF.VERSION);
 			setConnection(client, new URL(hostUrl));
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		}
 		
+	}
+	public HttpClient getClient() {
+		return _client;
 	}
 	
 	/**
@@ -90,7 +94,7 @@ public abstract class HttpBot {
 	 */
 	protected void setConnection(final URL hostUrl) {
 		
-		HttpClient client = new HttpClient();
+		HttpClient client = getClient();
 			setConnection(client, hostUrl);
 		
 	}
