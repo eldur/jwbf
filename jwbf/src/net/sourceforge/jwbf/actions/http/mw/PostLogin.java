@@ -63,15 +63,15 @@ public class PostLogin extends Action {
 	 * @throws CookieException when no cookies returning
 	 */
 	public void validateAllReturningCookies(final Cookie[] cs) throws CookieException {
-
+		String compare=username.replace('_', ' ').replace(' ', '+');
 		if (cs == null) {
 			throw new CookieException("Cookiearray is null.");
 		}
 		if (cs.length == 0) {
 			throw new CookieException("No cookies found.");
 		} else {
-			for (int i = 0; i < cs.length; i++) {
-				if (cs[i].toString().contains(username)) {
+			for (int i = 0; i < cs.length; i++) {								
+				if (cs[i].toString().contains(compare)) {
 					log.info("Logged in as: " + username);
 					return;
 				}
