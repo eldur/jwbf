@@ -19,6 +19,7 @@
 package net.sourceforge.jwbf.bots;
 
 import java.net.URL;
+import java.util.AbstractCollection;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Vector;
@@ -107,7 +108,7 @@ public class MediaWikiBot extends HttpBot {
 	 * @throws ActionException
 	 *             on problems
 	 */
-	public final Iterator<String> readCategory(final String title)
+	public final AbstractCollection<String> readCategory(final String title)
 			throws ActionException {
 		Vector<String> av = new Vector<String>();
 
@@ -126,7 +127,7 @@ public class MediaWikiBot extends HttpBot {
 			throw new ActionException("Category: \"" + title + "\" is empty");
 		}
 
-		return av.iterator();
+		return av;
 	}
 
 	/**
@@ -138,7 +139,7 @@ public class MediaWikiBot extends HttpBot {
 	 * @throws ActionException
 	 *             on problems
 	 */
-	public final Iterator<String> readWhatLinksHere(final String title)
+	public final AbstractCollection<String> readWhatLinksHere(final String title)
 			throws ActionException {
 		Vector<String> av = new Vector<String>();
 
@@ -158,7 +159,7 @@ public class MediaWikiBot extends HttpBot {
 			throw new ActionException("\"" + title + "\" is empty");
 		}
 
-		return av.iterator();
+		return av;
 	}
 
 	/**
