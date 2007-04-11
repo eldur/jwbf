@@ -46,7 +46,7 @@ public class GetWhatlinkshereElements extends GetMultipageNames{
 	 *
 	 */
 	public GetWhatlinkshereElements(final String categoryname, Collection<String> c) {
-		// http://wiki.horridoh.de/Special:WhatLinksHere/Stammesf%C3%BChrer
+		// Special:WhatLinksHere/Stammesf%C3%BChrer
 		super(categoryname, c);
 	}
 
