@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="jwbf-jar">
+	
+	<target name="init">
+		<property name="build" value="1.1.0.1" />
+		<!-- Dont forget to update internal Version in JWBF.VERSION -->
+	</target>
+
+	<target name="jwbf-jar" depends="init">
+			
+    	  <jar destfile="jwbf-${build}.jar">
+    	  	<fileset dir="bin"
+    	  	             excludes="**/Test.class"
+    	  	    />
+
+    	    <manifest>
+    	      <attribute name="Built-By" value="${user.name}"/>
+    	    </manifest>
+    	  </jar>
+    </target>
+
+</project>
