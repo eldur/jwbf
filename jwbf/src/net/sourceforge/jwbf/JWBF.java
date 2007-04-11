@@ -22,7 +22,9 @@ package net.sourceforge.jwbf;
 import net.sourceforge.jwbf.actions.http.Action;
 import net.sourceforge.jwbf.misc.LogAppender;
 
+import org.apache.commons.httpclient.HttpClient;
 import org.apache.log4j.Appender;
+import org.apache.log4j.ConsoleAppender;
 import org.apache.log4j.Layout;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -43,7 +45,7 @@ import org.apache.log4j.spi.LoggingEvent;
 public final class JWBF {
 
 	
-	private static Logger log;
+//	private static Logger log;
 
 	public static final String VERSION = "1.1.0.1";
 	
@@ -54,106 +56,6 @@ public final class JWBF {
 	private JWBF() {
 //		do nothing 
 	}
-	/**
-	 * init the logging system.
-	 * 
-	 */
-	public static void prepareLogger() {
-		try {
-			Logger rootLog = Logger.getRootLogger();
-			
-			rootLog.addAppender(new Appender() {
 
-				public void addFilter(Filter newFilter) {
-					// do nothing
-					
-				}
-
-				public void clearFilters() {
-					// do nothing
-					
-				}
-
-				public void close() {
-					// do nothing
-					
-				}
-
-				public void doAppend(LoggingEvent event) {
-					// do nothing
-					
-				}
-
-				public ErrorHandler getErrorHandler() {
-					return null;
-				}
-
-				public Filter getFilter() {
-					return null;
-				}
-
-				public Layout getLayout() {
-					return null;
-				}
-
-				public String getName() {
-					return null;
-				}
-
-				public boolean requiresLayout() {
-					return false;
-				}
-
-				public void setErrorHandler(ErrorHandler errorHandler) {
-//					do nothing
-				}
-
-				public void setLayout(Layout layout) {
-					// do nothing
-					
-				}
-
-				public void setName(String name) {
-					// do nothing
-					
-				}
-				
-			});
-			
-			  log = Logger.getLogger(Action.class);
-		      log.addAppender(new LogAppender());
-		       
-		      
-		      setLoggerLevel();
-		      
-		    } catch (Exception ex) {
-		      System.out.println(ex);
-		    }
-	}
-	/**
-	 * 
-	 * 
-	 */
-	static void setLoggerLevel() {
-		String levStr = System.getenv("loggerlevel");
-		try {
-			if (levStr.equalsIgnoreCase("info")) {
-				log.setLevel(Level.INFO);
-			} else if (levStr.equalsIgnoreCase("all")) {
-				log.setLevel(Level.ALL);
-			} else if (levStr.equalsIgnoreCase("warn")) {
-				log.setLevel(Level.WARN);
-			} else if (levStr.equalsIgnoreCase("trace")) {
-				log.setLevel(Level.TRACE);
-			} else {
-				log.setLevel(Level.ERROR);
-			}
-		} catch (NullPointerException npe) {
-			log.setLevel(Level.ERROR);
-		}
-		
-		
-//		log.setLevel();
-	}
 
 }

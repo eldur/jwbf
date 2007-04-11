@@ -14,7 +14,7 @@
  * the License.
  * 
  * Contributors:
- * 
+ * Philipp Kohl 
  */
 package net.sourceforge.jwbf.bots;
 
@@ -64,6 +64,7 @@ public class MediaWikiBot extends HttpBot {
 	public MediaWikiBot(final URL u) {
 		super();
 		setConnection(u);
+		
 	}
 
 	/**

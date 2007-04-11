@@ -28,6 +28,8 @@ import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.methods.GetMethod;
+import org.apache.log4j.ConsoleAppender;
+import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 /**
@@ -56,6 +58,10 @@ public class HttpActionClient {
 		 * see for docu
 		 * http://jakarta.apache.org/commons/httpclient/preference-api.html
 		 */
+		
+
+		
+		
 
 		this.client = client;
 
@@ -81,6 +87,8 @@ public class HttpActionClient {
 	 *             on problems
 	 */
 	public String performAction(Action a) throws ActionException {
+	
+		
 		List<HttpMethod> msgs = a.getMessages();
 		String out = "";
 		Iterator<HttpMethod> it = msgs.iterator();

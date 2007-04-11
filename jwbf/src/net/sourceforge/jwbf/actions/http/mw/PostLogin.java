@@ -14,7 +14,7 @@
  * the License.
  * 
  * Contributors:
- * 
+ * Philipp Kohl 
  */
 package net.sourceforge.jwbf.actions.http.mw;
 
@@ -63,7 +63,7 @@ public class PostLogin extends Action {
 	 * @throws CookieException when no cookies returning
 	 */
 	public void validateAllReturningCookies(final Cookie[] cs) throws CookieException {
-		String compare=username.replace('_', ' ').replace(' ', '+');
+		String compare = username.replace('_', ' ').replace(' ', '+');
 		if (cs == null) {
 			throw new CookieException("Cookiearray is null.");
 		}

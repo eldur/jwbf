@@ -1,1 +1,5 @@
 This is an eclipse project folder.
+
+For validate code style use checkstyle
+: http://eclipse-cs.sourceforge.net/
+: http://checkstyle.sourceforge.net/

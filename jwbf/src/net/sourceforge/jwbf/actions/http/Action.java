@@ -18,32 +18,33 @@
  */
 package net.sourceforge.jwbf.actions.http;
 
-
 import java.util.List;
 import java.util.Vector;
 
 import org.apache.commons.httpclient.Cookie;
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.log4j.Logger;
+
 /**
  * 
  * @author Thomas Stock
- *
+ * 
  */
 public abstract class Action implements ContentProcessable {
 
-	protected Logger log = Logger.getLogger(Action.class);
+	protected Logger log;
 
 	protected List<HttpMethod> msgs;
 
 	/**
 	 * 
-	 *
+	 * 
 	 */
 	public Action() {
 		msgs = new Vector<HttpMethod>();
-
+		log = Logger.getLogger(Action.class);
 	}
+
 	/**
 	 * 
 	 * @return a
@@ -53,29 +54,37 @@ public abstract class Action implements ContentProcessable {
 	}
 
 	/**
-	 * @param s the returning text
-	 * @param hm the method object
+	 * @param s
+	 *            the returning text
+	 * @param hm
+	 *            the method object
 	 * @return the returning text
 	 * 
 	 */
-	public String processReturningText(String s, HttpMethod hm) {
+	public String processReturningText(final String s, final HttpMethod hm) {
 		return processAllReturningText(s);
 	}
 
 	/**
-	 * @param cs a
-	 * @param hm the method object
-	 * @throws CookieException never
+	 * @param cs
+	 *            a
+	 * @param hm
+	 *            the method object
+	 * @throws CookieException
+	 *             never
 	 * 
 	 */
-	public void validateReturningCookies(Cookie[] cs, HttpMethod hm) throws CookieException {
+	public void validateReturningCookies(Cookie[] cs, HttpMethod hm)
+			throws CookieException {
 		validateAllReturningCookies(cs);
-		
+
 	}
-	
+
 	/**
-	 * @param cs a
-	 * @throws CookieException never
+	 * @param cs
+	 *            a
+	 * @throws CookieException
+	 *             never
 	 * 
 	 */
 	public void validateAllReturningCookies(final Cookie[] cs)
@@ -84,14 +93,13 @@ public abstract class Action implements ContentProcessable {
 	}
 
 	/**
-	 * @param s the returning text
+	 * @param s
+	 *            the returning text
 	 * @return the returning text
 	 * 
 	 */
 	public String processAllReturningText(final String s) {
 		return s;
 	}
-
-
 
 }
