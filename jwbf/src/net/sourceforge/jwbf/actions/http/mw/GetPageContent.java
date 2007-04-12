@@ -29,7 +29,6 @@ import org.apache.commons.httpclient.methods.GetMethod;
 /**
  * 
  * @author Thomas Stock
- * TODO
  * 
  */
 public class GetPageContent extends Action {

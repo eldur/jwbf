@@ -22,46 +22,50 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.Collection;
-import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.naming.NamingEnumeration;
-import javax.naming.NamingException;
-
 import org.apache.commons.httpclient.methods.GetMethod;
-
-import net.sourceforge.jwbf.actions.http.Action;
 
 /**
  * @author Thomas Stock
- * TODO
- *
+ * 
  */
-public class GetWhatlinkshereElements extends GetMultipageNames{
+public class GetWhatlinkshereElements extends GetMultipageNames {
 
-	
 	/**
 	 * 
-	 *
+	 * @param categoryname
+	 *            name of category with namespace like "Category:Names"
+	 * @param c
+	 *            a
 	 */
-	public GetWhatlinkshereElements(final String categoryname, Collection<String> c) {
-		// Special:WhatLinksHere/Stammesf%C3%BChrer
+	public GetWhatlinkshereElements(final String categoryname,
+			Collection<String> c) {
 		super(categoryname, c);
 	}
 
-	
-	public GetWhatlinkshereElements(final String categoryname, final String from,
-			Collection<String> c) {
-//		http://de.wikipedia.org/w/index.phpSpezial:Verweisliste/Hannover&limit=5500&from=0
+	/**
+	 * 
+	 * @param categoryname
+	 *            name of category with namespace like "Category:Names"
+	 * @param from
+	 *            start of
+	 * @param c
+	 *            a
+	 */
+	public GetWhatlinkshereElements(final String categoryname,
+			final String from, Collection<String> c) {
 		super(categoryname, from, c);
 	}
 
-
 	/**
 	 * creates the GET request for the action.
-	 * @param pagename name of a next 
-	 * @param from start bye article
+	 * 
+	 * @param pagename
+	 *            name of a next
+	 * @param from
+	 *            start bye article
 	 */
 	protected void addNextPage(final String pagename, final String from) {
 		String uS = "";
@@ -71,16 +75,19 @@ public class GetWhatlinkshereElements extends GetMultipageNames{
 			if (from.length() > 0) {
 				fromEl = "&from=" + from;
 			}
-			uS = "/index.php?title=Special:WhatLinksHere/" + URLEncoder.encode(pagename, "UTF-8")
-					+ fromEl + "&dontcountme=s";
+			uS = "/index.php?title=Special:WhatLinksHere/"
+					+ URLEncoder.encode(pagename, "UTF-8") + fromEl
+					+ "&dontcountme=s";
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
 		msgs.add(new GetMethod(uS));
 	}
+
 	/**
 	 * 
-	 * @param line of html text
+	 * @param line
+	 *            of html text
 	 */
 	protected void parseHasMore(final String line) {
 		String xLine = line.replace("\n", "");
@@ -99,6 +106,7 @@ public class GetWhatlinkshereElements extends GetMultipageNames{
 			moreCount++;
 		}
 	}
+
 	/**
 	 * 
 	 * @param s
@@ -118,11 +126,11 @@ public class GetWhatlinkshereElements extends GetMultipageNames{
 				String temp = myMatcher.group(1);
 				if (temp.length() > 0) {
 					try {
-						String t = URLDecoder
-								.decode(stripUrlElements(temp), "UTF-8");
+						String t = URLDecoder.decode(stripUrlElements(temp),
+								"UTF-8");
 						t = stripUrlElements(temp);
 						t = t.substring(0, t.length() - 1);
-						
+
 						if (t.indexOf("prev") > 1) {
 							continue;
 						} else if (t.indexOf("from") > 1) {
