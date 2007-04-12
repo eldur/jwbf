@@ -18,67 +18,93 @@
  */
 package net.sourceforge.jwbf.actions.http.mw;
 
-
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.Collection;
-import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import javax.naming.NamingEnumeration;
-import javax.naming.NamingException;
-
-import net.sourceforge.jwbf.actions.http.Action;
 
 import org.apache.commons.httpclient.methods.GetMethod;
 
 /**
- * 
+ * TODO eldurloki: working on type media and/or article.
  * @author Thomas Stock
+ * 
  * 
  */
 public class GetCategoryElements extends GetMultipageNames {
 
 	private boolean subContent = false;
-	
-	public GetCategoryElements(final String categoryname, Collection<String> c) {
+
+	private byte type = 00;
+
+	public static final byte ARTICLE = 10;
+
+	public static final byte MEDIA = 01;
+
+	/**
+	 * 
+	 * @param categoryname
+	 *            the
+	 * @param c
+	 *            a
+	 * @param type
+	 *            of category elements, MEDIA | ARTICLE
+	 */
+	public GetCategoryElements(final String categoryname, Collection<String> c,
+			final byte type) {
 		super(categoryname, c);
+		this.type = type;
 	}
 
-	
+	/**
+	 * 
+	 * @param categoryname
+	 *            the
+	 * @param from
+	 *            where category colection begins, like "from=D"
+	 * @param c
+	 *            a
+	 * @param type
+	 *            of category elements, MEDIA | ARTICLE
+	 */
 	public GetCategoryElements(final String categoryname, final String from,
-			Collection<String> c) {
+			Collection<String> c, final byte type) {
 
 		super(categoryname, from, c);
+		this.type = type;
 	}
 
-	
 	/**
-	 * if line is betwene lines <!-- start content --> and <!-- end
-	 * content --> returns, set inner variable on true.
+	 * if line is betwene lines <!-- start content --> and <!-- end content -->
+	 * returns, set inner variable on true.
 	 * 
-	 * @param s line of html file
+	 * @param s
+	 *            line of html file
 	 */
 	protected void checkIsContent(final String s) {
 
 		if (s.indexOf("<!-- start content -->") > 1) {
 			subContent = true;
-			
+
 		} else if (s.indexOf("<!-- end content -->") > 1) {
 			isContent = false;
-		} 
+		}
 		// no subcategories
 		if (s.indexOf("mw-pages") > 1 && subContent) {
 			isContent = true;
 		}
 
 	}
+
 	/**
 	 * creates the GET request for the action.
-	 * @param pagename name of a next 
-	 * @param from start bye article
+	 * 
+	 * @param pagename
+	 *            name of a next
+	 * @param from
+	 *            start bye article
 	 */
 	protected void addNextPage(final String pagename, final String from) {
 		String uS = "";
@@ -95,9 +121,11 @@ public class GetCategoryElements extends GetMultipageNames {
 		}
 		msgs.add(new GetMethod(uS));
 	}
+
 	/**
 	 * 
-	 * @param line of html text
+	 * @param line
+	 *            of html text
 	 */
 	protected void parseHasMore(final String line) {
 		String xLine = line.replace("\n", "");
@@ -116,6 +144,7 @@ public class GetCategoryElements extends GetMultipageNames {
 			moreCount++;
 		}
 	}
+
 	/**
 	 * 
 	 * @param s
@@ -137,8 +166,8 @@ public class GetCategoryElements extends GetMultipageNames {
 				// " + myMatcher.group(3);
 				if (temp.length() > 0) {
 					try {
-						String t = URLDecoder
-								.decode(stripUrlElements(temp), "UTF-8");
+						String t = URLDecoder.decode(stripUrlElements(temp),
+								"UTF-8");
 						t = stripUrlElements(temp);
 						t = t.substring(0, t.length() - 1);
 						if (t.indexOf("from") > 1) {

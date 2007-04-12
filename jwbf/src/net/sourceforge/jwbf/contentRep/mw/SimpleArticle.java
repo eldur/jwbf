@@ -50,6 +50,18 @@ public class SimpleArticle implements EditContentAccessable {
 		label = ca.getLabel();
 		text = ca.getText();
 	}
+	
+	/**
+	 * 
+	 * @param text
+	 *            of article
+	 * @param label
+	 *            of article
+	 */
+	public SimpleArticle(final String text, final String label) {
+		this.text = text;
+		this.label = label;
+	}
 	/**
 	 * @return the
 	 */

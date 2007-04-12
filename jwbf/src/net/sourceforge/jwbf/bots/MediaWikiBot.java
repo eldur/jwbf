@@ -37,6 +37,7 @@ import net.sourceforge.jwbf.actions.http.mw.PostLogin;
 import net.sourceforge.jwbf.actions.http.mw.PostModifyContent;
 import net.sourceforge.jwbf.contentRep.ContentAccessable;
 import net.sourceforge.jwbf.contentRep.mw.EditContentAccessable;
+import net.sourceforge.jwbf.contentRep.mw.SimpleArticle;
 
 /**
  * 
@@ -64,7 +65,7 @@ public class MediaWikiBot extends HttpBot {
 	public MediaWikiBot(final URL u) {
 		super();
 		setConnection(u);
-		
+
 	}
 
 	/**
@@ -94,9 +95,9 @@ public class MediaWikiBot extends HttpBot {
 	 */
 	public final ContentAccessable readContentOf(final String name)
 			throws ActionException {
-		MwContentHelper a = null;
+		SimpleArticle a = null;
 
-		a = new MwContentHelper(performAction(new GetPageContent(name)), name);
+		a = new SimpleArticle(performAction(new GetPageContent(name)), name);
 
 		return a;
 	}
@@ -111,13 +112,32 @@ public class MediaWikiBot extends HttpBot {
 	 */
 	public final AbstractCollection<String> readCategory(final String title)
 			throws ActionException {
+
+		return readCategory(title, GetCategoryElements.ARTICLE);
+	}
+
+	/**
+	 * TODO Feature not works realy.
+	 * @param title
+	 *            of category in a mediawiki like "Category:Small Things"
+	 * 
+	 * @param type
+	 *            of category elements, GetCategoryElements.MEDIA |
+	 *            GetCategoryElements.ARTICLE
+	 * @return with all article names in the requestet category
+	 * @throws ActionException
+	 *             on problems
+	 */
+	public final AbstractCollection<String> readCategory(final String title,
+			final byte type) throws ActionException {
 		Vector<String> av = new Vector<String>();
 
-		GetCategoryElements cel = new GetCategoryElements(title, av);
+		GetCategoryElements cel = new GetCategoryElements(title, av, type);
 		performAction(cel);
 		try {
 			while (cel.hasMore()) {
-				cel = new GetCategoryElements(title, cel.next().toString(), av);
+				cel = new GetCategoryElements(title, cel.next().toString(), av,
+						type);
 				performAction(cel);
 			}
 		} catch (NamingException e) {
@@ -213,8 +233,12 @@ public class MediaWikiBot extends HttpBot {
 		performAction(new PostDelete(label, tab));
 
 	}
-
-	public Iterator<String> readAllPages(String string) throws ActionException {
+	/**
+	 * Use ONLY in wikis with less articles.
+	 * @return Articles from the Specialpage: AllPages
+	 * @throws ActionException on problems
+	 */
+	public AbstractCollection<String> readAllPages() throws ActionException {
 		Vector<String> av = new Vector<String>();
 
 		GetAllPages cel = new GetAllPages(av);
@@ -232,49 +256,7 @@ public class MediaWikiBot extends HttpBot {
 			throw new ActionException("Allpages is empty");
 		}
 
-		return av.iterator();
-	}
-
-	/**
-	 * 
-	 * @author Thomas Stock
-	 * 
-	 */
-	private class MwContentHelper implements ContentAccessable {
-
-		private String text = "";
-
-		private String label = "";
-
-		/**
-		 * 
-		 * @param text
-		 *            of article
-		 * @param label
-		 *            of article
-		 */
-		MwContentHelper(final String text, final String label) {
-			this.text = text;
-			this.label = label;
-		}
-
-		/**
-		 * 
-		 * @see net.sourceforge.jwbf.contentRep.ContentAccessable#getLabel()
-		 * @return the
-		 */
-		public String getLabel() {
-			return label;
-		}
-
-		/**
-		 * @see net.sourceforge.jwbf.contentRep.ContentAccessable#getText()
-		 * @return the
-		 */
-		public String getText() {
-			return text;
-		}
-
+		return av;
 	}
 
 }
