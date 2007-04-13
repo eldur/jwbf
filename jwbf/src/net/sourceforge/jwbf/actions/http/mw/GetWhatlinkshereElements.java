@@ -33,6 +33,8 @@ import org.apache.commons.httpclient.methods.GetMethod;
  */
 public class GetWhatlinkshereElements extends GetMultipageNames {
 
+	public static final int LIMIT = 2;
+	
 	/**
 	 * 
 	 * @param categoryname
@@ -77,7 +79,7 @@ public class GetWhatlinkshereElements extends GetMultipageNames {
 			}
 			uS = "/index.php?title=Special:WhatLinksHere/"
 					+ URLEncoder.encode(pagename, "UTF-8") + fromEl
-					+ "&dontcountme=s";
+					+ "&limit=" + LIMIT;
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
@@ -97,16 +99,24 @@ public class GetWhatlinkshereElements extends GetMultipageNames {
 			String urlEl = getNextPageId(xLine);
 
 			if (urlEl.indexOf("from") > 1 && hasNoChiled) {
-
+				
 				hasNoChiled = false;
 				int fromStart = urlEl.indexOf("from");
 				nextPage = urlEl.substring(fromStart + 5);
-				log.debug("has more: " + nextPage);
+				log.debug("has more: " + nextPage + "\n" +
+						"on: " + line + "\n\n");
 			}
 			moreCount++;
 		}
 	}
 
+//	/**
+//	 * TODO dont works.
+//	 */
+//	 void parsePageLinks(final String line) {
+//		 System.err.println(line);
+//		}
+	
 	/**
 	 * 
 	 * @param s

@@ -65,7 +65,6 @@ public class GetPageContent extends Action {
 		}
 		return s;
 //		java 1.6 version
-		// TODO check if old utf works like new
 //		return new String(s.getBytes(), Charset.forName("UTF-8"));
 	}
 

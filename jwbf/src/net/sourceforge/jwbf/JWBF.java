@@ -19,35 +19,16 @@
 package net.sourceforge.jwbf;
 
 
-import net.sourceforge.jwbf.actions.http.Action;
-import net.sourceforge.jwbf.misc.LogAppender;
-
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.log4j.Appender;
-import org.apache.log4j.ConsoleAppender;
-import org.apache.log4j.Layout;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
-import org.apache.log4j.spi.ErrorHandler;
-import org.apache.log4j.spi.Filter;
-import org.apache.log4j.spi.LoggingEvent;
 
 /**
- *
- * 
- * to config logger level set env variable "loggerlevel" to 
- * {"info", "all", "warn", "trace", "error"}.
- * 
  * 
  * @author Thomas Stock
  *
  */
 public final class JWBF {
 
-	
-//	private static Logger log;
 
-	public static final String VERSION = "1.1.0.1";
+	public static final String VERSION = "1.1.0";
 	
 	/**
 	 * 

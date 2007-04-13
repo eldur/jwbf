@@ -1,22 +1,55 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<project default="jwbf-jar">
+<project default="release">
 	
-	<target name="init">
-		<property name="build" value="1.1.0.1" />
-		<!-- Dont forget to update internal Version in JWBF.VERSION -->
-	</target>
-
-	<target name="jwbf-jar" depends="init">
-			
-    	  <jar destfile="jwbf-${build}.jar">
-    	  	<fileset dir="bin"
-    	  	             excludes="**/Test.class"
-    	  	    />
-
-    	    <manifest>
-    	      <attribute name="Built-By" value="${user.name}"/>
-    	    </manifest>
-    	  </jar>
+	
+	<!-- 
+	- Dont forget to update internal Version in JWBF.VERSION 
+	- if build.number tenner place changes
+	-->
+	<property name="dist" value="build" />
+	
+	<!-- build jar -->
+	<target name="jar" >
+		
+		<loadproperties srcFile="build.number" />
+		<echo message="Building: jwbf-${build.number}.jar" />
+		<mkdir dir="${dist}"/>
+ 		<jar destfile="${dist}/jwbf-${build.number}.jar">
+    		<fileset dir="bin"
+    			excludes="**/Test.class, **/*.htm*" 
+    		/>
+			<fileset dir="buildAdds"
+				includes="*"
+			/>
+    	  	<manifest>
+    	  	   	<attribute name="Built-By" value="${user.name}"/>
+	    	</manifest>
+		</jar>
     </target>
+	
+	<!-- create release -->
+	<target name="release" depends="relInc, jar">
+		
+		<property name="release" value="${dist}/release_${build.number}" />
+				<echo message="Release: ${build.number}" />
+		<mkdir dir="${release}"/>
+
+		<copy file="${dist}/jwbf-${build.number}.jar" todir="${release}/bin" />
+		
+		<copy todir="${release}/src">
+			<fileset dir="src" includes="**/*"/>
+		</copy>
+		<copy todir="${release}">
+			<fileset dir="buildAdds" includes="*"/>
+		</copy>
+		<tar tarfile="${release}/jwbf-${build.number}.tar.gz" 
+			basedir="${release}" compression="gzip"/>
+
+        </target>
+	
+	<!-- increment release number in file: build.number -->
+	<target name="relInc">
+		<buildnumber/>
+	</target>
 
 </project>

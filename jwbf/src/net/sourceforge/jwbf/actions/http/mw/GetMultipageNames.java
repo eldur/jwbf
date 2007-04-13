@@ -158,7 +158,7 @@ public abstract class GetMultipageNames extends Action implements NamingEnumerat
 			String temp = myMatcher.group(2);
 			if (temp.length() > 0) {
 					content.add(temp);
-					log.info("add: " + temp);
+					log.debug("add: " + temp);
 			}
 		}
 		myMatcher.appendTail(myStringBuffer);

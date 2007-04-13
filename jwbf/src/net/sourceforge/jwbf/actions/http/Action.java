@@ -23,7 +23,10 @@ import java.util.Vector;
 
 import org.apache.commons.httpclient.Cookie;
 import org.apache.commons.httpclient.HttpMethod;
+import org.apache.log4j.ConsoleAppender;
+import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+import org.apache.log4j.SimpleLayout;
 
 /**
  * 
@@ -43,6 +46,8 @@ public abstract class Action implements ContentProcessable {
 	public Action() {
 		msgs = new Vector<HttpMethod>();
 		log = Logger.getLogger(Action.class);
+		log.addAppender(new ConsoleAppender(new SimpleLayout()));
+		log.setLevel(Level.toLevel(System.getenv("loggerlevel"), Level.ERROR));
 	}
 
 	/**
