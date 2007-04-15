@@ -27,10 +27,6 @@ import net.sourceforge.jwbf.actions.http.ActionException;
 import net.sourceforge.jwbf.actions.http.HttpActionClient;
 
 import org.apache.commons.httpclient.HttpClient;
-import org.apache.log4j.ConsoleAppender;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
-import org.apache.log4j.SimpleLayout;
 
 /**
  * 
@@ -49,7 +45,6 @@ public abstract class HttpBot {
 	 * 
 	 */
 	protected HttpBot() {
-		prepareLogger();
 		client = new HttpClient();
 		
 	}
@@ -119,34 +114,6 @@ public abstract class HttpBot {
 
 	}
 	
-	 	/**
-	 * init the logging system.
-	 * 
-	 */
-	private void prepareLogger() {
-		try {
-			
-			
-			Logger rootLog = Logger.getRootLogger();
-		    rootLog.setLevel(Level.ERROR);
-			rootLog.addAppender(new ConsoleAppender(new SimpleLayout()));
-//			rootLog.setLevel(Level.toLevel(System.getenv("loggerlevel"), Level.ERROR));
-			
-			Logger httpApp = Logger.getLogger(org.apache.commons.httpclient.HttpClient.class);
-			httpApp.addAppender(new ConsoleAppender(new SimpleLayout()));
-			httpApp.setLevel(Level.ERROR);
-//			httpApp.setLevel(Level.toLevel(System.getenv("loggerlevel"), Level.ERROR));
-			
-//			log = Logger.getLogger(Action.class);
-//		    log.addAppender(new LogAppender());
-		       
-		      
-//		    setLoggerLevel();
 
-		      
-		    } catch (Exception ex) {
-		      System.out.println(ex);
-		    }
-	}
 
 }
