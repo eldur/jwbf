@@ -29,6 +29,7 @@ import javax.naming.NamingException;
 import net.sourceforge.jwbf.actions.http.ActionException;
 import net.sourceforge.jwbf.actions.http.mw.GetAllPages;
 import net.sourceforge.jwbf.actions.http.mw.GetCategoryElements;
+import net.sourceforge.jwbf.actions.http.mw.GetCategoryPictures;
 import net.sourceforge.jwbf.actions.http.mw.GetEnvironmentVars;
 import net.sourceforge.jwbf.actions.http.mw.GetPageContent;
 import net.sourceforge.jwbf.actions.http.mw.GetWhatlinkshereElements;
@@ -149,6 +150,35 @@ public class MediaWikiBot extends HttpBot {
 		}
 
 		return av;
+	}
+	/**
+	 * 
+	 * @param title
+	 *            of category in a mediawiki like "Category:Small Things"
+	 * @return with all article names in the requestet category
+	 * @throws ActionException
+	 *             on problems
+	 */
+	public final Iterator<String> readCategoryPics(final String title)
+			throws ActionException {
+		Vector<String> av = new Vector<String>();
+
+		GetCategoryPictures cel = new GetCategoryPictures(title, av);
+		performAction(cel);
+		try {
+			while (cel.hasMore()) {
+				cel = new GetCategoryPictures(title, cel.next().toString(), av);
+				performAction(cel);
+			}
+		} catch (NamingException e) {
+			e.printStackTrace();
+		}
+
+		if (av.isEmpty()) {
+			throw new ActionException("Category: \"" + title + "\" is empty");
+		}
+
+		return av.iterator();
 	}
 
 	/**

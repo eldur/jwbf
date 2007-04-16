@@ -23,6 +23,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Hashtable;
 
+import net.sourceforge.jwbf.JWBF;
 import net.sourceforge.jwbf.actions.http.Action;
 import net.sourceforge.jwbf.contentRep.mw.EditContentAccessable;
 
@@ -46,7 +47,7 @@ public class PostModifyContent extends Action {
 
 		String uS = "";
 		try {
-			uS = "/index.php?title=" + URLEncoder.encode(a.getLabel(), "UTF-8")
+			uS = "/index.php?title=" + URLEncoder.encode(a.getLabel(), JWBF.charset)
 					+ "&action=submit";
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
@@ -82,7 +83,7 @@ public class PostModifyContent extends Action {
 		
 		log.info("WRITE: " + a.getLabel());
 		PostMethod pm = new PostMethod(uS);
-		pm.getParams().setContentCharset("UTF-8");
+		pm.getParams().setContentCharset(JWBF.charset);
 
 		pm.setRequestBody(new NameValuePair[] { action, wpStarttime,
 				wpEditToken, wpEdittime, wpTextbox, wpSummary, wpMinoredit });

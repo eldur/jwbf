@@ -19,6 +19,7 @@
 package net.sourceforge.jwbf.actions.http.mw;
 
 
+import net.sourceforge.jwbf.JWBF;
 import net.sourceforge.jwbf.actions.http.Action;
 import net.sourceforge.jwbf.actions.http.CookieException;
 
@@ -54,7 +55,7 @@ public class PostLogin extends Action {
 
 		pm.setRequestBody(new NameValuePair[] { action, url, userid,
 						password });
-		pm.getParams().setContentCharset("UTF-8");
+		pm.getParams().setContentCharset(JWBF.charset);
 		msgs.add(pm);
 
 	}

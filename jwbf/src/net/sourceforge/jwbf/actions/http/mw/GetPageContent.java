@@ -22,6 +22,7 @@ package net.sourceforge.jwbf.actions.http.mw;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
+import net.sourceforge.jwbf.JWBF;
 import net.sourceforge.jwbf.actions.http.Action;
 
 import org.apache.commons.httpclient.methods.GetMethod;
@@ -42,7 +43,7 @@ public class GetPageContent extends Action {
 		log.info("READ: " + articlename);
 		String uS = "";
 		try {
-			uS = "/index.php?title=" + URLEncoder.encode(articlename, "UTF-8")
+			uS = "/index.php?title=" + URLEncoder.encode(articlename, JWBF.charset)
 					+ "&action=raw&ctype=text/plain&dontcountme=s";
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
@@ -59,7 +60,7 @@ public class GetPageContent extends Action {
 	 */
 	public String processAllReturningText(final String s) {
 		try {
-			return new String(s.getBytes(), "UTF-8");
+			return new String(s.getBytes(), JWBF.charset);
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}

@@ -20,6 +20,7 @@ package net.sourceforge.jwbf.actions.http.mw;
 
 import java.util.Hashtable;
 
+import net.sourceforge.jwbf.JWBF;
 import net.sourceforge.jwbf.actions.http.Action;
 
 import org.apache.commons.httpclient.NameValuePair;
@@ -51,7 +52,7 @@ public class PostDelete extends Action {
 				"/index.php?title=" + label + "&action=delete");
 
 		pm.setRequestBody(new NameValuePair[] { action, wpReason, wpEditToken });
-		pm.getParams().setContentCharset("UTF-8");
+		pm.getParams().setContentCharset(JWBF.charset);
 		msgs.add(pm);
 		
 	}

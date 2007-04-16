@@ -27,6 +27,9 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.httpclient.methods.GetMethod;
 
+import net.sourceforge.jwbf.JWBF;
+import net.sourceforge.jwbf.actions.http.Action;
+
 /**
  * @author Thomas Stock
  * 
@@ -77,8 +80,8 @@ public class GetWhatlinkshereElements extends GetMultipageNames {
 			if (from.length() > 0) {
 				fromEl = "&from=" + from;
 			}
-			uS = "/index.php?title=Special:WhatLinksHere/"
-					+ URLEncoder.encode(pagename, "UTF-8") + fromEl
+			uS = "/index.php?title=Special:WhatLinksHere/" + URLEncoder.encode(pagename, JWBF.charset)
+					+ fromEl + "&dontcountme=s"
 					+ "&limit=" + LIMIT;
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
@@ -136,8 +139,8 @@ public class GetWhatlinkshereElements extends GetMultipageNames {
 				String temp = myMatcher.group(1);
 				if (temp.length() > 0) {
 					try {
-						String t = URLDecoder.decode(stripUrlElements(temp),
-								"UTF-8");
+						String t = URLDecoder
+								.decode(stripUrlElements(temp), JWBF.charset);
 						t = stripUrlElements(temp);
 						t = t.substring(0, t.length() - 1);
 

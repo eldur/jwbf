@@ -29,6 +29,7 @@ import java.util.regex.Pattern;
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
 
+import net.sourceforge.jwbf.JWBF;
 import net.sourceforge.jwbf.actions.http.Action;
 
 import org.apache.commons.httpclient.methods.GetMethod;
@@ -89,7 +90,7 @@ public class GetAllPages extends GetMultipageNames {
 			if (from.length() > 0) {
 				fromEl = "&from=" + from;
 			}
-			uS = "/index.php?title=" + URLEncoder.encode(pagename, "UTF-8")
+			uS = "/index.php?title=" + URLEncoder.encode(pagename, JWBF.charset)
 					+ fromEl + "&dontcountme=s";
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
@@ -142,7 +143,7 @@ public class GetAllPages extends GetMultipageNames {
 				if (temp.length() > 0) {
 					try {
 						String t = URLDecoder.decode(stripUrlElements(temp),
-								"UTF-8");
+								JWBF.charset);
 						t = stripUrlElements(temp);
 						t = t.substring(0, t.length() - 1);
 						if (t.indexOf("from") > 1) {

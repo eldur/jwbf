@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<project default="release">
+<project default="test">
 	
+	<property name="temp" location="temp"></property>
+	<property name="classes" location="${temp}/classes"/>
+	<property name="classes_test" location="${temp}/classes_test"/>
+	<property name="junit.dir" location="${temp}/junit"/>
+
+	<property name="lib" location="lib"/>
+
+	
+	<path id="classpath">
+		<fileset dir="${lib}" includes="*.jar"/>
+	</path>
+		
 	
 	<!-- 
 	- Dont forget to update internal Version in JWBF.VERSION 
@@ -8,14 +20,112 @@
 	-->
 	<property name="dist" value="build" />
 	
+	<target name="init">
+		<delete failonerror="false" dir="${classes}"></delete>
+		<mkdir dir="${classes}"/>		
+	</target>
+
+	<target name="init_test" depends="init">
+		<delete failonerror="false" dir="${classes_test}"></delete>
+		<mkdir dir="${classes_test}"/>	
+		<delete failonerror="false" dir="${junit.dir}"></delete>
+		<mkdir dir="${junit.dir}"/>	
+		
+	</target>
+	
+	
+	
+    <!-- ================================= 
+          target: Compile              
+         ================================= -->
+    <target name="compile" depends="init" description="--> compile the sources">
+        <javac classpathref="classpath" destdir="${classes}" srcdir="src">
+
+        </javac>
+    	<copy todir="${classes}"> 
+    		<fileset dir="src">
+    			<exclude name="**/*.java"/>
+    		</fileset>		
+	    </copy>
+    </target>
+
+
+	<target name="compile_test" depends="compile, init_test">
+        <javac  destdir="${classes_test}" srcdir="test">
+
+        	
+        	<classpath >
+        		 <path refid="classpath"/>
+        		 <pathelement location="${classes}"/>
+        	</classpath>
+        </javac>
+    	<copy todir="${classes_test}"> 
+    		<fileset dir="test">
+    			<exclude name="**/*.java"/>
+    		</fileset>		
+	    </copy>
+    </target>
+	
+	
+    <!-- ================================= 
+          target: test              
+         ================================= -->
+    <target name="test" depends="compile_test" description="--> Runs all Unit-Tests">
+    	
+        <junit printsummary="yes" 
+               haltonfailure="no"
+               haltonerror="no" 
+               failureproperty="junit.failure"   
+               errorproperty="junit.error"
+               fork="yes">
+            <formatter type="plain" usefile="true"/>
+            <formatter type="xml"/>
+            <batchtest todir="${temp}/junit">
+                <fileset dir="test">
+                    <include name="**/Test*.java"/>
+                </fileset>
+            </batchtest>
+            <classpath>
+                <path refid="classpath"></path>   
+                <pathelement location="${classes}"/>   
+                <pathelement location="${classes_test}"/>   
+            </classpath>
+        </junit>
+        <mkdir dir="${dist}/junit"/>
+    	<echo>${junit.dir}</echo>
+        <copy todir="${dist}/junit">
+            <fileset dir="${junit.dir}" >
+                <include name="TEST-*.xml"/>
+            </fileset>
+        </copy>
+        <junitreport todir="${dist}/junit">
+            <fileset dir="${junit.dir}">
+                <include name="TEST-*.xml"/>
+            </fileset>
+            <report todir="${junit.dir}"/>   
+        	
+        </junitreport>   
+    	<copy todir="${dist}/junit">
+    		<fileset dir="${junit.dir}">
+            	<include name="**/*.html"/>
+            	<include name="**/*.css"/>
+    		</fileset>
+    	</copy>
+        <fail message="junit errors" if="junit.error"/>
+        <fail message="junit failures" if="junit.failure"/>
+    </target>
+
+
+	
+	
 	<!-- build jar -->
-	<target name="jar" >
+	<target name="jar" depends="compile">
 		
 		<loadproperties srcFile="build.number" />
 		<echo message="Building: jwbf-${build.number}.jar" />
-		<mkdir dir="${dist}"/>
+		<mkdir dir="${dist}" />
  		<jar destfile="${dist}/jwbf-${build.number}.jar">
-    		<fileset dir="bin"
+    		<fileset dir="${classes}"
     			excludes="**/Test.class, **/*.htm*" 
     		/>
 			<fileset dir="buildAdds"

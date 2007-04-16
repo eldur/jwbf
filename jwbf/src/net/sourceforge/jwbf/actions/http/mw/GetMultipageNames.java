@@ -29,6 +29,7 @@ import java.util.regex.Pattern;
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
 
+import net.sourceforge.jwbf.JWBF;
 import net.sourceforge.jwbf.actions.http.Action;
 /**
  * 
@@ -92,7 +93,7 @@ public abstract class GetMultipageNames extends Action implements NamingEnumerat
 	public final String processAllReturningText(final String s) {
 		String temp = "";
 			try {
-				temp = new String(s.getBytes(), "UTF-8");
+				temp = new String(s.getBytes(), JWBF.charset);
 			} catch (UnsupportedEncodingException e) {
 				temp = s;
 			}

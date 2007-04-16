@@ -22,6 +22,7 @@ package net.sourceforge.jwbf.actions.http.mw;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
+import net.sourceforge.jwbf.JWBF;
 import net.sourceforge.jwbf.actions.http.Action;
 
 import org.apache.commons.httpclient.methods.GetMethod;
@@ -41,7 +42,7 @@ public class GetHTML extends Action {
 		String uS = "";
 		try {
 			uS = "/index.php?title="
-			+ URLEncoder.encode(articlename, "UTF-8") + "&dontcountme=s";
+			+ URLEncoder.encode(articlename, JWBF.charset) + "&dontcountme=s";
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}

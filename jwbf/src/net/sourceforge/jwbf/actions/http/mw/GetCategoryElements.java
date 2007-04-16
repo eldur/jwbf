@@ -25,6 +25,12 @@ import java.util.Collection;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.naming.NamingEnumeration;
+import javax.naming.NamingException;
+
+import net.sourceforge.jwbf.JWBF;
+import net.sourceforge.jwbf.actions.http.Action;
+
 import org.apache.commons.httpclient.methods.GetMethod;
 
 /**
@@ -88,11 +94,11 @@ public class GetCategoryElements extends GetMultipageNames {
 		if (s.indexOf("<!-- start content -->") > 1) {
 			subContent = true;
 
-		} else if (s.indexOf("<!-- end content -->") > 1) {
+		} else if (s.indexOf("printfooter") > 1) {
 			isContent = false;
 		}
 		// no subcategories
-		if (s.indexOf("mw-pages") > 1 && subContent) {
+		if (s.indexOf("<!-- Saved in parser") >= 0 && subContent) {
 			isContent = true;
 		}
 
@@ -114,7 +120,7 @@ public class GetCategoryElements extends GetMultipageNames {
 			if (from.length() > 0) {
 				fromEl = "&from=" + from;
 			}
-			uS = "/index.php?title=" + URLEncoder.encode(pagename, "UTF-8")
+			uS = "/index.php?title=" + URLEncoder.encode(pagename, JWBF.charset)
 					+ fromEl + "&dontcountme=s";
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
@@ -166,8 +172,8 @@ public class GetCategoryElements extends GetMultipageNames {
 				// " + myMatcher.group(3);
 				if (temp.length() > 0) {
 					try {
-						String t = URLDecoder.decode(stripUrlElements(temp),
-								"UTF-8");
+						String t = URLDecoder
+								.decode(stripUrlElements(temp), JWBF.charset);
 						t = stripUrlElements(temp);
 						t = t.substring(0, t.length() - 1);
 						if (t.indexOf("from") > 1) {
@@ -186,4 +192,18 @@ public class GetCategoryElements extends GetMultipageNames {
 		}
 		return "";
 	}
+	 void parsePageLinks(final String line) {
+			String ms = "<li><a href=\"(.*)\">(.*)</a></li>";
+			StringBuffer myStringBuffer = new StringBuffer();
+			String tempLine = line.replace("</li><li>", "</li>\n<li>");
+			Matcher myMatcher = Pattern.compile(ms).matcher(tempLine);
+			while (myMatcher.find()) {
+				String temp = myMatcher.group(2);
+				if (temp.length() > 0) {
+						getContent().add(temp);
+						log.info("add: " + temp);
+				}
+			}
+			myMatcher.appendTail(myStringBuffer);
+		}
 }
