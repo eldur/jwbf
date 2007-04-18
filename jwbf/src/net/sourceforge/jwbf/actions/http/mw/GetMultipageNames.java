@@ -20,7 +20,6 @@
 package net.sourceforge.jwbf.actions.http.mw;
 
 import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.util.Collection;
 import java.util.Vector;
 import java.util.regex.Matcher;

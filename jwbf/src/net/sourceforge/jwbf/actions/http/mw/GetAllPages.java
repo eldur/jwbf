@@ -1,5 +1,5 @@
 /*
- * Copyright 2007 Thomas Stock.
+ * Copyright 2007 Philipp Kohl.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -22,31 +22,33 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.Collection;
-import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.naming.NamingEnumeration;
-import javax.naming.NamingException;
-
 import net.sourceforge.jwbf.JWBF;
-import net.sourceforge.jwbf.actions.http.Action;
 
 import org.apache.commons.httpclient.methods.GetMethod;
 
 /**
  * 
- * @author Thomas Stock
+ * @author Philipp Kohl
  * 
  */
 public class GetAllPages extends GetMultipageNames {
 
 	private boolean subContent = false;
-
+	/**
+	 * TODO.
+	 * @param c
+	 */
 	public GetAllPages(Collection<String> c) {
 		super("Special:Allpages", c);
 	}
-
+	/**
+	 * TODO.
+	 * @param from
+	 * @param c
+	 */
 	public GetAllPages(final String from, Collection<String> c) {
 
 		super("Special:Allpages", from, c);

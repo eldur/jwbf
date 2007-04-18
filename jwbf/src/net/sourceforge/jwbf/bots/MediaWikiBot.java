@@ -52,11 +52,14 @@ import net.sourceforge.jwbf.contentRep.mw.SimpleArticle;
  * </pre>
  * 
  * @author Thomas Stock
+ * @author Philipp Kohl 
  * 
  */
 public class MediaWikiBot extends HttpBot {
 
 	private boolean loggedIn = false;
+
+	
 
 	/**
 	 * @param u
@@ -113,11 +116,11 @@ public class MediaWikiBot extends HttpBot {
 	public final AbstractCollection<String> readCategory(final String title)
 			throws ActionException {
 
-		return readCategory(title, GetCategoryElements.ARTICLE);
+		return readCategory(title, true);
 	}
 
 	/**
-	 * TODO Feature not works realy.
+	 * TODO Feature not works realy. Boolean var is there only for function test
 	 * @param title
 	 *            of category in a mediawiki like "Category:Small Things"
 	 * 
@@ -129,15 +132,14 @@ public class MediaWikiBot extends HttpBot {
 	 *             on problems
 	 */
 	public final AbstractCollection<String> readCategory(final String title,
-			final byte type) throws ActionException {
+			final boolean type) throws ActionException {
 		Vector<String> av = new Vector<String>();
 
-		GetCategoryElements cel = new GetCategoryElements(title, av, type);
+		GetCategoryElements cel = new GetCategoryElements(title, av);
 		performAction(cel);
 		try {
 			while (cel.hasMore()) {
-				cel = new GetCategoryElements(title, cel.next().toString(), av,
-						type);
+				cel = new GetCategoryElements(title, cel.next().toString(), av);
 				performAction(cel);
 			}
 		} catch (NamingException e) {

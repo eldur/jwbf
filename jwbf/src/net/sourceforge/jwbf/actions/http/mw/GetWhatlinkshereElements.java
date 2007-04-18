@@ -25,10 +25,9 @@ import java.util.Collection;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.httpclient.methods.GetMethod;
-
 import net.sourceforge.jwbf.JWBF;
-import net.sourceforge.jwbf.actions.http.Action;
+
+import org.apache.commons.httpclient.methods.GetMethod;
 
 /**
  * @author Thomas Stock
@@ -106,8 +105,8 @@ public class GetWhatlinkshereElements extends GetMultipageNames {
 				hasNoChiled = false;
 				int fromStart = urlEl.indexOf("from");
 				nextPage = urlEl.substring(fromStart + 5);
-				log.debug("has more: " + nextPage + "\n" +
-						"on: " + line + "\n\n");
+				log.debug("has more: " + nextPage + "\n"
+						+ "on: " + line + "\n\n");
 			}
 			moreCount++;
 		}

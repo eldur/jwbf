@@ -25,11 +25,7 @@ import java.util.Collection;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.naming.NamingEnumeration;
-import javax.naming.NamingException;
-
 import net.sourceforge.jwbf.JWBF;
-import net.sourceforge.jwbf.actions.http.Action;
 
 import org.apache.commons.httpclient.methods.GetMethod;
 
@@ -43,11 +39,7 @@ public class GetCategoryElements extends GetMultipageNames {
 
 	private boolean subContent = false;
 
-	private byte type = 00;
 
-	public static final byte ARTICLE = 10;
-
-	public static final byte MEDIA = 01;
 
 	/**
 	 * 
@@ -55,13 +47,9 @@ public class GetCategoryElements extends GetMultipageNames {
 	 *            the
 	 * @param c
 	 *            a
-	 * @param type
-	 *            of category elements, MEDIA | ARTICLE
 	 */
-	public GetCategoryElements(final String categoryname, Collection<String> c,
-			final byte type) {
+	public GetCategoryElements(final String categoryname, Collection<String> c) {
 		super(categoryname, c);
-		this.type = type;
 	}
 
 	/**
@@ -72,14 +60,11 @@ public class GetCategoryElements extends GetMultipageNames {
 	 *            where category colection begins, like "from=D"
 	 * @param c
 	 *            a
-	 * @param type
-	 *            of category elements, MEDIA | ARTICLE
 	 */
 	public GetCategoryElements(final String categoryname, final String from,
-			Collection<String> c, final byte type) {
+			Collection<String> c) {
 
 		super(categoryname, from, c);
-		this.type = type;
 	}
 
 	/**
@@ -192,7 +177,10 @@ public class GetCategoryElements extends GetMultipageNames {
 		}
 		return "";
 	}
-	 void parsePageLinks(final String line) {
+	/**
+	 * @param line a
+	 */
+	void parsePageLinks(final String line) {
 			String ms = "<li><a href=\"(.*)\">(.*)</a></li>";
 			StringBuffer myStringBuffer = new StringBuffer();
 			String tempLine = line.replace("</li><li>", "</li>\n<li>");
