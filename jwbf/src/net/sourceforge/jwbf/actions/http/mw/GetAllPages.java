@@ -25,7 +25,7 @@ import java.util.Collection;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import net.sourceforge.jwbf.JWBF;
+import net.sourceforge.jwbf.bots.MediaWikiBot;
 
 import org.apache.commons.httpclient.methods.GetMethod;
 
@@ -92,7 +92,7 @@ public class GetAllPages extends GetMultipageNames {
 			if (from.length() > 0) {
 				fromEl = "&from=" + from;
 			}
-			uS = "/index.php?title=" + URLEncoder.encode(pagename, JWBF.charset)
+			uS = "/index.php?title=" + URLEncoder.encode(pagename, MediaWikiBot.CHARSET)
 					+ fromEl + "&dontcountme=s";
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
@@ -145,7 +145,7 @@ public class GetAllPages extends GetMultipageNames {
 				if (temp.length() > 0) {
 					try {
 						String t = URLDecoder.decode(stripUrlElements(temp),
-								JWBF.charset);
+								MediaWikiBot.CHARSET);
 						t = stripUrlElements(temp);
 						t = t.substring(0, t.length() - 1);
 						if (t.indexOf("from") > 1) {

@@ -19,9 +19,9 @@
 package net.sourceforge.jwbf.actions.http.mw;
 
 
-import net.sourceforge.jwbf.JWBF;
 import net.sourceforge.jwbf.actions.http.Action;
 import net.sourceforge.jwbf.actions.http.CookieException;
+import net.sourceforge.jwbf.bots.MediaWikiBot;
 
 import org.apache.commons.httpclient.Cookie;
 import org.apache.commons.httpclient.NameValuePair;
@@ -55,7 +55,7 @@ public class PostLogin extends Action {
 
 		pm.setRequestBody(new NameValuePair[] { action, url, userid,
 						password });
-		pm.getParams().setContentCharset(JWBF.charset);
+		pm.getParams().setContentCharset(MediaWikiBot.CHARSET);
 		msgs.add(pm);
 
 	}

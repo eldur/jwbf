@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <project default="test">
 	
-	<property name="temp" location="temp"></property>
+	<property name="temp" location="temp" />
 	<property name="classes" location="${temp}/classes"/>
 	<property name="classes_test" location="${temp}/classes_test"/>
 	<property name="junit.dir" location="${temp}/junit"/>

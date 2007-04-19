@@ -23,8 +23,8 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Hashtable;
 
-import net.sourceforge.jwbf.JWBF;
 import net.sourceforge.jwbf.actions.http.Action;
+import net.sourceforge.jwbf.bots.MediaWikiBot;
 
 import org.apache.commons.httpclient.methods.GetMethod;
 
@@ -48,7 +48,7 @@ public class GetEnvironmentVars extends Action {
 		this.tab = tab;
 		try {
 			uS = "/index.php?title="
-			+ URLEncoder.encode(name, JWBF.charset) + "&action=edit&dontcountme=s";
+			+ URLEncoder.encode(name, MediaWikiBot.CHARSET) + "&action=edit&dontcountme=s";
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}

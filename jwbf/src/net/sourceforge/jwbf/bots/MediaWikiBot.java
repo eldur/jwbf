@@ -58,7 +58,12 @@ import net.sourceforge.jwbf.contentRep.mw.SimpleArticle;
 public class MediaWikiBot extends HttpBot {
 
 	private boolean loggedIn = false;
-
+	
+	public static final int ARTICLE = 1 << 1;
+	public static final int MEDIA = 1 << 2;
+	public static final int SUBCATEGORY = 1 << 3;
+	
+	public static final String CHARSET = "utf-8";
 	
 
 	/**
@@ -116,7 +121,7 @@ public class MediaWikiBot extends HttpBot {
 	public final AbstractCollection<String> readCategory(final String title)
 			throws ActionException {
 
-		return readCategory(title, true);
+		return readCategory(title, ARTICLE);
 	}
 
 	/**
@@ -125,62 +130,67 @@ public class MediaWikiBot extends HttpBot {
 	 *            of category in a mediawiki like "Category:Small Things"
 	 * 
 	 * @param type
-	 *            of category elements, GetCategoryElements.MEDIA |
-	 *            GetCategoryElements.ARTICLE
+	 *            of category elements, MediaWikiBot.MEDIA |
+	 *            MediaWikiBot.ARTICLE | ediaWikiBot.SUBCATEGORY
 	 * @return with all article names in the requestet category
 	 * @throws ActionException
 	 *             on problems
 	 */
 	public final AbstractCollection<String> readCategory(final String title,
-			final boolean type) throws ActionException {
-		Vector<String> av = new Vector<String>();
-
-		GetCategoryElements cel = new GetCategoryElements(title, av);
-		performAction(cel);
-		try {
-			while (cel.hasMore()) {
-				cel = new GetCategoryElements(title, cel.next().toString(), av);
-				performAction(cel);
+			final int type) throws ActionException {
+		Vector<String> elementV = new Vector<String>();
+		
+		if ((type & ARTICLE) > 0) {
+			GetCategoryElements cel = new GetCategoryElements(title, elementV);
+			performAction(cel);
+			try {
+				while (cel.hasMore()) {
+					cel = new GetCategoryElements(title, cel.next().toString(), elementV);
+					performAction(cel);
+				}
+			} catch (NamingException e) {
+				e.printStackTrace();
 			}
-		} catch (NamingException e) {
-			e.printStackTrace();
+	
+			if (elementV.isEmpty()) {
+				throw new ActionException("Category: \"" + title + "\" contains no articles");
+			}
 		}
-
-		if (av.isEmpty()) {
-			throw new ActionException("Category: \"" + title + "\" is empty");
-		}
-
-		return av;
-	}
-//	/**
-//	 * 
-//	 * @param title
-//	 *            of category in a mediawiki like "Category:Small Things"
-//	 * @return with all article names in the requestet category
-//	 * @throws ActionException
-//	 *             on problems
-//	 */
-//	public final Iterator<String> readCategoryPics(final String title)
-//			throws ActionException {
-//		Vector<String> av = new Vector<String>();
-//
-//		GetCategoryPictures cel = new GetCategoryPictures(title, av);
-//		performAction(cel);
-//		try {
-//			while (cel.hasMore()) {
-//				cel = new GetCategoryPictures(title, cel.next().toString(), av);
-//				performAction(cel);
+//		if ((type & MEDIA) > 0 && false) {
+//			GetCategoryMedia cel = new GetCategoryMedia(title, elementV);
+//			performAction(cel);
+//			try {
+//				while (cel.hasMore()) {
+//					cel = new GetCategoryMedia(title, cel.next().toString(), elementV);
+//					performAction(cel);
+//				}
+//			} catch (NamingException e) {
+//				e.printStackTrace();
 //			}
-//		} catch (NamingException e) {
-//			e.printStackTrace();
+//	
+//			if (elementV.isEmpty()) {
+//				throw new ActionException("Category: \"" + title + "\" contains no media");
+//			}
 //		}
-//
-//		if (av.isEmpty()) {
-//			throw new ActionException("Category: \"" + title + "\" is empty");
+//		if ((type & SUBCATEGORY) > 0  && false) {
+//			GetCategorySub cel = new GetCategorySub(title, elementV);
+//			performAction(cel);
+//			try {
+//				while (cel.hasMore()) {
+//					cel = new GetCategorySub(title, cel.next().toString(), elementV);
+//					performAction(cel);
+//				}
+//			} catch (NamingException e) {
+//				e.printStackTrace();
+//			}
+//	
+//			if (elementV.isEmpty()) {
+//				throw new ActionException("Category: \"" + title + "\" contains no subcategories");
+//			}
 //		}
-//
-//		return av.iterator();
-//	}
+		return elementV;
+	}
+
 
 	/**
 	 * TODO infinite loop in GetWhatlinkshereElements.

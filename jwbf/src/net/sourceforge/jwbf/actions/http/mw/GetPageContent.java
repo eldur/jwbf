@@ -22,8 +22,8 @@ package net.sourceforge.jwbf.actions.http.mw;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
-import net.sourceforge.jwbf.JWBF;
 import net.sourceforge.jwbf.actions.http.Action;
+import net.sourceforge.jwbf.bots.MediaWikiBot;
 
 import org.apache.commons.httpclient.methods.GetMethod;
 
@@ -43,7 +43,7 @@ public class GetPageContent extends Action {
 		log.info("READ: " + articlename);
 		String uS = "";
 		try {
-			uS = "/index.php?title=" + URLEncoder.encode(articlename, JWBF.charset)
+			uS = "/index.php?title=" + URLEncoder.encode(articlename, MediaWikiBot.CHARSET)
 					+ "&action=raw&ctype=text/plain&dontcountme=s";
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
@@ -60,7 +60,7 @@ public class GetPageContent extends Action {
 	 */
 	public String processAllReturningText(final String s) {
 		try {
-			return new String(s.getBytes(), JWBF.charset);
+			return new String(s.getBytes(), MediaWikiBot.CHARSET);
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}

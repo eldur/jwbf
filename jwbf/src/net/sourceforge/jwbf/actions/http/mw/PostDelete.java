@@ -20,8 +20,8 @@ package net.sourceforge.jwbf.actions.http.mw;
 
 import java.util.Hashtable;
 
-import net.sourceforge.jwbf.JWBF;
 import net.sourceforge.jwbf.actions.http.Action;
+import net.sourceforge.jwbf.bots.MediaWikiBot;
 
 import org.apache.commons.httpclient.NameValuePair;
 import org.apache.commons.httpclient.methods.PostMethod;
@@ -52,7 +52,7 @@ public class PostDelete extends Action {
 				"/index.php?title=" + label + "&action=delete");
 
 		pm.setRequestBody(new NameValuePair[] { action, wpReason, wpEditToken });
-		pm.getParams().setContentCharset(JWBF.charset);
+		pm.getParams().setContentCharset(MediaWikiBot.CHARSET);
 		msgs.add(pm);
 		
 	}

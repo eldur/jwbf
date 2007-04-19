@@ -23,8 +23,8 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Hashtable;
 
-import net.sourceforge.jwbf.JWBF;
 import net.sourceforge.jwbf.actions.http.Action;
+import net.sourceforge.jwbf.bots.MediaWikiBot;
 import net.sourceforge.jwbf.contentRep.mw.EditContentAccessable;
 
 import org.apache.commons.httpclient.NameValuePair;
@@ -47,7 +47,7 @@ public class PostModifyContent extends Action {
 
 		String uS = "";
 		try {
-			uS = "/index.php?title=" + URLEncoder.encode(a.getLabel(), JWBF.charset)
+			uS = "/index.php?title=" + URLEncoder.encode(a.getLabel(), MediaWikiBot.CHARSET)
 					+ "&action=submit";
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
@@ -83,7 +83,7 @@ public class PostModifyContent extends Action {
 		
 		log.info("WRITE: " + a.getLabel());
 		PostMethod pm = new PostMethod(uS);
-		pm.getParams().setContentCharset(JWBF.charset);
+		pm.getParams().setContentCharset(MediaWikiBot.CHARSET);
 
 		pm.setRequestBody(new NameValuePair[] { action, wpStarttime,
 				wpEditToken, wpEdittime, wpTextbox, wpSummary, wpMinoredit });

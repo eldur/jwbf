@@ -28,8 +28,8 @@ import java.util.regex.Pattern;
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
 
-import net.sourceforge.jwbf.JWBF;
 import net.sourceforge.jwbf.actions.http.Action;
+import net.sourceforge.jwbf.bots.MediaWikiBot;
 /**
  * 
  * @author Thomas Stock
@@ -92,7 +92,7 @@ public abstract class GetMultipageNames extends Action implements NamingEnumerat
 	public final String processAllReturningText(final String s) {
 		String temp = "";
 			try {
-				temp = new String(s.getBytes(), JWBF.charset);
+				temp = new String(s.getBytes(), MediaWikiBot.CHARSET);
 			} catch (UnsupportedEncodingException e) {
 				temp = s;
 			}
