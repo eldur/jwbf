@@ -19,33 +19,25 @@
 
 package net.sourceforge.jwbf.actions.http.mw;
 
-import java.io.UnsupportedEncodingException;
 import java.util.Collection;
 import java.util.Vector;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
 
-import net.sourceforge.jwbf.actions.http.Action;
-import net.sourceforge.jwbf.bots.MediaWikiBot;
+import org.htmlparser.Node;
+
 /**
  * 
  * @author Thomas Stock
  * 
  */
-public abstract class GetMultipageNames extends Action implements NamingEnumeration {
+public abstract class GetMultipageNames extends GetHTML implements NamingEnumeration {
 
-	private Collection<String> content = new Vector<String>();
+	protected Collection<String> content = new Vector<String>();
 
-	protected int moreCount;
 
-	protected boolean isContent = false;
-
-	protected boolean hasNoChiled = true;
-
-	protected String nextPage = "";
+	private String nextPage = "";
 
 	/**
 	 * 
@@ -55,7 +47,7 @@ public abstract class GetMultipageNames extends Action implements NamingEnumerat
 	public GetMultipageNames(final String categoryname, Collection<String> c) {
 
 		this.content = c;
-		addCatPage(categoryname);
+		addNextPage(categoryname);
 	}
 	/**
 	 * 
@@ -71,10 +63,10 @@ public abstract class GetMultipageNames extends Action implements NamingEnumerat
 	}
 	/**
 	 * creates the GET request for the action.
-	 * @param catname name of the category 
+	 * @param pagename name of the category 
 	 */
-	private void addCatPage(final String catname) { 
-		addNextPage(catname, "");
+	private void addNextPage(final String pagename) { 
+		addNextPage(pagename, "");
 	}
 	/**
 	 * creates the GET request for the action.
@@ -90,13 +82,7 @@ public abstract class GetMultipageNames extends Action implements NamingEnumerat
 	 * @see Action#processAllReturningText(String)
 	 */
 	public final String processAllReturningText(final String s) {
-		String temp = "";
-			try {
-				temp = new String(s.getBytes(), MediaWikiBot.CHARSET);
-			} catch (UnsupportedEncodingException e) {
-				temp = s;
-			}
-		return read(temp);
+		return processHtml(encode(s));
 	}
 	/**
 	 * 
@@ -104,105 +90,30 @@ public abstract class GetMultipageNames extends Action implements NamingEnumerat
 	 * @return an empty string, because it reads only the category elements not
 	 * the content.
 	 */
-	private String read(final String s) {
-
-		moreCount = 0;
-		String[] lines = s.split("\n");
-
-		for (int i = 0; i < lines.length; i++) {
-			checkIsContent(lines[i]);
-			if (isContent) {
-				parsePageLinks(lines[i]);
-	
-				parseHasMore(lines[i]);
-			}
-
-		}
-
-		log.debug("Pagecount: " + content.size());
-
-		return "";
-	}
+	protected abstract String processHtml(final String s);
 
 	
-	/**
-	 * if line is betwene lines <!-- start content --> and <!-- end
-	 * content --> returns, set inner variable on true.
-	 * 
-	 * @param s line of html file
-	 */
-	protected void checkIsContent(final String s) {
-
-		if (s.indexOf("<!-- start content -->") > 1) {
-			isContent = true;
-		} else if (s.indexOf("<!-- end content -->") > 1) {
-			isContent = false;
-		}
-
+	protected void setNextPage(final String s) {
+		nextPage = s;
 	}
 	/**
 	 * 
 	 * @param line of html text
 	 */
-	protected abstract void parseHasMore(final String line);
-	/**
-	 * 
-	 * @param line of html
-	 */
-	 void parsePageLinks(final String line) {
-		String ms = "<li><a href=\"(.*)\" title=\"(.*)\">(.*)</a></li>";
-		StringBuffer myStringBuffer = new StringBuffer();
-		String tempLine = line.replace("</li><li>", "</li>\n<li>");
-		Matcher myMatcher = Pattern.compile(ms).matcher(tempLine);
-		while (myMatcher.find()) {
-			String temp = myMatcher.group(2);
-			if (temp.length() > 0) {
-					content.add(temp);
-					log.debug("add: " + temp);
-			}
-		}
-		myMatcher.appendTail(myStringBuffer);
-	}
-	/**
-	 * 
-	 * @param s with url elements
-	 * @return without url elements
-	 */
-	final String stripUrlElements(final String s) {
+	public abstract void parseHasMore(final Node node);
 
-		String temp = s;
-		int phpSlashPos = temp.indexOf(".php/") + 5;
-
-		if (phpSlashPos > 5) {
-			temp = temp.substring(phpSlashPos, temp.length());
-		}
-		int equalPos = temp.indexOf("=") + 1;
-		if (equalPos > 1) {
-			temp = temp.substring(equalPos, temp.length());
-		}
-		int slashPos = temp.indexOf("/") + 1;
-		if (slashPos >= 1) {
-			temp = temp.substring(slashPos, temp.length());
-		}
-
-		return temp;
-	}
-
-	/**
-	 * 
-	 * @param s
-	 *            a
-	 * @return a url with includes a "from" variable or an empty string
-	 */
-	protected abstract String getNextPageId(final String s);
-	/**
-	 * 
-	 * @return all article names
-	 */
 	
-	final Collection<String> getContent() {
-		return content;
-	}
+
+//	/**
+//	 * 
+//	 * @param s
+//	 *            a
+//	 * @return a url with includes a "from" variable or an empty string
+//	 */
+//	public abstract String getNextPageId(final Node node);
+
+	
+	
 	/**
 	 * is unused.
 	 * @see NamingEnumeration#close()
@@ -211,14 +122,7 @@ public abstract class GetMultipageNames extends Action implements NamingEnumerat
 	public void close() throws NamingException {
 		// do notihng
 	}
-	/**
-	 * @see NamingEnumeration#hasMore()
-	 * @throws NamingException on problems
-	 * @return true, if has more
-	 */
-	public final boolean hasMore() throws NamingException {
-		return !hasNoChiled;
-	}
+	
 	/**
 	 * @see NamingEnumeration#next()
 	 * @throws NamingException on problems
@@ -227,13 +131,7 @@ public abstract class GetMultipageNames extends Action implements NamingEnumerat
 	public final Object next() throws NamingException {
 		return nextPage;
 	}
-	/**
-	 * @see NamingEnumeration#hasMore()
-	 * @return true if has more
-	 */
-	public final boolean hasMoreElements() {
-		return !hasNoChiled;
-	}
+	
 	/**
 	 * @return a
 	 */

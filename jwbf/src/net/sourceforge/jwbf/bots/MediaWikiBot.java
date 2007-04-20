@@ -27,11 +27,9 @@ import java.util.Vector;
 import javax.naming.NamingException;
 
 import net.sourceforge.jwbf.actions.http.ActionException;
-import net.sourceforge.jwbf.actions.http.mw.GetAllPages;
-import net.sourceforge.jwbf.actions.http.mw.GetCategoryElements;
+import net.sourceforge.jwbf.actions.http.mw.GetCategoryArticles;
 import net.sourceforge.jwbf.actions.http.mw.GetEnvironmentVars;
 import net.sourceforge.jwbf.actions.http.mw.GetPageContent;
-import net.sourceforge.jwbf.actions.http.mw.GetWhatlinkshereElements;
 import net.sourceforge.jwbf.actions.http.mw.PostDelete;
 import net.sourceforge.jwbf.actions.http.mw.PostLogin;
 import net.sourceforge.jwbf.actions.http.mw.PostModifyContent;
@@ -141,11 +139,11 @@ public class MediaWikiBot extends HttpBot {
 		Vector<String> elementV = new Vector<String>();
 		
 		if ((type & ARTICLE) > 0) {
-			GetCategoryElements cel = new GetCategoryElements(title, elementV);
+			GetCategoryArticles cel = new GetCategoryArticles(title, elementV);
 			performAction(cel);
 			try {
 				while (cel.hasMore()) {
-					cel = new GetCategoryElements(title, cel.next().toString(), elementV);
+					cel = new GetCategoryArticles(title, cel.next().toString(), elementV);
 					performAction(cel);
 				}
 			} catch (NamingException e) {
@@ -274,30 +272,30 @@ public class MediaWikiBot extends HttpBot {
 		performAction(new PostDelete(label, tab));
 
 	}
-	/**
-	 * Use ONLY in wikis with less articles.
-	 * @return Articles from the Specialpage: AllPages
-	 * @throws ActionException on problems
-	 */
-	public AbstractCollection<String> readAllPages() throws ActionException {
-		Vector<String> av = new Vector<String>();
-
-		GetAllPages cel = new GetAllPages(av);
-		performAction(cel);
-		try {
-			while (cel.hasMore()) {
-				cel = new GetAllPages(cel.next().toString(), av);
-				performAction(cel);
-			}
-		} catch (NamingException e) {
-			e.printStackTrace();
-		}
-
-		if (av.isEmpty()) {
-			throw new ActionException("Allpages is empty");
-		}
-
-		return av;
-	}
+//	/**
+//	 * Use ONLY in wikis with less articles.
+//	 * @return Articles from the Specialpage: AllPages
+//	 * @throws ActionException on problems
+//	 */
+//	public AbstractCollection<String> readAllPages() throws ActionException {
+//		Vector<String> av = new Vector<String>();
+//
+//		GetAllPages cel = new GetAllPages(av);
+//		performAction(cel);
+//		try {
+//			while (cel.hasMore()) {
+//				cel = new GetAllPages(cel.next().toString(), av);
+//				performAction(cel);
+//			}
+//		} catch (NamingException e) {
+//			e.printStackTrace();
+//		}
+//
+//		if (av.isEmpty()) {
+//			throw new ActionException("Allpages is empty");
+//		}
+//
+//		return av;
+//	}
 
 }

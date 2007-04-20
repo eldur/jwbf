@@ -23,6 +23,8 @@ import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.naming.NamingException;
+
 import org.htmlparser.Node;
 import org.htmlparser.NodeFilter;
 import org.htmlparser.filters.AndFilter;
@@ -35,7 +37,7 @@ import org.htmlparser.util.NodeList;
  * @author Thomas Stock
  * 
  */
-public class GetWhatlinkshereElements extends GetHTML {
+public class GetWhatlinkshereElements extends GetMultipageNames {
 
 	public static final int LIMIT = 2;
 
@@ -48,7 +50,7 @@ public class GetWhatlinkshereElements extends GetHTML {
 	 */
 	public GetWhatlinkshereElements(final String categoryname,
 			Collection<String> c) {
-		// super(categoryname, c);
+		 super(categoryname, c);
 
 	}
 
@@ -63,7 +65,7 @@ public class GetWhatlinkshereElements extends GetHTML {
 	 */
 	public GetWhatlinkshereElements(final String categoryname,
 			final String from, Collection<String> c) {
-		// super(categoryname, from, c);
+		 super(categoryname, from, c);
 	}
 
 	/**
@@ -99,7 +101,7 @@ public class GetWhatlinkshereElements extends GetHTML {
 	 *            of html text
 	 * @return true if has more pages
 	 */
-	public boolean parseHasMore(final Node node) {
+	public void parseHasMore(final Node node) {
 
 		String text = node.toHtml();
 		// from-value of the current page
@@ -149,7 +151,7 @@ public class GetWhatlinkshereElements extends GetHTML {
 
 		}
 
-		return hasNextPage;
+//		return hasNextPage;
 	}
 	/**
 	 * 
@@ -186,45 +188,64 @@ public class GetWhatlinkshereElements extends GetHTML {
 		return col;
 	}
 
-	/**
-	 * 
-	 * @param node
-	 *            a
-	 * @return a url with includes a "from" variable or an empty string
-	 */
-	public int getNextPageId(final Node node) {
-		// String ms = "<a href=\"(.*)\" title(.*)</a>";
-		// ms = "<a[^>]*href=\"([^(>| )]*\")?[^>]*>[^<]*</a>";
-		// String tempLine = s.replace("&amp;", "&");
-		//
-		// String[] xLine = tempLine.split("\\(");
-		// for (int j = 0; j < xLine.length; j++) {
-		//
-		// Matcher myMatcher = Pattern.compile(ms).matcher(tempLine);
-		// while (myMatcher.find()) {
-		// String temp = myMatcher.group(1);
-		// if (temp.length() > 0) {
-		// try {
-		// String t = URLDecoder
-		// .decode(stripUrlElements(temp), MediaWikiBot.CHARSET);
-		// t = stripUrlElements(temp);
-		// t = t.substring(0, t.length() - 1);
-		//
-		// if (t.indexOf("prev") > 1) {
-		// continue;
-		// } else if (t.indexOf("from") > 1) {
-		// t = t.replace(" ", "_");
-		// return t;
-		// } else {
-		// continue;
-		// }
-		//
-		// } catch (UnsupportedEncodingException e) {
-		// e.printStackTrace();
-		// }
-		// }
-		// }
-		// }
-		return 1;
+//	/**
+//	 * 
+//	 * @param node
+//	 *            a
+//	 * @return a url with includes a "from" variable or an empty string
+//	 */
+//	public String getNextPageId(final Node node) {
+//		// String ms = "<a href=\"(.*)\" title(.*)</a>";
+//		// ms = "<a[^>]*href=\"([^(>| )]*\")?[^>]*>[^<]*</a>";
+//		// String tempLine = s.replace("&amp;", "&");
+//		//
+//		// String[] xLine = tempLine.split("\\(");
+//		// for (int j = 0; j < xLine.length; j++) {
+//		//
+//		// Matcher myMatcher = Pattern.compile(ms).matcher(tempLine);
+//		// while (myMatcher.find()) {
+//		// String temp = myMatcher.group(1);
+//		// if (temp.length() > 0) {
+//		// try {
+//		// String t = URLDecoder
+//		// .decode(stripUrlElements(temp), MediaWikiBot.CHARSET);
+//		// t = stripUrlElements(temp);
+//		// t = t.substring(0, t.length() - 1);
+//		//
+//		// if (t.indexOf("prev") > 1) {
+//		// continue;
+//		// } else if (t.indexOf("from") > 1) {
+//		// t = t.replace(" ", "_");
+//		// return t;
+//		// } else {
+//		// continue;
+//		// }
+//		//
+//		// } catch (UnsupportedEncodingException e) {
+//		// e.printStackTrace();
+//		// }
+//		// }
+//		// }
+//		// }
+//		return 1 +
+//		 "";
+//	}
+
+
+	@Override
+	protected String processHtml(String s) {
+		// TODO Auto-generated method stub
+		return null;
 	}
+
+	public boolean hasMore() throws NamingException {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	public boolean hasMoreElements() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 }

@@ -25,14 +25,16 @@ public class GetWhatLinksHereTest {
 	public final void testParseHasMoreTrue1() {
 		Node text1 = getText(gl, TestFileLoader.MW110
 				+ "whatLinks2Test_wp1_10_de.htm");
-		boolean hasMore = gl.parseHasMore(text1);
+		gl.parseHasMore(text1);
+		boolean hasMore = gl.hasMoreElements();
 		assertEquals(true, hasMore);
 	}
 	@Test
 	public final void testGetNextPageId1() {
 		Node text1 = getText(gl, TestFileLoader.MW110
 				+ "whatLinks2Test_wp1_10_de.htm");
-		int hasMore = gl.getNextPageId(text1);
+		gl.parseHasMore(text1);
+		String hasMore = gl.nextElement() + "";
 		assertEquals(864323, hasMore);
 	}
 
@@ -40,7 +42,8 @@ public class GetWhatLinksHereTest {
 	public final void testParseHasMoreTrue2() {
 		Node text1 = getText(gl, TestFileLoader.MW110
 				+ "whatLinks2IngenieriaDeSoftware_wp1_10_es.htm");
-		boolean hasMore = gl.parseHasMore(text1);
+		gl.parseHasMore(text1);
+		boolean hasMore = gl.hasMoreElements();
 		assertEquals(true, hasMore);
 	}
 	
@@ -48,7 +51,8 @@ public class GetWhatLinksHereTest {
 	public final void testGetNextPageId2() {
 		Node text1 = getText(gl, TestFileLoader.MW110
 				+ "whatLinks2IngenieriaDeSoftware_wp1_10_es.htm");
-		int hasMore = gl.getNextPageId(text1);
+		
+		String hasMore = gl.nextElement() + "";
 		assertEquals(350470, hasMore);
 	}
 
@@ -56,7 +60,8 @@ public class GetWhatLinksHereTest {
 	public final void testParseHasMoreFalse1() {
 		Node text1 = getText(gl, TestFileLoader.MW110
 				+ "whatLinks2Test_wp1_10_fr.htm");
-		boolean hasMore = gl.parseHasMore(text1);
+		gl.parseHasMore(text1);
+		boolean hasMore = gl.hasMoreElements();
 		assertEquals(false, hasMore);
 	}
 
@@ -64,7 +69,8 @@ public class GetWhatLinksHereTest {
 	public final void testParseHasMoreFalse2() {
 		Node text1 = getText(gl, TestFileLoader.MW110
 				+ "whatLinks2Ohjelmistotuottanto_wp1_10_fi.htm");
-		boolean hasMore = gl.parseHasMore(text1);
+		gl.parseHasMore(text1);
+		boolean hasMore = gl.hasMoreElements();
 		assertEquals(false, hasMore);
 	}
 	
