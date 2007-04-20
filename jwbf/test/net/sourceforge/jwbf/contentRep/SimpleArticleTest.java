@@ -1,27 +1,29 @@
 package net.sourceforge.jwbf.contentRep;
 
 import net.sourceforge.jwbf.contentRep.mw.SimpleArticle;
-import junit.framework.TestCase;
+
+import org.junit.Before;
+import org.junit.Test;
+import static org.junit.Assert.*;
 
 /**
  * @author Phil
  *
  * Simple Test-Case to get Unit-Testing started
  */
-public class TestSimpleArticle extends TestCase {
+public class SimpleArticleTest {
 
 	
 	private SimpleArticle article;
 
-	@Override
+	@Before
 	protected void setUp() throws Exception {
-		// TODO Auto-generated method stub
-		super.setUp();
-		article=new SimpleArticle();
+
+		article = new SimpleArticle();
 	}
-	
-	public void testEditSummary(){
+	@Test
+	public void testEditSummary() {
 		article.setEditSummary("test");
-		assertEquals("test",article.getEditSummary());
+		assertEquals("test", article.getEditSummary());
 	}
 }

@@ -192,37 +192,37 @@ public class MediaWikiBot extends HttpBot {
 	}
 
 
-	/**
-	 * TODO infinite loop in GetWhatlinkshereElements.
-	 * 
-	 * @param title
-	 *            of page in a mediawiki like "Main Page"
-	 * @return with all article names what links to the page
-	 * @throws ActionException
-	 *             on problems
-	 */
-	public final AbstractCollection<String> readWhatLinksHere(final String title)
-			throws ActionException {
-		Vector<String> av = new Vector<String>();
-
-		GetWhatlinkshereElements cel = new GetWhatlinkshereElements(title, av);
-		performAction(cel);
-		try {
-			while (cel.hasMore()) {
-				cel = new GetWhatlinkshereElements(title,
-						cel.next().toString(), av);
-				performAction(cel);
-			}
-		} catch (NamingException e) {
-			e.printStackTrace();
-		}
-
-		if (av.isEmpty()) {
-			throw new ActionException("\"" + title + "\" is empty");
-		}
-
-		return av;
-	}
+//	/**
+//	 * TODO infinite loop in GetWhatlinkshereElements.
+//	 * 
+//	 * @param title
+//	 *            of page in a mediawiki like "Main Page"
+//	 * @return with all article names what links to the page
+//	 * @throws ActionException
+//	 *             on problems
+//	 */
+//	public final AbstractCollection<String> readWhatLinksHere(final String title)
+//			throws ActionException {
+//		Vector<String> av = new Vector<String>();
+//
+//		GetWhatlinkshereElements cel = new GetWhatlinkshereElements(title, av);
+//		performAction(cel);
+//		try {
+//			while (cel.hasMore()) {
+//				cel = new GetWhatlinkshereElements(title,
+//						cel.next().toString(), av);
+//				performAction(cel);
+//			}
+//		} catch (NamingException e) {
+//			e.printStackTrace();
+//		}
+//
+//		if (av.isEmpty()) {
+//			throw new ActionException("\"" + title + "\" is empty");
+//		}
+//
+//		return av;
+//	}
 
 	/**
 	 * 

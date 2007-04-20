@@ -18,25 +18,27 @@
  */
 package net.sourceforge.jwbf.actions.http.mw;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
 import java.util.Collection;
+import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import net.sourceforge.jwbf.bots.MediaWikiBot;
-
-import org.apache.commons.httpclient.methods.GetMethod;
+import org.htmlparser.Node;
+import org.htmlparser.NodeFilter;
+import org.htmlparser.filters.AndFilter;
+import org.htmlparser.filters.HasChildFilter;
+import org.htmlparser.filters.TagNameFilter;
+import org.htmlparser.util.NodeIterator;
+import org.htmlparser.util.NodeList;
 
 /**
  * @author Thomas Stock
  * 
  */
-public class GetWhatlinkshereElements extends GetMultipageNames {
+public class GetWhatlinkshereElements extends GetHTML {
 
 	public static final int LIMIT = 2;
-	
+
 	/**
 	 * 
 	 * @param categoryname
@@ -46,7 +48,8 @@ public class GetWhatlinkshereElements extends GetMultipageNames {
 	 */
 	public GetWhatlinkshereElements(final String categoryname,
 			Collection<String> c) {
-		super(categoryname, c);
+		// super(categoryname, c);
+
 	}
 
 	/**
@@ -60,7 +63,7 @@ public class GetWhatlinkshereElements extends GetMultipageNames {
 	 */
 	public GetWhatlinkshereElements(final String categoryname,
 			final String from, Collection<String> c) {
-		super(categoryname, from, c);
+		// super(categoryname, from, c);
 	}
 
 	/**
@@ -72,92 +75,156 @@ public class GetWhatlinkshereElements extends GetMultipageNames {
 	 *            start bye article
 	 */
 	protected void addNextPage(final String pagename, final String from) {
-		String uS = "";
-		String fromEl = "";
+		// String uS = "";
+		// String fromEl = "";
+		//
+		// try {
+		// if (from.length() > 0) {
+		// fromEl = "&from=" + from;
+		// }
+		// uS = "/index.php?title=Special:WhatLinksHere/" +
+		// URLEncoder.encode(pagename, MediaWikiBot.CHARSET)
+		// + fromEl + "&dontcountme=s"
+		// + "&limit=" + LIMIT;
+		// } catch (UnsupportedEncodingException e) {
+		// e.printStackTrace();
+		// }
+		// msgs.add(new GetMethod(uS));
+	}
+
+	/**
+	 * TODO prepared for test; test fails.
+	 * 
+	 * @param node
+	 *            of html text
+	 * @return true if has more pages
+	 */
+	public boolean parseHasMore(final Node node) {
+
+		String text = node.toHtml();
+		// from-value of the current page
+		int from = 1539253;
+		// limit-value of the current page
+		int limit = 50;
+		// the content of the current page
+
+		boolean hasNextPage = false;
+
+		// check wheter the page contains a link to another whatlinkshere with
+		// different from-value
+		Pattern p = Pattern.compile("^.*?<a.*?limit=" + limit
+				+ "&amp;from=([0-9]+).*?>.*$", Pattern.DOTALL
+				| Pattern.MULTILINE);
+		Matcher m = p.matcher(text);
+
+		if (m.find()) {
+
+			// isolate the from-value
+			String newFromAsString = m.replaceAll("$1");
+
+			// check whether the new from-value is greater than the current one
+			if (Integer.parseInt(newFromAsString) > from) {
+				hasNextPage = true;
+			}
+
+			// if not, this was the link to the previous page.
+			// do (nearly) the same again, but make sure to get the _second_
+			// link of that type.
+
+			p = Pattern.compile("^.*?<a.*?limit=" + limit + "&amp;from="
+					+ newFromAsString + ".*?>.*?<a.*?limit=" + limit
+					+ "&amp;from=([0-9]+).*?>.*$", Pattern.DOTALL
+					| Pattern.MULTILINE);
+			m = p.matcher(text);
+
+			if (m.find()) {
+
+				newFromAsString = m.replaceAll("$1");
+
+				if (Integer.parseInt(newFromAsString) > from) {
+					hasNextPage = true;
+				}
+
+			}
+
+		}
+
+		return hasNextPage;
+	}
+	/**
+	 * 
+	 * @param node with content of bodyContent div
+	 * @return a of articlenames
+	 */
+	public Collection<String> getArticles(final Node node) {
+
+		Collection<String> col = new Vector<String>();
 
 		try {
-			if (from.length() > 0) {
-				fromEl = "&from=" + from;
+			NodeList linkList = new NodeList();
+
+			NodeFilter linkFilter = new AndFilter(new TagNameFilter("LI"),
+					new HasChildFilter(new TagNameFilter("A")));
+
+			for (NodeIterator e = node.getChildren().elements();
+					e.hasMoreNodes();) {
+				e.nextNode().collectInto(linkList, linkFilter);
 			}
-			uS = "/index.php?title=Special:WhatLinksHere/" + URLEncoder.encode(pagename, MediaWikiBot.CHARSET)
-					+ fromEl + "&dontcountme=s"
-					+ "&limit=" + LIMIT;
-		} catch (UnsupportedEncodingException e) {
+
+			NodeIterator bodyEl = linkList.elements();
+			while (bodyEl.hasMoreNodes()) {
+				String toAdd = bodyEl.nextNode().getChildren().elements().nextNode()
+				.toPlainTextString();
+				col.add(encode(toAdd));
+
+			}
+
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		msgs.add(new GetMethod(uS));
+
+		return col;
 	}
 
 	/**
 	 * 
-	 * @param line
-	 *            of html text
-	 */
-	protected void parseHasMore(final String line) {
-		String xLine = line.replace("\n", "");
-		checkIsContent(xLine);
-		if (xLine.contains("from") && xLine.contains("(")) {
-
-			String urlEl = getNextPageId(xLine);
-
-			if (urlEl.indexOf("from") > 1 && hasNoChiled) {
-				
-				hasNoChiled = false;
-				int fromStart = urlEl.indexOf("from");
-				nextPage = urlEl.substring(fromStart + 5);
-				log.debug("has more: " + nextPage + "\n"
-						+ "on: " + line + "\n\n");
-			}
-			moreCount++;
-		}
-	}
-
-//	/**
-//	 * TODO dont works.
-//	 */
-//	 void parsePageLinks(final String line) {
-//		 System.err.println(line);
-//		}
-	
-	/**
-	 * 
-	 * @param s
+	 * @param node
 	 *            a
 	 * @return a url with includes a "from" variable or an empty string
 	 */
-	protected String getNextPageId(final String s) {
-		String ms = "<a href=\"(.*)\" title(.*)</a>";
-		ms = "<a[^>]*href=\"([^(>| )]*\")?[^>]*>[^<]*</a>";
-		String tempLine = s.replace("&amp;", "&");
-
-		String[] xLine = tempLine.split("\\(");
-		for (int j = 0; j < xLine.length; j++) {
-
-			Matcher myMatcher = Pattern.compile(ms).matcher(tempLine);
-			while (myMatcher.find()) {
-				String temp = myMatcher.group(1);
-				if (temp.length() > 0) {
-					try {
-						String t = URLDecoder
-								.decode(stripUrlElements(temp), MediaWikiBot.CHARSET);
-						t = stripUrlElements(temp);
-						t = t.substring(0, t.length() - 1);
-
-						if (t.indexOf("prev") > 1) {
-							continue;
-						} else if (t.indexOf("from") > 1) {
-							t = t.replace(" ", "_");
-							return t;
-						} else {
-							continue;
-						}
-
-					} catch (UnsupportedEncodingException e) {
-						e.printStackTrace();
-					}
-				}
-			}
-		}
-		return "";
+	public int getNextPageId(final Node node) {
+		// String ms = "<a href=\"(.*)\" title(.*)</a>";
+		// ms = "<a[^>]*href=\"([^(>| )]*\")?[^>]*>[^<]*</a>";
+		// String tempLine = s.replace("&amp;", "&");
+		//
+		// String[] xLine = tempLine.split("\\(");
+		// for (int j = 0; j < xLine.length; j++) {
+		//
+		// Matcher myMatcher = Pattern.compile(ms).matcher(tempLine);
+		// while (myMatcher.find()) {
+		// String temp = myMatcher.group(1);
+		// if (temp.length() > 0) {
+		// try {
+		// String t = URLDecoder
+		// .decode(stripUrlElements(temp), MediaWikiBot.CHARSET);
+		// t = stripUrlElements(temp);
+		// t = t.substring(0, t.length() - 1);
+		//
+		// if (t.indexOf("prev") > 1) {
+		// continue;
+		// } else if (t.indexOf("from") > 1) {
+		// t = t.replace(" ", "_");
+		// return t;
+		// } else {
+		// continue;
+		// }
+		//
+		// } catch (UnsupportedEncodingException e) {
+		// e.printStackTrace();
+		// }
+		// }
+		// }
+		// }
+		return 1;
 	}
 }

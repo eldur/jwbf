@@ -19,47 +19,32 @@
 package net.sourceforge.jwbf.actions.http.mw;
 
 import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 
+import net.sourceforge.jwbf.actions.http.Action;
 import net.sourceforge.jwbf.bots.MediaWikiBot;
 
-import org.apache.commons.httpclient.methods.GetMethod;
-
 /**
- * 
  * @author Thomas Stock
- * 
+ *
  */
-public class GetPageContent extends MWAction {
+public abstract class MWAction extends Action {
 
 	/**
-	 * 
-	 * @param articlename
-	 *            the
+	 * changes to mediawiki default encoding.
+	 * @param s a
+	 * @return encoded s
 	 */
-	public GetPageContent(final String articlename) {
-		log.info("READ: " + articlename);
-		String uS = "";
+	protected String encode(final String s) {
+		
 		try {
-			uS = "/index.php?title="
-					+ URLEncoder.encode(articlename, MediaWikiBot.CHARSET)
-					+ "&action=raw&ctype=text/plain&dontcountme=s";
+			return new String(s.getBytes(), MediaWikiBot.CHARSET);
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
-		msgs.add(new GetMethod(uS));
+		return s;
+		
+//		java 1.6 version
+//		return new String(s.getBytes(), Charset.forName("UTF-8"));
 	}
-
-	/**
-	 * @see Action#processAllReturningText(String)
-	 * @param s
-	 *            returning text
-	 * @return text
-	 */
-	public String processAllReturningText(final String s) {
-
-		return encode(s);
-
-	}
-
+	
 }
