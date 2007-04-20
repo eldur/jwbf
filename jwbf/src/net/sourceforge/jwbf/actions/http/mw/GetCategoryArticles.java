@@ -51,6 +51,7 @@ public class GetCategoryArticles extends GetMultipageNames {
 
 	private String prevFrom = "";
 	private boolean more = false;
+	private final boolean first;
 
 
 
@@ -63,6 +64,7 @@ public class GetCategoryArticles extends GetMultipageNames {
 	 */
 	public GetCategoryArticles(final String categoryname, Collection<String> c) {
 		super(categoryname, c);
+		first = true;
 	}
 
 	/**
@@ -78,6 +80,7 @@ public class GetCategoryArticles extends GetMultipageNames {
 			Collection<String> c) {
 
 		super(categoryname, from, c);
+		first = false;
 		this.prevFrom = from;
 	}
 
@@ -297,7 +300,7 @@ public class GetCategoryArticles extends GetMultipageNames {
 		parseHasMore(mYcontent);
 		
 		
-		if (hasMoreElements()) {
+		if (hasMoreElements() || first) {
 			String[] lines = mYcontent.toHtml().split("\n");
 			
 			
