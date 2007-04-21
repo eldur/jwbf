@@ -51,7 +51,7 @@ public class GetWhatLinksHereTest {
 	public final void testGetNextPageId2() {
 		Node text1 = getText(gl, FileLoader.MW110
 				+ "whatLinks2IngenieriaDeSoftware_wp1_10_es.htm");
-		
+		gl.parseHasMore(text1);
 		String hasMore = gl.nextElement() + "";
 		assertEquals("350470", hasMore);
 	}

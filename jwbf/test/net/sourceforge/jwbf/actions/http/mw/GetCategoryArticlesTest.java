@@ -27,7 +27,10 @@ public class GetCategoryArticlesTest {
 		assertEquals(true, ga.hasMoreElements());
 		
 	}
-
+	/**
+	 * Test if next category is .
+	 *
+	 */
 	@Test
 	public final void testGetNextPageId() {
 		Node text1 = getText(ga, FileLoader.MW110
@@ -35,7 +38,10 @@ public class GetCategoryArticlesTest {
 		ga.parseHasMore(text1);
 		assertEquals("Evelyn", ga.nextElement());
 	}
-	
+	/**
+	 * Test if no more pages are found.
+	 *
+	 */
 	@Test
 	public final void testGetNextPageId2No() {
 		Node text1 = getText(ga, FileLoader.MW110
@@ -44,6 +50,10 @@ public class GetCategoryArticlesTest {
 		assertEquals("", ga.nextElement());
 	}
 	
+	/**
+	 * Test if no more pages are found.
+	 *
+	 */
 	@Test
 	public final void testParseHasMoreNo() {
 		Node text1 = getText(ga, FileLoader.MW110
