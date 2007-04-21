@@ -82,7 +82,7 @@
             <formatter type="xml"/>
             <batchtest todir="${temp}/junit">
                 <fileset dir="test">
-                    <include name="**/Test*.java"/>
+                    <include name="**/*Test.java"/>
                 </fileset>
             </batchtest>
             <classpath>

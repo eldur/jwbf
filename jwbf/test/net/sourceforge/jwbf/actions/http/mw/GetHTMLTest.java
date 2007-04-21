@@ -20,7 +20,7 @@ package net.sourceforge.jwbf.actions.http.mw;
 
 import static org.junit.Assert.*;
 
-import net.sourceforge.jwbf.TestFileLoader;
+import net.sourceforge.jwbf.FileLoader;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -45,7 +45,7 @@ public class GetHTMLTest {
 	public void setUp() throws Exception {
 		gh = new GetHTML();
 
-		text1 = TestFileLoader.readFromFile(TestFileLoader.MW110
+		text1 = FileLoader.readFromFile(FileLoader.MW110
 				+ "whatLinks2Test_wp1_10_de.htm");
 	}
 

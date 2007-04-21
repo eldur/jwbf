@@ -17,7 +17,7 @@ public class SimpleArticleTest {
 	private SimpleArticle article;
 
 	@Before
-	protected void setUp() throws Exception {
+	public void setUp() throws Exception {
 
 		article = new SimpleArticle();
 	}

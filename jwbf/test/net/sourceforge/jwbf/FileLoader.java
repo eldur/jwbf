@@ -5,11 +5,11 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 
-public class TestFileLoader {
+public class FileLoader {
 	
 	public static final String MW110 = "testHtml/mw1_10/";
 	
-	private TestFileLoader() {
+	private FileLoader() {
 //		do nothing
 	}
 	public static String readFromFile(final File f) {
