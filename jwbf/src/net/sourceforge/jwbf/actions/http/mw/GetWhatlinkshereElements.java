@@ -103,55 +103,32 @@ public class GetWhatlinkshereElements extends GetMultipageNames {
 	 */
 	public void parseHasMore(final Node node) {
 
-		String text = node.toHtml();
-		// from-value of the current page
-		int from = 1539253;
-		// limit-value of the current page
-		int limit = 50;
 		// the content of the current page
+		String content = node.toHtml();
 
-		boolean hasNextPage = false;
-
-		// check wheter the page contains a link to another whatlinkshere with
-		// different from-value
-		Pattern p = Pattern.compile("^.*?<a.*?limit=" + limit
-				+ "&amp;from=([0-9]+).*?>.*$", Pattern.DOTALL
+		//get the from-value of the link to the next page.
+		
+		Pattern p = Pattern.compile("^.*?<a.*?limit=" + 2
+				+ "&amp;from=([0-9]+)+&amp;back=[0-9]+&amp;namespace.*?>.*$", Pattern.DOTALL
 				| Pattern.MULTILINE);
-		Matcher m = p.matcher(text);
-
+		Matcher m = p.matcher(content);
+	
+		//set nextPage accordingly
+		
 		if (m.find()) {
-
-			// isolate the from-value
-			String newFromAsString = m.replaceAll("$1");
-
-			// check whether the new from-value is greater than the current one
-			if (Integer.parseInt(newFromAsString) > from) {
-				hasNextPage = true;
-			}
-
-			// if not, this was the link to the previous page.
-			// do (nearly) the same again, but make sure to get the _second_
-			// link of that type.
-
-			p = Pattern.compile("^.*?<a.*?limit=" + limit + "&amp;from="
-					+ newFromAsString + ".*?>.*?<a.*?limit=" + limit
-					+ "&amp;from=([0-9]+).*?>.*$", Pattern.DOTALL
-					| Pattern.MULTILINE);
-			m = p.matcher(text);
-
-			if (m.find()) {
-
-				newFromAsString = m.replaceAll("$1");
-
-				if (Integer.parseInt(newFromAsString) > from) {
-					hasNextPage = true;
-				}
-
-			}
-
+		
+			String nextFrom = m.replaceFirst("$1");
+			
+			setNextPage(nextFrom);
+			
 		}
-
-//		return hasNextPage;
+		
+		else{
+			
+			setNextPage(null);
+			
+		}
+					
 	}
 	/**
 	 * 
@@ -243,9 +220,8 @@ public class GetWhatlinkshereElements extends GetMultipageNames {
 		return false;
 	}
 
-	public boolean hasMoreElements() {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean hasMoreElements() {		
+		return nextElement() != null;
 	}
 
 }
