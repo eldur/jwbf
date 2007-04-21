@@ -14,17 +14,21 @@
  * the License.
  * 
  * Contributors:
+ * Tobias Knerr
  * 
  */
 package net.sourceforge.jwbf.actions.http.mw;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.Collection;
 import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.naming.NamingException;
+import net.sourceforge.jwbf.bots.MediaWikiBot;
 
+import org.apache.commons.httpclient.methods.GetMethod;
 import org.htmlparser.Node;
 import org.htmlparser.NodeFilter;
 import org.htmlparser.filters.AndFilter;
@@ -35,11 +39,12 @@ import org.htmlparser.util.NodeList;
 
 /**
  * @author Thomas Stock
+ * @author Tobias Knerr
  * 
  */
 public class GetWhatlinkshereElements extends GetMultipageNames {
 
-	public static final int LIMIT = 2;
+	
 
 	/**
 	 * 
@@ -77,6 +82,21 @@ public class GetWhatlinkshereElements extends GetMultipageNames {
 	 *            start bye article
 	 */
 	protected void addNextPage(final String pagename, final String from) {
+		
+		
+		String uS = "";
+		String fromEl = "";
+
+		try {
+			if (from.length() > 0) {
+				fromEl = "&from=" + from;
+			}
+			uS = "/index.php?title=Special:WhatLinksHere/" + URLEncoder.encode(pagename, MediaWikiBot.CHARSET)
+					+ fromEl + "&dontcountme=s";
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		msgs.add(new GetMethod(uS));
 		// String uS = "";
 		// String fromEl = "";
 		//
@@ -99,16 +119,15 @@ public class GetWhatlinkshereElements extends GetMultipageNames {
 	 * 
 	 * @param node
 	 *            of html text
-	 * @return true if has more pages
 	 */
-	public void parseHasMore(final Node node) {
+	protected void parseHasMore(final Node node) {
 
 		// the content of the current page
 		String content = node.toHtml();
 
 		//get the from-value of the link to the next page.
 		
-		Pattern p = Pattern.compile("^.*?<a.*?limit=" + 2
+		Pattern p = Pattern.compile("^.*?<a.*?limit=" + "[0-9]+"
 				+ "&amp;from=([0-9]+)+&amp;back=[0-9]+&amp;namespace.*?>.*$", Pattern.DOTALL
 				| Pattern.MULTILINE);
 		Matcher m = p.matcher(content);
@@ -120,15 +139,11 @@ public class GetWhatlinkshereElements extends GetMultipageNames {
 			String nextFrom = m.replaceFirst("$1");
 			
 			setNextPage(nextFrom);
+			setHasMore(true);
 			
 		}
 		
-		else{
 			
-			setNextPage(null);
-			
-		}
-					
 	}
 	/**
 	 * 
@@ -154,7 +169,7 @@ public class GetWhatlinkshereElements extends GetMultipageNames {
 			while (bodyEl.hasMoreNodes()) {
 				String toAdd = bodyEl.nextNode().getChildren().elements().nextNode()
 				.toPlainTextString();
-				col.add(encode(toAdd));
+				col.add(toAdd);
 
 			}
 
@@ -165,63 +180,14 @@ public class GetWhatlinkshereElements extends GetMultipageNames {
 		return col;
 	}
 
-//	/**
-//	 * 
-//	 * @param node
-//	 *            a
-//	 * @return a url with includes a "from" variable or an empty string
-//	 */
-//	public String getNextPageId(final Node node) {
-//		// String ms = "<a href=\"(.*)\" title(.*)</a>";
-//		// ms = "<a[^>]*href=\"([^(>| )]*\")?[^>]*>[^<]*</a>";
-//		// String tempLine = s.replace("&amp;", "&");
-//		//
-//		// String[] xLine = tempLine.split("\\(");
-//		// for (int j = 0; j < xLine.length; j++) {
-//		//
-//		// Matcher myMatcher = Pattern.compile(ms).matcher(tempLine);
-//		// while (myMatcher.find()) {
-//		// String temp = myMatcher.group(1);
-//		// if (temp.length() > 0) {
-//		// try {
-//		// String t = URLDecoder
-//		// .decode(stripUrlElements(temp), MediaWikiBot.CHARSET);
-//		// t = stripUrlElements(temp);
-//		// t = t.substring(0, t.length() - 1);
-//		//
-//		// if (t.indexOf("prev") > 1) {
-//		// continue;
-//		// } else if (t.indexOf("from") > 1) {
-//		// t = t.replace(" ", "_");
-//		// return t;
-//		// } else {
-//		// continue;
-//		// }
-//		//
-//		// } catch (UnsupportedEncodingException e) {
-//		// e.printStackTrace();
-//		// }
-//		// }
-//		// }
-//		// }
-//		return 1 +
-//		 "";
-//	}
-
 
 	@Override
 	protected String processHtml(String s) {
-		// TODO Auto-generated method stub
-		return null;
+		Node n = getMainContent(s);
+		parseHasMore(n);
+		content.addAll(getArticles(n));
+		return "";
 	}
 
-	public boolean hasMore() throws NamingException {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	public boolean hasMoreElements() {		
-		return nextElement() != null;
-	}
 
 }

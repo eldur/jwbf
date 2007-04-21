@@ -35,7 +35,7 @@ public class GetWhatLinksHereTest {
 				+ "whatLinks2Test_wp1_10_de.htm");
 		gl.parseHasMore(text1);
 		String hasMore = gl.nextElement() + "";
-		assertEquals(864323, hasMore);
+		assertEquals("864323", hasMore);
 	}
 
 	@Test
@@ -53,7 +53,7 @@ public class GetWhatLinksHereTest {
 				+ "whatLinks2IngenieriaDeSoftware_wp1_10_es.htm");
 		
 		String hasMore = gl.nextElement() + "";
-		assertEquals(350470, hasMore);
+		assertEquals("350470", hasMore);
 	}
 
 	@Test
@@ -100,7 +100,7 @@ public class GetWhatLinksHereTest {
 	}
 
 	private static Node getText(GetWhatlinkshereElements gl, String file) {
-		return gl.getMainContent(FileLoader.readFromFile(file));
+		return gl.getMainContent(gl.encode(FileLoader.readFromFile(file)));
 	}
 
 }

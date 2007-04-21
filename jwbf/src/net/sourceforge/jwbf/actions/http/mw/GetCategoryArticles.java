@@ -50,7 +50,6 @@ import org.htmlparser.util.NodeList;
 public class GetCategoryArticles extends GetMultipageNames {
 
 	private String prevFrom = "";
-	private boolean more = false;
 	private final boolean first;
 
 
@@ -135,7 +134,7 @@ public class GetCategoryArticles extends GetMultipageNames {
 	 * @param node
 	 *            of html text
 	 */
-	public void parseHasMore(final Node node) {
+	protected void parseHasMore(final Node node) {
 		
 		
 		
@@ -164,7 +163,7 @@ public class GetCategoryArticles extends GetMultipageNames {
 			int end = t.indexOf("\"");
 			String x = t.substring(0, end);
 			if (x.length() > 0 && !prevFrom.equalsIgnoreCase(x)) {
-				more = true;
+				setHasMore(true);
 				setNextPage(x);
 				log.debug("has more: " + nextElement());
 			}
@@ -173,8 +172,7 @@ public class GetCategoryArticles extends GetMultipageNames {
 			
 
 		} catch (Exception e) {
-//			e.printStackTrace();
-			more = false;
+			setHasMore(false);
 			log.debug("No Html elements found", e);
 		}
 		
@@ -317,19 +315,5 @@ public class GetCategoryArticles extends GetMultipageNames {
 		return "";
 	}
 	
-	/**
-	 * @see NamingEnumeration#hasMore()
-	 * @throws NamingException on problems
-	 * @return true, if has more
-	 */
-	public final boolean hasMore() throws NamingException {
-		return more;
-	}
-	/**
-	 * @see NamingEnumeration#hasMore()
-	 * @return true if has more
-	 */
-	public final boolean hasMoreElements() {
-		return more;
-	}
+
 }

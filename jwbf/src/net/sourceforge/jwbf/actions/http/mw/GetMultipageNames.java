@@ -36,7 +36,7 @@ public abstract class GetMultipageNames extends GetHTML implements NamingEnumera
 
 	protected Collection<String> content = new Vector<String>();
 
-
+	private boolean more = false;
 	private String nextPage = "";
 
 	/**
@@ -93,14 +93,18 @@ public abstract class GetMultipageNames extends GetHTML implements NamingEnumera
 	protected abstract String processHtml(final String s);
 
 	
+	protected void setHasMore(final boolean bool) {
+		more = bool;
+	}
+	
 	protected void setNextPage(final String s) {
 		nextPage = s;
 	}
 	/**
 	 * 
-	 * @param line of html text
+	 * @param node of html text
 	 */
-	public abstract void parseHasMore(final Node node);
+	protected abstract void parseHasMore(final Node node);
 
 	
 
@@ -138,5 +142,21 @@ public abstract class GetMultipageNames extends GetHTML implements NamingEnumera
 	public final Object nextElement() {
 		return nextPage;
 	}
-	
+
+
+	/**
+	 * @see NamingEnumeration#hasMore()
+	 * @throws NamingException on problems
+	 * @return true, if has more
+	 */
+	public final boolean hasMore() throws NamingException {
+		return more;
+	}
+	/**
+	 * @see NamingEnumeration#hasMore()
+	 * @return true if has more
+	 */
+	public final boolean hasMoreElements() {
+		return more;
+	}
 }
