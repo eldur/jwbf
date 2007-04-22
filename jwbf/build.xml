@@ -5,7 +5,8 @@
 	<property name="classes" location="${temp}/classes"/>
 	<property name="classes_test" location="${temp}/classes_test"/>
 	<property name="junit.dir" location="${temp}/junit"/>
-
+	
+	
 	<property name="lib" location="lib"/>
 
 	
@@ -116,15 +117,18 @@
     </target>
 
 
-	
+	<target name="loadBuildNo">
+		<loadproperties srcFile="build.number" />
+		<loadproperties srcFile="build.sufix" />
+		
+	</target>
 	
 	<!-- build jar -->
-	<target name="jar" depends="compile">
+	<target name="jar" depends="compile, loadBuildNo, clean">
 		
-		<loadproperties srcFile="build.number" />
-		<echo message="Building: jwbf-${build.number}.jar" />
+		<echo message="Building: jwbf-${build.number}${build.sufix}.jar" />
 		<mkdir dir="${dist}" />
- 		<jar destfile="${dist}/jwbf-${build.number}.jar">
+ 		<jar destfile="${dist}/jwbf-${build.number}${build.sufix}.jar">
     		<fileset dir="${classes}"
     			excludes="**/Test.class, **/*.htm*" 
     		/>
@@ -138,13 +142,13 @@
     </target>
 	
 	<!-- create release -->
-	<target name="release" depends="relInc, jar">
+	<target name="release" depends="jar">
 		
-		<property name="release" value="${dist}/release_${build.number}" />
-				<echo message="Release: ${build.number}" />
+		<property name="release" value="${dist}/release_${build.number}${build.sufix}" />
+				<echo message="Release: ${build.number}${build.sufix}" />
 		<mkdir dir="${release}"/>
 
-		<copy file="${dist}/jwbf-${build.number}.jar" todir="${release}/bin" />
+		<copy file="${dist}/jwbf-${build.number}${build.sufix}.jar" todir="${release}/bin" />
 		
 		<copy todir="${release}/src">
 			<fileset dir="src" includes="**/*"/>
@@ -152,14 +156,23 @@
 		<copy todir="${release}">
 			<fileset dir="buildAdds" includes="*"/>
 		</copy>
-		<tar tarfile="${release}/jwbf-${build.number}.tar.gz" 
+		<tar tarfile="${release}/jwbf-${build.number}${build.sufix}.tar.gz" 
 			basedir="${release}" compression="gzip"/>
 
         </target>
+	
+	
 	
 	<!-- increment release number in file: build.number -->
 	<target name="relInc">
 		<buildnumber/>
 	</target>
+	
+	<target name="clean">
+		<delete failonerror="false" dir="${dist}"></delete>
+	</target>
+    <target name="buildsufix">
+            <property name="build.sufix" value="RC"></property>
+    </target>
 
 </project>

@@ -100,7 +100,7 @@ public class MediaWikiBot extends HttpBot {
 	 * @throws ActionException
 	 *             on problems or if conent null
 	 */
-	public final ContentAccessable readContentOf(final String name)
+	public final ContentAccessable readContent(final String name)
 			throws ActionException {
 		SimpleArticle a = null;
 
