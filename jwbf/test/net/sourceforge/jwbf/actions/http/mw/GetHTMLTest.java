@@ -45,7 +45,7 @@ public class GetHTMLTest {
 	public void setUp() throws Exception {
 		gh = new GetHTML();
 
-		text1 = FileLoader.readFromFile(FileLoader.MW110
+		text1 = FileLoader.readFromFile(FileLoader.MW1_10
 				+ "whatLinks2Test_wp1_10_de.htm");
 	}
 

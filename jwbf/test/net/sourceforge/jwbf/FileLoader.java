@@ -7,7 +7,8 @@ import java.io.IOException;
 
 public class FileLoader {
 	
-	public static final String MW110 = "testHtml/mw1_10/";
+	public static final String MW1_10 = "testHtml/mw1_10/";
+	public static final String MW1_9_3 = "testHtml/mw1_9_3/";
 	
 	private FileLoader() {
 //		do nothing

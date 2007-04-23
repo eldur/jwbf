@@ -21,7 +21,7 @@ public class GetCategoryArticlesTest {
 
 	@Test
 	public final void testParseHasMore() {
-		Node text1 = getText(ga, FileLoader.MW110
+		Node text1 = getText(ga, FileLoader.MW1_10
 				+ "category_Weiblicher_Vorname_wp1_10_de.htm");
 		ga.parseHasMore(text1);
 		assertEquals(true, ga.hasMoreElements());
@@ -33,7 +33,7 @@ public class GetCategoryArticlesTest {
 	 */
 	@Test
 	public final void testGetNextPageId() {
-		Node text1 = getText(ga, FileLoader.MW110
+		Node text1 = getText(ga, FileLoader.MW1_10
 				+ "category_Weiblicher_Vorname_wp1_10_de.htm");
 		ga.parseHasMore(text1);
 		assertEquals("Evelyn", ga.nextElement());
@@ -44,7 +44,7 @@ public class GetCategoryArticlesTest {
 	 */
 	@Test
 	public final void testGetNextPageId2No() {
-		Node text1 = getText(ga, FileLoader.MW110
+		Node text1 = getText(ga, FileLoader.MW1_10
 				+ "category_Pigenavne_wp1_10_dk.htm");
 		ga.parseHasMore(text1);
 		assertEquals("", ga.nextElement());
@@ -56,7 +56,7 @@ public class GetCategoryArticlesTest {
 	 */
 	@Test
 	public final void testParseHasMoreNo() {
-		Node text1 = getText(ga, FileLoader.MW110
+		Node text1 = getText(ga, FileLoader.MW1_10
 				+ "category_Pigenavne_wp1_10_dk.htm");
 		ga.parseHasMore(text1);
 		assertEquals(false, ga.hasMoreElements());
