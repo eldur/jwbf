@@ -121,28 +121,62 @@ public class GetWhatlinkshereElements extends GetMultipageNames {
 	 *            of html text
 	 */
 	protected void parseHasMore(final Node node) {
-
+		
 		// the content of the current page
 		String content = node.toHtml();
+							
+		//results of the parsing
+		boolean hasNextPage = false;
+		String nextPageFromString = "";		
 
-		//get the from-value of the link to the next page.
-		
-		Pattern p = Pattern.compile("^.*?<a.*?limit=" + "[0-9]+"
-				+ "&amp;from=([0-9]+)+&amp;back=[0-9]+&amp;namespace.*?>.*$", Pattern.DOTALL
-				| Pattern.MULTILINE);
+		//get from- and limit-value of the current page using the tab on top of the content area		
+		Pattern p = Pattern.compile("^.*?class=\"selected\"> *<a.*?limit=([0-9]+)&amp;from=([0-9]+).*?>.*$",Pattern.DOTALL|Pattern.MULTILINE);	
 		Matcher m = p.matcher(content);
-	
-		//set nextPage accordingly
 		
-		if (m.find()) {
-		
-			String nextFrom = m.replaceFirst("$1");
+		if( m.find() ){
+					
+			int limit = Integer.parseInt( m.replaceFirst("$1") ); 
+			int from = Integer.parseInt( m.replaceFirst("$2") ); 
+
+			System.out.println(limit +", "+from);
 			
-			setNextPage(nextFrom);
-			setHasMore(true);
+			//check wheter the page contains a link to another whatlinkshere with different from-value
+			p = Pattern.compile("^.*?<a.*?limit="+limit+"&amp;from=([0-9]+).*?>.*$",Pattern.DOTALL|Pattern.MULTILINE);	
+			m = p.matcher(content);
+			
+			if( m.find() ){
+				
+				//isolate the from-value			
+				nextPageFromString = m.replaceFirst("$1");
+				
+				//check whether the new from-value is greater than the current one
+				if( Integer.parseInt(nextPageFromString) > from ){
+					hasNextPage = true;
+				}
+				
+				//if not, this was the link to the previous page.
+				//do (nearly) the same again, but make sure to get the _second_ link of that type.
+				
+				p = Pattern.compile("^.*?<a.*?limit="+limit+"&amp;from="+nextPageFromString+".*?>.*?<a.*?limit="+limit+"&amp;from=([0-9]+).*?>.*$",Pattern.DOTALL|Pattern.MULTILINE);	
+				m = p.matcher(content);
+				
+				if( m.find() ){
+						
+					nextPageFromString = m.replaceFirst("$1");
+					
+					if( Integer.parseInt(nextPageFromString) > from ){
+						hasNextPage = true;
+					}
+					
+				}
+				
+			}
 			
 		}
 		
+		//make the results known		
+		setHasMore(hasNextPage);
+		if(hasNextPage){ setNextPage(nextPageFromString); }
 			
 	}
 	/**
