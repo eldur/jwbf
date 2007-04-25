@@ -31,7 +31,6 @@ import net.sourceforge.jwbf.bots.MediaWikiBot;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.htmlparser.Node;
 import org.htmlparser.NodeFilter;
-import org.htmlparser.Parser;
 import org.htmlparser.filters.AndFilter;
 import org.htmlparser.filters.HasChildFilter;
 import org.htmlparser.filters.TagNameFilter;
@@ -39,13 +38,13 @@ import org.htmlparser.util.NodeIterator;
 import org.htmlparser.util.NodeList;
 
 /**
+ * Optimized and tested for MediaWiki versions 1.9.0, 1.9.3, 1.10.
+ * 
  * @author Thomas Stock
  * @author Tobias Knerr
  * 
  */
 public class GetWhatlinkshereElements extends GetMultipageNames {
-
-	
 
 	/**
 	 * 
@@ -56,7 +55,7 @@ public class GetWhatlinkshereElements extends GetMultipageNames {
 	 */
 	public GetWhatlinkshereElements(final String categoryname,
 			Collection<String> c) {
-		 super(categoryname, c);
+		super(categoryname, c);
 
 	}
 
@@ -71,7 +70,7 @@ public class GetWhatlinkshereElements extends GetMultipageNames {
 	 */
 	public GetWhatlinkshereElements(final String categoryname,
 			final String from, Collection<String> c) {
-		 super(categoryname, from, c);
+		super(categoryname, from, c);
 	}
 
 	/**
@@ -83,8 +82,7 @@ public class GetWhatlinkshereElements extends GetMultipageNames {
 	 *            start bye article
 	 */
 	protected void addNextPage(final String pagename, final String from) {
-		
-		
+
 		String uS = "";
 		String fromEl = "";
 
@@ -92,27 +90,14 @@ public class GetWhatlinkshereElements extends GetMultipageNames {
 			if (from.length() > 0) {
 				fromEl = "&from=" + from;
 			}
-			uS = "/index.php?title=Special:WhatLinksHere/" + URLEncoder.encode(pagename, MediaWikiBot.CHARSET)
+			uS = "/index.php?title=Special:WhatLinksHere/"
+					+ URLEncoder.encode(pagename, MediaWikiBot.CHARSET)
 					+ fromEl + "&dontcountme=s";
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
 		msgs.add(new GetMethod(uS));
-		// String uS = "";
-		// String fromEl = "";
-		//
-		// try {
-		// if (from.length() > 0) {
-		// fromEl = "&from=" + from;
-		// }
-		// uS = "/index.php?title=Special:WhatLinksHere/" +
-		// URLEncoder.encode(pagename, MediaWikiBot.CHARSET)
-		// + fromEl + "&dontcountme=s"
-		// + "&limit=" + LIMIT;
-		// } catch (UnsupportedEncodingException e) {
-		// e.printStackTrace();
-		// }
-		// msgs.add(new GetMethod(uS));
+
 	}
 
 	/**
@@ -122,69 +107,84 @@ public class GetWhatlinkshereElements extends GetMultipageNames {
 	 *            of html text
 	 */
 	protected void parseHasMore(final Node node) {
-		
+
 		// the content of the current page
 		String content = node.toHtml();
-							
-		//results of the parsing
+
+		// results of the parsing
 		boolean hasNextPage = false;
-		String nextPageFromString = "";		
+		String nextPageFromString = "";
 
-		//get from- and limit-value of the current page using the tab on top of the content area		
-		Pattern p = Pattern.compile("^.*?class=\"selected\"> *<a.*?limit=([0-9]+)&amp;from=([0-9]+).*?>.*$",Pattern.DOTALL|Pattern.MULTILINE);	
+		// get from- and limit-value of the current page using the tab on top of
+		// the content area
+		Pattern p = Pattern
+				.compile(
+						"^.*?class=\"selected\"> *<a.*?limit=([0-9]+)&amp;from=([0-9]+).*?>.*$",
+						Pattern.DOTALL | Pattern.MULTILINE);
 		Matcher m = p.matcher(content);
-		
-		if( m.find() ){
-					
-			int limit = Integer.parseInt( m.replaceFirst("$1") ); 
-			int from = Integer.parseInt( m.replaceFirst("$2") ); 
 
-			//check wheter the page contains a link to another whatlinkshere with different from-value
-			p = Pattern.compile("^.*?<a.*?limit="+limit+"&amp;from=([0-9]+).*?>.*$",Pattern.DOTALL|Pattern.MULTILINE);	
+		if (m.find()) {
+
+			int limit = Integer.parseInt(m.replaceFirst("$1"));
+			int from = Integer.parseInt(m.replaceFirst("$2"));
+
+			// check wheter the page contains a link to another whatlinkshere
+			// with different from-value
+			p = Pattern.compile("^.*?<a.*?limit=" + limit
+					+ "&amp;from=([0-9]+).*?>.*$", Pattern.DOTALL
+					| Pattern.MULTILINE);
 			m = p.matcher(content);
-			
-			if( m.find() ){
-				
-				//isolate the from-value			
+
+			if (m.find()) {
+
+				// isolate the from-value
 				nextPageFromString = m.replaceFirst("$1");
-				
-				//check whether the new from-value is greater than the current one
-				if( Integer.parseInt(nextPageFromString) > from ){
+
+				// check whether the new from-value is greater than the current
+				// one
+				if (Integer.parseInt(nextPageFromString) > from) {
 					hasNextPage = true;
-				}
-				
-				else{
-				
-					//if not, this was the link to the previous page.
-					//do (nearly) the same again, but make sure to get the _second_ link of that type.
-					
-					p = Pattern.compile("^.*?<a.*?limit="+limit+"&amp;from="+nextPageFromString+".*?>.*?<a.*?limit="+limit+"&amp;from=([0-9]+).*?>.*$",Pattern.DOTALL|Pattern.MULTILINE);	
+				} else {
+
+					// if not, this was the link to the previous page.
+					// do (nearly) the same again, but make sure to get the
+					// _second_ link of that type.
+
+					p = Pattern.compile("^.*?<a.*?limit=" + limit
+							+ "&amp;from=" + nextPageFromString
+							+ ".*?>.*?<a.*?limit=" + limit
+							+ "&amp;from=([0-9]+).*?>.*$", Pattern.DOTALL
+							| Pattern.MULTILINE);
 					m = p.matcher(content);
-					
-					if( m.find() ){
-							
+
+					if (m.find()) {
+
 						nextPageFromString = m.replaceFirst("$1");
-						
-						if( Integer.parseInt(nextPageFromString) > from ){
+
+						if (Integer.parseInt(nextPageFromString) > from) {
 							hasNextPage = true;
 						}
-						
+
 					}
-				
+
 				}
-				
+
 			}
-			
+
 		}
-		
-		//make the results known		
+
+		// make the results known
 		setHasMore(hasNextPage);
-		if(hasNextPage){ setNextPage(nextPageFromString); }
-			
+		if (hasNextPage) {
+			setNextPage(nextPageFromString);
+		}
+
 	}
+
 	/**
 	 * 
-	 * @param node with content of bodyContent div
+	 * @param node
+	 *            with content of bodyContent div
 	 * @return a of articlenames
 	 */
 	public Collection<String> getArticles(final Node node) {
@@ -197,15 +197,15 @@ public class GetWhatlinkshereElements extends GetMultipageNames {
 			NodeFilter linkFilter = new AndFilter(new TagNameFilter("LI"),
 					new HasChildFilter(new TagNameFilter("A")));
 
-			for (NodeIterator e = node.getChildren().elements();
-					e.hasMoreNodes();) {
+			for (NodeIterator e = node.getChildren().elements(); e
+					.hasMoreNodes();) {
 				e.nextNode().collectInto(linkList, linkFilter);
 			}
 
 			NodeIterator bodyEl = linkList.elements();
 			while (bodyEl.hasMoreNodes()) {
-				String toAdd = bodyEl.nextNode().getChildren().elements().nextNode()
-				.toPlainTextString();
+				String toAdd = bodyEl.nextNode().getChildren().elements()
+						.nextNode().toPlainTextString();
 				col.add(toAdd);
 
 			}
@@ -217,15 +217,18 @@ public class GetWhatlinkshereElements extends GetMultipageNames {
 		return col;
 	}
 
-
+	/**
+	 * @param s
+	 *            html string
+	 * @return an empty string
+	 */
 	@Override
 	protected String processHtml(String s) {
-		
+
 		Node n = getHtmlBody(s);
 		parseHasMore(n);
 		content.addAll(getArticles(n));
 		return "";
 	}
-
 
 }

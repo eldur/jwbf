@@ -74,6 +74,16 @@ public class MediaWikiBot extends HttpBot {
 		setConnection(u);
 
 	}
+	
+	/**
+	 * @param u
+	 *            wikihosturl like "http://www.mediawiki.org/wiki/index.php"
+	 */
+	public MediaWikiBot(final String url) {
+		super();
+		setConnection(url);
+
+	}
 
 	/**
 	 * Performs a Login.
