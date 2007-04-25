@@ -55,7 +55,7 @@ public class GetHTMLTest {
 	@Test
 	public void testGetMainContent() {
 
-		assertEquals(10214, gh.getMainContent(text1).toHtml().length());
+		assertEquals(10214, gh.getDivBodyContent(text1).toHtml().length());
 	}
 
 }

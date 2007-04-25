@@ -70,7 +70,7 @@ public class GetHTML extends MWAction {
 	 * @param text of html
 	 * @return a node with bodyContent div
 	 */
-	public Node getMainContent(final String text) {
+	public Node getDivBodyContent(final String text) {
 		Parser p = new Parser();
 		Node n = new Span();
 
@@ -88,6 +88,35 @@ public class GetHTML extends MWAction {
 
 			NodeIterator ni = bcList.elements();
 			n = (Node) ni.nextNode();
+//			System.out.println(n.toHtml());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return n;
+	}
+	
+	/**
+	 * 
+	 * @param text of html
+	 * @return a node with bodyContent div
+	 */
+	public Node getHtmlBody(final String text) {
+		Parser p = new Parser();
+		Node n = new Span();
+
+		try {
+			p.setInputHTML(text);
+//			 Find bodycontent
+			NodeList bcList = new NodeList();
+			NodeFilter bcFilter = new TagNameFilter("BODY");
+
+			for (NodeIterator e = p.elements(); e.hasMoreNodes();) {
+				e.nextNode().collectInto(bcList, bcFilter);
+			}
+
+			NodeIterator ni = bcList.elements();
+			n = (Node) ni.nextNode();
+//			System.out.println(n.toHtml());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

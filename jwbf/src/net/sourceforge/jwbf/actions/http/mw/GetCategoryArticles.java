@@ -293,7 +293,7 @@ public class GetCategoryArticles extends GetMultipageNames {
 	@Override
 	protected String processHtml(final String s) {
 		
-		Node mYcontent = getMainContent(s);
+		Node mYcontent = getDivBodyContent(s);
 		
 		parseHasMore(mYcontent);
 		

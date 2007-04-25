@@ -63,6 +63,6 @@ public class GetCategoryArticlesTest {
 	}
 	
 	private static Node getText(GetCategoryArticles gl, String file) {
-		return gl.getMainContent(FileLoader.readFromFile(file));
+		return gl.getDivBodyContent(FileLoader.readFromFile(file));
 	}
 }

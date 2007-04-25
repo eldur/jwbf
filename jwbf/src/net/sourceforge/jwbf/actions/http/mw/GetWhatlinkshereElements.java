@@ -31,6 +31,7 @@ import net.sourceforge.jwbf.bots.MediaWikiBot;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.htmlparser.Node;
 import org.htmlparser.NodeFilter;
+import org.htmlparser.Parser;
 import org.htmlparser.filters.AndFilter;
 import org.htmlparser.filters.HasChildFilter;
 import org.htmlparser.filters.TagNameFilter;
@@ -219,7 +220,8 @@ public class GetWhatlinkshereElements extends GetMultipageNames {
 
 	@Override
 	protected String processHtml(String s) {
-		Node n = getMainContent(s);
+		
+		Node n = getHtmlBody(s);
 		parseHasMore(n);
 		content.addAll(getArticles(n));
 		return "";

@@ -23,7 +23,7 @@ public class GetWhatLinksHereTest {
 
 	@Test
 	public final void testParseHasMoreTrue1() {
-		Node text1 = getText(gl, FileLoader.MW1_10
+		Node text1 = getHTML(gl, FileLoader.MW1_10
 				+ "whatLinks2Test_wp1_10_de.htm");
 		gl.parseHasMore(text1);
 		boolean hasMore = gl.hasMoreElements();
@@ -31,7 +31,7 @@ public class GetWhatLinksHereTest {
 	}
 	@Test
 	public final void testGetNextPageId1() {
-		Node text1 = getText(gl, FileLoader.MW1_10
+		Node text1 = getHTML(gl, FileLoader.MW1_10
 				+ "whatLinks2Test_wp1_10_de.htm");
 		gl.parseHasMore(text1);
 		String hasMore = gl.nextElement() + "";
@@ -40,7 +40,7 @@ public class GetWhatLinksHereTest {
 
 	@Test
 	public final void testParseHasMoreTrue2() {
-		Node text1 = getText(gl, FileLoader.MW1_10
+		Node text1 = getHTML(gl, FileLoader.MW1_10
 				+ "whatLinks2IngenieriaDeSoftware_wp1_10_es.htm");
 		gl.parseHasMore(text1);
 		boolean hasMore = gl.hasMoreElements();
@@ -49,7 +49,7 @@ public class GetWhatLinksHereTest {
 	
 	@Test
 	public final void testGetNextPageId2() {
-		Node text1 = getText(gl, FileLoader.MW1_10
+		Node text1 = getHTML(gl, FileLoader.MW1_10
 				+ "whatLinks2IngenieriaDeSoftware_wp1_10_es.htm");
 		gl.parseHasMore(text1);
 		String hasMore = gl.nextElement() + "";
@@ -58,7 +58,7 @@ public class GetWhatLinksHereTest {
 
 	@Test
 	public final void testParseHasMoreFalse1() {
-		Node text1 = getText(gl, FileLoader.MW1_10
+		Node text1 = getBodyContent(gl, FileLoader.MW1_10
 				+ "whatLinks2Test_wp1_10_fr.htm");
 		gl.parseHasMore(text1);
 		boolean hasMore = gl.hasMoreElements();
@@ -67,7 +67,7 @@ public class GetWhatLinksHereTest {
 
 	@Test
 	public final void testParseHasMoreFalse2() {
-		Node text1 = getText(gl, FileLoader.MW1_10
+		Node text1 = getBodyContent(gl, FileLoader.MW1_10
 				+ "whatLinks2Ohjelmistotuottanto_wp1_10_fi.htm");
 		gl.parseHasMore(text1);
 		boolean hasMore = gl.hasMoreElements();
@@ -76,7 +76,7 @@ public class GetWhatLinksHereTest {
 	
 	@Test
 	public final void testNumberOfWhatLinks1() {
-		Node text1 = getText(gl, FileLoader.MW1_10
+		Node text1 = getBodyContent(gl, FileLoader.MW1_10
 				+ "whatLinks2Test_wp1_10_de.htm");
 		int has = gl.getArticles(text1).size();
 		assertEquals(61, has);
@@ -84,7 +84,7 @@ public class GetWhatLinksHereTest {
 	}
 	@Test
 	public final void testEncodingOfElements1() {
-		Node text1 = getText(gl, FileLoader.MW1_10
+		Node text1 = getBodyContent(gl, FileLoader.MW1_10
 				+ "whatLinks2Test_wp1_10_de.htm");
 		boolean bool = gl.getArticles(text1).contains("Reliabilität");
 		assertEquals(true, bool);
@@ -92,7 +92,7 @@ public class GetWhatLinksHereTest {
 	}
 	@Test
 	public final void testEncodingOfElements2() {
-		Node text1 = getText(gl, FileLoader.MW1_10
+		Node text1 = getBodyContent(gl, FileLoader.MW1_10
 				+ "whatLinks2Test_wp1_10_de.htm");
 		gl.parseHasMore(text1);
 		boolean bool = gl.getArticles(text1).contains("Dyskalkulie");
@@ -101,7 +101,7 @@ public class GetWhatLinksHereTest {
 	}
 	@Test
 	public final void testWhatlinksMW193() {
-		Node text1 = getText(gl, FileLoader.MW1_9_3
+		Node text1 = getHTML(gl, FileLoader.MW1_9_3
 				+ "whatLinks2A_ws_de.htm");
 		gl.parseHasMore(text1);
 		String str = gl.nextElement() + "";
@@ -109,8 +109,13 @@ public class GetWhatLinksHereTest {
 		
 	}
 
-	private static Node getText(GetWhatlinkshereElements gl, String file) {
-		return gl.getMainContent(gl.encode(FileLoader.readFromFile(file)));
+	private static Node getBodyContent(GetWhatlinkshereElements gl, String file) {
+		return gl.getDivBodyContent(gl.encode(FileLoader.readFromFile(file)));
 	}
+	private static Node getHTML(GetWhatlinkshereElements gl, String file) {
+		return gl.getHtmlBody(gl.encode(FileLoader.readFromFile(file)));
+	}
+	
+	
 
 }
