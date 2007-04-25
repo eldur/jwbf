@@ -138,8 +138,6 @@ public class GetWhatlinkshereElements extends GetMultipageNames {
 			int limit = Integer.parseInt( m.replaceFirst("$1") ); 
 			int from = Integer.parseInt( m.replaceFirst("$2") ); 
 
-			System.out.println(limit +", "+from);
-			
 			//check wheter the page contains a link to another whatlinkshere with different from-value
 			p = Pattern.compile("^.*?<a.*?limit="+limit+"&amp;from=([0-9]+).*?>.*$",Pattern.DOTALL|Pattern.MULTILINE);	
 			m = p.matcher(content);
@@ -154,20 +152,24 @@ public class GetWhatlinkshereElements extends GetMultipageNames {
 					hasNextPage = true;
 				}
 				
-				//if not, this was the link to the previous page.
-				//do (nearly) the same again, but make sure to get the _second_ link of that type.
+				else{
 				
-				p = Pattern.compile("^.*?<a.*?limit="+limit+"&amp;from="+nextPageFromString+".*?>.*?<a.*?limit="+limit+"&amp;from=([0-9]+).*?>.*$",Pattern.DOTALL|Pattern.MULTILINE);	
-				m = p.matcher(content);
-				
-				if( m.find() ){
+					//if not, this was the link to the previous page.
+					//do (nearly) the same again, but make sure to get the _second_ link of that type.
+					
+					p = Pattern.compile("^.*?<a.*?limit="+limit+"&amp;from="+nextPageFromString+".*?>.*?<a.*?limit="+limit+"&amp;from=([0-9]+).*?>.*$",Pattern.DOTALL|Pattern.MULTILINE);	
+					m = p.matcher(content);
+					
+					if( m.find() ){
+							
+						nextPageFromString = m.replaceFirst("$1");
 						
-					nextPageFromString = m.replaceFirst("$1");
-					
-					if( Integer.parseInt(nextPageFromString) > from ){
-						hasNextPage = true;
+						if( Integer.parseInt(nextPageFromString) > from ){
+							hasNextPage = true;
+						}
+						
 					}
-					
+				
 				}
 				
 			}
