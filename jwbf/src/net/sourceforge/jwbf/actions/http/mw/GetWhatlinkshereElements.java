@@ -115,56 +115,70 @@ public class GetWhatlinkshereElements extends GetMultipageNames {
 		boolean hasNextPage = false;
 		String nextPageFromString = "";
 
-		// get from- and limit-value of the current page using the tab on top of
-		// the content area
-		Pattern p = Pattern
-				.compile(
-						"^.*?class=\"selected\"> *<a.*?limit=([0-9]+)&amp;from=([0-9]+).*?>.*$",
-						Pattern.DOTALL | Pattern.MULTILINE);
+		// get from- and limit-value of the current page
+		// using the tab on top of the content area		
+		
+		int limit;
+		int from;
+			
+		Pattern p = Pattern.compile(
+			"^.*?class=\"selected\"> *<a.*?limit=([0-9]+)&amp;from=([0-9]+).*?>.*$",
+			Pattern.DOTALL | Pattern.MULTILINE);
 		Matcher m = p.matcher(content);
 
 		if (m.find()) {
-
-			int limit = Integer.parseInt(m.replaceFirst("$1"));
-			int from = Integer.parseInt(m.replaceFirst("$2"));
-
-			// check wheter the page contains a link to another whatlinkshere
-			// with different from-value
-			p = Pattern.compile("^.*?<a.*?limit=" + limit
-					+ "&amp;from=([0-9]+).*?>.*$", Pattern.DOTALL
-					| Pattern.MULTILINE);
-			m = p.matcher(content);
+			limit = Integer.parseInt(m.replaceFirst("$1"));
+			from = Integer.parseInt(m.replaceFirst("$2"));			
+		}
+		
+		else{
+			
+			//try to find a limit-info without from
+			Pattern p = Pattern.compile(
+				"^.*?class=\"selected\"> *<a.*?limit=([0-9]+).*?>.*$",
+				Pattern.DOTALL | Pattern.MULTILINE);
+			Matcher m = p.matcher(content);			
 
 			if (m.find()) {
+				limit = Integer.parseInt(m.replaceFirst("$1"));
+			}
+			
+		}
 
-				// isolate the from-value
-				nextPageFromString = m.replaceFirst("$1");
+		// check wheter the page contains a link to another whatlinkshere
+		// with a from-value greater than the current one
+		
+		p = Pattern.compile(
+			"^.*?<a.*?limit=" + limit + "&amp;from=([0-9]+).*?>.*$",
+			Pattern.DOTALL | Pattern.MULTILINE);
+		m = p.matcher(content);
 
-				// check whether the new from-value is greater than the current
-				// one
-				if (Integer.parseInt(nextPageFromString) > from) {
-					hasNextPage = true;
-				} else {
+		if (m.find()) {
 
-					// if not, this was the link to the previous page.
-					// do (nearly) the same again, but make sure to get the
-					// _second_ link of that type.
+			// isolate the from-value
+			nextPageFromString = m.replaceFirst("$1");
 
-					p = Pattern.compile("^.*?<a.*?limit=" + limit
-							+ "&amp;from=" + nextPageFromString
-							+ ".*?>.*?<a.*?limit=" + limit
-							+ "&amp;from=([0-9]+).*?>.*$", Pattern.DOTALL
-							| Pattern.MULTILINE);
-					m = p.matcher(content);
+			// check whether the new from-value is greater than the current one
+			if (Integer.parseInt(nextPageFromString) > from) {
+				hasNextPage = true;
+			} else {
 
-					if (m.find()) {
+				// if not, this was the link to the previous page.
+				// => do (nearly) the same again, but make sure to get the
+				// _second_ link of that type.
 
-						nextPageFromString = m.replaceFirst("$1");
+				p = Pattern.compile( 
+					"^.*?<a.*?limit=" + limit + "&amp;from=" + nextPageFromString + ".*?>
+					+ ".*?<a.*?limit=" + limit 	+ "&amp;from=([0-9]+).*?>.*$",
+					Pattern.DOTALL	| Pattern.MULTILINE);
+				m = p.matcher(content);
 
-						if (Integer.parseInt(nextPageFromString) > from) {
-							hasNextPage = true;
-						}
+				if (m.find()) {
 
+					nextPageFromString = m.replaceFirst("$1");
+				
+					if (Integer.parseInt(nextPageFromString) > from) {
+						hasNextPage = true;
 					}
 
 				}
