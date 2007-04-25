@@ -104,6 +104,7 @@ public class GetHTML extends MWAction {
 		Parser p = new Parser();
 		Node n = new Span();
 
+		
 		try {
 			p.setInputHTML(text);
 //			 Find bodycontent

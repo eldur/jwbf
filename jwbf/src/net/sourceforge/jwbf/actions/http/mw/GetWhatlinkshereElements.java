@@ -190,7 +190,7 @@ public class GetWhatlinkshereElements extends GetMultipageNames {
 	public Collection<String> getArticles(final Node node) {
 
 		Collection<String> col = new Vector<String>();
-
+		
 		try {
 			NodeList linkList = new NodeList();
 
@@ -206,6 +206,7 @@ public class GetWhatlinkshereElements extends GetMultipageNames {
 			while (bodyEl.hasMoreNodes()) {
 				String toAdd = bodyEl.nextNode().getChildren().elements()
 						.nextNode().toPlainTextString();
+				System.err.println(toAdd);
 				col.add(toAdd);
 
 			}
@@ -223,11 +224,11 @@ public class GetWhatlinkshereElements extends GetMultipageNames {
 	 * @return an empty string
 	 */
 	@Override
-	protected String processHtml(String s) {
+	protected String processHtml(final String s) {
 
-		Node n = getHtmlBody(s);
-		parseHasMore(n);
-		content.addAll(getArticles(n));
+		
+		parseHasMore(getHtmlBody(s));
+		content.addAll(getArticles(getDivBodyContent(s)));
 		return "";
 	}
 

@@ -92,11 +92,18 @@ public abstract class GetMultipageNames extends GetHTML implements NamingEnumera
 	 */
 	protected abstract String processHtml(final String s);
 
-	
+	/**
+	 * 
+	 * @param bool state
+	 */
 	protected void setHasMore(final boolean bool) {
 		more = bool;
 	}
-	
+
+	/**
+	 * 
+	 * @param s id
+	 */
 	protected void setNextPage(final String s) {
 		nextPage = s;
 	}

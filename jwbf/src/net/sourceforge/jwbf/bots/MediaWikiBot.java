@@ -76,7 +76,7 @@ public class MediaWikiBot extends HttpBot {
 	}
 	
 	/**
-	 * @param u
+	 * @param url
 	 *            wikihosturl like "http://www.mediawiki.org/wiki/index.php"
 	 */
 	public MediaWikiBot(final String url) {

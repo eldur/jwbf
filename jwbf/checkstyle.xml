@@ -110,6 +110,8 @@ Description:
         <module name="UpperEll"/>
     </module>
     <module name="PackageHtml"/>
-    <module name="NewlineAtEndOfFile"/>
+    <module name="NewlineAtEndOfFile">
+        <property name="severity" value="info"/>
+    </module>
     <module name="Translation"/>
 </module>
