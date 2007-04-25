@@ -118,8 +118,8 @@ public class GetWhatlinkshereElements extends GetMultipageNames {
 		// get from- and limit-value of the current page
 		// using the tab on top of the content area		
 		
-		int limit;
-		int from;
+		int limit = 0;
+		int from = 0;
 			
 		Pattern p = Pattern.compile(
 			"^.*?class=\"selected\"> *<a.*?limit=([0-9]+)&amp;from=([0-9]+).*?>.*$",
@@ -134,10 +134,10 @@ public class GetWhatlinkshereElements extends GetMultipageNames {
 		else{
 			
 			//try to find a limit-info without from
-			Pattern p = Pattern.compile(
+			p = Pattern.compile(
 				"^.*?class=\"selected\"> *<a.*?limit=([0-9]+).*?>.*$",
 				Pattern.DOTALL | Pattern.MULTILINE);
-			Matcher m = p.matcher(content);			
+			m = p.matcher(content);			
 
 			if (m.find()) {
 				limit = Integer.parseInt(m.replaceFirst("$1"));
@@ -168,9 +168,9 @@ public class GetWhatlinkshereElements extends GetMultipageNames {
 				// _second_ link of that type.
 
 				p = Pattern.compile( 
-					"^.*?<a.*?limit=" + limit + "&amp;from=" + nextPageFromString + ".*?>
+					"^.*?<a.*?limit=" + limit + "&amp;from=" + nextPageFromString + ".*?>"
 					+ ".*?<a.*?limit=" + limit 	+ "&amp;from=([0-9]+).*?>.*$",
-					Pattern.DOTALL	| Pattern.MULTILINE);
+					Pattern.DOTALL | Pattern.MULTILINE);
 				m = p.matcher(content);
 
 				if (m.find()) {
