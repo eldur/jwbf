@@ -28,6 +28,7 @@ import javax.naming.NamingException;
 
 import net.sourceforge.jwbf.actions.http.ActionException;
 import net.sourceforge.jwbf.actions.http.mw.GetCategoryArticles;
+import net.sourceforge.jwbf.actions.http.mw.GetBacklinkTitles;
 import net.sourceforge.jwbf.actions.http.mw.GetEnvironmentVars;
 import net.sourceforge.jwbf.actions.http.mw.GetPageContent;
 import net.sourceforge.jwbf.actions.http.mw.GetWhatlinkshereElements;
@@ -133,6 +134,47 @@ public class MediaWikiBot extends HttpBot {
 		return readCategory(title, ARTICLE);
 	}
 
+	
+	/**
+	 * TODO    still in development
+	 *
+	 * @param article   title of an article
+	 * 
+	 * @return   collection containing names of all articles
+	 *           which link to the article specified by the article-parameter.
+	 *           May be empty if no article links there.
+	 *
+	 * @throws ActionException   general exception when problems occur
+	 */
+	public final AbstractCollection<String> getBacklinkTitles(
+		final String article) throws ActionException {
+		
+		//vector that will be returned in the end
+		Vector<String> titleVector = new Vector<String>();
+		
+		//create and use a GetBacklinkTitles-action
+		GetBacklinkTitles action = new GetBacklinkTitles(article,titleVector);			
+		performAction(action);
+		
+		//use more actions to access the rest of the api's output pages
+		try {
+			//check whether another action is needed
+			//(note: "action" will always contain the last action which was generated)
+			while (action.hasMore()) {
+				action = new GetBacklinkTitles(
+					article, action.next().toString(), titleVector );
+				performAction(action);
+			}
+		} catch (NamingException e) {
+			e.printStackTrace();
+		}
+
+		//return the result
+		return titleVector;
+		
+	}
+
+	
 	/**
 	 * TODO Feature not works realy. Boolean var is there only for function test
 	 * @param title
