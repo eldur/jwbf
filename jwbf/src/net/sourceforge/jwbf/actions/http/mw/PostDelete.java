@@ -20,7 +20,6 @@ package net.sourceforge.jwbf.actions.http.mw;
 
 import java.util.Hashtable;
 
-import net.sourceforge.jwbf.actions.http.Action;
 import net.sourceforge.jwbf.bots.MediaWikiBot;
 
 import org.apache.commons.httpclient.NameValuePair;
@@ -29,9 +28,9 @@ import org.apache.commons.httpclient.methods.PostMethod;
 
 /**
  * @author Thomas Stock
- *
+ * @deprecated
  */
-public class PostDelete extends Action {
+public class PostDelete extends MWAction {
 
 	/**
 	 * 

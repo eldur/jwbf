@@ -23,27 +23,31 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Hashtable;
 
-import net.sourceforge.jwbf.actions.http.Action;
 import net.sourceforge.jwbf.bots.MediaWikiBot;
+import net.sourceforge.jwbf.bots.util.LoginData;
 
 import org.apache.commons.httpclient.methods.GetMethod;
+import org.apache.log4j.Logger;
 
 /**
  * This Message can be used to find variables, you need to process modification
  * and deletion. 
  * @author Thomas Stock
+ * 
+ *
  *
  */
-public class GetEnvironmentVars extends Action {
+public class GetEnvironmentVars extends MWAction {
 
 	private Hashtable<String, String> tab;
+	private static final Logger LOG = Logger.getLogger(GetEnvironmentVars.class);
 	
 	/**
 	 * 
 	 * @param name of article
 	 * @param tab ref on a tabel with inner values
 	 */
-	public GetEnvironmentVars(final String name, Hashtable<String, String> tab) {
+	public GetEnvironmentVars(final String name, Hashtable<String, String> tab, LoginData login) {
 		String uS = "";
 		this.tab = tab;
 		try {
@@ -65,7 +69,7 @@ public class GetEnvironmentVars extends Action {
 		
 		 
 		getWpValues(s, tab);
-		log.debug(tab);
+		LOG.debug(tab);
 		return s;
 	}
 	

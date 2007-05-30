@@ -19,30 +19,34 @@
 package net.sourceforge.jwbf.actions.http.mw;
 
 
-import net.sourceforge.jwbf.actions.http.Action;
 import net.sourceforge.jwbf.actions.http.CookieException;
 import net.sourceforge.jwbf.bots.MediaWikiBot;
 
 import org.apache.commons.httpclient.Cookie;
 import org.apache.commons.httpclient.NameValuePair;
 import org.apache.commons.httpclient.methods.PostMethod;
+import org.apache.log4j.Logger;
 
 /**
  * 
  * @author Thomas Stock
- * 
+ * @supportedBy MediaWiki 1.8.x, 1.9.x
  */
-public class PostLogin extends Action {
+public class PostLoginOld extends MWAction {
 
 
 	private String username = "";
+	
+	private static final Logger LOG = Logger.getLogger(PostLoginOld.class);
+	
+
 	
 	/**
 	 * 
 	 * @param username the
 	 * @param pw password
 	 */
-	public PostLogin(final String username, final String pw) {
+	public PostLoginOld(final String username, final String pw) {
 		this.username = username;
 
 		NameValuePair action = new NameValuePair("wpLoginattempt", "Log in");
@@ -73,7 +77,7 @@ public class PostLogin extends Action {
 		} else {
 			for (int i = 0; i < cs.length; i++) {								
 				if (cs[i].toString().contains(compare)) {
-					log.info("Logged in as: " + username);
+					LOG.info("Logged in as: " + username);
 					return;
 				}
 				if (i == cs.length - 1) {

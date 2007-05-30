@@ -23,27 +23,30 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Hashtable;
 
-import net.sourceforge.jwbf.actions.http.Action;
 import net.sourceforge.jwbf.bots.MediaWikiBot;
+import net.sourceforge.jwbf.bots.util.LoginData;
 import net.sourceforge.jwbf.contentRep.mw.EditContentAccessable;
 
 import org.apache.commons.httpclient.NameValuePair;
 import org.apache.commons.httpclient.methods.PostMethod;
+import org.apache.log4j.Logger;
 
 /**
- * 
+ * TODO no api use.
  * @author Thomas Stock
- *
+ * 
  */
-public class PostModifyContent extends Action {
+public class PostModifyContent extends MWAction {
 
+	
+	private static final Logger LOG = Logger.getLogger(PostModifyContent.class);
 	/**
 	 * 
 	 * @param a the
 	 * @param tab internal value set
 	 */
 	public PostModifyContent(final EditContentAccessable a,
-			final Hashtable<String, String> tab) {
+			final Hashtable<String, String> tab, LoginData login) {
 
 		String uS = "";
 		try {
@@ -81,7 +84,7 @@ public class PostModifyContent extends Action {
 		
 		
 		
-		log.info("WRITE: " + a.getLabel());
+		LOG.info("WRITE: " + a.getLabel());
 		PostMethod pm = new PostMethod(uS);
 		pm.getParams().setContentCharset(MediaWikiBot.CHARSET);
 

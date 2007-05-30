@@ -22,8 +22,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import net.sourceforge.jwbf.JWBF;
-import net.sourceforge.jwbf.actions.http.Action;
 import net.sourceforge.jwbf.actions.http.ActionException;
+import net.sourceforge.jwbf.actions.http.ContentProcessable;
 import net.sourceforge.jwbf.actions.http.HttpActionClient;
 
 import org.apache.commons.httpclient.HttpClient;
@@ -57,7 +57,7 @@ public abstract class HttpBot {
 	 *            like http://www.yourOwnWiki.org/w/index.php
 	 * 
 	 */
-	protected void setConnection(final HttpClient client, final URL u) {
+	protected final void setConnection(final HttpClient client, final URL u) {
 
 		this.client = client;
 		client.getParams().setParameter("http.useragent",
@@ -76,7 +76,7 @@ public abstract class HttpBot {
 	 *             on problems
 	 * @return text
 	 */
-	public final String performAction(final Action a) throws ActionException {
+	public final String performAction(final ContentProcessable a) throws ActionException {
 		return cc.performAction(a);
 	}
 
@@ -85,7 +85,7 @@ public abstract class HttpBot {
 	 * @param hostUrl
 	 *            like http://www.yourOwnWiki.org/wiki/index.php
 	 */
-	protected void setConnection(final String hostUrl) {
+	protected final void setConnection(final String hostUrl) {
 		try {
 			client.getParams().setParameter("http.useragent",
 					"JWBF " + JWBF.VERSION);
@@ -100,7 +100,7 @@ public abstract class HttpBot {
 	 * 
 	 * @return a
 	 */
-	public HttpClient getClient() {
+	public final HttpClient getClient() {
 		return client;
 	}
 
@@ -109,7 +109,7 @@ public abstract class HttpBot {
 	 * @param hostUrl
 	 *            like http://www.yourOwnWiki.org/wiki/index.php
 	 */
-	protected void setConnection(final URL hostUrl) {
+	protected final void setConnection(final URL hostUrl) {
 		setConnection(client, hostUrl);
 
 	}

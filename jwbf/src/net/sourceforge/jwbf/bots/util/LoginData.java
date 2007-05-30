@@ -16,39 +16,27 @@
  * Contributors:
  * 
  */
-package net.sourceforge.jwbf.actions.http;
+package net.sourceforge.jwbf.bots.util;
 
-
-import java.util.List;
-
-import org.apache.commons.httpclient.Cookie;
-import org.apache.commons.httpclient.HttpMethod;
 /**
  * 
  * @author Thomas Stock
  *
  */
-public interface ContentProcessable {
-
-	/**
-	 * 
-	 * @param cs a
-	 * @param hm a
-	 * @throws CookieException on problems with cookies
-	 */
-	void validateReturningCookies(final Cookie[] cs, HttpMethod hm) throws CookieException;
-
-	/**
-	 * 
-	 * @param s the returning text
-	 * @param hm a
-	 * @return the retruning text or a modification of it
-	 */
-	String processReturningText(final String s, HttpMethod hm);
+public class LoginData {
 	
-	/**
-	 * @return the of messages in this action
-	 */
-	List<HttpMethod> getMessages();
+	private final int userid;
+	private final String botName;
+	private final String loginToken;
 	
+	public LoginData(int userid, String botName, String loginToken) {
+		this.userid = userid;
+		this.botName = botName;
+		this.loginToken = loginToken;
+	}
+	
+	public String get() {
+		return "& lgtoken=123ABC & lgusername=Yurik & lguserid=23456";
+	}
+
 }

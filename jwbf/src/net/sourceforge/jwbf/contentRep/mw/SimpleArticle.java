@@ -116,5 +116,19 @@ public class SimpleArticle implements EditContentAccessable {
 	public void setText(final String text) {
 		this.text = text;
 	}
+	/**
+	 * 
+	 * @param text to add to content of the article
+	 */
+	public void addText(final String text) {
+		this.text += text;
+	}
+	/**
+	 * 
+	 * @param text to add to content of the article
+	 */
+	public void addTextnl(final String text) {
+		this.text += "\n" + text;
+	}
 
 }

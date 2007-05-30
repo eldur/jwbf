@@ -14,30 +14,32 @@
  * the License.
  * 
  * Contributors:
- * Philipp Kohl 
+ * Tobias Knerr
  */
+ 
 package net.sourceforge.jwbf.bots;
 
 import java.net.URL;
-import java.util.AbstractCollection;
+import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Iterator;
-import java.util.Vector;
-
-import javax.naming.NamingException;
 
 import net.sourceforge.jwbf.actions.http.ActionException;
-import net.sourceforge.jwbf.actions.http.mw.GetCategoryArticles;
-import net.sourceforge.jwbf.actions.http.mw.GetBacklinkTitles;
 import net.sourceforge.jwbf.actions.http.mw.GetEnvironmentVars;
-import net.sourceforge.jwbf.actions.http.mw.GetPageContent;
-import net.sourceforge.jwbf.actions.http.mw.GetWhatlinkshereElements;
+import net.sourceforge.jwbf.actions.http.mw.MWAction;
 import net.sourceforge.jwbf.actions.http.mw.PostDelete;
-import net.sourceforge.jwbf.actions.http.mw.PostLogin;
+import net.sourceforge.jwbf.actions.http.mw.PostLoginOld;
 import net.sourceforge.jwbf.actions.http.mw.PostModifyContent;
+import net.sourceforge.jwbf.actions.http.mw.api.alpha.GetAllPageTitles;
+import net.sourceforge.jwbf.actions.http.mw.api.alpha.GetBacklinkTitles;
+import net.sourceforge.jwbf.actions.http.mw.api.alpha.GetImagelinkTitles;
+import net.sourceforge.jwbf.actions.http.mw.api.alpha.GetRevision;
+import net.sourceforge.jwbf.actions.http.mw.api.alpha.GetTemplateUserTitles;
+import net.sourceforge.jwbf.actions.http.mw.api.alpha.MultiAction;
+import net.sourceforge.jwbf.actions.http.mw.api.alpha.PostLogin;
+import net.sourceforge.jwbf.bots.util.LoginData;
 import net.sourceforge.jwbf.contentRep.ContentAccessable;
 import net.sourceforge.jwbf.contentRep.mw.EditContentAccessable;
-import net.sourceforge.jwbf.contentRep.mw.SimpleArticle;
 
 /**
  * 
@@ -52,18 +54,19 @@ import net.sourceforge.jwbf.contentRep.mw.SimpleArticle;
  * </pre>
  * 
  * @author Thomas Stock
- * @author Philipp Kohl 
+ * @author Tobias Knerr 
  * 
  */
 public class MediaWikiBot extends HttpBot {
-
-	private boolean loggedIn = false;
 	
 	public static final int ARTICLE = 1 << 1;
 	public static final int MEDIA = 1 << 2;
 	public static final int SUBCATEGORY = 1 << 3;
 	
 	public static final String CHARSET = "utf-8";
+	
+	private LoginData login;
+	private boolean loggedIn = false;
 	
 
 	/**
@@ -95,12 +98,16 @@ public class MediaWikiBot extends HttpBot {
 	 *            the password
 	 * @throws ActionException
 	 *             on problems
+	 * @supportedBy MediaWiki 1.9.x API
 	 */
 	public final void login(final String username, final String passwd)
 			throws ActionException {
-		performAction(new PostLogin(username, passwd));
+		// code for 1.9.x API
+//		PostLogin pl = new PostLogin(username, passwd);
+//		performAction(pl);
+//		login = pl.getLoginData();
+		performAction(new PostLoginOld(username, passwd));
 		loggedIn = true;
-
 	}
 
 	/**
@@ -110,169 +117,332 @@ public class MediaWikiBot extends HttpBot {
 	 * @return a content representation of requested article, never null
 	 * @throws ActionException
 	 *             on problems or if conent null
+	 * @supportedBy MediaWiki 1.9.x API
 	 */
 	public final ContentAccessable readContent(final String name)
 			throws ActionException {
-		SimpleArticle a = null;
-
-		a = new SimpleArticle(performAction(new GetPageContent(name)), name);
+		ContentAccessable a = null;
+		GetRevision ac = new GetRevision(name, GetRevision.CONTENT);
+		
+		performAction(ac);
+		a = ac.getArticle();
 
 		return a;
 	}
 
+//	/**
+//	 * 
+//	 * @param title
+//	 *            of category in a mediawiki like "Category:Small Things"
+//	 * @return with all article names in the requestet category
+//	 * @throws ActionException
+//	 *             on problems
+//	 */
+//	public final Collection<String> readCategory(final String title)
+//			throws ActionException {
+//
+//		return readCategory(title, ARTICLE);
+//	}
+
+
 	/**
-	 * 
-	 * @param title
-	 *            of category in a mediawiki like "Category:Small Things"
-	 * @return with all article names in the requestet category
-	 * @throws ActionException
-	 *             on problems
+	 * helper method generating a namespace string as required by the MW-api.
+	 * @param namespaces namespace as 
+	 * @return with numbers seperated by |
 	 */
-	public final AbstractCollection<String> readCategory(final String title)
-			throws ActionException {
+	private String generateNamespaceString(int ... namespaces) {
+	
+		String namespaceString = null;
+		
+		if (namespaces != null && namespaces.length != 0) {
+			
+			namespaceString = new String();
+			
+			for (int nsNumber : namespaces) {
+				
+				namespaceString += nsNumber + "|";
+				
+			}
+			
+			//remove last '|'
+			if (namespaceString.endsWith("|")) {
+				namespaceString = namespaceString.substring(0, namespaceString.length() - 1);
+			}			
 
-		return readCategory(title, ARTICLE);
+		}
+		
+		return namespaceString;
+		
 	}
-
 	
 	/**
-	 * TODO    still in development
+	 * generates an iterable with the results from a series of MultiAction
+	 * when given the first of the actions.
+	 * The result type can vary to match the result type of the MultiActions.
 	 *
-	 * @param article   title of an article
+	 *
+	 * @param initialAction   first action to perform, provides a next action.
 	 * 
-	 * @return   collection containing names of all articles
-	 *           which link to the article specified by the article-parameter.
-	 *           May be empty if no article links there.
+	 * @return   iterable providing access to the result values from the
+	 *           responses to the initial and subsequent actions.
+	 *           Attention: when the values from the subsequent actions 
+	 *           are accessed for the first time,
+	 *           the connection to the MediaWiki must still exist,
+	 *           /*++ unless ...
+	 *
+	 * @throws ActionException   
+	 *           general exception when problems concerning the action occur
+	 * @supportedBy MediaWiki 1.9.x API
+	 */
+	public <R> Iterable<R> performMultiAction(MultiAction<R> initialAction)
+		throws ActionException {
+		
+		//Iterable-class which will store all results which are already known
+		//and perform the next action when more titles are needed 
+		class MultiActionResultIterable<R> implements Iterable<R> {
+		
+			//matching Iterator, containing an index variable
+			//and a reference to a MultiActionResultIterable
+			class MultiActionResultIterator<R> implements Iterator<R> {
+			
+				private int index = 0;
+	
+				private MultiActionResultIterable<R> generatingIterable;
+				
+				public boolean hasNext() { 
+					while( index >= generatingIterable.knownResults.size() 
+									&& generatingIterable.nextAction != null ){
+						generatingIterable.loadMoreResults();
+					}
+					return index < generatingIterable.knownResults.size();						
+				}
+					
+				public R next() {
+					while( index >= generatingIterable.knownResults.size()
+									&& generatingIterable.nextAction != null ){
+						generatingIterable.loadMoreResults();
+					}
+					return generatingIterable.knownResults.get(index ++);					
+				}
+				
+				public void remove() { throw new UnsupportedOperationException(); }
+				
+				/** constructor, relies on generatingIterable != null */
+				MultiActionResultIterator(
+					MultiActionResultIterable<R> generatingIterable) {
+					this.generatingIterable = generatingIterable;
+				}																
+				
+			}   			
+					
+			private MultiAction<R> nextAction = null;
+					
+			private ArrayList<R> knownResults = new ArrayList<R>();
+						
+			private void loadMoreResults() {
+				
+				if (nextAction != null ) {
+					
+					try {
+					
+						performAction((MWAction)nextAction); /*++ remove that cast! ++*/
+						knownResults.addAll(nextAction.getResults());		
+					
+						nextAction = nextAction.getNextAction();
+						
+					} catch( ActionException ae ){ nextAction = null; }
+					
+				}
+				
+			}
+			
+			public Iterator<R> iterator() {
+				return new MultiActionResultIterator<R>(this);
+			}
+			
+			public MultiActionResultIterable(MultiAction<R> initialAction) {
+				this.nextAction = initialAction;
+			}
+			
+		}
+		
+		return new MultiActionResultIterable(initialAction);
+
+	}
+
+
+	/*++ TODO: loadAll-parameter ++*/
+	
+	
+	/**
+	 * get the titles of all pages meeting certain criteria;
+	 * USE WITH CAUTION - especially in big wikis!
+	 *
+	 * @param from          page title to start from, may be null
+	 * @param prefix        restricts search to titles that begin with this value,
+	 *                      may be null
+	 * @param redirects     include redirects in the list
+	 * @param nonredirects  include nonredirects in the list
+	 * @param namespaces    numbers of the namespaces (specified using varargs)
+	 *                      that will be included in the search
+   *                      (will be ignored if redirects is false!)
+	 * 
+	 * @return   iterable providing access to the names of all articles
+	 *           which embed the template specified by the template-parameter.
+	 *           Attention: to get more article titles,
+	 *           the connection to the MediaWiki must still exist.
 	 *
 	 * @throws ActionException   general exception when problems occur
+	 * @supportedBy MediaWiki 1.9.x API
 	 */
-	public final AbstractCollection<String> getBacklinkTitles(
-		final String article) throws ActionException {
-		
-		//vector that will be returned in the end
-		Vector<String> titleVector = new Vector<String>();
-		
-		//create and use a GetBacklinkTitles-action
-		GetBacklinkTitles action = new GetBacklinkTitles(article,titleVector);			
-		performAction(action);
-		
-		//use more actions to access the rest of the api's output pages
-		try {
-			//check whether another action is needed
-			//(note: "action" will always contain the last action which was generated)
-			while (action.hasMore()) {
-				action = new GetBacklinkTitles(
-					article, action.next().toString(), titleVector );
-				performAction(action);
-			}
-		} catch (NamingException e) {
-			e.printStackTrace();
-		}
+	public Iterable<String> getAllPageTitles(String from, String prefix,
+		boolean redirects, boolean nonredirects, int... namespaces)
+		throws ActionException {
+				
+		GetAllPageTitles a = new GetAllPageTitles(from, prefix,
+			redirects, nonredirects, generateNamespaceString(namespaces));			
 
-		//return the result
-		return titleVector;
+		return performMultiAction(a);
+		
+	}	
+	
+	/**
+	 * variation of the getAllPageTitles-method
+	 * which does not set a namespace restriction.
+	 * @supportedBy MediaWiki 1.9.x API
+	 */
+	public Iterable<String> getAllPageTitles(String from, String prefix,
+		boolean redirects, boolean nonredirects) throws ActionException {
+				
+		return getAllPageTitles(from, prefix, redirects, nonredirects, null);	
 		
 	}
 
 	
 	/**
-	 * TODO Feature not works realy. Boolean var is there only for function test
-	 * @param title
-	 *            of category in a mediawiki like "Category:Small Things"
+	 * get the titles of all pages which contain a link to the given article.
+	 *
+	 * @param article   title of an article
+	 *
+	 * @param namespaces   numbers of the namespaces (specified using varargs)
+	 *                     that will be included in the search
 	 * 
-	 * @param type
-	 *            of category elements, MediaWikiBot.MEDIA |
-	 *            MediaWikiBot.ARTICLE | ediaWikiBot.SUBCATEGORY
-	 * @return with all article names in the requestet category
-	 * @throws ActionException
-	 *             on problems
+	 * @return   iterable providing access to the names of all articles
+	 *           which link to the article specified by the article-parameter.
+	 *           Attention: to get more article titles,
+	 *           the connection to the MediaWiki must still exist.
+	 *
+	 * @throws ActionException   general exception when problems occur
+	 * @supportedBy MediaWiki 1.9.x API
 	 */
-	public final AbstractCollection<String> readCategory(final String title,
-			final int type) throws ActionException {
-		Vector<String> elementV = new Vector<String>();
-		
-		if ((type & ARTICLE) > 0) {
-			GetCategoryArticles cel = new GetCategoryArticles(title, elementV);
-			performAction(cel);
-			try {
-				while (cel.hasMore()) {
-					cel = new GetCategoryArticles(title, cel.next().toString(), elementV);
-					performAction(cel);
-				}
-			} catch (NamingException e) {
-				e.printStackTrace();
-			}
-	
-			if (elementV.isEmpty()) {
-				throw new ActionException("Category: \"" + title + "\" contains no articles");
-			}
-		}
-//		if ((type & MEDIA) > 0 && false) {
-//			GetCategoryMedia cel = new GetCategoryMedia(title, elementV);
-//			performAction(cel);
-//			try {
-//				while (cel.hasMore()) {
-//					cel = new GetCategoryMedia(title, cel.next().toString(), elementV);
-//					performAction(cel);
-//				}
-//			} catch (NamingException e) {
-//				e.printStackTrace();
-//			}
-//	
-//			if (elementV.isEmpty()) {
-//				throw new ActionException("Category: \"" + title + "\" contains no media");
-//			}
-//		}
-//		if ((type & SUBCATEGORY) > 0  && false) {
-//			GetCategorySub cel = new GetCategorySub(title, elementV);
-//			performAction(cel);
-//			try {
-//				while (cel.hasMore()) {
-//					cel = new GetCategorySub(title, cel.next().toString(), elementV);
-//					performAction(cel);
-//				}
-//			} catch (NamingException e) {
-//				e.printStackTrace();
-//			}
-//	
-//			if (elementV.isEmpty()) {
-//				throw new ActionException("Category: \"" + title + "\" contains no subcategories");
-//			}
-//		}
-		return elementV;
-	}
+	public Iterable<String> getBacklinkTitles(
+		String article, int... namespaces) throws ActionException {
+					
+		GetBacklinkTitles a = new GetBacklinkTitles(
+			article, generateNamespaceString(namespaces));			
 
+		return performMultiAction(a);
+		
+	}
+	
+	/**
+	 * variation of the getBacklinkTitles-method
+	 * which does not set a namespace restriction.
+	 * @supportedBy MediaWiki 1.9.x API
+	 */
+	public Iterable<String> getBacklinkTitles(
+		String article) throws ActionException {
+				
+		return getBacklinkTitles(article, null);	
+		
+	}
+	
 
 	/**
-	 * TODO infinite loop in GetWhatlinkshereElements.
+	 * get the titles of all pages which contain a link to the given image.
+	 *
+	 * @param image   title of an image
+	 *
+	 * @param namespaces   numbers of the namespaces (specified using varargs)
+	 *                     that will be included in the search
 	 * 
-	 * @param title
-	 *            of page in a mediawiki like "Main Page"
-	 * @return with all article names what links to the page
-	 * @throws ActionException
-	 *             on problems
+	 * @return   iterable providing access to the names of all articles
+	 *           which link to the image specified by the image-parameter.
+	 *           Attention: to get more article titles,
+	 *           the connection to the MediaWiki must still exist.
+	 *
+	 * @throws ActionException   general exception when problems occur
+	 * @since MediaWiki 1.9.0 API
 	 */
-	public final AbstractCollection<String> readWhatLinksHere(final String title)
-			throws ActionException {
-		Vector<String> av = new Vector<String>();
+	public Iterable<String> getImagelinkTitles(
+		String image, int... namespaces) throws ActionException {
+				
+		GetImagelinkTitles a = new GetImagelinkTitles(
+			image, generateNamespaceString(namespaces));			
 
-		GetWhatlinkshereElements cel = new GetWhatlinkshereElements(title, av);
-		performAction(cel);
-		try {
-			while (cel.hasMore()) {
-				cel = new GetWhatlinkshereElements(title,
-						cel.next().toString(), av);
-				performAction(cel);
-			}
-		} catch (NamingException e) {
-			e.printStackTrace();
-		}
+		return performMultiAction(a);
+		
+	}	
+	
+	/**
+	 * variation of the getImagelinkTitles-method
+	 * which does not set a namespace restriction.
+	 * @see #getImagelinkTitles(String, int[])
+	 * @supportedBy MediaWiki 1.9.x API
+	 */
+	public Iterable<String> getImagelinkTitles(
+		String image) throws ActionException {
+				
+		return getImagelinkTitles(image, null);	
+		
+	}	
 
-		if (av.isEmpty()) {
-			throw new ActionException("\"" + title + "\" is empty");
-		}
+	
+	/**
+	 * get the titles of all pages which embed the given template.
+	 *
+	 * @param template   title of a template
+	 *
+	 * @param namespaces   numbers of the namespaces (specified using varargs)
+	 *                     that will be included in the search
+	 * 
+	 * @return   iterable providing access to the names of all articles
+	 *           which embed the template specified by the template-parameter.
+	 *           Attention: to get more article titles,
+	 *           the connection to the MediaWiki must still exist.
+	 *
+	 * @throws ActionException   general exception when problems occur
+	 * @supportedBy MediaWiki 1.9.x API
+	 */
+	public Iterable<String> getTemplateUserTitles(
+		String template, int... namespaces) throws ActionException {
+				
+		GetTemplateUserTitles a = new GetTemplateUserTitles(
+			template, generateNamespaceString(namespaces));			
 
-		return av;
+		return performMultiAction(a);
+		
+	}	
+	
+	/**
+	 * variation of the getTemplateUserTitles-method.
+	 * which does not set a namespace restriction
+	 * @supportedBy MediaWiki 1.9.x API
+	 */
+	public Iterable<String> getTemplateUserTitles(
+		String template) throws ActionException {
+				
+		return getTemplateUserTitles(template, null);	
+		
+	}		
+
+	private boolean isLoggedIn() {
+		return loggedIn;
+//		// code for api 
+//		if(login != null) {
+//			return true;
+//		}
+//		return false;
 	}
 
 	/**
@@ -281,16 +451,17 @@ public class MediaWikiBot extends HttpBot {
 	 *            write the article (if already exists) in the mediawiki
 	 * @throws ActionException
 	 *             on problems
+	 * @supportedBy MediaWiki 1.9.x
 	 */
 	public final void writeContent(final EditContentAccessable a)
 			throws ActionException {
 
-		if (!loggedIn) {
+		if (!isLoggedIn()) {
 			throw new ActionException("Please login first");
 		}
 		Hashtable<String, String> tab = new Hashtable<String, String>();
-		performAction(new GetEnvironmentVars(a.getLabel(), tab));
-		performAction(new PostModifyContent(a, tab));
+		performAction(new GetEnvironmentVars(a.getLabel(), tab, login));
+		performAction(new PostModifyContent(a, tab, login));
 
 	}
 
@@ -301,6 +472,7 @@ public class MediaWikiBot extends HttpBot {
 	 *            a
 	 * @throws ActionException
 	 *             on problems
+	 * @supportedBy MediaWiki 1.9.x
 	 */
 	public final void writeMultContent(final Iterator<EditContentAccessable> cav)
 			throws ActionException {
@@ -316,39 +488,16 @@ public class MediaWikiBot extends HttpBot {
 	 *            like "Tamplate:FooBar" or "Main Page"
 	 * @throws ActionException
 	 *             on problems
+	 * @supportedBy MediaWiki 1.8.x, 1.9.x
 	 */
 	public final void deleteArticle(final String label) throws ActionException {
 
 		Hashtable<String, String> tab = new Hashtable<String, String>();
-		performAction(new GetEnvironmentVars(label, tab));
+		performAction(new GetEnvironmentVars(label, tab, login));
 
 		performAction(new PostDelete(label, tab));
 
 	}
-//	/**
-//	 * Use ONLY in wikis with less articles.
-//	 * @return Articles from the Specialpage: AllPages
-//	 * @throws ActionException on problems
-//	 */
-//	public AbstractCollection<String> readAllPages() throws ActionException {
-//		Vector<String> av = new Vector<String>();
-//
-//		GetAllPages cel = new GetAllPages(av);
-//		performAction(cel);
-//		try {
-//			while (cel.hasMore()) {
-//				cel = new GetAllPages(cel.next().toString(), av);
-//				performAction(cel);
-//			}
-//		} catch (NamingException e) {
-//			e.printStackTrace();
-//		}
-//
-//		if (av.isEmpty()) {
-//			throw new ActionException("Allpages is empty");
-//		}
-//
-//		return av;
-//	}
+	
 
 }

@@ -42,7 +42,7 @@ public class HttpActionClient {
 
 	private String path = "";
 
-	private Logger log = Logger.getLogger(Action.class);
+	private static final Logger LOG = Logger.getLogger(HttpActionClient.class);
 
 	/**
 	 * 
@@ -84,7 +84,7 @@ public class HttpActionClient {
 	 * @throws ActionException
 	 *             on problems
 	 */
-	public String performAction(Action a) throws ActionException {
+	public String performAction(ContentProcessable a) throws ActionException {
 	
 		
 		List<HttpMethod> msgs = a.getMessages();
@@ -132,8 +132,9 @@ public class HttpActionClient {
 		out = cp.processReturningText(out, authpost);
 
 		authpost.releaseConnection();
-		log.debug(authpost.getURI());
-		log.debug("POST: " + authpost.getStatusLine().toString());
+		LOG.debug(authpost.getURI() + " || "
+				+ "POST: " + authpost.getStatusLine().toString());
+		
 
 		// Usually a successful form-based login results in a redicrect to
 		// another url
@@ -181,8 +182,8 @@ public class HttpActionClient {
 
 		client.executeMethod(authgets);
 		cp.validateReturningCookies(client.getState().getCookies(), authgets);
-		log.debug(authgets.getURI());
-		log.debug("GET: " + authgets.getStatusLine().toString());
+		LOG.debug(authgets.getURI());
+		LOG.debug("GET: " + authgets.getStatusLine().toString());
 
 		out = new String(authgets.getResponseBody());
 		out = cp.processReturningText(out, authgets);
@@ -191,7 +192,7 @@ public class HttpActionClient {
 		int statuscode = authgets.getStatusCode();
 
 		if (statuscode == HttpStatus.SC_NOT_FOUND) {
-			log.warn("Not Found: " + authgets.getQueryString());
+			LOG.warn("Not Found: " + authgets.getQueryString());
 
 			throw new FileNotFoundException(authgets.getQueryString());
 		}
@@ -209,7 +210,7 @@ public class HttpActionClient {
 		Cookie[] cookies = client.getState().getCookies();
 		if (cookies.length > 0) {
 			for (int i = 0; i < cookies.length; i++) {
-				log.trace("cookie: " + cookies[i].toString());
+				LOG.trace("cookie: " + cookies[i].toString());
 			}
 		}
 	}
