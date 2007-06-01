@@ -95,18 +95,20 @@ public class GetImagelinkTitles extends MWAction implements MultiAction<String> 
 		
 			if (ilcontinue == null) {
 		
-				uS = "/api.php?action=query&list=imagelinks"
+				uS = "/api.php?action=query&list=imageusage"
 						+ "&titles=" + URLEncoder.encode(imageName, MediaWikiBot.CHARSET) 
 						+ ((namespace!=null)?("&ilnamespace="+namespace):"")
 						+ "&illimit=" + LIMIT + "&format=xml";
 			
 			} else {
 				
-				uS = "/api.php?action=query&list=imagelinks"
+				uS = "/api.php?action=query&list=imageusage"
 						+ "&ilcontinue=" + URLEncoder.encode(ilcontinue, MediaWikiBot.CHARSET)
 						+ "&illimit=" + LIMIT + "&format=xml";
 				
 			}
+			
+			System.out.println(uS);
 			
 			msgs.add(new GetMethod(uS));
 		
@@ -138,11 +140,13 @@ public class GetImagelinkTitles extends MWAction implements MultiAction<String> 
 	 */
 	protected void parseHasMore(final String s) {
 			
+		System.out.println(s);
+		
 		// get the ilcontinue-value
 		
 		Pattern p = Pattern.compile(
 			"<query-continue>.*?"
-			+ "<imagelinks *ilcontinue=\"([^\"]*)\" */>"
+			+ "<imageusage *iucontinue=\"([^\"]*)\" */>"
 			+ ".*?</query-continue>",
 			Pattern.DOTALL | Pattern.MULTILINE);
 			
@@ -161,10 +165,12 @@ public class GetImagelinkTitles extends MWAction implements MultiAction<String> 
 	 */
 	public void parseArticleTitles(String s) {
 		
+		System.out.println(s);
+
 		// get the backlink titles and add them all to the titleCollection
 			
 		Pattern p = Pattern.compile(
-			"<il pageid=\".*?\" ns=\".*?\" title=\"(.*?)\" />");
+			"<iu pageid=\".*?\" ns=\".*?\" title=\"(.*?)\" />");
 			
 		Matcher m = p.matcher(s);
 		
