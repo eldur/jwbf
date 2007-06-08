@@ -123,21 +123,22 @@ public class HttpActionClient {
 	protected String post(HttpMethod authpost, ContentProcessable cp)
 			throws Exception {
 		showCookies(client);
-
+		
 		String out = "";
 
 		client.executeMethod(authpost);
-
-		out = new String(authpost.getResponseBody());
+		out = authpost.getResponseBodyAsString();
 		out = cp.processReturningText(out, authpost);
 
+		
+		
 		cp.validateReturningCookies(client.getState().getCookies(), authpost);
 		
 		authpost.releaseConnection();
 		LOG.debug(authpost.getURI() + " || "
 				+ "POST: " + authpost.getStatusLine().toString());
 		
-
+		
 		// Usually a successful form-based login results in a redicrect to
 		// another url
 		// int statuscode = authpost.getStatusCode();

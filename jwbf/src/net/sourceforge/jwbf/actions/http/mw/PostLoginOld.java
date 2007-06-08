@@ -19,11 +19,13 @@
 package net.sourceforge.jwbf.actions.http.mw;
 
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
 import net.sourceforge.jwbf.actions.http.CookieException;
 import net.sourceforge.jwbf.bots.MediaWikiBot;
 
 import org.apache.commons.httpclient.Cookie;
-import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.NameValuePair;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.log4j.Logger;
@@ -62,9 +64,12 @@ public class PostLoginOld extends MWAction {
 		PostMethod pm = new PostMethod(
 				"/index.php?title=Special:Userlogin&action=submitlogin&type=login");
 
+		
+		pm.getParams().setContentCharset(MediaWikiBot.CHARSET);
+		
 		pm.setRequestBody(new NameValuePair[] { action, url, userid,
 						password });
-		pm.getParams().setContentCharset(MediaWikiBot.CHARSET);
+		
 		msgs.add(pm);
 
 	}
@@ -73,14 +78,22 @@ public class PostLoginOld extends MWAction {
 	 * @throws CookieException when no cookies returning
 	 */
 	public void validateAllReturningCookies(final Cookie[] cs) throws CookieException {
-		String compare = username.replace('_', ' ').replace(' ', '+');
+		String compare = username;
+		try {
+			compare = URLEncoder.encode(username, MediaWikiBot.CHARSET);
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		if (cs == null) {
 			throw new CookieException("Cookiearray is null.");
 		}
 		if (cs.length == 0) {
 			throw new CookieException("No cookies found.");
 		} else {
-			for (int i = 0; i < cs.length; i++) {								
+			for (int i = 0; i < cs.length; i++) {	
+		
 				if (cs[i].toString().contains(compare)) {
 					LOG.info("Logged in as: " + username);
 					return;
@@ -91,11 +104,6 @@ public class PostLoginOld extends MWAction {
 				}
 			}
 		}
-	}
-	@Override
-	public String processReturningText(String s, HttpMethod hm) {
-		System.out.println(s);
-		return super.processReturningText(s, hm);
 	}
 
 }

@@ -456,7 +456,7 @@ public class MediaWikiBot extends HttpBot {
 		
 	}		
 
-	private boolean isLoggedIn() {
+	public boolean isLoggedIn() {
 		return loggedIn;
 //		// code for api 
 //		if(login != null) {

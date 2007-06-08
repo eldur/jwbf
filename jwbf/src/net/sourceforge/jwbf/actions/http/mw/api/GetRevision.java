@@ -131,7 +131,7 @@ public class GetRevision extends MWAction {
 		while (el.hasNext()) {
 			Element element = (Element) el.next();
 			if (element.getQualifiedName().equalsIgnoreCase("rev")) {
-				sa.setText(encode(element.getText()));
+				sa.setText(encodeUtf8(element.getText()));
 			} else {
 				findContent(element);
 			}

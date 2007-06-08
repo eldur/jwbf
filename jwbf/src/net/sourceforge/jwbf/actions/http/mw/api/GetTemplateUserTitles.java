@@ -125,7 +125,7 @@ public class GetTemplateUserTitles extends MWAction implements MultiAction<Strin
 	 * @return empty string
 	 */
 	public String processAllReturningText(final String s) {
-		String t = encode(s);
+		String t = encodeUtf8(s);
 		parseArticleTitles(t);
 		parseHasMore(t);
 		return "";

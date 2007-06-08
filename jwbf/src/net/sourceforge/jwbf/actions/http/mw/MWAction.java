@@ -109,7 +109,7 @@ public abstract class MWAction implements ContentProcessable {
 	 * @param s a
 	 * @return encoded s
 	 */
-	protected String encode(final String s) {
+	protected String encodeUtf8(final String s) {
 		
 		try {
 			return new String(s.getBytes(), MediaWikiBot.CHARSET);
