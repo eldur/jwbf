@@ -127,10 +127,12 @@ public class HttpActionClient {
 		String out = "";
 
 		client.executeMethod(authpost);
-		cp.validateReturningCookies(client.getState().getCookies(), authpost);
+
 		out = new String(authpost.getResponseBody());
 		out = cp.processReturningText(out, authpost);
 
+		cp.validateReturningCookies(client.getState().getCookies(), authpost);
+		
 		authpost.releaseConnection();
 		LOG.debug(authpost.getURI() + " || "
 				+ "POST: " + authpost.getStatusLine().toString());

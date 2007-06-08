@@ -23,6 +23,7 @@ import net.sourceforge.jwbf.actions.http.CookieException;
 import net.sourceforge.jwbf.bots.MediaWikiBot;
 
 import org.apache.commons.httpclient.Cookie;
+import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.NameValuePair;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.log4j.Logger;
@@ -40,6 +41,7 @@ public class PostLoginOld extends MWAction {
 	private static final Logger LOG = Logger.getLogger(PostLoginOld.class);
 	
 
+
 	
 	/**
 	 * 
@@ -52,7 +54,10 @@ public class PostLoginOld extends MWAction {
 		NameValuePair action = new NameValuePair("wpLoginattempt", "Log in");
 		NameValuePair url = new NameValuePair("wpRemember", "1");
 		NameValuePair userid = new NameValuePair("wpName", username);
-		NameValuePair password = new NameValuePair("wpPassword", pw);
+		
+		String pwLabel = "wpPassword";
+		
+		NameValuePair password = new NameValuePair(pwLabel, pw);
 
 		PostMethod pm = new PostMethod(
 				"/index.php?title=Special:Userlogin&action=submitlogin&type=login");
@@ -86,6 +91,11 @@ public class PostLoginOld extends MWAction {
 				}
 			}
 		}
+	}
+	@Override
+	public String processReturningText(String s, HttpMethod hm) {
+		System.out.println(s);
+		return super.processReturningText(s, hm);
 	}
 
 }

@@ -36,7 +36,6 @@ import net.sourceforge.jwbf.actions.http.mw.api.alpha.GetImagelinkTitles;
 import net.sourceforge.jwbf.actions.http.mw.api.alpha.GetRevision;
 import net.sourceforge.jwbf.actions.http.mw.api.alpha.GetTemplateUserTitles;
 import net.sourceforge.jwbf.actions.http.mw.api.alpha.MultiAction;
-import net.sourceforge.jwbf.actions.http.mw.api.alpha.PostLogin;
 import net.sourceforge.jwbf.bots.util.LoginData;
 import net.sourceforge.jwbf.contentRep.ContentAccessable;
 import net.sourceforge.jwbf.contentRep.mw.EditContentAccessable;
@@ -89,6 +88,9 @@ public class MediaWikiBot extends HttpBot {
 
 	}
 
+	
+
+	
 	/**
 	 * Performs a Login.
 	 * 
