@@ -31,6 +31,7 @@ import net.sourceforge.jwbf.contentRep.mw.EditContentAccessable;
 import net.sourceforge.jwbf.contentRep.mw.SimpleArticle;
 
 import org.apache.commons.httpclient.methods.GetMethod;
+import org.apache.log4j.Logger;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -50,6 +51,8 @@ public class GetRevision extends MWAction {
 	public static final int USER = 1 << 3;
 	public static final int COMMENT = 1 << 4;
 
+	private static final Logger LOG = Logger.getLogger(GetRevision.class);
+	
 	/**
 	 * TODO follow redirects.
 	 */
@@ -65,6 +68,7 @@ public class GetRevision extends MWAction {
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
+		LOG.debug(uS);
 		msgs.add(new GetMethod(uS));
 		
 	}

@@ -93,7 +93,8 @@ public class HttpActionClient {
 		while (it.hasNext()) {
 			HttpMethod e = it.next();
 			if (path.length() > 1) {
-				e.setPath(path);
+				e.setPath(path.substring(0, path.length() - 1) + e.getPath());
+				LOG.debug("path is: " + e.getPath());
 			}
 			try {
 				if (e instanceof GetMethod) {

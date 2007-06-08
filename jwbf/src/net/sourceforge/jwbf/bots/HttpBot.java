@@ -83,7 +83,7 @@ public abstract class HttpBot {
 	/**
 	 * 
 	 * @param hostUrl
-	 *            like http://www.yourOwnWiki.org/wiki/index.php
+	 *            like http://www.yourOwnWiki.org/wiki/
 	 */
 	protected final void setConnection(final String hostUrl) {
 		try {
@@ -107,7 +107,7 @@ public abstract class HttpBot {
 	/**
 	 * 
 	 * @param hostUrl
-	 *            like http://www.yourOwnWiki.org/wiki/index.php
+	 *            like http://www.yourOwnWiki.org/wiki/
 	 */
 	protected final void setConnection(final URL hostUrl) {
 		setConnection(client, hostUrl);
