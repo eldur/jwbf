@@ -16,7 +16,7 @@
  * Contributors:
  * 
  */
-package net.sourceforge.jwbf.actions.http.mw.api.alpha;
+package net.sourceforge.jwbf.actions.http.mw.api;
 
 import java.io.IOException;
 import java.io.Reader;

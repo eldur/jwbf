@@ -18,7 +18,7 @@
  * 
  */
  
-package net.sourceforge.jwbf.actions.http.mw.api.alpha;
+package net.sourceforge.jwbf.actions.http.mw.api;
 
 import java.util.Collection;
 import net.sourceforge.jwbf.actions.http.ContentProcessable;

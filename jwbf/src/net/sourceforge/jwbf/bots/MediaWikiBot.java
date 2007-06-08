@@ -30,15 +30,29 @@ import net.sourceforge.jwbf.actions.http.mw.MWAction;
 import net.sourceforge.jwbf.actions.http.mw.PostDelete;
 import net.sourceforge.jwbf.actions.http.mw.PostLoginOld;
 import net.sourceforge.jwbf.actions.http.mw.PostModifyContent;
-import net.sourceforge.jwbf.actions.http.mw.api.alpha.GetAllPageTitles;
-import net.sourceforge.jwbf.actions.http.mw.api.alpha.GetBacklinkTitles;
-import net.sourceforge.jwbf.actions.http.mw.api.alpha.GetImagelinkTitles;
-import net.sourceforge.jwbf.actions.http.mw.api.alpha.GetRevision;
-import net.sourceforge.jwbf.actions.http.mw.api.alpha.GetTemplateUserTitles;
-import net.sourceforge.jwbf.actions.http.mw.api.alpha.MultiAction;
+import net.sourceforge.jwbf.actions.http.mw.api.GetAllPageTitles;
+import net.sourceforge.jwbf.actions.http.mw.api.GetBacklinkTitles;
+import net.sourceforge.jwbf.actions.http.mw.api.GetImagelinkTitles;
+import net.sourceforge.jwbf.actions.http.mw.api.GetRevision;
+import net.sourceforge.jwbf.actions.http.mw.api.GetTemplateUserTitles;
+import net.sourceforge.jwbf.actions.http.mw.api.MultiAction;
 import net.sourceforge.jwbf.bots.util.LoginData;
 import net.sourceforge.jwbf.contentRep.ContentAccessable;
 import net.sourceforge.jwbf.contentRep.mw.EditContentAccessable;
+
+/*
+ * possible tag values: @supportedBy
+ * ------------------------------------------
+ * MediaWiki 1.9.x
+ * MediaWiki 1.9.x API
+ * MediaWiki 1.10.x
+ * MediaWiki 1.10.x API
+ * 
+ * ( current Wikipedia version )
+ * MediaWiki 1.11.alpha
+ * MediaWiki 1.11.alpha API
+ * ------------------------------------------
+ */
 
 /**
  * 
@@ -70,7 +84,7 @@ public class MediaWikiBot extends HttpBot {
 
 	/**
 	 * @param u
-	 *            wikihosturl like "http://www.mediawiki.org/wiki/index.php"
+	 *            wikihosturl like "http://www.mediawiki.org/wiki/"
 	 */
 	public MediaWikiBot(final URL u) {
 		super();
@@ -80,7 +94,7 @@ public class MediaWikiBot extends HttpBot {
 	
 	/**
 	 * @param url
-	 *            wikihosturl like "http://www.mediawiki.org/wiki/index.php"
+	 *            wikihosturl like "http://www.mediawiki.org/wiki/"
 	 */
 	public MediaWikiBot(final String url) {
 		super();
@@ -196,15 +210,18 @@ public class MediaWikiBot extends HttpBot {
 	 *           general exception when problems concerning the action occur
 	 * @supportedBy MediaWiki 1.9.x API
 	 */
+	@SuppressWarnings("unchecked")
 	public <R> Iterable<R> performMultiAction(MultiAction<R> initialAction)
 		throws ActionException {
 		
 		//Iterable-class which will store all results which are already known
 		//and perform the next action when more titles are needed 
+		@SuppressWarnings("hiding")
 		class MultiActionResultIterable<R> implements Iterable<R> {
 		
 			//matching Iterator, containing an index variable
 			//and a reference to a MultiActionResultIterable
+			@SuppressWarnings("hiding")
 			class MultiActionResultIterator<R> implements Iterator<R> {
 			
 				private int index = 0;
@@ -241,6 +258,7 @@ public class MediaWikiBot extends HttpBot {
 					
 			private ArrayList<R> knownResults = new ArrayList<R>();
 						
+			@SuppressWarnings("unchecked")
 			private void loadMoreResults() {
 				
 				if (nextAction != null ) {
@@ -491,6 +509,7 @@ public class MediaWikiBot extends HttpBot {
 	 * @throws ActionException
 	 *             on problems
 	 * @supportedBy MediaWiki 1.8.x, 1.9.x
+	 * @deprecated
 	 */
 	public final void deleteArticle(final String label) throws ActionException {
 

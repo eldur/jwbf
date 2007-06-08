@@ -17,7 +17,7 @@
  * Tobias Knerr
  * 
  */
-package net.sourceforge.jwbf.actions.http.mw.api.alpha;
+package net.sourceforge.jwbf.actions.http.mw.api;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -27,26 +27,27 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import net.sourceforge.jwbf.actions.http.mw.MWAction;
-import net.sourceforge.jwbf.actions.http.mw.api.alpha.MultiAction;
+import net.sourceforge.jwbf.actions.http.mw.api.MultiAction;
 import net.sourceforge.jwbf.bots.MediaWikiBot;
 
 import org.apache.commons.httpclient.methods.GetMethod;
 
 
 /**
- * action class using the MediaWiki-api's "list=allpages".
+ * action class using the MediaWiki-api's "list=backlinks" 
  *
+ * @author Thomas Stock
  * @author Tobias Knerr
  * @since MediaWiki 1.9.0
  */
-public class GetAllPageTitles extends MWAction implements MultiAction<String> {
+public class GetBacklinkTitles extends MWAction implements MultiAction<String> {
 
-	/** constant value for the aplimit-parameter. **/
+	/** constant value for the bllimit-parameter. **/
 	private static final int LIMIT = 50;
 	
 	/**
 	 * Collection that will contain the result
-	 * (titles of articles matching the given criteria) 
+	 * (titles of articles linking to the target) 
 	 * after performing the action has finished.
 	 */
 	private Collection<String> titleCollection = new ArrayList<String>();
@@ -56,66 +57,57 @@ public class GetAllPageTitles extends MWAction implements MultiAction<String> {
 	 */
 	private String nextPageInfo = null;
 		
-	/**
-	 * information given in the constructor, necessary for creating next action
-	 */
-	private String prefix;
-	private String namespace;
-	private boolean redirects;
-	private boolean nonredirects;
-	
 		
 	/**
 	 * The public constructor. It will have an MediaWiki-request generated,
 	 * which is then added to msgs. When it is answered,
 	 * the method processAllReturningText will be called
 	 * (from outside this class).
-	 * For the parameters, see {@link GetAllPageTitles#generateRequest()}
+	 * For the parameters, see {@link GetBacklinkTitles#generateRequest()}
 	 */
-	public GetAllPageTitles(String from, String prefix,
-		boolean redirects, boolean nonredirects, String namespace){
-		this.prefix = prefix;
-		this.namespace = namespace;
-		this.redirects = redirects;
-		this.nonredirects = nonredirects;			
-		generateRequest(from, prefix, redirects, nonredirects, namespace);
+	public GetBacklinkTitles(String articleName, String namespace){
+		generateRequest(articleName,namespace,null);
 	}
-
+	
+	/**
+	 * The private constructor, which is used to create follow-up actions.
+	 */
+	private GetBacklinkTitles(String nextPageInfo) {
+		generateRequest(null,null,nextPageInfo);
+	}
 	
 	/**
 	 * generates the next MediaWiki-request (GetMethod) and adds it to msgs.
 	 *
-	 * @param from          page title to start from, may be null
-	 * @param prefix        restricts search to titles that begin with this value,
-	 *                      may be null
-	 * @param redirects     include redirects in the list
-	 * @param nonredirects  include nonredirects in the list
-   *                      (will be ignored if redirects is false!)
+	 * @param articleName   the title of the article,
+	 *                      may only be null if blcontinue is not null
 	 * @param namespace     the namespace(s) that will be searched for links,
 	 *                      as a string of numbers separated by '|';
 	 *                      if null, this parameter is omitted
+	 * @param blcontinue    the value for the blcontinue parameter,
+	 *                      null for the generation of the initial request
 	 */
-	protected void generateRequest(String from, String prefix,
-		boolean redirects, boolean nonredirects, String namespace){
+	protected void generateRequest(String articleName, String namespace, String blcontinue){
 	 
 	 	String uS = "";
 		
 		try {
 		
-			String apfilterredir;
-			if( redirects && nonredirects ){ apfilterredir = "all"; }
-			else if( redirects && ! nonredirects ){ apfilterredir = "redirects"; }
-			else{ apfilterredir = "nonredirects"; }
+			if (blcontinue == null) {
+		
+				uS = "/api.php?action=query&list=backlinks"
+						+ "&titles=" + URLEncoder.encode(articleName, MediaWikiBot.CHARSET) 
+						+ ((namespace!=null)?("&blnamespace="+namespace):"")
+						+ "&bllimit=" + LIMIT + "&format=xml";
 			
-			uS = "/api.php?action=query&list=allpages&"
-					+ ((from!=null)?( "&apfrom="
-						+ URLEncoder.encode(from, MediaWikiBot.CHARSET) ):"")
-					+ ((prefix!=null)?( "&apprefix="
-						+ URLEncoder.encode(prefix, MediaWikiBot.CHARSET) ):"")
-					+ ((namespace!=null)?("&apnamespace="+namespace):"")
-					+ "&apfilterredir=" + apfilterredir
-					+ "&aplimit=" + LIMIT + "&format=xml";
-						
+			} else {
+				
+				uS = "/api.php?action=query&list=backlinks"
+						+ "&blcontinue=" + URLEncoder.encode(blcontinue, MediaWikiBot.CHARSET)
+						+ "&bllimit=" + LIMIT + "&format=xml";
+				
+			}
+			
 			msgs.add(new GetMethod(uS));
 		
 		} catch (UnsupportedEncodingException e) {
@@ -150,7 +142,7 @@ public class GetAllPageTitles extends MWAction implements MultiAction<String> {
 		
 		Pattern p = Pattern.compile(
 			"<query-continue>.*?"
-			+ "<allpages *apfrom=\"([^\"]*)\" */>"
+			+ "<backlinks *blcontinue=\"([^\"]*)\" */>"
 			+ ".*?</query-continue>",
 			Pattern.DOTALL | Pattern.MULTILINE);
 			
@@ -172,7 +164,7 @@ public class GetAllPageTitles extends MWAction implements MultiAction<String> {
 		// get the backlink titles and add them all to the titleCollection
 			
 		Pattern p = Pattern.compile(
-			"<p pageid=\".*?\" ns=\".*?\" title=\"(.*?)\" />");
+			"<bl pageid=\".*?\" ns=\".*?\" title=\"(.*?)\" />");
 			
 		Matcher m = p.matcher(s);
 		
@@ -193,11 +185,10 @@ public class GetAllPageTitles extends MWAction implements MultiAction<String> {
 	 * @return   necessary information for the next action
 	 *           or null if no next api page exists
 	 */
-	public GetAllPageTitles getNextAction() {
+	public GetBacklinkTitles getNextAction() {
 		if( nextPageInfo == null ){ return null; }
 		else{
-			return new GetAllPageTitles(
-				nextPageInfo, prefix,	redirects, nonredirects, namespace);
+			return new GetBacklinkTitles(nextPageInfo);
 		}
 	}
 	

@@ -16,7 +16,7 @@
  * Contributors:
  * Philipp Kohl 
  */
-package net.sourceforge.jwbf.actions.http.mw.api.alpha;
+package net.sourceforge.jwbf.actions.http.mw.api;
 
 
 import java.io.IOException;

@@ -36,6 +36,7 @@ public class PostDelete extends MWAction {
 	 * 
 	 * @param label of the article
 	 * @param tab with contains environment variable "wpEditToken"
+	 * @deprecated
 	 */
 	public PostDelete(final String label, Hashtable<String, String> tab) {
 		

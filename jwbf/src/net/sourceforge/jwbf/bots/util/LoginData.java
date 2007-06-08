@@ -19,6 +19,8 @@
 package net.sourceforge.jwbf.bots.util;
 
 /**
+ * TODO API related, use only if posting data works
+ * http://www.mediawiki.org/wiki/API#Posting_Data_.2F_needs_major_editPage.php_rewrite
  * 
  * @author Thomas Stock
  *
@@ -36,7 +38,7 @@ public class LoginData {
 	}
 	
 	public String get() {
-		return "& lgtoken=123ABC & lgusername=Yurik & lguserid=23456";
+		return "& lgtoken=123ABC & lgusername="+ botName + " & lguserid=23456";
 	}
 
 }

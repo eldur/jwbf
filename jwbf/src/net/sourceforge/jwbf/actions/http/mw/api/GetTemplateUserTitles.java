@@ -17,7 +17,7 @@
  * Tobias Knerr
  * 
  */
-package net.sourceforge.jwbf.actions.http.mw.api.alpha;
+package net.sourceforge.jwbf.actions.http.mw.api;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -27,26 +27,27 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import net.sourceforge.jwbf.actions.http.mw.MWAction;
-import net.sourceforge.jwbf.actions.http.mw.api.alpha.MultiAction;
+import net.sourceforge.jwbf.actions.http.mw.api.MultiAction;
 import net.sourceforge.jwbf.bots.MediaWikiBot;
 
 import org.apache.commons.httpclient.methods.GetMethod;
 
 
 /**
- * action class using the MediaWiki-api's "list=imagelinks" 
+ * action class using the MediaWiki-api's "list=embeddedin"
+ * that is used to find all articles which use a template
  *
  * @author Tobias Knerr
  * @since MediaWiki 1.9.0
  */
-public class GetImagelinkTitles extends MWAction implements MultiAction<String> {
+public class GetTemplateUserTitles extends MWAction implements MultiAction<String> {
 
-	/** constant value for the illimit-parameter. **/
+	/** constant value for the eilimit-parameter. **/
 	private static final int LIMIT = 50;
 	
 	/**
 	 * Collection that will contain the result
-	 * (titles of articles using the image) 
+	 * (titles of articles using the template) 
 	 * after performing the action has finished.
 	 */
 	private Collection<String> titleCollection = new ArrayList<String>();
@@ -62,53 +63,51 @@ public class GetImagelinkTitles extends MWAction implements MultiAction<String> 
 	 * which is then added to msgs. When it is answered,
 	 * the method processAllReturningText will be called
 	 * (from outside this class).
-	 * For the parameters, see {@link GetImagelinkTitles#generateRequest()}
+	 * For the parameters, see {@link GetTemplateUserTitles#generateRequest()}
 	 */
-	public GetImagelinkTitles(String imageName, String namespace){
-		generateRequest(imageName,namespace,null);
+	public GetTemplateUserTitles(String templateName, String namespace){
+		generateRequest(templateName,namespace,null);
 	}
 	
 	/**
 	 * The private constructor, which is used to create follow-up actions.
 	 */
-	private GetImagelinkTitles(String nextPageInfo) {
+	private GetTemplateUserTitles(String nextPageInfo) {
 		generateRequest(null,null,nextPageInfo);
 	}
 	
 	/**
 	 * generates the next MediaWiki-request (GetMethod) and adds it to msgs.
 	 *
-	 * @param imageName     the title of the image,
-	 *                      may only be null if ilcontinue is not null
+	 * @param templateName   the name of the template,
+	 *                      may only be null if eicontinue is not null
 	 * @param namespace     the namespace(s) that will be searched for links,
 	 *                      as a string of numbers separated by '|';
 	 *                      if null, this parameter is omitted
-	 * @param ilcontinue    the value for the ilcontinue parameter,
+	 * @param eicontinue    the value for the eicontinue parameter,
 	 *                      null for the generation of the initial request
 	 */
-	protected void generateRequest(String imageName, String namespace,
-		String ilcontinue){
+	protected void generateRequest(String templateName, String namespace,
+		String eicontinue){
 	 
 	 	String uS = "";
 		
 		try {
 		
-			if (ilcontinue == null) {
+			if (eicontinue == null) {
 		
-				uS = "/api.php?action=query&list=imageusage"
-						+ "&titles=" + URLEncoder.encode(imageName, MediaWikiBot.CHARSET) 
-						+ ((namespace!=null)?("&ilnamespace="+namespace):"")
-						+ "&illimit=" + LIMIT + "&format=xml";
+				uS = "/api.php?action=query&list=embeddedin"
+						+ "&titles=" + URLEncoder.encode(templateName, MediaWikiBot.CHARSET) 
+						+ ((namespace!=null)?("&einamespace="+namespace):"")
+						+ "&eilimit=" + LIMIT + "&format=xml";
 			
 			} else {
 				
-				uS = "/api.php?action=query&list=imageusage"
-						+ "&ilcontinue=" + URLEncoder.encode(ilcontinue, MediaWikiBot.CHARSET)
-						+ "&illimit=" + LIMIT + "&format=xml";
+				uS = "/api.php?action=query&list=embeddedin"
+						+ "&eicontinue=" + URLEncoder.encode(eicontinue, MediaWikiBot.CHARSET)
+						+ "&eilimit=" + LIMIT + "&format=xml";
 				
 			}
-			
-			System.out.println(uS);
 			
 			msgs.add(new GetMethod(uS));
 		
@@ -140,13 +139,11 @@ public class GetImagelinkTitles extends MWAction implements MultiAction<String> 
 	 */
 	protected void parseHasMore(final String s) {
 			
-		System.out.println(s);
-		
-		// get the ilcontinue-value
+		// get the eicontinue-value
 		
 		Pattern p = Pattern.compile(
 			"<query-continue>.*?"
-			+ "<imageusage *iucontinue=\"([^\"]*)\" */>"
+			+ "<embeddedin *eicontinue=\"([^\"]*)\" */>"
 			+ ".*?</query-continue>",
 			Pattern.DOTALL | Pattern.MULTILINE);
 			
@@ -165,12 +162,10 @@ public class GetImagelinkTitles extends MWAction implements MultiAction<String> 
 	 */
 	public void parseArticleTitles(String s) {
 		
-		System.out.println(s);
-
 		// get the backlink titles and add them all to the titleCollection
 			
 		Pattern p = Pattern.compile(
-			"<iu pageid=\".*?\" ns=\".*?\" title=\"(.*?)\" />");
+			"<ei pageid=\".*?\" ns=\".*?\" title=\"(.*?)\" />");
 			
 		Matcher m = p.matcher(s);
 		
@@ -191,10 +186,10 @@ public class GetImagelinkTitles extends MWAction implements MultiAction<String> 
 	 * @return   necessary information for the next action
 	 *           or null if no next api page exists
 	 */
-	public GetImagelinkTitles getNextAction() {
+	public GetTemplateUserTitles getNextAction() {
 		if( nextPageInfo == null ){ return null; }
 		else{
-			return new GetImagelinkTitles(nextPageInfo);
+			return new GetTemplateUserTitles(nextPageInfo);
 		}
 	}
 	
