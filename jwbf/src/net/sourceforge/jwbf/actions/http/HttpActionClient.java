@@ -49,21 +49,19 @@ public class HttpActionClient {
 	 * @param client
 	 *            a
 	 * @param path
-	 *            like "/w/index.php"
+	 *            like "/w/"
 	 */
 	public HttpActionClient(final HttpClient client, final String path) {
 		/*
 		 * see for docu
 		 * http://jakarta.apache.org/commons/httpclient/preference-api.html
 		 */
-		
-
-		
-		
 
 		this.client = client;
+		if (path.length() > 1) {
+			this.path = path.substring(0, path.lastIndexOf("/"));
+		}
 
-		this.path = path;
 	}
 
 	/**
@@ -93,8 +91,10 @@ public class HttpActionClient {
 		while (it.hasNext()) {
 			HttpMethod e = it.next();
 			if (path.length() > 1) {
-				e.setPath(path.substring(0, path.length() - 1) + e.getPath());
+				
+				e.setPath(path + e.getPath());
 				LOG.debug("path is: " + e.getPath());
+				
 			}
 			try {
 				if (e instanceof GetMethod) {
