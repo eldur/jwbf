@@ -27,7 +27,6 @@ import java.util.Iterator;
 import net.sourceforge.jwbf.actions.http.ActionException;
 import net.sourceforge.jwbf.actions.http.mw.GetEnvironmentVars;
 import net.sourceforge.jwbf.actions.http.mw.MWAction;
-import net.sourceforge.jwbf.actions.http.mw.PostDelete;
 import net.sourceforge.jwbf.actions.http.mw.PostLoginOld;
 import net.sourceforge.jwbf.actions.http.mw.PostModifyContent;
 import net.sourceforge.jwbf.actions.http.mw.api.GetAllPageTitles;
@@ -198,7 +197,7 @@ public class MediaWikiBot extends HttpBot {
 	 *
 	 *
 	 * @param initialAction   first action to perform, provides a next action.
-	 * @param <R> sd
+	 * @param <R> type like String
 	 * @return   iterable providing access to the result values from the
 	 *           responses to the initial and subsequent actions.
 	 *           Attention: when the values from the subsequent actions 
@@ -208,55 +207,35 @@ public class MediaWikiBot extends HttpBot {
 	 *
 	 * @throws ActionException   
 	 *           general exception when problems concerning the action occur
-	 * @supportedBy MediaWiki 1.9.x API
+	 * @supportedBy MediaWiki 1.9.x API, 1.10.x API
 	 */
 	@SuppressWarnings("unchecked")
 	private <R> Iterable<R> performMultiAction(MultiAction<R> initialAction)
 		throws ActionException {
 		
-		//Iterable-class which will store all results which are already known
-		//and perform the next action when more titles are needed 
+		/** Iterable-class which will store all results which are already known
+		 * and perform the next action when more titles are needed
+		 */ 
+		@SuppressWarnings("hiding")
 		class MultiActionResultIterable<R> implements Iterable<R> {
 		
-			//matching Iterator, containing an index variable
-			//and a reference to a MultiActionResultIterable
-			class MultiActionResultIterator<R> implements Iterator<R> {
-			
-				private int index = 0;
-	
-				private MultiActionResultIterable<R> generatingIterable;
-				
-				public boolean hasNext() { 
-					while (index >= generatingIterable.knownResults.size() 
-									&& generatingIterable.nextAction != null) {
-						generatingIterable.loadMoreResults();
-					}
-					return index < generatingIterable.knownResults.size();						
-				}
-					
-				public R next() {
-					while (index >= generatingIterable.knownResults.size()
-									&& generatingIterable.nextAction != null) {
-						generatingIterable.loadMoreResults();
-					}
-					return generatingIterable.knownResults.get(index++);					
-				}
-				
-				public void remove() { throw new UnsupportedOperationException(); }
-				
-				/** constructor, relies on generatingIterable != null */
-				MultiActionResultIterator(
-					MultiActionResultIterable<R> generatingIterable) {
-					this.generatingIterable = generatingIterable;
-				}																
-				
-			}   			
+						
 					
 			private MultiAction<R> nextAction = null;
 					
 			private ArrayList<R> knownResults = new ArrayList<R>();
 						
-
+			/**
+			 * constructor.
+			 * @param initialAction the
+			 */
+			public MultiActionResultIterable(MultiAction<R> initialAction) {
+				this.nextAction = initialAction;
+			}
+			
+			/**
+			 * request more results if local interation seems to be empty.
+			 */
 			private void loadMoreResults() {
 				
 				if (nextAction != null) {
@@ -273,14 +252,67 @@ public class MediaWikiBot extends HttpBot {
 				}
 				
 			}
-			
+			/**
+			 * @return a
+			 */
 			public Iterator<R> iterator() {
 				return new MultiActionResultIterator<R>(this);
 			}
 			
-			public MultiActionResultIterable(MultiAction<R> initialAction) {
-				this.nextAction = initialAction;
-			}
+		
+			
+			/** matching Iterator, containing an index variable
+			 * and a reference to a MultiActionResultIterable
+			 */
+			class MultiActionResultIterator<R> implements Iterator<R> {
+			
+				private int index = 0;
+	
+				private MultiActionResultIterable<R> generatingIterable;
+				
+				
+				/** constructor, relies on generatingIterable != null
+				 * @param generatingIterable a
+				 */
+				MultiActionResultIterator(
+					MultiActionResultIterable<R> generatingIterable) {
+					this.generatingIterable = generatingIterable;
+				}		
+				
+				
+				/**
+				 * if a new query is needed to request more; more results
+				 * are requested. 
+				 * @return true if has next
+				 */
+				public boolean hasNext() { 
+					while (index >= generatingIterable.knownResults.size() 
+									&& generatingIterable.nextAction != null) {
+						generatingIterable.loadMoreResults();
+					}
+					return index < generatingIterable.knownResults.size();						
+				}
+				/**
+				 * if a new query is needed to request more; more results
+				 * are requested. 
+				 * @return a element of iteration
+				 */
+				public R next() {
+					while (index >= generatingIterable.knownResults.size()
+									&& generatingIterable.nextAction != null) {
+						generatingIterable.loadMoreResults();
+					}
+					return generatingIterable.knownResults.get(index++);					
+				}
+				
+				/**
+				 * is not supported 
+				 */
+				public void remove() { throw new UnsupportedOperationException(); }
+				
+																		
+				
+			}   
 			
 		}
 		
@@ -303,7 +335,7 @@ public class MediaWikiBot extends HttpBot {
 	 * @param nonredirects  include nonredirects in the list
 	 * @param namespaces    numbers of the namespaces (specified using varargs)
 	 *                      that will be included in the search
-   *                      (will be ignored if redirects is false!)
+     *                      (will be ignored if redirects is false!)
 	 * 
 	 * @return   iterable providing access to the names of all articles
 	 *           which embed the template specified by the template-parameter.
@@ -330,7 +362,7 @@ public class MediaWikiBot extends HttpBot {
 	 *
 	 * @param namespaces    numbers of the namespaces (specified using varargs)
 	 *                      that will be included in the search
-   *                      (will be ignored if redirects is false!)
+     *                      (will be ignored if redirects is false!)
 	 * 
 	 * @return   iterable providing access to the names of all articles
 	 *           which embed the template specified by the template-parameter.
@@ -353,10 +385,13 @@ public class MediaWikiBot extends HttpBot {
 	/**
 	 * variation of the getAllPageTitles-method
 	 * which does not set a namespace restriction.
-	 * @param from 
-	 * @param prefix
-	 * @param redirects
-	 * @param nonredirects
+	 * @param from          page title to start from, may be null
+	 * @param prefix        restricts search to titles that begin with this value,
+	 *                      may be null
+	 * @param redirects     include redirects in the list
+	 * @param nonredirects  include nonredirects in the list
+	 * @return of titels
+	 * @throws ActionException on requesting problems
 	 * @supportedBy MediaWiki 1.9.x, 1.10.x API
 	 */
 	public Iterable<String> getAllPageTitles(String from, String prefix,
@@ -396,6 +431,9 @@ public class MediaWikiBot extends HttpBot {
 	/**
 	 * variation of the getBacklinkTitles-method
 	 * which does not set a namespace restriction.
+	 * @param article label of article
+	 * @return of article labels
+	 * @throws ActionException general exception when problems occur 
 	 * @supportedBy MediaWiki 1.9.x API
 	 */
 	public Iterable<String> getBacklinkTitles(
@@ -435,8 +473,11 @@ public class MediaWikiBot extends HttpBot {
 	/**
 	 * variation of the getImagelinkTitles-method
 	 * which does not set a namespace restriction.
+	 * @param image label of image like TODO
+	 * @return an of labels
 	 * @see #getImagelinkTitles(String, int[])
-	 * @supportedBy MediaWiki 1.9.x API
+	 * @throws ActionException   general exception when problems occur
+	 * @supportedBy MediaWiki 1.9.x API, 1.10.x API
 	 */
 	public Iterable<String> getImagelinkTitles(
 		String image) throws ActionException {
@@ -475,7 +516,10 @@ public class MediaWikiBot extends HttpBot {
 	/**
 	 * variation of the getTemplateUserTitles-method.
 	 * which does not set a namespace restriction
-	 * @supportedBy MediaWiki 1.9.x API
+	 * @param template label of template like TODO
+	 * @return an of labels
+	 * @throws ActionException   general exception when problems occur
+	 * @supportedBy MediaWiki 1.9.x API, 1.10.x API
 	 */
 	public Iterable<String> getTemplateUserTitles(
 		String template) throws ActionException {
@@ -532,24 +576,6 @@ public class MediaWikiBot extends HttpBot {
 			writeContent(cav.next());
 
 		}
-	}
-
-	/**
-	 * 
-	 * @param label
-	 *            like "Tamplate:FooBar" or "Main Page"
-	 * @throws ActionException
-	 *             on problems
-	 * @supportedBy MediaWiki 1.8.x, 1.9.x
-	 * @deprecated
-	 */
-	public final void deleteArticle(final String label) throws ActionException {
-
-		Hashtable<String, String> tab = new Hashtable<String, String>();
-		performAction(new GetEnvironmentVars(label, tab, login));
-
-		performAction(new PostDelete(label, tab));
-
 	}
 	
 

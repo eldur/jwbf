@@ -145,7 +145,7 @@ public class SimpleArticle implements EditContentAccessable {
 	
 
 	/**
-	 * @return the
+	 * @param editor the
 	 */
 	public void setEditor(final String editor) {
 		this.editor = editor;
