@@ -18,22 +18,40 @@
  */
 package net.sourceforge.jwbf.contentRep.mw;
 
-import net.sourceforge.jwbf.contentRep.ContentAccessable;
+
 /**
  * 
  * @author Thomas Stock
  *
  */
-public interface EditContentAccessable extends ContentAccessable {
+public interface EditContentAccessable {
 	
 	/**
 	 * 
 	 * @return the
 	 */
 	String getEditSummary();
+	
+	/**
+	 * 
+	 * @return the
+	 */
+	String getEditor();
 	/**
 	 * 
 	 * @return true, if is
 	 */
 	boolean isMinorEdit(); 
+	
+	/**
+	 * 
+	 * @return titel
+	 */
+	String getLabel(); 
+	
+	/**
+	 * 
+	 * @return content wiki syntax of this article
+	 */
+	String getText();
 }

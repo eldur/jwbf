@@ -37,7 +37,7 @@ import net.sourceforge.jwbf.actions.http.mw.api.GetRevision;
 import net.sourceforge.jwbf.actions.http.mw.api.GetTemplateUserTitles;
 import net.sourceforge.jwbf.actions.http.mw.api.MultiAction;
 import net.sourceforge.jwbf.bots.util.LoginData;
-import net.sourceforge.jwbf.contentRep.ContentAccessable;
+
 import net.sourceforge.jwbf.contentRep.mw.EditContentAccessable;
 
 /*
@@ -135,10 +135,10 @@ public class MediaWikiBot extends HttpBot {
 	 *             on problems or if conent null
 	 * @supportedBy MediaWiki 1.9.x API
 	 */
-	public final ContentAccessable readContent(final String name)
+	public final EditContentAccessable readContent(final String name)
 			throws ActionException {
-		ContentAccessable a = null;
-		GetRevision ac = new GetRevision(name, GetRevision.CONTENT);
+		EditContentAccessable a = null;
+		GetRevision ac = new GetRevision(name, GetRevision.CONTENT | GetRevision.COMMENT | GetRevision.USER);
 		
 		performAction(ac);
 		a = ac.getArticle();
@@ -198,7 +198,7 @@ public class MediaWikiBot extends HttpBot {
 	 *
 	 *
 	 * @param initialAction   first action to perform, provides a next action.
-	 * 
+	 * @param <R> sd
 	 * @return   iterable providing access to the result values from the
 	 *           responses to the initial and subsequent actions.
 	 *           Attention: when the values from the subsequent actions 
@@ -211,17 +211,15 @@ public class MediaWikiBot extends HttpBot {
 	 * @supportedBy MediaWiki 1.9.x API
 	 */
 	@SuppressWarnings("unchecked")
-	public <R> Iterable<R> performMultiAction(MultiAction<R> initialAction)
+	private <R> Iterable<R> performMultiAction(MultiAction<R> initialAction)
 		throws ActionException {
 		
 		//Iterable-class which will store all results which are already known
 		//and perform the next action when more titles are needed 
-		@SuppressWarnings("hiding")
 		class MultiActionResultIterable<R> implements Iterable<R> {
 		
 			//matching Iterator, containing an index variable
 			//and a reference to a MultiActionResultIterable
-			@SuppressWarnings("hiding")
 			class MultiActionResultIterator<R> implements Iterator<R> {
 			
 				private int index = 0;
@@ -229,19 +227,19 @@ public class MediaWikiBot extends HttpBot {
 				private MultiActionResultIterable<R> generatingIterable;
 				
 				public boolean hasNext() { 
-					while( index >= generatingIterable.knownResults.size() 
-									&& generatingIterable.nextAction != null ){
+					while (index >= generatingIterable.knownResults.size() 
+									&& generatingIterable.nextAction != null) {
 						generatingIterable.loadMoreResults();
 					}
 					return index < generatingIterable.knownResults.size();						
 				}
 					
 				public R next() {
-					while( index >= generatingIterable.knownResults.size()
-									&& generatingIterable.nextAction != null ){
+					while (index >= generatingIterable.knownResults.size()
+									&& generatingIterable.nextAction != null) {
 						generatingIterable.loadMoreResults();
 					}
-					return generatingIterable.knownResults.get(index ++);					
+					return generatingIterable.knownResults.get(index++);					
 				}
 				
 				public void remove() { throw new UnsupportedOperationException(); }
@@ -258,19 +256,19 @@ public class MediaWikiBot extends HttpBot {
 					
 			private ArrayList<R> knownResults = new ArrayList<R>();
 						
-			@SuppressWarnings("unchecked")
+
 			private void loadMoreResults() {
 				
-				if (nextAction != null ) {
+				if (nextAction != null) {
 					
 					try {
 					
-						performAction((MWAction)nextAction); /*++ remove that cast! ++*/
+						performAction((MWAction) nextAction); /*++ remove that cast! ++*/
 						knownResults.addAll(nextAction.getResults());		
 					
 						nextAction = nextAction.getNextAction();
 						
-					} catch( ActionException ae ){ nextAction = null; }
+					} catch (ActionException ae) { nextAction = null; }
 					
 				}
 				
@@ -324,12 +322,42 @@ public class MediaWikiBot extends HttpBot {
 
 		return performMultiAction(a);
 		
+	}
+	
+	/**
+	 * get the titles of all pages meeting certain criteria;
+	 * USE WITH CAUTION - especially in big wikis!
+	 *
+	 * @param namespaces    numbers of the namespaces (specified using varargs)
+	 *                      that will be included in the search
+   *                      (will be ignored if redirects is false!)
+	 * 
+	 * @return   iterable providing access to the names of all articles
+	 *           which embed the template specified by the template-parameter.
+	 *           Attention: to get more article titles,
+	 *           the connection to the MediaWiki must still exist.
+	 *
+	 * @throws ActionException   general exception when problems occur
+	 * @supportedBy MediaWiki 1.9.x API
+	 */
+	public Iterable<String> getAllPageTitles(int... namespaces)
+		throws ActionException {
+				
+		GetAllPageTitles a = new GetAllPageTitles(null, null,
+			false, true, generateNamespaceString(namespaces));			
+
+		return performMultiAction(a);
+		
 	}	
 	
 	/**
 	 * variation of the getAllPageTitles-method
 	 * which does not set a namespace restriction.
-	 * @supportedBy MediaWiki 1.9.x API
+	 * @param from 
+	 * @param prefix
+	 * @param redirects
+	 * @param nonredirects
+	 * @supportedBy MediaWiki 1.9.x, 1.10.x API
 	 */
 	public Iterable<String> getAllPageTitles(String from, String prefix,
 		boolean redirects, boolean nonredirects) throws ActionException {
@@ -456,6 +484,10 @@ public class MediaWikiBot extends HttpBot {
 		
 	}		
 
+	/**
+	 * 
+	 * @return true if
+	 */
 	public boolean isLoggedIn() {
 		return loggedIn;
 //		// code for api 

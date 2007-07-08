@@ -18,7 +18,7 @@
  */
 package net.sourceforge.jwbf.contentRep.mw;
 
-import net.sourceforge.jwbf.contentRep.ContentAccessable;
+
 
 /**
  * This is a simple content helper class that implements the EditContentAccesable
@@ -32,6 +32,7 @@ public class SimpleArticle implements EditContentAccessable {
 	private String label = "";
 	private String editSummary = "";
 	private String text = "";
+	private String editor = "";
 	private boolean minorEdit = false;
 	
 	/**
@@ -46,9 +47,13 @@ public class SimpleArticle implements EditContentAccessable {
 	 * 
 	 * @param ca a
 	 */
-	public SimpleArticle(ContentAccessable ca) {
+	public SimpleArticle(EditContentAccessable ca) {
 		label = ca.getLabel();
 		text = ca.getText();
+		minorEdit = ca.isMinorEdit();
+		editSummary = ca.getEditSummary();
+		editor = ca.getEditor();
+		
 	}
 	
 	/**
@@ -129,6 +134,21 @@ public class SimpleArticle implements EditContentAccessable {
 	 */
 	public void addTextnl(final String text) {
 		this.text += "\n" + text;
+	}
+
+	/**
+	 * @return the
+	 */
+	public String getEditor() {
+		return editor;
+	}
+	
+
+	/**
+	 * @return the
+	 */
+	public void setEditor(final String editor) {
+		this.editor = editor;
 	}
 
 }

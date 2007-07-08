@@ -136,6 +136,8 @@ public class GetRevision extends MWAction {
 			Element element = (Element) el.next();
 			if (element.getQualifiedName().equalsIgnoreCase("rev")) {
 				sa.setText(encodeUtf8(element.getText()));
+				sa.setEditSummary(element.getAttributeValue("comment"));
+				sa.setEditor(encodeUtf8(element.getAttributeValue("user")));
 			} else {
 				findContent(element);
 			}

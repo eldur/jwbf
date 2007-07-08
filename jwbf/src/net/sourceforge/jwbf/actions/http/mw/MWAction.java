@@ -115,6 +115,8 @@ public abstract class MWAction implements ContentProcessable {
 			return new String(s.getBytes(), MediaWikiBot.CHARSET);
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
+		} catch (NullPointerException npe) {
+			return s;
 		}
 		return s;
 		
