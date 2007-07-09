@@ -27,7 +27,7 @@ package net.sourceforge.jwbf.contentRep.mw;
  * @author Thomas Stock
  *
  */
-public class SimpleArticle implements EditContentAccessable {
+public class SimpleArticle implements ContentAccessable {
 
 	private String label = "";
 	private String editSummary = "";
@@ -47,7 +47,7 @@ public class SimpleArticle implements EditContentAccessable {
 	 * 
 	 * @param ca a
 	 */
-	public SimpleArticle(EditContentAccessable ca) {
+	public SimpleArticle(ContentAccessable ca) {
 		label = ca.getLabel();
 		text = ca.getText();
 		minorEdit = ca.isMinorEdit();

@@ -27,7 +27,7 @@ import java.util.Iterator;
 
 import net.sourceforge.jwbf.actions.http.mw.MWAction;
 import net.sourceforge.jwbf.bots.MediaWikiBot;
-import net.sourceforge.jwbf.contentRep.mw.EditContentAccessable;
+import net.sourceforge.jwbf.contentRep.mw.ContentAccessable;
 import net.sourceforge.jwbf.contentRep.mw.SimpleArticle;
 
 import org.apache.commons.httpclient.methods.GetMethod;
@@ -120,7 +120,7 @@ public class GetRevision extends MWAction {
 		findContent(root);
 	}
 
-	public EditContentAccessable getArticle() {
+	public ContentAccessable getArticle() {
 		
 		
 		return sa;

@@ -37,7 +37,7 @@ import net.sourceforge.jwbf.actions.http.mw.api.GetTemplateUserTitles;
 import net.sourceforge.jwbf.actions.http.mw.api.MultiAction;
 import net.sourceforge.jwbf.bots.util.LoginData;
 
-import net.sourceforge.jwbf.contentRep.mw.EditContentAccessable;
+import net.sourceforge.jwbf.contentRep.mw.ContentAccessable;
 
 /*
  * possible tag values: @supportedBy
@@ -134,9 +134,9 @@ public class MediaWikiBot extends HttpBot {
 	 *             on problems or if conent null
 	 * @supportedBy MediaWiki 1.9.x API
 	 */
-	public final EditContentAccessable readContent(final String name)
+	public final ContentAccessable readContent(final String name)
 			throws ActionException {
-		EditContentAccessable a = null;
+		ContentAccessable a = null;
 		GetRevision ac = new GetRevision(name, GetRevision.CONTENT | GetRevision.COMMENT | GetRevision.USER);
 		
 		performAction(ac);
@@ -549,7 +549,7 @@ public class MediaWikiBot extends HttpBot {
 	 *             on problems
 	 * @supportedBy MediaWiki 1.9.x
 	 */
-	public final void writeContent(final EditContentAccessable a)
+	public final void writeContent(final ContentAccessable a)
 			throws ActionException {
 
 		if (!isLoggedIn()) {
@@ -570,7 +570,7 @@ public class MediaWikiBot extends HttpBot {
 	 *             on problems
 	 * @supportedBy MediaWiki 1.9.x
 	 */
-	public final void writeMultContent(final Iterator<EditContentAccessable> cav)
+	public final void writeMultContent(final Iterator<ContentAccessable> cav)
 			throws ActionException {
 		while (cav.hasNext()) {
 			writeContent(cav.next());

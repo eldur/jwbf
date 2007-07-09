@@ -25,7 +25,7 @@ import java.util.Hashtable;
 
 import net.sourceforge.jwbf.bots.MediaWikiBot;
 import net.sourceforge.jwbf.bots.util.LoginData;
-import net.sourceforge.jwbf.contentRep.mw.EditContentAccessable;
+import net.sourceforge.jwbf.contentRep.mw.ContentAccessable;
 
 import org.apache.commons.httpclient.NameValuePair;
 import org.apache.commons.httpclient.methods.PostMethod;
@@ -45,7 +45,7 @@ public class PostModifyContent extends MWAction {
 	 * @param a the
 	 * @param tab internal value set
 	 */
-	public PostModifyContent(final EditContentAccessable a,
+	public PostModifyContent(final ContentAccessable a,
 			final Hashtable<String, String> tab, LoginData login) {
 
 		String uS = "";

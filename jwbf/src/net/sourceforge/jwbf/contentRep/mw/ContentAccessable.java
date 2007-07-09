@@ -24,7 +24,7 @@ package net.sourceforge.jwbf.contentRep.mw;
  * @author Thomas Stock
  *
  */
-public interface EditContentAccessable {
+public interface ContentAccessable {
 	
 	/**
 	 * 
