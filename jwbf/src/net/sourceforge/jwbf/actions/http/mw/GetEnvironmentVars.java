@@ -62,7 +62,6 @@ public class GetEnvironmentVars extends MWAction {
 	/**
 	 * @return the returning text
 	 * @param s the whole returning text
-	 * @see net.sourceforge.jwbf.actions.http.Action#processAllReturningText(java.lang.String)
 	 */
 	public String processAllReturningText(final String s) {
 		

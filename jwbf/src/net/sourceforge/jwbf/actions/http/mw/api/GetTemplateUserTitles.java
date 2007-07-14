@@ -63,7 +63,7 @@ public class GetTemplateUserTitles extends MWAction implements MultiAction<Strin
 	 * which is then added to msgs. When it is answered,
 	 * the method processAllReturningText will be called
 	 * (from outside this class).
-	 * For the parameters, see {@link GetTemplateUserTitles#generateRequest()}
+	 * For the parameters, see {@link GetTemplateUserTitles#generateRequest(String, String, String)}
 	 */
 	public GetTemplateUserTitles(String templateName, String namespace){
 		generateRequest(templateName,namespace,null);

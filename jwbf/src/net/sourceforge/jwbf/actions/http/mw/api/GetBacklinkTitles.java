@@ -63,7 +63,7 @@ public class GetBacklinkTitles extends MWAction implements MultiAction<String> {
 	 * which is then added to msgs. When it is answered,
 	 * the method processAllReturningText will be called
 	 * (from outside this class).
-	 * For the parameters, see {@link GetBacklinkTitles#generateRequest()}
+	 * For the parameters, see {@link GetBacklinkTitles#generateRequest(String, String, String)}
 	 */
 	public GetBacklinkTitles(String articleName, String namespace){
 		generateRequest(articleName,namespace,null);

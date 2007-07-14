@@ -57,7 +57,7 @@ public class GetAllPageTitles extends MWAction implements MultiAction<String> {
 	private String nextPageInfo = null;
 		
 	/**
-	 * information given in the constructor, necessary for creating next action
+	 * information given in the constructor, necessary for creating next action.
 	 */
 	private String prefix;
 	private String namespace;
@@ -70,10 +70,20 @@ public class GetAllPageTitles extends MWAction implements MultiAction<String> {
 	 * which is then added to msgs. When it is answered,
 	 * the method processAllReturningText will be called
 	 * (from outside this class).
-	 * For the parameters, see {@link GetAllPageTitles#generateRequest()}
+	 * For the parameters, 
+	 * see {@link GetAllPageTitles#generateRequest(String, String, boolean, boolean, String)}
+	 * @param from          page title to start from, may be null
+	 * @param prefix        restricts search to titles that begin with this value,
+	 *                      may be null
+	 * @param redirects     include redirects in the list
+	 * @param nonredirects  include nonredirects in the list
+   *                      (will be ignored if redirects is false!)
+	 * @param namespace     the namespace(s) that will be searched for links,
+	 *                      as a string of numbers separated by '|';
+	 *                      if null, this parameter is omitted
 	 */
 	public GetAllPageTitles(String from, String prefix,
-		boolean redirects, boolean nonredirects, String namespace){
+		boolean redirects, boolean nonredirects, String namespace) {
 		this.prefix = prefix;
 		this.namespace = namespace;
 		this.redirects = redirects;
@@ -96,23 +106,27 @@ public class GetAllPageTitles extends MWAction implements MultiAction<String> {
 	 *                      if null, this parameter is omitted
 	 */
 	protected void generateRequest(String from, String prefix,
-		boolean redirects, boolean nonredirects, String namespace){
+		boolean redirects, boolean nonredirects, String namespace) {
 	 
 	 	String uS = "";
 		
 		try {
 		
 			String apfilterredir;
-			if( redirects && nonredirects ){ apfilterredir = "all"; }
-			else if( redirects && ! nonredirects ){ apfilterredir = "redirects"; }
-			else{ apfilterredir = "nonredirects"; }
+			if (redirects && nonredirects) { 
+				apfilterredir = "all"; 
+			} else if (redirects && !nonredirects) { 
+				apfilterredir = "redirects"; 
+			} else {
+				apfilterredir = "nonredirects"; 
+			} 
 			
 			uS = "/api.php?action=query&list=allpages&"
-					+ ((from!=null)?( "&apfrom="
+					+ ((from != null) ? ( "&apfrom="
 						+ URLEncoder.encode(from, MediaWikiBot.CHARSET) ):"")
-					+ ((prefix!=null)?( "&apprefix="
+					+ ((prefix != null) ? ( "&apprefix="
 						+ URLEncoder.encode(prefix, MediaWikiBot.CHARSET) ):"")
-					+ ((namespace!=null)?("&apnamespace="+namespace):"")
+					+ ((namespace != null) ? ("&apnamespace=" + namespace):"")
 					+ "&apfilterredir=" + apfilterredir
 					+ "&aplimit=" + LIMIT + "&format=xml";
 						
@@ -194,8 +208,9 @@ public class GetAllPageTitles extends MWAction implements MultiAction<String> {
 	 *           or null if no next api page exists
 	 */
 	public GetAllPageTitles getNextAction() {
-		if( nextPageInfo == null ){ return null; }
-		else{
+		if (nextPageInfo == null) { 
+			return null;	
+		} else {
 			return new GetAllPageTitles(
 				nextPageInfo, prefix,	redirects, nonredirects, namespace);
 		}

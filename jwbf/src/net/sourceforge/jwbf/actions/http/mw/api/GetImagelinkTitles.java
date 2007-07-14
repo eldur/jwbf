@@ -62,17 +62,17 @@ public class GetImagelinkTitles extends MWAction implements MultiAction<String> 
 	 * which is then added to msgs. When it is answered,
 	 * the method processAllReturningText will be called
 	 * (from outside this class).
-	 * For the parameters, see {@link GetImagelinkTitles#generateRequest()}
+	 * For the parameters, see {@link GetImagelinkTitles#generateRequest(String, String, String)}
 	 */
-	public GetImagelinkTitles(String imageName, String namespace){
-		generateRequest(imageName,namespace,null);
+	public GetImagelinkTitles(String imageName, String namespace) {
+		generateRequest(imageName, namespace, null);
 	}
 	
 	/**
 	 * The private constructor, which is used to create follow-up actions.
 	 */
 	private GetImagelinkTitles(String nextPageInfo) {
-		generateRequest(null,null,nextPageInfo);
+		generateRequest(null, null, nextPageInfo);
 	}
 	
 	/**

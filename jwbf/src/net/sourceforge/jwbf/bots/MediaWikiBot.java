@@ -343,7 +343,10 @@ public class MediaWikiBot extends HttpBot {
 	 *           the connection to the MediaWiki must still exist.
 	 *
 	 * @throws ActionException   general exception when problems occur
-	 * @supportedBy MediaWiki 1.9.x API
+	 * 
+	 * @supportedBy MediaWikiAPI 1.9 allpages / ap
+	 * @supportedBy MediaWikiAPI 1.10 allpages / ap
+	 * @supportedBy MediaWikiAPI 1.11 allpages / ap
 	 */
 	public Iterable<String> getAllPageTitles(String from, String prefix,
 		boolean redirects, boolean nonredirects, int... namespaces)
@@ -370,7 +373,10 @@ public class MediaWikiBot extends HttpBot {
 	 *           the connection to the MediaWiki must still exist.
 	 *
 	 * @throws ActionException   general exception when problems occur
-	 * @supportedBy MediaWiki 1.9.x API
+	 * 
+	 * @supportedBy MediaWikiAPI 1.9 allpages / ap
+	 * @supportedBy MediaWikiAPI 1.10 allpages / ap
+	 * @supportedBy MediaWikiAPI 1.11 allpages / ap
 	 */
 	public Iterable<String> getAllPageTitles(int... namespaces)
 		throws ActionException {
@@ -392,7 +398,10 @@ public class MediaWikiBot extends HttpBot {
 	 * @param nonredirects  include nonredirects in the list
 	 * @return of titels
 	 * @throws ActionException on requesting problems
-	 * @supportedBy MediaWiki 1.9.x, 1.10.x API
+	 * 
+	 * @supportedBy MediaWikiAPI 1.9 allpages / ap
+	 * @supportedBy MediaWikiAPI 1.10 allpages / ap
+	 * @supportedBy MediaWikiAPI 1.11 allpages / ap
 	 */
 	public Iterable<String> getAllPageTitles(String from, String prefix,
 		boolean redirects, boolean nonredirects) throws ActionException {
@@ -416,7 +425,11 @@ public class MediaWikiBot extends HttpBot {
 	 *           the connection to the MediaWiki must still exist.
 	 *
 	 * @throws ActionException   general exception when problems occur
-	 * @supportedBy MediaWiki 1.9.x API
+	 *
+	 * TODO Pending Parameter Change; http://www.mediawiki.org/wiki/API:Query_-_Lists
+	 * @supportedBy MediaWikiAPI 1.9 backlinks / bl
+	 * @supportedBy MediaWikiAPI 1.10 backlinks / bl
+	 * @supportedBy MediaWikiAPI 1.11 backlinks / bl
 	 */
 	public Iterable<String> getBacklinkTitles(
 		String article, int... namespaces) throws ActionException {
@@ -434,7 +447,11 @@ public class MediaWikiBot extends HttpBot {
 	 * @param article label of article
 	 * @return of article labels
 	 * @throws ActionException general exception when problems occur 
-	 * @supportedBy MediaWiki 1.9.x API
+	 * 
+	 * TODO Pending Parameter Change; http://www.mediawiki.org/wiki/API:Query_-_Lists
+	 * @supportedBy MediaWikiAPI 1.9 backlinks / bl
+	 * @supportedBy MediaWikiAPI 1.10 backlinks / bl
+	 * @supportedBy MediaWikiAPI 1.11 backlinks / bl
 	 */
 	public Iterable<String> getBacklinkTitles(
 		String article) throws ActionException {
@@ -458,7 +475,13 @@ public class MediaWikiBot extends HttpBot {
 	 *           the connection to the MediaWiki must still exist.
 	 *
 	 * @throws ActionException   general exception when problems occur
-	 * @since MediaWiki 1.9.0 API
+	 * 
+	 * TODO Pending Parameter Change; http://www.mediawiki.org/wiki/API:Query_-_Lists
+	 * TODO New API call, deside if design a swich by version or support only newest
+	 * 
+	 * @supportedBy MediaWikiAPI 1.9 embeddedin / ei
+	 * @supportedBy MediaWikiAPI 1.10 embeddedin / ei
+	 * 
 	 */
 	public Iterable<String> getImagelinkTitles(
 		String image, int... namespaces) throws ActionException {
@@ -477,7 +500,12 @@ public class MediaWikiBot extends HttpBot {
 	 * @return an of labels
 	 * @see #getImagelinkTitles(String, int[])
 	 * @throws ActionException   general exception when problems occur
-	 * @supportedBy MediaWiki 1.9.x API, 1.10.x API
+	 * 
+	 * TODO Pending Parameter Change; http://www.mediawiki.org/wiki/API:Query_-_Lists
+	 * TODO New API call, deside if design a swich by version or support only newest
+	 * 
+	 * @supportedBy MediaWikiAPI 1.9 embeddedin / ei
+	 * @supportedBy MediaWikiAPI 1.10 embeddedin / ei
 	 */
 	public Iterable<String> getImagelinkTitles(
 		String image) throws ActionException {
@@ -501,7 +529,10 @@ public class MediaWikiBot extends HttpBot {
 	 *           the connection to the MediaWiki must still exist.
 	 *
 	 * @throws ActionException   general exception when problems occur
-	 * @supportedBy MediaWiki 1.9.x API
+	 * 
+	 * @supportedBy MediaWikiAPI 1.9 embeddedin / ei
+	 * @supportedBy MediaWikiAPI 1.10 embeddedin / ei
+	 * @supportedBy MediaWikiAPI 1.11 embeddedin / ei
 	 */
 	public Iterable<String> getTemplateUserTitles(
 		String template, int... namespaces) throws ActionException {
@@ -519,7 +550,10 @@ public class MediaWikiBot extends HttpBot {
 	 * @param template label of template like TODO
 	 * @return an of labels
 	 * @throws ActionException   general exception when problems occur
-	 * @supportedBy MediaWiki 1.9.x API, 1.10.x API
+	 * 
+	 * @supportedBy MediaWikiAPI 1.9 embeddedin / ei
+	 * @supportedBy MediaWikiAPI 1.10 embeddedin / ei
+	 * @supportedBy MediaWikiAPI 1.11 embeddedin / ei
 	 */
 	public Iterable<String> getTemplateUserTitles(
 		String template) throws ActionException {
@@ -547,7 +581,8 @@ public class MediaWikiBot extends HttpBot {
 	 *            write the article (if already exists) in the mediawiki
 	 * @throws ActionException
 	 *             on problems
-	 * @supportedBy MediaWiki 1.9.x
+	 * @supportedBy MediaWiki 1.9
+	 * @supportedBy MediaWiki 1.10
 	 */
 	public final void writeContent(final ContentAccessable a)
 			throws ActionException {
@@ -568,7 +603,8 @@ public class MediaWikiBot extends HttpBot {
 	 *            a
 	 * @throws ActionException
 	 *             on problems
-	 * @supportedBy MediaWiki 1.9.x
+	 * @supportedBy MediaWiki 1.9
+	 * @supportedBy MediaWiki 1.10
 	 */
 	public final void writeMultContent(final Iterator<ContentAccessable> cav)
 			throws ActionException {
