@@ -4,6 +4,7 @@ Sources of the libs can be found at:
 * Logging http://jakarta.apache.org/commons/logging/
 * Codec http://jakarta.apache.org/commons/codec/
 * HttpClient http://jakarta.apache.org/commons/httpclient/
+* JDOM http://www.jdom.org/
 
 All under the Apache 2.0 licence
 
