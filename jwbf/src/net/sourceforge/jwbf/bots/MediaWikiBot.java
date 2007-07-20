@@ -33,11 +33,13 @@ import net.sourceforge.jwbf.actions.http.mw.api.GetAllPageTitles;
 import net.sourceforge.jwbf.actions.http.mw.api.GetBacklinkTitles;
 import net.sourceforge.jwbf.actions.http.mw.api.GetImagelinkTitles;
 import net.sourceforge.jwbf.actions.http.mw.api.GetRevision;
+import net.sourceforge.jwbf.actions.http.mw.api.GetSiteinfo;
 import net.sourceforge.jwbf.actions.http.mw.api.GetTemplateUserTitles;
 import net.sourceforge.jwbf.actions.http.mw.api.MultiAction;
 import net.sourceforge.jwbf.bots.util.LoginData;
 
 import net.sourceforge.jwbf.contentRep.mw.ContentAccessable;
+import net.sourceforge.jwbf.contentRep.mw.Siteinfo;
 
 /*
  * possible tag values: @supportedBy
@@ -496,7 +498,7 @@ public class MediaWikiBot extends HttpBot {
 	/**
 	 * variation of the getImagelinkTitles-method
 	 * which does not set a namespace restriction.
-	 * @param image label of image like TODO
+	 * @param image label of image like TODO what?
 	 * @return an of labels
 	 * @see #getImagelinkTitles(String, int[])
 	 * @throws ActionException   general exception when problems occur
@@ -547,7 +549,7 @@ public class MediaWikiBot extends HttpBot {
 	/**
 	 * variation of the getTemplateUserTitles-method.
 	 * which does not set a namespace restriction
-	 * @param template label of template like TODO
+	 * @param template label of template like TODO what ?
 	 * @return an of labels
 	 * @throws ActionException   general exception when problems occur
 	 * 
@@ -561,7 +563,20 @@ public class MediaWikiBot extends HttpBot {
 		return getTemplateUserTitles(template, null);	
 		
 	}		
-
+	/**
+	 * 
+	 * @return a
+	 * @throws ActionException on action problems
+	 * @supportedBy MediaWikiAPI 1.9 siteinfo / si
+	 */
+	public Siteinfo getSiteinfo() throws ActionException {
+		GetSiteinfo gs = new GetSiteinfo();
+		
+		performAction(gs);
+		
+		return gs.getSiteinfo();
+		
+	}
 	/**
 	 * 
 	 * @return true if
