@@ -58,6 +58,7 @@ public class HttpActionClient {
 		 */
 
 		this.client = client;
+//		this.client.getParams().setParameter("http.protocol.content-charset", "UTF-8");
 		if (path.length() > 1) {
 			this.path = path.substring(0, path.lastIndexOf("/"));
 		}

@@ -24,6 +24,7 @@ import java.net.URL;
 import net.sourceforge.jwbf.JWBF;
 import net.sourceforge.jwbf.actions.http.ActionException;
 import net.sourceforge.jwbf.actions.http.ContentProcessable;
+import net.sourceforge.jwbf.actions.http.GetPage;
 import net.sourceforge.jwbf.actions.http.HttpActionClient;
 
 import org.apache.commons.httpclient.HttpClient;
@@ -94,6 +95,23 @@ public abstract class HttpBot {
 			e.printStackTrace();
 		}
 
+	}
+	
+	/**
+	 * Simple method to get plain HTML or XML data e.g. from custom 
+	 * specialpages or xml newsfeeds.
+	 * @param u url like index.php?title=Main_Page
+	 * @return HTML content
+	 * @throws ActionException on any requesing problems
+	 * @supportedBy 
+	 */
+	public String getPage(String u) throws ActionException {
+		
+		GetPage gp = new GetPage(u);
+		
+		performAction(gp);
+		
+		return gp.getText();
 	}
 
 	/**

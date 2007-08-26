@@ -32,12 +32,12 @@ import net.sourceforge.jwbf.actions.http.mw.PostModifyContent;
 import net.sourceforge.jwbf.actions.http.mw.api.GetAllPageTitles;
 import net.sourceforge.jwbf.actions.http.mw.api.GetBacklinkTitles;
 import net.sourceforge.jwbf.actions.http.mw.api.GetImagelinkTitles;
+import net.sourceforge.jwbf.actions.http.mw.api.GetRecentchanges;
 import net.sourceforge.jwbf.actions.http.mw.api.GetRevision;
 import net.sourceforge.jwbf.actions.http.mw.api.GetSiteinfo;
 import net.sourceforge.jwbf.actions.http.mw.api.GetTemplateUserTitles;
 import net.sourceforge.jwbf.actions.http.mw.api.MultiAction;
 import net.sourceforge.jwbf.bots.util.LoginData;
-
 import net.sourceforge.jwbf.contentRep.mw.ContentAccessable;
 import net.sourceforge.jwbf.contentRep.mw.Siteinfo;
 
@@ -107,7 +107,7 @@ public class MediaWikiBot extends HttpBot {
 
 	
 	/**
-	 * Performs a Login.
+	 * Performs a old Login via cookie. 
 	 * 
 	 * @param username
 	 *            the username
@@ -115,7 +115,25 @@ public class MediaWikiBot extends HttpBot {
 	 *            the password
 	 * @throws ActionException
 	 *             on problems
-	 * @supportedBy MediaWiki 1.9.x API
+	 * @supportedBy MediaWiki 1.9.x
+	 */
+	public final void httpLogin(final String username, final String passwd)
+			throws ActionException {
+		performAction(new PostLoginOld(username, passwd));
+		loggedIn = true;
+	}
+	
+	/**
+	 * Performs a Login.
+	 * Actual old cookie login works right, because is pending on 
+	 * {@link #writeContent(ContentAccessable)} 
+	 * @param username
+	 *            the username
+	 * @param passwd
+	 *            the password
+	 * @throws ActionException
+	 *             on problems
+	 * @supportedBy MediaWiki 1.9.x
 	 */
 	public final void login(final String username, final String passwd)
 			throws ActionException {
@@ -123,8 +141,7 @@ public class MediaWikiBot extends HttpBot {
 //		PostLogin pl = new PostLogin(username, passwd);
 //		performAction(pl);
 //		login = pl.getLoginData();
-		performAction(new PostLoginOld(username, passwd));
-		loggedIn = true;
+		httpLogin(username, passwd);
 	}
 
 	/**
@@ -134,7 +151,9 @@ public class MediaWikiBot extends HttpBot {
 	 * @return a content representation of requested article, never null
 	 * @throws ActionException
 	 *             on problems or if conent null
-	 * @supportedBy MediaWiki 1.9.x API
+	 * @supportedBy MediaWikiAPI 1.9.x
+	 * @supportedBy MediaWikiAPI 1.10.x
+	 * @supportedBy MediaWikiAPI 1.11.x
 	 */
 	public final ContentAccessable readContent(final String name)
 			throws ActionException {
@@ -146,6 +165,7 @@ public class MediaWikiBot extends HttpBot {
 
 		return a;
 	}
+
 
 //	/**
 //	 * 
@@ -530,7 +550,7 @@ public class MediaWikiBot extends HttpBot {
 	 *           Attention: to get more article titles,
 	 *           the connection to the MediaWiki must still exist.
 	 *
-	 * @throws ActionException   general exception when problems occur
+	 * @throws ActionException general exception when problems occur
 	 * 
 	 * @supportedBy MediaWikiAPI 1.9 embeddedin / ei
 	 * @supportedBy MediaWikiAPI 1.10 embeddedin / ei
@@ -568,6 +588,8 @@ public class MediaWikiBot extends HttpBot {
 	 * @return a
 	 * @throws ActionException on action problems
 	 * @supportedBy MediaWikiAPI 1.9 siteinfo / si
+	 * @supportedBy MediaWikiAPI 1.10 siteinfo / si
+	 * @supportedBy MediaWikiAPI 1.11 siteinfo / si
 	 */
 	public Siteinfo getSiteinfo() throws ActionException {
 		GetSiteinfo gs = new GetSiteinfo();
@@ -576,6 +598,33 @@ public class MediaWikiBot extends HttpBot {
 		
 		return gs.getSiteinfo();
 		
+	}
+	
+	/**
+	 * Get a number of recent changes from namespace.
+	 * @param count of changes
+	 * @param namespaces namespacenumbers greater equals 0
+	 * @return a
+	 * @throws ActionException general exception when problems occur
+	 * @supportedBy MediaWikiAPI 1.10 recentchanges / rc
+	 */
+	public Iterable<String> getRecentchangesTitles(final int count,
+			int... namespaces) throws ActionException {
+		GetRecentchanges a = new GetRecentchanges(count, generateNamespaceString(namespaces));			
+
+			return performMultiAction(a);
+	}
+	
+	/**
+	 * Get a number of recent changes from default namespace.
+	 * @param count of changes
+	 * @return a
+	 * @throws ActionException general exception when problems occur
+	 * @supportedBy MediaWikiAPI 1.10 recentchanges / rc
+	 */
+	public Iterable<String> getRecentchangesTitles(final int count) throws ActionException {
+
+			return getRecentchangesTitles(count, null);
 	}
 	/**
 	 * 
@@ -596,8 +645,8 @@ public class MediaWikiBot extends HttpBot {
 	 *            write the article (if already exists) in the mediawiki
 	 * @throws ActionException
 	 *             on problems
-	 * @supportedBy MediaWiki 1.9
-	 * @supportedBy MediaWiki 1.10
+	 * @supportedBy MediaWiki 1.9.x
+	 * @supportedBy MediaWiki 1.10.x
 	 */
 	public final void writeContent(final ContentAccessable a)
 			throws ActionException {
@@ -618,8 +667,8 @@ public class MediaWikiBot extends HttpBot {
 	 *            a
 	 * @throws ActionException
 	 *             on problems
-	 * @supportedBy MediaWiki 1.9
-	 * @supportedBy MediaWiki 1.10
+	 * @supportedBy MediaWiki 1.9.x
+	 * @supportedBy MediaWiki 1.10.x
 	 */
 	public final void writeMultContent(final Iterator<ContentAccessable> cav)
 			throws ActionException {
