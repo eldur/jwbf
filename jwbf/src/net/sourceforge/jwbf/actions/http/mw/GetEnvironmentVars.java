@@ -23,6 +23,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Hashtable;
 
+import net.sourceforge.jwbf.actions.http.ProcessException;
 import net.sourceforge.jwbf.bots.MediaWikiBot;
 import net.sourceforge.jwbf.bots.util.LoginData;
 
@@ -63,7 +64,7 @@ public class GetEnvironmentVars extends MWAction {
 	 * @return the returning text
 	 * @param s the whole returning text
 	 */
-	public String processAllReturningText(final String s) {
+	public String processAllReturningText(final String s) throws ProcessException {
 		
 		
 		 

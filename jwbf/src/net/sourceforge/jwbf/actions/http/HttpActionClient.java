@@ -20,11 +20,13 @@
 package net.sourceforge.jwbf.actions.http;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.httpclient.Cookie;
 import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.methods.GetMethod;
@@ -58,7 +60,8 @@ public class HttpActionClient {
 		 */
 
 		this.client = client;
-//		this.client.getParams().setParameter("http.protocol.content-charset", "UTF-8");
+		// this.client.getParams().setParameter("http.protocol.content-charset",
+		// "UTF-8");
 		if (path.length() > 1) {
 			this.path = path.substring(0, path.lastIndexOf("/"));
 		}
@@ -81,31 +84,38 @@ public class HttpActionClient {
 	 *            a
 	 * @return message, never null
 	 * @throws ActionException
-	 *             on problems
+	 *             on problems with http, cookies and io
+	 * @throws ProcessException 
 	 */
-	public String performAction(ContentProcessable a) throws ActionException {
-	
-		
+	public String performAction(ContentProcessable a) throws ActionException, ProcessException {
+
 		List<HttpMethod> msgs = a.getMessages();
 		String out = "";
 		Iterator<HttpMethod> it = msgs.iterator();
 		while (it.hasNext()) {
 			HttpMethod e = it.next();
 			if (path.length() > 1) {
-				
+
 				e.setPath(path + e.getPath());
 				LOG.debug("path is: " + e.getPath());
-				
+
 			}
 			try {
 				if (e instanceof GetMethod) {
+
 					out = get(e, a);
+
 				} else {
 					out = post(e, a);
 				}
-			} catch (Exception ex) {
-				throw new ActionException(ex);
-			}
+			} catch (HttpException e1) {
+				throw new ActionException(e1);
+			} catch (IOException e1) {
+				throw new ActionException(e1);
+			} catch (CookieException e1) {
+				throw new ActionException(e1);
+			} 
+
 		}
 		return out;
 
@@ -119,28 +129,29 @@ public class HttpActionClient {
 	 * @param cp
 	 *            a
 	 * @return a returning message, not null
-	 * @throws Exception
+	 * @throws IOException
+	 * @throws HttpException
+	 * @throws ProcessException
+	 * @throws CookieException
 	 *             on problems or if document can't be found
 	 */
 	protected String post(HttpMethod authpost, ContentProcessable cp)
-			throws Exception {
+			throws HttpException, IOException, ProcessException,
+			CookieException {
 		showCookies(client);
-		
+
 		String out = "";
 
 		client.executeMethod(authpost);
 		out = authpost.getResponseBodyAsString();
 		out = cp.processReturningText(out, authpost);
 
-		
-		
 		cp.validateReturningCookies(client.getState().getCookies(), authpost);
-		
+
 		authpost.releaseConnection();
-		LOG.debug(authpost.getURI() + " || "
-				+ "POST: " + authpost.getStatusLine().toString());
-		
-		
+		LOG.debug(authpost.getURI() + " || " + "POST: "
+				+ authpost.getStatusLine().toString());
+
 		// Usually a successful form-based login results in a redicrect to
 		// another url
 		// int statuscode = authpost.getStatusCode();
@@ -177,11 +188,16 @@ public class HttpActionClient {
 	 * @param cp
 	 *            a
 	 * @return a returning message, not null
+	 * @throws IOException
+	 * @throws HttpException
+	 * @throws CookieException
+	 * @throws ProcessException
 	 * @throws Exception
 	 *             on problems or if document can't be found
 	 */
 	protected String get(HttpMethod authgets, ContentProcessable cp)
-			throws Exception {
+			throws HttpException, IOException, CookieException,
+			ProcessException {
 		showCookies(client);
 		String out = "";
 
@@ -219,5 +235,5 @@ public class HttpActionClient {
 			}
 		}
 	}
-	
+
 }

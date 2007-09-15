@@ -25,6 +25,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Iterator;
 
+import net.sourceforge.jwbf.actions.http.ProcessException;
 import net.sourceforge.jwbf.actions.http.mw.MWAction;
 import net.sourceforge.jwbf.bots.MediaWikiBot;
 import net.sourceforge.jwbf.contentRep.mw.ContentAccessable;
@@ -78,7 +79,8 @@ public class GetRevision extends MWAction {
 	 * @return empty string
 	 * 
 	 */
-	public String processAllReturningText(final String s) {
+	public String processAllReturningText(final String s) throws ProcessException {
+
 		parse(s);
 		return "";
 	}
@@ -101,7 +103,7 @@ public class GetRevision extends MWAction {
 		return properties.substring(0, properties.length() - 1);
 	}
 	
-	private void parse(final String xml){
+	private void parse(final String xml) throws ApiException{
 		SAXBuilder builder = new SAXBuilder();
 		Element root = null;
 		try {
@@ -127,14 +129,17 @@ public class GetRevision extends MWAction {
 	}
 	
 	@SuppressWarnings("unchecked")
-	private void findContent(final Element root) {
+	private void findContent(final Element root) throws ApiException {
 		
 		
 		
 		Iterator<Element> el = root.getChildren().iterator();
 		while (el.hasNext()) {
 			Element element = (Element) el.next();
-			if (element.getQualifiedName().equalsIgnoreCase("rev")) {
+			if (element.getQualifiedName().equalsIgnoreCase("error")) {
+				throw new ApiException(element.getAttributeValue("code"),
+						element.getAttributeValue("info"));
+			} else if (element.getQualifiedName().equalsIgnoreCase("rev")) {
 				sa.setText(encodeUtf8(element.getText()));
 				sa.setEditSummary(element.getAttributeValue("comment"));
 				sa.setEditor(encodeUtf8(element.getAttributeValue("user")));

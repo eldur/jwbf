@@ -24,6 +24,7 @@ import java.io.Reader;
 import java.io.StringReader;
 
 import net.sourceforge.jwbf.actions.http.ActionException;
+import net.sourceforge.jwbf.actions.http.ProcessException;
 import net.sourceforge.jwbf.actions.http.mw.MWAction;
 import net.sourceforge.jwbf.bots.MediaWikiBot;
 import net.sourceforge.jwbf.bots.util.LoginData;
@@ -80,7 +81,7 @@ public class PostLogin extends MWAction {
 	 * @param s incomming
 	 * @return after testing
 	 */
-	public String processAllReturningText(final String s) {
+	public String processAllReturningText(final String s) throws ProcessException {
 		SAXBuilder builder = new SAXBuilder();
 		Element root = null;
 		try {

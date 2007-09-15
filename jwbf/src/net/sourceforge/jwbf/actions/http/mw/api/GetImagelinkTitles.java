@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import net.sourceforge.jwbf.actions.http.ProcessException;
 import net.sourceforge.jwbf.actions.http.mw.MWAction;
 import net.sourceforge.jwbf.actions.http.mw.api.MultiAction;
 import net.sourceforge.jwbf.bots.MediaWikiBot;
@@ -125,7 +126,7 @@ public class GetImagelinkTitles extends MWAction implements MultiAction<String> 
 	 *
 	 * @return empty string
 	 */
-	public String processAllReturningText(final String s) {
+	public String processAllReturningText(final String s) throws ProcessException {
 		String t = encodeUtf8(s);
 		parseArticleTitles(t);
 		parseHasMore(t);

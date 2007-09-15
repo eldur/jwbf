@@ -26,6 +26,7 @@ import net.sourceforge.jwbf.actions.http.ActionException;
 import net.sourceforge.jwbf.actions.http.ContentProcessable;
 import net.sourceforge.jwbf.actions.http.GetPage;
 import net.sourceforge.jwbf.actions.http.HttpActionClient;
+import net.sourceforge.jwbf.actions.http.ProcessException;
 
 import org.apache.commons.httpclient.HttpClient;
 
@@ -74,10 +75,11 @@ public abstract class HttpBot {
 	 * @param a
 	 *            a
 	 * @throws ActionException
-	 *             on problems
+	 *             on problems with http, cookies and io
 	 * @return text
+	 * @throws ProcessException 
 	 */
-	public final String performAction(final ContentProcessable a) throws ActionException {
+	public final String performAction(final ContentProcessable a) throws ActionException, ProcessException {
 		return cc.performAction(a);
 	}
 
@@ -109,7 +111,11 @@ public abstract class HttpBot {
 		
 		GetPage gp = new GetPage(u);
 		
-		performAction(gp);
+		try {
+			performAction(gp);
+		} catch (ProcessException e) {
+			e.printStackTrace();
+		}
 		
 		return gp.getText();
 	}

@@ -14,6 +14,7 @@ import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
 import org.xml.sax.InputSource;
 
+import net.sourceforge.jwbf.actions.http.ProcessException;
 import net.sourceforge.jwbf.actions.http.mw.MWAction;
 import net.sourceforge.jwbf.bots.MediaWikiBot;
 import net.sourceforge.jwbf.contentRep.mw.SimpleArticle;
@@ -34,7 +35,7 @@ public class GetSiteinfo extends MWAction {
 	 * @return empty string
 	 * 
 	 */
-	public String processAllReturningText(final String s) {
+	public String processAllReturningText(final String s) throws ProcessException {
 		parse(s);
 		return "";
 	}

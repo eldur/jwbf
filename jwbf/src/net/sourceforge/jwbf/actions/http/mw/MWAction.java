@@ -27,6 +27,7 @@ import org.apache.commons.httpclient.HttpMethod;
 
 import net.sourceforge.jwbf.actions.http.ContentProcessable;
 import net.sourceforge.jwbf.actions.http.CookieException;
+import net.sourceforge.jwbf.actions.http.ProcessException;
 import net.sourceforge.jwbf.bots.MediaWikiBot;
 
 /**
@@ -61,9 +62,10 @@ public abstract class MWAction implements ContentProcessable {
 	 * @param hm
 	 *            the method object
 	 * @return the returning text
+	 * @throws ProcessException on processing problems
 	 * 
 	 */
-	public String processReturningText(final String s, final HttpMethod hm) {
+	public String processReturningText(final String s, final HttpMethod hm) throws ProcessException {
 		return processAllReturningText(s);
 	}
 
@@ -98,9 +100,10 @@ public abstract class MWAction implements ContentProcessable {
 	 * @param s
 	 *            the returning text
 	 * @return the returning text
+	 * @throws ProcessException TODO
 	 * 
 	 */
-	public String processAllReturningText(final String s) {
+	public String processAllReturningText(final String s) throws ProcessException {
 		return s;
 	}
 	

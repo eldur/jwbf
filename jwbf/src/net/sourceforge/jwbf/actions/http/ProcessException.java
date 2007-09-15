@@ -18,38 +18,36 @@
  */
 package net.sourceforge.jwbf.actions.http;
 
+import net.sourceforge.jwbf.actions.http.mw.MWAction;
 
-import java.util.List;
-
-import org.apache.commons.httpclient.Cookie;
-import org.apache.commons.httpclient.HttpMethod;
 /**
+ * 
+ * This exception can be used in children of {@link MWAction} to handle 
+ * exceptions in these actions, like access to content or mismatching patterns e.g.
  * 
  * @author Thomas Stock
  *
  */
-public interface ContentProcessable {
+public class ProcessException extends Exception {
 
-	/**
-	 * 
-	 * @param cs a
-	 * @param hm a
-	 * @throws CookieException on problems with cookies
-	 */
-	void validateReturningCookies(final Cookie[] cs, HttpMethod hm) throws CookieException;
-
-	/**
-	 * 
-	 * @param s the returning text
-	 * @param hm a
-	 * @return the retruning text or a modification of it
-	 * @throws ProcessException TODO
-	 */
-	String processReturningText(final String s, HttpMethod hm) throws ProcessException;
 	
 	/**
-	 * @return the of messages in this action
+	 * 
 	 */
-	List<HttpMethod> getMessages();
+	private static final long serialVersionUID = -3830701798846228121L;
+
 	
+	/**
+	 * 
+	 */
+	public ProcessException() {
+		super();
+	}
+	/**
+	 * 
+	 * @param msg exception text
+	 */
+	public ProcessException(final String msg) {
+		super(msg);
+	}
 }

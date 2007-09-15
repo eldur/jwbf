@@ -25,7 +25,7 @@ public class GetPage implements ContentProcessable {
 		return msgs;
 	}
 
-	public String processReturningText(String s, HttpMethod hm) {
+	public String processReturningText(String s, HttpMethod hm) throws ProcessException {
 		text = s;
 		return s;
 	}
