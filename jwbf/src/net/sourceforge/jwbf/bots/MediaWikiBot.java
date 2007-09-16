@@ -35,6 +35,7 @@ import net.sourceforge.jwbf.actions.http.mw.api.GetAllPageTitles;
 import net.sourceforge.jwbf.actions.http.mw.api.GetBacklinkTitles;
 import net.sourceforge.jwbf.actions.http.mw.api.GetCategoryMembers;
 import net.sourceforge.jwbf.actions.http.mw.api.GetImagelinkTitles;
+import net.sourceforge.jwbf.actions.http.mw.api.GetLogEvents;
 import net.sourceforge.jwbf.actions.http.mw.api.GetRecentchanges;
 import net.sourceforge.jwbf.actions.http.mw.api.GetRevision;
 import net.sourceforge.jwbf.actions.http.mw.api.GetSiteinfo;
@@ -590,6 +591,17 @@ public class MediaWikiBot extends HttpBot {
 
 	}
 
+	
+	public Iterable<String> getLogEvents(String ... type) throws ActionException {
+
+		return getLogEvents(10, type);
+	}
+	
+	public Iterable<String> getLogEvents(int limit, String ... type) throws ActionException {
+		checkApiVersion(Version.MW1_11);
+		GetLogEvents c = new GetLogEvents(limit, type);
+		return performMultiAction(c);
+	}
 	/**
 	 * get the titles of all pages which embed the given template.
 	 * 
