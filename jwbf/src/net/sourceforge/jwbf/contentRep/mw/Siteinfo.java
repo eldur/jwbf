@@ -10,9 +10,9 @@ public class Siteinfo {
 	private String generator = "";
 	private String theCase = "";
 	private String rights = "";
-	
+
 	public Siteinfo() {
-		
+
 	}
 
 	public String getMainpage() {
@@ -46,7 +46,7 @@ public class Siteinfo {
 	public String getGenerator() {
 		return generator;
 	}
-	
+
 	public Version getVersion() {
 		if (getGenerator().contains("1.9.")) {
 			return Version.MW1_9;
@@ -54,6 +54,8 @@ public class Siteinfo {
 			return Version.MW1_10;
 		} else if (getGenerator().contains("1.11.")) {
 			return Version.MW1_11;
+		} else if (getGenerator().contains("1.12")) { // actual Wikipedia
+			return Version.MW_WIKIPEDIA;
 		} else {
 			return Version.UNKNOWN;
 		}
@@ -78,12 +80,12 @@ public class Siteinfo {
 	public void setRights(String rights) {
 		this.rights = rights;
 	}
-	
+
 	public String toString() {
-		String temp = "This is " + getSitename() + " @ " 
-			+ getGenerator() + " (" + getVersion() + ".x)";
-		
+		String temp = "This is " + getSitename() + " @ " + getGenerator()
+				+ " (" + getVersion() + ".x)";
+
 		return temp;
 	}
-	
+
 }

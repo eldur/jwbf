@@ -26,12 +26,14 @@ import java.util.Iterator;
 
 import net.sourceforge.jwbf.actions.http.ActionException;
 import net.sourceforge.jwbf.actions.http.ProcessException;
+import net.sourceforge.jwbf.actions.http.VersionException;
 import net.sourceforge.jwbf.actions.http.mw.GetEnvironmentVars;
 import net.sourceforge.jwbf.actions.http.mw.MWAction;
 import net.sourceforge.jwbf.actions.http.mw.PostLoginOld;
 import net.sourceforge.jwbf.actions.http.mw.PostModifyContent;
 import net.sourceforge.jwbf.actions.http.mw.api.GetAllPageTitles;
 import net.sourceforge.jwbf.actions.http.mw.api.GetBacklinkTitles;
+import net.sourceforge.jwbf.actions.http.mw.api.GetCategoryMembers;
 import net.sourceforge.jwbf.actions.http.mw.api.GetImagelinkTitles;
 import net.sourceforge.jwbf.actions.http.mw.api.GetRecentchanges;
 import net.sourceforge.jwbf.actions.http.mw.api.GetRevision;
@@ -39,6 +41,7 @@ import net.sourceforge.jwbf.actions.http.mw.api.GetSiteinfo;
 import net.sourceforge.jwbf.actions.http.mw.api.GetTemplateUserTitles;
 import net.sourceforge.jwbf.actions.http.mw.api.MultiAction;
 import net.sourceforge.jwbf.bots.util.LoginData;
+import net.sourceforge.jwbf.contentRep.Version;
 import net.sourceforge.jwbf.contentRep.mw.ContentAccessable;
 import net.sourceforge.jwbf.contentRep.mw.Siteinfo;
 
@@ -72,6 +75,8 @@ public class MediaWikiBot extends HttpBot {
 	public static final int SUBCATEGORY = 1 << 3;
 
 	public static final String CHARSET = "utf-8";
+	
+	private Version currentVersion = null;
 
 	private LoginData login;
 	private boolean loggedIn = false;
@@ -153,6 +158,7 @@ public class MediaWikiBot extends HttpBot {
 	 */
 	public final ContentAccessable readContent(final String name)
 			throws ActionException, ProcessException {
+		checkApiVersion(Version.MW1_9, Version.MW1_10, Version.MW1_11);
 		ContentAccessable a = null;
 		GetRevision ac = new GetRevision(name, GetRevision.CONTENT
 				| GetRevision.COMMENT | GetRevision.USER);
@@ -387,7 +393,7 @@ public class MediaWikiBot extends HttpBot {
 	public Iterable<String> getAllPageTitles(String from, String prefix,
 			boolean redirects, boolean nonredirects, int... namespaces)
 			throws ActionException {
-
+		checkApiVersion(Version.MW1_9, Version.MW1_10, Version.MW1_11);
 		GetAllPageTitles a = new GetAllPageTitles(from, prefix, redirects,
 				nonredirects, generateNamespaceString(namespaces));
 
@@ -480,7 +486,7 @@ public class MediaWikiBot extends HttpBot {
 	 */
 	public Iterable<String> getBacklinkTitles(String article, int... namespaces)
 			throws ActionException {
-
+		checkApiVersion(Version.MW1_9, Version.MW1_10, Version.MW1_11);
 		GetBacklinkTitles a = new GetBacklinkTitles(article,
 				generateNamespaceString(namespaces));
 
@@ -510,7 +516,19 @@ public class MediaWikiBot extends HttpBot {
 		return getBacklinkTitles(article, null);
 
 	}
-
+	/**
+	 * 
+	 * @param category like "Buildings" or "Chemical elements" without prefix Category
+	 * @return of article labels
+	 * @throws ActionException on any kind of http or version problems
+	 * @supportedBy MediaWikiAPI 1.11 categorymembers / cm
+	 */
+	public Iterable<String> getCategoryMembers(String category) throws ActionException {
+		checkApiVersion(Version.MW1_11);
+		GetCategoryMembers c = new GetCategoryMembers(category, null);
+		return performMultiAction(c);
+	}
+	
 	/**
 	 * get the titles of all pages which contain a link to the given image.
 	 * 
@@ -539,7 +557,7 @@ public class MediaWikiBot extends HttpBot {
 	 */
 	public Iterable<String> getImagelinkTitles(String image, int... namespaces)
 			throws ActionException {
-
+		checkApiVersion(Version.MW1_9, Version.MW1_10);
 		GetImagelinkTitles a = new GetImagelinkTitles(image,
 				generateNamespaceString(namespaces));
 
@@ -596,7 +614,7 @@ public class MediaWikiBot extends HttpBot {
 	 */
 	public Iterable<String> getTemplateUserTitles(String template,
 			int... namespaces) throws ActionException {
-
+		checkApiVersion(Version.MW1_9, Version.MW1_10, Version.MW1_11);
 		GetTemplateUserTitles a = new GetTemplateUserTitles(template,
 				generateNamespaceString(namespaces));
 
@@ -620,7 +638,7 @@ public class MediaWikiBot extends HttpBot {
 	 */
 	public Iterable<String> getTemplateUserTitles(String template)
 			throws ActionException {
-
+		checkApiVersion(Version.MW1_9, Version.MW1_10, Version.MW1_11);
 		return getTemplateUserTitles(template, null);
 
 	}
@@ -659,15 +677,17 @@ public class MediaWikiBot extends HttpBot {
 	 * @throws ActionException
 	 *             on problems with http, cookies and io
 	 * @supportedBy MediaWikiAPI 1.10 recentchanges / rc
+	 * @supportedBy MediaWikiAPI 1.10 recentchanges / rc
 	 */
 	public Iterable<String> getRecentchangesTitles(final int count,
 			int... namespaces) throws ActionException {
+		checkApiVersion(Version.MW1_10, Version.MW1_11);
 		GetRecentchanges a = new GetRecentchanges(count,
 				generateNamespaceString(namespaces));
 
 		return performMultiAction(a);
 	}
-
+	
 	/**
 	 * Get a number of recent changes from default namespace.
 	 * 
@@ -736,6 +756,27 @@ public class MediaWikiBot extends HttpBot {
 			writeContent(cav.next());
 
 		}
+	}
+	/**
+	 * 
+	 * @param vers alowed versions
+	 * @throws ActionException on problems with http, cookies and io, 
+	 * 		and expecialy versionExceptions on version mismatch.
+	 */
+	private void checkApiVersion(Version... vers) throws ActionException {
+		
+		if (currentVersion == null) {
+			Siteinfo s = getSiteinfo();
+			currentVersion = s.getVersion();
+		}
+		for (int i = 0; i < vers.length; i++) {
+			if (vers[i] == currentVersion 
+					|| currentVersion == Version.MW_WIKIPEDIA) {
+				return;
+			}
+		}
+		throw new VersionException();
+		
 	}
 
 }

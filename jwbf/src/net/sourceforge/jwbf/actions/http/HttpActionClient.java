@@ -26,7 +26,6 @@ import java.util.List;
 
 import org.apache.commons.httpclient.Cookie;
 import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.methods.GetMethod;
@@ -85,7 +84,7 @@ public class HttpActionClient {
 	 * @return message, never null
 	 * @throws ActionException
 	 *             on problems with http, cookies and io
-	 * @throws ProcessException 
+	 * @throws ProcessException on inner problems
 	 */
 	public String performAction(ContentProcessable a) throws ActionException, ProcessException {
 
@@ -108,13 +107,9 @@ public class HttpActionClient {
 				} else {
 					out = post(e, a);
 				}
-			} catch (HttpException e1) {
-				throw new ActionException(e1);
 			} catch (IOException e1) {
 				throw new ActionException(e1);
-			} catch (CookieException e1) {
-				throw new ActionException(e1);
-			} 
+			}
 
 		}
 		return out;
@@ -129,14 +124,12 @@ public class HttpActionClient {
 	 * @param cp
 	 *            a
 	 * @return a returning message, not null
-	 * @throws IOException
-	 * @throws HttpException
-	 * @throws ProcessException
-	 * @throws CookieException
-	 *             on problems or if document can't be found
+	 * @throws IOException on problems
+	 * @throws ProcessException on problems
+	 * @throws CookieException on problems
 	 */
 	protected String post(HttpMethod authpost, ContentProcessable cp)
-			throws HttpException, IOException, ProcessException,
+			throws IOException, ProcessException,
 			CookieException {
 		showCookies(client);
 
@@ -188,16 +181,12 @@ public class HttpActionClient {
 	 * @param cp
 	 *            a
 	 * @return a returning message, not null
-	 * @throws IOException
-	 * @throws HttpException
-	 * @throws CookieException
-	 * @throws ProcessException
-	 * @throws Exception
-	 *             on problems or if document can't be found
+	 * @throws IOException on problems
+	 * @throws CookieException on problems
+	 * @throws ProcessException on problems
 	 */
 	protected String get(HttpMethod authgets, ContentProcessable cp)
-			throws HttpException, IOException, CookieException,
-			ProcessException {
+			throws IOException, CookieException, ProcessException {
 		showCookies(client);
 		String out = "";
 
