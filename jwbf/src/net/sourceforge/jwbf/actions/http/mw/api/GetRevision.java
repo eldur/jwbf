@@ -51,6 +51,8 @@ public class GetRevision extends MWAction {
 	public static final int TIMESTAMP = 1 << 2;
 	public static final int USER = 1 << 3;
 	public static final int COMMENT = 1 << 4;
+	public static final int FIRST = 1 << 5;
+	public static final int LAST = 1 << 6;
 
 	private static final Logger LOG = Logger.getLogger(GetRevision.class);
 	
@@ -64,7 +66,9 @@ public class GetRevision extends MWAction {
 		try {
 			uS = "/api.php?action=query&prop=revisions&titles="
 					+ URLEncoder.encode(articlename, MediaWikiBot.CHARSET)
-					+ "&rvprop=" + getProperties(property)
+					+ "&rvprop=" + getDataProperties(property)
+					+ getReversion(property)
+					+ "&rvlimit=1"
 					+ "&format=xml";
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
@@ -85,7 +89,7 @@ public class GetRevision extends MWAction {
 		return "";
 	}
 	
-	private String getProperties(final int property) {
+	private String getDataProperties(final int property) {
 		String properties = "";
 		
 		if ((property & CONTENT) > 0) {
@@ -102,6 +106,20 @@ public class GetRevision extends MWAction {
 		}
 		return properties.substring(0, properties.length() - 1);
 	}
+	
+	
+	private String getReversion(final int property) {
+		String properties = "&rvdir=";
+		
+		if ((property & FIRST) > 0) {
+			properties += "newer";
+		} else {
+			properties += "older";
+		}
+		
+		return properties;
+	}
+	
 	
 	private void parse(final String xml) throws ApiException{
 		SAXBuilder builder = new SAXBuilder();

@@ -2,9 +2,12 @@
 JWBF-1.2.0.0                                                                2007
 --------------------------------------------------------------------------------
   Features(MediaWiki):
-  * 
-  
+  * For supported MW API functions, see Javadocs at 
+  	http://jwbf.sourceforge.net/doc/net/sourceforge/jwbf/bots/MediaWikiBot.html
+  	there are special tags javadoc tags, that informs about it.
+  	
   Internal(MediaWiki):
+  * Confiramtion if requested MW API function is available
   * switch to MediaWikiAPI
   * optimize iterable
   * new exception for handle inner action exceptions

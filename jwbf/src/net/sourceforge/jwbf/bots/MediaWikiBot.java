@@ -44,6 +44,7 @@ import net.sourceforge.jwbf.actions.http.mw.api.MultiAction;
 import net.sourceforge.jwbf.bots.util.LoginData;
 import net.sourceforge.jwbf.contentRep.Version;
 import net.sourceforge.jwbf.contentRep.mw.ContentAccessable;
+import net.sourceforge.jwbf.contentRep.mw.LogItem;
 import net.sourceforge.jwbf.contentRep.mw.Siteinfo;
 
 /*
@@ -149,6 +150,31 @@ public class MediaWikiBot extends HttpBot {
 	 * 
 	 * @param name
 	 *            of article in a mediawiki like "Main Page"
+	 * @param properties {@link GetRevision}
+	 * @return a content representation of requested article, never null
+	 * @throws ActionException
+	 *             on problems with http, cookies and io
+	 * @throws ProcessException on access problems
+	 * @supportedBy MediaWikiAPI 1.9.x
+	 * @supportedBy MediaWikiAPI 1.10.x
+	 * @supportedBy MediaWikiAPI 1.11.x
+	 */
+	public final ContentAccessable readContent(final String name, final int properties)
+			throws ActionException, ProcessException {
+		checkApiVersion(Version.MW1_9, Version.MW1_10, Version.MW1_11);
+		ContentAccessable a = null;
+		GetRevision ac = new GetRevision(name, properties);
+
+		performAction(ac);
+		a = ac.getArticle();
+
+		return a;
+	}
+	
+	/**
+	 * 
+	 * @param name
+	 *            of article in a mediawiki like "Main Page"
 	 * @return a content representation of requested article, never null
 	 * @throws ActionException
 	 *             on problems with http, cookies and io
@@ -159,15 +185,9 @@ public class MediaWikiBot extends HttpBot {
 	 */
 	public final ContentAccessable readContent(final String name)
 			throws ActionException, ProcessException {
-		checkApiVersion(Version.MW1_9, Version.MW1_10, Version.MW1_11);
-		ContentAccessable a = null;
-		GetRevision ac = new GetRevision(name, GetRevision.CONTENT
+		return readContent(name, GetRevision.CONTENT
 				| GetRevision.COMMENT | GetRevision.USER);
 
-		performAction(ac);
-		a = ac.getArticle();
-
-		return a;
 	}
 
 	// /**
@@ -591,16 +611,27 @@ public class MediaWikiBot extends HttpBot {
 
 	}
 
-	
-	public Iterable<String> getLogEvents(String ... type) throws ActionException {
+	/**
+	 * 
+	 * @param type
+	 * @return
+	 * @throws ActionException
+	 */
+	public Iterator<LogItem> getLogEvents(String ... type) throws ActionException {
 
 		return getLogEvents(10, type);
 	}
 	
-	public Iterable<String> getLogEvents(int limit, String ... type) throws ActionException {
+	public Iterator<LogItem> getLogEvents(int limit, String ... type) throws ActionException {
 		checkApiVersion(Version.MW1_11);
 		GetLogEvents c = new GetLogEvents(limit, type);
-		return performMultiAction(c);
+		try {
+			performAction(c);
+		} catch (ProcessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return c.getResults();
 	}
 	/**
 	 * get the titles of all pages which embed the given template.

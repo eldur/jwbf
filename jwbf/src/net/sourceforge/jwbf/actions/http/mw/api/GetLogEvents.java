@@ -27,6 +27,7 @@ import java.util.Iterator;
 
 import net.sourceforge.jwbf.actions.http.ProcessException;
 import net.sourceforge.jwbf.actions.http.mw.MWAction;
+import net.sourceforge.jwbf.contentRep.mw.LogItem;
 
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.jdom.Document;
@@ -50,7 +51,7 @@ import org.xml.sax.InputSource;
  * 
  */
 
-public class GetLogEvents extends MWAction implements MultiAction<String> {
+public class GetLogEvents extends MWAction  {
 
 	/** value for the bllimit-parameter. * */
 	private int limit = 10;
@@ -59,7 +60,7 @@ public class GetLogEvents extends MWAction implements MultiAction<String> {
 	 * Collection that will contain the result (titles of articles linking to
 	 * the target) after performing the action has finished.
 	 */
-	private Collection<String> titleCollection = new ArrayList<String>();
+	private Collection<LogItem> logArray = new ArrayList<LogItem>();
 
 	/**
 	 * information necessary to get the next api page.
@@ -157,7 +158,11 @@ public class GetLogEvents extends MWAction implements MultiAction<String> {
 			Element element = (Element) el.next();
 			if (element.getQualifiedName().equalsIgnoreCase("item")) {
 
-				titleCollection.add(element.getAttributeValue("title"));
+				LogItem l = new LogItem();
+				l.setTitle(element.getAttributeValue("title"));
+				l.setType(element.getAttributeValue("type"));
+				l.setUser(element.getAttributeValue("user"));
+				logArray.add(l);
 
 			} else {
 				findContent(element);
@@ -169,16 +174,10 @@ public class GetLogEvents extends MWAction implements MultiAction<String> {
 	/**
 	 * @return the collected article names
 	 */
-	public Collection<String> getResults() {
-		return titleCollection;
+	public Iterator<LogItem> getResults() {
+		return logArray.iterator();
 	}
 
-	/**
-	 * @return necessary information for the next action or null if no next api
-	 *         page exists
-	 */
-	public GetRecentchanges getNextAction() {
-		return null;
-	}
+
 
 }
