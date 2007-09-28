@@ -1,5 +1,9 @@
 package net.sourceforge.jwbf.contentRep.mw;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
 import net.sourceforge.jwbf.contentRep.Version;
 
 public class Siteinfo {
@@ -11,6 +15,9 @@ public class Siteinfo {
 	private String theCase = "";
 	private String rights = "";
 
+	private Map<Integer,String> namespaces=new HashMap<Integer,String>();
+	private Map<String,String> interwiki=new HashMap<String,String>();
+	
 	public Siteinfo() {
 
 	}
@@ -86,6 +93,22 @@ public class Siteinfo {
 				+ " (" + getVersion() + ".x)";
 
 		return temp;
+	}
+
+	public void addNamespace(Integer id, String name) {
+		namespaces.put(id,name);
+		
+	}
+
+	public Map<Integer, String> getNamespaces() {
+		return Collections.unmodifiableMap(namespaces);
+	}
+
+	public void addInterwiki(String prefix, String name) {
+		interwiki.put(prefix, name);
+	}
+	public Map getInterwikis(){
+		return Collections.unmodifiableMap(interwiki);
 	}
 
 }
