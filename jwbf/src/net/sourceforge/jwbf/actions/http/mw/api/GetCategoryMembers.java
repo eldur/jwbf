@@ -20,8 +20,6 @@ package net.sourceforge.jwbf.actions.http.mw.api;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -37,22 +35,23 @@ import org.apache.commons.httpclient.methods.GetMethod;
  *
  * @author Thomas Stock
  */
-public class GetCategoryMembers extends MWAction implements MultiAction<String> {
+public abstract class GetCategoryMembers extends MWAction {
 
 	/** constant value for the bllimit-parameter. **/
 	private static final int LIMIT = 50;
 	
-	/**
-	 * Collection that will contain the result
-	 * (titles of articles linking to the target) 
-	 * after performing the action has finished.
-	 */
-	private Collection<String> titleCollection = new ArrayList<String>();
+	
 
 	/**
 	 * information necessary to get the next api page.
 	 */
-	private String nextPageInfo = null;
+	protected String nextPageInfo = null;
+	
+	
+	/**
+	 * Name of the category.
+	 */
+	protected String categoryName = "";
 		
 		
 	/**
@@ -62,15 +61,16 @@ public class GetCategoryMembers extends MWAction implements MultiAction<String> 
 	 * (from outside this class).
 	 * For the parameters, see {@link GetCategoryMembers#generateRequest(String, String, String)}
 	 */
-	public GetCategoryMembers(String articleName, String namespace){
-		generateRequest(articleName,null);
+	protected GetCategoryMembers(String nextPageInfo, String categoryName){
+		this.categoryName = categoryName;
+		generateContinueRequest(nextPageInfo);
 	}
 	
 	/**
 	 * The private constructor, which is used to create follow-up actions.
 	 */
-	private GetCategoryMembers(String nextPageInfo) {
-		generateRequest(null,nextPageInfo);
+	public GetCategoryMembers(String articleName) {
+		generateFirstRequest(articleName);
 	}
 	
 	/**
@@ -82,25 +82,18 @@ public class GetCategoryMembers extends MWAction implements MultiAction<String> 
 	 * @param cmcontinue    the value for the blcontinue parameter,
 	 *                      null for the generation of the initial request
 	 */
-	protected void generateRequest(String categoryName, String cmcontinue){
-	 
+	protected void generateFirstRequest(String categoryName) {
+		this.categoryName = categoryName;
 	 	String uS = "";
 		
 		try {
 		
-			if (cmcontinue == null) {
+
 		
 				uS = "/api.php?action=query&list=categorymembers"
 						+ "&cmcategory=" + URLEncoder.encode(categoryName, MediaWikiBot.CHARSET) 
 						+ "&cmlimit=" + LIMIT + "&format=xml";
 			
-			} else {
-				
-				uS = "/api.php?action=query&list=categorymembers"
-						+ "&cmcontinue=" + URLEncoder.encode(cmcontinue, MediaWikiBot.CHARSET)
-						+ "&cmlimit=" + LIMIT + "&format=xml";
-				
-			}
 			
 			msgs.add(new GetMethod(uS));
 		
@@ -110,6 +103,33 @@ public class GetCategoryMembers extends MWAction implements MultiAction<String> 
 		
 	}
 	
+	/**
+	 * generates the next MediaWiki-request (GetMethod) and adds it to msgs.
+	 *
+	 * 
+	 * @param cmcontinue    the value for the blcontinue parameter,
+	 *                      null for the generation of the initial request
+	 */
+	protected void generateContinueRequest(String cmcontinue) {
+	 
+	 	String uS = "";
+		
+		try {
+		
+
+				uS = "/api.php?action=query&list=categorymembers"
+						+ "&cmcategory=" + URLEncoder.encode(categoryName, MediaWikiBot.CHARSET) 
+						+ "&cmcontinue=" + URLEncoder.encode(cmcontinue, MediaWikiBot.CHARSET)
+						+ "&cmlimit=" + LIMIT + "&format=xml";
+				
+
+			msgs.add(new GetMethod(uS));
+		
+		} catch (UnsupportedEncodingException e) {
+    	e.printStackTrace();
+		}		
+		
+	}
 	/**
 	 * deals with the MediaWiki api's response by parsing the provided text.
 	 *
@@ -158,33 +178,23 @@ public class GetCategoryMembers extends MWAction implements MultiAction<String> 
 		// get the backlink titles and add them all to the titleCollection
 			
 		Pattern p = Pattern.compile(
-			"<cm pageid=\".*?\" ns=\".*?\" title=\"(.*?)\" />");
+			"<cm pageid=\"(.*?)\" ns=\"(.*?)\" title=\"(.*?)\" />");
 			
 		Matcher m = p.matcher(s);
 		
 		while (m.find()) {
-			titleCollection.add(m.group(1));
+			
+			addCatItem(m.group(3), Integer.parseInt(m.group(1)), Integer.parseInt(m.group(2)));
+
 		}
 		
 	}
 	
-	/**
-	 * @return   the collected article names
-	 */
-	public Collection<String> getResults() {
-		return titleCollection;	 
-	}
+	protected abstract void addCatItem(String title, int pageid, int ns);
 	
-	/**
-	 * @return   necessary information for the next action
-	 *           or null if no next api page exists
-	 */
-	public GetCategoryMembers getNextAction() {
-		if( nextPageInfo == null ){ return null; }
-		else{
-			return new GetCategoryMembers(nextPageInfo);
-		}
-	}
+
+	
+
 	
 	
 

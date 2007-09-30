@@ -156,7 +156,7 @@
 		<copy todir="${release}">
 			<fileset dir="buildAdds" includes="*"/>
 		</copy>
-		<tar tarfile="${release}/jwbf-${build.number}${build.sufix}.tar.gz" 
+		<tar tarfile="${release}/jwbf-${build.number}${build.sufix}-src.tar.gz" 
 			basedir="${release}" compression="gzip"/>
 
         </target>

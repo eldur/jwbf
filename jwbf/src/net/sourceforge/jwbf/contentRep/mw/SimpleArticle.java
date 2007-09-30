@@ -18,6 +18,8 @@
  */
 package net.sourceforge.jwbf.contentRep.mw;
 
+import java.util.regex.Pattern;
+
 
 
 /**
@@ -149,6 +151,18 @@ public class SimpleArticle implements ContentAccessable {
 	 */
 	public void setEditor(final String editor) {
 		this.editor = editor;
+	}
+
+	/**
+	 * TODO method is untested.
+	 * @return true if is
+	 */
+	public boolean isRedirect() {
+		
+		Pattern pattern = Pattern.compile("#(.*)redirect(.*)", Pattern.CASE_INSENSITIVE);
+		if(pattern.matcher(text).matches()) 
+			return true;
+		return false;
 	}
 
 }

@@ -33,16 +33,18 @@ import net.sourceforge.jwbf.actions.http.mw.PostLoginOld;
 import net.sourceforge.jwbf.actions.http.mw.PostModifyContent;
 import net.sourceforge.jwbf.actions.http.mw.api.GetAllPageTitles;
 import net.sourceforge.jwbf.actions.http.mw.api.GetBacklinkTitles;
-import net.sourceforge.jwbf.actions.http.mw.api.GetCategoryMembers;
+import net.sourceforge.jwbf.actions.http.mw.api.GetFullCategoryMembers;
 import net.sourceforge.jwbf.actions.http.mw.api.GetImagelinkTitles;
 import net.sourceforge.jwbf.actions.http.mw.api.GetLogEvents;
 import net.sourceforge.jwbf.actions.http.mw.api.GetRecentchanges;
 import net.sourceforge.jwbf.actions.http.mw.api.GetRevision;
+import net.sourceforge.jwbf.actions.http.mw.api.GetSimpleCategoryMembers;
 import net.sourceforge.jwbf.actions.http.mw.api.GetSiteinfo;
 import net.sourceforge.jwbf.actions.http.mw.api.GetTemplateUserTitles;
 import net.sourceforge.jwbf.actions.http.mw.api.MultiAction;
 import net.sourceforge.jwbf.bots.util.LoginData;
 import net.sourceforge.jwbf.contentRep.Version;
+import net.sourceforge.jwbf.contentRep.mw.CategoryItem;
 import net.sourceforge.jwbf.contentRep.mw.ContentAccessable;
 import net.sourceforge.jwbf.contentRep.mw.LogItem;
 import net.sourceforge.jwbf.contentRep.mw.Siteinfo;
@@ -546,7 +548,20 @@ public class MediaWikiBot extends HttpBot {
 	 */
 	public Iterable<String> getCategoryMembers(String category) throws ActionException {
 		checkApiVersion(Version.MW1_11);
-		GetCategoryMembers c = new GetCategoryMembers(category, null);
+		GetSimpleCategoryMembers c = new GetSimpleCategoryMembers(category);
+		return performMultiAction(c);
+	}
+	
+	/**
+	 * 
+	 * @param category like "Buildings" or "Chemical elements" without prefix Category
+	 * @return of article labels
+	 * @throws ActionException on any kind of http or version problems
+	 * @supportedBy MediaWikiAPI 1.11 categorymembers / cm
+	 */
+	public Iterable<CategoryItem> getFullCategoryMembers(String category) throws ActionException {
+		checkApiVersion(Version.MW1_11);
+		GetFullCategoryMembers c = new GetFullCategoryMembers(category);
 		return performMultiAction(c);
 	}
 	
