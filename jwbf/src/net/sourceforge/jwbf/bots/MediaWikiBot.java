@@ -121,7 +121,6 @@ public class MediaWikiBot extends HttpBot {
 		try {
 			performAction(new PostLoginOld(username, passwd));
 		} catch (ProcessException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		loggedIn = true;
@@ -643,7 +642,6 @@ public class MediaWikiBot extends HttpBot {
 		try {
 			performAction(c);
 		} catch (ProcessException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return c.getResults();

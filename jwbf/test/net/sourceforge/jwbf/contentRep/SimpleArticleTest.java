@@ -14,19 +14,21 @@
  * the License.
  * 
  * Contributors:
- * 
+ * Thomas Stock
  */
 package net.sourceforge.jwbf.contentRep;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import net.sourceforge.jwbf.contentRep.mw.SimpleArticle;
 
 import org.junit.Before;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 /**
  * @author Philipp Kohl 
- *
+ * @author Thomas Stock
  * Simple Test-Case to get Unit-Testing started
  */
 public class SimpleArticleTest {
@@ -50,5 +52,28 @@ public class SimpleArticleTest {
 	public void testEditSummary() {
 		article.setEditSummary("test");
 		assertEquals("test", article.getEditSummary());
+	}
+	
+	@Test
+	public void testIsRedirect() {
+		article.setText("#redirect [[A]]");
+		assertTrue(article.isRedirect());
+		article.setText("#REDIRECT [[A]]");
+		assertTrue(article.isRedirect());
+		article.setText("# redirect [[A]]");
+		assertTrue(article.isRedirect());
+		article.setText("# redirect [[A]] [[Category:B]]");
+		assertTrue(article.isRedirect());
+	}
+	@Test
+	public void testIsNoRedirect() {
+		article.setText("Text\n#redirect [[A]]");
+		assertFalse(article.isRedirect());
+		article.setText("Text #REDIRECT [[A]]");
+		assertFalse(article.isRedirect());
+		article.setText("Text# redirect [[A]]");
+		assertFalse(article.isRedirect());
+		article.setText("Text# redirect [[A]]");
+		assertFalse(article.isRedirect());
 	}
 }
