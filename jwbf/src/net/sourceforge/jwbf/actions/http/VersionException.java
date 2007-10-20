@@ -26,8 +26,8 @@ package net.sourceforge.jwbf.actions.http;
 public class VersionException extends ActionException {
 
 
-	public VersionException() {
-		super();
+	public VersionException(String s) {
+		super(s);
 	}
 
 

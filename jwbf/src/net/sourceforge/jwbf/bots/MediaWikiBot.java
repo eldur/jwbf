@@ -84,6 +84,8 @@ public class MediaWikiBot extends HttpBot {
 
 	private LoginData login;
 	private boolean loggedIn = false;
+	
+	private boolean versionValidation = false;
 
 	/**
 	 * @param u
@@ -103,6 +105,15 @@ public class MediaWikiBot extends HttpBot {
 		super();
 		setConnection(url);
 
+	}
+	
+	/**
+	 * If true, the bot checks if action is be allowed on the working 
+	 * bot api. 
+	 * @param versionValidation a
+	 */
+	public void setVersionValidation(boolean versionValidation) {
+		this.versionValidation = versionValidation;
 	}
 
 	/**
@@ -820,19 +831,19 @@ public class MediaWikiBot extends HttpBot {
 	 * 		and expecialy versionExceptions on version mismatch.
 	 */
 	private void checkApiVersion(Version... vers) throws ActionException {
-		
-		if (currentVersion == null) {
-			Siteinfo s = getSiteinfo();
-			currentVersion = s.getVersion();
-		}
-		for (int i = 0; i < vers.length; i++) {
-			if (vers[i] == currentVersion 
-					|| currentVersion == Version.MW_WIKIPEDIA) {
-				return;
+		if (versionValidation) {
+			if (currentVersion == null) {
+				Siteinfo s = getSiteinfo();
+				currentVersion = s.getVersion();
 			}
+			for (int i = 0; i < vers.length; i++) {
+				if (vers[i] == currentVersion
+						|| currentVersion == Version.MW_WIKIPEDIA) {
+					return;
+				}
+			}
+			throw new VersionException("Current Version: " + currentVersion);
 		}
-		throw new VersionException();
-		
 	}
 
 }
