@@ -551,7 +551,7 @@ public class MediaWikiBot extends HttpBot {
 	}
 	/**
 	 * 
-	 * @param category like "Buildings" or "Chemical elements" without prefix Category
+	 * @param category like "Buildings" or "Chemical elements" without prefix "Category:"
 	 * @return of article labels
 	 * @throws ActionException on any kind of http or version problems
 	 * @supportedBy MediaWikiAPI 1.11 categorymembers / cm
@@ -579,7 +579,7 @@ public class MediaWikiBot extends HttpBot {
 	 * get the titles of all pages which contain a link to the given image.
 	 * 
 	 * @param image
-	 *            title of an image
+	 *            title of an image, without prefix "Image:"
 	 * 
 	 * @param namespaces
 	 *            numbers of the namespaces (specified using varargs) that will
@@ -594,8 +594,8 @@ public class MediaWikiBot extends HttpBot {
 	 *             on problems with http, cookies and io
 	 * 
 	 * TODO Pending Parameter Change;
-	 * http://www.mediawiki.org/wiki/API:Query_-_Lists TODO New API call, deside
-	 * if design a swich by version or support only newest
+	 * http://www.mediawiki.org/wiki/API:Query_-_Lists TODO New API call, decide
+	 * if design a switch by version or support only newest
 	 * 
 	 * @supportedBy MediaWikiAPI 1.9 embeddedin / ei
 	 * @supportedBy MediaWikiAPI 1.10 embeddedin / ei
@@ -616,7 +616,7 @@ public class MediaWikiBot extends HttpBot {
 	 * restriction.
 	 * 
 	 * @param image
-	 *            label of image like TODO what?
+	 *            label of image like TODO what? , without prefix "Image:"
 	 * @return an of labels
 	 * @see #getImagelinkTitles(String, int[])
 	 * @throws ActionException
@@ -661,7 +661,7 @@ public class MediaWikiBot extends HttpBot {
 	 * get the titles of all pages which embed the given template.
 	 * 
 	 * @param template
-	 *            title of a template
+	 *            title of a template, without prefix "Template:"
 	 * 
 	 * @param namespaces
 	 *            numbers of the namespaces (specified using varargs) that will
@@ -694,7 +694,7 @@ public class MediaWikiBot extends HttpBot {
 	 * namespace restriction
 	 * 
 	 * @param template
-	 *            label of template like TODO what ?
+	 *            label of template like TODO what ?, without prefix "Template:"
 	 * @return an of labels
 	 * @throws ActionException
 	 *             on problems with http, cookies and io
@@ -828,7 +828,7 @@ public class MediaWikiBot extends HttpBot {
 	 * 
 	 * @param vers alowed versions
 	 * @throws ActionException on problems with http, cookies and io, 
-	 * 		and expecialy versionExceptions on version mismatch.
+	 * 		and especially versionExceptions on version mismatch.
 	 */
 	private void checkApiVersion(Version... vers) throws ActionException {
 		if (versionValidation) {
