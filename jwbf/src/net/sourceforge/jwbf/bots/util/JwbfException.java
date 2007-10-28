@@ -16,39 +16,48 @@
  * Contributors:
  * 
  */
-package net.sourceforge.jwbf.actions.http;
-
-import net.sourceforge.jwbf.actions.http.mw.MWAction;
-import net.sourceforge.jwbf.bots.util.JwbfException;
-
 /**
  * 
- * This exception can be used in children of {@link MWAction} to handle 
- * exceptions in these actions, like access to content or mismatching patterns e.g.
- * 
+ */
+package net.sourceforge.jwbf.bots.util;
+
+/**
  * @author Thomas Stock
  *
  */
-public class ProcessException extends JwbfException {
+public class JwbfException extends Exception {
 
-	
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -3830701798846228121L;
-
-	
+	private static final long serialVersionUID = -2456904376052276104L;
 	/**
 	 * 
 	 */
-	public ProcessException() {
+	public JwbfException() {
 		super();
 	}
+
 	/**
-	 * 
-	 * @param msg exception text
+	 * @param arg0 a
 	 */
-	public ProcessException(final String msg) {
-		super(msg);
+	public JwbfException(String arg0) {
+		super(arg0);
 	}
+
+	/**
+	 * @param arg0 a
+	 */
+	public JwbfException(Throwable arg0) {
+		super(arg0);
+	}
+
+	/**
+	 * @param arg0 a
+	 * @param arg1 a
+	 */
+	public JwbfException(String arg0, Throwable arg1) {
+		super(arg0, arg1);
+	}
+
 }

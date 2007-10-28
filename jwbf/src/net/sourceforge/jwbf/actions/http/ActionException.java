@@ -18,12 +18,14 @@
  */
 package net.sourceforge.jwbf.actions.http;
 
+import net.sourceforge.jwbf.bots.util.JwbfException;
+
 /**
  * 
  * @author Thomas Stock
  *
  */
-public class ActionException extends Exception {
+public class ActionException extends JwbfException {
 
 	/**
 	 * 

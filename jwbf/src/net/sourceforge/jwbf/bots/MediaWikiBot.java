@@ -171,7 +171,7 @@ public class MediaWikiBot extends HttpBot {
 	 * @supportedBy MediaWikiAPI 1.10.x
 	 * @supportedBy MediaWikiAPI 1.11.x
 	 */
-	public final ContentAccessable readContent(final String name, final int properties)
+	public synchronized final ContentAccessable readContent(final String name, final int properties)
 			throws ActionException, ProcessException {
 		checkApiVersion(Version.MW1_9, Version.MW1_10, Version.MW1_11);
 		ContentAccessable a = null;
@@ -195,7 +195,7 @@ public class MediaWikiBot extends HttpBot {
 	 * @supportedBy MediaWikiAPI 1.10.x
 	 * @supportedBy MediaWikiAPI 1.11.x
 	 */
-	public final ContentAccessable readContent(final String name)
+	public synchronized final ContentAccessable readContent(final String name)
 			throws ActionException, ProcessException {
 		return readContent(name, GetRevision.CONTENT
 				| GetRevision.COMMENT | GetRevision.USER);
@@ -794,7 +794,7 @@ public class MediaWikiBot extends HttpBot {
 	 * @supportedBy MediaWiki 1.9.x
 	 * @supportedBy MediaWiki 1.10.x
 	 */
-	public final void writeContent(final ContentAccessable a)
+	public synchronized final void writeContent(final ContentAccessable a)
 			throws ActionException, ProcessException {
 
 		if (!isLoggedIn()) {
@@ -817,7 +817,7 @@ public class MediaWikiBot extends HttpBot {
 	 * @supportedBy MediaWiki 1.9.x
 	 * @supportedBy MediaWiki 1.10.x
 	 */
-	public final void writeMultContent(final Iterator<ContentAccessable> cav)
+	public synchronized final void writeMultContent(final Iterator<ContentAccessable> cav)
 			throws ActionException, ProcessException {
 		while (cav.hasNext()) {
 			writeContent(cav.next());
