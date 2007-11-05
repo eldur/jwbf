@@ -19,9 +19,10 @@
 package net.sourceforge.jwbf.actions.http;
 
 /**
+ * exception indicating that a feature is not
+ * supported by the wiki's software version
  * 
  * @author Thomas Stock
- *
  */
 public class VersionException extends ActionException {
 

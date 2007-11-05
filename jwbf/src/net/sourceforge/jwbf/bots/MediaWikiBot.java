@@ -19,6 +19,7 @@
 
 package net.sourceforge.jwbf.bots;
 
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Hashtable;
@@ -100,8 +101,10 @@ public class MediaWikiBot extends HttpBot {
 	/**
 	 * @param url
 	 *            wikihosturl like "http://www.mediawiki.org/wiki/"
+	 * @throws MalformedURLException  
+	 *            if param url does not represent a well-formed url          
 	 */
-	public MediaWikiBot(final String url) {
+	public MediaWikiBot(final String url) throws MalformedURLException {
 		super();
 		setConnection(url);
 

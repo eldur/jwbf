@@ -85,18 +85,17 @@ public abstract class HttpBot {
 
 	/**
 	 * 
-	 * @param hostUrl
-	 *            like http://www.yourOwnWiki.org/wiki/
+	 * @param hostUrl  base url of a wiki site to connect with;
+	 *            example: http://www.yourOwnWiki.org/wiki/
+	 * @throws MalformedURLException  
+	 *            if hostUrl does not represent a well-formed url
 	 */
-	protected final void setConnection(final String hostUrl) {
-		try {
-			client.getParams().setParameter("http.useragent",
-					"JWBF " + JWBF.VERSION);
-			setConnection(client, new URL(hostUrl));
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		}
-
+	protected final void setConnection(final String hostUrl) throws MalformedURLException {
+		
+		client.getParams().setParameter("http.useragent",
+				"JWBF " + JWBF.VERSION);
+		setConnection(client, new URL(hostUrl));
+		
 	}
 	
 	/**
