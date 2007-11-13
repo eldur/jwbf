@@ -28,7 +28,7 @@ package net.sourceforge.jwbf;
 public final class JWBF {
 
 
-	public static final String VERSION = "1.1.0";
+	public static final String VERSION = "1.2.0.1";
 	
 	
 	/**
@@ -37,6 +37,12 @@ public final class JWBF {
 	 */
 	private JWBF() {
 //		do nothing 
+	}
+	/**
+	 * Prints the JWBF Version.
+	 */
+	public static void printVersion() {
+		System.out.println("JWBF Version: " + VERSION);
 	}
 
 
