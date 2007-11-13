@@ -97,6 +97,12 @@ public class MediaWikiBot extends HttpBot {
 		setConnection(u);
 
 	}
+	/**
+	 * Design only for extension.
+	 */
+	protected MediaWikiBot() {
+		// do nothing, design only for extension
+	}
 
 	/**
 	 * @param url
@@ -174,7 +180,7 @@ public class MediaWikiBot extends HttpBot {
 	 * @supportedBy MediaWikiAPI 1.10.x
 	 * @supportedBy MediaWikiAPI 1.11.x
 	 */
-	public synchronized final ContentAccessable readContent(final String name, final int properties)
+	public final synchronized ContentAccessable readContent(final String name, final int properties)
 			throws ActionException, ProcessException {
 		checkApiVersion(Version.MW1_9, Version.MW1_10, Version.MW1_11);
 		ContentAccessable a = null;
@@ -198,7 +204,7 @@ public class MediaWikiBot extends HttpBot {
 	 * @supportedBy MediaWikiAPI 1.10.x
 	 * @supportedBy MediaWikiAPI 1.11.x
 	 */
-	public synchronized final ContentAccessable readContent(final String name)
+	public final synchronized ContentAccessable readContent(final String name)
 			throws ActionException, ProcessException {
 		return readContent(name, GetRevision.CONTENT
 				| GetRevision.COMMENT | GetRevision.USER);
@@ -641,15 +647,28 @@ public class MediaWikiBot extends HttpBot {
 
 	/**
 	 * 
-	 * @param type
-	 * @return
-	 * @throws ActionException
+	 * @param type event type like: upload, delete, ...
+	 * @return the last ten log events
+	 * @throws ActionException on problems with http, cookies and io 
+	 * @supportedBy MediaWikiAPI 1.11 logevents / le 
+	 * TODO API state is (semi-complete), see 
+	 * http://www.mediawiki.org/wiki/API:Query_-_Lists#logevents_.2F_le_.28semi-complete.29
 	 */
 	public Iterator<LogItem> getLogEvents(String ... type) throws ActionException {
 
 		return getLogEvents(10, type);
 	}
 	
+	/**
+	 * 
+	 * @param type event type like: upload, delete, ...
+	 * @param limit number of events
+	 * @return the last ten log events
+	 * @throws ActionException on problems with http, cookies and io
+	 * @supportedBy MediaWikiAPI 1.11 logevents / le 
+	 * TODO API state is (semi-complete), see 
+	 * http://www.mediawiki.org/wiki/API:Query_-_Lists#logevents_.2F_le_.28semi-complete.29
+	 */
 	public Iterator<LogItem> getLogEvents(int limit, String ... type) throws ActionException {
 		checkApiVersion(Version.MW1_11);
 		GetLogEvents c = new GetLogEvents(limit, type);
@@ -797,7 +816,7 @@ public class MediaWikiBot extends HttpBot {
 	 * @supportedBy MediaWiki 1.9.x
 	 * @supportedBy MediaWiki 1.10.x
 	 */
-	public synchronized final void writeContent(final ContentAccessable a)
+	public final synchronized void writeContent(final ContentAccessable a)
 			throws ActionException, ProcessException {
 
 		if (!isLoggedIn()) {
@@ -820,7 +839,7 @@ public class MediaWikiBot extends HttpBot {
 	 * @supportedBy MediaWiki 1.9.x
 	 * @supportedBy MediaWiki 1.10.x
 	 */
-	public synchronized final void writeMultContent(final Iterator<ContentAccessable> cav)
+	public final synchronized  void writeMultContent(final Iterator<ContentAccessable> cav)
 			throws ActionException, ProcessException {
 		while (cav.hasNext()) {
 			writeContent(cav.next());
