@@ -21,14 +21,13 @@ package net.sourceforge.jwbf.actions.http.mw.api;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.Collection;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import net.sourceforge.jwbf.actions.http.ProcessException;
 import net.sourceforge.jwbf.actions.http.mw.MWAction;
-import net.sourceforge.jwbf.actions.http.mw.api.MultiAction;
 import net.sourceforge.jwbf.bots.MediaWikiBot;
 
 import org.apache.commons.httpclient.methods.GetMethod;
@@ -97,7 +96,7 @@ public class GetBacklinkTitles extends MWAction implements MultiAction<String> {
 			if (blcontinue == null) {
 		
 				uS = "/api.php?action=query&list=backlinks"
-						+ "&titles=" + URLEncoder.encode(articleName, MediaWikiBot.CHARSET) 
+						+ "&bltitle=" + URLEncoder.encode(articleName, MediaWikiBot.CHARSET) 
 						+ ((namespace!=null)?("&blnamespace="+namespace):"")
 						+ "&bllimit=" + LIMIT + "&format=xml";
 			
