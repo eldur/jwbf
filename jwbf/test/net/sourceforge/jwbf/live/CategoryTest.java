@@ -32,7 +32,7 @@ import org.junit.Test;
  * @author Thomas Stock
  *
  */
-public class CategoryTests extends LiveTest {
+public class CategoryTest extends LiveTestFather {
 
 	
 	private MediaWikiBot bot = null;

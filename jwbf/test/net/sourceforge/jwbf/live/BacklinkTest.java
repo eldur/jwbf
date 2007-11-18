@@ -14,7 +14,7 @@ import org.junit.Test;
  * @author Thomas Stock
  * 
  */
-public class BacklinkTests extends LiveTest {
+public class BacklinkTest extends LiveTestFather {
 
 	private MediaWikiBot bot = null;
 

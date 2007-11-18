@@ -31,7 +31,7 @@ import org.junit.Test;
  * 
  *
  */
-public class LoginTests extends LiveTest {
+public class LoginTest extends LiveTestFather {
 
 	private MediaWikiBot bot = null;
 	

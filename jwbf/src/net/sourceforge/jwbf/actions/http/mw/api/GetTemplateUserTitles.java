@@ -21,14 +21,13 @@ package net.sourceforge.jwbf.actions.http.mw.api;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.Collection;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import net.sourceforge.jwbf.actions.http.ProcessException;
 import net.sourceforge.jwbf.actions.http.mw.MWAction;
-import net.sourceforge.jwbf.actions.http.mw.api.MultiAction;
 import net.sourceforge.jwbf.bots.MediaWikiBot;
 
 import org.apache.commons.httpclient.methods.GetMethod;
@@ -36,7 +35,7 @@ import org.apache.commons.httpclient.methods.GetMethod;
 
 /**
  * action class using the MediaWiki-api's "list=embeddedin"
- * that is used to find all articles which use a template
+ * that is used to find all articles which use a template.
  *
  * @author Tobias Knerr
  * @since MediaWiki 1.9.0

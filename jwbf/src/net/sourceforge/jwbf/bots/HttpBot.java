@@ -48,7 +48,7 @@ public abstract class HttpBot {
 	 */
 	protected HttpBot() {
 		client = new HttpClient();
-		
+
 	}
 
 	/**
@@ -63,7 +63,7 @@ public abstract class HttpBot {
 
 		this.client = client;
 		client.getParams().setParameter("http.useragent",
-				"JWBF " + JWBF.VERSION);
+				"JWBF " + JWBF.getVersion());
 		client.getHostConfiguration().setHost(u.getHost(), u.getPort(),
 				u.getProtocol());
 		cc = new HttpActionClient(client, u.getPath());
@@ -77,45 +77,50 @@ public abstract class HttpBot {
 	 * @throws ActionException
 	 *             on problems with http, cookies and io
 	 * @return text
-	 * @throws ProcessException 
+	 * @throws ProcessException on problems in the subst of ContentProcessable 
 	 */
-	public final String performAction(final ContentProcessable a) throws ActionException, ProcessException {
+	public final String performAction(final ContentProcessable a)
+			throws ActionException, ProcessException {
 		return cc.performAction(a);
 	}
 
 	/**
 	 * 
-	 * @param hostUrl  base url of a wiki site to connect with;
-	 *            example: http://www.yourOwnWiki.org/wiki/
-	 * @throws MalformedURLException  
-	 *            if hostUrl does not represent a well-formed url
+	 * @param hostUrl
+	 *            base url of a wiki site to connect with; example:
+	 *            http://www.yourOwnWiki.org/wiki/
+	 * @throws MalformedURLException
+	 *             if hostUrl does not represent a well-formed url
 	 */
-	protected final void setConnection(final String hostUrl) throws MalformedURLException {
-		
+	protected final void setConnection(final String hostUrl)
+			throws MalformedURLException {
+
 		client.getParams().setParameter("http.useragent",
-				"JWBF " + JWBF.VERSION);
+				"JWBF " + JWBF.getVersion());
 		setConnection(client, new URL(hostUrl));
-		
+
 	}
-	
+
 	/**
-	 * Simple method to get plain HTML or XML data e.g. from custom 
-	 * specialpages or xml newsfeeds.
-	 * @param u url like index.php?title=Main_Page
+	 * Simple method to get plain HTML or XML data e.g. from custom specialpages
+	 * or xml newsfeeds.
+	 * 
+	 * @param u
+	 *            url like index.php?title=Main_Page
 	 * @return HTML content
-	 * @throws ActionException on any requesing problems
-	 * @supportedBy 
+	 * @throws ActionException
+	 *             on any requesing problems
 	 */
 	public String getPage(String u) throws ActionException {
-		
+
 		GetPage gp = new GetPage(u);
-		
+
 		try {
 			performAction(gp);
 		} catch (ProcessException e) {
 			e.printStackTrace();
 		}
-		
+
 		return gp.getText();
 	}
 
@@ -136,7 +141,5 @@ public abstract class HttpBot {
 		setConnection(client, hostUrl);
 
 	}
-	
-
 
 }

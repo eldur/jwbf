@@ -24,12 +24,12 @@ import java.io.IOException;
 import java.util.InvalidPropertiesFormatException;
 import java.util.Properties;
 
-public class LiveTest {
+public class LiveTestFather {
 
 	private static Properties data;
 	private static final String filename = "test.xml";
 	
-	protected LiveTest() {
+	protected LiveTestFather() {
 		if (data == null) {
 			data = new Properties();
 			try {

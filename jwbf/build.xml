@@ -1,178 +1,229 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <project default="test">
-	
+
 	<property name="temp" location="temp" />
 	<property name="classes" location="${temp}/classes"/>
 	<property name="classes_test" location="${temp}/classes_test"/>
 	<property name="junit.dir" location="${temp}/junit"/>
-	
-	
+
+
 	<property name="lib" location="lib"/>
 
-	
+
 	<path id="classpath">
 		<fileset dir="${lib}" includes="*.jar"/>
 	</path>
-		
 	
+	<path id="test.classpath">
+	  
+	  <pathelement location="${lib}junit-4.3.1.jar" />
+	  <fileset dir="${lib}" includes="*.jar"/>
+	</path>
+
+
 	<!-- 
 	- Dont forget to update internal Version in JWBF.VERSION 
 	- if build.number tenner place changes
 	-->
 	<property name="dist" value="build" />
-	
+
 	<target name="init">
-		<delete failonerror="false" dir="${classes}"></delete>
-		<mkdir dir="${classes}"/>		
+		<delete failonerror="false" dir="${classes}">
+		</delete>
+		<mkdir dir="${classes}"/>
 	</target>
 
 	<target name="init_test" depends="init">
-		<delete failonerror="false" dir="${classes_test}"></delete>
-		<mkdir dir="${classes_test}"/>	
-		<delete failonerror="false" dir="${junit.dir}"></delete>
-		<mkdir dir="${junit.dir}"/>	
-		
+		<delete failonerror="false" dir="${classes_test}">
+		</delete>
+		<mkdir dir="${classes_test}"/>
+		<delete failonerror="false" dir="${junit.dir}">
+		</delete>
+		<mkdir dir="${junit.dir}"/>
+
 	</target>
-	
-	
-	
-    <!-- ================================= 
+
+
+
+	<!-- ================================= 
           target: Compile              
          ================================= -->
-    <target name="compile" depends="init" description="--> compile the sources">
-        <javac classpathref="classpath" destdir="${classes}" srcdir="src">
+	<target name="compile" depends="init" description="--> compile the sources">
+		<javac classpathref="classpath" destdir="${classes}" srcdir="src">
 
-        </javac>
-    	<copy todir="${classes}"> 
-    		<fileset dir="src">
-    			<exclude name="**/*.java"/>
-    		</fileset>		
-	    </copy>
-    </target>
+		</javac>
+		<copy todir="${classes}">
+			<fileset dir="src">
+				<exclude name="**/*.java"/>
+			</fileset>
+		</copy>
+	</target>
 
 
 	<target name="compile_test" depends="compile, init_test">
-        <javac  destdir="${classes_test}" srcdir="test">
+		<javac destdir="${classes_test}" srcdir="test">
 
-        	
-        	<classpath >
-        		 <path refid="classpath"/>
-        		 <pathelement location="${classes}"/>
-        	</classpath>
-        </javac>
-    	<copy todir="${classes_test}"> 
-    		<fileset dir="test">
-    			<exclude name="**/*.java"/>
-    		</fileset>		
-	    </copy>
-    </target>
-	
-	
-    <!-- ================================= 
+
+			<classpath >
+				<path refid="classpath"/>
+				<pathelement location="${classes}"/>
+			</classpath>
+		</javac>
+		<copy todir="${classes_test}">
+			<fileset dir="test">
+				<exclude name="**/*.java"/>
+			</fileset>
+		</copy>
+	</target>
+
+
+	<!-- ================================= 
           target: test              
          ================================= -->
-    <target name="test" depends="compile_test" description="--> Runs all Unit-Tests">
-    	
-        <junit printsummary="yes" 
+	<target name="test" depends="compile_test" description="--> Runs all Unit-Tests">
+
+		<junit printsummary="yes" 
                haltonfailure="no"
                haltonerror="no" 
                failureproperty="junit.failure"   
                errorproperty="junit.error"
                fork="yes">
-            <formatter type="plain" usefile="true"/>
-            <formatter type="xml"/>
-            <batchtest todir="${temp}/junit">
-                <fileset dir="test">
-                    <include name="**/*Test.java"/>
-                </fileset>
-            </batchtest>
-            <classpath>
-                <path refid="classpath"></path>   
-                <pathelement location="${classes}"/>   
-                <pathelement location="${classes_test}"/>   
-            </classpath>
-        </junit>
-        <mkdir dir="${dist}/junit"/>
-    	<echo>${junit.dir}</echo>
-        <copy todir="${dist}/junit">
-            <fileset dir="${junit.dir}" >
-                <include name="TEST-*.xml"/>
-            </fileset>
-        </copy>
-        <junitreport todir="${dist}/junit">
-            <fileset dir="${junit.dir}">
-                <include name="TEST-*.xml"/>
-            </fileset>
-            <report todir="${junit.dir}"/>   
-        	
-        </junitreport>   
-    	<copy todir="${dist}/junit">
-    		<fileset dir="${junit.dir}">
-            	<include name="**/*.html"/>
-            	<include name="**/*.css"/>
-    		</fileset>
-    	</copy>
-        <fail message="junit errors" if="junit.error"/>
-        <fail message="junit failures" if="junit.failure"/>
-    </target>
+			<formatter type="plain" usefile="true"/>
+			<formatter type="xml"/>
+			<batchtest todir="${temp}/junit">
+				<fileset dir="test">
+					<include name="**/*Test.java"/>
+				</fileset>
+			</batchtest>
+			<classpath>
+				<path refid="test.classpath">
+				</path>
+				<pathelement location="${classes}"/>
+				<pathelement location="${classes_test}"/>
+			</classpath>
+		</junit>
+		<mkdir dir="${dist}/junit"/>
+		<echo>${junit.dir}</echo>
+		
+		<copy todir="${dist}/junit">
+			<fileset dir="${junit.dir}" >
+				<include name="TEST-*.xml"/>
+			</fileset>
+		</copy>
+		<junitreport todir="${dist}/junit">
+			<fileset dir="${junit.dir}">
+				<include name="TEST-*.xml"/>
+			</fileset>
+			<report todir="${junit.dir}"/>
+
+		</junitreport>
+		<copy todir="${dist}/junit">
+			<fileset dir="${junit.dir}">
+				<include name="**/*.html"/>
+				<include name="**/*.css"/>
+			</fileset>
+		</copy>
+		<fail message="junit errors" if="junit.error"/>
+		<fail message="junit failures" if="junit.failure"/>
+	</target>
 
 
 	<target name="loadBuildNo">
 		<loadproperties srcFile="build.number" />
 		<loadproperties srcFile="build.sufix" />
-		
+
 	</target>
-	
+
 	<!-- build jar -->
 	<target name="jar" depends="compile, loadBuildNo, clean">
-		
+
 		<echo message="Building: jwbf-${build.number}${build.sufix}.jar" />
 		<mkdir dir="${dist}" />
- 		<jar destfile="${dist}/jwbf-${build.number}${build.sufix}.jar">
-    		<fileset dir="${classes}"
+		<jar destfile="${dist}/jwbf-${build.number}${build.sufix}.jar">
+			<fileset dir="${classes}"
     			excludes="**/Test.class, **/*.htm*" 
     		/>
 			<fileset dir="buildAdds"
 				includes="*"
 			/>
-    	  	<manifest>
-    	  	   	<attribute name="Built-By" value="${user.name}"/>
-	    	</manifest>
+			<manifest>
+				<attribute name="Built-By" value="${user.name}"/>
+			</manifest>
 		</jar>
-    </target>
-	
+	</target>
+
 	<!-- create release -->
 	<target name="release" depends="jar">
-		
+		<antcall target="test" />
+		<antcall target="releaseWithSrc" />
+		<antcall target="releaseBin" />
+
+	</target>
+
+	<target name="releaseWithSrc">
+
 		<property name="release" value="${dist}/release_${build.number}${build.sufix}" />
-				<echo message="Release: ${build.number}${build.sufix}" />
-		<mkdir dir="${release}"/>
+		<echo message="Release SRC: ${build.number}${build.sufix}" />
+		<mkdir dir="${release}" />
 
 		<copy file="${dist}/jwbf-${build.number}${build.sufix}.jar" todir="${release}/bin" />
-		
+
 		<copy todir="${release}/src">
-			<fileset dir="src" includes="**/*"/>
+			<fileset dir="src" includes="**/*" />
+		</copy>
+		<copy todir="${release}/test">
+					<fileset dir="test" includes="**/*" />
+				</copy>
+		<copy todir="${release}/lib">
+			<fileset dir="lib" includes="**/*" />
 		</copy>
 		<copy todir="${release}">
-			<fileset dir="buildAdds" includes="*"/>
+			<fileset dir="buildAdds" includes="*" />
 		</copy>
-		<tar tarfile="${release}/jwbf-${build.number}${build.sufix}-src.tar.gz" 
-			basedir="${release}" compression="gzip"/>
+		<tar tarfile="${release}/jwbf-${build.number}${build.sufix}-src.tar.gz"
+		basedir="${release}" compression="gzip" excludes="*.tar.gz" />
+		<delete includeemptydirs="true">
+			<fileset dir="${release}" includes="*/**" excludes="*.tar.gz, junit" />
 
-        </target>
+		</delete>
+	</target>
 	
-	
-	
+	<target name="releaseBin">
+
+		<property name="release" value="${dist}/release_${build.number}${build.sufix}" />
+		<echo message="Release BIN: ${build.number}${build.sufix}" />
+		<mkdir dir="${release}" />
+
+		<copy file="${dist}/jwbf-${build.number}${build.sufix}.jar" todir="${release}/bin" />
+
+		<copy todir="${release}/lib">
+			<fileset dir="lib" includes="**/*" excludes="junit*, taglet*" />
+		</copy>
+		<copy todir="${release}">
+			<fileset dir="buildAdds" includes="*" />
+		</copy>
+		<tar tarfile="${release}/jwbf-${build.number}${build.sufix}-bin.tar.gz" 
+			excludes="*.tar.gz" basedir="${release}" compression="gzip" />
+		<delete includeemptydirs="true">
+			<fileset dir="${release}" includes="*/**" excludes="*.tar.gz, junit" />
+
+		</delete>
+	</target>
+
+
+
 	<!-- increment release number in file: build.number -->
 	<target name="relInc">
 		<buildnumber/>
 	</target>
-	
+
 	<target name="clean">
-		<delete failonerror="false" dir="${dist}"></delete>
+		<delete failonerror="false" dir="${dist}">
+		</delete>
 	</target>
-    <target name="buildsufix">
-            <property name="build.sufix" value="RC"></property>
-    </target>
+	<target name="buildsufix">
+		<property name="build.sufix" value="RC">
+		</property>
+	</target>
 
 </project>

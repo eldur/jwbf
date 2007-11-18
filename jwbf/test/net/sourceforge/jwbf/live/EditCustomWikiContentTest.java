@@ -35,7 +35,7 @@ import org.junit.Test;
  * @author Thomas Stock
  *
  */
-public class EditCustomWikiContent extends LiveTest {
+public class EditCustomWikiContentTest extends LiveTestFather {
 
 	private MediaWikiBot bot;
 	
@@ -111,6 +111,7 @@ public class EditCustomWikiContent extends LiveTest {
 	@Test
 	public final void contentModifyUtf8Get() throws Exception {
 		String utf8value = "öäüÖÄÜß Лин 瓦茲القواميس والمراجع";
+		utf8value = "öäüÖÄÜß";
 		String label = getValue("editCustomWikiContent_article");
 		SimpleArticle sa;
 		sa = new SimpleArticle(utf8value, label);
