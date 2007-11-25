@@ -25,7 +25,7 @@ package net.sourceforge.jwbf;
 public final class JWBF {
 
 
-	private static final String VERSION = "1.2.0.1";
+	private static final String VERSION = "1.2.0.2";
 	
 	
 	/**

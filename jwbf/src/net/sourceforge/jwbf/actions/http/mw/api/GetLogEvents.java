@@ -140,10 +140,8 @@ public class GetLogEvents extends MWAction  {
 			root = doc.getRootElement();
 
 		} catch (JDOMException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		findContent(root);

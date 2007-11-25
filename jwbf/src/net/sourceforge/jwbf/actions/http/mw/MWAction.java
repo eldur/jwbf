@@ -22,13 +22,13 @@ import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Vector;
 
-import org.apache.commons.httpclient.Cookie;
-import org.apache.commons.httpclient.HttpMethod;
-
 import net.sourceforge.jwbf.actions.http.ContentProcessable;
 import net.sourceforge.jwbf.actions.http.CookieException;
 import net.sourceforge.jwbf.actions.http.ProcessException;
 import net.sourceforge.jwbf.bots.MediaWikiBot;
+
+import org.apache.commons.httpclient.Cookie;
+import org.apache.commons.httpclient.HttpMethod;
 
 /**
  * @author Thomas Stock
@@ -100,7 +100,7 @@ public abstract class MWAction implements ContentProcessable {
 	 * @param s
 	 *            the returning text
 	 * @return the returning text
-	 * @throws ProcessException TODO
+	 * @throws ProcessException never
 	 * 
 	 */
 	public String processAllReturningText(final String s) throws ProcessException {
@@ -111,6 +111,7 @@ public abstract class MWAction implements ContentProcessable {
 	 * changes to mediawiki default encoding.
 	 * @param s a
 	 * @return encoded s
+	 * @deprecated
 	 */
 	protected String encodeUtf8(final String s) {
 		

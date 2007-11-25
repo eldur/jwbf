@@ -157,11 +157,11 @@
 		<antcall target="test" />
 		<antcall target="releaseWithSrc" />
 		<antcall target="releaseBin" />
+		<antcall target="releaseSimpleJar" />
 
 	</target>
 
 	<target name="releaseWithSrc">
-
 		<property name="release" value="${dist}/release_${build.number}${build.sufix}" />
 		<echo message="Release SRC: ${build.number}${build.sufix}" />
 		<mkdir dir="${release}" />
@@ -184,7 +184,6 @@
 		basedir="${release}" compression="gzip" excludes="*.tar.gz" />
 		<delete includeemptydirs="true">
 			<fileset dir="${release}" includes="*/**" excludes="*.tar.gz, junit" />
-
 		</delete>
 	</target>
 	
@@ -207,6 +206,23 @@
 		<delete includeemptydirs="true">
 			<fileset dir="${release}" includes="*/**" excludes="*.tar.gz, junit" />
 
+		</delete>
+	</target>
+	<target name="releaseSimpleJar">
+
+		<property name="release" value="${dist}/release_${build.number}${build.sufix}" />
+		<echo message="Release BIN SIMPLE: ${build.number}${build.sufix}" />
+		<mkdir dir="${release}" />
+
+		<copy file="${dist}/jwbf-${build.number}${build.sufix}.jar" todir="${release}/bin" />
+
+		<copy todir="${release}">
+			<fileset dir="buildAdds" includes="*" />
+		</copy>
+		<tar tarfile="${release}/jwbf-${build.number}${build.sufix}-binSimple.tar.gz" 
+			excludes="*.tar.gz" basedir="${release}" compression="gzip" />
+		<delete includeemptydirs="true">
+			<fileset dir="${release}" includes="*/**" excludes="*.tar.gz, junit" />
 		</delete>
 	</target>
 

@@ -43,7 +43,7 @@ public interface ContentProcessable {
 	 * @param s the returning text
 	 * @param hm a
 	 * @return the retruning text or a modification of it
-	 * @throws ProcessException TODO
+	 * @throws ProcessException on internal problems of implementing class
 	 */
 	String processReturningText(final String s, HttpMethod hm) throws ProcessException;
 	

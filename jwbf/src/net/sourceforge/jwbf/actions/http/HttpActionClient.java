@@ -24,7 +24,10 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 
+import net.sourceforge.jwbf.bots.MediaWikiBot;
+
 import org.apache.commons.httpclient.Cookie;
+import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.HttpStatus;
@@ -59,8 +62,9 @@ public class HttpActionClient {
 		 */
 
 		this.client = client;
-		// this.client.getParams().setParameter("http.protocol.content-charset",
-		// "UTF-8");
+//		this.client.getParams().setParameter("http.protocol.content-charset",
+//		 "UTF-8");
+		
 		if (path.length() > 1) {
 			this.path = path.substring(0, path.lastIndexOf("/"));
 		}
@@ -132,44 +136,55 @@ public class HttpActionClient {
 			throws IOException, ProcessException,
 			CookieException {
 		showCookies(client);
-
+		authpost.getParams().setParameter("http.protocol.content-charset",
+				MediaWikiBot.CHARSET);
 		String out = "";
 
 		client.executeMethod(authpost);
+		
+
+		// Header locationHeader = authpost.getResponseHeader("location");
+		// if (locationHeader != null) {
+		// authpost.setRequestHeader(locationHeader) ;
+		// }
+
+		
+
+		// Usually a successful form-based login results in a redicrect to
+		// another url
+		
+		int statuscode = authpost.getStatusCode();
+		if ((statuscode == HttpStatus.SC_MOVED_TEMPORARILY)
+				|| (statuscode == HttpStatus.SC_MOVED_PERMANENTLY)
+				|| (statuscode == HttpStatus.SC_SEE_OTHER)
+				|| (statuscode == HttpStatus.SC_TEMPORARY_REDIRECT)) {
+			Header header = authpost.getResponseHeader("location");
+			if (header != null) {
+				String newuri = header.getValue();
+				if ((newuri == null) || (newuri.equals(""))) {
+					newuri = "/";
+				}
+				LOG.debug("Redirect target: " + newuri);
+				GetMethod redirect = new GetMethod(newuri);
+
+				client.executeMethod(redirect);
+				LOG.debug("Redirect: " + redirect.getStatusLine().toString());
+				// release any connection resources used by the method
+				authpost.releaseConnection();
+				authpost = redirect;
+			}
+		}
+		
 		out = authpost.getResponseBodyAsString();
 		out = cp.processReturningText(out, authpost);
 
 		cp.validateReturningCookies(client.getState().getCookies(), authpost);
+		
+	
 
 		authpost.releaseConnection();
 		LOG.debug(authpost.getURI() + " || " + "POST: "
 				+ authpost.getStatusLine().toString());
-
-		// Usually a successful form-based login results in a redicrect to
-		// another url
-		// int statuscode = authpost.getStatusCode();
-		// if ((statuscode == HttpStatus.SC_MOVED_TEMPORARILY)
-		// || (statuscode == HttpStatus.SC_MOVED_PERMANENTLY)
-		// || (statuscode == HttpStatus.SC_SEE_OTHER)
-		// || (statuscode == HttpStatus.SC_TEMPORARY_REDIRECT)) {
-		// Header header = authpost.getResponseHeader("location");
-		// if (header != null) {
-		// String newuri = header.getValue();
-		// if ((newuri == null) || (newuri.equals(""))) {
-		// newuri = "/";
-		// }
-		// log.debug("Redirect target: " + newuri);
-		// GetMethod redirect = new GetMethod(newuri);
-		//
-		// client.executeMethod(redirect);
-		// log.debug("Redirect: " + redirect.getStatusLine().toString());
-		// // release any connection resources used by the method
-		// redirect.releaseConnection();
-		// } else {
-		// throw new Exception("Invalid redicet");
-		// }
-		// }
-
 		return out;
 	}
 
@@ -189,13 +204,16 @@ public class HttpActionClient {
 			throws IOException, CookieException, ProcessException {
 		showCookies(client);
 		String out = "";
-
+		authgets.getParams().setParameter("http.protocol.content-charset",
+				MediaWikiBot.CHARSET);
+//		System.err.println(authgets.getParams().getParameter("http.protocol.content-charset"));
+		
 		client.executeMethod(authgets);
 		cp.validateReturningCookies(client.getState().getCookies(), authgets);
 		LOG.debug(authgets.getURI());
 		LOG.debug("GET: " + authgets.getStatusLine().toString());
 
-		out = new String(authgets.getResponseBody());
+		out = authgets.getResponseBodyAsString();
 		out = cp.processReturningText(out, authgets);
 		// release any connection resources used by the method
 		authgets.releaseConnection();

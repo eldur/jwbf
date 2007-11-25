@@ -22,6 +22,8 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URLEncoder;
 import java.util.Iterator;
 
@@ -63,6 +65,7 @@ public class GetRevision extends MWAction {
 		sa = new SimpleArticle();
 		sa.setLabel(articlename);
 		String uS = "";
+		URI uri = null;
 		try {
 			uS = "/api.php?action=query&prop=revisions&titles="
 					+ URLEncoder.encode(articlename, MediaWikiBot.CHARSET)
@@ -70,11 +73,14 @@ public class GetRevision extends MWAction {
 					+ getReversion(property)
 					+ "&rvlimit=1"
 					+ "&format=xml";
+			uri = new URI(uS);
 		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		} catch (URISyntaxException e) {
 			e.printStackTrace();
 		}
 		LOG.debug(uS);
-		msgs.add(new GetMethod(uS));
+		msgs.add(new GetMethod(uri.toString()));
 		
 	}
 	/**
@@ -104,7 +110,14 @@ public class GetRevision extends MWAction {
 		if ((property & USER) > 0) {
 			properties += "user|";
 		}
-		return properties.substring(0, properties.length() - 1);
+		String enc = ""; 
+		
+		try {
+			enc = URLEncoder.encode(properties.substring(0, properties.length() - 1), MediaWikiBot.CHARSET);
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		return enc;
 	}
 	
 	
@@ -158,9 +171,10 @@ public class GetRevision extends MWAction {
 				throw new ApiException(element.getAttributeValue("code"),
 						element.getAttributeValue("info"));
 			} else if (element.getQualifiedName().equalsIgnoreCase("rev")) {
-				sa.setText(encodeUtf8(element.getText()));
+				
+				sa.setText(element.getText());
 				sa.setEditSummary(element.getAttributeValue("comment"));
-				sa.setEditor(encodeUtf8(element.getAttributeValue("user")));
+				sa.setEditor(element.getAttributeValue("user"));
 			} else {
 				findContent(element);
 			}

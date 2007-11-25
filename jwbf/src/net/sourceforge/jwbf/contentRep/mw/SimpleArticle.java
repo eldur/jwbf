@@ -20,14 +20,12 @@ package net.sourceforge.jwbf.contentRep.mw;
 
 import java.util.regex.Pattern;
 
-
-
 /**
- * This is a simple content helper class that implements the EditContentAccesable
- * interface, plus setter methods.
+ * This is a simple content helper class that implements the
+ * EditContentAccesable interface, plus setter methods.
  * 
  * @author Thomas Stock
- *
+ * 
  */
 public class SimpleArticle implements ContentAccessable {
 
@@ -36,28 +34,36 @@ public class SimpleArticle implements ContentAccessable {
 	private String text = "";
 	private String editor = "";
 	private boolean minorEdit = false;
-	
+
 	/**
 	 * 
-	 *
+	 * 
 	 */
 	public SimpleArticle() {
-//		do nothing 
+		// do nothing
 	}
 
 	/**
 	 * 
-	 * @param ca a
+	 * @param ca
+	 *            a
 	 */
 	public SimpleArticle(ContentAccessable ca) {
 		label = ca.getLabel();
-		text = ca.getText();
+		if (ca.getText().length() > 0) {
+			text = ca.getText();
+		}
 		minorEdit = ca.isMinorEdit();
-		editSummary = ca.getEditSummary();
-		editor = ca.getEditor();
-		
+
+		if (ca.getEditSummary() != null && ca.getEditSummary().length() > 0) {
+			editSummary = ca.getEditSummary();
+		}
+		if (ca.getEditor().length() > 0) {
+			editor = ca.getEditor();
+		}
+
 	}
-	
+
 	/**
 	 * 
 	 * @param text
@@ -69,15 +75,18 @@ public class SimpleArticle implements ContentAccessable {
 		this.text = text;
 		this.label = label;
 	}
+
 	/**
 	 * @return the
 	 */
 	public String getEditSummary() {
 		return editSummary;
 	}
+
 	/**
 	 * 
-	 * @param s the
+	 * @param s
+	 *            the
 	 */
 	public void setEditSummary(final String s) {
 		this.editSummary = s;
@@ -89,9 +98,11 @@ public class SimpleArticle implements ContentAccessable {
 	public boolean isMinorEdit() {
 		return minorEdit;
 	}
+
 	/**
 	 * 
-	 * @param minor the
+	 * @param minor
+	 *            the
 	 */
 	public void setMinorEdit(final boolean minor) {
 		this.minorEdit = minor;
@@ -103,36 +114,45 @@ public class SimpleArticle implements ContentAccessable {
 	public String getLabel() {
 		return label;
 	}
+
 	/**
 	 * 
-	 * @param label the label, like "Main Page"
+	 * @param label
+	 *            the label, like "Main Page"
 	 */
 	public void setLabel(final String label) {
 		this.label = label;
 	}
+
 	/**
 	 * @return the content of the article
 	 */
 	public String getText() {
 		return text;
 	}
+
 	/**
 	 * 
-	 * @param text the content of the article
+	 * @param text
+	 *            the content of the article
 	 */
 	public void setText(final String text) {
 		this.text = text;
 	}
+
 	/**
 	 * 
-	 * @param text to add to content of the article
+	 * @param text
+	 *            to add to content of the article
 	 */
 	public void addText(final String text) {
 		this.text += text;
 	}
+
 	/**
 	 * 
-	 * @param text to add to content of the article
+	 * @param text
+	 *            to add to content of the article
 	 */
 	public void addTextnl(final String text) {
 		this.text += "\n" + text;
@@ -144,10 +164,10 @@ public class SimpleArticle implements ContentAccessable {
 	public String getEditor() {
 		return editor;
 	}
-	
 
 	/**
-	 * @param editor the
+	 * @param editor
+	 *            the
 	 */
 	public void setEditor(final String editor) {
 		this.editor = editor;
@@ -155,12 +175,14 @@ public class SimpleArticle implements ContentAccessable {
 
 	/**
 	 * TODO method is untested.
+	 * 
 	 * @return true if is
 	 */
 	public boolean isRedirect() {
-		
-		Pattern pattern = Pattern.compile("#(.*)redirect(.*)", Pattern.CASE_INSENSITIVE);
-		if(pattern.matcher(text).matches()) 
+
+		Pattern pattern = Pattern.compile("#(.*)redirect(.*)",
+				Pattern.CASE_INSENSITIVE);
+		if (pattern.matcher(text).matches())
 			return true;
 		return false;
 	}
