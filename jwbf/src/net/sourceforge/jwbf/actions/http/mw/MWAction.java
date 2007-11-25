@@ -112,6 +112,7 @@ public abstract class MWAction implements ContentProcessable {
 	 * @param s a
 	 * @return encoded s
 	 * @deprecated
+	 * TODO delete Method
 	 */
 	protected String encodeUtf8(final String s) {
 		

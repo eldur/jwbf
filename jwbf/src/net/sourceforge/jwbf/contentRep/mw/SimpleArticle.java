@@ -49,18 +49,17 @@ public class SimpleArticle implements ContentAccessable {
 	 *            a
 	 */
 	public SimpleArticle(ContentAccessable ca) {
-		label = ca.getLabel();
-		if (ca.getText().length() > 0) {
-			text = ca.getText();
-		}
-		minorEdit = ca.isMinorEdit();
+		assert ca.getLabel() != null 
+			&& ca.getText() != null
+			&& ca.isMinorEdit()
+			&& ca.getEditSummary() != null
+			&& ca.getEditor() != null;
 
-		if (ca.getEditSummary() != null && ca.getEditSummary().length() > 0) {
-			editSummary = ca.getEditSummary();
-		}
-		if (ca.getEditor().length() > 0) {
-			editor = ca.getEditor();
-		}
+		label = ca.getLabel();
+		text = ca.getText();
+		minorEdit = ca.isMinorEdit();
+		editSummary = ca.getEditSummary();
+		editor = ca.getEditor();
 
 	}
 

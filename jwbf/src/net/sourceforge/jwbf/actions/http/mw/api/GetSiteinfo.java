@@ -3,9 +3,11 @@ package net.sourceforge.jwbf.actions.http.mw.api;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.Iterator;
+
+import net.sourceforge.jwbf.actions.http.ProcessException;
+import net.sourceforge.jwbf.actions.http.mw.MWAction;
+import net.sourceforge.jwbf.contentRep.mw.Siteinfo;
 
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.jdom.Document;
@@ -13,12 +15,6 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
 import org.xml.sax.InputSource;
-
-import net.sourceforge.jwbf.actions.http.ProcessException;
-import net.sourceforge.jwbf.actions.http.mw.MWAction;
-import net.sourceforge.jwbf.bots.MediaWikiBot;
-import net.sourceforge.jwbf.contentRep.mw.SimpleArticle;
-import net.sourceforge.jwbf.contentRep.mw.Siteinfo;
 
 public class GetSiteinfo extends MWAction {
 
@@ -71,15 +67,15 @@ public class GetSiteinfo extends MWAction {
 			Element element = (Element) el.next();
 			if (element.getQualifiedName().equalsIgnoreCase("general")) {
 
-				site.setMainpage(encodeUtf8(element
-						.getAttributeValue("mainpage")));
-				site.setBase(encodeUtf8(element.getAttributeValue("base")));
-				site.setSitename(encodeUtf8(element
-						.getAttributeValue("sitename")));
-				site.setGenerator(encodeUtf8(element
-						.getAttributeValue("generator")));
-				site.setCase(encodeUtf8(element.getAttributeValue("case")));
-				site.setRights(encodeUtf8(element.getAttributeValue("rights")));
+				site.setMainpage(element
+						.getAttributeValue("mainpage"));
+				site.setBase(element.getAttributeValue("base"));
+				site.setSitename(element
+						.getAttributeValue("sitename"));
+				site.setGenerator(element
+						.getAttributeValue("generator"));
+				site.setCase(element.getAttributeValue("case"));
+				site.setRights(element.getAttributeValue("rights"));
 			} else if (element.getQualifiedName().equalsIgnoreCase("ns")) {
 				Integer id = Integer.parseInt(element.getAttributeValue("id"));
 				String name = element.getText();
@@ -87,7 +83,7 @@ public class GetSiteinfo extends MWAction {
 
 			} else if (element.getQualifiedName().equalsIgnoreCase("iw")) {
 				if (element.getAttribute("prefix") != null) {
-					String prefix= element
+					String prefix = element
 							.getAttributeValue("prefix");
 					String name = element.getAttributeValue("url");
 					site.addInterwiki(prefix, name);

@@ -21,6 +21,7 @@ package net.sourceforge.jwbf.contentRep;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import net.sourceforge.jwbf.contentRep.mw.ContentAccessable;
 import net.sourceforge.jwbf.contentRep.mw.SimpleArticle;
 
 import org.junit.Before;
@@ -52,6 +53,72 @@ public class SimpleArticleTest {
 	public void testEditSummary() {
 		article.setEditSummary("test");
 		assertEquals("test", article.getEditSummary());
+	}
+	
+	@Test
+	public void testNoNullpointer() {
+		ContentAccessable ca = new ContentAccessable() {
+		
+			public boolean isMinorEdit() {
+				return false;
+			}
+		
+			public String getText() {
+				return null;
+			}
+		
+			public String getLabel() {
+				return null;
+			}
+		
+			public String getEditor() {
+				return null;
+			}
+		
+			public String getEditSummary() {
+				return null;
+			}
+		
+		};
+		
+		SimpleArticle sa = new SimpleArticle(ca);
+		sa.getEditor();
+		sa.getEditSummary();
+		sa.getLabel();
+		sa.getText();
+	}
+	
+	@Test
+	public void testNoNullpointer1() {
+		ContentAccessable ca = new ContentAccessable() {
+		
+			public boolean isMinorEdit() {
+				return false;
+			}
+		
+			public String getText() {
+				return "test";
+			}
+		
+			public String getLabel() {
+				return "MyTest";
+			}
+		
+			public String getEditor() {
+				return null;
+			}
+		
+			public String getEditSummary() {
+				return null;
+			}
+		
+		};
+		
+		SimpleArticle sa = new SimpleArticle(ca);
+		sa.getEditor();
+		sa.getEditSummary();
+		assertEquals("MyTest", sa.getLabel());
+		assertEquals("test", sa.getText());
 	}
 	
 	@Test

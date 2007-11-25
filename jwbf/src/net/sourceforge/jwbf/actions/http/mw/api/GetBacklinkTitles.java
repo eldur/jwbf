@@ -124,7 +124,7 @@ public class GetBacklinkTitles extends MWAction implements MultiAction<String> {
 	 * @return empty string
 	 */
 	public String processAllReturningText(final String s) throws ProcessException {
-		String t = encodeUtf8(s);
+		String t = s;
 		parseArticleTitles(t);
 		parseHasMore(t);
 		return "";

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<project default="test">
+<project default="release">
 
 	<property name="temp" location="temp" />
 	<property name="classes" location="${temp}/classes"/>
@@ -61,7 +61,7 @@
 
 
 	<target name="compile_test" depends="compile, init_test">
-		<javac destdir="${classes_test}" srcdir="test">
+		<javac destdir="${classes_test}" srcdir="test" encoding="UTF-8">
 
 
 			<classpath >
@@ -160,6 +160,14 @@
 		<antcall target="releaseSimpleJar" />
 
 	</target>
+	
+	<!-- create release without test -->
+		<target name="releaseWithoutTest" depends="jar">
+			<antcall target="releaseWithSrc" />
+			<antcall target="releaseBin" />
+			<antcall target="releaseSimpleJar" />
+
+		</target>
 
 	<target name="releaseWithSrc">
 		<property name="release" value="${dist}/release_${build.number}${build.sufix}" />
