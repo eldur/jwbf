@@ -1,10 +1,7 @@
 package net.sourceforge.jwbf.actions.http;
 
-import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Vector;
-
-import net.sourceforge.jwbf.bots.MediaWikiBot;
 
 import org.apache.commons.httpclient.Cookie;
 import org.apache.commons.httpclient.HttpMethod;
@@ -37,26 +34,8 @@ public class GetPage implements ContentProcessable {
 	}
 
 	public String getText() {
-		return encodeUtf8(text);
+		return text;
 	}
-	/**
-	 * changes to mediawiki default encoding.
-	 * @param s a
-	 * @return encoded s
-	 */
-	private String encodeUtf8(final String s) {
-		
-		try {
-			return new String(s.getBytes(), MediaWikiBot.CHARSET);
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		} catch (NullPointerException npe) {
-			return s;
-		}
-		return s;
-		
-//		java 1.6 version
-//		return new String(s.getBytes(), Charset.forName("UTF-8"));
-	}
+
 	
 }
