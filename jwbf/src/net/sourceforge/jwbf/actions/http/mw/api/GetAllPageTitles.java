@@ -122,9 +122,9 @@ public class GetAllPageTitles extends MWAction implements MultiAction<String> {
 			} 
 			
 			uS = "/api.php?action=query&list=allpages&"
-					+ ((from != null) ? ( "&apfrom="
+					+ ((from != null) ? ("&apfrom="
 						+ URLEncoder.encode(from, MediaWikiBot.CHARSET) ):"")
-					+ ((prefix != null) ? ( "&apprefix="
+					+ ((prefix != null) ? ("&apprefix="
 						+ URLEncoder.encode(prefix, MediaWikiBot.CHARSET) ):"")
 					+ ((namespace != null) ? ("&apnamespace=" + namespace):"")
 					+ "&apfilterredir=" + apfilterredir

@@ -44,6 +44,7 @@ public class ProcessException extends JwbfException {
 	public ProcessException() {
 		super();
 	}
+	
 	/**
 	 * 
 	 * @param msg exception text

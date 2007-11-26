@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-	This configuration file was written by the eclipse-cs plugin configuration editor
+    This configuration file was written by the eclipse-cs plugin configuration editor
 -->
 <!--
-Checkstyle-Configuration: jwbf checkstyle
-Description:
-
+    Checkstyle-Configuration: jwbf checkstyle
+    Description: none
 -->
 <!DOCTYPE module PUBLIC "-//Puppy Crawl//DTD Check Configuration 1.2//EN" "http://www.puppycrawl.com/dtds/configuration_1_2.dtd">
 <module name="Checker">
@@ -34,7 +33,9 @@ Description:
             <property name="severity" value="info"/>
         </module>
         <module name="RedundantImport"/>
-        <module name="UnusedImports"/>
+        <module name="UnusedImports">
+            <property name="severity" value="info"/>
+        </module>
         <module name="FileLength">
             <property name="severity" value="ignore"/>
         </module>

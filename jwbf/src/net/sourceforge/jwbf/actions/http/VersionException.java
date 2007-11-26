@@ -20,13 +20,22 @@ package net.sourceforge.jwbf.actions.http;
 
 /**
  * exception indicating that a feature is not
- * supported by the wiki's software version
+ * supported by the wiki's software version.
  * 
  * @author Thomas Stock
  */
 public class VersionException extends ActionException {
 
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -156908450310809588L;
+
+	/**
+	 * 
+	 * @param s exeption text
+	 */
 	public VersionException(String s) {
 		super(s);
 	}

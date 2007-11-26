@@ -44,6 +44,7 @@ public class PostModifyContent extends MWAction {
 	 * 
 	 * @param a the
 	 * @param tab internal value set
+	 * @param login a 
 	 */
 	public PostModifyContent(final ContentAccessable a,
 			final Hashtable<String, String> tab, LoginData login) {

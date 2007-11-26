@@ -47,6 +47,7 @@ public class GetEnvironmentVars extends MWAction {
 	 * 
 	 * @param name of article
 	 * @param tab ref on a tabel with inner values
+	 * @param login a
 	 */
 	public GetEnvironmentVars(final String name, Hashtable<String, String> tab, LoginData login) {
 		String uS = "";
@@ -63,6 +64,7 @@ public class GetEnvironmentVars extends MWAction {
 	/**
 	 * @return the returning text
 	 * @param s the whole returning text
+	 * @throws ProcessException on problems with inner browser
 	 */
 	public String processAllReturningText(final String s) throws ProcessException {
 		

@@ -59,7 +59,6 @@
 		</copy>
 	</target>
 
-
 	<target name="compile_test" depends="compile, init_test">
 		<javac destdir="${classes_test}" srcdir="test" encoding="UTF-8">
 
