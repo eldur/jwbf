@@ -157,6 +157,9 @@
 		<antcall target="releaseWithSrc" />
 		<antcall target="releaseBin" />
 		<antcall target="releaseSimpleJar" />
+		<copy todir="${dist}/" >
+			<fileset dir="." includes="*.sh" />
+		</copy>
 
 	</target>
 	
