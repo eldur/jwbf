@@ -79,7 +79,7 @@ public abstract class HttpBot {
 	 * @return text
 	 * @throws ProcessException on problems in the subst of ContentProcessable 
 	 */
-	public final String performAction(final ContentProcessable a)
+	public final synchronized String performAction(final ContentProcessable a)
 			throws ActionException, ProcessException {
 		return cc.performAction(a);
 	}
