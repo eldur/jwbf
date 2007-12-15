@@ -110,8 +110,7 @@ public class EditCustomWikiContentTest extends LiveTestFather {
 	 */
 	@Test
 	public final void contentModifySimpleUtf8Get() throws Exception {
-		String utf8value = "öäüÖÄÜß Лин 瓦茲القواميس والمراجع";
-		utf8value = "öäüÖÄÜß";
+		String utf8value = "öäüÖÄÜß";
 		String label = getValue("editCustomWikiContent_article");
 		SimpleArticle sa;
 		sa = new SimpleArticle(utf8value, label);
@@ -124,6 +123,27 @@ public class EditCustomWikiContentTest extends LiveTestFather {
 		
 		assertEquals(utf8value, sa.getText());
 	}
+	/**
+	 * Test utf-8 read on english Mediawiki.
+	 * @throws Exception a
+	 */
+	@Test
+	public final void contentModifyIPAUtf8Get() throws Exception {
+		String utf8value = "koːɐ̯eːaɐɑɒæɑ̃ʌbɓʙβcçɔɔ";
+	
+		String label = getValue("editCustomWikiContent_article");
+		SimpleArticle sa;
+		sa = new SimpleArticle(utf8value, label);
+		bot.writeContent(sa);
+		
+		
+		
+		sa = new SimpleArticle(bot.readContent(label));
+
+		
+		assertEquals(utf8value, sa.getText());
+	}
+	
 	/**
 	 * Test utf-8 read on english Mediawiki.
 	 * @throws Exception a
