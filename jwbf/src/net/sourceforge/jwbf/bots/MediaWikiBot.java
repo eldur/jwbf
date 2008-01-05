@@ -81,6 +81,9 @@ public class MediaWikiBot extends HttpBot {
 
 	public static final String CHARSET = "utf-8";
 	
+	public static final int NS_IMAGES = 6;
+	public static final int NS_IMAGES_DISCUSSION = 7;
+	// TODO Add missing NS variables
 	private Version currentVersion = null;
 
 	private LoginData login;

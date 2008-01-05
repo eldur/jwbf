@@ -129,7 +129,7 @@ public class EditCustomWikiContentTest extends LiveTestFather {
 	 */
 	@Test
 	public final void contentModifyIPAUtf8Get() throws Exception {
-		String utf8value = "koːɐ̯eːaɐɑɒæɑ̃ʌbɓʙβcçɔɔ";
+		String utf8value = "ɕɕkɕoːɐ̯eːaɕɐɑɒæɑ̃ɕʌbɓʙβcɕçɕɕçɕɔɔɕɕ";
 	
 		String label = getValue("editCustomWikiContent_article");
 		SimpleArticle sa;
