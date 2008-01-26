@@ -20,6 +20,7 @@
 	  <fileset dir="${lib}" includes="*.jar"/>
 	</path>
 
+	
 
 	<!-- 
 	- Dont forget to update internal Version in JWBF.VERSION 
@@ -41,6 +42,25 @@
 		</delete>
 		<mkdir dir="${junit.dir}"/>
 
+	</target>
+
+	<!-- target: version -->
+	<target name="version">
+	        <exec executable="svnversion" outputproperty="svn.main.version">
+	                <arg value="." />
+	        </exec>
+		
+		<java
+		           jar="lib/svnversion.jar"
+		           fork="true"
+		           failonerror="true"
+			outputproperty="svn.version"
+		           >
+		         <arg value="${svn.main.version}"/>
+		       </java>
+		<echo>${svn.version}</echo>
+		<property name="build.number" value="${svn.version}"></property>
+		<property name="build.sufix" value=""></property>
 	</target>
 
 
@@ -127,14 +147,10 @@
 	</target>
 
 
-	<target name="loadBuildNo">
-		<loadproperties srcFile="build.number" />
-		<loadproperties srcFile="build.sufix" />
 
-	</target>
 
 	<!-- build jar -->
-	<target name="jar" depends="compile, loadBuildNo, clean">
+	<target name="jar" depends="compile, version, clean">
 
 		<echo message="Building: jwbf-${build.number}${build.sufix}.jar" />
 		<mkdir dir="${dist}" />
@@ -147,6 +163,7 @@
 			/>
 			<manifest>
 				<attribute name="Built-By" value="${user.name}"/>
+				<attribute name="Implementation-Version" value="${svn.version}" />
 			</manifest>
 		</jar>
 	</target>
@@ -238,18 +255,11 @@
 
 
 
-	<!-- increment release number in file: build.number -->
-	<target name="relInc">
-		<buildnumber/>
-	</target>
+
 
 	<target name="clean">
 		<delete failonerror="false" dir="${dist}">
 		</delete>
-	</target>
-	<target name="buildsufix">
-		<property name="build.sufix" value="RC">
-		</property>
 	</target>
 
 </project>

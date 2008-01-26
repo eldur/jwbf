@@ -25,8 +25,11 @@ package net.sourceforge.jwbf;
 public final class JWBF {
 
 
-	private static final String VERSION = "1.2.0.2.1";
+	private static final String VERSION;
 	
+	static {
+		VERSION = readVersion();
+	}
 	
 	/**
 	 * 
@@ -49,5 +52,42 @@ public final class JWBF {
 		System.out.println("JWBF Version: " + VERSION);
 	}
 
+	/**
+	 * 
+	 * @return the version from manifest
+	 */
+	private static String readVersion() {
+
+		String implementationVersion = JWBF.class.getPackage()
+				.getImplementationVersion();
+
+		if (implementationVersion == null) {
+			return "0";
+		} else {
+			return prepareVersion(implementationVersion);
+		}
+
+	}
+	/**
+	 * 
+	 * @param implementationVersion raw
+	 * @return formated version
+	 */
+	private static String prepareVersion(String implementationVersion) {
+		String out = "";
+		char[] numbers = new char[implementationVersion.length()];
+		implementationVersion.getChars(0, implementationVersion.length(), numbers, 0);
+		for (int i = 0; i < numbers.length; i++) {
+			if (i == numbers.length - 2) {
+				out += numbers[i] + "";
+			} else {
+				out += numbers[i] + ".";
+			}
+			
+		}
+		
+		
+		return out.substring(0, out.length() - 1);
+	}
 
 }
