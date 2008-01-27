@@ -235,9 +235,9 @@ public class MediaWikiBot extends HttpBot {
 	 *            namespace as
 	 * @return with numbers seperated by |
 	 */
-	private String generateNamespaceString(int... namespaces) {
+	private String createNsString(int... namespaces) {
 
-		String namespaceString = null;
+		String namespaceString = "";
 
 		if (namespaces != null && namespaces.length != 0) {
 
@@ -440,7 +440,7 @@ public class MediaWikiBot extends HttpBot {
 			throws ActionException {
 		checkApiVersion(Version.MW1_9, Version.MW1_10, Version.MW1_11);
 		GetAllPageTitles a = new GetAllPageTitles(from, prefix, redirects,
-				nonredirects, generateNamespaceString(namespaces));
+				nonredirects, createNsString(namespaces));
 
 		return performMultiAction(a);
 
@@ -471,7 +471,7 @@ public class MediaWikiBot extends HttpBot {
 			throws ActionException {
 
 		GetAllPageTitles a = new GetAllPageTitles(null, null, false, true,
-				generateNamespaceString(namespaces));
+				createNsString(namespaces));
 
 		return performMultiAction(a);
 
@@ -533,7 +533,7 @@ public class MediaWikiBot extends HttpBot {
 			throws ActionException {
 		checkApiVersion(Version.MW1_9, Version.MW1_10, Version.MW1_11);
 		GetBacklinkTitles a = new GetBacklinkTitles(article,
-				generateNamespaceString(namespaces));
+				createNsString(namespaces));
 
 		return performMultiAction(a);
 
@@ -570,20 +570,44 @@ public class MediaWikiBot extends HttpBot {
 	 */
 	public Iterable<String> getCategoryMembers(String category) throws ActionException {
 		checkApiVersion(Version.MW1_11);
-		GetSimpleCategoryMembers c = new GetSimpleCategoryMembers(category);
+		GetSimpleCategoryMembers c = new GetSimpleCategoryMembers(category, "");
 		return performMultiAction(c);
 	}
 	
 	/**
 	 * 
-	 * @param category like "Buildings" or "Chemical elements" without prefix Category
+	 * @param category like "Buildings" or "Chemical elements" without prefix "Category:"
 	 * @return of article labels
+	 * @throws ActionException on any kind of http or version problems
+	 * @supportedBy MediaWikiAPI 1.11 categorymembers / cm
+	 */
+	public Iterable<String> getCategoryMembers(String category, int... namespaces) throws ActionException {
+		checkApiVersion(Version.MW1_11);
+		GetSimpleCategoryMembers c = new GetSimpleCategoryMembers(category, createNsString(namespaces));
+		return performMultiAction(c);
+	}
+	/**
+	 * 
+	 * @param category like "Buildings" or "Chemical elements" without prefix Category
+	 * @return of category items with more details as simple labels
 	 * @throws ActionException on any kind of http or version problems
 	 * @supportedBy MediaWikiAPI 1.11 categorymembers / cm
 	 */
 	public Iterable<CategoryItem> getFullCategoryMembers(String category) throws ActionException {
 		checkApiVersion(Version.MW1_11);
-		GetFullCategoryMembers c = new GetFullCategoryMembers(category);
+		GetFullCategoryMembers c = new GetFullCategoryMembers(category, "");
+		return performMultiAction(c);
+	}
+	/**
+	 * 
+	 * @param category like "Buildings" or "Chemical elements" without prefix Category
+	 * @return of category items with more details as simple labels
+	 * @throws ActionException on any kind of http or version problems
+	 * @supportedBy MediaWikiAPI 1.11 categorymembers / cm
+	 */
+	public Iterable<CategoryItem> getFullCategoryMembers(String category, int... namespaces) throws ActionException {
+		checkApiVersion(Version.MW1_11);
+		GetFullCategoryMembers c = new GetFullCategoryMembers(category, createNsString(namespaces));
 		return performMultiAction(c);
 	}
 	
@@ -617,7 +641,7 @@ public class MediaWikiBot extends HttpBot {
 			throws ActionException {
 		checkApiVersion(Version.MW1_9, Version.MW1_10);
 		GetImagelinkTitles a = new GetImagelinkTitles(image,
-				generateNamespaceString(namespaces));
+				createNsString(namespaces));
 
 		return performMultiAction(a);
 
@@ -708,7 +732,7 @@ public class MediaWikiBot extends HttpBot {
 			int... namespaces) throws ActionException {
 		checkApiVersion(Version.MW1_9, Version.MW1_10, Version.MW1_11);
 		GetTemplateUserTitles a = new GetTemplateUserTitles(template,
-				generateNamespaceString(namespaces));
+				createNsString(namespaces));
 
 		return performMultiAction(a);
 
@@ -775,7 +799,7 @@ public class MediaWikiBot extends HttpBot {
 			int... namespaces) throws ActionException {
 		checkApiVersion(Version.MW1_10, Version.MW1_11);
 		GetRecentchanges a = new GetRecentchanges(count,
-				generateNamespaceString(namespaces));
+				createNsString(namespaces));
 
 		return performMultiAction(a);
 	}

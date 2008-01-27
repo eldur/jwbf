@@ -52,7 +52,9 @@ public abstract class GetCategoryMembers extends MWAction {
 	 * Name of the category.
 	 */
 	protected String categoryName = "";
-		
+	
+	
+	protected String namespace = "";
 		
 	/**
 	 * The public constructor. It will have an MediaWiki-request generated,
@@ -61,16 +63,18 @@ public abstract class GetCategoryMembers extends MWAction {
 	 * (from outside this class).
 	 * For the parameters, see {@link GetCategoryMembers#generateRequest(String, String, String)}
 	 */
-	protected GetCategoryMembers(String nextPageInfo, String categoryName){
+	protected GetCategoryMembers(String nextPageInfo, String categoryName, String namespace){
 		this.categoryName = categoryName;
+		this.namespace = namespace;
 		generateContinueRequest(nextPageInfo);
 	}
 	
 	/**
 	 * The private constructor, which is used to create follow-up actions.
 	 */
-	public GetCategoryMembers(String articleName) {
-		generateFirstRequest(articleName);
+	public GetCategoryMembers(String categoryName, String namespace) {
+		this.namespace = namespace;
+		generateFirstRequest(categoryName);
 	}
 	
 	/**
@@ -88,12 +92,15 @@ public abstract class GetCategoryMembers extends MWAction {
 		
 		try {
 		
-
+			String nsinj = "";
+			if (namespace.length() > 0) {
+				nsinj = "&cmnamespace=" + namespace;
+			}
 		
 				uS = "/api.php?action=query&list=categorymembers"
 						+ "&cmcategory=" + URLEncoder.encode(categoryName, MediaWikiBot.CHARSET) 
+						+ nsinj
 						+ "&cmlimit=" + LIMIT + "&format=xml";
-			
 			
 			msgs.add(new GetMethod(uS));
 		
@@ -115,10 +122,13 @@ public abstract class GetCategoryMembers extends MWAction {
 	 	String uS = "";
 		
 		try {
-		
-
+			String nsinj = "";
+			if (namespace.length() > 0) {
+				nsinj = "&cmnamespace=" + namespace;
+			}
 				uS = "/api.php?action=query&list=categorymembers"
 						+ "&cmcategory=" + URLEncoder.encode(categoryName, MediaWikiBot.CHARSET) 
+						+ nsinj
 						+ "&cmcontinue=" + URLEncoder.encode(cmcontinue, MediaWikiBot.CHARSET)
 						+ "&cmlimit=" + LIMIT + "&format=xml";
 				

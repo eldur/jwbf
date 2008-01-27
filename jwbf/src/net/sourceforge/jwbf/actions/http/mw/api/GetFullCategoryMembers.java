@@ -16,12 +16,12 @@ public class GetFullCategoryMembers extends GetCategoryMembers implements MultiA
 	 */
 	private Collection<CategoryItem> titleCollection = new ArrayList<CategoryItem>();
 	
-	public GetFullCategoryMembers(String articleName) {
-		super(articleName);
+	public GetFullCategoryMembers(String articleName, String namespace) {
+		super(articleName, namespace);
 
 	}
-	private GetFullCategoryMembers(String nextPageInfo, String categoryName){
-		super(nextPageInfo, categoryName);
+	private GetFullCategoryMembers(String nextPageInfo, String categoryName, String namespace){
+		super(nextPageInfo, categoryName, namespace);
 	}
 	
 	/**

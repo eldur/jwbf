@@ -31,12 +31,12 @@ public class GetSimpleCategoryMembers extends GetCategoryMembers implements Mult
 	 */
 	private Collection<String> titleCollection = new ArrayList<String>();
 	
-	public GetSimpleCategoryMembers(String nextPageInfo, String categoryName) {
-		super(nextPageInfo, categoryName);
+	public GetSimpleCategoryMembers(String nextPageInfo, String categoryName, String namespace) {
+		super(nextPageInfo, categoryName, namespace);
 	}
 
-	public GetSimpleCategoryMembers(String articleName) {
-		super(articleName);
+	public GetSimpleCategoryMembers(String categoryName, String namespace) {
+		super(categoryName, namespace);
 	}
 	
 	/**

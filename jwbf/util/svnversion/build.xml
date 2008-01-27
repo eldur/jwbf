@@ -61,6 +61,9 @@
 			<fileset dir="${classes}"
     			excludes="**/Test.class, **/*.htm*" 
     		/>
+	<manifest>
+		<attribute name="Main-Class" value="VersionTransform" />
+	</manifest>
 		</jar>
 	</target>
 
