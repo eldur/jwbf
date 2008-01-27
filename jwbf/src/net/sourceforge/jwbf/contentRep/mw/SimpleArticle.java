@@ -49,17 +49,21 @@ public class SimpleArticle implements ContentAccessable {
 	 *            a
 	 */
 	public SimpleArticle(ContentAccessable ca) {
-		assert ca.getLabel() != null 
-			&& ca.getText() != null
-			&& ca.isMinorEdit()
-			&& ca.getEditSummary() != null
-			&& ca.getEditor() != null;
+		
 
-		label = ca.getLabel();
-		text = ca.getText();
-		minorEdit = ca.isMinorEdit();
-		editSummary = ca.getEditSummary();
-		editor = ca.getEditor();
+		if (ca.getLabel() != null) {
+			label = ca.getLabel();
+		}
+		if (ca.getText() != null) {
+			text = ca.getText();
+		}	
+		if (ca.getEditSummary() != null) {
+			editSummary = ca.getEditSummary();
+		}	
+		if (ca.getEditor() != null) {
+			editor = ca.getEditor();
+		}
+			
 
 	}
 
@@ -181,8 +185,10 @@ public class SimpleArticle implements ContentAccessable {
 
 		Pattern pattern = Pattern.compile("#(.*)redirect(.*)",
 				Pattern.CASE_INSENSITIVE);
-		if (pattern.matcher(text).matches())
+		if (pattern.matcher(text).matches()) {
 			return true;
+		}
+			
 		return false;
 	}
 

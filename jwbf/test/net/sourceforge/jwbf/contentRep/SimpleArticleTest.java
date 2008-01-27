@@ -82,10 +82,10 @@ public class SimpleArticleTest {
 		};
 		
 		SimpleArticle sa = new SimpleArticle(ca);
-		sa.getEditor();
-		sa.getEditSummary();
-		sa.getLabel();
-		sa.getText();
+		assertEquals("", sa.getEditor());
+		assertEquals("", sa.getEditSummary());
+		assertEquals("", sa.getLabel());
+		assertEquals("", sa.getText());
 	}
 	
 	@Test
@@ -115,8 +115,9 @@ public class SimpleArticleTest {
 		};
 		
 		SimpleArticle sa = new SimpleArticle(ca);
-		sa.getEditor();
-		sa.getEditSummary();
+		
+		assertEquals("", sa.getEditor());
+		assertEquals("", sa.getEditSummary());
 		assertEquals("MyTest", sa.getLabel());
 		assertEquals("test", sa.getText());
 	}
