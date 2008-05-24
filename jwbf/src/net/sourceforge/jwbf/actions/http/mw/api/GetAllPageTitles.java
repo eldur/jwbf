@@ -126,7 +126,7 @@ public class GetAllPageTitles extends MWAction implements MultiAction<String> {
 						+ URLEncoder.encode(from, MediaWikiBot.CHARSET) ):"")
 					+ ((prefix != null) ? ("&apprefix="
 						+ URLEncoder.encode(prefix, MediaWikiBot.CHARSET) ):"")
-					+ ((namespace != null) ? ("&apnamespace=" + namespace):"")
+					+ ((namespace != null&&!namespace.isEmpty()) ? ("&apnamespace=" + namespace):"")
 					+ "&apfilterredir=" + apfilterredir
 					+ "&aplimit=" + LIMIT + "&format=xml";
 						

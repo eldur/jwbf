@@ -97,7 +97,7 @@ public class GetBacklinkTitles extends MWAction implements MultiAction<String> {
 		
 				uS = "/api.php?action=query&list=backlinks"
 						+ "&bltitle=" + URLEncoder.encode(articleName, MediaWikiBot.CHARSET) 
-						+ ((namespace!=null)?("&blnamespace="+namespace):"")
+						+ ((namespace!=null&&!namespace.isEmpty())?("&blnamespace="+namespace):"")
 						+ "&bllimit=" + LIMIT + "&format=xml";
 			
 			} else {

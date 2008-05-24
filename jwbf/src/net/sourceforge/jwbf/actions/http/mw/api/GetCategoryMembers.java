@@ -97,8 +97,10 @@ public abstract class GetCategoryMembers extends MWAction {
 				nsinj = "&cmnamespace=" + namespace;
 			}
 		
+				//TODO: do not add Category: - instead, change other methods' descs (e.g. in MediaWikiBot)
+			
 				uS = "/api.php?action=query&list=categorymembers"
-						+ "&cmcategory=" + URLEncoder.encode(categoryName, MediaWikiBot.CHARSET) 
+						+ "&cmtitle=Category:" + URLEncoder.encode(categoryName, MediaWikiBot.CHARSET) 
 						+ nsinj
 						+ "&cmlimit=" + LIMIT + "&format=xml";
 			
