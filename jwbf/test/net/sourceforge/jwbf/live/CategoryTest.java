@@ -64,7 +64,7 @@ public class CategoryTest extends LiveTestFather {
 				break;
 			}
 		}
-		Assert.assertTrue(i > getIntValue("category_category_count"));
+		Assert.assertTrue("i is: " + i , i <= 50 && i > 5);
 	}
 	
 	
@@ -87,6 +87,6 @@ public class CategoryTest extends LiveTestFather {
 				break;
 			}
 		}
-		Assert.assertTrue(i > getIntValue("category_customWiki_category_count"));
+		Assert.assertTrue("i is: " + i , i <= 50 && i > 5);
 	}
 }

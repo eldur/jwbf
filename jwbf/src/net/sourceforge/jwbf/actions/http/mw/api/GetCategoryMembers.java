@@ -87,7 +87,7 @@ public abstract class GetCategoryMembers extends MWAction {
 	 *                      null for the generation of the initial request
 	 */
 	protected void generateFirstRequest(String categoryName) {
-		this.categoryName = categoryName;
+		this.categoryName = categoryName.replace(" ", "_");
 	 	String uS = "";
 		
 		try {
