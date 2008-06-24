@@ -18,7 +18,6 @@
  */
 package net.sourceforge.jwbf.live;
 
-
 import static org.junit.Assert.assertEquals;
 
 import java.util.Random;
@@ -30,6 +29,7 @@ import org.apache.log4j.PropertyConfigurator;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
 /**
  * 
  * @author Thomas Stock
@@ -38,7 +38,7 @@ import org.junit.Test;
 public class EditCustomWikiContentTest extends LiveTestFather {
 
 	private MediaWikiBot bot;
-	
+
 	/**
 	 * Setup log4j.
 	 * @throws Exception a
@@ -55,39 +55,38 @@ public class EditCustomWikiContentTest extends LiveTestFather {
 	 */
 	@Before
 	public void setUp() throws Exception {
-		bot = new MediaWikiBot(getValue("editCustomWikiContent_url"));
-		bot.login(getValue("editCustomWikiContent_user"), getValue("editCustomWikiContent_pass"));
+		bot = new MediaWikiBot(getValue("edit_customWiki_url"));
+		bot.login(getValue("edit_customWiki_user"),
+				getValue("edit_customWiki_pass"));
 	}
 
-	
 	/**
 	 * Test content modification.
 	 * @throws Exception a
 	 */
 	@Test
 	public final void contentModify() throws Exception {
-		String label = getValue("editCustomWikiContent_article");
+		String label = getValue("edit_customWiki_article");
 		SimpleArticle sa;
 		sa = new SimpleArticle("", label);
 		bot.writeContent(sa);
 		sa = new SimpleArticle(bot.readContent(label));
 		//System.out.println("Content is: " + sa.getText());
 		int x = (Math.abs(new Random(System.currentTimeMillis()).nextInt()));
-		String text = "hello " + x;
+		String text = "test " + x;
 		sa.setText(text);
 		bot.writeContent(sa);
 		assertEquals(text, bot.readContent(label).getText());
-		
-	
+
 	}
-	
+
 	/**
 	 * Test the read of metadata on english Mediawiki.
 	 * @throws Exception a
 	 */
 	@Test
 	public final void contentModifyDetails() throws Exception {
-		String label = getValue("editCustomWikiContent_article");
+		String label = getValue("edit_customWiki_article");
 		String summary = "clear it";
 		SimpleArticle t = new SimpleArticle("", label);
 		t.setEditSummary(summary);
@@ -95,15 +94,13 @@ public class EditCustomWikiContentTest extends LiveTestFather {
 		bot.writeContent(t);
 		SimpleArticle sa = new SimpleArticle(bot.readContent(label));
 		assertEquals(label, sa.getLabel());
-//		System.out.println(sa.getEditSummary());
+		//		System.out.println(sa.getEditSummary());
 		assertEquals(summary, sa.getEditSummary());
-		assertEquals(getValue("editCustomWikiContent_user"), sa.getEditor());
-//		assertEquals(true, sa.isMinorEdit()); // TODO 
-		
-		
-	
+		assertEquals(getValue("edit_customWiki_user"), sa.getEditor());
+		//		assertEquals(true, sa.isMinorEdit()); // TODO 
+
 	}
-	
+
 	/**
 	 * Test utf-8 read on english Mediawiki.
 	 * @throws Exception a
@@ -111,18 +108,16 @@ public class EditCustomWikiContentTest extends LiveTestFather {
 	@Test
 	public final void contentModifySimpleUtf8Get() throws Exception {
 		String utf8value = "öäüÖÄÜß";
-		String label = getValue("editCustomWikiContent_article");
+		String label = getValue("edit_customWiki_article");
 		SimpleArticle sa;
 		sa = new SimpleArticle(utf8value, label);
 		bot.writeContent(sa);
-		
-		
-		
+
 		sa = new SimpleArticle(bot.readContent(label));
 
-		
 		assertEquals(utf8value, sa.getText());
 	}
+
 	/**
 	 * Test utf-8 read on english Mediawiki.
 	 * @throws Exception a
@@ -130,39 +125,34 @@ public class EditCustomWikiContentTest extends LiveTestFather {
 	@Test
 	public final void contentModifyIPAUtf8Get() throws Exception {
 		String utf8value = "ɕɕkɕoːɐ̯eːaɕɐɑɒæɑ̃ɕʌbɓʙβcɕçɕɕçɕɔɔɕɕ";
-	
-		String label = getValue("editCustomWikiContent_article");
+
+		String label = getValue("edit_customWiki_article");
 		SimpleArticle sa;
 		sa = new SimpleArticle(utf8value, label);
 		bot.writeContent(sa);
-		
-		
-		
+
 		sa = new SimpleArticle(bot.readContent(label));
 
-		
 		assertEquals(utf8value, sa.getText());
 	}
-	
+
 	/**
 	 * Test utf-8 read on english Mediawiki.
 	 * @throws Exception a
 	 */
 	@Test
 	public final void contentModifyComplexUtf8Get() throws Exception {
-		String utf8value = "öä 品 üÖÄÜß り新しく作成したりできます Л" +
-				"ин 瓦茲القواميس والمراجع";
+		String utf8value = "öä 品 üÖÄÜß り新しく作成したりできます Л"
+				+ "ин 瓦茲القواميس والمراجع";
 
-		String label = getValue("editCustomWikiContent_article");
+		String label = getValue("edit_customWiki_article");
 		SimpleArticle sa;
 		sa = new SimpleArticle(utf8value, label);
 		bot.writeContent(sa);
-		
-		
-		
+
 		sa = new SimpleArticle(bot.readContent(label));
-		
+
 		assertEquals(utf8value, sa.getText());
 	}
-	
+
 }
