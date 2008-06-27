@@ -19,7 +19,7 @@
 package net.sourceforge.jwbf.live;
 
 import static org.junit.Assert.assertEquals;
-import net.sourceforge.jwbf.actions.http.ActionException;
+import net.sourceforge.jwbf.actions.mw.util.ActionException;
 import net.sourceforge.jwbf.bots.MediaWikiBot;
 
 import org.apache.log4j.PropertyConfigurator;
@@ -146,17 +146,17 @@ public class LoginTest extends LiveTestFather {
 
 	}
 	/**
-	 * Test login on english Mediawiki. 
+	 * Test login where the wiki is in a subfolder, like www.abc.com/wiki/index.php
 	 * @throws Exception a
 	 */
 	@Test(expected = ActionException.class) 
 	public final void loginCustomWiki1UrlformatsFail() throws Exception {
 		
-		String url = getValue("login_customWiki1_url");
+		String url = getValue("login_customWiki2_url");
 		int lastSlash = url.lastIndexOf("/");
 		url = url.substring(0, lastSlash);
 		bot = new MediaWikiBot(url);
-		bot.login(getValue("login_customWiki1_user"), getValue("login_customWiki1_pass"));
+		bot.login(getValue("login_customWiki2_user"), getValue("login_customWiki2_pass"));
 	}
 	
 
@@ -194,20 +194,14 @@ public class LoginTest extends LiveTestFather {
 	@Test
 	public final void loginCustomWiki3() throws Exception {
 		
-		String user = getValue("login_customWiki3_user1");
-		String pass = getValue("login_customWiki3_pass1");
+		String user = getValue("login_customWiki3_user");
+		String pass = getValue("login_customWiki3_pass");
 		bot = new MediaWikiBot(getValue("login_customWiki3_url"));
 		bot.login(user, pass);
 		
 		assertEquals(true, bot.isLoggedIn());
 		
 		
-		String user2 = getValue("login_customWiki3_user2");
-		String pass2 = getValue("login_customWiki3_pass2");
-		bot = new MediaWikiBot(getValue("login_customWiki3_url"));
-		bot.login(user2, pass2);
-	
-		assertEquals(true, bot.isLoggedIn());
 	}
 	
 	/**

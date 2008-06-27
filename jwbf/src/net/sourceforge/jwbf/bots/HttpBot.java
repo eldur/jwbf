@@ -22,11 +22,11 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import net.sourceforge.jwbf.JWBF;
-import net.sourceforge.jwbf.actions.http.ActionException;
-import net.sourceforge.jwbf.actions.http.ContentProcessable;
-import net.sourceforge.jwbf.actions.http.GetPage;
-import net.sourceforge.jwbf.actions.http.HttpActionClient;
-import net.sourceforge.jwbf.actions.http.ProcessException;
+import net.sourceforge.jwbf.actions.ContentProcessable;
+import net.sourceforge.jwbf.actions.GetPage;
+import net.sourceforge.jwbf.actions.HttpActionClient;
+import net.sourceforge.jwbf.actions.mw.util.ActionException;
+import net.sourceforge.jwbf.actions.mw.util.ProcessException;
 
 import org.apache.commons.httpclient.HttpClient;
 
