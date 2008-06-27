@@ -3,10 +3,13 @@ package net.sourceforge.jwbf.actions.mw.meta;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.Iterator;
 
 import net.sourceforge.jwbf.actions.mw.util.MWAction;
 import net.sourceforge.jwbf.actions.mw.util.ProcessException;
+import net.sourceforge.jwbf.bots.MediaWikiBot;
 import net.sourceforge.jwbf.contentRep.mw.Siteinfo;
 
 import org.apache.commons.httpclient.methods.GetMethod;
@@ -21,12 +24,21 @@ public class GetSiteinfo extends MWAction {
 	private Siteinfo site = new Siteinfo();
 
 	public GetSiteinfo() {
-		GetMethod getMethod = new GetMethod(
-				"/api.php?action=query&meta=siteinfo&siprop=general|namespaces|interwikimap&format=xml");
-		System.out.println(getMethod.toString());
-		msgs.add(getMethod);
-	}
+		
+		
 
+			try {
+				msgs.add(new GetMethod("/api.php?action=query&meta=siteinfo" +
+						"&siprop=" + URLEncoder.encode("general|namespaces|interwikimap", MediaWikiBot.CHARSET) +
+						"&format=xml"));
+			} catch (UnsupportedEncodingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		
+		
+	}
+	
 	/**
 	 * @param s
 	 *            the returning text
@@ -40,7 +52,7 @@ public class GetSiteinfo extends MWAction {
 	}
 
 	private void parse(final String xml) {
-		System.out.println(xml);
+		
 		SAXBuilder builder = new SAXBuilder();
 		Element root = null;
 		try {

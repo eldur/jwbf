@@ -42,13 +42,14 @@ import net.sourceforge.jwbf.actions.mw.util.MWAction;
 import net.sourceforge.jwbf.actions.mw.util.PostLoginOld;
 import net.sourceforge.jwbf.actions.mw.util.PostModifyContent;
 import net.sourceforge.jwbf.actions.mw.util.ProcessException;
-import net.sourceforge.jwbf.actions.mw.util.VersionException;
 import net.sourceforge.jwbf.bots.util.LoginData;
-import net.sourceforge.jwbf.contentRep.Version;
 import net.sourceforge.jwbf.contentRep.mw.CategoryItem;
 import net.sourceforge.jwbf.contentRep.mw.ContentAccessable;
 import net.sourceforge.jwbf.contentRep.mw.LogItem;
 import net.sourceforge.jwbf.contentRep.mw.Siteinfo;
+import net.sourceforge.jwbf.contentRep.mw.Version;
+
+import org.apache.log4j.Logger;
 
 /*
  * possible tag values: @supportedBy ------------------------------------------
@@ -78,19 +79,18 @@ public class MediaWikiBot extends HttpBot {
 	public static final int ARTICLE = 1 << 1;
 	public static final int MEDIA = 1 << 2;
 	public static final int SUBCATEGORY = 1 << 3;
-
+	
 	public static final String CHARSET = "utf-8";
 	
 	public static final int NS_IMAGES = 6;
 	public static final int NS_IMAGES_DISCUSSION = 7;
 	// TODO Add missing NS variables
-	private Version currentVersion = null;
-
+	
+	private static Logger log = Logger.getLogger(MediaWikiBot.class);
 	private LoginData login;
 	private boolean loggedIn = false;
 	
-	private boolean versionValidation = false;
-
+	private Version v = null;
 	/**
 	 * @param u
 	 *            wikihosturl like "http://www.mediawiki.org/wiki/"
@@ -117,15 +117,6 @@ public class MediaWikiBot extends HttpBot {
 		super();
 		setConnection(url);
 
-	}
-	
-	/**
-	 * If true, the bot checks if action is be allowed on the working 
-	 * bot api. 
-	 * @param versionValidation a
-	 */
-	public void setVersionValidation(boolean versionValidation) {
-		this.versionValidation = versionValidation;
 	}
 
 	/**
@@ -185,7 +176,7 @@ public class MediaWikiBot extends HttpBot {
 	 */
 	public final ContentAccessable readContent(final String name, final int properties)
 			throws ActionException, ProcessException {
-		checkApiVersion(Version.MW1_9, Version.MW1_10, Version.MW1_11);
+		checkApiVersion(Version.MW1_09, Version.MW1_10, Version.MW1_11);
 		ContentAccessable a = null;
 		GetRevision ac = new GetRevision(name, properties);
 
@@ -438,7 +429,7 @@ public class MediaWikiBot extends HttpBot {
 	public Iterable<String> getAllPageTitles(String from, String prefix,
 			boolean redirects, boolean nonredirects, int... namespaces)
 			throws ActionException {
-		checkApiVersion(Version.MW1_9, Version.MW1_10, Version.MW1_11);
+		checkApiVersion(Version.MW1_09, Version.MW1_10, Version.MW1_11);
 		GetAllPageTitles a = new GetAllPageTitles(from, prefix, redirects,
 				nonredirects, createNsString(namespaces));
 
@@ -531,7 +522,7 @@ public class MediaWikiBot extends HttpBot {
 	 */
 	public Iterable<String> getBacklinkTitles(String article, int... namespaces)
 			throws ActionException {
-		checkApiVersion(Version.MW1_9, Version.MW1_10, Version.MW1_11);
+		checkApiVersion(Version.MW1_09, Version.MW1_10, Version.MW1_11);
 		GetBacklinkTitles a = new GetBacklinkTitles(article,
 				createNsString(namespaces));
 
@@ -570,7 +561,7 @@ public class MediaWikiBot extends HttpBot {
 	 */
 	public Iterable<String> getCategoryMembers(String category) throws ActionException {
 		checkApiVersion(Version.MW1_11);
-		GetSimpleCategoryMembers c = new GetSimpleCategoryMembers(category, "");
+		GetSimpleCategoryMembers c = new GetSimpleCategoryMembers(category, "", v);
 		return performMultiAction(c);
 	}
 	
@@ -583,7 +574,7 @@ public class MediaWikiBot extends HttpBot {
 	 */
 	public Iterable<String> getCategoryMembers(String category, int... namespaces) throws ActionException {
 		checkApiVersion(Version.MW1_11);
-		GetSimpleCategoryMembers c = new GetSimpleCategoryMembers(category, createNsString(namespaces));
+		GetSimpleCategoryMembers c = new GetSimpleCategoryMembers(category, createNsString(namespaces), v);
 		return performMultiAction(c);
 	}
 	/**
@@ -595,7 +586,7 @@ public class MediaWikiBot extends HttpBot {
 	 */
 	public Iterable<CategoryItem> getFullCategoryMembers(String category) throws ActionException {
 		checkApiVersion(Version.MW1_11);
-		GetFullCategoryMembers c = new GetFullCategoryMembers(category, "");
+		GetFullCategoryMembers c = new GetFullCategoryMembers(category, "", v);
 		return performMultiAction(c);
 	}
 	/**
@@ -607,7 +598,7 @@ public class MediaWikiBot extends HttpBot {
 	 */
 	public Iterable<CategoryItem> getFullCategoryMembers(String category, int... namespaces) throws ActionException {
 		checkApiVersion(Version.MW1_11);
-		GetFullCategoryMembers c = new GetFullCategoryMembers(category, createNsString(namespaces));
+		GetFullCategoryMembers c = new GetFullCategoryMembers(category, createNsString(namespaces), v);
 		return performMultiAction(c);
 	}
 	
@@ -639,7 +630,7 @@ public class MediaWikiBot extends HttpBot {
 	 */
 	public Iterable<String> getImagelinkTitles(String image, int... namespaces)
 			throws ActionException {
-		checkApiVersion(Version.MW1_9, Version.MW1_10);
+		checkApiVersion(Version.MW1_09, Version.MW1_10);
 		GetImagelinkTitles a = new GetImagelinkTitles(image,
 				createNsString(namespaces));
 
@@ -730,7 +721,7 @@ public class MediaWikiBot extends HttpBot {
 	 */
 	public Iterable<String> getTemplateUserTitles(String template,
 			int... namespaces) throws ActionException {
-		checkApiVersion(Version.MW1_9, Version.MW1_10, Version.MW1_11);
+		checkApiVersion(Version.MW1_09, Version.MW1_10, Version.MW1_11);
 		GetTemplateUserTitles a = new GetTemplateUserTitles(template,
 				createNsString(namespaces));
 
@@ -754,7 +745,7 @@ public class MediaWikiBot extends HttpBot {
 	 */
 	public Iterable<String> getTemplateUserTitles(String template)
 			throws ActionException {
-		checkApiVersion(Version.MW1_9, Version.MW1_10, Version.MW1_11);
+		checkApiVersion(Version.MW1_09, Version.MW1_10, Version.MW1_11);
 		return getTemplateUserTitles(template, null);
 
 	}
@@ -880,19 +871,17 @@ public class MediaWikiBot extends HttpBot {
 	 * 		and especially versionExceptions on version mismatch.
 	 */
 	private void checkApiVersion(Version... vers) throws ActionException {
-		if (versionValidation) {
-			if (currentVersion == null) {
+
+			if (v == null) {
 				Siteinfo s = getSiteinfo();
-				currentVersion = s.getVersion();
+				v = s.getVersion();
+				log.debug("Version is: " + v.name());
+				
 			}
-			for (int i = 0; i < vers.length; i++) {
-				if (vers[i] == currentVersion
-						|| currentVersion == Version.MW_WIKIPEDIA) {
-					return;
-				}
-			}
-			throw new VersionException("Current Version: " + currentVersion);
-		}
+		
+	}
+	public Version getVersion() {
+		return v;
 	}
 
 }

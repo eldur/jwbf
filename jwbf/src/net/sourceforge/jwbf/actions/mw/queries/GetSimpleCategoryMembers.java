@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import net.sourceforge.jwbf.actions.mw.MultiAction;
+import net.sourceforge.jwbf.contentRep.mw.Version;
 
 public class GetSimpleCategoryMembers extends GetCategoryMembers implements MultiAction<String>{
 
@@ -33,12 +34,12 @@ public class GetSimpleCategoryMembers extends GetCategoryMembers implements Mult
 	 */
 	private Collection<String> titleCollection = new ArrayList<String>();
 	
-	public GetSimpleCategoryMembers(String nextPageInfo, String categoryName, String namespace) {
-		super(nextPageInfo, categoryName, namespace);
+	private GetSimpleCategoryMembers(String nextPageInfo, String categoryName, String namespace, Version v) {
+		super(nextPageInfo, categoryName, namespace, v);
 	}
 
-	public GetSimpleCategoryMembers(String categoryName, String namespace) {
-		super(categoryName, namespace);
+	public GetSimpleCategoryMembers(String categoryName, String namespace, Version v) {
+		super(categoryName, namespace, v);
 	}
 	
 	/**
@@ -56,7 +57,7 @@ public class GetSimpleCategoryMembers extends GetCategoryMembers implements Mult
 		if (nextPageInfo == null) { 
 			return null; 
 		} else {
-			return new GetSimpleCategoryMembers(nextPageInfo, categoryName);
+			return new GetSimpleCategoryMembers(nextPageInfo, categoryName, namespace, v);
 		}
 	}
 

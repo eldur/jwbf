@@ -22,6 +22,7 @@ package net.sourceforge.jwbf.live;
 import java.util.Iterator;
 
 import net.sourceforge.jwbf.bots.MediaWikiBot;
+import net.sourceforge.jwbf.contentRep.mw.Version;
 
 import org.apache.log4j.PropertyConfigurator;
 import org.junit.Assert;
@@ -48,7 +49,7 @@ public class CategoryTest extends LiveTestFather {
 	
 
 	/**
-	 * Test category read.
+	 * Test category read. Test category must have more then 50 members.
 	 * @throws Exception a
 	 */
 	@Test
@@ -60,17 +61,18 @@ public class CategoryTest extends LiveTestFather {
 		while (is.hasNext()) {
 			is.next();
 			i++;
-			if (i > 50) {
+			if (i > 55) {
 				break;
 			}
+
 		}
-		Assert.assertTrue("i is: " + i , i <= 50 && i > 5);
+		Assert.assertTrue("i is: " + i , i > 50 );
 	}
 	
 	
 
 	/**
-	 * Test category read.
+	 * Test category read. Test category must have more then 50 members.
 	 * @throws Exception a
 	 */
 	@Test
@@ -83,10 +85,34 @@ public class CategoryTest extends LiveTestFather {
 		while (is.hasNext()) {
 			is.next();
 			i++;
-			if (i > 50) {
+			if (i > 55) {
 				break;
 			}
 		}
-		Assert.assertTrue("i is: " + i , i <= 50 && i > 5);
+		Assert.assertTrue("i is: " + i , i > 50);
 	}
+	
+	/**
+	 * Test category read. Test category must have more then 50 members.
+	 * @throws Exception a
+	 */
+	@Test
+	public final void categoryWikiMW1_11() throws Exception {
+		
+		bot = new MediaWikiBot(getValue("category_WikiMW1_11_url"));
+		bot.login(getValue("category_WikiMW1_11_user"), getValue("category_WikiMW1_11_pass"));
+		Iterator<String> is = bot.getCategoryMembers(getValue("category_WikiMW1_11_category")).iterator();
+		int i = 0;
+		while (is.hasNext()) {
+			is.next();
+			i++;
+			if (i > 55) {
+				break;
+			}
+		}
+		
+		Assert.assertTrue("i is: " + i , i > 50);
+		Assert.assertTrue( "Wrong Wiki Version " + bot.getVersion() , Version.MW1_11.equals(bot.getVersion()));
+	}
+	
 }

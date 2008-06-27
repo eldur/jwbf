@@ -62,7 +62,7 @@ public final class JWBF {
 				.getImplementationVersion();
 
 		if (implementationVersion == null) {
-			return "0";
+			return "DEVEL";
 		} else {
 			return prepareVersion(implementationVersion);
 		}

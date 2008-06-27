@@ -1,4 +1,4 @@
-package net.sourceforge.jwbf.contentRep;
+package net.sourceforge.jwbf.contentRep.mw;
 
 /**
  * Representaion of MediaWiki version.
@@ -6,5 +6,5 @@ package net.sourceforge.jwbf.contentRep;
  *
  */
 public enum Version {
-MW1_9, MW1_10, MW1_11, MW_WIKIPEDIA, UNKNOWN;
+MW1_09, MW1_10, MW1_11, MW1_12, UNKNOWN;
 }

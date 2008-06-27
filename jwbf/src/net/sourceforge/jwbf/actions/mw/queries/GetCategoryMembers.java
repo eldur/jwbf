@@ -26,6 +26,7 @@ import java.util.regex.Pattern;
 import net.sourceforge.jwbf.actions.mw.util.MWAction;
 import net.sourceforge.jwbf.actions.mw.util.ProcessException;
 import net.sourceforge.jwbf.bots.MediaWikiBot;
+import net.sourceforge.jwbf.contentRep.mw.Version;
 
 import org.apache.commons.httpclient.methods.GetMethod;
 
@@ -53,6 +54,8 @@ public abstract class GetCategoryMembers extends MWAction {
 	 */
 	protected String categoryName = "";
 	
+	protected Version v = Version.UNKNOWN;
+	private Requestor r = null;
 	
 	protected String namespace = "";
 		
@@ -63,20 +66,40 @@ public abstract class GetCategoryMembers extends MWAction {
 	 * (from outside this class).
 	 * For the parameters, see {@link GetCategoryMembers#generateRequest(String, String, String)}
 	 */
-	protected GetCategoryMembers(String nextPageInfo, String categoryName, String namespace){
+	protected GetCategoryMembers(String nextPageInfo, String categoryName, String namespace, Version v){
 		this.categoryName = categoryName;
 		this.namespace = namespace;
+		this.v = v;
+		createRequestor();
 		generateContinueRequest(nextPageInfo);
 	}
 	
 	/**
 	 * The private constructor, which is used to create follow-up actions.
 	 */
-	public GetCategoryMembers(String categoryName, String namespace) {
+	public GetCategoryMembers(String categoryName, String namespace, Version v) {
 		this.namespace = namespace;
+		this.v = v;
+		createRequestor();
+		
 		generateFirstRequest(categoryName);
 	}
 	
+	private void createRequestor() {
+		
+			switch (v) {
+			case MW1_11:
+				r = new V11Requestor();
+				break;
+	
+			default:
+				r = new Requestor();
+				break;
+			}
+		
+
+	}
+
 	/**
 	 * generates the next MediaWiki-request (GetMethod) and adds it to msgs.
 	 *
@@ -86,25 +109,12 @@ public abstract class GetCategoryMembers extends MWAction {
 	 * @param cmcontinue    the value for the blcontinue parameter,
 	 *                      null for the generation of the initial request
 	 */
-	protected void generateFirstRequest(String categoryName) {
+	protected final void generateFirstRequest(String categoryName) {
 		this.categoryName = categoryName.replace(" ", "_");
-	 	String uS = "";
-		
+	 	
 		try {
 		
-			String nsinj = "";
-			if (namespace.length() > 0) {
-				nsinj = "&cmnamespace=" + namespace;
-			}
-		
-				//TODO: do not add Category: - instead, change other methods' descs (e.g. in MediaWikiBot)
-			
-				uS = "/api.php?action=query&list=categorymembers"
-						+ "&cmtitle=Category:" + URLEncoder.encode(categoryName, MediaWikiBot.CHARSET) 
-						+ nsinj
-						+ "&cmlimit=" + LIMIT + "&format=xml";
-			
-			msgs.add(new GetMethod(uS));
+			msgs.add(new GetMethod(r.first(categoryName)));
 		
 		} catch (UnsupportedEncodingException e) {
     	e.printStackTrace();
@@ -119,27 +129,19 @@ public abstract class GetCategoryMembers extends MWAction {
 	 * @param cmcontinue    the value for the blcontinue parameter,
 	 *                      null for the generation of the initial request
 	 */
-	protected void generateContinueRequest(String cmcontinue) {
+	protected final void generateContinueRequest(String cmcontinue) {
 	 
-	 	String uS = "";
+	 	
 		
 		try {
-			String nsinj = "";
-			if (namespace.length() > 0) {
-				nsinj = "&cmnamespace=" + namespace;
-			}
-				uS = "/api.php?action=query&list=categorymembers"
-						+ "&cmcategory=" + URLEncoder.encode(categoryName, MediaWikiBot.CHARSET) 
-						+ nsinj
-						+ "&cmcontinue=" + URLEncoder.encode(cmcontinue, MediaWikiBot.CHARSET)
-						+ "&cmlimit=" + LIMIT + "&format=xml";
-				
-
-			msgs.add(new GetMethod(uS));
+			
+			msgs.add(new GetMethod(r.continiue(cmcontinue)));
 		
 		} catch (UnsupportedEncodingException e) {
-    	e.printStackTrace();
-		}		
+			e.printStackTrace();
+		} catch (NullPointerException e) {
+			e.printStackTrace();
+		}
 		
 	}
 	/**
@@ -150,9 +152,8 @@ public abstract class GetCategoryMembers extends MWAction {
 	 * @return empty string
 	 */
 	public String processAllReturningText(final String s) throws ProcessException {
-		String t = s;
-		parseArticleTitles(t);
-		parseHasMore(t);
+		parseArticleTitles(s);
+		parseHasMore(s);
 		return "";
 	}
 
@@ -162,7 +163,7 @@ public abstract class GetCategoryMembers extends MWAction {
 	 *	
 	 * @param s   text for parsing
 	 */
-	protected void parseHasMore(final String s) {
+	private void parseHasMore(final String s) {
 			
 		// get the blcontinue-value
 		
@@ -175,7 +176,7 @@ public abstract class GetCategoryMembers extends MWAction {
 		Matcher m = p.matcher(s);
 
 		if (m.find()) {			
-			nextPageInfo = m.group(1);			
+			nextPageInfo = m.group(1);
 		}
 
 	}
@@ -185,7 +186,7 @@ public abstract class GetCategoryMembers extends MWAction {
 	 *	
 	 * @param s   text for parsing
 	 */
-	public void parseArticleTitles(String s) {
+	public final void parseArticleTitles(String s) {
 		
 		// get the backlink titles and add them all to the titleCollection
 			
@@ -205,7 +206,83 @@ public abstract class GetCategoryMembers extends MWAction {
 	protected abstract void addCatItem(String title, int pageid, int ns);
 	
 
+	private class V11Requestor extends Requestor {
+		
+		V11Requestor() {
+			super();
+		}
+		String continiue(String cmcontinue) throws UnsupportedEncodingException {
+			String uS = "";	
+			String nsinj = "";
+			if (namespace.length() > 0) {
+				nsinj = "&cmnamespace=" + namespace;
+			}
+				uS = "/api.php?action=query&list=categorymembers"
+						+ "&cmcategory=" + URLEncoder.encode(categoryName, MediaWikiBot.CHARSET) 
+						+ nsinj
+						+ "&cmcontinue=" + URLEncoder.encode(cmcontinue, MediaWikiBot.CHARSET)
+						+ "&cmlimit=" + LIMIT + "&format=xml";
+				return uS;
+		}
+		
+		String first(String categoryName) throws UnsupportedEncodingException {
+			String uS = "";
+			String nsinj = "";
+			if (namespace.length() > 0) {
+				nsinj = "&cmnamespace=" + namespace;
+			}
+			
+				uS = "/api.php?action=query&list=categorymembers"
+						+ "&cmcategory=" + URLEncoder.encode(categoryName, MediaWikiBot.CHARSET) 
+						+ nsinj
+						+ "&cmlimit=" + LIMIT + "&format=xml";
+				return uS;
+		}
+
+		
+		
+	}
 	
+	private class Requestor {
+		
+		Requestor() {
+			
+		}
+		
+		String continiue(String cmcontinue) throws UnsupportedEncodingException {
+			String uS = "";	
+			String nsinj = "";
+			if (namespace.length() > 0) {
+				nsinj = "&cmnamespace=" + namespace;
+			}
+			
+			//TODO: do not add Category: - instead, change other methods' descs (e.g. in MediaWikiBot)
+			
+				uS = "/api.php?action=query&list=categorymembers"
+						+ "&cmtitle=Category:" + URLEncoder.encode(categoryName, MediaWikiBot.CHARSET) 
+						+ nsinj
+						+ "&cmcontinue=" + URLEncoder.encode(cmcontinue, MediaWikiBot.CHARSET)
+						+ "&cmlimit=" + LIMIT + "&format=xml";
+				return uS;
+		}
+		
+		String first(String categoryName) throws UnsupportedEncodingException {
+			String uS = "";
+			String nsinj = "";
+			if (namespace.length() > 0) {
+				nsinj = "&cmnamespace=" + namespace;
+			}
+		
+				//TODO: do not add Category: - instead, change other methods' descs (e.g. in MediaWikiBot)
+			
+				uS = "/api.php?action=query&list=categorymembers"
+						+ "&cmtitle=Category:" + URLEncoder.encode(categoryName, MediaWikiBot.CHARSET) 
+						+ nsinj
+						+ "&cmlimit=" + LIMIT + "&format=xml";
+				return uS;
+		}
+		
+	}
 
 	
 	

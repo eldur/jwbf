@@ -5,6 +5,7 @@ import java.util.Collection;
 
 import net.sourceforge.jwbf.actions.mw.MultiAction;
 import net.sourceforge.jwbf.contentRep.mw.CategoryItem;
+import net.sourceforge.jwbf.contentRep.mw.Version;
 
 
 public class GetFullCategoryMembers extends GetCategoryMembers implements MultiAction<CategoryItem> {
@@ -17,12 +18,12 @@ public class GetFullCategoryMembers extends GetCategoryMembers implements MultiA
 	 */
 	private Collection<CategoryItem> titleCollection = new ArrayList<CategoryItem>();
 	
-	public GetFullCategoryMembers(String articleName, String namespace) {
-		super(articleName, namespace);
+	public GetFullCategoryMembers(String articleName, String namespace, Version v) {
+		super(articleName, namespace, v);
 
 	}
-	private GetFullCategoryMembers(String nextPageInfo, String categoryName, String namespace){
-		super(nextPageInfo, categoryName, namespace);
+	private GetFullCategoryMembers(String nextPageInfo, String categoryName, String namespace, Version v){
+		super(nextPageInfo, categoryName, namespace, v);
 	}
 	
 	/**
@@ -40,7 +41,7 @@ public class GetFullCategoryMembers extends GetCategoryMembers implements MultiA
 		if (nextPageInfo == null) { 
 			return null; 
 		} else {
-			return new GetFullCategoryMembers(nextPageInfo, categoryName);
+			return new GetFullCategoryMembers(nextPageInfo, categoryName, namespace, v);
 		}
 	}
 	@Override

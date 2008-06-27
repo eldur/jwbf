@@ -4,7 +4,10 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.sourceforge.jwbf.contentRep.Version;
+import net.sourceforge.jwbf.JWBF;
+
+import org.apache.log4j.Logger;
+
 
 public class Siteinfo {
 
@@ -17,6 +20,8 @@ public class Siteinfo {
 
 	private Map<Integer,String> namespaces=new HashMap<Integer,String>();
 	private Map<String,String> interwiki=new HashMap<String,String>();
+	
+	private static Logger log = Logger.getLogger(Siteinfo.class);
 	
 	public Siteinfo() {
 
@@ -56,16 +61,19 @@ public class Siteinfo {
 
 	public Version getVersion() {
 		if (getGenerator().contains("1.9.")) {
-			return Version.MW1_9;
+			return Version.MW1_09;
 		} else if (getGenerator().contains("1.10.")) {
 			return Version.MW1_10;
 		} else if (getGenerator().contains("1.11.")) {
 			return Version.MW1_11;
-		} else if (getGenerator().contains("1.12")) { // actual Wikipedia
-			return Version.MW_WIKIPEDIA;
+		} else if (getGenerator().contains("1.12")) {
+			return Version.MW1_12;
 		} else {
+			log.info("\nVersion is UNKNOWN for JWBF (" + JWBF.getVersion() + ") : \n\t" + getGenerator() 
+					+ "\n\tUsing settings for actual Wikipedia development version");
 			return Version.UNKNOWN;
 		}
+	
 	}
 
 	public void setGenerator(String generator) {
