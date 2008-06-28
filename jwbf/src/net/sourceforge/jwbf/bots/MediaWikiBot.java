@@ -15,10 +15,12 @@
  * 
  * Contributors:
  * Tobias Knerr
+ * Justus Bisser - thanks for file upload methods
  */
 
 package net.sourceforge.jwbf.bots;
 
+import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -26,6 +28,7 @@ import java.util.Hashtable;
 import java.util.Iterator;
 
 import net.sourceforge.jwbf.actions.mw.MultiAction;
+import net.sourceforge.jwbf.actions.mw.editing.FileUpload;
 import net.sourceforge.jwbf.actions.mw.editing.GetRevision;
 import net.sourceforge.jwbf.actions.mw.meta.GetSiteinfo;
 import net.sourceforge.jwbf.actions.mw.queries.GetAllPageTitles;
@@ -46,6 +49,7 @@ import net.sourceforge.jwbf.bots.util.LoginData;
 import net.sourceforge.jwbf.contentRep.mw.CategoryItem;
 import net.sourceforge.jwbf.contentRep.mw.ContentAccessable;
 import net.sourceforge.jwbf.contentRep.mw.LogItem;
+import net.sourceforge.jwbf.contentRep.mw.SimpleFile;
 import net.sourceforge.jwbf.contentRep.mw.Siteinfo;
 import net.sourceforge.jwbf.contentRep.mw.Version;
 
@@ -72,7 +76,7 @@ import org.apache.log4j.Logger;
  * 
  * @author Thomas Stock
  * @author Tobias Knerr
- * 
+ * @author Justus Bisser
  */
 public class MediaWikiBot extends HttpBot {
 
@@ -600,6 +604,43 @@ public class MediaWikiBot extends HttpBot {
 		checkApiVersion(Version.MW1_11);
 		GetFullCategoryMembers c = new GetFullCategoryMembers(category, createNsString(namespaces), v);
 		return performMultiAction(c);
+	}
+	
+	/**
+	 * uploads a file
+	 * @param fileName the name of the file as String
+	 * @supportedBy MediaWiki NO API
+	 */
+	public final void uploadFile(final String fileName)
+		throws ActionException, ProcessException {
+
+			if (!isLoggedIn()) {
+				throw new ActionException("Please login first");
+			}
+			File f = new File(fileName);
+			
+			SimpleFile a = new SimpleFile(f.getName(), fileName);
+			uploadFile(a);
+			
+	}
+	
+	/**
+	 * uploads a file
+	 * @param FileName the file as SimpleFile
+	 * @supportedBy MediaWiki NO API
+	 */
+	public final void uploadFile(SimpleFile file)
+		throws ActionException, ProcessException {
+
+		
+			if (!isLoggedIn()) {
+				throw new ActionException("Please login first");
+			}
+
+			Hashtable<String, String> tab = new Hashtable<String, String>();
+		performAction(new GetEnvironmentVars(file.getLabel(), tab, login));
+		performAction(new FileUpload(file, tab, login));
+	
 	}
 	
 	/**
