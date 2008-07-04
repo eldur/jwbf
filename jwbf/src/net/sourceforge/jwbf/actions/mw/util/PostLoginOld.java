@@ -49,12 +49,13 @@ public class PostLoginOld extends MWAction {
 	 * @param username the
 	 * @param pw password
 	 */
-	public PostLoginOld(final String username, final String pw) {
+	public PostLoginOld(final String username, final String pw, final String domain) {
 		this.username = username;
 
 		NameValuePair action = new NameValuePair("wpLoginattempt", "Log in");
 		NameValuePair url = new NameValuePair("wpRemember", "1");
 		NameValuePair userid = new NameValuePair("wpName", username);
+		NameValuePair dom = new NameValuePair("wpDomain", domain);
 		
 		String pwLabel = "wpPassword";
 		
@@ -66,7 +67,7 @@ public class PostLoginOld extends MWAction {
 		
 		pm.getParams().setContentCharset(MediaWikiBot.CHARSET);
 		
-		pm.setRequestBody(new NameValuePair[] { action, url, userid,
+		pm.setRequestBody(new NameValuePair[] { action, url, userid, dom,
 						password });
 		
 		msgs.add(pm);
@@ -93,7 +94,7 @@ public class PostLoginOld extends MWAction {
 		} else {
 			for (int i = 0; i < cs.length; i++) {	
 		
-				if (cs[i].toString().contains(compare)) {
+				if (cs[i].toString().toLowerCase().contains(compare)) {
 					LOG.info("Logged in as: " + username);
 					return;
 				}

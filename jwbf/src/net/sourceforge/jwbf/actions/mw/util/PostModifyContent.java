@@ -68,7 +68,7 @@ public class PostModifyContent extends MWAction {
 		NameValuePair wpTextbox = new NameValuePair("wpTextbox1", a.getText());
 		
 		String editSummaryText = a.getEditSummary();
-		if (editSummaryText.length() > 200) {
+		if (editSummaryText != null && editSummaryText.length() > 200) {
 			editSummaryText = editSummaryText.substring(0, 200);
 		}
 		

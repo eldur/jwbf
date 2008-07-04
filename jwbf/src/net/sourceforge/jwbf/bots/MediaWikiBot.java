@@ -94,7 +94,7 @@ public class MediaWikiBot extends HttpBot {
 	private LoginData login;
 	private boolean loggedIn = false;
 	
-	private Version v = null;
+	private Version version = null;
 	/**
 	 * @param u
 	 *            wikihosturl like "http://www.mediawiki.org/wiki/"
@@ -137,11 +137,57 @@ public class MediaWikiBot extends HttpBot {
 	public final void httpLogin(final String username, final String passwd)
 			throws ActionException {
 		try {
-			performAction(new PostLoginOld(username, passwd));
+			performAction(new PostLoginOld(username, passwd, null));
 		} catch (ProcessException e) {
 			e.printStackTrace();
 		}
 		loggedIn = true;
+	}
+	
+	/**
+	 * Performs a old Login via cookie. 
+	 *  Special for LDAPAuth extention to authenticate against LDAP users
+	 * @param username
+	 *            the username
+	 * @param passwd
+	 *            the password
+	 * @param domain
+	 *            the password
+	 * @throws ActionException
+	 *             on problems with http, cookies and io
+	 * @supportedBy MediaWiki 1.9.x
+	 */
+	public final void httpLogin(final String username, final String passwd, final String domain)
+			throws ActionException {
+		try {
+			performAction(new PostLoginOld(username, passwd, domain));
+		} catch (ProcessException e) {
+			e.printStackTrace();
+		}
+		loggedIn = true;
+	}
+
+	/**
+	 * Performs a Login. Actual old cookie login works right, because is pending
+	 * on {@link #writeContent(ContentAccessable)}
+	 * 
+	 * @param username
+	 *            the username
+	 * @param passwd
+	 *            the password
+	 * @param domain
+	 *            login domain
+	 * @throws ActionException
+	 *             on problems with http, cookies and io
+	 * @supportedBy MediaWiki 1.9.x
+	 */
+	public final void login(final String username, final String passwd, final String domain)
+			throws ActionException {
+		// code for 1.9.x API
+		// PostLogin pl = new PostLogin(username, passwd);
+		// performAction(pl);
+		// login = pl.getLoginData();
+		httpLogin(username, passwd, domain);
 	}
 
 	/**
@@ -162,9 +208,8 @@ public class MediaWikiBot extends HttpBot {
 		// PostLogin pl = new PostLogin(username, passwd);
 		// performAction(pl);
 		// login = pl.getLoginData();
-		httpLogin(username, passwd);
+		httpLogin(username, passwd, null);
 	}
-
 	/**
 	 * 
 	 * @param name
@@ -174,13 +219,12 @@ public class MediaWikiBot extends HttpBot {
 	 * @throws ActionException
 	 *             on problems with http, cookies and io
 	 * @throws ProcessException on access problems
-	 * @supportedBy MediaWikiAPI 1.9.x
-	 * @supportedBy MediaWikiAPI 1.10.x
-	 * @supportedBy MediaWikiAPI 1.11.x
+	 * @supportedBy MediaWikiAPI 1.9.x TODO Test Required
+	 * @supportedBy MediaWikiAPI 1.10.x TODO Test Required
+	 * @supportedBy MediaWikiAPI 1.11.x TODO Test Required
 	 */
 	public final ContentAccessable readContent(final String name, final int properties)
 			throws ActionException, ProcessException {
-		checkApiVersion(Version.MW1_09, Version.MW1_10, Version.MW1_11);
 		ContentAccessable a = null;
 		GetRevision ac = new GetRevision(name, properties);
 
@@ -426,14 +470,13 @@ public class MediaWikiBot extends HttpBot {
 	 * @throws ActionException
 	 *             on problems with http, cookies and io
 	 * 
-	 * @supportedBy MediaWikiAPI 1.9 allpages / ap
-	 * @supportedBy MediaWikiAPI 1.10 allpages / ap
-	 * @supportedBy MediaWikiAPI 1.11 allpages / ap
+	 * @supportedBy MediaWikiAPI 1.9 allpages / ap TODO Test Required
+	 * @supportedBy MediaWikiAPI 1.10 allpages / ap TODO Test Required
+	 * @supportedBy MediaWikiAPI 1.11 allpages / ap TODO Test Required
 	 */
 	public Iterable<String> getAllPageTitles(String from, String prefix,
 			boolean redirects, boolean nonredirects, int... namespaces)
 			throws ActionException {
-		checkApiVersion(Version.MW1_09, Version.MW1_10, Version.MW1_11);
 		GetAllPageTitles a = new GetAllPageTitles(from, prefix, redirects,
 				nonredirects, createNsString(namespaces));
 
@@ -520,13 +563,12 @@ public class MediaWikiBot extends HttpBot {
 	 * 
 	 * TODO Pending Parameter Change;
 	 * http://www.mediawiki.org/wiki/API:Query_-_Lists
-	 * @supportedBy MediaWikiAPI 1.9 backlinks / bl
-	 * @supportedBy MediaWikiAPI 1.10 backlinks / bl
-	 * @supportedBy MediaWikiAPI 1.11 backlinks / bl
+	 * @supportedBy MediaWikiAPI 1.9 backlinks / bl TODO Test Required
+	 * @supportedBy MediaWikiAPI 1.10 backlinks / bl TODO Test Required
+	 * @supportedBy MediaWikiAPI 1.11 backlinks / bl TODO Test Required
 	 */
 	public Iterable<String> getBacklinkTitles(String article, int... namespaces)
 			throws ActionException {
-		checkApiVersion(Version.MW1_09, Version.MW1_10, Version.MW1_11);
 		GetBacklinkTitles a = new GetBacklinkTitles(article,
 				createNsString(namespaces));
 
@@ -561,11 +603,10 @@ public class MediaWikiBot extends HttpBot {
 	 * @param category like "Buildings" or "Chemical elements" without prefix "Category:"
 	 * @return of article labels
 	 * @throws ActionException on any kind of http or version problems
-	 * @supportedBy MediaWikiAPI 1.11 categorymembers / cm
+	 * @supportedBy MediaWikiAPI 1.11 categorymembers / cm  TODO Test Required
 	 */
 	public Iterable<String> getCategoryMembers(String category) throws ActionException {
-		checkApiVersion(Version.MW1_11);
-		GetSimpleCategoryMembers c = new GetSimpleCategoryMembers(category, "", v);
+		GetSimpleCategoryMembers c = new GetSimpleCategoryMembers(category, "", getVersion());
 		return performMultiAction(c);
 	}
 	
@@ -574,11 +615,10 @@ public class MediaWikiBot extends HttpBot {
 	 * @param category like "Buildings" or "Chemical elements" without prefix "Category:"
 	 * @return of article labels
 	 * @throws ActionException on any kind of http or version problems
-	 * @supportedBy MediaWikiAPI 1.11 categorymembers / cm
+	 * @supportedBy MediaWikiAPI 1.11 categorymembers / cm  TODO Test Required
 	 */
 	public Iterable<String> getCategoryMembers(String category, int... namespaces) throws ActionException {
-		checkApiVersion(Version.MW1_11);
-		GetSimpleCategoryMembers c = new GetSimpleCategoryMembers(category, createNsString(namespaces), v);
+		GetSimpleCategoryMembers c = new GetSimpleCategoryMembers(category, createNsString(namespaces), getVersion());
 		return performMultiAction(c);
 	}
 	/**
@@ -586,11 +626,10 @@ public class MediaWikiBot extends HttpBot {
 	 * @param category like "Buildings" or "Chemical elements" without prefix Category
 	 * @return of category items with more details as simple labels
 	 * @throws ActionException on any kind of http or version problems
-	 * @supportedBy MediaWikiAPI 1.11 categorymembers / cm
+	 * @supportedBy MediaWikiAPI 1.11 categorymembers / cm TODO Test Required
 	 */
 	public Iterable<CategoryItem> getFullCategoryMembers(String category) throws ActionException {
-		checkApiVersion(Version.MW1_11);
-		GetFullCategoryMembers c = new GetFullCategoryMembers(category, "", v);
+		GetFullCategoryMembers c = new GetFullCategoryMembers(category, "", getVersion());
 		return performMultiAction(c);
 	}
 	/**
@@ -598,49 +637,50 @@ public class MediaWikiBot extends HttpBot {
 	 * @param category like "Buildings" or "Chemical elements" without prefix Category
 	 * @return of category items with more details as simple labels
 	 * @throws ActionException on any kind of http or version problems
-	 * @supportedBy MediaWikiAPI 1.11 categorymembers / cm
+	 * @supportedBy MediaWikiAPI 1.11 categorymembers / cm TODO Test Required
 	 */
 	public Iterable<CategoryItem> getFullCategoryMembers(String category, int... namespaces) throws ActionException {
-		checkApiVersion(Version.MW1_11);
-		GetFullCategoryMembers c = new GetFullCategoryMembers(category, createNsString(namespaces), v);
+		GetFullCategoryMembers c = new GetFullCategoryMembers(category, createNsString(namespaces), getVersion());
 		return performMultiAction(c);
 	}
 	
 	/**
 	 * uploads a file
-	 * @param fileName the name of the file as String
-	 * @supportedBy MediaWiki NO API
+	 * 
+	 * @param fileName
+	 *            the name of the file as String
+	 * @supportedBy MediaWiki 1.11
+	 * @supportedBy MediaWiki NO API TODO Test Required
 	 */
-	public final void uploadFile(final String fileName)
-		throws ActionException, ProcessException {
+	public final void uploadFile(final String fileName) throws ActionException,
+			ProcessException {
 
-			if (!isLoggedIn()) {
-				throw new ActionException("Please login first");
-			}
-			File f = new File(fileName);
-			
-			SimpleFile a = new SimpleFile(f.getName(), fileName);
-			uploadFile(a);
-			
+		File f = new File(fileName);
+
+		SimpleFile a = new SimpleFile(f.getName(), fileName);
+		uploadFile(a);
+
 	}
-	
+
 	/**
 	 * uploads a file
-	 * @param FileName the file as SimpleFile
-	 * @supportedBy MediaWiki NO API
+	 * 
+	 * @param FileName
+	 *            the file as SimpleFile
+	 * @supportedBy MediaWiki 1.11
+	 * @supportedBy MediaWiki NO API  TODO Test Required
 	 */
-	public final void uploadFile(SimpleFile file)
-		throws ActionException, ProcessException {
+	public final void uploadFile(SimpleFile file) throws ActionException,
+			ProcessException {
 
-		
-			if (!isLoggedIn()) {
-				throw new ActionException("Please login first");
-			}
+		if (!isLoggedIn()) {
+			throw new ActionException("Please login first");
+		}
 
-			Hashtable<String, String> tab = new Hashtable<String, String>();
+		Hashtable<String, String> tab = new Hashtable<String, String>();
 		performAction(new GetEnvironmentVars(file.getLabel(), tab, login));
 		performAction(new FileUpload(file, tab, login));
-	
+
 	}
 	
 	/**
@@ -665,13 +705,12 @@ public class MediaWikiBot extends HttpBot {
 	 * http://www.mediawiki.org/wiki/API:Query_-_Lists TODO New API call, decide
 	 * if design a switch by version or support only newest
 	 * 
-	 * @supportedBy MediaWikiAPI 1.9 embeddedin / ei
-	 * @supportedBy MediaWikiAPI 1.10 embeddedin / ei
+	 * @supportedBy MediaWikiAPI 1.9 embeddedin / ei TODO Test Required
+	 * @supportedBy MediaWikiAPI 1.10 embeddedin / ei TODO Test Required
 	 * 
 	 */
 	public Iterable<String> getImagelinkTitles(String image, int... namespaces)
 			throws ActionException {
-		checkApiVersion(Version.MW1_09, Version.MW1_10);
 		GetImagelinkTitles a = new GetImagelinkTitles(image,
 				createNsString(namespaces));
 
@@ -724,12 +763,11 @@ public class MediaWikiBot extends HttpBot {
 	 * @param limit number of events
 	 * @return the last ten log events
 	 * @throws ActionException on problems with http, cookies and io
-	 * @supportedBy MediaWikiAPI 1.11 logevents / le 
+	 * @supportedBy MediaWikiAPI 1.11 logevents / le TODO Test Required
 	 * TODO API state is (semi-complete), see 
 	 * http://www.mediawiki.org/wiki/API:Query_-_Lists#logevents_.2F_le_.28semi-complete.29
 	 */
 	public Iterator<LogItem> getLogEvents(int limit, String ... type) throws ActionException {
-		checkApiVersion(Version.MW1_11);
 		GetLogEvents c = new GetLogEvents(limit, type);
 		try {
 			performAction(c);
@@ -756,13 +794,12 @@ public class MediaWikiBot extends HttpBot {
 	 * @throws ActionException
 	 *             on problems with http, cookies and io
 	 * 
-	 * @supportedBy MediaWikiAPI 1.9 embeddedin / ei
-	 * @supportedBy MediaWikiAPI 1.10 embeddedin / ei
-	 * @supportedBy MediaWikiAPI 1.11 embeddedin / ei
+	 * @supportedBy MediaWikiAPI 1.9 embeddedin / ei TODO Test Required
+	 * @supportedBy MediaWikiAPI 1.10 embeddedin / ei TODO Test Required
+	 * @supportedBy MediaWikiAPI 1.11 embeddedin / ei TODO Test Required
 	 */
 	public Iterable<String> getTemplateUserTitles(String template,
 			int... namespaces) throws ActionException {
-		checkApiVersion(Version.MW1_09, Version.MW1_10, Version.MW1_11);
 		GetTemplateUserTitles a = new GetTemplateUserTitles(template,
 				createNsString(namespaces));
 
@@ -780,13 +817,12 @@ public class MediaWikiBot extends HttpBot {
 	 * @throws ActionException
 	 *             on problems with http, cookies and io
 	 * 
-	 * @supportedBy MediaWikiAPI 1.9 embeddedin / ei
-	 * @supportedBy MediaWikiAPI 1.10 embeddedin / ei
-	 * @supportedBy MediaWikiAPI 1.11 embeddedin / ei
+	 * @supportedBy MediaWikiAPI 1.9 embeddedin / ei TODO Test Required
+	 * @supportedBy MediaWikiAPI 1.10 embeddedin / ei TODO Test Required
+	 * @supportedBy MediaWikiAPI 1.11 embeddedin / ei TODO Test Required
 	 */
 	public Iterable<String> getTemplateUserTitles(String template)
 			throws ActionException {
-		checkApiVersion(Version.MW1_09, Version.MW1_10, Version.MW1_11);
 		return getTemplateUserTitles(template, null);
 
 	}
@@ -824,12 +860,11 @@ public class MediaWikiBot extends HttpBot {
 	 * @return a
 	 * @throws ActionException
 	 *             on problems with http, cookies and io
-	 * @supportedBy MediaWikiAPI 1.10 recentchanges / rc
-	 * @supportedBy MediaWikiAPI 1.10 recentchanges / rc
+	 * @supportedBy MediaWikiAPI 1.10 recentchanges / rc TODO Test Required
+	 * @supportedBy MediaWikiAPI 1.10 recentchanges / rc TODO Test Required
 	 */
 	public Iterable<String> getRecentchangesTitles(final int count,
 			int... namespaces) throws ActionException {
-		checkApiVersion(Version.MW1_10, Version.MW1_11);
 		GetRecentchanges a = new GetRecentchanges(count,
 				createNsString(namespaces));
 
@@ -905,24 +940,23 @@ public class MediaWikiBot extends HttpBot {
 
 		}
 	}
-	/**
-	 * 
-	 * @param vers alowed versions
-	 * @throws ActionException on problems with http, cookies and io, 
-	 * 		and especially versionExceptions on version mismatch.
-	 */
-	private void checkApiVersion(Version... vers) throws ActionException {
 
-			if (v == null) {
-				Siteinfo s = getSiteinfo();
-				v = s.getVersion();
-				log.debug("Version is: " + v.name());
-				
-			}
-		
-	}
+	
 	public Version getVersion() {
-		return v;
+		if (version == null) {
+			Siteinfo s;
+			try {
+				s = getSiteinfo();
+				version = s.getVersion();
+			} catch (ActionException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			log.debug("Version is: " + version.name());
+			
+		}
+		return version;
 	}
 
 }
