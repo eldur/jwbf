@@ -18,6 +18,7 @@
  */
 package net.sourceforge.jwbf.live;
 
+import net.sourceforge.jwbf.LiveTestFather;
 import net.sourceforge.jwbf.actions.mw.util.ProcessException;
 import net.sourceforge.jwbf.bots.MediaWikiBot;
 import net.sourceforge.jwbf.contentRep.mw.SimpleFile;

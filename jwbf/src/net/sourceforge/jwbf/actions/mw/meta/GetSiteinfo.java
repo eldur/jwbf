@@ -31,6 +31,7 @@ public class GetSiteinfo extends MWAction {
 				msgs.add(new GetMethod("/api.php?action=query&meta=siteinfo" +
 						"&siprop=" + URLEncoder.encode("general|namespaces|interwikimap", MediaWikiBot.CHARSET) +
 						"&format=xml"));
+				msgs.add(new GetMethod("/api.php?action=query&meta=siteinfo&format=xml"));
 			} catch (UnsupportedEncodingException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -38,6 +39,8 @@ public class GetSiteinfo extends MWAction {
 		
 		
 	}
+	
+	
 	
 	/**
 	 * @param s
@@ -47,12 +50,13 @@ public class GetSiteinfo extends MWAction {
 	 */
 	public String processAllReturningText(final String s)
 			throws ProcessException {
+//		System.err.println(s);
 		parse(s);
 		return "";
 	}
 
 	private void parse(final String xml) {
-		
+		System.out.println("parse: " + xml);
 		SAXBuilder builder = new SAXBuilder();
 		Element root = null;
 		try {
@@ -60,7 +64,7 @@ public class GetSiteinfo extends MWAction {
 			Document doc = builder.build(new InputSource(i));
 
 			root = doc.getRootElement();
-
+			findContent(root);
 		} catch (JDOMException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -68,8 +72,10 @@ public class GetSiteinfo extends MWAction {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		findContent(root);
+		
 	}
+	
+	
 
 	@SuppressWarnings("unchecked")
 	private void findContent(final Element root) {
@@ -110,4 +116,6 @@ public class GetSiteinfo extends MWAction {
 		return site;
 	}
 
+	
+	
 }

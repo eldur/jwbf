@@ -16,7 +16,7 @@
  * Contributors:
  * 
  */
-package net.sourceforge.jwbf.live;
+package net.sourceforge.jwbf;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;

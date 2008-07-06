@@ -16,12 +16,14 @@
  * Contributors:
  * Philipp Kohl 
  */
-package net.sourceforge.jwbf.actions.mw.util;
+package net.sourceforge.jwbf.actions.mw.login;
 
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
+import net.sourceforge.jwbf.actions.mw.util.CookieException;
+import net.sourceforge.jwbf.actions.mw.util.MWAction;
 import net.sourceforge.jwbf.bots.MediaWikiBot;
 
 import org.apache.commons.httpclient.Cookie;
@@ -36,48 +38,50 @@ import org.apache.log4j.Logger;
  */
 public class PostLoginOld extends MWAction {
 
-
 	private String username = "";
-	
+
 	private static final Logger LOG = Logger.getLogger(PostLoginOld.class);
-	
 
-
-	
 	/**
 	 * 
-	 * @param username the
-	 * @param pw password
+	 * @param username
+	 *            the
+	 * @param pw
+	 *            password
 	 */
-	public PostLoginOld(final String username, final String pw, final String domain) {
+	public PostLoginOld(final String username, final String pw,
+			final String domain) {
 		this.username = username;
 
 		NameValuePair action = new NameValuePair("wpLoginattempt", "Log in");
 		NameValuePair url = new NameValuePair("wpRemember", "1");
 		NameValuePair userid = new NameValuePair("wpName", username);
 		NameValuePair dom = new NameValuePair("wpDomain", domain);
-		
+
 		String pwLabel = "wpPassword";
-		
+
 		NameValuePair password = new NameValuePair(pwLabel, pw);
 
 		PostMethod pm = new PostMethod(
 				"/index.php?title=Special:Userlogin&action=submitlogin&type=login");
 
-		
 		pm.getParams().setContentCharset(MediaWikiBot.CHARSET);
-		
+
 		pm.setRequestBody(new NameValuePair[] { action, url, userid, dom,
-						password });
-		
+				password });
+
 		msgs.add(pm);
 
 	}
+
 	/**
-	 * @param cs the
-	 * @throws CookieException when no cookies returning
+	 * @param cs
+	 *            the
+	 * @throws CookieException
+	 *             when no cookies returning
 	 */
-	public void validateAllReturningCookies(final Cookie[] cs) throws CookieException {
+	public void validateAllReturningCookies(final Cookie[] cs)
+			throws CookieException {
 		String compare = username;
 		try {
 			compare = URLEncoder.encode(username, MediaWikiBot.CHARSET);
@@ -85,16 +89,15 @@ public class PostLoginOld extends MWAction {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		if (cs == null) {
 			throw new CookieException("Cookiearray is null.");
 		}
 		if (cs.length == 0) {
 			throw new CookieException("No cookies found.");
 		} else {
-			for (int i = 0; i < cs.length; i++) {	
-		
-				if (cs[i].toString().toLowerCase().contains(compare)) {
+			for (int i = 0; i < cs.length; i++) {
+				if (cs[i].toString().contains(compare)) {
 					LOG.info("Logged in as: " + username);
 					return;
 				}
@@ -106,4 +109,10 @@ public class PostLoginOld extends MWAction {
 		}
 	}
 
+//	private class Requestor {
+//
+//		Requestor() {
+//
+//		}
+//	}
 }

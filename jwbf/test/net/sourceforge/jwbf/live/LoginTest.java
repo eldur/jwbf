@@ -19,6 +19,7 @@
 package net.sourceforge.jwbf.live;
 
 import static org.junit.Assert.assertEquals;
+import net.sourceforge.jwbf.LiveTestFather;
 import net.sourceforge.jwbf.actions.mw.util.ActionException;
 import net.sourceforge.jwbf.bots.MediaWikiBot;
 

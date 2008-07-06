@@ -22,6 +22,7 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.Random;
 
+import net.sourceforge.jwbf.LiveTestFather;
 import net.sourceforge.jwbf.bots.MediaWikiBot;
 import net.sourceforge.jwbf.contentRep.mw.SimpleArticle;
 

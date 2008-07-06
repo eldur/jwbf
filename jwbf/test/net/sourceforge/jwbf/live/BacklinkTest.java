@@ -2,6 +2,7 @@ package net.sourceforge.jwbf.live;
 
 import java.util.Iterator;
 
+import net.sourceforge.jwbf.LiveTestFather;
 import net.sourceforge.jwbf.bots.MediaWikiBot;
 
 import org.apache.log4j.PropertyConfigurator;

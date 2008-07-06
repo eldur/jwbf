@@ -19,10 +19,13 @@
 package net.sourceforge.jwbf.live;
 
 
+import net.sourceforge.jwbf.LiveTestFather;
 import net.sourceforge.jwbf.bots.MediaWikiBot;
 import net.sourceforge.jwbf.contentRep.mw.Siteinfo;
+import net.sourceforge.jwbf.contentRep.mw.Version;
 
 import org.apache.log4j.PropertyConfigurator;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 /**
@@ -49,13 +52,53 @@ public class SiteinfoTest extends LiveTestFather {
 	 * Test category read. Test category must have more then 50 members.
 	 * @throws Exception a
 	 */
-	@Test
-	public final void SiteInfoWikipediaDe() throws Exception {
+	//@Test
+	public final void siteInfoWikipediaDe() throws Exception {
 		
 		bot = new MediaWikiBot("http://de.wikipedia.org/w/index.php");
 		Siteinfo is = bot.getSiteinfo();
 		System.out.println(is);
 	}
+	
+	/**
+	 * Test category read. Test category must have more then 50 members.
+	 * @throws Exception a
+	 */
+	@Test
+	public final void siteInfoMW1_09() throws Exception {
+		
+		bot = new MediaWikiBot(getValue("wikiMW1_09_url"));
+		Siteinfo is = bot.getSiteinfo();
+		System.out.println(is);
+		Assert.assertEquals(bot.getVersion(), Version.MW1_09);
+	}
+	
+	/**
+	 * Test category read. Test category must have more then 50 members.
+	 * @throws Exception a
+	 */
+	@Test
+	public final void siteInfoMW1_10() throws Exception {
+		
+		bot = new MediaWikiBot(getValue("wikiMW1_10_url"));
+		Siteinfo is = bot.getSiteinfo();
+		System.out.println(is);
+		Assert.assertEquals(bot.getVersion(), Version.MW1_10);
+	}
+	
+	/**
+	 * Test category read. Test category must have more then 50 members.
+	 * @throws Exception a
+	 */
+	@Test
+	public final void siteInfoMW1_11() throws Exception {
+		
+		bot = new MediaWikiBot(getValue("wikiMW1_11_url"));
+		Siteinfo is = bot.getSiteinfo();
+		System.out.println(is);
+		Assert.assertEquals(bot.getVersion(), Version.MW1_11);
+	}
+
 	
 	
 
