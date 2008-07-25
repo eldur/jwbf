@@ -217,7 +217,47 @@ public class HttpActionClient {
 		LOG.debug("GET: " + authgets.getStatusLine().toString());
 
 		out = authgets.getResponseBodyAsString();
+		
 		out = cp.processReturningText(out, authgets);
+		// release any connection resources used by the method
+		authgets.releaseConnection();
+		int statuscode = authgets.getStatusCode();
+
+		if (statuscode == HttpStatus.SC_NOT_FOUND) {
+			LOG.warn("Not Found: " + authgets.getQueryString());
+
+			throw new FileNotFoundException(authgets.getQueryString());
+		}
+
+		return out;
+	}
+	
+	/**
+	 * Process a GET Message.
+	 * 
+	 * @param authgets
+	 *            a
+	 * @param cp
+	 *            a
+	 * @return a returning message, not null
+	 * @throws IOException on problems
+	 * @throws CookieException on problems
+	 * @throws ProcessException on problems
+	 */
+	public byte[] get(HttpMethod authgets)
+			throws IOException, CookieException, ProcessException {
+		showCookies(client);
+		byte[] out = null;
+		authgets.getParams().setParameter("http.protocol.content-charset",
+				MediaWikiBot.CHARSET);
+//		System.err.println(authgets.getParams().getParameter("http.protocol.content-charset"));
+		
+		client.executeMethod(authgets);
+		LOG.debug(authgets.getURI());
+		LOG.debug("GET: " + authgets.getStatusLine().toString());
+
+		out = authgets.getResponseBody();
+		
 		// release any connection resources used by the method
 		authgets.releaseConnection();
 		int statuscode = authgets.getStatusCode();

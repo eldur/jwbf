@@ -132,8 +132,8 @@ public class AllPagesTest extends LiveTestFather {
 	@Test
 	public final void allPagesWikiMW1_11() throws Exception {
 		
-		bot = new MediaWikiBot(getValue("allPages_WikiMW1_11_url"));
-		bot.login(getValue("allPages_WikiMW1_11_user"), getValue("allPages_WikiMW1_11_pass"));
+		bot = new MediaWikiBot(getValue("wikiMW1_11_url"));
+		bot.login(getValue("wikiMW1_11_user"), getValue("wikiMW1_11_pass"));
 		Iterator<String> is = bot.getAllPageTitles(0).iterator();
 		int i = 0;
 		while (is.hasNext()) {

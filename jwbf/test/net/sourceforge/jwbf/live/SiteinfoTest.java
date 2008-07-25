@@ -68,8 +68,7 @@ public class SiteinfoTest extends LiveTestFather {
 	public final void siteInfoMW1_09() throws Exception {
 		
 		bot = new MediaWikiBot(getValue("wikiMW1_09_url"));
-		Siteinfo is = bot.getSiteinfo();
-		System.out.println(is);
+
 		Assert.assertEquals(bot.getVersion(), Version.MW1_09);
 	}
 	
@@ -81,8 +80,7 @@ public class SiteinfoTest extends LiveTestFather {
 	public final void siteInfoMW1_10() throws Exception {
 		
 		bot = new MediaWikiBot(getValue("wikiMW1_10_url"));
-		Siteinfo is = bot.getSiteinfo();
-		System.out.println(is);
+
 		Assert.assertEquals(bot.getVersion(), Version.MW1_10);
 	}
 	
@@ -94,9 +92,20 @@ public class SiteinfoTest extends LiveTestFather {
 	public final void siteInfoMW1_11() throws Exception {
 		
 		bot = new MediaWikiBot(getValue("wikiMW1_11_url"));
-		Siteinfo is = bot.getSiteinfo();
-		System.out.println(is);
+
 		Assert.assertEquals(bot.getVersion(), Version.MW1_11);
+	}
+	
+	/**
+	 * Test category read. Test category must have more then 50 members.
+	 * @throws Exception a
+	 */
+	@Test
+	public final void siteInfoMW1_12() throws Exception {
+		
+		bot = new MediaWikiBot(getValue("wikiMW1_12_url"));
+
+		Assert.assertEquals(bot.getVersion(), Version.MW1_12);
 	}
 
 	

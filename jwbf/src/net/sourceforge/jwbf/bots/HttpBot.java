@@ -18,6 +18,7 @@
  */
 package net.sourceforge.jwbf.bots;
 
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -29,6 +30,7 @@ import net.sourceforge.jwbf.actions.mw.util.ActionException;
 import net.sourceforge.jwbf.actions.mw.util.ProcessException;
 
 import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.methods.GetMethod;
 
 /**
  * 
@@ -122,6 +124,32 @@ public abstract class HttpBot {
 		}
 
 		return gp.getText();
+	}
+	
+	/**
+	 * Simple method to get plain HTML or XML data e.g. from custom specialpages
+	 * or xml newsfeeds.
+	 * 
+	 * @param u
+	 *            url like index.php?title=Main_Page
+	 * @return HTML content
+	 * @throws ActionException
+	 *             on any requesing problems
+	 */
+	public final byte[] getBytes(String u) throws ActionException {
+
+		
+
+		try {
+			return cc.get(new GetMethod(u));
+		} catch (ProcessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	/**

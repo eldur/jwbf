@@ -32,9 +32,11 @@ import net.sourceforge.jwbf.actions.mw.editing.FileUpload;
 import net.sourceforge.jwbf.actions.mw.editing.GetRevision;
 import net.sourceforge.jwbf.actions.mw.login.PostLoginOld;
 import net.sourceforge.jwbf.actions.mw.meta.GetSiteinfo;
+import net.sourceforge.jwbf.actions.mw.meta.GetVersion;
 import net.sourceforge.jwbf.actions.mw.queries.GetAllPageTitles;
 import net.sourceforge.jwbf.actions.mw.queries.GetBacklinkTitles;
 import net.sourceforge.jwbf.actions.mw.queries.GetFullCategoryMembers;
+import net.sourceforge.jwbf.actions.mw.queries.GetImageInfo;
 import net.sourceforge.jwbf.actions.mw.queries.GetImagelinkTitles;
 import net.sourceforge.jwbf.actions.mw.queries.GetLogEvents;
 import net.sourceforge.jwbf.actions.mw.queries.GetRecentchanges;
@@ -742,6 +744,12 @@ public class MediaWikiBot extends HttpBot {
 		return getImagelinkTitles(image, null);
 
 	}
+	
+	public String getImageInfo(String imagename) throws ActionException, ProcessException {
+		GetImageInfo a = new GetImageInfo(imagename, getVersion());
+		performAction(a);
+		return a.getUrlAsString();
+	}
 
 	/**
 	 * 
@@ -944,14 +952,19 @@ public class MediaWikiBot extends HttpBot {
 	
 	public Version getVersion() {
 		if (version == null) {
-			Siteinfo s;
+			GetVersion gs = new GetVersion();
+
 			try {
-				s = getSiteinfo();
-				version = s.getVersion();
+				performAction(gs);
+			} catch (ProcessException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			} catch (ActionException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+
+			version = gs.getSiteinfo().getVersion();
 			
 			log.debug("Version is: " + version.name());
 			
