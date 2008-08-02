@@ -21,6 +21,11 @@ package net.sourceforge.jwbf.contentRep;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import net.sourceforge.jwbf.contentRep.mw.ContentAccessable;
 import net.sourceforge.jwbf.contentRep.mw.SimpleArticle;
 
@@ -56,6 +61,22 @@ public class SimpleArticleTest {
 	}
 	
 	@Test
+	public void testDateFormat() {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+        try {
+        	
+        	String dateString = "2007-01-08T15:12:55Z";
+        	article.setEditTimestamp(dateString);
+		
+			
+			assertEquals(dateString, sdf.format(article.getEditTimestamp()));
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	@Test
 	public void testNoNullpointer() {
 		ContentAccessable ca = new ContentAccessable() {
 		
@@ -76,6 +97,11 @@ public class SimpleArticleTest {
 			}
 		
 			public String getEditSummary() {
+				return null;
+			}
+
+			public Date getEditTimestamp() {
+				// TODO Auto-generated method stub
 				return null;
 			}
 		
@@ -109,6 +135,11 @@ public class SimpleArticleTest {
 			}
 		
 			public String getEditSummary() {
+				return null;
+			}
+
+			public Date getEditTimestamp() {
+				// TODO Auto-generated method stub
 				return null;
 			}
 		

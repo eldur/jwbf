@@ -18,6 +18,8 @@
  */
 package net.sourceforge.jwbf.contentRep.mw;
 
+import java.util.Date;
+
 
 /**
  * 
@@ -54,4 +56,10 @@ public interface ContentAccessable {
 	 * @return content wiki syntax of this article
 	 */
 	String getText();
+	
+	/**
+	 * 
+	 * @return a
+	 */
+	Date getEditTimestamp();
 }

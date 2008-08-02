@@ -19,10 +19,12 @@
 package net.sourceforge.jwbf.live;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Random;
 
 import net.sourceforge.jwbf.LiveTestFather;
+import net.sourceforge.jwbf.actions.mw.editing.GetRevision;
 import net.sourceforge.jwbf.bots.MediaWikiBot;
 import net.sourceforge.jwbf.contentRep.mw.SimpleArticle;
 
@@ -114,9 +116,10 @@ public class EditCustomWikiContentTest extends LiveTestFather {
 		sa = new SimpleArticle(utf8value, label);
 		bot.writeContent(sa);
 
-		sa = new SimpleArticle(bot.readContent(label));
+		sa = new SimpleArticle(bot.readContent(label, GetRevision.TIMESTAMP | GetRevision.CONTENT));
 
 		assertEquals(utf8value, sa.getText());
+		assertTrue(sa.getEditTimestamp().getTime() > 1000);
 	}
 
 	/**
@@ -154,6 +157,7 @@ public class EditCustomWikiContentTest extends LiveTestFather {
 		sa = new SimpleArticle(bot.readContent(label));
 
 		assertEquals(utf8value, sa.getText());
+		assertTrue(sa.getEditTimestamp() == null);
 	}
 
 }

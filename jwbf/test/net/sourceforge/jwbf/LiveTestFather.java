@@ -29,7 +29,7 @@ public class LiveTestFather {
 	private static Properties data;
 	private static final String filename = "test.xml";
 	
-	protected LiveTestFather() {
+	static {
 		if (data == null) {
 			data = new Properties();
 			try {
@@ -48,13 +48,13 @@ public class LiveTestFather {
 
 	}
 	
-	protected String getValue(final String key) throws Exception {
+	protected static String getValue(final String key) throws Exception {
 		if (!data.containsKey(key) || data.getProperty(key).length() <= 0) {
 			throw new Exception("No or empty value for key: \"" + key + "\" in " + filename);
 		}
 		return data.getProperty(key);
 	}
-	protected int getIntValue(final String key)  throws Exception {
+	protected static int getIntValue(final String key)  throws Exception {
 		return Integer.parseInt(getValue(key));
 	}
 

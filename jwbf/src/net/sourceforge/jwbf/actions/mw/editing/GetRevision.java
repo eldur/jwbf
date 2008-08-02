@@ -25,6 +25,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
+import java.text.ParseException;
 import java.util.Iterator;
 
 import net.sourceforge.jwbf.actions.mw.util.ApiException;
@@ -136,6 +137,7 @@ public class GetRevision extends MWAction {
 	
 	
 	private void parse(final String xml) throws ApiException{
+		LOG.debug(xml);
 		SAXBuilder builder = new SAXBuilder();
 		Element root = null;
 		try {
@@ -172,10 +174,25 @@ public class GetRevision extends MWAction {
 				throw new ApiException(element.getAttributeValue("code"),
 						element.getAttributeValue("info"));
 			} else if (element.getQualifiedName().equalsIgnoreCase("rev")) {
-				
-				sa.setText(element.getText());
-				sa.setEditSummary(element.getAttributeValue("comment"));
-				sa.setEditor(element.getAttributeValue("user"));
+
+				try {
+					sa.setText(element.getText());
+//					LOG.debug("found text");
+				} catch (NullPointerException e) {
+					// TODO: handle exception
+				}
+
+			
+					sa.setEditSummary(getAsStringValues(element,"comment"));
+					sa.setEditor(getAsStringValues(element,"user"));
+			
+
+				try {
+					sa.setEditTimestamp(getAsStringValues(element,"timestamp"));
+				} catch (ParseException e) {
+					e.printStackTrace();
+				} 
+
 			} else {
 				findContent(element);
 			}
@@ -183,6 +200,21 @@ public class GetRevision extends MWAction {
 		}
 		
 		
+	}
+	
+	private String getAsStringValues(Element e, String attrName) {
+		String buff = "";
+		try {
+			buff = e.getAttributeValue(attrName);
+			if (buff == null) {
+				throw new NullPointerException();
+			}
+		} catch (Exception npe) {
+			// LOG.debug("no value for " + attrName );
+			buff = "";
+		}
+		// LOG.debug("value for " + attrName + " = \"" + buff + "\"");
+		return buff;
 	}
 
 }

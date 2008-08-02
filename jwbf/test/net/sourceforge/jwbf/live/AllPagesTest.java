@@ -23,6 +23,7 @@ import java.util.Iterator;
 
 import net.sourceforge.jwbf.LiveTestFather;
 import net.sourceforge.jwbf.bots.MediaWikiBot;
+import net.sourceforge.jwbf.contentRep.mw.SimpleArticle;
 import net.sourceforge.jwbf.contentRep.mw.Version;
 
 import org.apache.log4j.PropertyConfigurator;
@@ -46,8 +47,45 @@ public class AllPagesTest extends LiveTestFather {
 	public static void setUp() throws Exception {
 		PropertyConfigurator.configureAndWatch("test4log4j.properties",
 				60 * 1000);
+//		prepareTestWikis();
 	}
-	
+	public static final void prepareTestWikis() throws Exception {
+		MediaWikiBot bot = new MediaWikiBot(getValue("wikiMW1_09_url"));
+		bot.login(getValue("wikiMW1_09_user"), getValue("wikiMW1_09_pass"));
+		
+		SimpleArticle a = new SimpleArticle("test", "0");
+		for (int i = 0; i < 60; i++) {
+			a.setLabel("Test " + i);
+			bot.writeContent(a);
+		}
+		
+		bot = new MediaWikiBot(getValue("wikiMW1_10_url"));
+		bot.login(getValue("wikiMW1_10_user"), getValue("wikiMW1_11_pass"));
+		
+		for (int i = 0; i < 60; i++) {
+			a.setLabel("Test " + i);
+			bot.writeContent(a);
+		}
+		
+		bot = new MediaWikiBot(getValue("wikiMW1_11_url"));
+		bot.login(getValue("wikiMW1_11_user"), getValue("wikiMW1_11_pass"));
+		
+		for (int i = 0; i < 60; i++) {
+			a.setLabel("Test " + i);
+			bot.writeContent(a);
+		}
+		
+
+		bot = new MediaWikiBot(getValue("wikiMW1_12_url"));
+		bot.login(getValue("wikiMW1_12_user"), getValue("wikiMW1_12_pass"));
+		
+		for (int i = 0; i < 60; i++) {
+			a.setLabel("Test " + i);
+			bot.writeContent(a);
+		}
+		
+		
+	}
 
 	/**
 	 * Test category read. Test category must have more then 50 members.
@@ -125,6 +163,52 @@ public class AllPagesTest extends LiveTestFather {
 		Assert.assertTrue("i is: " + i , i > 50);
 	}
 	
+	
+	/**
+	 * Test category read. Test category must have more then 50 members.
+	 * @throws Exception a
+	 */
+	@Test
+	public final void allPagesWikiMW1_09() throws Exception {
+		
+		bot = new MediaWikiBot(getValue("wikiMW1_09_url"));
+		bot.login(getValue("wikiMW1_09_user"), getValue("wikiMW1_09_pass"));
+		Iterator<String> is = bot.getAllPageTitles(0).iterator();
+		int i = 0;
+		while (is.hasNext()) {
+			is.next();
+			i++;
+			if (i > 55) {
+				break;
+			}
+		}
+		
+		Assert.assertTrue("i is: " + i , i > 50);
+		Assert.assertTrue( "Wrong Wiki Version " + bot.getVersion() , Version.MW1_09.equals(bot.getVersion()));
+	}
+	/**
+	 * Test category read. Test category must have more then 50 members.
+	 * @throws Exception a
+	 */
+	@Test
+	public final void allPagesWikiMW1_10() throws Exception {
+		
+		bot = new MediaWikiBot(getValue("wikiMW1_10_url"));
+		bot.login(getValue("wikiMW1_10_user"), getValue("wikiMW1_10_pass"));
+		Iterator<String> is = bot.getAllPageTitles(0).iterator();
+		int i = 0;
+		while (is.hasNext()) {
+			is.next();
+			i++;
+			if (i > 55) {
+				break;
+			}
+		}
+		
+		Assert.assertTrue("i is: " + i , i > 50);
+		Assert.assertTrue( "Wrong Wiki Version " + bot.getVersion() , Version.MW1_10.equals(bot.getVersion()));
+	}
+	
 	/**
 	 * Test category read. Test category must have more then 50 members.
 	 * @throws Exception a
@@ -148,5 +232,27 @@ public class AllPagesTest extends LiveTestFather {
 		Assert.assertTrue( "Wrong Wiki Version " + bot.getVersion() , Version.MW1_11.equals(bot.getVersion()));
 	}
 	
+	/**
+	 * Test category read. Test category must have more then 50 members.
+	 * @throws Exception a
+	 */
+	@Test
+	public final void allPagesWikiMW1_12() throws Exception {
+		
+		bot = new MediaWikiBot(getValue("wikiMW1_12_url"));
+		bot.login(getValue("wikiMW1_12_user"), getValue("wikiMW1_12_pass"));
+		Iterator<String> is = bot.getAllPageTitles(0).iterator();
+		int i = 0;
+		while (is.hasNext()) {
+			is.next();
+			i++;
+			if (i > 55) {
+				break;
+			}
+		}
+		
+		Assert.assertTrue("i is: " + i , i > 50);
+		Assert.assertTrue( "Wrong Wiki Version " + bot.getVersion() , Version.MW1_12.equals(bot.getVersion()));
+	}
 }
 

@@ -27,7 +27,7 @@ public class GetVersion extends MWAction {
 	}
 	
 	private void parse(final String xml) {
-		System.out.println("parse: " + xml);
+//		System.out.println("parse: " + xml);
 		SAXBuilder builder = new SAXBuilder();
 		Element root = null;
 		try {

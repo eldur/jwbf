@@ -18,6 +18,9 @@
  */
 package net.sourceforge.jwbf.contentRep.mw;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.regex.Pattern;
 
 /**
@@ -34,6 +37,7 @@ public class SimpleArticle implements ContentAccessable {
 	private String text = "";
 	private String editor = "";
 	private boolean minorEdit = false;
+	private Date editTimestamp = null;
 
 	/**
 	 * 
@@ -62,6 +66,9 @@ public class SimpleArticle implements ContentAccessable {
 		}	
 		if (ca.getEditor() != null) {
 			editor = ca.getEditor();
+		}
+		if (ca.getEditTimestamp() != null) {
+			editTimestamp = ca.getEditTimestamp();
 		}
 			
 
@@ -190,6 +197,23 @@ public class SimpleArticle implements ContentAccessable {
 		}
 			
 		return false;
+	}
+
+	/**
+	 * @return get it, format is wiki related.
+	 */
+	public Date getEditTimestamp() {
+		return editTimestamp;
+	}
+	/**
+	 * 
+	 * @param editTimestamp set
+	 * @throws ParseException if date unparseable
+	 */
+	public void setEditTimestamp(String editTimestamp) throws ParseException {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+		this.editTimestamp = sdf.parse(editTimestamp);
+		System.out.println(this.editTimestamp.getTime()); // TODO RM
 	}
 
 }
