@@ -53,77 +53,74 @@ public class FileUpload extends MWAction {
 	 * @throws ActionException on problems with file
 	 */
 	public FileUpload(final SimpleFile a,
-			final Hashtable<String, String> tab, LoginData login) throws ActionException {
+			final Hashtable<String, String> tab,
+			LoginData login) throws ActionException {
 
-		
 		if (!a.getFile().isFile() || !a.getFile().canRead()) {
 			throw new ActionException("no such file " + a.getFile());
 		}
-		
+
 		String uS = "";
-		//try {
-			uS = "/Spezial:Hochladen";
-			uS = "/index.php?title=Special:Upload";
-			//uS = "/index.php?title=" + URLEncoder.encode("Spezial:Hochladen", MediaWikiBot.CHARSET);
-					//+ "&action=submit";
-		//} catch (UnsupportedEncodingException e) {
-		//	e.printStackTrace();
-		//}
+		// try {
+		uS = "/Spezial:Hochladen";
+		uS = "/index.php?title=Special:Upload";
+		// uS = "/index.php?title=" + URLEncoder.encode("Spezial:Hochladen",
+		// MediaWikiBot.CHARSET);
+		// + "&action=submit";
+		// } catch (UnsupportedEncodingException e) {
+		// e.printStackTrace();
+		// }
 
 		try {
-	
-		
-		LOG.info("WRITE: " + a.getLabel());
-		PostMethod post = new PostMethod(uS);
-        Part[] parts;
-        if(a.getText().isEmpty())
-        {
-        	parts = new Part[]{
-            new StringPart("wpDestFile", a.getLabel()),
-            new StringPart("wpIgnoreWarning", "true"),
-            new StringPart("wpSourceType", "file"),
-            new StringPart("wpUpload","Upload file"),
-            //   new StringPart("wpUploadDescription", "false"),
-            //  new StringPart("wpWatchthis", "false"),
-            
-            new FilePart("wpUploadFile",  a.getFile())
-            //   new FilePart( f.getName(), f)
-            
-        };
-        }
-        else
-        {
-        	parts = new Part[]{
-                    new StringPart("wpDestFile", a.getLabel()),
-                    new StringPart("wpIgnoreWarning", "true"),
-                    new StringPart("wpSourceType", "file"),
-                    new StringPart("wpUpload","Upload file"),
-                    //   new StringPart("wpUploadDescription", "false"),
-                    //  new StringPart("wpWatchthis", "false"),
-                    
-                    new FilePart("wpUploadFile",  a.getFile()),
-                    //   new FilePart( f.getName(), f)
-                    new StringPart("wpUploadDescription", a.getText())
-        	};
-        	
-        }
-        post.setRequestEntity( new MultipartRequestEntity(parts, post.getParams()) );
-        
-        //int statusCode =  hc.executeMethod(post);
-//        log(statusCode);
-        
-//       log(Arrays.asList(post.getResponseHeaders()));
-//
-//        String res = post.getResponseBodyAsString();
-//        LOG.debug(res);
-//        post.releaseConnection();
-		//pm.setRequestBody(new NameValuePair[] { action, wpStarttime,
-		//		wpEditToken, wpEdittime, wpTextbox, wpSummary, wpMinoredit });
-		msgs.add(post);
+
+			LOG.info("WRITE: " + a.getLabel());
+			PostMethod post = new PostMethod(uS);
+			Part[] parts;
+			if (a.getText().isEmpty()) {
+				parts = new Part[] {
+						new StringPart("wpDestFile", a.getLabel()),
+						new StringPart("wpIgnoreWarning", "true"),
+						new StringPart("wpSourceType", "file"),
+						new StringPart("wpUpload", "Upload file"),
+						// new StringPart("wpUploadDescription", "false"),
+						// new StringPart("wpWatchthis", "false"),
+
+						new FilePart("wpUploadFile", a.getFile())
+				// new FilePart( f.getName(), f)
+
+				};
+			} else {
+				parts = new Part[] {
+						new StringPart("wpDestFile", a.getLabel()),
+						new StringPart("wpIgnoreWarning", "true"),
+						new StringPart("wpSourceType", "file"),
+						new StringPart("wpUpload", "Upload file"),
+						// new StringPart("wpUploadDescription", "false"),
+						// new StringPart("wpWatchthis", "false"),
+
+						new FilePart("wpUploadFile", a.getFile()),
+						// new FilePart( f.getName(), f)
+						new StringPart("wpUploadDescription", a.getText()) };
+
+			}
+			post.setRequestEntity(new MultipartRequestEntity(parts, post
+					.getParams()));
+
+			// int statusCode = hc.executeMethod(post);
+			// log(statusCode);
+
+			// log(Arrays.asList(post.getResponseHeaders()));
+			//
+			// String res = post.getResponseBodyAsString();
+			// LOG.debug(res);
+			// post.releaseConnection();
+			// pm.setRequestBody(new NameValuePair[] { action, wpStarttime,
+			// wpEditToken, wpEdittime, wpTextbox, wpSummary, wpMinoredit });
+			msgs.add(post);
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} 
+		}
 	}
 	@Override
 	public String processAllReturningText(String s) throws ProcessException {

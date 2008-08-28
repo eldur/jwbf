@@ -20,6 +20,7 @@ public class Siteinfo {
 
 	private Map<Integer,String> namespaces=new HashMap<Integer,String>();
 	private Map<String,String> interwiki=new HashMap<String,String>();
+	private boolean writeApi;
 	
 	private static Logger log = Logger.getLogger(Siteinfo.class);
 	
@@ -120,5 +121,10 @@ public class Siteinfo {
 	public Map getInterwikis(){
 		return Collections.unmodifiableMap(interwiki);
 	}
-
+	public boolean isWriteAPI() {
+		return writeApi;
+	}
+	public void setWriteAPI(boolean writeApi) {
+		this.writeApi = writeApi;
+	}
 }
