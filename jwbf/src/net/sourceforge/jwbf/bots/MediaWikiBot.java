@@ -121,6 +121,9 @@ public class MediaWikiBot extends HttpBot {
 	 */
 	public MediaWikiBot(final String url) throws MalformedURLException {
 		super();
+		if (!(url.endsWith(".php") || url.endsWith("/"))) {
+			throw new MalformedURLException("(" + url + ") url must end with slash or .php");
+		}
 		setConnection(url);
 
 	}

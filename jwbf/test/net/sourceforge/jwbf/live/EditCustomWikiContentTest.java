@@ -58,9 +58,9 @@ public class EditCustomWikiContentTest extends LiveTestFather {
 	 */
 	@Before
 	public void setUp() throws Exception {
-		bot = new MediaWikiBot(getValue("edit_customWiki_url"));
-		bot.login(getValue("edit_customWiki_user"),
-				getValue("edit_customWiki_pass"));
+		bot = new MediaWikiBot(getValue("test_live_url"));
+		bot.login(getValue("test_live_user"),
+				getValue("test_live_pass"));
 	}
 
 	/**
@@ -69,7 +69,7 @@ public class EditCustomWikiContentTest extends LiveTestFather {
 	 */
 	@Test
 	public final void contentModify() throws Exception {
-		String label = getValue("edit_customWiki_article");
+		String label = getValue("test_live_article");
 		SimpleArticle sa;
 		sa = new SimpleArticle("", label);
 		bot.writeContent(sa);
@@ -89,7 +89,7 @@ public class EditCustomWikiContentTest extends LiveTestFather {
 	 */
 	@Test
 	public final void contentModifyDetails() throws Exception {
-		String label = getValue("edit_customWiki_article");
+		String label = getValue("test_live_article");
 		String summary = "clear it";
 		SimpleArticle t = new SimpleArticle("", label);
 		t.setEditSummary(summary);
@@ -99,7 +99,7 @@ public class EditCustomWikiContentTest extends LiveTestFather {
 		assertEquals(label, sa.getLabel());
 		//		System.out.println(sa.getEditSummary());
 		assertEquals(summary, sa.getEditSummary());
-		assertEquals(getValue("edit_customWiki_user"), sa.getEditor());
+		assertEquals(getValue("test_live_user"), sa.getEditor());
 		//		assertEquals(true, sa.isMinorEdit()); // TODO 
 
 	}
@@ -111,7 +111,7 @@ public class EditCustomWikiContentTest extends LiveTestFather {
 	@Test
 	public final void contentModifySimpleUtf8Get() throws Exception {
 		String utf8value = "öäüÖÄÜß";
-		String label = getValue("edit_customWiki_article");
+		String label = getValue("test_live_article");
 		SimpleArticle sa;
 		sa = new SimpleArticle(utf8value, label);
 		bot.writeContent(sa);
@@ -130,7 +130,7 @@ public class EditCustomWikiContentTest extends LiveTestFather {
 	public final void contentModifyIPAUtf8Get() throws Exception {
 		String utf8value = "ɕɕkɕoːɐ̯eːaɕɐɑɒæɑ̃ɕʌbɓʙβcɕçɕɕçɕɔɔɕɕ";
 
-		String label = getValue("edit_customWiki_article");
+		String label = getValue("test_live_article");
 		SimpleArticle sa;
 		sa = new SimpleArticle(utf8value, label);
 		bot.writeContent(sa);
@@ -149,7 +149,7 @@ public class EditCustomWikiContentTest extends LiveTestFather {
 		String utf8value = "öä 品 üÖÄÜß り新しく作成したりできます Л"
 				+ "ин 瓦茲القواميس والمراجع";
 
-		String label = getValue("edit_customWiki_article");
+		String label = getValue("test_live_article");
 		SimpleArticle sa;
 		sa = new SimpleArticle(utf8value, label);
 		bot.writeContent(sa);

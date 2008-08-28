@@ -19,6 +19,9 @@
 package net.sourceforge.jwbf.live;
 
 import static org.junit.Assert.assertEquals;
+
+import java.net.MalformedURLException;
+
 import net.sourceforge.jwbf.LiveTestFather;
 import net.sourceforge.jwbf.actions.mw.util.ActionException;
 import net.sourceforge.jwbf.bots.MediaWikiBot;
@@ -107,6 +110,21 @@ public class LoginTest extends LiveTestFather {
 		int lastSlash = url.lastIndexOf("/");
 		url = url.substring(0, lastSlash + 1);
 		bot = new MediaWikiBot(url);
+		
+		bot.login(getValue("login_wikipedia2_user_valid"), getValue("login_wikipedia2_pass_valid"));
+		assertEquals(true, bot.isLoggedIn());
+	}
+	
+	/**
+	 * Test login on Wikipedia .
+	 * @throws Exception a
+	 */
+	@Test(expected = MalformedURLException.class)
+	public final void loginWikipedia2Urlformats2() throws Exception {
+		String url = getValue("login_wikipedia2_url");
+		int lastSlash = url.lastIndexOf("/");
+		url = url.substring(0, lastSlash);
+		bot = new MediaWikiBot(url);
 		bot.login(getValue("login_wikipedia2_user_valid"), getValue("login_wikipedia2_pass_valid"));
 		assertEquals(true, bot.isLoggedIn());
 	}
@@ -147,10 +165,10 @@ public class LoginTest extends LiveTestFather {
 
 	}
 	/**
-	 * Test login where the wiki is in a subfolder, like www.abc.com/wiki/index.php
+	 * Test login where the wiki is in a subfolder, like www.abc.com/wiki
 	 * @throws Exception a
 	 */
-	@Test(expected = ActionException.class) 
+	@Test(expected = MalformedURLException.class) 
 	public final void loginCustomWiki1UrlformatsFail() throws Exception {
 		
 		String url = getValue("login_customWiki2_url");

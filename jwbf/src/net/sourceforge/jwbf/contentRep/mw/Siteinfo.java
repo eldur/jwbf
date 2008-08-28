@@ -68,6 +68,8 @@ public class Siteinfo {
 			return Version.MW1_11;
 		} else if (getGenerator().contains("1.12")) {
 			return Version.MW1_12;
+		} else if (getGenerator().contains("1.13")) {
+			return Version.MW1_13;
 		} else {
 			log.info("\nVersion is UNKNOWN for JWBF (" + JWBF.getVersion() + ") : \n\t" + getGenerator() 
 					+ "\n\tUsing settings for actual Wikipedia development version");

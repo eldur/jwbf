@@ -158,6 +158,23 @@ public class UploadTest extends LiveTestFather {
 		File file = new File(getValue("validFile"));
 		assertFile(url, file);
 	}
+	
+	/**
+	 * Test category read. Test category must have more then 50 members.
+	 * @throws Exception a
+	 */
+	@Test
+	public final void uploadMW1_13() throws Exception {
+		
+		bot = new MediaWikiBot(getValue("wikiMW1_13_url"));
+		bot.login(getValue("wikiMW1_13_user"),
+				getValue("wikiMW1_13_pass"));
+		Assert.assertEquals(bot.getVersion(), Version.MW1_13);
+		SimpleFile sf = new SimpleFile("Test.gif", getValue("validFile"));
+		String url = bot.getImageInfo(sf.getFilename());
+		File file = new File(getValue("validFile"));
+		assertFile(url, file);
+	}
 	@After
 	public final void cleanUp() {
 		

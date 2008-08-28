@@ -107,6 +107,18 @@ public class SiteinfoTest extends LiveTestFather {
 
 		Assert.assertEquals(bot.getVersion(), Version.MW1_12);
 	}
+	
+	/**
+	 * Test category read. Test category must have more then 50 members.
+	 * @throws Exception a
+	 */
+	@Test
+	public final void siteInfoMW1_13() throws Exception {
+		
+		bot = new MediaWikiBot(getValue("wikiMW1_13_url"));
+
+		Assert.assertEquals(bot.getVersion(), Version.MW1_13);
+	}
 
 	
 	
