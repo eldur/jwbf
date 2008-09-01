@@ -43,6 +43,18 @@ import org.apache.commons.httpclient.methods.GetMethod;
  */
 public class GetBacklinkTitles extends MWAction implements MultiAction<String> {
 
+	/**
+	 * enum that defines the three posibilities of dealing with
+	 * article lists including both redirects and non-redirects.
+	 * <ul>
+	 * <li>all: List all pages regardless of their redirect flag</li>
+	 * <li>redirects: Only list redirects</li>
+	 * <li>nonredirects: Don't list redirects</li>
+	 * </ul>
+	 */
+	public static enum RedirectFilter {all, redirects, nonredirects};
+	
+	
 	/** constant value for the bllimit-parameter. **/
 	private static final int LIMIT = 50;
 	
@@ -60,36 +72,46 @@ public class GetBacklinkTitles extends MWAction implements MultiAction<String> {
 		
 		
 	/**
-	 * The public constructor. It will have an MediaWiki-request generated,
+	 * The public constructor. It will have a MediaWiki-request generated,
 	 * which is then added to msgs. When it is answered,
 	 * the method processAllReturningText will be called
 	 * (from outside this class).
-	 * For the parameters, see {@link GetBacklinkTitles#generateRequest(String, String, String)}
+	 * 
+	 * For parameters, 
+	 * see {@link GetBacklinkTitles#generateRequest(String, String, String)}
 	 */
-	public GetBacklinkTitles(String articleName, String namespace){
-		generateRequest(articleName,namespace,null);
+	public GetBacklinkTitles(String articleName, RedirectFilter redirectFilter,
+			                 String namespace) {
+		generateRequest(articleName, redirectFilter, namespace, null);
 	}
 	
 	/**
 	 * The private constructor, which is used to create follow-up actions.
 	 */
 	private GetBacklinkTitles(String nextPageInfo) {
-		generateRequest(null,null,nextPageInfo);
+		generateRequest(null, null, null, nextPageInfo);
 	}
 	
 	/**
 	 * generates the next MediaWiki-request (GetMethod) and adds it to msgs.
 	 *
-	 * @param articleName   the title of the article,
-	 *                      may only be null if blcontinue is not null
-	 * @param namespace     the namespace(s) that will be searched for links,
-	 *                      as a string of numbers separated by '|';
-	 *                      if null, this parameter is omitted
-	 * @param blcontinue    the value for the blcontinue parameter,
-	 *                      null for the generation of the initial request
+	 * @param articleName    the title of the article,
+	 *                       may only be null if blcontinue is not null
+	 * @param namespace      the namespace(s) that will be searched for links,
+	 *                       as a string of numbers separated by '|';
+	 *                       if null, this parameter is omitted
+	 * @param redirectFilter filter that determines how to handle redirects,
+	 *                       may only be null if blcontinue is not null
+	 * @param blcontinue     the value for the blcontinue parameter,
+	 *                       null for the generation of the initial request
 	 */
-	protected void generateRequest(String articleName, String namespace, String blcontinue){
+	protected void generateRequest(String articleName, 
+			                       RedirectFilter redirectFilter,
+			                       String namespace, String blcontinue) {
 	 
+		assert blcontinue != null || articleName != null;
+		assert blcontinue != null || redirectFilter != null;
+		
 	 	String uS = "";
 		
 		try {
@@ -99,6 +121,7 @@ public class GetBacklinkTitles extends MWAction implements MultiAction<String> {
 				uS = "/api.php?action=query&list=backlinks"
 						+ "&bltitle=" + URLEncoder.encode(articleName, MediaWikiBot.CHARSET) 
 						+ ((namespace!=null&&!namespace.isEmpty())?("&blnamespace="+namespace):"")
+						+ "&blfilterredir=" + redirectFilter.toString() 
 						+ "&bllimit=" + LIMIT + "&format=xml";
 			
 			} else {
@@ -138,7 +161,7 @@ public class GetBacklinkTitles extends MWAction implements MultiAction<String> {
 	 * @param s   text for parsing
 	 */
 	protected void parseHasMore(final String s) {
-			
+		
 		// get the blcontinue-value
 		
 		Pattern p = Pattern.compile(
@@ -160,12 +183,12 @@ public class GetBacklinkTitles extends MWAction implements MultiAction<String> {
 	 *	
 	 * @param s   text for parsing
 	 */
-	public void parseArticleTitles(String s) {
+	protected void parseArticleTitles(String s) {
 		
-		// get the backlink titles and add them all to the titleCollection
+		// get the other backlink titles and add them all to the titleCollection
 			
 		Pattern p = Pattern.compile(
-			"<bl pageid=\".*?\" ns=\".*?\" title=\"(.*?)\" />");
+			"<bl pageid=\".*?\" ns=\".*?\" title=\"([^\"]*)\" (redirect=\"\" )?/>");
 			
 		Matcher m = p.matcher(s);
 		

@@ -42,6 +42,7 @@ import net.sourceforge.jwbf.actions.mw.queries.GetLogEvents;
 import net.sourceforge.jwbf.actions.mw.queries.GetRecentchanges;
 import net.sourceforge.jwbf.actions.mw.queries.GetSimpleCategoryMembers;
 import net.sourceforge.jwbf.actions.mw.queries.GetTemplateUserTitles;
+import net.sourceforge.jwbf.actions.mw.queries.GetBacklinkTitles.RedirectFilter;
 import net.sourceforge.jwbf.actions.mw.util.ActionException;
 import net.sourceforge.jwbf.actions.mw.util.GetEnvironmentVars;
 import net.sourceforge.jwbf.actions.mw.util.MWAction;
@@ -219,7 +220,7 @@ public class MediaWikiBot extends HttpBot {
 	 * 
 	 * @param name
 	 *            of article in a mediawiki like "Main Page"
-	 * @param properties {@link GetRevision}
+	 * @param properties {@link getRevision}
 	 * @return a content representation of requested article, never null
 	 * @throws ActionException
 	 *             on problems with http, cookies and io
@@ -549,7 +550,47 @@ public class MediaWikiBot extends HttpBot {
 	}
 
 	/**
-	 * get the titles of all pages which contain a link to the given article.
+	 * get the titles of all pages which contain a link to the given article;
+	 * this includes redirects to the page.
+	 * 
+	 * @param article
+	 *            title of an article
+	 * 
+	 * @param redirectFilter 
+	 *            filter that determines how to handle redirects
+	 * @param namespaces
+	 *            numbers of the namespaces (specified using varargs) that will
+	 *            be included in the search;
+	 *            leaving this parameter out will include all namespaces
+	 * 
+	 * @return iterable providing access to the names of all articles which link
+	 *         to the article specified by the article-parameter. Attention: to
+	 *         get more article titles, the connection to the MediaWiki must
+	 *         still exist.
+	 * 
+	 * @throws ActionException
+	 *             on problems with http, cookies and io
+	 * 
+	 * TODO Pending Parameter Change;
+	 * http://www.mediawiki.org/wiki/API:Query_-_Lists
+	 * @supportedBy MediaWikiAPI 1.9 backlinks / bl TODO Test Required
+	 * @supportedBy MediaWikiAPI 1.10 backlinks / bl TODO Test Required
+	 * @supportedBy MediaWikiAPI 1.11 backlinks / bl TODO Test Required
+	 */
+	public Iterable<String> getBacklinkTitles(String article, 
+			RedirectFilter redirectFilter, int... namespaces)
+			throws ActionException {
+		GetBacklinkTitles a = new GetBacklinkTitles(article,
+				redirectFilter,
+				createNsString(namespaces));
+
+		return performMultiAction(a);
+
+	}	
+	
+	/**
+	 * variation of the getBacklinkTitles-method that returns 
+	 * both redirects and non-redirects linking to the page.
 	 * 
 	 * @param article
 	 *            title of an article
@@ -574,11 +615,8 @@ public class MediaWikiBot extends HttpBot {
 	 */
 	public Iterable<String> getBacklinkTitles(String article, int... namespaces)
 			throws ActionException {
-		GetBacklinkTitles a = new GetBacklinkTitles(article,
-				createNsString(namespaces));
 
-		return performMultiAction(a);
-
+		return getBacklinkTitles(article, RedirectFilter.all, namespaces);
 	}
 
 	/**
@@ -601,8 +639,9 @@ public class MediaWikiBot extends HttpBot {
 			throws ActionException {
 
 		return getBacklinkTitles(article, null);
-
 	}
+		
+	
 	/**
 	 * 
 	 * @param category like "Buildings" or "Chemical elements" without prefix "Category:"
