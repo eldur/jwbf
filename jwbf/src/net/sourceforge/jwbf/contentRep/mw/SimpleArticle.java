@@ -30,7 +30,7 @@ import java.util.regex.Pattern;
  * @author Thomas Stock
  * 
  */
-public class SimpleArticle implements ContentAccessable {
+public class SimpleArticle implements ContentAccessable, ArticleMeta {
 
 	private String label = "";
 	private String editSummary = "";
@@ -67,9 +67,9 @@ public class SimpleArticle implements ContentAccessable {
 		if (ca.getEditor() != null) {
 			editor = ca.getEditor();
 		}
-		if (ca.getEditTimestamp() != null) {
-			editTimestamp = ca.getEditTimestamp();
-		}
+//		if (ca.getEditTimestamp() != null) {
+//			editTimestamp = ca.getEditTimestamp();
+//		}
 			
 
 	}

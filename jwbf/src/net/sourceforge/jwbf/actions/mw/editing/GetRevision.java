@@ -32,7 +32,6 @@ import net.sourceforge.jwbf.actions.mw.util.ApiException;
 import net.sourceforge.jwbf.actions.mw.util.MWAction;
 import net.sourceforge.jwbf.actions.mw.util.ProcessException;
 import net.sourceforge.jwbf.bots.MediaWikiBot;
-import net.sourceforge.jwbf.contentRep.mw.ContentAccessable;
 import net.sourceforge.jwbf.contentRep.mw.SimpleArticle;
 
 import org.apache.commons.httpclient.methods.GetMethod;
@@ -156,7 +155,7 @@ public class GetRevision extends MWAction {
 		findContent(root);
 	}
 
-	public ContentAccessable getArticle() {
+	public SimpleArticle getArticle() {
 		
 		
 		return sa;

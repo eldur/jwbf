@@ -52,6 +52,7 @@ import net.sourceforge.jwbf.bots.util.LoginData;
 import net.sourceforge.jwbf.contentRep.mw.CategoryItem;
 import net.sourceforge.jwbf.contentRep.mw.ContentAccessable;
 import net.sourceforge.jwbf.contentRep.mw.LogItem;
+import net.sourceforge.jwbf.contentRep.mw.SimpleArticle;
 import net.sourceforge.jwbf.contentRep.mw.SimpleFile;
 import net.sourceforge.jwbf.contentRep.mw.Siteinfo;
 import net.sourceforge.jwbf.contentRep.mw.Version;
@@ -228,10 +229,13 @@ public class MediaWikiBot extends HttpBot {
 	 * @supportedBy MediaWikiAPI 1.9.x TODO Test Required
 	 * @supportedBy MediaWikiAPI 1.10.x TODO Test Required
 	 * @supportedBy MediaWikiAPI 1.11.x TODO Test Required
+	 * @supportedBy MediaWikiAPI 1.12.x TODO Test Required
+	 * @supportedBy MediaWikiAPI 1.13.x TODO Test Required
+	 * @supportedBy MediaWikiAPI 1.14.x TODO Test Required
 	 */
-	public final ContentAccessable readContent(final String name, final int properties)
+	public final SimpleArticle readContent(final String name, final int properties)
 			throws ActionException, ProcessException {
-		ContentAccessable a = null;
+		SimpleArticle a = null;
 		GetRevision ac = new GetRevision(name, properties);
 
 		performAction(ac);
@@ -252,7 +256,7 @@ public class MediaWikiBot extends HttpBot {
 	 * @supportedBy MediaWikiAPI 1.10.x
 	 * @supportedBy MediaWikiAPI 1.11.x
 	 */
-	public final ContentAccessable readContent(final String name)
+	public final SimpleArticle readContent(final String name)
 			throws ActionException, ProcessException {
 		return readContent(name, GetRevision.CONTENT
 				| GetRevision.COMMENT | GetRevision.USER);
@@ -618,6 +622,7 @@ public class MediaWikiBot extends HttpBot {
 
 		return getBacklinkTitles(article, RedirectFilter.all, namespaces);
 	}
+
 
 	/**
 	 * variation of the getBacklinkTitles-method which does not set a namespace
