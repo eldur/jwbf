@@ -25,24 +25,13 @@ public class GetImageInfo extends MWAction {
 	private String urlOfImage  = "";
 
 	public GetImageInfo(String name, Version v) throws VersionException {
-		Requestor r = null;
+		
 		switch (v) {
 		case MW1_09:
-			r = new V1_09Requestor();
-			break;
 		case MW1_10:
-			r = new V1_10Requestor();
-			break;
+			throw new VersionException("Not supportet by this version of MW");
+			
 		default:
-			r = new Requestor();
-			break;
-		}
-		r.buildRequest(name);
-	}
-
-	private class Requestor {
-
-		void buildRequest(String name) throws VersionException {
 			try {
 				msgs.add(new GetMethod("/api.php?action=query&titles=Image:"
 						+ URLEncoder.encode(name, MediaWikiBot.CHARSET)
@@ -53,20 +42,13 @@ public class GetImageInfo extends MWAction {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			break;
 		}
+		
 	}
 
-	private class V1_10Requestor extends Requestor {
-		void buildRequest(String name) throws VersionException {
-			throw new VersionException("Not supportet by this version of MW");
-		}
-	}
+	
 
-	private class V1_09Requestor extends Requestor {
-		void buildRequest(String name) throws VersionException {
-			throw new VersionException("Not supportet by this version of MW");
-		}
-	}
 
 	public String getUrlAsString() {
 		return urlOfImage  ;

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import net.sourceforge.jwbf.actions.mw.MultiAction;
+import net.sourceforge.jwbf.actions.mw.util.ActionException;
 import net.sourceforge.jwbf.contentRep.mw.CategoryItem;
 import net.sourceforge.jwbf.contentRep.mw.Version;
 
@@ -18,11 +19,11 @@ public class GetFullCategoryMembers extends GetCategoryMembers implements MultiA
 	 */
 	private Collection<CategoryItem> titleCollection = new ArrayList<CategoryItem>();
 	
-	public GetFullCategoryMembers(String articleName, String namespace, Version v) {
+	public GetFullCategoryMembers(String articleName, String namespace, Version v) throws ActionException {
 		super(articleName, namespace, v);
 
 	}
-	private GetFullCategoryMembers(String nextPageInfo, String categoryName, String namespace, Version v){
+	private GetFullCategoryMembers(String nextPageInfo, String categoryName, String namespace, Version v) throws ActionException{
 		super(nextPageInfo, categoryName, namespace, v);
 	}
 	
@@ -41,7 +42,11 @@ public class GetFullCategoryMembers extends GetCategoryMembers implements MultiA
 		if (nextPageInfo == null) { 
 			return null; 
 		} else {
-			return new GetFullCategoryMembers(nextPageInfo, categoryName, namespace, v);
+			try {
+				return new GetFullCategoryMembers(nextPageInfo, categoryName, namespace, v);
+			} catch (ActionException e) {
+				return null;
+			}
 		}
 	}
 	@Override

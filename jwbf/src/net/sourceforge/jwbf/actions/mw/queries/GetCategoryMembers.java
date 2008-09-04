@@ -25,6 +25,7 @@ import java.util.regex.Pattern;
 
 import net.sourceforge.jwbf.actions.mw.util.MWAction;
 import net.sourceforge.jwbf.actions.mw.util.ProcessException;
+import net.sourceforge.jwbf.actions.mw.util.VersionException;
 import net.sourceforge.jwbf.bots.MediaWikiBot;
 import net.sourceforge.jwbf.contentRep.mw.Version;
 
@@ -65,8 +66,9 @@ public abstract class GetCategoryMembers extends MWAction {
 	 * the method processAllReturningText will be called
 	 * (from outside this class).
 	 * For the parameters, see {@link GetCategoryMembers#generateRequest(String, String, String)}
+	 * @throws VersionException 
 	 */
-	protected GetCategoryMembers(String nextPageInfo, String categoryName, String namespace, Version v){
+	protected GetCategoryMembers(String nextPageInfo, String categoryName, String namespace, Version v) throws VersionException{
 		this.categoryName = categoryName;
 		this.namespace = namespace;
 		this.v = v;
@@ -76,8 +78,9 @@ public abstract class GetCategoryMembers extends MWAction {
 	
 	/**
 	 * The private constructor, which is used to create follow-up actions.
+	 * @throws VersionException 
 	 */
-	public GetCategoryMembers(String categoryName, String namespace, Version v) {
+	public GetCategoryMembers(String categoryName, String namespace, Version v) throws VersionException {
 		this.namespace = namespace;
 		this.v = v;
 		createRequestor();
@@ -85,18 +88,21 @@ public abstract class GetCategoryMembers extends MWAction {
 		generateFirstRequest(categoryName);
 	}
 	
-	private void createRequestor() {
-		
-			switch (v) {
-			case MW1_11:
-				r = new V11Requestor();
-				break;
-	
-			default:
-				r = new Requestor();
-				break;
-			}
-		
+	private void createRequestor() throws VersionException {
+
+		switch (v) {
+		case MW1_09:
+		case MW1_10:
+			throw new VersionException("Not supportet by this version of MW");
+
+		case MW1_11:
+			r = new V11Requestor();
+			break;
+
+		default:
+			r = new Requestor();
+			break;
+		}
 
 	}
 
