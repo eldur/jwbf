@@ -23,6 +23,8 @@ import java.util.Collection;
 
 import net.sourceforge.jwbf.actions.mw.MultiAction;
 import net.sourceforge.jwbf.actions.mw.util.ActionException;
+import net.sourceforge.jwbf.actions.mw.util.ProcessException;
+import net.sourceforge.jwbf.bots.util.JwbfException;
 import net.sourceforge.jwbf.contentRep.mw.Version;
 
 public class GetSimpleCategoryMembers extends GetCategoryMembers implements MultiAction<String>{
@@ -35,11 +37,11 @@ public class GetSimpleCategoryMembers extends GetCategoryMembers implements Mult
 	 */
 	private Collection<String> titleCollection = new ArrayList<String>();
 	
-	private GetSimpleCategoryMembers(String nextPageInfo, String categoryName, String namespace, Version v) throws ActionException {
+	private GetSimpleCategoryMembers(String nextPageInfo, String categoryName, String namespace, Version v) throws ActionException, ProcessException {
 		super(nextPageInfo, categoryName, namespace, v);
 	}
 
-	public GetSimpleCategoryMembers(String categoryName, String namespace, Version v) throws ActionException {
+	public GetSimpleCategoryMembers(String categoryName, String namespace, Version v) throws ActionException, ProcessException {
 		super(categoryName, namespace, v);
 	}
 	
@@ -60,7 +62,7 @@ public class GetSimpleCategoryMembers extends GetCategoryMembers implements Mult
 		} else {
 			try {
 				return new GetSimpleCategoryMembers(nextPageInfo, categoryName, namespace, v);
-			} catch (ActionException e) {
+			} catch (JwbfException e) {
 				return null;
 			}
 		}

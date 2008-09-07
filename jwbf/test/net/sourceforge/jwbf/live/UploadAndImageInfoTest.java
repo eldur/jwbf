@@ -39,7 +39,7 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-public class UploadTest extends LiveTestFather {
+public class UploadAndImageInfoTest extends LiveTestFather {
 
 	
 

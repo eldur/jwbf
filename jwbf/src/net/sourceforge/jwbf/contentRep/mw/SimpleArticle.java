@@ -67,9 +67,6 @@ public class SimpleArticle implements ContentAccessable, ArticleMeta {
 		if (ca.getEditor() != null) {
 			editor = ca.getEditor();
 		}
-//		if (ca.getEditTimestamp() != null) {
-//			editTimestamp = ca.getEditTimestamp();
-//		}
 			
 
 	}
@@ -213,7 +210,6 @@ public class SimpleArticle implements ContentAccessable, ArticleMeta {
 	public void setEditTimestamp(String editTimestamp) throws ParseException {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
 		this.editTimestamp = sdf.parse(editTimestamp);
-		System.out.println(this.editTimestamp.getTime()); // TODO RM
 	}
 
 }

@@ -26,6 +26,7 @@ import java.util.Random;
 import net.sourceforge.jwbf.LiveTestFather;
 import net.sourceforge.jwbf.actions.mw.editing.GetRevision;
 import net.sourceforge.jwbf.bots.MediaWikiBot;
+import net.sourceforge.jwbf.contentRep.mw.ArticleMeta;
 import net.sourceforge.jwbf.contentRep.mw.SimpleArticle;
 
 import org.apache.log4j.PropertyConfigurator;
@@ -73,7 +74,7 @@ public class EditCustomWikiContentTest extends LiveTestFather {
 		SimpleArticle sa;
 		sa = new SimpleArticle("", label);
 		bot.writeContent(sa);
-		sa = new SimpleArticle(bot.readContent(label));
+		sa = bot.readContent(label);
 		//System.out.println("Content is: " + sa.getText());
 		int x = (Math.abs(new Random(System.currentTimeMillis()).nextInt()));
 		String text = "test " + x;
@@ -95,7 +96,7 @@ public class EditCustomWikiContentTest extends LiveTestFather {
 		t.setEditSummary(summary);
 		t.setMinorEdit(true);
 		bot.writeContent(t);
-		SimpleArticle sa = new SimpleArticle(bot.readContent(label));
+		SimpleArticle sa = bot.readContent(label);
 		assertEquals(label, sa.getLabel());
 		//		System.out.println(sa.getEditSummary());
 		assertEquals(summary, sa.getEditSummary());
@@ -116,10 +117,9 @@ public class EditCustomWikiContentTest extends LiveTestFather {
 		sa = new SimpleArticle(utf8value, label);
 		bot.writeContent(sa);
 
-		sa = new SimpleArticle(bot.readContent(label, GetRevision.TIMESTAMP | GetRevision.CONTENT));
+		sa = bot.readContent(label, GetRevision.CONTENT);
 
 		assertEquals(utf8value, sa.getText());
-		assertTrue(sa.getEditTimestamp().getTime() > 1000);
 	}
 
 	/**
@@ -135,7 +135,7 @@ public class EditCustomWikiContentTest extends LiveTestFather {
 		sa = new SimpleArticle(utf8value, label);
 		bot.writeContent(sa);
 
-		sa = new SimpleArticle(bot.readContent(label));
+		sa = bot.readContent(label);
 
 		assertEquals(utf8value, sa.getText());
 	}
@@ -154,10 +154,26 @@ public class EditCustomWikiContentTest extends LiveTestFather {
 		sa = new SimpleArticle(utf8value, label);
 		bot.writeContent(sa);
 
-		sa = new SimpleArticle(bot.readContent(label));
+		sa = bot.readContent(label);
 
 		assertEquals(utf8value, sa.getText());
 		assertTrue(sa.getEditTimestamp() == null);
+	}
+	
+	/**
+	 * Test getTimestamp
+	 * @throws Exception a
+	 */
+	@Test
+	public final void getTimestamp() throws Exception {
+
+		String label = getValue("test_live_article");
+		ArticleMeta sa;
+
+
+		sa = bot.readContent(label, GetRevision.TIMESTAMP | GetRevision.CONTENT);
+
+		assertTrue(sa.getEditTimestamp().getTime() > 1000);
 	}
 
 }

@@ -56,7 +56,7 @@ public abstract class GetCategoryMembers extends MWAction {
 	protected String categoryName = "";
 	
 	protected Version v = Version.UNKNOWN;
-	private Requestor r = null;
+	private RequestBuilder r = null;
 	
 	protected String namespace = "";
 		
@@ -66,7 +66,7 @@ public abstract class GetCategoryMembers extends MWAction {
 	 * the method processAllReturningText will be called
 	 * (from outside this class).
 	 * For the parameters, see {@link GetCategoryMembers#generateRequest(String, String, String)}
-	 * @throws VersionException 
+	 * @throws VersionException on version problems
 	 */
 	protected GetCategoryMembers(String nextPageInfo, String categoryName, String namespace, Version v) throws VersionException{
 		this.categoryName = categoryName;
@@ -78,7 +78,7 @@ public abstract class GetCategoryMembers extends MWAction {
 	
 	/**
 	 * The private constructor, which is used to create follow-up actions.
-	 * @throws VersionException 
+	 * @throws VersionException on version problems
 	 */
 	public GetCategoryMembers(String categoryName, String namespace, Version v) throws VersionException {
 		this.namespace = namespace;
@@ -96,11 +96,11 @@ public abstract class GetCategoryMembers extends MWAction {
 			throw new VersionException("Not supportet by this version of MW");
 
 		case MW1_11:
-			r = new V11Requestor();
+			r = new RequestBuilder_1_11();
 			break;
 
 		default:
-			r = new Requestor();
+			r = new RequestBuilder();
 			break;
 		}
 
@@ -212,9 +212,9 @@ public abstract class GetCategoryMembers extends MWAction {
 	protected abstract void addCatItem(String title, int pageid, int ns);
 	
 
-	private class V11Requestor extends Requestor {
+	private class RequestBuilder_1_11 extends RequestBuilder {
 		
-		V11Requestor() {
+		RequestBuilder_1_11() {
 			super();
 		}
 		String continiue(String cmcontinue) throws UnsupportedEncodingException {
@@ -249,9 +249,9 @@ public abstract class GetCategoryMembers extends MWAction {
 		
 	}
 	
-	private class Requestor {
+	private class RequestBuilder {
 		
-		Requestor() {
+		RequestBuilder() {
 			
 		}
 		

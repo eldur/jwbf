@@ -574,16 +574,12 @@ public class MediaWikiBot extends HttpBot {
 	 * 
 	 * @throws ActionException
 	 *             on problems with http, cookies and io
-	 * 
-	 * TODO Pending Parameter Change;
-	 * http://www.mediawiki.org/wiki/API:Query_-_Lists
-	 * @supportedBy MediaWikiAPI 1.9 backlinks / bl TODO Test Required
-	 * @supportedBy MediaWikiAPI 1.10 backlinks / bl TODO Test Required
-	 * @supportedBy MediaWikiAPI 1.11 backlinks / bl TODO Test Required
+	 * @throws ProcessException on inner problems like version mismatch 
+	 * @supportedBy MediaWikiAPI 1.9, 1.10, 1.11, 1.12, 1.13, 1.14
 	 */
 	public Iterable<String> getBacklinkTitles(String article, 
 			RedirectFilter redirectFilter, int... namespaces)
-			throws ActionException {
+			throws ActionException, ProcessException {
 		
 		GetBacklinkTitles a = new GetBacklinkTitles(article,
 				redirectFilter, createNsString(namespaces), getVersion());
@@ -611,16 +607,38 @@ public class MediaWikiBot extends HttpBot {
 	 * @throws ActionException
 	 *             on problems with http, cookies and io
 	 * 
-	 * TODO Pending Parameter Change;
-	 * http://www.mediawiki.org/wiki/API:Query_-_Lists
-	 * @supportedBy MediaWikiAPI 1.9 backlinks / bl TODO Test Required
-	 * @supportedBy MediaWikiAPI 1.10 backlinks / bl TODO Test Required
-	 * @supportedBy MediaWikiAPI 1.11 backlinks / bl TODO Test Required
+	 * @see #getBacklinkTitles(String, RedirectFilter, int...)
 	 */
 	public Iterable<String> getBacklinkTitles(String article, int... namespaces)
-			throws ActionException {
+			throws ActionException, ProcessException {
 
 		return getBacklinkTitles(article, RedirectFilter.all, namespaces);
+	}
+	/**
+	 * variation of the getBacklinkTitles-method that returns 
+	 * both redirects and non-redirects linking to the page.
+	 * 
+	 * @param article
+	 *            title of an article
+	 * 
+	 * @param namespaces
+	 *            numbers of the namespaces (specified using varargs) that will
+	 *            be included in the search
+	 * 
+	 * @return iterable providing access to the names of all articles which link
+	 *         to the article specified by the article-parameter. Attention: to
+	 *         get more article titles, the connection to the MediaWiki must
+	 *         still exist.
+	 * 
+	 * @throws ActionException
+	 *             on problems with http, cookies and io
+	 * 
+	 * @see #getBacklinkTitles(String, RedirectFilter, int...)
+	 */
+	public Iterable<String> getBacklinkTitles(String article, RedirectFilter redirectFilter)
+			throws ActionException, ProcessException {
+
+		return getBacklinkTitles(article, redirectFilter, null);
 	}
 
 
@@ -633,17 +651,12 @@ public class MediaWikiBot extends HttpBot {
 	 * @return of article labels
 	 * @throws ActionException
 	 *             on problems with http, cookies and io
-	 * 
-	 * TODO Pending Parameter Change;
-	 * http://www.mediawiki.org/wiki/API:Query_-_Lists
-	 * @supportedBy MediaWikiAPI 1.9 backlinks / bl
-	 * @supportedBy MediaWikiAPI 1.10 backlinks / bl
-	 * @supportedBy MediaWikiAPI 1.11 backlinks / bl
+	 * @see #getBacklinkTitles(String, RedirectFilter, int...)
 	 */
 	public Iterable<String> getBacklinkTitles(String article)
-			throws ActionException {
+			throws ActionException, ProcessException {
 
-		return getBacklinkTitles(article, null);
+		return getBacklinkTitles(article, RedirectFilter.all, null);
 	}
 		
 	
@@ -652,9 +665,10 @@ public class MediaWikiBot extends HttpBot {
 	 * @param category like "Buildings" or "Chemical elements" without prefix "Category:"
 	 * @return of article labels
 	 * @throws ActionException on any kind of http or version problems
+	 * @throws ProcessException on inner problems like version mismatch
 	 * @supportedBy MediaWikiAPI 1.11 categorymembers / cm  TODO Test Required
 	 */
-	public Iterable<String> getCategoryMembers(String category) throws ActionException {
+	public Iterable<String> getCategoryMembers(String category) throws ActionException, ProcessException {
 		GetSimpleCategoryMembers c = new GetSimpleCategoryMembers(category, "", getVersion());
 		return performMultiAction(c);
 	}
@@ -664,9 +678,10 @@ public class MediaWikiBot extends HttpBot {
 	 * @param category like "Buildings" or "Chemical elements" without prefix "Category:"
 	 * @return of article labels
 	 * @throws ActionException on any kind of http or version problems
+	 * @throws ProcessException on inner problems like mw version 
 	 * @supportedBy MediaWikiAPI 1.11 categorymembers / cm  TODO Test Required
 	 */
-	public Iterable<String> getCategoryMembers(String category, int... namespaces) throws ActionException {
+	public Iterable<String> getCategoryMembers(String category, int... namespaces) throws ActionException, ProcessException {
 		GetSimpleCategoryMembers c = new GetSimpleCategoryMembers(category, createNsString(namespaces), getVersion());
 		return performMultiAction(c);
 	}
@@ -675,9 +690,10 @@ public class MediaWikiBot extends HttpBot {
 	 * @param category like "Buildings" or "Chemical elements" without prefix Category
 	 * @return of category items with more details as simple labels
 	 * @throws ActionException on any kind of http or version problems
+	 * @throws ProcessException on inner problems like a version mismatch
 	 * @supportedBy MediaWikiAPI 1.11 categorymembers / cm TODO Test Required
 	 */
-	public Iterable<CategoryItem> getFullCategoryMembers(String category) throws ActionException {
+	public Iterable<CategoryItem> getFullCategoryMembers(String category) throws ActionException, ProcessException {
 		GetFullCategoryMembers c = new GetFullCategoryMembers(category, "", getVersion());
 		return performMultiAction(c);
 	}
@@ -686,9 +702,10 @@ public class MediaWikiBot extends HttpBot {
 	 * @param category like "Buildings" or "Chemical elements" without prefix Category
 	 * @return of category items with more details as simple labels
 	 * @throws ActionException on any kind of http or version problems
+	 * @throws ProcessException on inner problems like a version mismatch
 	 * @supportedBy MediaWikiAPI 1.11 categorymembers / cm TODO Test Required
 	 */
-	public Iterable<CategoryItem> getFullCategoryMembers(String category, int... namespaces) throws ActionException {
+	public Iterable<CategoryItem> getFullCategoryMembers(String category, int... namespaces) throws ActionException, ProcessException {
 		GetFullCategoryMembers c = new GetFullCategoryMembers(category, createNsString(namespaces), getVersion());
 		return performMultiAction(c);
 	}
@@ -699,7 +716,6 @@ public class MediaWikiBot extends HttpBot {
 	 * @param fileName
 	 *            the name of the file as String
 	 * @supportedBy MediaWiki 1.11
-	 * @supportedBy MediaWiki NO API TODO Test Required
 	 */
 	public final void uploadFile(final String fileName) throws ActionException,
 			ProcessException {
@@ -717,7 +733,6 @@ public class MediaWikiBot extends HttpBot {
 	 * @param FileName
 	 *            the file as SimpleFile
 	 * @supportedBy MediaWiki 1.11
-	 * @supportedBy MediaWiki NO API  TODO Test Required
 	 */
 	public final void uploadFile(SimpleFile file) throws ActionException,
 			ProcessException {
@@ -771,19 +786,12 @@ public class MediaWikiBot extends HttpBot {
 	 * variation of the getImagelinkTitles-method which does not set a namespace
 	 * restriction.
 	 * 
-	 * @param image
-	 *            label of image like TODO what? , without prefix "Image:"
+	 * @param image name of
 	 * @return an of labels
 	 * @see #getImagelinkTitles(String, int[])
 	 * @throws ActionException
 	 *             on problems with http, cookies and io
-	 * 
-	 * TODO Pending Parameter Change;
-	 * http://www.mediawiki.org/wiki/API:Query_-_Lists TODO New API call, deside
-	 * if design a swich by version or support only newest
-	 * 
-	 * @supportedBy MediaWikiAPI 1.9 embeddedin / ei
-	 * @supportedBy MediaWikiAPI 1.10 embeddedin / ei
+	 * @see #getImagelinkTitles(String, int...)
 	 */
 	public Iterable<String> getImagelinkTitles(String image)
 			throws ActionException {
@@ -791,7 +799,14 @@ public class MediaWikiBot extends HttpBot {
 		return getImagelinkTitles(image, null);
 
 	}
-	
+	/**
+	 * Get a relativ url to an image.
+	 * @param imagename name of like "Test.gif"
+	 * @return position relative like "/path/to/Test.gif"
+	 * @throws ActionException on problems with http, cookies and io
+	 * @throws ProcessException on inner problems, like unsopportet version
+	 * @supportedBy MediaWikiAPI 1.11, 1.12, 1.13, 1.14
+	 */
 	public String getImageInfo(String imagename) throws ActionException, ProcessException {
 		GetImageInfo a = new GetImageInfo(imagename, getVersion());
 		performAction(a);
@@ -804,8 +819,7 @@ public class MediaWikiBot extends HttpBot {
 	 * @return the last ten log events
 	 * @throws ActionException on problems with http, cookies and io 
 	 * @supportedBy MediaWikiAPI 1.11 logevents / le 
-	 * TODO API state is (semi-complete), see 
-	 * http://www.mediawiki.org/wiki/API:Query_-_Lists#logevents_.2F_le_.28semi-complete.29
+	 * @see #getLogEvents(int, String...)
 	 */
 	public Iterator<LogItem> getLogEvents(String ... type) throws ActionException {
 
@@ -871,10 +885,7 @@ public class MediaWikiBot extends HttpBot {
 	 * @return an of labels
 	 * @throws ActionException
 	 *             on problems with http, cookies and io
-	 * 
-	 * @supportedBy MediaWikiAPI 1.9 embeddedin / ei TODO Test Required
-	 * @supportedBy MediaWikiAPI 1.10 embeddedin / ei TODO Test Required
-	 * @supportedBy MediaWikiAPI 1.11 embeddedin / ei TODO Test Required
+	 * @see #getTemplateUserTitles(String, int...)
 	 */
 	public Iterable<String> getTemplateUserTitles(String template)
 			throws ActionException {
@@ -887,9 +898,7 @@ public class MediaWikiBot extends HttpBot {
 	 * @return a
 	 * @throws ActionException
 	 *             on problems with http, cookies and io
-	 * @supportedBy MediaWikiAPI 1.9 siteinfo / si
-	 * @supportedBy MediaWikiAPI 1.10 siteinfo / si
-	 * @supportedBy MediaWikiAPI 1.11 siteinfo / si
+	 * @supportedBy MediaWikiAPI 1.9, 1.10, 1.11, 1.12, 1.13, 1.14
 	 */
 	public Siteinfo getSiteinfo() throws ActionException {
 		GetSiteinfo gs = new GetSiteinfo();
@@ -935,6 +944,7 @@ public class MediaWikiBot extends HttpBot {
 	 * @throws ActionException
 	 *             on problems with http, cookies and io
 	 * @supportedBy MediaWikiAPI 1.10 recentchanges / rc
+	 * TODO TEST
 	 */
 	public Iterable<String> getRecentchangesTitles(final int count)
 			throws ActionException {
@@ -962,8 +972,7 @@ public class MediaWikiBot extends HttpBot {
 	 * @throws ActionException
 	 *             on problems with http, cookies and io
 	 * @throws ProcessException on access problems
-	 * @supportedBy MediaWiki 1.9.x
-	 * @supportedBy MediaWiki 1.10.x
+	 * @supportedBy MediaWiki 1.9.x, 1.10.x, 1.11.x, 1.12.x, 1.13.x, 1.14.x
 	 */
 	public final void writeContent(final ContentAccessable a)
 			throws ActionException, ProcessException {
@@ -985,8 +994,7 @@ public class MediaWikiBot extends HttpBot {
 	 * @throws ActionException
 	 *             on problems with http, cookies and io
 	 * @throws ProcessException on acces problems
-	 * @supportedBy MediaWiki 1.9.x
-	 * @supportedBy MediaWiki 1.10.x
+	 * @supportedBy MediaWiki 1.9.x, 1.10.x, 1.11.x, 1.12.x, 1.13.x, 1.14.x
 	 */
 	public final void writeMultContent(final Iterator<ContentAccessable> cav)
 			throws ActionException, ProcessException {
@@ -997,7 +1005,7 @@ public class MediaWikiBot extends HttpBot {
 	}
 
 	
-	public Version getVersion() {
+	public final Version getVersion() {
 		if (version == null) {
 			GetVersion gs = new GetVersion();
 

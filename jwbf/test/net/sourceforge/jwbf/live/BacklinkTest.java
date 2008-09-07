@@ -3,8 +3,10 @@ package net.sourceforge.jwbf.live;
 import java.util.Iterator;
 
 import net.sourceforge.jwbf.LiveTestFather;
+import net.sourceforge.jwbf.actions.mw.queries.GetBacklinkTitles.RedirectFilter;
 import net.sourceforge.jwbf.actions.mw.util.ActionException;
 import net.sourceforge.jwbf.actions.mw.util.ProcessException;
+import net.sourceforge.jwbf.actions.mw.util.VersionException;
 import net.sourceforge.jwbf.bots.MediaWikiBot;
 import net.sourceforge.jwbf.contentRep.mw.SimpleArticle;
 import net.sourceforge.jwbf.contentRep.mw.Version;
@@ -130,6 +132,29 @@ public class BacklinkTest extends LiveTestFather {
 		
 		Iterator<String> is = bot.getBacklinkTitles(
 				BACKLINKS).iterator();
+		int i = 0;
+		while (is.hasNext()) {
+			is.next();
+			i++;
+			if (i > COUNT ) {
+				break;
+			}
+		}
+
+		Assert.assertTrue("Fail: " + i + " < "
+				+ COUNT,
+				i > COUNT -1);
+	}
+	@Test(expected=VersionException.class)
+	public final void backlinksMW1_09_redirectVar() throws Exception {
+
+		bot = new MediaWikiBot(getValue("wikiMW1_09_url"));
+		bot.login(getValue("wikiMW1_09_user"),
+				getValue("wikiMW1_09_pass"));
+		Assert.assertEquals(bot.getVersion(), Version.MW1_09);
+		
+		Iterator<String> is = bot.getBacklinkTitles(
+				BACKLINKS, RedirectFilter.nonredirects).iterator();
 		int i = 0;
 		while (is.hasNext()) {
 			is.next();

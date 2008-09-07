@@ -49,7 +49,7 @@ public class SiteinfoTest extends LiveTestFather {
 	
 
 	/**
-	 * Test category read. Test category must have more then 50 members.
+	 * Test get siteinfo on Wikipedia DE.
 	 * @throws Exception a
 	 */
 	//@Test
@@ -61,7 +61,7 @@ public class SiteinfoTest extends LiveTestFather {
 	}
 	
 	/**
-	 * Test category read. Test category must have more then 50 members.
+	 * Test get siteinfo on a MW.
 	 * @throws Exception a
 	 */
 	@Test
@@ -73,7 +73,7 @@ public class SiteinfoTest extends LiveTestFather {
 	}
 	
 	/**
-	 * Test category read. Test category must have more then 50 members.
+	 * Test get siteinfo on a MW.
 	 * @throws Exception a
 	 */
 	@Test
@@ -85,7 +85,7 @@ public class SiteinfoTest extends LiveTestFather {
 	}
 	
 	/**
-	 * Test category read. Test category must have more then 50 members.
+	 * Test get siteinfo on a MW.
 	 * @throws Exception a
 	 */
 	@Test
@@ -97,7 +97,7 @@ public class SiteinfoTest extends LiveTestFather {
 	}
 	
 	/**
-	 * Test category read. Test category must have more then 50 members.
+	 * Test get siteinfo on a MW.
 	 * @throws Exception a
 	 */
 	@Test
@@ -109,7 +109,7 @@ public class SiteinfoTest extends LiveTestFather {
 	}
 	
 	/**
-	 * Test category read. Test category must have more then 50 members.
+	 * Test get siteinfo on a MW.
 	 * @throws Exception a
 	 */
 	@Test

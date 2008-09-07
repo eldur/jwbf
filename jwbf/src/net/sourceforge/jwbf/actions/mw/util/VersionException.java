@@ -24,7 +24,7 @@ package net.sourceforge.jwbf.actions.mw.util;
  * 
  * @author Thomas Stock
  */
-public class VersionException extends ActionException {
+public class VersionException extends ProcessException {
 
 
 	/**
