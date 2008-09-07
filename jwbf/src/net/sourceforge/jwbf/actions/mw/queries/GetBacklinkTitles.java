@@ -113,11 +113,15 @@ public class GetBacklinkTitles extends MWAction implements MultiAction<String> {
 	/**
 	 * The private constructor, which is used to create follow-up actions.
 	 * 
-	 * @param nextPageInfo  value for the blcontinue parameter, != null
+	 * @param nextPageInfo   value for the blcontinue parameter, != null
+	 * @param requestBuilder object to use for building requests, != null
 	 */
-	private GetBacklinkTitles(String nextPageInfo) {
+	private GetBacklinkTitles(String nextPageInfo, RequestBuilder requestBuilder) {
 		
+		assert requestBuilder != null;
 		assert nextPageInfo != null;
+		
+		this.requestBuilder = requestBuilder;
 		
 		try {
 			String request = requestBuilder.buildContinueRequest(nextPageInfo);
@@ -213,7 +217,7 @@ public class GetBacklinkTitles extends MWAction implements MultiAction<String> {
 	public GetBacklinkTitles getNextAction() {
 		if( nextPageInfo == null ){ return null; }
 		else{
-			return new GetBacklinkTitles(nextPageInfo);
+			return new GetBacklinkTitles(nextPageInfo, requestBuilder);
 		}
 	}
 	
