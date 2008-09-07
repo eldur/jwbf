@@ -29,7 +29,9 @@ import java.util.regex.Pattern;
 import net.sourceforge.jwbf.actions.mw.MultiAction;
 import net.sourceforge.jwbf.actions.mw.util.MWAction;
 import net.sourceforge.jwbf.actions.mw.util.ProcessException;
+import net.sourceforge.jwbf.actions.mw.util.VersionException;
 import net.sourceforge.jwbf.bots.MediaWikiBot;
+import net.sourceforge.jwbf.contentRep.mw.Version;
 
 import org.apache.commons.httpclient.methods.GetMethod;
 
@@ -58,6 +60,9 @@ public class GetBacklinkTitles extends MWAction implements MultiAction<String> {
 	/** constant value for the bllimit-parameter. **/
 	private static final int LIMIT = 50;
 	
+	/** object creating the requests that are sent to the api */
+	private RequestBuilder requestBuilder = null;
+	
 	/**
 	 * Collection that will contain the result
 	 * (titles of articles linking to the target) 
@@ -70,73 +75,68 @@ public class GetBacklinkTitles extends MWAction implements MultiAction<String> {
 	 */
 	private String nextPageInfo = null;
 		
-		
+			
 	/**
 	 * The public constructor. It will have a MediaWiki-request generated,
 	 * which is then added to msgs. When it is answered,
 	 * the method processAllReturningText will be called
 	 * (from outside this class).
 	 * 
-	 * For parameters, 
-	 * see {@link GetBacklinkTitles#generateRequest(String, String, String)}
-	 */
-	public GetBacklinkTitles(String articleName, RedirectFilter redirectFilter,
-			                 String namespace) {
-		generateRequest(articleName, redirectFilter, namespace, null);
-	}
-	
-	/**
-	 * The private constructor, which is used to create follow-up actions.
-	 */
-	private GetBacklinkTitles(String nextPageInfo) {
-		generateRequest(null, null, null, nextPageInfo);
-	}
-	
-	/**
-	 * generates the next MediaWiki-request (GetMethod) and adds it to msgs.
-	 *
-	 * @param articleName    the title of the article,
-	 *                       may only be null if blcontinue is not null
+	 * @param articleName    the title of the article, != null
 	 * @param namespace      the namespace(s) that will be searched for links,
 	 *                       as a string of numbers separated by '|';
 	 *                       if null, this parameter is omitted
 	 * @param redirectFilter filter that determines how to handle redirects,
-	 *                       may only be null if blcontinue is not null
-	 * @param blcontinue     the value for the blcontinue parameter,
-	 *                       null for the generation of the initial request
+	 *                       must be all for MW versions before 1.11; != null
+	 * @param apiVersion     version of the api to adapt requests to; != null
+	 *                       
+	 * @throws VersionException  if general functionality or parameter values 
+	 *                           are not compatible with apiVersion value 
 	 */
-	protected void generateRequest(String articleName, 
-			                       RedirectFilter redirectFilter,
-			                       String namespace, String blcontinue) {
-	 
-		assert blcontinue != null || articleName != null;
-		assert blcontinue != null || redirectFilter != null;
+	public GetBacklinkTitles(String articleName, RedirectFilter redirectFilter,
+			                 String namespace, Version apiVersion) 
+							throws VersionException {
 		
-	 	String uS = "";
+		assert apiVersion != null;
+		assert articleName != null && redirectFilter != null;
+		
+		requestBuilder = createRequestBuilder(apiVersion);
 		
 		try {
-		
-			if (blcontinue == null) {
-		
-				uS = "/api.php?action=query&list=backlinks"
-						+ "&bltitle=" + URLEncoder.encode(articleName, MediaWikiBot.CHARSET) 
-						+ ((namespace!=null&&!namespace.isEmpty())?("&blnamespace="+namespace):"")
-						+ "&blfilterredir=" + redirectFilter.toString() 
-						+ "&bllimit=" + LIMIT + "&format=xml";
-			
-			} else {
-				
-				uS = "/api.php?action=query&list=backlinks"
-						+ "&blcontinue=" + URLEncoder.encode(blcontinue, MediaWikiBot.CHARSET)
-						+ "&bllimit=" + LIMIT + "&format=xml";
-				
-			}
-			
-			msgs.add(new GetMethod(uS));
-		
+			String request = requestBuilder.buildInitialRequest(articleName, redirectFilter, namespace);
+			sendRequest(request);
 		} catch (UnsupportedEncodingException e) {
-    	e.printStackTrace();
-		}		
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * The private constructor, which is used to create follow-up actions.
+	 * 
+	 * @param nextPageInfo  value for the blcontinue parameter, != null
+	 */
+	private GetBacklinkTitles(String nextPageInfo) {
+		
+		assert nextPageInfo != null;
+		
+		try {
+			String request = requestBuilder.buildContinueRequest(nextPageInfo);
+			sendRequest(request);
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+	}
+		
+	/**
+	 * schedules a MediaWiki request for sending by adding it to msgs.
+	 *
+	 * @param request  the request string; != null
+	 */
+	protected void sendRequest(String request) {
+	 
+		assert request != null;
+		
+	 	msgs.add(new GetMethod(request));
 		
 	}
 	
@@ -156,7 +156,8 @@ public class GetBacklinkTitles extends MWAction implements MultiAction<String> {
 
 	/**
 	 * gets the information about a follow-up page from a provided api response.
-	 * If there is one, a new request is added to msgs by calling generateRequest.
+	 * If there is one, the information for the next page parameter is 
+	 * added to the nextPageInfo field.
 	 *	
 	 * @param s   text for parsing
 	 */
@@ -186,7 +187,7 @@ public class GetBacklinkTitles extends MWAction implements MultiAction<String> {
 	protected void parseArticleTitles(String s) {
 		
 		// get the other backlink titles and add them all to the titleCollection
-			
+		
 		Pattern p = Pattern.compile(
 			"<bl pageid=\".*?\" ns=\".*?\" title=\"([^\"]*)\" (redirect=\"\" )?/>");
 			
@@ -216,6 +217,100 @@ public class GetBacklinkTitles extends MWAction implements MultiAction<String> {
 		}
 	}
 	
-	
+	/**
+	 * creates a request builder for the given api version
+	 * 
+	 * @throws VersionException  if no request builder class for the apiVersion
+	 *                           is known
+	 */
+	private static RequestBuilder createRequestBuilder(Version apiVersion)
+		throws VersionException {
+		
+		switch (apiVersion) {
 
+		case MW1_09:
+		case MW1_10:
+			return new RequestBuilder_1_09();
+
+		default: //MW1_11 and up
+			return new RequestBuilder_1_11();
+
+		}
+		
+	}
+	
+	/** interface for classes that create a request strings */	
+	private static interface RequestBuilder {
+		
+		/**
+		 * generates an initial MediaWiki-request.
+		 * For params, see {@link GetBacklinkTitles#GetBacklinkTitles(String, net.sourceforge.jwbf.actions.mw.queries.GetBacklinkTitles.RedirectFilter, String, Version)}y
+		 *                       
+		 * @throws VersionException if a param is not compatible with the
+		 *                          associated MediaWiki version 
+		 */
+		String buildInitialRequest(String articleName, 
+                RedirectFilter redirectFilter,
+                String namespace) throws UnsupportedEncodingException, VersionException;
+
+		/**
+		 * generates a follow-up MediaWiki-request.
+		 */
+		String buildContinueRequest(String blcontinue) 
+			throws UnsupportedEncodingException;
+		
+	}
+
+	/** request builder for MW versions 1_11 to (at least) 1_13 */
+	private static class RequestBuilder_1_11 implements RequestBuilder {
+
+		public String buildInitialRequest(String articleName, 
+				RedirectFilter redirectFilter, String namespace) throws UnsupportedEncodingException {
+			
+			return "/api.php?action=query&list=backlinks"
+			       + "&bltitle=" + URLEncoder.encode(articleName, MediaWikiBot.CHARSET) 
+			       + ((namespace!=null&&!namespace.isEmpty())?("&blnamespace="+namespace):"")
+			       + "&blfilterredir=" + redirectFilter.toString() 
+			       + "&bllimit=" + LIMIT + "&format=xml";			
+		}
+		
+		public String buildContinueRequest(String blcontinue) throws UnsupportedEncodingException {
+			
+			return "/api.php?action=query&list=backlinks"
+			       + "&blcontinue=" + URLEncoder.encode(blcontinue, MediaWikiBot.CHARSET)
+			       + "&bllimit=" + LIMIT + "&format=xml";			
+		}
+		
+	}
+	
+	/** request builder for MW versions 1_09 and 1_10 */
+	private static class RequestBuilder_1_09 implements RequestBuilder {
+
+		/**
+		 * @throws UnsupportedEncodingException  if redirectFilter != all
+		 */
+		public String buildInitialRequest(String articleName, 
+				RedirectFilter redirectFilter, String namespace) 
+				throws UnsupportedEncodingException, VersionException {
+			
+			if (redirectFilter != RedirectFilter.all) {
+				throw new VersionException("redirect filtering is not available in this MediaWiki version");
+			}
+			
+			return "/api.php?action=query&list=backlinks"
+			       + "&titles=" + URLEncoder.encode(articleName, MediaWikiBot.CHARSET) 
+			       + ((namespace!=null&&!namespace.isEmpty())?("&blnamespace="+namespace):"")
+			       + "&blfilterredir=" + redirectFilter.toString() 
+			       + "&bllimit=" + LIMIT + "&format=xml";			
+		}
+		
+		public String buildContinueRequest(String blcontinue) throws UnsupportedEncodingException {
+			
+			return "/api.php?action=query&list=backlinks"
+			       + "&blcontinue=" + URLEncoder.encode(blcontinue, MediaWikiBot.CHARSET)
+			       + "&bllimit=" + LIMIT + "&format=xml";			
+		}
+		
+	}
+	
 }

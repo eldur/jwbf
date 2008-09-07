@@ -584,13 +584,13 @@ public class MediaWikiBot extends HttpBot {
 	public Iterable<String> getBacklinkTitles(String article, 
 			RedirectFilter redirectFilter, int... namespaces)
 			throws ActionException {
+		
 		GetBacklinkTitles a = new GetBacklinkTitles(article,
-				redirectFilter,
-				createNsString(namespaces));
+				redirectFilter, createNsString(namespaces), getVersion());
 
 		return performMultiAction(a);
 
-	}	
+	}
 	
 	/**
 	 * variation of the getBacklinkTitles-method that returns 
