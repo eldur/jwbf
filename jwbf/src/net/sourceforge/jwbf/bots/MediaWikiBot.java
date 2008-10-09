@@ -90,9 +90,23 @@ public class MediaWikiBot extends HttpBot {
 	
 	public static final String CHARSET = "utf-8";
 	
+	
+	public static final int NS_MAIN = 0;
+	public static final int NS_MAIN_TALK = 1;
+	public static final int NS_USER = 2;
+	public static final int NS_USER_TALK = 3;
+	public static final int NS_META = 4;
+	public static final int NS_META_TALK = 5;
 	public static final int NS_IMAGES = 6;
-	public static final int NS_IMAGES_DISCUSSION = 7;
-	// TODO Add missing NS variables
+	public static final int NS_IMAGES_TALK = 7;
+	public static final int NS_MEDIAWIKI = 8;
+	public static final int NS_MEDIAWIKI_TALK = 9;
+	public static final int NS_TEMPLATE = 10;
+	public static final int NS_TEMPLATE_TALK = 11;
+	public static final int NS_HELP = 12;
+	public static final int NS_HELP_TALK = 13;
+	public static final int NS_CATEGORY = 14;
+	public static final int NS_CATEGORY_TALK = 15;
 	
 	private static Logger log = Logger.getLogger(MediaWikiBot.class);
 	private LoginData login;
@@ -284,30 +298,21 @@ public class MediaWikiBot extends HttpBot {
 	 *            namespace as
 	 * @return with numbers seperated by |
 	 */
-	private String createNsString(int... namespaces) {
+	protected String createNsString(int... namespaces) {
 
 		String namespaceString = "";
 
 		if (namespaces != null && namespaces.length != 0) {
-
-			namespaceString = new String();
-
 			for (int nsNumber : namespaces) {
-
 				namespaceString += nsNumber + "|";
-
 			}
-
 			// remove last '|'
 			if (namespaceString.endsWith("|")) {
 				namespaceString = namespaceString.substring(0, namespaceString
 						.length() - 1);
 			}
-
 		}
-
 		return namespaceString;
-
 	}
 
 	/**
@@ -330,7 +335,7 @@ public class MediaWikiBot extends HttpBot {
 	 * @supportedBy MediaWiki 1.9.x API, 1.10.x API
 	 */
 	@SuppressWarnings("unchecked")
-	private <R> Iterable<R> performMultiAction(MultiAction<R> initialAction)
+	protected <R> Iterable<R> performMultiAction(MultiAction<R> initialAction)
 			throws ActionException {
 
 		/**

@@ -18,8 +18,10 @@
  */
 package net.sourceforge.jwbf;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.InvalidPropertiesFormatException;
 import java.util.Properties;
@@ -38,8 +40,13 @@ public class LiveTestFather {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				File f = new File(filename);
+				try {
+					f.createNewFile();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -47,9 +54,21 @@ public class LiveTestFather {
 		}
 
 	}
-	
+	private static void addEmptyKey(String key) {
+		data.put(key, " ");
+		try {
+			data.storeToXML(new FileOutputStream(filename), "");
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 	protected static String getValue(final String key) throws Exception {
-		if (!data.containsKey(key) || data.getProperty(key).length() <= 0) {
+		if (!data.containsKey(key) || data.getProperty(key).trim().length() <= 0) {
+			addEmptyKey(key);
 			throw new Exception("No or empty value for key: \"" + key + "\" in " + filename);
 		}
 		return data.getProperty(key);
