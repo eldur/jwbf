@@ -10,6 +10,7 @@ import net.sourceforge.jwbf.actions.mw.util.ProcessException;
 import net.sourceforge.jwbf.contentRep.mw.Siteinfo;
 
 import org.apache.commons.httpclient.methods.GetMethod;
+import org.apache.log4j.Logger;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -19,7 +20,7 @@ import org.xml.sax.InputSource;
 public class GetVersion extends MWAction {
 
 	protected Siteinfo site = new Siteinfo();
-	
+	private final Logger log = Logger.getLogger(getClass());
 	public GetVersion() {
 	
 			msgs.add(new GetMethod("/api.php?action=query&meta=siteinfo&format=xml"));
@@ -27,7 +28,7 @@ public class GetVersion extends MWAction {
 	}
 	
 	private void parse(final String xml) {
-//		System.out.println("parse: " + xml);
+//		log.debug(xml);
 		SAXBuilder builder = new SAXBuilder();
 		Element root = null;
 		try {
@@ -53,7 +54,6 @@ public class GetVersion extends MWAction {
 	 */
 	public final String processAllReturningText(final String s)
 			throws ProcessException {
-//		System.err.println(s);
 		parse(s);
 		return "";
 	}
@@ -68,7 +68,7 @@ public class GetVersion extends MWAction {
 
 		Iterator<Element> el = root.getChildren().iterator();
 		while (el.hasNext()) {
-			Element element = (Element) el.next();
+			Element element = el.next();
 			if (element.getQualifiedName().equalsIgnoreCase("general")) {
 
 				site.setMainpage(element
@@ -79,7 +79,6 @@ public class GetVersion extends MWAction {
 				site.setGenerator(element
 						.getAttributeValue("generator"));
 				site.setCase(element.getAttributeValue("case"));
-				site.setRights(element.getAttributeValue("rights"));
 			} else {
 				findContent(element);
 			}

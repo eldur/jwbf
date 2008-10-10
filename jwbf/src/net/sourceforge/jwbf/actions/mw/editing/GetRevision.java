@@ -168,7 +168,7 @@ public class GetRevision extends MWAction {
 		
 		Iterator<Element> el = root.getChildren().iterator();
 		while (el.hasNext()) {
-			Element element = (Element) el.next();
+			Element element = el.next();
 			if (element.getQualifiedName().equalsIgnoreCase("error")) {
 				throw new ApiException(element.getAttributeValue("code"),
 						element.getAttributeValue("info"));

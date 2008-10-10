@@ -273,7 +273,7 @@ public class GetBacklinkTitles extends MWAction implements MultiAction<String> {
 			
 			return "/api.php?action=query&list=backlinks"
 			       + "&bltitle=" + URLEncoder.encode(articleName, MediaWikiBot.CHARSET) 
-			       + ((namespace!=null&&!namespace.isEmpty())?("&blnamespace="+namespace):"")
+			       + ((namespace!=null && namespace.length() != 0)?("&blnamespace="+namespace):"")
 			       + "&blfilterredir=" + redirectFilter.toString() 
 			       + "&bllimit=" + LIMIT + "&format=xml";			
 		}
@@ -303,7 +303,7 @@ public class GetBacklinkTitles extends MWAction implements MultiAction<String> {
 			
 			return "/api.php?action=query&list=backlinks"
 			       + "&titles=" + URLEncoder.encode(articleName, MediaWikiBot.CHARSET) 
-			       + ((namespace!=null&&!namespace.isEmpty())?("&blnamespace="+namespace):"")
+			       + ((namespace!=null && namespace.length() != 0)?("&blnamespace="+namespace):"")
 			       + "&blfilterredir=" + redirectFilter.toString() 
 			       + "&bllimit=" + LIMIT + "&format=xml";			
 		}

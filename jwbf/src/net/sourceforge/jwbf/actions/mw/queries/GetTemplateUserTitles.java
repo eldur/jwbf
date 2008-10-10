@@ -99,7 +99,7 @@ public class GetTemplateUserTitles extends MWAction implements MultiAction<Strin
 		
 				uS = "/api.php?action=query&list=embeddedin"
 						+ "&eititle=" + URLEncoder.encode(templateName, MediaWikiBot.CHARSET) 
-						+ ((namespace!=null&&!namespace.isEmpty())?("&einamespace="+namespace):"")
+						+ ((namespace!=null&&namespace.length() != 0)?("&einamespace="+namespace):"")
 						+ "&eilimit=" + LIMIT + "&format=xml";
 			
 			} else {

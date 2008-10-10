@@ -16,7 +16,6 @@ public class Siteinfo {
 	private String sitename = "";
 	private String generator = "";
 	private String theCase = "";
-	private String rights = "";
 
 	private Map<Integer,String> namespaces=new HashMap<Integer,String>();
 	private Map<String,String> interwiki=new HashMap<String,String>();
@@ -91,13 +90,7 @@ public class Siteinfo {
 		this.theCase = theCase;
 	}
 
-	public String getRights() {
-		return rights;
-	}
 
-	public void setRights(String rights) {
-		this.rights = rights;
-	}
 
 	public String toString() {
 		String temp = "This is " + getSitename() + " @ " + getGenerator()

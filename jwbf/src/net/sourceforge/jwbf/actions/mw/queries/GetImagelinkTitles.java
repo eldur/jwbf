@@ -98,7 +98,7 @@ public class GetImagelinkTitles extends MWAction implements MultiAction<String> 
 		
 				uS = "/api.php?action=query&list=imageusage"
 						+ "&iutitle=" + URLEncoder.encode(imageName, MediaWikiBot.CHARSET) 
-						+ ((namespace!=null&&!namespace.isEmpty())?("&ilnamespace="+namespace):"")
+						+ ((namespace!=null&&namespace.length() != 0)?("&ilnamespace="+namespace):"")
 						+ "&illimit=" + LIMIT + "&format=xml";
 			
 			} else {

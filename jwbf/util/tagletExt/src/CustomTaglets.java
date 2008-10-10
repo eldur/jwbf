@@ -92,7 +92,7 @@ public class CustomTaglets implements Taglet {
     	
     	Iterator<ByElement> byElIt = byList.values().iterator();
     	while (byElIt.hasNext()) {
-			ByElement elem = (ByElement) byElIt.next();
+			ByElement elem = byElIt.next();
 			result += elem.toString();
 			
 		}

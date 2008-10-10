@@ -66,7 +66,7 @@ public class GetImageInfo extends MWAction {
 
 		Iterator<Element> el = root.getChildren().iterator();
 		while (el.hasNext()) {
-			Element element = (Element) el.next();
+			Element element = el.next();
 			if (element.getQualifiedName().equalsIgnoreCase("ii")) {
 				urlOfImage = element.getAttributeValue("url");
 				return;

@@ -30,8 +30,10 @@ import java.util.Iterator;
 import net.sourceforge.jwbf.actions.mw.MultiAction;
 import net.sourceforge.jwbf.actions.mw.editing.FileUpload;
 import net.sourceforge.jwbf.actions.mw.editing.GetRevision;
+import net.sourceforge.jwbf.actions.mw.editing.PostDelete;
 import net.sourceforge.jwbf.actions.mw.login.PostLoginOld;
 import net.sourceforge.jwbf.actions.mw.meta.GetSiteinfo;
+import net.sourceforge.jwbf.actions.mw.meta.GetUserinfo;
 import net.sourceforge.jwbf.actions.mw.meta.GetVersion;
 import net.sourceforge.jwbf.actions.mw.queries.GetAllPageTitles;
 import net.sourceforge.jwbf.actions.mw.queries.GetBacklinkTitles;
@@ -55,6 +57,7 @@ import net.sourceforge.jwbf.contentRep.mw.LogItem;
 import net.sourceforge.jwbf.contentRep.mw.SimpleArticle;
 import net.sourceforge.jwbf.contentRep.mw.SimpleFile;
 import net.sourceforge.jwbf.contentRep.mw.Siteinfo;
+import net.sourceforge.jwbf.contentRep.mw.Userinfo;
 import net.sourceforge.jwbf.contentRep.mw.Version;
 
 import org.apache.log4j.Logger;
@@ -113,6 +116,7 @@ public class MediaWikiBot extends HttpBot {
 	private boolean loggedIn = false;
 	
 	private Version version = null;
+	private Userinfo ui = null;
 	/**
 	 * @param u
 	 *            wikihosturl like "http://www.mediawiki.org/wiki/"
@@ -277,20 +281,6 @@ public class MediaWikiBot extends HttpBot {
 
 	}
 
-	// /**
-	// *
-	// * @param title
-	// * of category in a mediawiki like "Category:Small Things"
-	// * @return with all article names in the requestet category
-	// * @throws ActionException
-	// * on problems
-	// */
-	// public final Collection<String> readCategory(final String title)
-	// throws ActionException {
-	//
-	// return readCategory(title, ARTICLE);
-	// }
-
 	/**
 	 * helper method generating a namespace string as required by the MW-api.
 	 * 
@@ -335,7 +325,7 @@ public class MediaWikiBot extends HttpBot {
 	 * @supportedBy MediaWiki 1.9.x API, 1.10.x API
 	 */
 	@SuppressWarnings("unchecked")
-	protected <R> Iterable<R> performMultiAction(MultiAction<R> initialAction)
+	public final <R> Iterable<R> performMultiAction(MultiAction<R> initialAction)
 			throws ActionException {
 
 		/**
@@ -664,6 +654,18 @@ public class MediaWikiBot extends HttpBot {
 		return getBacklinkTitles(article, RedirectFilter.all, null);
 	}
 		
+	
+	/**
+	 * 
+	 * @param name like "Buildings" or "Chemical elements"
+	 * @throws ActionException on any kind of http or version problems
+	 * @throws ProcessException on inner problems like a version mismatch
+	 * @supportedBy MediaWikiAPI 1.12
+	 */
+	public void postDelete(String name) throws ActionException, ProcessException {
+		PostDelete c = new PostDelete(name, getSiteinfo(), getUserinfo());
+		performMultiAction(c);
+	}
 	
 	/**
 	 * 
@@ -1030,6 +1032,14 @@ public class MediaWikiBot extends HttpBot {
 			
 		}
 		return version;
+	}
+	public Userinfo getUserinfo() throws ActionException, ProcessException {
+		if (ui == null) {
+		GetUserinfo a = new GetUserinfo(getVersion());
+		performAction(a);
+		ui =  a.getUserinfo();
+		}
+		return ui;
 	}
 
 }

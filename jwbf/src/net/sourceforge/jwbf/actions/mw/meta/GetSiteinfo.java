@@ -29,36 +29,13 @@ public class GetSiteinfo extends GetVersion {
 		
 	}
 	
-	
-	
-
-//	private void parse(final String xml) {
-//		System.out.println("parse: " + xml);
-//		SAXBuilder builder = new SAXBuilder();
-//		Element root = null;
-//		try {
-//			Reader i = new StringReader(xml);
-//			Document doc = builder.build(new InputSource(i));
-//
-//			root = doc.getRootElement();
-//			findContent(root);
-//		} catch (JDOMException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//	}
-	
-	
 
 	@SuppressWarnings("unchecked")
 	protected void findContent(final Element root) {
-
+		
 		Iterator<Element> el = root.getChildren().iterator();
 		while (el.hasNext()) {
-			Element element = (Element) el.next();
+			Element element = el.next();
 			if (element.getQualifiedName().equalsIgnoreCase("general")) {
 
 				site.setMainpage(element
@@ -69,7 +46,6 @@ public class GetSiteinfo extends GetVersion {
 				site.setGenerator(element
 						.getAttributeValue("generator"));
 				site.setCase(element.getAttributeValue("case"));
-				site.setRights(element.getAttributeValue("rights"));
 			} else if (element.getQualifiedName().equalsIgnoreCase("ns")) {
 				Integer id = Integer.parseInt(element.getAttributeValue("id"));
 				String name = element.getText();

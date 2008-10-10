@@ -76,7 +76,7 @@ public class FileUpload extends MWAction {
 			LOG.info("WRITE: " + a.getLabel());
 			PostMethod post = new PostMethod(uS);
 			Part[] parts;
-			if (a.getText().isEmpty()) {
+			if (a.getText().length() == 0) {
 				parts = new Part[] {
 						new StringPart("wpDestFile", a.getLabel()),
 						new StringPart("wpIgnoreWarning", "true"),

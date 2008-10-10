@@ -29,7 +29,7 @@ public class MediaWikiThreadBot extends MediaWikiBot {
 	public void start() {
 		Iterator<Thread> ti = rv.iterator();
 		while (ti.hasNext()) {
-			Thread thread = (Thread) ti.next();
+			Thread thread = ti.next();
 			if (!thread.isAlive()) {
 				thread.start();
 			}

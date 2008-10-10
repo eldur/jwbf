@@ -153,7 +153,7 @@ public class GetRecentchanges extends MWAction implements MultiAction<String> {
 		
 		Iterator<Element> el = root.getChildren().iterator();
 		while (el.hasNext()) {
-			Element element = (Element) el.next();
+			Element element = el.next();
 			if (element.getQualifiedName().equalsIgnoreCase("rc")) {
 
 				titleCollection.add(element.getAttributeValue("title"));
