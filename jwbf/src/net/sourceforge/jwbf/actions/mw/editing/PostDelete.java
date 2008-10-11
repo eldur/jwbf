@@ -81,9 +81,9 @@ public class PostDelete extends MWAction implements MultiAction<String> {
 			throw new VersionException("Not supportet by this version of MW");
 			
 		default:
-			if (!si.isWriteAPI()) {
-				throw new ProcessException("Write API is disabled. To enable it see JavaDoc of class " + getClass().getName());
-			}
+//			if (!si.isWriteAPI()) {
+//				throw new ProcessException("Write API is disabled. To enable it see JavaDoc of class " + getClass().getName());
+//			}
 			if (!ui.getRights().contains("delete")) {
 				throw new ProcessException("Bot has no delete rights. To enable it see JavaDoc of class " + getClass().getName());
 			}

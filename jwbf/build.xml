@@ -45,6 +45,9 @@
 	</target>
 
 	<!-- target: version -->
+	<!-- to build a regular release the svn tool: "svnversion" is required  
+	   - for ant script. You can get if from
+	   - http://subversion.tigris.org/getting.html -->
 	<target name="version">
 	        <exec executable="svnversion" outputproperty="svn.main.version">
 	                <arg value="." />

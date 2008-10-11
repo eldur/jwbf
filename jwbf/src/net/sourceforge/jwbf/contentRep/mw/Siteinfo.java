@@ -111,9 +111,13 @@ public class Siteinfo {
 	public void addInterwiki(String prefix, String name) {
 		interwiki.put(prefix, name);
 	}
-	public Map getInterwikis(){
+	public Map<String, String> getInterwikis(){
 		return Collections.unmodifiableMap(interwiki);
 	}
+	/**
+	 * @deprecated
+	 * @return if is
+	 */
 	public boolean isWriteAPI() {
 		return writeApi;
 	}
