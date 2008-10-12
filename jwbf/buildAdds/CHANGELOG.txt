@@ -1,7 +1,15 @@
 --------------------------------------------------------------------------------
+JWBF-1.2.1.61                                                               2008
+--------------------------------------------------------------------------------
+  * GetToken und PostDelete without use of XPath (out of additional Jaxen lib)
+--------------------------------------------------------------------------------
+JWBF-1.2.1.60                                                               2008
+--------------------------------------------------------------------------------
+  * PostDelete splitted to PostDelete and GetToken
+--------------------------------------------------------------------------------
 JWBF-1.2.1.59                                                               2008
 --------------------------------------------------------------------------------
-  * comment out WriteApi detection 
+  * comment out WriteApi detection
 --------------------------------------------------------------------------------
 JWBF-1.2.1.58                                                               2008
 --------------------------------------------------------------------------------
@@ -33,13 +41,13 @@ JWBF-1.2.1.52                                                               2008
 JWBF-1.2.1.51                                                               2008
 --------------------------------------------------------------------------------
   * fixed bug in getBacklinkTitles
-  * added support for redirect filtering to getBacklinkTitles 
+  * added support for redirect filtering to getBacklinkTitles
 --------------------------------------------------------------------------------
 JWBF-1.2.1.50 release                                                       2008
 --------------------------------------------------------------------------------
-  * first small steps for: 
-  ** new write api 
-  ** improve uploading for MW 1.12 and higher 
+  * first small steps for:
+  ** new write api
+  ** improve uploading for MW 1.12 and higher
 --------------------------------------------------------------------------------
 JWBF-1.2.1.49                                                               2008
 --------------------------------------------------------------------------------
@@ -49,14 +57,14 @@ JWBF-1.2.1.49                                                               2008
 JWBF-1.2.1.48                                                               2008
 --------------------------------------------------------------------------------
   * add ability to get timestamp of last change
-  * compete tests for getAllPages 
+  * compete tests for getAllPages
 --------------------------------------------------------------------------------
 JWBF-1.2.1.47                                                               2008
 --------------------------------------------------------------------------------
   * some up- and download tests
   * test with local installed mw packages
   * new query to get image meta data
-  * better mw version detection 
+  * better mw version detection
 --------------------------------------------------------------------------------
 JWBF-1.2.1.46                                                               2008
 --------------------------------------------------------------------------------
@@ -76,7 +84,7 @@ JWBF-1.2.1.44                                                               2008
 --------------------------------------------------------------------------------
 JWBF-1.2.1.43                                                               2008
 --------------------------------------------------------------------------------
-  * add: mediawiki version sensitiv api requests for: 
+  * add: mediawiki version sensitiv api requests for:
   		category members (MW1_11)
   * fix: category read over 'limit' members
 --------------------------------------------------------------------------------
@@ -87,7 +95,7 @@ JWBF-1.2.1.41 and 42                                                        2008
 --------------------------------------------------------------------------------
 JWBF-1.2.1.40 release                                                       2008
 --------------------------------------------------------------------------------
-  * fix: problems with actual mediawiki api 
+  * fix: problems with actual mediawiki api
 --------------------------------------------------------------------------------
 JWBF-1.2.1.27                                                               2008
 --------------------------------------------------------------------------------
@@ -105,7 +113,7 @@ JWBF-1.2.1.25                                                               2008
 --------------------------------------------------------------------------------
 JWBF-1.2.1.24                                                               2008
 --------------------------------------------------------------------------------
-  * Change versionnumbers by useing parts of svnversion from project 
+  * Change versionnumbers by useing parts of svnversion from project
   * adding build helper jars
 --------------------------------------------------------------------------------
 JWBF-1.2.0.2                                                                2007
@@ -119,10 +127,10 @@ JWBF-1.2.0.2                                                                2007
 JWBF-1.2.0.0                                                                2007
 --------------------------------------------------------------------------------
   Features(MediaWiki):
-  * For supported MW API functions, see Javadocs at 
+  * For supported MW API functions, see Javadocs at
   	http://jwbf.sourceforge.net/doc/net/sourceforge/jwbf/bots/MediaWikiBot.html
   	there are special tags javadoc tags, that informs about it.
-  	
+
   Internal(MediaWiki):
   * Confiramtion if requested MW API function is available
   * switch to MediaWikiAPI
@@ -133,7 +141,7 @@ JWBF-1.1.0.2                                                      April 21, 2007
 --------------------------------------------------------------------------------
   Features:
   * add get articles by whatlinkshere
-  
+
   Internal:
   * add Junit Tests for MediaWiki 1.10
   * add htmlparser

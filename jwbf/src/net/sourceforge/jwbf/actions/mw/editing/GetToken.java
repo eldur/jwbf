@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.Iterator;
 
 import net.sourceforge.jwbf.actions.mw.util.MWAction;
 import net.sourceforge.jwbf.actions.mw.util.ProcessException;
@@ -100,7 +101,7 @@ public class GetToken extends MWAction {
 			LOG.trace("enter GetToken.processAllReturningText(String)");
 		}
 		if( LOG.isDebugEnabled()) {
-			LOG.debug("Got returning text: \""+s+"\"");
+			LOG.debug("Got returning text: \"" + s + "\"");
 		}
 		SAXBuilder builder = new SAXBuilder();
 		try {
@@ -124,8 +125,14 @@ public class GetToken extends MWAction {
 	 * @throws JDOMException thrown if the document could not be parsed
 	 */
 	private void process(Document doc) throws JDOMException {
-		Object node;
-		if (null != (node = XPath.selectSingleNode(doc, "/api/query/pages/page"))) {
+		// Object node = XPath.selectSingleNode(doc, "/api/query/pages/page");
+		Object node = null;
+		try {
+			node = doc.getRootElement().getChild("query").getChild("pages").getChild("page");
+		} catch (NullPointerException e) {
+			// do nothing
+		}
+		if (node != null) {
 			// process reply for token request
 			Element elem = (Element) node;
 			token = elem.getAttributeValue("deletetoken");

@@ -1,29 +1,26 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<project default="releaseWithoutTest">
+<project name="jwbf" default="releaseWithoutTest" basedir=".">
+	<!-- alter this for a new release -->
+	<property name="version.release" value="1.2" />
 
-	<property name="temp" location="temp" />
+	<property name="temp" location="${basedir}/temp" />
 	<property name="classes" location="${temp}/classes"/>
 	<property name="classes_test" location="${temp}/classes_test"/>
 	<property name="junit.dir" location="${temp}/junit"/>
 
-
-	<property name="lib" location="lib"/>
-
+	<property name="lib" location="${basedir}/lib"/>
 
 	<path id="classpath">
 		<fileset dir="${lib}" includes="*.jar"/>
 	</path>
-	
+
 	<path id="test.classpath">
-	  
-	  <pathelement location="${lib}junit-4.3.1.jar" />
-	  <fileset dir="${lib}" includes="*.jar"/>
+		<pathelement location="${lib}junit-4.3.1.jar" />
+		<fileset dir="${lib}" includes="*.jar"/>
 	</path>
 
-	
-
-	<!-- 
-	- Dont forget to update internal Version in JWBF.VERSION 
+	<!--
+	- Dont forget to update internal Version in JWBF.VERSION
 	- if build.number tenner place changes
 	-->
 	<property name="dist" value="build" />
@@ -44,36 +41,24 @@
 
 	</target>
 
-	<!-- target: version -->
-	<!-- to build a regular release the svn tool: "svnversion" is required  
+	<!-- to build a regular release the svn tool: "svnversion" is required
 	   - for ant script. You can get if from
 	   - http://subversion.tigris.org/getting.html -->
 	<target name="version">
-	        <exec executable="svnversion" outputproperty="svn.main.version">
-	                <arg value="." />
-	        </exec>
-		
-		<java
-		           jar="lib/svnversion.jar"
-		           fork="true"
-		           failonerror="true"
-			outputproperty="svn.version"
-		           >
-		         <arg value="${svn.main.version}"/>
-		       </java>
-		<echo>${svn.version}</echo>
-		<property name="build.number" value="${svn.version}"></property>
-		<property name="build.sufix" value=""></property>
+		<exec executable="svnversion" outputproperty="svn.main.version">
+			<arg value="." />
+		</exec>
+		<echo>svn.main.version: ${svn.main.version}</echo>
+		<java jar="${lib}/svnversion.jar" fork="true" failonerror="true" outputproperty="svn.version">
+			<arg value="${svn.main.version}" />
+		</java>
+		<echo>svn.version: ${svn.version}</echo>
+		<property name="build.number" value="${version.release}.${svn.version}" />
+		<property name="build.sufix" value="" />
 	</target>
 
-
-
-	<!-- ================================= 
-          target: Compile              
-         ================================= -->
 	<target name="compile" depends="init" description="--> compile the sources">
 		<javac classpathref="classpath" source="1.5" target="1.5" destdir="${classes}" srcdir="src">
-
 		</javac>
 		<copy todir="${classes}">
 			<fileset dir="src">
@@ -84,8 +69,6 @@
 
 	<target name="compile_test" depends="compile, init_test">
 		<javac destdir="${classes_test}" srcdir="test" encoding="UTF-8">
-
-
 			<classpath >
 				<path refid="classpath"/>
 				<pathelement location="${classes}"/>
@@ -98,16 +81,11 @@
 		</copy>
 	</target>
 
-
-	<!-- ================================= 
-          target: test              
-         ================================= -->
 	<target name="test" depends="compile_test" description="--> Runs all Unit-Tests">
-
-		<junit printsummary="yes" 
+		<junit printsummary="yes"
                haltonfailure="no"
-               haltonerror="no" 
-               failureproperty="junit.failure"   
+               haltonerror="no"
+               failureproperty="junit.failure"
                errorproperty="junit.error"
                fork="yes">
 			<formatter type="plain" usefile="true"/>
@@ -126,7 +104,6 @@
 		</junit>
 		<mkdir dir="${dist}/junit"/>
 		<echo>${junit.dir}</echo>
-		
 		<copy todir="${dist}/junit">
 			<fileset dir="${junit.dir}" >
 				<include name="TEST-*.xml"/>
@@ -137,7 +114,6 @@
 				<include name="TEST-*.xml"/>
 			</fileset>
 			<report todir="${junit.dir}"/>
-
 		</junitreport>
 		<copy todir="${dist}/junit">
 			<fileset dir="${junit.dir}">
@@ -149,17 +125,12 @@
 		<fail message="junit failures" if="junit.failure"/>
 	</target>
 
-
-
-
-	<!-- build jar -->
-	<target name="jar" depends="compile, version, clean">
-
+	<target name="jar" depends="compile, version, clean" description="--> build jar">
 		<echo message="Building: jwbf-${build.number}${build.sufix}.jar" />
 		<mkdir dir="${dist}" />
 		<jar destfile="${dist}/jwbf-${build.number}${build.sufix}.jar">
 			<fileset dir="${classes}"
-    			excludes="**/Test.class, **/*.htm*" 
+    			excludes="**/Test.class, **/*.htm*"
     		/>
 			<fileset dir="buildAdds"
 				includes="*"
@@ -171,8 +142,7 @@
 		</jar>
 	</target>
 
-	<!-- create release -->
-	<target name="release" depends="jar">
+	<target name="release" depends="jar" description="--> create release">
 		<antcall target="test" />
 		<antcall target="releaseWithSrc" />
 		<antcall target="releaseBin" />
@@ -180,30 +150,25 @@
 		<copy todir="${dist}/" >
 			<fileset dir="." includes="*.sh" />
 		</copy>
-
 	</target>
-	
-	<!-- create release without test -->
-		<target name="releaseWithoutTest" depends="jar">
-			<antcall target="releaseWithSrc" />
-			<antcall target="releaseBin" />
-			<antcall target="releaseSimpleJar" />
 
-		</target>
+	<target name="releaseWithoutTest" depends="jar" description="--> create release without test">
+		<antcall target="releaseWithSrc" />
+		<antcall target="releaseBin" />
+		<antcall target="releaseSimpleJar" />
+	</target>
 
 	<target name="releaseWithSrc">
 		<property name="release" value="${dist}/release_${build.number}${build.sufix}" />
 		<echo message="Release SRC: ${build.number}${build.sufix}" />
 		<mkdir dir="${release}" />
-
 		<copy file="${dist}/jwbf-${build.number}${build.sufix}.jar" todir="${release}/bin" />
-
 		<copy todir="${release}/src">
 			<fileset dir="src" includes="**/*" />
 		</copy>
 		<copy todir="${release}/test">
-					<fileset dir="test" includes="**/*" />
-				</copy>
+			<fileset dir="test" includes="**/*" />
+		</copy>
 		<copy todir="${release}/lib">
 			<fileset dir="lib" includes="**/*" />
 		</copy>
@@ -216,53 +181,41 @@
 			<fileset dir="${release}" includes="*/**" excludes="*.tar.gz, junit" />
 		</delete>
 	</target>
-	
-	<target name="releaseBin">
 
+	<target name="releaseBin">
 		<property name="release" value="${dist}/release_${build.number}${build.sufix}" />
 		<echo message="Release BIN: ${build.number}${build.sufix}" />
 		<mkdir dir="${release}" />
-
 		<copy file="${dist}/jwbf-${build.number}${build.sufix}.jar" todir="${release}/bin" />
-
 		<copy todir="${release}/lib">
 			<fileset dir="lib" includes="**/*" excludes="junit*, taglet*" />
 		</copy>
 		<copy todir="${release}">
 			<fileset dir="buildAdds" includes="*" />
 		</copy>
-		<tar tarfile="${release}/jwbf-${build.number}${build.sufix}-bin.tar.gz" 
+		<tar tarfile="${release}/jwbf-${build.number}${build.sufix}-bin.tar.gz"
 			excludes="*.tar.gz" basedir="${release}" compression="gzip" />
 		<delete includeemptydirs="true">
 			<fileset dir="${release}" includes="*/**" excludes="*.tar.gz, junit" />
-
 		</delete>
 	</target>
-	<target name="releaseSimpleJar">
 
+	<target name="releaseSimpleJar">
 		<property name="release" value="${dist}/release_${build.number}${build.sufix}" />
 		<echo message="Release BIN SIMPLE: ${build.number}${build.sufix}" />
 		<mkdir dir="${release}" />
-
 		<copy file="${dist}/jwbf-${build.number}${build.sufix}.jar" todir="${release}/bin" />
-
 		<copy todir="${release}">
 			<fileset dir="buildAdds" includes="*" />
 		</copy>
-		<tar tarfile="${release}/jwbf-${build.number}${build.sufix}-binSimple.tar.gz" 
+		<tar tarfile="${release}/jwbf-${build.number}${build.sufix}-binSimple.tar.gz"
 			excludes="*.tar.gz" basedir="${release}" compression="gzip" />
 		<delete includeemptydirs="true">
 			<fileset dir="${release}" includes="*/**" excludes="*.tar.gz, junit" />
 		</delete>
 	</target>
 
-
-
-
-
 	<target name="clean">
-		<delete failonerror="false" dir="${dist}">
-		</delete>
+		<delete failonerror="false" dir="${dist}" />
 	</target>
-
 </project>

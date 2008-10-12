@@ -147,7 +147,8 @@ public class PostDelete extends MWAction {
 	 * @throws JDOMException thrown if the document could not be parsed
 	 */
 	private boolean containsError(Document doc) throws JDOMException {
-		Object node = XPath.selectSingleNode(doc, "/api/error");
+		// Object node = XPath.selectSingleNode(doc, "/api/error");
+		Object node = doc.getRootElement().getChild("error");
 		if( node != null) {
 			Element elem = (Element) node;
 			LOG.error(elem.getAttributeValue("info"));
@@ -165,8 +166,9 @@ public class PostDelete extends MWAction {
 	 * @throws JDOMException thrown if the document could not be parsed
 	 */
 	private void process(Document doc) throws JDOMException {
-		Object node;
-		if (null != (node = XPath.selectSingleNode(doc, "/api/delete"))) {
+		// Object node = XPath.selectSingleNode(doc, "/api/delete");
+		Object node = doc.getRootElement().getChild("delete");
+		if (node != null) {
 			// process reply for delete request
 			Element elem = (Element) node;
 			if(LOG.isInfoEnabled()) {
