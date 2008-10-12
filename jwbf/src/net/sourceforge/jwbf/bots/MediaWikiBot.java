@@ -1,18 +1,18 @@
 /*
  * Copyright 2007 Thomas Stock.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under
  * the License.
- * 
+ *
  * Contributors:
  * Tobias Knerr
  * Justus Bisser - thanks for file upload methods
@@ -30,7 +30,9 @@ import java.util.Iterator;
 import net.sourceforge.jwbf.actions.mw.MultiAction;
 import net.sourceforge.jwbf.actions.mw.editing.FileUpload;
 import net.sourceforge.jwbf.actions.mw.editing.GetRevision;
+import net.sourceforge.jwbf.actions.mw.editing.GetToken;
 import net.sourceforge.jwbf.actions.mw.editing.PostDelete;
+import net.sourceforge.jwbf.actions.mw.editing.GetToken.Intoken;
 import net.sourceforge.jwbf.actions.mw.login.PostLoginOld;
 import net.sourceforge.jwbf.actions.mw.meta.GetSiteinfo;
 import net.sourceforge.jwbf.actions.mw.meta.GetUserinfo;
@@ -70,17 +72,17 @@ import org.apache.log4j.Logger;
  */
 
 /**
- * 
+ *
  * This class helps you to interact with each mediawiki.
- * 
+ *
  * How to use:
- * 
+ *
  * <pre>
  * MediaWikiBot b = new MediaWikiBot(&quot;http://yourwiki.org&quot;);
  * b.login(&quot;Username&quot;, &quot;Password&quot;);
  * System.out.writeln(b.readContentOf(&quot;Main Page&quot;).getText());
  * </pre>
- * 
+ *
  * @author Thomas Stock
  * @author Tobias Knerr
  * @author Justus Bisser
@@ -90,10 +92,10 @@ public class MediaWikiBot extends HttpBot {
 	public static final int ARTICLE = 1 << 1;
 	public static final int MEDIA = 1 << 2;
 	public static final int SUBCATEGORY = 1 << 3;
-	
+
 	public static final String CHARSET = "utf-8";
-	
-	
+
+
 	public static final int NS_MAIN = 0;
 	public static final int NS_MAIN_TALK = 1;
 	public static final int NS_USER = 2;
@@ -110,11 +112,11 @@ public class MediaWikiBot extends HttpBot {
 	public static final int NS_HELP_TALK = 13;
 	public static final int NS_CATEGORY = 14;
 	public static final int NS_CATEGORY_TALK = 15;
-	
+
 	private static Logger log = Logger.getLogger(MediaWikiBot.class);
 	private LoginData login;
 	private boolean loggedIn = false;
-	
+
 	private Version version = null;
 	private Userinfo ui = null;
 	/**
@@ -136,8 +138,8 @@ public class MediaWikiBot extends HttpBot {
 	/**
 	 * @param url
 	 *            wikihosturl like "http://www.mediawiki.org/wiki/"
-	 * @throws MalformedURLException  
-	 *            if param url does not represent a well-formed url          
+	 * @throws MalformedURLException
+	 *            if param url does not represent a well-formed url
 	 */
 	public MediaWikiBot(final String url) throws MalformedURLException {
 		super();
@@ -150,7 +152,7 @@ public class MediaWikiBot extends HttpBot {
 
 	/**
 	 * Performs a old Login via cookie.
-	 * 
+	 *
 	 * @param username
 	 *            the username
 	 * @param passwd
@@ -168,9 +170,9 @@ public class MediaWikiBot extends HttpBot {
 		}
 		loggedIn = true;
 	}
-	
+
 	/**
-	 * Performs a old Login via cookie. 
+	 * Performs a old Login via cookie.
 	 *  Special for LDAPAuth extention to authenticate against LDAP users
 	 * @param username
 	 *            the username
@@ -195,7 +197,7 @@ public class MediaWikiBot extends HttpBot {
 	/**
 	 * Performs a Login. Actual old cookie login works right, because is pending
 	 * on {@link #writeContent(ContentAccessable)}
-	 * 
+	 *
 	 * @param username
 	 *            the username
 	 * @param passwd
@@ -218,7 +220,7 @@ public class MediaWikiBot extends HttpBot {
 	/**
 	 * Performs a Login. Actual old cookie login works right, because is pending
 	 * on {@link #writeContent(ContentAccessable)}
-	 * 
+	 *
 	 * @param username
 	 *            the username
 	 * @param passwd
@@ -236,7 +238,7 @@ public class MediaWikiBot extends HttpBot {
 		httpLogin(username, passwd, null);
 	}
 	/**
-	 * 
+	 *
 	 * @param name
 	 *            of article in a mediawiki like "Main Page"
 	 * @param properties {@link getRevision}
@@ -261,9 +263,9 @@ public class MediaWikiBot extends HttpBot {
 
 		return a;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param name
 	 *            of article in a mediawiki like "Main Page"
 	 * @return a content representation of requested article, never null
@@ -283,7 +285,7 @@ public class MediaWikiBot extends HttpBot {
 
 	/**
 	 * helper method generating a namespace string as required by the MW-api.
-	 * 
+	 *
 	 * @param namespaces
 	 *            namespace as
 	 * @return with numbers seperated by |
@@ -309,8 +311,8 @@ public class MediaWikiBot extends HttpBot {
 	 * generates an iterable with the results from a series of MultiAction when
 	 * given the first of the actions. The result type can vary to match the
 	 * result type of the MultiActions.
-	 * 
-	 * 
+	 *
+	 *
 	 * @param initialAction
 	 *            first action to perform, provides a next action.
 	 * @param <R>
@@ -319,7 +321,7 @@ public class MediaWikiBot extends HttpBot {
 	 *         to the initial and subsequent actions. Attention: when the values
 	 *         from the subsequent actions are accessed for the first time, the
 	 *         connection to the MediaWiki must still exist, /*++ unless ...
-	 * 
+	 *
 	 * @throws ActionException
 	 *             on problems with http, cookies and io
 	 * @supportedBy MediaWiki 1.9.x API, 1.10.x API
@@ -341,7 +343,7 @@ public class MediaWikiBot extends HttpBot {
 
 			/**
 			 * constructor.
-			 * 
+			 *
 			 * @param initialAction
 			 *            the
 			 */
@@ -395,7 +397,7 @@ public class MediaWikiBot extends HttpBot {
 
 				/**
 				 * constructor, relies on generatingIterable != null
-				 * 
+				 *
 				 * @param generatingIterable
 				 *            a
 				 */
@@ -407,7 +409,7 @@ public class MediaWikiBot extends HttpBot {
 				/**
 				 * if a new query is needed to request more; more results are
 				 * requested.
-				 * 
+				 *
 				 * @return true if has next
 				 */
 				public boolean hasNext() {
@@ -421,7 +423,7 @@ public class MediaWikiBot extends HttpBot {
 				/**
 				 * if a new query is needed to request more; more results are
 				 * requested.
-				 * 
+				 *
 				 * @return a element of iteration
 				 */
 				public R next() {
@@ -452,7 +454,7 @@ public class MediaWikiBot extends HttpBot {
 	/**
 	 * get the titles of all pages meeting certain criteria; USE WITH CAUTION -
 	 * especially in big wikis!
-	 * 
+	 *
 	 * @param from
 	 *            page title to start from, may be null
 	 * @param prefix
@@ -466,15 +468,15 @@ public class MediaWikiBot extends HttpBot {
 	 *            numbers of the namespaces (specified using varargs) that will
 	 *            be included in the search (will be ignored if redirects is
 	 *            false!)
-	 * 
+	 *
 	 * @return iterable providing access to the names of all articles which
 	 *         embed the template specified by the template-parameter.
 	 *         Attention: to get more article titles, the connection to the
 	 *         MediaWiki must still exist.
-	 * 
+	 *
 	 * @throws ActionException
 	 *             on problems with http, cookies and io
-	 * 
+	 *
 	 * @supportedBy MediaWikiAPI 1.9 allpages / ap TODO Test Required
 	 * @supportedBy MediaWikiAPI 1.10 allpages / ap TODO Test Required
 	 * @supportedBy MediaWikiAPI 1.11 allpages / ap TODO Test Required
@@ -492,20 +494,20 @@ public class MediaWikiBot extends HttpBot {
 	/**
 	 * get the titles of all pages meeting certain criteria; USE WITH CAUTION -
 	 * especially in big wikis!
-	 * 
+	 *
 	 * @param namespaces
 	 *            numbers of the namespaces (specified using varargs) that will
 	 *            be included in the search (will be ignored if redirects is
 	 *            false!)
-	 * 
+	 *
 	 * @return iterable providing access to the names of all articles which
 	 *         embed the template specified by the template-parameter.
 	 *         Attention: to get more article titles, the connection to the
 	 *         MediaWiki must still exist.
-	 * 
+	 *
 	 * @throws ActionException
 	 *             on problems with http, cookies and io
-	 * 
+	 *
 	 * @supportedBy MediaWikiAPI 1.9 allpages / ap
 	 * @supportedBy MediaWikiAPI 1.10 allpages / ap
 	 * @supportedBy MediaWikiAPI 1.11 allpages / ap
@@ -523,7 +525,7 @@ public class MediaWikiBot extends HttpBot {
 	/**
 	 * variation of the getAllPageTitles-method which does not set a namespace
 	 * restriction.
-	 * 
+	 *
 	 * @param from
 	 *            page title to start from, may be null
 	 * @param prefix
@@ -536,7 +538,7 @@ public class MediaWikiBot extends HttpBot {
 	 * @return of titels
 	 * @throws ActionException
 	 *             on problems with http, cookies and io
-	 * 
+	 *
 	 * @supportedBy MediaWikiAPI 1.9 allpages / ap
 	 * @supportedBy MediaWikiAPI 1.10 allpages / ap
 	 * @supportedBy MediaWikiAPI 1.11 allpages / ap
@@ -551,57 +553,57 @@ public class MediaWikiBot extends HttpBot {
 	/**
 	 * get the titles of all pages which contain a link to the given article;
 	 * this includes redirects to the page.
-	 * 
+	 *
 	 * @param article
 	 *            title of an article
-	 * 
-	 * @param redirectFilter 
+	 *
+	 * @param redirectFilter
 	 *            filter that determines how to handle redirects
 	 * @param namespaces
 	 *            numbers of the namespaces (specified using varargs) that will
 	 *            be included in the search;
 	 *            leaving this parameter out will include all namespaces
-	 * 
+	 *
 	 * @return iterable providing access to the names of all articles which link
 	 *         to the article specified by the article-parameter. Attention: to
 	 *         get more article titles, the connection to the MediaWiki must
 	 *         still exist.
-	 * 
+	 *
 	 * @throws ActionException
 	 *             on problems with http, cookies and io
-	 * @throws ProcessException on inner problems like version mismatch 
+	 * @throws ProcessException on inner problems like version mismatch
 	 * @supportedBy MediaWikiAPI 1.9, 1.10, 1.11, 1.12, 1.13, 1.14
 	 */
-	public Iterable<String> getBacklinkTitles(String article, 
+	public Iterable<String> getBacklinkTitles(String article,
 			RedirectFilter redirectFilter, int... namespaces)
 			throws ActionException, ProcessException {
-		
+
 		GetBacklinkTitles a = new GetBacklinkTitles(article,
 				redirectFilter, createNsString(namespaces), getVersion());
 
 		return performMultiAction(a);
 
 	}
-	
+
 	/**
-	 * variation of the getBacklinkTitles-method that returns 
+	 * variation of the getBacklinkTitles-method that returns
 	 * both redirects and non-redirects linking to the page.
-	 * 
+	 *
 	 * @param article
 	 *            title of an article
-	 * 
+	 *
 	 * @param namespaces
 	 *            numbers of the namespaces (specified using varargs) that will
 	 *            be included in the search
-	 * 
+	 *
 	 * @return iterable providing access to the names of all articles which link
 	 *         to the article specified by the article-parameter. Attention: to
 	 *         get more article titles, the connection to the MediaWiki must
 	 *         still exist.
-	 * 
+	 *
 	 * @throws ActionException
 	 *             on problems with http, cookies and io
-	 * 
+	 *
 	 * @see #getBacklinkTitles(String, RedirectFilter, int...)
 	 */
 	public Iterable<String> getBacklinkTitles(String article, int... namespaces)
@@ -610,24 +612,24 @@ public class MediaWikiBot extends HttpBot {
 		return getBacklinkTitles(article, RedirectFilter.all, namespaces);
 	}
 	/**
-	 * variation of the getBacklinkTitles-method that returns 
+	 * variation of the getBacklinkTitles-method that returns
 	 * both redirects and non-redirects linking to the page.
-	 * 
+	 *
 	 * @param article
 	 *            title of an article
-	 * 
+	 *
 	 * @param namespaces
 	 *            numbers of the namespaces (specified using varargs) that will
 	 *            be included in the search
-	 * 
+	 *
 	 * @return iterable providing access to the names of all articles which link
 	 *         to the article specified by the article-parameter. Attention: to
 	 *         get more article titles, the connection to the MediaWiki must
 	 *         still exist.
-	 * 
+	 *
 	 * @throws ActionException
 	 *             on problems with http, cookies and io
-	 * 
+	 *
 	 * @see #getBacklinkTitles(String, RedirectFilter, int...)
 	 */
 	public Iterable<String> getBacklinkTitles(String article, RedirectFilter redirectFilter)
@@ -640,7 +642,7 @@ public class MediaWikiBot extends HttpBot {
 	/**
 	 * variation of the getBacklinkTitles-method which does not set a namespace
 	 * restriction.
-	 * 
+	 *
 	 * @param article
 	 *            label of article
 	 * @return of article labels
@@ -653,22 +655,24 @@ public class MediaWikiBot extends HttpBot {
 
 		return getBacklinkTitles(article, RedirectFilter.all, null);
 	}
-		
-	
+
+
 	/**
-	 * 
-	 * @param name like "Buildings" or "Chemical elements"
+	 * Deletes the article with the given title.
+	 * @param title like "Buildings" or "Chemical elements"
 	 * @throws ActionException on any kind of http or version problems
 	 * @throws ProcessException on inner problems like a version mismatch
 	 * @supportedBy MediaWikiAPI 1.12
+	 * @supportedBy MediaWikiAPI 1.13
 	 */
-	public void postDelete(String name) throws ActionException, ProcessException {
-		PostDelete c = new PostDelete(name, getSiteinfo(), getUserinfo());
-		performMultiAction(c);
+	public void postDelete(String title) throws ActionException, ProcessException {
+		GetToken t = new GetToken(Intoken.DELETE, title, getSiteinfo(), getUserinfo());
+		performAction(t);
+		performAction(new PostDelete(title, t.getToken(), getSiteinfo(), getUserinfo()));
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param category like "Buildings" or "Chemical elements" without prefix "Category:"
 	 * @return of article labels
 	 * @throws ActionException on any kind of http or version problems
@@ -679,13 +683,13 @@ public class MediaWikiBot extends HttpBot {
 		GetSimpleCategoryMembers c = new GetSimpleCategoryMembers(category, "", getVersion());
 		return performMultiAction(c);
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param category like "Buildings" or "Chemical elements" without prefix "Category:"
 	 * @return of article labels
 	 * @throws ActionException on any kind of http or version problems
-	 * @throws ProcessException on inner problems like mw version 
+	 * @throws ProcessException on inner problems like mw version
 	 * @supportedBy MediaWikiAPI 1.11 categorymembers / cm  TODO Test Required
 	 */
 	public Iterable<String> getCategoryMembers(String category, int... namespaces) throws ActionException, ProcessException {
@@ -693,7 +697,7 @@ public class MediaWikiBot extends HttpBot {
 		return performMultiAction(c);
 	}
 	/**
-	 * 
+	 *
 	 * @param category like "Buildings" or "Chemical elements" without prefix Category
 	 * @return of category items with more details as simple labels
 	 * @throws ActionException on any kind of http or version problems
@@ -705,7 +709,7 @@ public class MediaWikiBot extends HttpBot {
 		return performMultiAction(c);
 	}
 	/**
-	 * 
+	 *
 	 * @param category like "Buildings" or "Chemical elements" without prefix Category
 	 * @return of category items with more details as simple labels
 	 * @throws ActionException on any kind of http or version problems
@@ -716,10 +720,10 @@ public class MediaWikiBot extends HttpBot {
 		GetFullCategoryMembers c = new GetFullCategoryMembers(category, createNsString(namespaces), getVersion());
 		return performMultiAction(c);
 	}
-	
+
 	/**
 	 * uploads a file
-	 * 
+	 *
 	 * @param fileName
 	 *            the name of the file as String
 	 * @supportedBy MediaWiki 1.11
@@ -736,7 +740,7 @@ public class MediaWikiBot extends HttpBot {
 
 	/**
 	 * uploads a file
-	 * 
+	 *
 	 * @param FileName
 	 *            the file as SimpleFile
 	 * @supportedBy MediaWiki 1.11
@@ -753,32 +757,32 @@ public class MediaWikiBot extends HttpBot {
 		performAction(new FileUpload(file, tab, login));
 
 	}
-	
+
 	/**
 	 * get the titles of all pages which contain a link to the given image.
-	 * 
+	 *
 	 * @param image
 	 *            title of an image, without prefix "Image:"
-	 * 
+	 *
 	 * @param namespaces
 	 *            numbers of the namespaces (specified using varargs) that will
 	 *            be included in the search
-	 * 
+	 *
 	 * @return iterable providing access to the names of all articles which link
 	 *         to the image specified by the image-parameter. Attention: to get
 	 *         more article titles, the connection to the MediaWiki must still
 	 *         exist.
-	 * 
+	 *
 	 * @throws ActionException
 	 *             on problems with http, cookies and io
-	 * 
+	 *
 	 * TODO Pending Parameter Change;
 	 * http://www.mediawiki.org/wiki/API:Query_-_Lists TODO New API call, decide
 	 * if design a switch by version or support only newest
-	 * 
+	 *
 	 * @supportedBy MediaWikiAPI 1.9 embeddedin / ei TODO Test Required
 	 * @supportedBy MediaWikiAPI 1.10 embeddedin / ei TODO Test Required
-	 * 
+	 *
 	 */
 	public Iterable<String> getImagelinkTitles(String image, int... namespaces)
 			throws ActionException {
@@ -792,7 +796,7 @@ public class MediaWikiBot extends HttpBot {
 	/**
 	 * variation of the getImagelinkTitles-method which does not set a namespace
 	 * restriction.
-	 * 
+	 *
 	 * @param image name of
 	 * @return an of labels
 	 * @see #getImagelinkTitles(String, int[])
@@ -821,26 +825,26 @@ public class MediaWikiBot extends HttpBot {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param type event type like: upload, delete, ...
 	 * @return the last ten log events
-	 * @throws ActionException on problems with http, cookies and io 
-	 * @supportedBy MediaWikiAPI 1.11 logevents / le 
+	 * @throws ActionException on problems with http, cookies and io
+	 * @supportedBy MediaWikiAPI 1.11 logevents / le
 	 * @see #getLogEvents(int, String...)
 	 */
 	public Iterator<LogItem> getLogEvents(String ... type) throws ActionException {
 
 		return getLogEvents(10, type);
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param type event type like: upload, delete, ...
 	 * @param limit number of events
 	 * @return the last ten log events
 	 * @throws ActionException on problems with http, cookies and io
 	 * @supportedBy MediaWikiAPI 1.11 logevents / le TODO Test Required
-	 * TODO API state is (semi-complete), see 
+	 * TODO API state is (semi-complete), see
 	 * http://www.mediawiki.org/wiki/API:Query_-_Lists#logevents_.2F_le_.28semi-complete.29
 	 */
 	public Iterator<LogItem> getLogEvents(int limit, String ... type) throws ActionException {
@@ -854,22 +858,22 @@ public class MediaWikiBot extends HttpBot {
 	}
 	/**
 	 * get the titles of all pages which embed the given template.
-	 * 
+	 *
 	 * @param template
 	 *            title of a template, without prefix "Template:"
-	 * 
+	 *
 	 * @param namespaces
 	 *            numbers of the namespaces (specified using varargs) that will
 	 *            be included in the search
-	 * 
+	 *
 	 * @return iterable providing access to the names of all articles which
 	 *         embed the template specified by the template-parameter.
 	 *         Attention: to get more article titles, the connection to the
 	 *         MediaWiki must still exist.
-	 * 
+	 *
 	 * @throws ActionException
 	 *             on problems with http, cookies and io
-	 * 
+	 *
 	 * @supportedBy MediaWikiAPI 1.9 embeddedin / ei TODO Test Required
 	 * @supportedBy MediaWikiAPI 1.10 embeddedin / ei TODO Test Required
 	 * @supportedBy MediaWikiAPI 1.11 embeddedin / ei TODO Test Required
@@ -886,7 +890,7 @@ public class MediaWikiBot extends HttpBot {
 	/**
 	 * variation of the getTemplateUserTitles-method. which does not set a
 	 * namespace restriction
-	 * 
+	 *
 	 * @param template
 	 *            label of template like TODO what ?, without prefix "Template:"
 	 * @return an of labels
@@ -901,7 +905,7 @@ public class MediaWikiBot extends HttpBot {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return a
 	 * @throws ActionException
 	 *             on problems with http, cookies and io
@@ -923,7 +927,7 @@ public class MediaWikiBot extends HttpBot {
 
 	/**
 	 * Get a number of recent changes from namespace.
-	 * 
+	 *
 	 * @param count
 	 *            of changes
 	 * @param namespaces
@@ -941,10 +945,10 @@ public class MediaWikiBot extends HttpBot {
 
 		return performMultiAction(a);
 	}
-	
+
 	/**
 	 * Get a number of recent changes from default namespace.
-	 * 
+	 *
 	 * @param count
 	 *            of changes
 	 * @return a
@@ -960,7 +964,7 @@ public class MediaWikiBot extends HttpBot {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return true if
 	 */
 	public boolean isLoggedIn() {
@@ -973,7 +977,7 @@ public class MediaWikiBot extends HttpBot {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param a
 	 *            write the article (if already exists) in the mediawiki
 	 * @throws ActionException
@@ -995,7 +999,7 @@ public class MediaWikiBot extends HttpBot {
 
 	/**
 	 * Writes an iteration of ContentAccessables to the mediawiki.
-	 * 
+	 *
 	 * @param cav
 	 *            a
 	 * @throws ActionException
@@ -1011,7 +1015,7 @@ public class MediaWikiBot extends HttpBot {
 		}
 	}
 
-	
+
 	public final Version getVersion() {
 		if (version == null) {
 			GetVersion gs = new GetVersion();
@@ -1027,9 +1031,9 @@ public class MediaWikiBot extends HttpBot {
 			}
 
 			version = gs.getSiteinfo().getVersion();
-			
+
 			log.debug("Version is: " + version.name());
-			
+
 		}
 		return version;
 	}
