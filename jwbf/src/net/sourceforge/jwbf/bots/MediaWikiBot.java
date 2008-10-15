@@ -24,15 +24,13 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Hashtable;
 import java.util.Iterator;
 
 import net.sourceforge.jwbf.actions.mw.MultiAction;
 import net.sourceforge.jwbf.actions.mw.editing.FileUpload;
 import net.sourceforge.jwbf.actions.mw.editing.GetRevision;
-import net.sourceforge.jwbf.actions.mw.editing.GetToken;
 import net.sourceforge.jwbf.actions.mw.editing.PostDelete;
-import net.sourceforge.jwbf.actions.mw.editing.GetToken.Intoken;
+import net.sourceforge.jwbf.actions.mw.editing.PostModifyContent;
 import net.sourceforge.jwbf.actions.mw.login.PostLoginOld;
 import net.sourceforge.jwbf.actions.mw.meta.GetSiteinfo;
 import net.sourceforge.jwbf.actions.mw.meta.GetUserinfo;
@@ -48,9 +46,7 @@ import net.sourceforge.jwbf.actions.mw.queries.GetSimpleCategoryMembers;
 import net.sourceforge.jwbf.actions.mw.queries.GetTemplateUserTitles;
 import net.sourceforge.jwbf.actions.mw.queries.GetBacklinkTitles.RedirectFilter;
 import net.sourceforge.jwbf.actions.mw.util.ActionException;
-import net.sourceforge.jwbf.actions.mw.util.GetEnvironmentVars;
 import net.sourceforge.jwbf.actions.mw.util.MWAction;
-import net.sourceforge.jwbf.actions.mw.util.PostModifyContent;
 import net.sourceforge.jwbf.actions.mw.util.ProcessException;
 import net.sourceforge.jwbf.bots.util.LoginData;
 import net.sourceforge.jwbf.contentRep.mw.CategoryItem;
@@ -664,11 +660,10 @@ public class MediaWikiBot extends HttpBot {
 	 * @throws ProcessException on inner problems like a version mismatch
 	 * @supportedBy MediaWikiAPI 1.12
 	 * @supportedBy MediaWikiAPI 1.13
+	 * 
 	 */
 	public void postDelete(String title) throws ActionException, ProcessException {
-		GetToken t = new GetToken(Intoken.DELETE, title, getSiteinfo(), getUserinfo());
-		performAction(t);
-		performAction(new PostDelete(title, t.getToken(), getSiteinfo(), getUserinfo()));
+		PostDelete.doDelete(this, title);
 	}
 
 	/**
@@ -727,6 +722,7 @@ public class MediaWikiBot extends HttpBot {
 	 * @param fileName
 	 *            the name of the file as String
 	 * @supportedBy MediaWiki 1.11
+	 * 
 	 */
 	public final void uploadFile(final String fileName) throws ActionException,
 			ProcessException {
@@ -744,17 +740,12 @@ public class MediaWikiBot extends HttpBot {
 	 * @param FileName
 	 *            the file as SimpleFile
 	 * @supportedBy MediaWiki 1.11
+	 * 
 	 */
 	public final void uploadFile(SimpleFile file) throws ActionException,
 			ProcessException {
-
-		if (!isLoggedIn()) {
-			throw new ActionException("Please login first");
-		}
-
-		Hashtable<String, String> tab = new Hashtable<String, String>();
-		performAction(new GetEnvironmentVars(file.getLabel(), tab, login));
-		performAction(new FileUpload(file, tab, login));
+		FileUpload.doUpload(this, file);
+	
 
 	}
 
@@ -967,7 +958,7 @@ public class MediaWikiBot extends HttpBot {
 	 *
 	 * @return true if
 	 */
-	public boolean isLoggedIn() {
+	public final boolean isLoggedIn() {
 		return loggedIn;
 		// // code for api
 		// if(login != null) {
@@ -984,17 +975,11 @@ public class MediaWikiBot extends HttpBot {
 	 *             on problems with http, cookies and io
 	 * @throws ProcessException on access problems
 	 * @supportedBy MediaWiki 1.9.x, 1.10.x, 1.11.x, 1.12.x, 1.13.x, 1.14.x
+	 * 
 	 */
 	public final void writeContent(final ContentAccessable a)
 			throws ActionException, ProcessException {
-
-		if (!isLoggedIn()) {
-			throw new ActionException("Please login first");
-		}
-		Hashtable<String, String> tab = new Hashtable<String, String>();
-		performAction(new GetEnvironmentVars(a.getLabel(), tab, login));
-		performAction(new PostModifyContent(a, tab, login));
-
+		PostModifyContent.doWrite(this, a);
 	}
 
 	/**

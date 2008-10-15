@@ -16,15 +16,17 @@
  * Contributors:
  * 
  */
-package net.sourceforge.jwbf.actions.mw.util;
+package net.sourceforge.jwbf.actions.mw.editing;
 
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Hashtable;
 
+import net.sourceforge.jwbf.actions.mw.util.ActionException;
+import net.sourceforge.jwbf.actions.mw.util.MWAction;
+import net.sourceforge.jwbf.actions.mw.util.ProcessException;
 import net.sourceforge.jwbf.bots.MediaWikiBot;
-import net.sourceforge.jwbf.bots.util.LoginData;
 import net.sourceforge.jwbf.contentRep.mw.ContentAccessable;
 
 import org.apache.commons.httpclient.NameValuePair;
@@ -40,6 +42,16 @@ public class PostModifyContent extends MWAction {
 
 	
 	private static final Logger LOG = Logger.getLogger(PostModifyContent.class);
+	
+	public  static void doWrite(MediaWikiBot bot, ContentAccessable a) throws ActionException, ProcessException {
+		if (!bot.isLoggedIn()) {
+			throw new ActionException("Please login first");
+		}
+		Hashtable<String, String> tab = new Hashtable<String, String>();
+		bot.performAction(new GetEnvironmentVars(a.getLabel(), tab));
+		bot.performAction(new PostModifyContent(a, tab));
+		
+	}
 	/**
 	 * 
 	 * @param a the
@@ -47,7 +59,7 @@ public class PostModifyContent extends MWAction {
 	 * @param login a 
 	 */
 	public PostModifyContent(final ContentAccessable a,
-			final Hashtable<String, String> tab, LoginData login) {
+			final Hashtable<String, String> tab) {
 
 		String uS = "";
 		try {

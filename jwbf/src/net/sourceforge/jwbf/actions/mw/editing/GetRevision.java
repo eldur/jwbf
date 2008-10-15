@@ -45,10 +45,10 @@ import org.xml.sax.InputSource;
 /**
  * @author Thomas Stock
  * @since MediaWiki 1.9.0
- *
+ * 
  */
 public class GetRevision extends MWAction {
-	
+
 	private final SimpleArticle sa;
 	public static final int CONTENT = 1 << 1;
 	public static final int TIMESTAMP = 1 << 2;
@@ -58,11 +58,14 @@ public class GetRevision extends MWAction {
 	public static final int LAST = 1 << 6;
 
 	private static final Logger LOG = Logger.getLogger(GetRevision.class);
-	
+
+	private final int property;
+
 	/**
 	 * TODO follow redirects.
 	 */
 	public GetRevision(final String articlename, final int property) {
+		this.property = property;
 		sa = new SimpleArticle();
 		sa.setLabel(articlename);
 		String uS = "";
@@ -71,9 +74,7 @@ public class GetRevision extends MWAction {
 			uS = "/api.php?action=query&prop=revisions&titles="
 					+ URLEncoder.encode(articlename, MediaWikiBot.CHARSET)
 					+ "&rvprop=" + getDataProperties(property)
-					+ getReversion(property)
-					+ "&rvlimit=1"
-					+ "&format=xml";
+					+ getReversion(property) + "&rvlimit=1" + "&format=xml";
 			uri = new URI(uS);
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
@@ -82,23 +83,25 @@ public class GetRevision extends MWAction {
 		}
 		LOG.debug(uS);
 		msgs.add(new GetMethod(uri.toString()));
-		
+
 	}
+
 	/**
 	 * @param s
 	 *            the returning text
 	 * @return empty string
 	 * 
 	 */
-	public String processAllReturningText(final String s) throws ProcessException {
+	public String processAllReturningText(final String s)
+			throws ProcessException {
 
 		parse(s);
 		return "";
 	}
-	
+
 	private String getDataProperties(final int property) {
 		String properties = "";
-		
+
 		if ((property & CONTENT) > 0) {
 			properties += "content|";
 		}
@@ -111,38 +114,37 @@ public class GetRevision extends MWAction {
 		if ((property & USER) > 0) {
 			properties += "user|";
 		}
-		String enc = ""; 
-		
+		String enc = "";
+
 		try {
-			enc = URLEncoder.encode(properties.substring(0, properties.length() - 1), MediaWikiBot.CHARSET);
+			enc = URLEncoder.encode(properties.substring(0,
+					properties.length() - 1), MediaWikiBot.CHARSET);
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
 		return enc;
 	}
-	
-	
+
 	private String getReversion(final int property) {
 		String properties = "&rvdir=";
-		
+
 		if ((property & FIRST) > 0) {
 			properties += "newer";
 		} else {
 			properties += "older";
 		}
-		
+
 		return properties;
 	}
-	
-	
-	private void parse(final String xml) throws ApiException{
+
+	private void parse(final String xml) throws ApiException {
 		LOG.debug(xml);
 		SAXBuilder builder = new SAXBuilder();
 		Element root = null;
 		try {
 			Reader i = new StringReader(xml);
 			Document doc = builder.build(new InputSource(i));
-			
+
 			root = doc.getRootElement();
 
 		} catch (JDOMException e) {
@@ -156,16 +158,13 @@ public class GetRevision extends MWAction {
 	}
 
 	public SimpleArticle getArticle() {
-		
-		
+
 		return sa;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	private void findContent(final Element root) throws ApiException {
-		
-		
-		
+
 		Iterator<Element> el = root.getChildren().iterator();
 		while (el.hasNext()) {
 			Element element = el.next();
@@ -176,31 +175,32 @@ public class GetRevision extends MWAction {
 
 				try {
 					sa.setText(element.getText());
-//					LOG.debug("found text");
+					// LOG.debug("found text");
 				} catch (NullPointerException e) {
 					// TODO: handle exception
 				}
 
-			
-					sa.setEditSummary(getAsStringValues(element,"comment"));
-					sa.setEditor(getAsStringValues(element,"user"));
-			
+				sa.setEditSummary(getAsStringValues(element, "comment"));
+				sa.setEditor(getAsStringValues(element, "user"));
 
-				try {
-					sa.setEditTimestamp(getAsStringValues(element,"timestamp"));
-				} catch (ParseException e) {
-					e.printStackTrace();
-				} 
+				if ((property & TIMESTAMP) > 0) {
+
+					try {
+						sa.setEditTimestamp(getAsStringValues(element,
+								"timestamp"));
+					} catch (ParseException e) {
+						e.printStackTrace();
+					}
+				}
 
 			} else {
 				findContent(element);
 			}
-			
+
 		}
-		
-		
+
 	}
-	
+
 	private String getAsStringValues(Element e, String attrName) {
 		String buff = "";
 		try {

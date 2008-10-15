@@ -16,15 +16,16 @@
  * Contributors:
  * 
  */
-package net.sourceforge.jwbf.actions.mw.util;
+package net.sourceforge.jwbf.actions.mw.editing;
 
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Hashtable;
 
+import net.sourceforge.jwbf.actions.mw.util.MWAction;
+import net.sourceforge.jwbf.actions.mw.util.ProcessException;
 import net.sourceforge.jwbf.bots.MediaWikiBot;
-import net.sourceforge.jwbf.bots.util.LoginData;
 
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.log4j.Logger;
@@ -37,7 +38,7 @@ import org.apache.log4j.Logger;
  *
  *
  */
-public class GetEnvironmentVars extends MWAction {
+class GetEnvironmentVars extends MWAction {
 
 	private Hashtable<String, String> tab;
 	private static final Logger LOG = Logger.getLogger(GetEnvironmentVars.class);
@@ -48,7 +49,7 @@ public class GetEnvironmentVars extends MWAction {
 	 * @param tab ref on a tabel with inner values
 	 * @param login a
 	 */
-	public GetEnvironmentVars(final String name, Hashtable<String, String> tab, LoginData login) {
+	public GetEnvironmentVars(final String name, Hashtable<String, String> tab) {
 		String uS = "";
 		this.tab = tab;
 		try {

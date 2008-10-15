@@ -5,6 +5,8 @@ import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
+import net.sourceforge.jwbf.actions.mw.editing.GetToken.Intoken;
+import net.sourceforge.jwbf.actions.mw.util.ActionException;
 import net.sourceforge.jwbf.actions.mw.util.MWAction;
 import net.sourceforge.jwbf.actions.mw.util.ProcessException;
 import net.sourceforge.jwbf.actions.mw.util.VersionException;
@@ -53,6 +55,12 @@ import org.xml.sax.InputSource;
 public class PostDelete extends MWAction {
 	private static final Logger LOG = Logger.getLogger(PostDelete.class);
 
+	
+	public static void doDelete(MediaWikiBot bot, String title) throws ActionException, ProcessException {
+		GetToken t = new GetToken(Intoken.DELETE, title, bot.getSiteinfo(), bot.getUserinfo());
+		bot.performAction(t);
+		bot.performAction(new PostDelete(title, t.getToken(), bot.getSiteinfo(), bot.getUserinfo()));
+	}
 	/**
 	 * Constructs a new <code>PostDelete</code> action.
 	 * @param title title of the article to delete

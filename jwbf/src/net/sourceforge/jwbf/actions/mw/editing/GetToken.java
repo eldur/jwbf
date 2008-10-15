@@ -29,7 +29,7 @@ import org.xml.sax.InputSource;
  * @supportedBy MediaWikiAPI 1.12
  * @supportedBy MediaWikiAPI 1.13
  */
-public class GetToken extends MWAction {
+class GetToken extends MWAction {
 	private static final Logger LOG = Logger.getLogger(GetToken.class);
 	/** Types that need a token. See API field intoken. */
 	// TODO this does not feel the elegant way.

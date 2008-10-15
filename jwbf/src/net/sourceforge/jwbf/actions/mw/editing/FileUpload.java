@@ -26,7 +26,7 @@ import java.util.Hashtable;
 import net.sourceforge.jwbf.actions.mw.util.ActionException;
 import net.sourceforge.jwbf.actions.mw.util.MWAction;
 import net.sourceforge.jwbf.actions.mw.util.ProcessException;
-import net.sourceforge.jwbf.bots.util.LoginData;
+import net.sourceforge.jwbf.bots.MediaWikiBot;
 import net.sourceforge.jwbf.contentRep.mw.SimpleFile;
 
 import org.apache.commons.httpclient.methods.PostMethod;
@@ -53,8 +53,7 @@ public class FileUpload extends MWAction {
 	 * @throws ActionException on problems with file
 	 */
 	public FileUpload(final SimpleFile a,
-			final Hashtable<String, String> tab,
-			LoginData login) throws ActionException {
+			final Hashtable<String, String> tab) throws ActionException {
 
 		if (!a.getFile().isFile() || !a.getFile().canRead()) {
 			throw new ActionException("no such file " + a.getFile());
@@ -132,6 +131,16 @@ public class FileUpload extends MWAction {
 			throw new ProcessException("Upload failed");
 		}
 		return "";
+	}
+	public static void doUpload(MediaWikiBot bot, SimpleFile file) throws ActionException, ProcessException {
+		if (!bot.isLoggedIn()) {
+			throw new ActionException("Please login first");
+		}
+
+		Hashtable<String, String> tab = new Hashtable<String, String>();
+		bot.performAction(new GetEnvironmentVars(file.getLabel(), tab));
+		bot.performAction(new FileUpload(file, tab));
+		
 	}
 
 }
