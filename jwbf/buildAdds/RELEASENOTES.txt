@@ -1,1 +1,1 @@
-Build with Sun JDK 1.6.xx
+Build with Sun JDK 1.5.xx

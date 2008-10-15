@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.Iterator;
 
 import net.sourceforge.jwbf.actions.mw.util.MWAction;
 import net.sourceforge.jwbf.actions.mw.util.ProcessException;
@@ -19,7 +18,6 @@ import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
-import org.jdom.xpath.XPath;
 import org.xml.sax.InputSource;
 
 /**
@@ -35,7 +33,7 @@ public class GetToken extends MWAction {
 	private static final Logger LOG = Logger.getLogger(GetToken.class);
 	/** Types that need a token. See API field intoken. */
 	// TODO this does not feel the elegant way.
-	// Probably put request URIs into this enum objects
+	// Probably put complete request URIs into this enum objects
 	// to support different URIs for different actions.
 	public enum Intoken { DELETE, EDIT, MOVE, PROTECT, EMAIL };
 	private String token = null;
@@ -125,16 +123,14 @@ public class GetToken extends MWAction {
 	 * @throws JDOMException thrown if the document could not be parsed
 	 */
 	private void process(Document doc) throws JDOMException {
-		// Object node = XPath.selectSingleNode(doc, "/api/query/pages/page");
-		Object node = null;
+		Element elem = null;
 		try {
-			node = doc.getRootElement().getChild("query").getChild("pages").getChild("page");
+			elem = doc.getRootElement().getChild("query").getChild("pages").getChild("page");
 		} catch (NullPointerException e) {
 			// do nothing
 		}
-		if (node != null) {
+		if (elem != null) {
 			// process reply for token request
-			Element elem = (Element) node;
 			token = elem.getAttributeValue("deletetoken");
 		} else {
 			LOG.error("Unknow reply. This is not a token.");

@@ -23,7 +23,7 @@ import org.junit.Test;
  */
 public class DeleteTest extends LiveTestFather {
 	private MediaWikiBot bot = null;
-	private static final int COUNT = 5;
+	private static final int COUNT = 6;
 	@BeforeClass
 	public static void setUp() throws Exception {
 		PropertyConfigurator.configureAndWatch("test4log4j.properties",
@@ -34,22 +34,23 @@ public class DeleteTest extends LiveTestFather {
 		
 		for (int i = 0; i < COUNT; i++) {
 			a.setLabel("Delete " + i);
+			a.setText("delete me");
 			bot.writeContent(a);
 		}
 	}
 	
 	private final void delete(MediaWikiBot bot) throws ActionException, ProcessException {
 		
-		for (int i = 0; i < COUNT + 1; i++) {
+		for (int i = 0; i < COUNT ; i++) {
 			bot.postDelete("Delete " + i);
 		}
 	}
 	
 	private final void test(MediaWikiBot bot) throws ActionException, ProcessException {
 	
-		for (int i = 0; i < COUNT + 1; i++) {
+		for (int i = 0; i < COUNT; i++) {
 			ContentAccessable ca = bot.readContent("Delete " + i);
-			Assert.assertNull(ca);
+			Assert.assertTrue(ca.getText().length() == 0);
 		}
 	}
 	
