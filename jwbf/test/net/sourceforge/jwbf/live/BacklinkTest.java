@@ -291,38 +291,5 @@ public class BacklinkTest extends LiveTestFather {
 				+ COUNT,
 				i > COUNT -1);
 	}
-	
-	/*
-	 * 
-DEBUG [main] net.sourceforge.jwbf.actions.HttpActionClient: http://localhost/mediawiki-1.9.6/index.php?title=Back10&redirect=no || POST: HTTP/1.1 200 OK
-DEBUG [main] net.sourceforge.jwbf.actions.HttpActionClient: path is: /mediawiki-1.9.6/index.php
-DEBUG [main] net.sourceforge.jwbf.actions.HttpActionClient: /mediawiki-1.9.6/index.php?title=Back11&action=edit&dontcountme=s
-DEBUG [main] net.sourceforge.jwbf.actions.HttpActionClient: GET: HTTP/1.1 200 OK
-	 */
-	/**
-	 * Test backlinks.
-	 * 
-	 * @throws Exception
-	 *             a
-	 */
-	@Test
-	public final void backlinksCustomWiki() throws Exception {
 
-		bot = new MediaWikiBot(getValue("backlinks_customWiki_url"));
-		bot.login(getValue("backlinks_customWiki_user"),
-				getValue("backlinks_customWiki_pass"));
-		Iterator<String> is = bot.getBacklinkTitles(
-				getValue("backlinks_customWiki_article")).iterator();
-		int i = 0;
-		while (is.hasNext()) {
-			is.next();
-			i++;
-			if (i > getIntValue("backlinks_customWiki_article_count") + 1) {
-				break;
-			}
-		}
-		Assert.assertTrue("Fail: " + i + " < "
-				+ getIntValue("backlinks_customWiki_article_count"),
-				i > getIntValue("backlinks_customWiki_article_count"));
-	}
 }

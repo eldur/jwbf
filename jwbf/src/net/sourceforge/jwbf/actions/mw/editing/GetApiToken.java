@@ -5,6 +5,8 @@ import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
+import net.sourceforge.jwbf.actions.Get;
+import net.sourceforge.jwbf.actions.mw.HttpAction;
 import net.sourceforge.jwbf.actions.mw.util.MWAction;
 import net.sourceforge.jwbf.actions.mw.util.ProcessException;
 import net.sourceforge.jwbf.actions.mw.util.VersionException;
@@ -12,7 +14,6 @@ import net.sourceforge.jwbf.bots.MediaWikiBot;
 import net.sourceforge.jwbf.contentRep.mw.Siteinfo;
 import net.sourceforge.jwbf.contentRep.mw.Userinfo;
 
-import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.log4j.Logger;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -24,13 +25,16 @@ import org.xml.sax.InputSource;
  * Action class using the MediaWiki-<a
  * href="http://www.mediawiki.org/wiki/API:Changing_wiki_content"
  * >Editing-API</a>.
+ * <br />
+ * Its job is to get the token for some actions like delete or edit.
  *
  * @author Max Gensthaler
+ * @author Thomas Stock
  * @supportedBy MediaWikiAPI 1.12
  * @supportedBy MediaWikiAPI 1.13
  */
-class GetToken extends MWAction {
-	private static final Logger LOG = Logger.getLogger(GetToken.class);
+abstract class GetApiToken extends MWAction {
+	private static final Logger LOG = Logger.getLogger(GetApiToken.class);
 	/** Types that need a token. See API field intoken. */
 	// TODO this does not feel the elegant way.
 	// Probably put complete request URIs into this enum objects
@@ -38,6 +42,10 @@ class GetToken extends MWAction {
 	public enum Intoken { DELETE, EDIT, MOVE, PROTECT, EMAIL };
 	private String token = null;
 
+	private boolean first = true;
+	private boolean second = true;
+	
+	private Get msg;
 	/**
 	 * Constructs a new <code>GetToken</code> action.
 	 * @param intoken type to get the token for
@@ -46,7 +54,7 @@ class GetToken extends MWAction {
 	 * @param ui user info object
 	 * @throws VersionException if this action is not supported of the MediaWiki version connected to
 	 */
-	public GetToken(Intoken intoken, String title, Siteinfo si, Userinfo ui) throws VersionException {
+	protected GetApiToken(Intoken intoken, String title, Siteinfo si, Userinfo ui) throws VersionException {
 		switch (si.getVersion()) {
 		case MW1_09:
 		case MW1_10:
@@ -74,7 +82,7 @@ class GetToken extends MWAction {
 					+ "&intoken=" + intoken.toString().toLowerCase()
 					+ "&titles=" + URLEncoder.encode(title, MediaWikiBot.CHARSET)
 					+ "&format=xml";
-			msgs.add(new GetMethod(uS));
+			msg = new Get(uS);
 		} catch (UnsupportedEncodingException e) {
 			LOG.error(e.getMessage(), e);
 		}
@@ -84,7 +92,7 @@ class GetToken extends MWAction {
 	 * Returns the requested token after parsing the result from MediaWiki.
 	 * @return the requested token
 	 */
-	public String getToken() {
+	protected String getToken() {
 		return token;
 	}
 
@@ -94,29 +102,51 @@ class GetToken extends MWAction {
 	 * @return empty string
 	 */
 	@Override
-	public String processAllReturningText(final String s) throws ProcessException {
-		if( LOG.isTraceEnabled()) {
-			LOG.trace("enter GetToken.processAllReturningText(String)");
-		}
-		if( LOG.isDebugEnabled()) {
-			LOG.debug("Got returning text: \"" + s + "\"");
-		}
-		SAXBuilder builder = new SAXBuilder();
-		try {
-			Document doc = builder.build(new InputSource(new StringReader(s)));
-			process(doc);
-		} catch (JDOMException e) {
-			if(s.startsWith("unknown_action:")) {
-				LOG.error("Adding '$wgEnableWriteAPI = true;' to your MediaWiki's LocalSettings.php might remove this problem.", e);
-			} else {
+	public String processReturningText(String s, HttpAction hm)
+			throws ProcessException {
+		if (hm.getRequest().equals(msg.getRequest())) {
+			if (LOG.isTraceEnabled()) {
+				LOG.trace("enter GetToken.processAllReturningText(String)");
+			}
+			if (LOG.isDebugEnabled()) {
+				LOG.debug("Got returning text: \"" + s + "\"");
+			}
+			SAXBuilder builder = new SAXBuilder();
+			try {
+				Document doc = builder.build(new InputSource(
+						new StringReader(s)));
+				process(doc);
+			} catch (JDOMException e) {
+				if (s.startsWith("unknown_action:")) {
+					LOG.error(
+									"Adding '$wgEnableWriteAPI = true;' to your MediaWiki's LocalSettings.php might remove this problem.",
+									e);
+				} else {
+					LOG.error(e.getMessage(), e);
+				}
+			} catch (IOException e) {
 				LOG.error(e.getMessage(), e);
 			}
-		} catch (IOException e) {
-			LOG.error(e.getMessage(), e);
 		}
 		return "";
 	}
 
+	public HttpAction getNextMessage() {
+		if (first) {
+			first = false;
+			return msg;	
+		} else {
+			second = false;
+			
+			return getSecondRequest();
+		}
+		
+	}
+	@Override
+	public boolean hasMoreMessages() {
+		return first || second;
+	}
+	abstract protected HttpAction getSecondRequest();
 	/**
 	 * Processing the XML {@link Document} returned from the MediaWiki API.
 	 * @param doc XML <code>Document</code>

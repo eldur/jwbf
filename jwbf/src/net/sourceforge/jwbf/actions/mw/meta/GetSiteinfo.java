@@ -4,23 +4,24 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Iterator;
 
+import net.sourceforge.jwbf.actions.Get;
+import net.sourceforge.jwbf.actions.mw.HttpAction;
 import net.sourceforge.jwbf.bots.MediaWikiBot;
 
-import org.apache.commons.httpclient.methods.GetMethod;
 import org.jdom.Element;
 
 public class GetSiteinfo extends GetVersion {
 
 	
-
+	private Get msg;
 	public GetSiteinfo() {
 		
 		
 
 			try {
-				msgs.add(new GetMethod("/api.php?action=query&meta=siteinfo" +
-						"&siprop=" + URLEncoder.encode("general|namespaces|interwikimap", MediaWikiBot.CHARSET) +
-						"&format=xml"));
+				msg = new Get("/api.php?action=query&meta=siteinfo" +
+						"&siprop=" + URLEncoder.encode("general|namespaces", MediaWikiBot.CHARSET) +
+						"&format=xml");
 			} catch (UnsupportedEncodingException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -28,7 +29,10 @@ public class GetSiteinfo extends GetVersion {
 		
 		
 	}
-	
+	@Override
+	public HttpAction getNextMessage() {
+		return msg;
+	}
 
 	@SuppressWarnings("unchecked")
 	protected void findContent(final Element root) {

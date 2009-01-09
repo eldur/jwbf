@@ -25,11 +25,14 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
+import net.sourceforge.jwbf.actions.Get;
+import net.sourceforge.jwbf.actions.mw.HttpAction;
 import net.sourceforge.jwbf.actions.mw.MultiAction;
+import net.sourceforge.jwbf.actions.mw.util.ActionException;
 import net.sourceforge.jwbf.actions.mw.util.MWAction;
 import net.sourceforge.jwbf.actions.mw.util.ProcessException;
+import net.sourceforge.jwbf.bots.MediaWikiBotImpl;
 
-import org.apache.commons.httpclient.methods.GetMethod;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -53,7 +56,7 @@ public class GetRecentchanges extends MWAction implements MultiAction<String> {
 
 	/** value for the bllimit-parameter. **/
 	private int limit = 10;
-	
+	private Get msg;
 	/**
 	 * Collection that will contain the result
 	 * (titles of articles linking to the target) 
@@ -87,7 +90,7 @@ public class GetRecentchanges extends MWAction implements MultiAction<String> {
 			
 	
 			
-		msgs.add(new GetMethod(uS));
+		msg = new Get(uS);
 				
 		
 	}
@@ -95,14 +98,14 @@ public class GetRecentchanges extends MWAction implements MultiAction<String> {
 	/**
 	 * 
 	 */
-	public GetRecentchanges(String ns) {
+	GetRecentchanges(String ns) {
 		generateRequest(ns);
 	}
 	
 	/**
 	 * 
 	 */
-	public GetRecentchanges(int count, String ns) {
+	GetRecentchanges(int count, String ns) {
 		this.limit = count;
 		generateRequest(ns);
 	}
@@ -178,6 +181,17 @@ public class GetRecentchanges extends MWAction implements MultiAction<String> {
 	 */
 	public GetRecentchanges getNextAction() {
 		return null;
+	}
+
+	public static Iterable<String> get(MediaWikiBotImpl bot, int count, int[] namespaces) throws ActionException {
+		GetRecentchanges a = new GetRecentchanges(count,
+				createNsString(namespaces));
+		
+		return bot.performMultiAction(a);
+	}
+
+	public HttpAction getNextMessage() {
+		return msg;
 	}
 
 }

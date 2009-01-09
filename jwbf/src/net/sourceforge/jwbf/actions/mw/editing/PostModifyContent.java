@@ -18,92 +18,155 @@
  */
 package net.sourceforge.jwbf.actions.mw.editing;
 
-
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Hashtable;
 
-import net.sourceforge.jwbf.actions.mw.util.ActionException;
+import net.sourceforge.jwbf.actions.Get;
+import net.sourceforge.jwbf.actions.Post;
+import net.sourceforge.jwbf.actions.mw.HttpAction;
 import net.sourceforge.jwbf.actions.mw.util.MWAction;
 import net.sourceforge.jwbf.actions.mw.util.ProcessException;
 import net.sourceforge.jwbf.bots.MediaWikiBot;
 import net.sourceforge.jwbf.contentRep.mw.ContentAccessable;
 
-import org.apache.commons.httpclient.NameValuePair;
-import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.log4j.Logger;
 
 /**
  * TODO no api use.
+ * 
  * @author Thomas Stock
  * 
  */
 public class PostModifyContent extends MWAction {
 
-	
+	private boolean first = true;
+	private boolean second = true;
+	private final Get g;
+	private final ContentAccessable a;
 	private static final Logger LOG = Logger.getLogger(PostModifyContent.class);
-	
-	public  static void doWrite(MediaWikiBot bot, ContentAccessable a) throws ActionException, ProcessException {
-		if (!bot.isLoggedIn()) {
-			throw new ActionException("Please login first");
-		}
-		Hashtable<String, String> tab = new Hashtable<String, String>();
-		bot.performAction(new GetEnvironmentVars(a.getLabel(), tab));
-		bot.performAction(new PostModifyContent(a, tab));
-		
-	}
+	private Hashtable<String, String> tab = new Hashtable<String, String>();
+
+
 	/**
 	 * 
-	 * @param a the
-	 * @param tab internal value set
-	 * @param login a 
+	 * @param a
+	 *            the
 	 */
-	public PostModifyContent(final ContentAccessable a,
-			final Hashtable<String, String> tab) {
-
+	public PostModifyContent(final ContentAccessable a) {
+		this.a = a;
 		String uS = "";
 		try {
-			uS = "/index.php?title=" + URLEncoder.encode(a.getLabel(), MediaWikiBot.CHARSET)
+			uS = "/index.php?title="
+					+ URLEncoder.encode(a.getLabel(), MediaWikiBot.CHARSET)
+					+ "&action=edit&dontcountme=s";
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		g = new Get(uS);
+
+	}
+
+	
+	public HttpAction getNextMessage() {
+		if (first) {
+			first = false;
+			return g;
+		}
+
+		String uS = "";
+		uS = "";
+		try {
+			uS = "/index.php?title="
+					+ URLEncoder.encode(a.getLabel(), MediaWikiBot.CHARSET)
 					+ "&action=submit";
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
+		Post pm = new Post(uS);
+		pm.addParam("wpSave", "Save");
 
-		NameValuePair action = new NameValuePair("wpSave", "Save");
-		NameValuePair wpStarttime = new NameValuePair("wpStarttime", tab
-				.get("wpStarttime"));
-		NameValuePair wpEditToken = new NameValuePair("wpEditToken", tab
-				.get("wpEditToken"));
-		NameValuePair wpEdittime = new NameValuePair("wpEdittime", tab
-				.get("wpEdittime"));
+		pm.addParam("wpStarttime", tab.get("wpStarttime"));
 
-		NameValuePair wpTextbox = new NameValuePair("wpTextbox1", a.getText());
-		
+		pm.addParam("wpEditToken", tab.get("wpEditToken"));
+
+		pm.addParam("wpEdittime", tab.get("wpEdittime"));
+
+		pm.addParam("wpTextbox1", a.getText());
+
 		String editSummaryText = a.getEditSummary();
 		if (editSummaryText != null && editSummaryText.length() > 200) {
 			editSummaryText = editSummaryText.substring(0, 200);
 		}
-		
-		NameValuePair wpSummary = new NameValuePair("wpSummary", editSummaryText);
-		
-		
-		NameValuePair wpMinoredit = new NameValuePair();
-		
-		if (a.isMinorEdit()) {
-			wpMinoredit.setValue("1");
-			wpMinoredit.setName("wpMinoredit");
-		}
-		
-		
-		
-		
-		LOG.info("WRITE: " + a.getLabel());
-		PostMethod pm = new PostMethod(uS);
-		pm.getParams().setContentCharset(MediaWikiBot.CHARSET);
 
-		pm.setRequestBody(new NameValuePair[] { action, wpStarttime,
-				wpEditToken, wpEdittime, wpTextbox, wpSummary, wpMinoredit });
-		msgs.add(pm);
+		pm.addParam("wpSummary", editSummaryText);
+		if (a.isMinorEdit()) {
+
+			pm.addParam("wpMinoredit", "1");
+
+		}
+
+		LOG.info("WRITE: " + a.getLabel());
+
+		second = false;
+		return pm;
+	}
+
+	@Override
+	public boolean hasMoreMessages() {
+		return first || second;
+	}
+
+	@Override
+	public String processReturningText(String s, HttpAction hm)
+			throws ProcessException {
+		if (hm.getRequest().equals(g.getRequest())) {
+			getWpValues(s, tab);
+			LOG.debug(tab);
+		}
+		return s;
+	}
+
+	/**
+	 * 
+	 * @param text
+	 *            where to search
+	 * @param tab
+	 *            tabel with required values
+	 */
+	private void getWpValues(final String text, Hashtable<String, String> tab) {
+
+		String[] tParts = text.split("\n");
+		// System.out.println(tParts.length);
+		for (int i = 0; i < tParts.length; i++) {
+			if (tParts[i].indexOf("wpEditToken") > 0) {
+				// \<input type='hidden' value=\"(.*?)\" name=\"wpEditToken\"
+				int begin = tParts[i].indexOf("value") + 7;
+				int end = tParts[i].indexOf("name") - 2;
+				// System.out.println(line.substring(begin, end));
+				// System.out.println("read wp token:" + tParts[i]);
+				tab.put("wpEditToken", tParts[i].substring(begin, end));
+
+			} else if (tParts[i].indexOf("wpEdittime") > 0) {
+				// value="(\d+)" name=["\']wpEdittime["\']
+				int begin = tParts[i].indexOf("value") + 7;
+				int end = tParts[i].indexOf("name") - 2;
+				// System.out.println( "read wp edit: " +
+				// tParts[i].substring(begin, end));
+
+				tab.put("wpEdittime", tParts[i].substring(begin, end));
+
+			} else if (tParts[i].indexOf("wpStarttime") > 0) {
+				// value="(\d+)" name=["\']wpStarttime["\']
+				int begin = tParts[i].indexOf("value") + 7;
+				int end = tParts[i].indexOf("name") - 2;
+				// System.out.println("read wp start:" + tParts[i]);
+
+				tab.put("wpStarttime", tParts[i].substring(begin, end));
+
+			}
+		}
+
 	}
 
 }

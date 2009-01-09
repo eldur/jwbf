@@ -21,44 +21,92 @@ package net.sourceforge.jwbf.actions.mw.editing;
 
 
 import java.io.FileNotFoundException;
-import java.util.Hashtable;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 
+import net.sourceforge.jwbf.actions.FilePost;
+import net.sourceforge.jwbf.actions.Get;
+import net.sourceforge.jwbf.actions.Post;
+import net.sourceforge.jwbf.actions.mw.HttpAction;
 import net.sourceforge.jwbf.actions.mw.util.ActionException;
 import net.sourceforge.jwbf.actions.mw.util.MWAction;
 import net.sourceforge.jwbf.actions.mw.util.ProcessException;
+import net.sourceforge.jwbf.actions.mw.util.VersionException;
 import net.sourceforge.jwbf.bots.MediaWikiBot;
+import net.sourceforge.jwbf.bots.MediaWikiBotImpl;
 import net.sourceforge.jwbf.contentRep.mw.SimpleFile;
 
-import org.apache.commons.httpclient.methods.PostMethod;
-import org.apache.commons.httpclient.methods.multipart.FilePart;
-import org.apache.commons.httpclient.methods.multipart.MultipartRequestEntity;
-import org.apache.commons.httpclient.methods.multipart.Part;
-import org.apache.commons.httpclient.methods.multipart.StringPart;
 import org.apache.log4j.Logger;
 
 /**
- * TODO no api use.
+ * <p>
+ * To allow your bot to upload media in your MediaWiki add at least the following line
+ * to your MediaWiki's LocalSettings.php:<br>
+ *
+ * <pre>
+ * $wgEnableUploads = true;
+ * </pre>
+ * 
+ * For more details see also 
+ * <a href="http://www.mediawiki.org/wiki/Help:Configuration_settings#Uploads">Upload Config</a>
+ * 
  * @author Justus Bisser
+ * @author Thomas Stock
+ * @supportedBy MediaWiki 1.11, 1.12, 1.13
  * 
  */
 public class FileUpload extends MWAction {
 
 	
 	private static final Logger LOG = Logger.getLogger(FileUpload.class);
+	private final Get g;
+	private boolean first = true;
+	private boolean second = true;
+	private final SimpleFile a;
+	private Post msg;
 	/**
 	 * 
 	 * @param a the
-	 * @param tab internal value set
-	 * @param login a 
+	 * @param bot a 
 	 * @throws ActionException on problems with file
+	 * @throws VersionException on wrong MediaWiki version
 	 */
-	public FileUpload(final SimpleFile a,
-			final Hashtable<String, String> tab) throws ActionException {
+	public FileUpload(final SimpleFile a, MediaWikiBotImpl bot) throws ActionException, VersionException {
 
 		if (!a.getFile().isFile() || !a.getFile().canRead()) {
 			throw new ActionException("no such file " + a.getFile());
 		}
+		
+		if (!bot.isLoggedIn()) {
+			throw new ActionException("Please login first");
+		}
+		
+		
+		switch (bot.getVersion()) {
+		case MW1_09:
+		case MW1_10:
+			throw new VersionException("Not supportet by this version of MW");
+		}
 
+		
+		this.a = a;
+		String uS = "";
+		try {
+			uS = "/index.php?title="
+					+ URLEncoder.encode(a.getLabel(), MediaWikiBot.CHARSET)
+					+ "&action=edit&dontcountme=s";
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		g = new Get(uS);
+		
+	}
+	
+	public HttpAction getNextMessage() {
+		if (first) {
+			first = false;
+			return g;
+		}
 		String uS = "";
 		// try {
 		uS = "/Spezial:Hochladen";
@@ -73,54 +121,54 @@ public class FileUpload extends MWAction {
 		try {
 
 			LOG.info("WRITE: " + a.getLabel());
-			PostMethod post = new PostMethod(uS);
-			Part[] parts;
+			FilePost post = new FilePost(uS);
+	
 			if (a.getText().length() == 0) {
-				parts = new Part[] {
-						new StringPart("wpDestFile", a.getLabel()),
-						new StringPart("wpIgnoreWarning", "true"),
-						new StringPart("wpSourceType", "file"),
-						new StringPart("wpUpload", "Upload file"),
-						// new StringPart("wpUploadDescription", "false"),
-						// new StringPart("wpWatchthis", "false"),
+				post.addPart("wpDestFile", a.getLabel());
+			
+				post.addPart("wpIgnoreWarning", "true");
+				post.addPart("wpSourceType", "file");
+				post.addPart("wpUpload", "Upload file");
+//				 post.addPart("wpUploadDescription", "false");
+//				 post.addPart("wpWatchthis", "false");
 
-						new FilePart("wpUploadFile", a.getFile())
+				post.addPart("wpUploadFile", a.getFile());
 				// new FilePart( f.getName(), f)
 
-				};
+			
 			} else {
-				parts = new Part[] {
-						new StringPart("wpDestFile", a.getLabel()),
-						new StringPart("wpIgnoreWarning", "true"),
-						new StringPart("wpSourceType", "file"),
-						new StringPart("wpUpload", "Upload file"),
+				post.addPart("wpDestFile", a.getLabel());
+				
+				post.addPart("wpIgnoreWarning", "true");
+				post.addPart("wpSourceType", "file");
+				post.addPart("wpUpload", "Upload file");
 						// new StringPart("wpUploadDescription", "false"),
 						// new StringPart("wpWatchthis", "false"),
 
-						new FilePart("wpUploadFile", a.getFile()),
+				post.addPart("wpUploadFile", a.getFile());
 						// new FilePart( f.getName(), f)
-						new StringPart("wpUploadDescription", a.getText()) };
+				post.addPart("wpUploadDescription", a.getText());
+				
 
 			}
-			post.setRequestEntity(new MultipartRequestEntity(parts, post
-					.getParams()));
+			if (!a.getFile().exists()) {
+				throw new FileNotFoundException();
+			}
+	
 
-			// int statusCode = hc.executeMethod(post);
-			// log(statusCode);
-
-			// log(Arrays.asList(post.getResponseHeaders()));
-			//
-			// String res = post.getResponseBodyAsString();
-			// LOG.debug(res);
-			// post.releaseConnection();
-			// pm.setRequestBody(new NameValuePair[] { action, wpStarttime,
-			// wpEditToken, wpEdittime, wpTextbox, wpSummary, wpMinoredit });
-			msgs.add(post);
+			msg = post;
+			second = false;
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		return msg;
 	}
+	
+	@Override
+	public boolean hasMoreMessages() {
+		return first || second;
+	}
+	
 	@Override
 	public String processAllReturningText(String s) throws ProcessException {
 		
@@ -132,15 +180,6 @@ public class FileUpload extends MWAction {
 		}
 		return "";
 	}
-	public static void doUpload(MediaWikiBot bot, SimpleFile file) throws ActionException, ProcessException {
-		if (!bot.isLoggedIn()) {
-			throw new ActionException("Please login first");
-		}
 
-		Hashtable<String, String> tab = new Hashtable<String, String>();
-		bot.performAction(new GetEnvironmentVars(file.getLabel(), tab));
-		bot.performAction(new FileUpload(file, tab));
-		
-	}
 
 }

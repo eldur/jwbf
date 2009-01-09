@@ -18,17 +18,20 @@
  */
 package net.sourceforge.jwbf.live;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 import java.net.MalformedURLException;
 
 import net.sourceforge.jwbf.LiveTestFather;
 import net.sourceforge.jwbf.actions.mw.util.ActionException;
+import net.sourceforge.jwbf.actions.mw.util.ProcessException;
 import net.sourceforge.jwbf.bots.MediaWikiBot;
 
 import org.apache.log4j.PropertyConfigurator;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import com.sun.source.tree.AssertTree;
 /**
  * Test Login.
  * @author Thomas Stock
@@ -80,76 +83,24 @@ public class LoginTest extends LiveTestFather {
 	 * Test FAIL login on Wikipedia.
 	 * @throws Exception a
 	 */
-	@Test(expected = ActionException.class) 
+	@Test(expected=ActionException.class)
 	public final void loginWikipedia1Fail() throws Exception {
 
 			bot = new MediaWikiBot(getValue("login_wikipedia1_url"));
 			bot.login("Klhjfd", "4sdf");
+			assertFalse("Login does not exist", bot.isLoggedIn());
 
 	}
-	
-	/**
-	 * Test login on Wikipedia. 
-	 * @throws Exception a
-	 */
-	@Test
-	public final void loginWikipedia2() throws Exception {
 		
-		bot = new MediaWikiBot(getValue("login_wikipedia2_url"));
-		bot.login(getValue("login_wikipedia2_user_valid"), getValue("login_wikipedia2_pass_valid"));
-		assertEquals(true, bot.isLoggedIn());
-	}
-	
-	/**
-	 * Test login on Wikipedia .
-	 * @throws Exception a
-	 */
-	@Test
-	public final void loginWikipedia2Urlformats() throws Exception {
-		String url = getValue("login_wikipedia2_url");
-		int lastSlash = url.lastIndexOf("/");
-		url = url.substring(0, lastSlash + 1);
-		bot = new MediaWikiBot(url);
-		
-		bot.login(getValue("login_wikipedia2_user_valid"), getValue("login_wikipedia2_pass_valid"));
-		assertEquals(true, bot.isLoggedIn());
-	}
-	
-	/**
-	 * Test login on Wikipedia .
-	 * @throws Exception a
-	 */
-	@Test(expected = MalformedURLException.class)
-	public final void loginWikipedia2Urlformats2() throws Exception {
-		String url = getValue("login_wikipedia2_url");
-		int lastSlash = url.lastIndexOf("/");
-		url = url.substring(0, lastSlash);
-		bot = new MediaWikiBot(url);
-		bot.login(getValue("login_wikipedia2_user_valid"), getValue("login_wikipedia2_pass_valid"));
-		assertEquals(true, bot.isLoggedIn());
-	}
-	/**
-	 * Test FAIL login on english Wikipedia.
-	 * @throws Exception a
-	 */
-	@Test(expected = ActionException.class) 
-	public final void loginWikipedia2Fail() throws Exception {
-
-			bot = new MediaWikiBot(getValue("login_wikipedia2_url"));
-			bot.login("Klhjfd", "4sdf");
-
-	}
-
-	
 	/**
 	 * Test login on a Mediawiki. 
 	 * @throws Exception a
 	 */
 	@Test
-	public final void loginCustomWiki1() throws Exception {
-		
-		bot = new MediaWikiBot(getValue("login_customWiki1_url"));
-		bot.login(getValue("login_customWiki1_user"), getValue("login_customWiki1_pass"));
+	public final void loginWikiMW1_09() throws Exception {
+		assertTrue("shuld end with .php" , getValue("wikiMW1_09_url").endsWith(".php"));
+		bot = new MediaWikiBot(getValue("wikiMW1_09_url"));
+		bot.login(getValue("wikiMW1_09_user"), getValue("wikiMW1_09_pass"));
 		assertEquals(true, bot.isLoggedIn());
 	}
 	
@@ -158,9 +109,9 @@ public class LoginTest extends LiveTestFather {
 	 * @throws Exception a
 	 */
 	@Test(expected = ActionException.class) 
-	public final void loginCustomWiki1Fail() throws Exception {
+	public final void loginWikiMW1_09Fail() throws Exception {
 
-			bot = new MediaWikiBot(getValue("login_customWiki1_url"));
+			bot = new MediaWikiBot(getValue("wikiMW1_09_url"));
 			bot.login("Klhjfd", "4sdf");
 
 	}
@@ -169,13 +120,14 @@ public class LoginTest extends LiveTestFather {
 	 * @throws Exception a
 	 */
 	@Test(expected = MalformedURLException.class) 
-	public final void loginCustomWiki1UrlformatsFail() throws Exception {
+	public final void loginWikiMW1_09UrlformatsFail() throws Exception {
 		
-		String url = getValue("login_customWiki2_url");
+		String url = getValue("wikiMW1_09_url");
 		int lastSlash = url.lastIndexOf("/");
 		url = url.substring(0, lastSlash);
+		assertFalse("shuld not end with .php" , url.endsWith(".php"));
 		bot = new MediaWikiBot(url);
-		bot.login(getValue("login_customWiki2_user"), getValue("login_customWiki2_pass"));
+		bot.login(getValue("wikiMW1_09_user"), getValue("wikiMW1_09_pass"));
 	}
 	
 
@@ -188,52 +140,19 @@ public class LoginTest extends LiveTestFather {
 	 * @throws Exception a
 	 */
 	@Test
-	public final void loginCustomWiki1Urlformats() throws Exception {
+	public final void loginWikiMW1_09Urlformats() throws Exception {
 		
-		bot = new MediaWikiBot(getValue("login_customWiki1_url"));
-		bot.login(getValue("login_customWiki1_user"), getValue("login_customWiki1_pass"));
-		assertEquals(true, bot.isLoggedIn());
-		
-		String url = getValue("login_customWiki1_url");
+
+		String url = getValue("wikiMW1_09_url");
 		int lastSlash = url.lastIndexOf("/");
 		url = url.substring(0, lastSlash + 1);
-		
+		assertFalse("shuld not end with .php" , url.endsWith(".php"));
 		bot = new MediaWikiBot(url);
-		bot.login(getValue("login_customWiki1_user"), getValue("login_customWiki1_pass"));
+		bot.login(getValue("wikiMW1_09_user"), getValue("wikiMW1_09_pass"));
 		assertEquals(true, bot.isLoggedIn());
 	}
 	
 	
-	
-	/**
-	 * Test login on MediaWiki specialchars. Here you should use
-	 * logins and passworts with special chars like: "' اي.
-	 * @throws Exception a
-	 */
-	@Test
-	public final void loginCustomWiki3() throws Exception {
-		
-		String user = getValue("login_customWiki3_user");
-		String pass = getValue("login_customWiki3_pass");
-		bot = new MediaWikiBot(getValue("login_customWiki3_url"));
-		bot.login(user, pass);
-		
-		assertEquals(true, bot.isLoggedIn());
-		
-		
-	}
-	
-	/**
-	 * Test login on a Mediawiki. 
-	 * @throws Exception a
-	 */
-	@Test
-	public final void loginCustomWiki2() throws Exception {
-		
-		bot = new MediaWikiBot(getValue("login_customWiki2_url"));
-		bot.login(getValue("login_customWiki2_user"), getValue("login_customWiki2_pass"));
-		assertEquals(true, bot.isLoggedIn());
-	}
 	
 
 

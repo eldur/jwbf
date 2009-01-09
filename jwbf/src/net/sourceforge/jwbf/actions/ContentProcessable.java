@@ -19,13 +19,11 @@
 package net.sourceforge.jwbf.actions;
 
 
-import java.util.List;
-
+import net.sourceforge.jwbf.actions.mw.HttpAction;
 import net.sourceforge.jwbf.actions.mw.util.CookieException;
 import net.sourceforge.jwbf.actions.mw.util.ProcessException;
 
 import org.apache.commons.httpclient.Cookie;
-import org.apache.commons.httpclient.HttpMethod;
 /**
  * 
  * @author Thomas Stock
@@ -39,7 +37,7 @@ public interface ContentProcessable {
 	 * @param hm a
 	 * @throws CookieException on problems with cookies
 	 */
-	void validateReturningCookies(final Cookie[] cs, HttpMethod hm) throws CookieException;
+	void validateReturningCookies(final Cookie[] cs, HttpAction hm) throws CookieException;
 
 	/**
 	 * 
@@ -48,11 +46,13 @@ public interface ContentProcessable {
 	 * @return the retruning text or a modification of it
 	 * @throws ProcessException on internal problems of implementing class
 	 */
-	String processReturningText(final String s, HttpMethod hm) throws ProcessException;
+	String processReturningText(final String s, HttpAction hm) throws ProcessException;
 	
 	/**
 	 * @return the of messages in this action
 	 */
-	List<HttpMethod> getMessages();
+	HttpAction getNextMessage();
+
+	boolean hasMoreMessages();
 	
 }

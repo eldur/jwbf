@@ -26,12 +26,14 @@ import java.util.Collection;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import net.sourceforge.jwbf.actions.Get;
+import net.sourceforge.jwbf.actions.mw.HttpAction;
 import net.sourceforge.jwbf.actions.mw.MultiAction;
+import net.sourceforge.jwbf.actions.mw.util.ActionException;
 import net.sourceforge.jwbf.actions.mw.util.MWAction;
 import net.sourceforge.jwbf.actions.mw.util.ProcessException;
 import net.sourceforge.jwbf.bots.MediaWikiBot;
-
-import org.apache.commons.httpclient.methods.GetMethod;
+import net.sourceforge.jwbf.bots.MediaWikiBotImpl;
 
 
 /**
@@ -45,7 +47,7 @@ public class GetTemplateUserTitles extends MWAction implements MultiAction<Strin
 
 	/** constant value for the eilimit-parameter. **/
 	private static final int LIMIT = 50;
-	
+	private Get msg;
 	/**
 	 * Collection that will contain the result
 	 * (titles of articles using the template) 
@@ -66,7 +68,7 @@ public class GetTemplateUserTitles extends MWAction implements MultiAction<Strin
 	 * (from outside this class).
 	 * For the parameters, see {@link GetTemplateUserTitles#generateRequest(String, String, String)}
 	 */
-	public GetTemplateUserTitles(String templateName, String namespace){
+	GetTemplateUserTitles(String templateName, String namespace){
 		generateRequest(templateName,namespace,null);
 	}
 	
@@ -110,7 +112,7 @@ public class GetTemplateUserTitles extends MWAction implements MultiAction<Strin
 				
 			}
 			
-			msgs.add(new GetMethod(uS));
+			msg = new Get(uS);
 		
 		} catch (UnsupportedEncodingException e) {
     	e.printStackTrace();
@@ -192,6 +194,18 @@ public class GetTemplateUserTitles extends MWAction implements MultiAction<Strin
 		else{
 			return new GetTemplateUserTitles(nextPageInfo);
 		}
+	}
+
+	public static Iterable<String> get(MediaWikiBotImpl bot,
+			String template, int[] namespaces) throws ActionException {
+		GetTemplateUserTitles a = new GetTemplateUserTitles(template,
+				createNsString(namespaces));
+
+		return bot.performMultiAction(a);
+	}
+
+	public HttpAction getNextMessage() {
+		return msg;
 	}
 	
 	

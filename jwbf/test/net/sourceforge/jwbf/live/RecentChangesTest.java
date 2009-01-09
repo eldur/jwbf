@@ -28,6 +28,7 @@ public class RecentChangesTest extends LiveTestFather {
 	public static void setUp() throws Exception {
 		PropertyConfigurator.configureAndWatch("test4log4j.properties",
 				60 * 1000);
+
 //		prepareTestWikis();
 	}
 	
@@ -36,21 +37,21 @@ public class RecentChangesTest extends LiveTestFather {
 		MediaWikiBot bot;
 		 
 		
-//		bot = new MediaWikiBot(getValue("wikiMW1_09_url"));
-//		bot.login(getValue("wikiMW1_09_user"), getValue("wikiMW1_09_pass"));
-//		
-//		for (int i = 0; i < 60; i++) {
-//			a.setLabel("Test " + i);
-//			bot.writeContent(a);
-//		}
-//		
-//		bot = new MediaWikiBot(getValue("wikiMW1_10_url"));
-//		bot.login(getValue("wikiMW1_10_user"), getValue("wikiMW1_11_pass"));
-//		
-//		for (int i = 0; i < 60; i++) {
-//			a.setLabel("Test " + i);
-//			bot.writeContent(a);
-//		}
+		bot = new MediaWikiBot(getValue("wikiMW1_09_url"));
+		bot.login(getValue("wikiMW1_09_user"), getValue("wikiMW1_09_pass"));
+		
+		for (int i = 0; i < 60; i++) {
+			a.setLabel("Test " + i);
+			bot.writeContent(a);
+		}
+		
+		bot = new MediaWikiBot(getValue("wikiMW1_10_url"));
+		bot.login(getValue("wikiMW1_10_user"), getValue("wikiMW1_11_pass"));
+		
+		for (int i = 0; i < 60; i++) {
+			a.setLabel("Test " + i);
+			bot.writeContent(a);
+		}
 //		
 //		bot = new MediaWikiBot(getValue("wikiMW1_11_url"));
 //		bot.login(getValue("wikiMW1_11_user"), getValue("wikiMW1_11_pass"));
@@ -90,7 +91,8 @@ public class RecentChangesTest extends LiveTestFather {
 		}
 		int i = 0;
 		while (is.hasNext()) {
-			is.next();
+			String out = is.next();
+			System.out.println("-- " + out);
 			i++;
 			if (i > COUNT -1) {
 				break;
@@ -208,11 +210,11 @@ public class RecentChangesTest extends LiveTestFather {
 	}
 	
 	private final void change(MediaWikiBot bot) throws ActionException, ProcessException {
-		SimpleArticle a = new SimpleArticle("Change", "0");
-		for (int i = 0; i < COUNT + 1; i++) {
-			a.setLabel("Cahnge " + i);
-			a.setText(System.currentTimeMillis() + "");
-			bot.writeContent(a);
-		}
+//		SimpleArticle a = new SimpleArticle("Change", "0");
+//		for (int i = 0; i < COUNT + 1; i++) {
+//			a.setLabel("Cahnge " + i);
+//			a.setText(System.currentTimeMillis() + "");
+//			bot.writeContent(a);
+//		}
 	}
 }

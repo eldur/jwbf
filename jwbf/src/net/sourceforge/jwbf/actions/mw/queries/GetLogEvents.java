@@ -25,11 +25,14 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
+import net.sourceforge.jwbf.actions.Get;
+import net.sourceforge.jwbf.actions.mw.HttpAction;
+import net.sourceforge.jwbf.actions.mw.util.ActionException;
 import net.sourceforge.jwbf.actions.mw.util.MWAction;
 import net.sourceforge.jwbf.actions.mw.util.ProcessException;
+import net.sourceforge.jwbf.bots.MediaWikiBotImpl;
 import net.sourceforge.jwbf.contentRep.mw.LogItem;
 
-import org.apache.commons.httpclient.methods.GetMethod;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -56,6 +59,8 @@ public class GetLogEvents extends MWAction  {
 	/** value for the bllimit-parameter. * */
 	private int limit = 10;
 
+	private Get msg;
+	
 	/**
 	 * Collection that will contain the result (titles of articles linking to
 	 * the target) after performing the action has finished.
@@ -87,7 +92,7 @@ public class GetLogEvents extends MWAction  {
 			
 		uS += "&lelimit=" + limit + "&format=xml";
 
-		msgs.add(new GetMethod(uS));
+		msg = new Get(uS);
 
 	}
 
@@ -95,14 +100,14 @@ public class GetLogEvents extends MWAction  {
 	/**
 	 * 
 	 */
-	public GetLogEvents(String... type) {
+	GetLogEvents(String... type) {
 		generateRequest(type);
 	}
 
 	/**
 	 * 
 	 */
-	public GetLogEvents(int limit, String... type) {
+	GetLogEvents(int limit, String... type) {
 		this.limit = limit;
 		generateRequest(type);
 	}
@@ -174,6 +179,20 @@ public class GetLogEvents extends MWAction  {
 	 */
 	public Iterator<LogItem> getResults() {
 		return logArray.iterator();
+	}
+
+
+	public static Iterator<LogItem> get(MediaWikiBotImpl bot, int limit,
+			String[] type) throws ActionException, ProcessException {
+		GetLogEvents c = new GetLogEvents(limit, type);
+		
+		bot.performAction(c);
+		return c.getResults();
+	}
+
+
+	public HttpAction getNextMessage() {
+		return msg;
 	}
 
 

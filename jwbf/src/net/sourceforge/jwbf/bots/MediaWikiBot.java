@@ -20,21 +20,14 @@
 
 package net.sourceforge.jwbf.bots;
 
+
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Iterator;
 
-import net.sourceforge.jwbf.actions.mw.MultiAction;
 import net.sourceforge.jwbf.actions.mw.editing.FileUpload;
-import net.sourceforge.jwbf.actions.mw.editing.GetRevision;
 import net.sourceforge.jwbf.actions.mw.editing.PostDelete;
-import net.sourceforge.jwbf.actions.mw.editing.PostModifyContent;
-import net.sourceforge.jwbf.actions.mw.login.PostLoginOld;
-import net.sourceforge.jwbf.actions.mw.meta.GetSiteinfo;
-import net.sourceforge.jwbf.actions.mw.meta.GetUserinfo;
-import net.sourceforge.jwbf.actions.mw.meta.GetVersion;
 import net.sourceforge.jwbf.actions.mw.queries.GetAllPageTitles;
 import net.sourceforge.jwbf.actions.mw.queries.GetBacklinkTitles;
 import net.sourceforge.jwbf.actions.mw.queries.GetFullCategoryMembers;
@@ -46,19 +39,11 @@ import net.sourceforge.jwbf.actions.mw.queries.GetSimpleCategoryMembers;
 import net.sourceforge.jwbf.actions.mw.queries.GetTemplateUserTitles;
 import net.sourceforge.jwbf.actions.mw.queries.GetBacklinkTitles.RedirectFilter;
 import net.sourceforge.jwbf.actions.mw.util.ActionException;
-import net.sourceforge.jwbf.actions.mw.util.MWAction;
 import net.sourceforge.jwbf.actions.mw.util.ProcessException;
-import net.sourceforge.jwbf.bots.util.LoginData;
 import net.sourceforge.jwbf.contentRep.mw.CategoryItem;
 import net.sourceforge.jwbf.contentRep.mw.ContentAccessable;
 import net.sourceforge.jwbf.contentRep.mw.LogItem;
-import net.sourceforge.jwbf.contentRep.mw.SimpleArticle;
 import net.sourceforge.jwbf.contentRep.mw.SimpleFile;
-import net.sourceforge.jwbf.contentRep.mw.Siteinfo;
-import net.sourceforge.jwbf.contentRep.mw.Userinfo;
-import net.sourceforge.jwbf.contentRep.mw.Version;
-
-import org.apache.log4j.Logger;
 
 /*
  * possible tag values: @supportedBy ------------------------------------------
@@ -68,7 +53,7 @@ import org.apache.log4j.Logger;
  */
 
 /**
- *
+ * 
  * This class helps you to interact with each mediawiki.
  *
  * How to use:
@@ -82,8 +67,9 @@ import org.apache.log4j.Logger;
  * @author Thomas Stock
  * @author Tobias Knerr
  * @author Justus Bisser
+ * 
  */
-public class MediaWikiBot extends HttpBot {
+public class MediaWikiBot extends MediaWikiBotImpl {
 
 	public static final int ARTICLE = 1 << 1;
 	public static final int MEDIA = 1 << 2;
@@ -109,26 +95,26 @@ public class MediaWikiBot extends HttpBot {
 	public static final int NS_CATEGORY = 14;
 	public static final int NS_CATEGORY_TALK = 15;
 
-	private static Logger log = Logger.getLogger(MediaWikiBot.class);
-	private LoginData login;
-	private boolean loggedIn = false;
+//	private static Logger log = Logger.getLogger(MediaWikiBot.class);
+//	private LoginData login;
+//
+//	private Version version = null;
+//	private Userinfo ui = null;
 
-	private Version version = null;
-	private Userinfo ui = null;
-	/**
-	 * @param u
-	 *            wikihosturl like "http://www.mediawiki.org/wiki/"
-	 */
-	public MediaWikiBot(final URL u) {
-		super();
-		setConnection(u);
-
-	}
 	/**
 	 * Design only for extension.
 	 */
 	protected MediaWikiBot() {
 		// do nothing, design only for extension
+	}
+	
+	/**
+	 * @param u
+	 *            wikihosturl like "http://www.mediawiki.org/wiki/"
+	 */
+	public MediaWikiBot(final URL u) {
+		super(u);
+
 	}
 
 	/**
@@ -138,406 +124,34 @@ public class MediaWikiBot extends HttpBot {
 	 *            if param url does not represent a well-formed url
 	 */
 	public MediaWikiBot(final String url) throws MalformedURLException {
-		super();
-		if (!(url.endsWith(".php") || url.endsWith("/"))) {
-			throw new MalformedURLException("(" + url + ") url must end with slash or .php");
-		}
-		setConnection(url);
+		super(url);
 
 	}
 
-	/**
-	 * Performs a old Login via cookie.
-	 *
-	 * @param username
-	 *            the username
-	 * @param passwd
-	 *            the password
-	 * @throws ActionException
-	 *             on problems with http, cookies and io
-	 * @supportedBy MediaWiki 1.9.x
-	 */
-	public final void httpLogin(final String username, final String passwd)
-			throws ActionException {
-		try {
-			performAction(new PostLoginOld(username, passwd, null));
-		} catch (ProcessException e) {
-			e.printStackTrace();
-		}
-		loggedIn = true;
-	}
 
 	/**
-	 * Performs a old Login via cookie.
-	 *  Special for LDAPAuth extention to authenticate against LDAP users
-	 * @param username
-	 *            the username
-	 * @param passwd
-	 *            the password
-	 * @param domain
-	 *            the password
-	 * @throws ActionException
-	 *             on problems with http, cookies and io
-	 * @supportedBy MediaWiki 1.9.x
-	 */
-	public final void httpLogin(final String username, final String passwd, final String domain)
-			throws ActionException {
-		try {
-			performAction(new PostLoginOld(username, passwd, domain));
-		} catch (ProcessException e) {
-			e.printStackTrace();
-		}
-		loggedIn = true;
-	}
-
-	/**
-	 * Performs a Login. Actual old cookie login works right, because is pending
-	 * on {@link #writeContent(ContentAccessable)}
-	 *
-	 * @param username
-	 *            the username
-	 * @param passwd
-	 *            the password
-	 * @param domain
-	 *            login domain
-	 * @throws ActionException
-	 *             on problems with http, cookies and io
-	 * @supportedBy MediaWiki 1.9.x
-	 */
-	public final void login(final String username, final String passwd, final String domain)
-			throws ActionException {
-		// code for 1.9.x API
-		// PostLogin pl = new PostLogin(username, passwd);
-		// performAction(pl);
-		// login = pl.getLoginData();
-		httpLogin(username, passwd, domain);
-	}
-
-	/**
-	 * Performs a Login. Actual old cookie login works right, because is pending
-	 * on {@link #writeContent(ContentAccessable)}
-	 *
-	 * @param username
-	 *            the username
-	 * @param passwd
-	 *            the password
-	 * @throws ActionException
-	 *             on problems with http, cookies and io
-	 * @supportedBy MediaWiki 1.9.x
-	 */
-	public final void login(final String username, final String passwd)
-			throws ActionException {
-		// code for 1.9.x API
-		// PostLogin pl = new PostLogin(username, passwd);
-		// performAction(pl);
-		// login = pl.getLoginData();
-		httpLogin(username, passwd, null);
-	}
-	/**
-	 *
-	 * @param name
-	 *            of article in a mediawiki like "Main Page"
-	 * @param properties {@link getRevision}
-	 * @return a content representation of requested article, never null
-	 * @throws ActionException
-	 *             on problems with http, cookies and io
-	 * @throws ProcessException on access problems
-	 * @supportedBy MediaWikiAPI 1.9.x TODO Test Required
-	 * @supportedBy MediaWikiAPI 1.10.x TODO Test Required
-	 * @supportedBy MediaWikiAPI 1.11.x TODO Test Required
-	 * @supportedBy MediaWikiAPI 1.12.x TODO Test Required
-	 * @supportedBy MediaWikiAPI 1.13.x TODO Test Required
-	 * @supportedBy MediaWikiAPI 1.14.x TODO Test Required
-	 */
-	public final SimpleArticle readContent(final String name, final int properties)
-			throws ActionException, ProcessException {
-		SimpleArticle a = null;
-		GetRevision ac = new GetRevision(name, properties);
-
-		performAction(ac);
-		a = ac.getArticle();
-
-		return a;
-	}
-
-	/**
-	 *
-	 * @param name
-	 *            of article in a mediawiki like "Main Page"
-	 * @return a content representation of requested article, never null
-	 * @throws ActionException
-	 *             on problems with http, cookies and io
-	 * @throws ProcessException on access problems
-	 * @supportedBy MediaWikiAPI 1.9.x
-	 * @supportedBy MediaWikiAPI 1.10.x
-	 * @supportedBy MediaWikiAPI 1.11.x
-	 */
-	public final SimpleArticle readContent(final String name)
-			throws ActionException, ProcessException {
-		return readContent(name, GetRevision.CONTENT
-				| GetRevision.COMMENT | GetRevision.USER);
-
-	}
-
-	/**
-	 * helper method generating a namespace string as required by the MW-api.
-	 *
-	 * @param namespaces
-	 *            namespace as
-	 * @return with numbers seperated by |
-	 */
-	protected String createNsString(int... namespaces) {
-
-		String namespaceString = "";
-
-		if (namespaces != null && namespaces.length != 0) {
-			for (int nsNumber : namespaces) {
-				namespaceString += nsNumber + "|";
-			}
-			// remove last '|'
-			if (namespaceString.endsWith("|")) {
-				namespaceString = namespaceString.substring(0, namespaceString
-						.length() - 1);
-			}
-		}
-		return namespaceString;
-	}
-
-	/**
-	 * generates an iterable with the results from a series of MultiAction when
-	 * given the first of the actions. The result type can vary to match the
-	 * result type of the MultiActions.
-	 *
-	 *
-	 * @param initialAction
-	 *            first action to perform, provides a next action.
-	 * @param <R>
-	 *            type like String
-	 * @return iterable providing access to the result values from the responses
-	 *         to the initial and subsequent actions. Attention: when the values
-	 *         from the subsequent actions are accessed for the first time, the
-	 *         connection to the MediaWiki must still exist, /*++ unless ...
-	 *
-	 * @throws ActionException
-	 *             on problems with http, cookies and io
-	 * @supportedBy MediaWiki 1.9.x API, 1.10.x API
-	 */
-	@SuppressWarnings("unchecked")
-	public final <R> Iterable<R> performMultiAction(MultiAction<R> initialAction)
-			throws ActionException {
-
-		/**
-		 * Iterable-class which will store all results which are already known
-		 * and perform the next action when more titles are needed
-		 */
-		@SuppressWarnings("hiding")
-		class MultiActionResultIterable<R> implements Iterable<R> {
-
-			private MultiAction<R> nextAction = null;
-
-			private ArrayList<R> knownResults = new ArrayList<R>();
-
-			/**
-			 * constructor.
-			 *
-			 * @param initialAction
-			 *            the
-			 */
-			public MultiActionResultIterable(MultiAction<R> initialAction) {
-				this.nextAction = initialAction;
-			}
-
-			/**
-			 * request more results if local interation seems to be empty.
-			 */
-			private void loadMoreResults() {
-
-				if (nextAction != null) {
-
-					try {
-
-						performAction((MWAction) nextAction); /*
-																 * ++ remove
-																 * that cast! ++
-																 */
-						knownResults.addAll(nextAction.getResults());
-
-						nextAction = nextAction.getNextAction();
-
-					} catch (ActionException ae) {
-						nextAction = null;
-					} catch (ProcessException e) {
-						nextAction = null;
-					}
-
-				}
-
-			}
-
-			/**
-			 * @return a
-			 */
-			public Iterator<R> iterator() {
-				return new MultiActionResultIterator<R>(this);
-			}
-
-			/**
-			 * matching Iterator, containing an index variable and a reference
-			 * to a MultiActionResultIterable
-			 */
-			class MultiActionResultIterator<R> implements Iterator<R> {
-
-				private int index = 0;
-
-				private MultiActionResultIterable<R> generatingIterable;
-
-				/**
-				 * constructor, relies on generatingIterable != null
-				 *
-				 * @param generatingIterable
-				 *            a
-				 */
-				MultiActionResultIterator(
-						MultiActionResultIterable<R> generatingIterable) {
-					this.generatingIterable = generatingIterable;
-				}
-
-				/**
-				 * if a new query is needed to request more; more results are
-				 * requested.
-				 *
-				 * @return true if has next
-				 */
-				public boolean hasNext() {
-					while (index >= generatingIterable.knownResults.size()
-							&& generatingIterable.nextAction != null) {
-						generatingIterable.loadMoreResults();
-					}
-					return index < generatingIterable.knownResults.size();
-				}
-
-				/**
-				 * if a new query is needed to request more; more results are
-				 * requested.
-				 *
-				 * @return a element of iteration
-				 */
-				public R next() {
-					while (index >= generatingIterable.knownResults.size()
-							&& generatingIterable.nextAction != null) {
-						generatingIterable.loadMoreResults();
-					}
-					return generatingIterable.knownResults.get(index++);
-				}
-
-				/**
-				 * is not supported
-				 */
-				public void remove() {
-					throw new UnsupportedOperationException();
-				}
-
-			}
-
-		}
-
-		return new MultiActionResultIterable(initialAction);
-
-	}
-
-	/* ++ TODO: loadAll-parameter ++ */
-
-	/**
-	 * get the titles of all pages meeting certain criteria; USE WITH CAUTION -
-	 * especially in big wikis!
-	 *
-	 * @param from
-	 *            page title to start from, may be null
-	 * @param prefix
-	 *            restricts search to titles that begin with this value, may be
-	 *            null
-	 * @param redirects
-	 *            include redirects in the list
-	 * @param nonredirects
-	 *            include nonredirects in the list
-	 * @param namespaces
-	 *            numbers of the namespaces (specified using varargs) that will
-	 *            be included in the search (will be ignored if redirects is
-	 *            false!)
-	 *
-	 * @return iterable providing access to the names of all articles which
-	 *         embed the template specified by the template-parameter.
-	 *         Attention: to get more article titles, the connection to the
-	 *         MediaWiki must still exist.
-	 *
-	 * @throws ActionException
-	 *             on problems with http, cookies and io
-	 *
-	 * @supportedBy MediaWikiAPI 1.9 allpages / ap TODO Test Required
-	 * @supportedBy MediaWikiAPI 1.10 allpages / ap TODO Test Required
-	 * @supportedBy MediaWikiAPI 1.11 allpages / ap TODO Test Required
+	 * @see GetAllPageTitles
 	 */
 	public Iterable<String> getAllPageTitles(String from, String prefix,
 			boolean redirects, boolean nonredirects, int... namespaces)
 			throws ActionException {
 		GetAllPageTitles a = new GetAllPageTitles(from, prefix, redirects,
-				nonredirects, createNsString(namespaces));
-
+				nonredirects, namespaces);
 		return performMultiAction(a);
-
 	}
 
 	/**
-	 * get the titles of all pages meeting certain criteria; USE WITH CAUTION -
-	 * especially in big wikis!
-	 *
-	 * @param namespaces
-	 *            numbers of the namespaces (specified using varargs) that will
-	 *            be included in the search (will be ignored if redirects is
-	 *            false!)
-	 *
-	 * @return iterable providing access to the names of all articles which
-	 *         embed the template specified by the template-parameter.
-	 *         Attention: to get more article titles, the connection to the
-	 *         MediaWiki must still exist.
-	 *
-	 * @throws ActionException
-	 *             on problems with http, cookies and io
-	 *
-	 * @supportedBy MediaWikiAPI 1.9 allpages / ap
-	 * @supportedBy MediaWikiAPI 1.10 allpages / ap
-	 * @supportedBy MediaWikiAPI 1.11 allpages / ap
+	 * @see GetAllPageTitles
 	 */
 	public Iterable<String> getAllPageTitles(int... namespaces)
 			throws ActionException {
+		return getAllPageTitles(null, null, false, true, namespaces);
 
-		GetAllPageTitles a = new GetAllPageTitles(null, null, false, true,
-				createNsString(namespaces));
-
-		return performMultiAction(a);
 
 	}
 
 	/**
-	 * variation of the getAllPageTitles-method which does not set a namespace
-	 * restriction.
-	 *
-	 * @param from
-	 *            page title to start from, may be null
-	 * @param prefix
-	 *            restricts search to titles that begin with this value, may be
-	 *            null
-	 * @param redirects
-	 *            include redirects in the list
-	 * @param nonredirects
-	 *            include nonredirects in the list
-	 * @return of titels
-	 * @throws ActionException
-	 *             on problems with http, cookies and io
-	 *
-	 * @supportedBy MediaWikiAPI 1.9 allpages / ap
-	 * @supportedBy MediaWikiAPI 1.10 allpages / ap
-	 * @supportedBy MediaWikiAPI 1.11 allpages / ap
+	 * @see GetAllPageTitles
 	 */
 	public Iterable<String> getAllPageTitles(String from, String prefix,
 			boolean redirects, boolean nonredirects) throws ActionException {
@@ -547,60 +161,20 @@ public class MediaWikiBot extends HttpBot {
 	}
 
 	/**
-	 * get the titles of all pages which contain a link to the given article;
-	 * this includes redirects to the page.
-	 *
-	 * @param article
-	 *            title of an article
-	 *
-	 * @param redirectFilter
-	 *            filter that determines how to handle redirects
-	 * @param namespaces
-	 *            numbers of the namespaces (specified using varargs) that will
-	 *            be included in the search;
-	 *            leaving this parameter out will include all namespaces
-	 *
-	 * @return iterable providing access to the names of all articles which link
-	 *         to the article specified by the article-parameter. Attention: to
-	 *         get more article titles, the connection to the MediaWiki must
-	 *         still exist.
-	 *
-	 * @throws ActionException
-	 *             on problems with http, cookies and io
-	 * @throws ProcessException on inner problems like version mismatch
-	 * @supportedBy MediaWikiAPI 1.9, 1.10, 1.11, 1.12, 1.13, 1.14
+	 * @see GetBacklinkTitles
 	 */
 	public Iterable<String> getBacklinkTitles(String article,
 			RedirectFilter redirectFilter, int... namespaces)
 			throws ActionException, ProcessException {
 
 		GetBacklinkTitles a = new GetBacklinkTitles(article,
-				redirectFilter, createNsString(namespaces), getVersion());
+				redirectFilter, getVersion(), namespaces);
 
 		return performMultiAction(a);
-
 	}
 
 	/**
-	 * variation of the getBacklinkTitles-method that returns
-	 * both redirects and non-redirects linking to the page.
-	 *
-	 * @param article
-	 *            title of an article
-	 *
-	 * @param namespaces
-	 *            numbers of the namespaces (specified using varargs) that will
-	 *            be included in the search
-	 *
-	 * @return iterable providing access to the names of all articles which link
-	 *         to the article specified by the article-parameter. Attention: to
-	 *         get more article titles, the connection to the MediaWiki must
-	 *         still exist.
-	 *
-	 * @throws ActionException
-	 *             on problems with http, cookies and io
-	 *
-	 * @see #getBacklinkTitles(String, RedirectFilter, int...)
+	 * @see GetBacklinkTitles
 	 */
 	public Iterable<String> getBacklinkTitles(String article, int... namespaces)
 			throws ActionException, ProcessException {
@@ -608,25 +182,7 @@ public class MediaWikiBot extends HttpBot {
 		return getBacklinkTitles(article, RedirectFilter.all, namespaces);
 	}
 	/**
-	 * variation of the getBacklinkTitles-method that returns
-	 * both redirects and non-redirects linking to the page.
-	 *
-	 * @param article
-	 *            title of an article
-	 *
-	 * @param namespaces
-	 *            numbers of the namespaces (specified using varargs) that will
-	 *            be included in the search
-	 *
-	 * @return iterable providing access to the names of all articles which link
-	 *         to the article specified by the article-parameter. Attention: to
-	 *         get more article titles, the connection to the MediaWiki must
-	 *         still exist.
-	 *
-	 * @throws ActionException
-	 *             on problems with http, cookies and io
-	 *
-	 * @see #getBacklinkTitles(String, RedirectFilter, int...)
+	 * @see GetBacklinkTitle
 	 */
 	public Iterable<String> getBacklinkTitles(String article, RedirectFilter redirectFilter)
 			throws ActionException, ProcessException {
@@ -636,34 +192,21 @@ public class MediaWikiBot extends HttpBot {
 
 
 	/**
-	 * variation of the getBacklinkTitles-method which does not set a namespace
-	 * restriction.
-	 *
-	 * @param article
-	 *            label of article
-	 * @return of article labels
-	 * @throws ActionException
-	 *             on problems with http, cookies and io
-	 * @see #getBacklinkTitles(String, RedirectFilter, int...)
+	 *  @see GetBacklinkTitle
 	 */
 	public Iterable<String> getBacklinkTitles(String article)
 			throws ActionException, ProcessException {
 
-		return getBacklinkTitles(article, RedirectFilter.all, null);
+		return getBacklinkTitles( article, RedirectFilter.all, null);
 	}
 
 
 	/**
-	 * Deletes the article with the given title.
-	 * @param title like "Buildings" or "Chemical elements"
-	 * @throws ActionException on any kind of http or version problems
-	 * @throws ProcessException on inner problems like a version mismatch
-	 * @supportedBy MediaWikiAPI 1.12
-	 * @supportedBy MediaWikiAPI 1.13
-	 * 
+	 * @see PostDelete
 	 */
 	public void postDelete(String title) throws ActionException, ProcessException {
-		PostDelete.doDelete(this, title);
+		
+		performAction(new PostDelete(title, getSiteinfo(), getUserinfo()));
 	}
 
 	/**
@@ -675,8 +218,7 @@ public class MediaWikiBot extends HttpBot {
 	 * @supportedBy MediaWikiAPI 1.11 categorymembers / cm  TODO Test Required
 	 */
 	public Iterable<String> getCategoryMembers(String category) throws ActionException, ProcessException {
-		GetSimpleCategoryMembers c = new GetSimpleCategoryMembers(category, "", getVersion());
-		return performMultiAction(c);
+		return getCategoryMembers(category, NS_MAIN);
 	}
 
 	/**
@@ -688,8 +230,9 @@ public class MediaWikiBot extends HttpBot {
 	 * @supportedBy MediaWikiAPI 1.11 categorymembers / cm  TODO Test Required
 	 */
 	public Iterable<String> getCategoryMembers(String category, int... namespaces) throws ActionException, ProcessException {
-		GetSimpleCategoryMembers c = new GetSimpleCategoryMembers(category, createNsString(namespaces), getVersion());
-		return performMultiAction(c);
+		
+		
+		return GetSimpleCategoryMembers.get(this, category, namespaces);
 	}
 	/**
 	 *
@@ -700,8 +243,7 @@ public class MediaWikiBot extends HttpBot {
 	 * @supportedBy MediaWikiAPI 1.11 categorymembers / cm TODO Test Required
 	 */
 	public Iterable<CategoryItem> getFullCategoryMembers(String category) throws ActionException, ProcessException {
-		GetFullCategoryMembers c = new GetFullCategoryMembers(category, "", getVersion());
-		return performMultiAction(c);
+		return getFullCategoryMembers(category, NS_MAIN);
 	}
 	/**
 	 *
@@ -712,16 +254,12 @@ public class MediaWikiBot extends HttpBot {
 	 * @supportedBy MediaWikiAPI 1.11 categorymembers / cm TODO Test Required
 	 */
 	public Iterable<CategoryItem> getFullCategoryMembers(String category, int... namespaces) throws ActionException, ProcessException {
-		GetFullCategoryMembers c = new GetFullCategoryMembers(category, createNsString(namespaces), getVersion());
-		return performMultiAction(c);
+		return GetFullCategoryMembers.get(this, category, namespaces);
+		
 	}
 
 	/**
-	 * uploads a file
-	 *
-	 * @param fileName
-	 *            the name of the file as String
-	 * @supportedBy MediaWiki 1.11
+	 * @deprecated  use {@link FileUpload} instead 
 	 * 
 	 */
 	public final void uploadFile(final String fileName) throws ActionException,
@@ -730,23 +268,19 @@ public class MediaWikiBot extends HttpBot {
 		File f = new File(fileName);
 
 		SimpleFile a = new SimpleFile(f.getName(), fileName);
-		uploadFile(a);
+		performAction(new FileUpload(a, this));
+		
+		
 
 	}
 
 	/**
-	 * uploads a file
-	 *
-	 * @param FileName
-	 *            the file as SimpleFile
-	 * @supportedBy MediaWiki 1.11
 	 * 
+	 * @deprecated  use {@link FileUpload} instead 
 	 */
-	public final void uploadFile(SimpleFile file) throws ActionException,
+	public void uploadFile(SimpleFile file) throws ActionException,
 			ProcessException {
-		FileUpload.doUpload(this, file);
-	
-
+		performAction(new FileUpload(file, this));
 	}
 
 	/**
@@ -777,10 +311,8 @@ public class MediaWikiBot extends HttpBot {
 	 */
 	public Iterable<String> getImagelinkTitles(String image, int... namespaces)
 			throws ActionException {
-		GetImagelinkTitles a = new GetImagelinkTitles(image,
-				createNsString(namespaces));
-
-		return performMultiAction(a);
+	
+		return GetImagelinkTitles.get(this, image, namespaces);
 
 	}
 
@@ -802,17 +334,11 @@ public class MediaWikiBot extends HttpBot {
 
 	}
 	/**
-	 * Get a relativ url to an image.
-	 * @param imagename name of like "Test.gif"
-	 * @return position relative like "/path/to/Test.gif"
-	 * @throws ActionException on problems with http, cookies and io
-	 * @throws ProcessException on inner problems, like unsopportet version
-	 * @supportedBy MediaWikiAPI 1.11, 1.12, 1.13, 1.14
+	 * @deprecated  use {@link GetImageInfo} instead 
 	 */
 	public String getImageInfo(String imagename) throws ActionException, ProcessException {
-		GetImageInfo a = new GetImageInfo(imagename, getVersion());
-		performAction(a);
-		return a.getUrlAsString();
+		
+		return GetImageInfo.get(this, imagename);
 	}
 
 	/**
@@ -820,10 +346,11 @@ public class MediaWikiBot extends HttpBot {
 	 * @param type event type like: upload, delete, ...
 	 * @return the last ten log events
 	 * @throws ActionException on problems with http, cookies and io
+	 * @throws ProcessException 
 	 * @supportedBy MediaWikiAPI 1.11 logevents / le
 	 * @see #getLogEvents(int, String...)
 	 */
-	public Iterator<LogItem> getLogEvents(String ... type) throws ActionException {
+	public Iterator<LogItem> getLogEvents(String ... type) throws ActionException, ProcessException {
 
 		return getLogEvents(10, type);
 	}
@@ -834,18 +361,15 @@ public class MediaWikiBot extends HttpBot {
 	 * @param limit number of events
 	 * @return the last ten log events
 	 * @throws ActionException on problems with http, cookies and io
+	 * @throws ProcessException 
 	 * @supportedBy MediaWikiAPI 1.11 logevents / le TODO Test Required
 	 * TODO API state is (semi-complete), see
 	 * http://www.mediawiki.org/wiki/API:Query_-_Lists#logevents_.2F_le_.28semi-complete.29
 	 */
-	public Iterator<LogItem> getLogEvents(int limit, String ... type) throws ActionException {
-		GetLogEvents c = new GetLogEvents(limit, type);
-		try {
-			performAction(c);
-		} catch (ProcessException e) {
-			e.printStackTrace();
-		}
-		return c.getResults();
+	public Iterator<LogItem> getLogEvents(int limit, String ... type) throws ActionException, ProcessException {
+		
+		return GetLogEvents.get(this, limit, type);
+		
 	}
 	/**
 	 * get the titles of all pages which embed the given template.
@@ -871,10 +395,8 @@ public class MediaWikiBot extends HttpBot {
 	 */
 	public Iterable<String> getTemplateUserTitles(String template,
 			int... namespaces) throws ActionException {
-		GetTemplateUserTitles a = new GetTemplateUserTitles(template,
-				createNsString(namespaces));
-
-		return performMultiAction(a);
+		
+		return GetTemplateUserTitles.get(this, template, namespaces);
 
 	}
 
@@ -895,26 +417,7 @@ public class MediaWikiBot extends HttpBot {
 
 	}
 
-	/**
-	 *
-	 * @return a
-	 * @throws ActionException
-	 *             on problems with http, cookies and io
-	 * @supportedBy MediaWikiAPI 1.9, 1.10, 1.11, 1.12, 1.13, 1.14
-	 */
-	public Siteinfo getSiteinfo() throws ActionException {
-		GetSiteinfo gs = new GetSiteinfo();
 
-		try {
-			performAction(gs);
-		} catch (ProcessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		return gs.getSiteinfo();
-
-	}
 
 	/**
 	 * Get a number of recent changes from namespace.
@@ -931,10 +434,8 @@ public class MediaWikiBot extends HttpBot {
 	 */
 	public Iterable<String> getRecentchangesTitles(final int count,
 			int... namespaces) throws ActionException {
-		GetRecentchanges a = new GetRecentchanges(count,
-				createNsString(namespaces));
-
-		return performMultiAction(a);
+		return GetRecentchanges.get(this, count, namespaces);
+		
 	}
 
 	/**
@@ -951,36 +452,10 @@ public class MediaWikiBot extends HttpBot {
 	public Iterable<String> getRecentchangesTitles(final int count)
 			throws ActionException {
 
-		return getRecentchangesTitles(count, null);
+		return getRecentchangesTitles(count, NS_MAIN);
 	}
 
-	/**
-	 *
-	 * @return true if
-	 */
-	public final boolean isLoggedIn() {
-		return loggedIn;
-		// // code for api
-		// if(login != null) {
-		// return true;
-		// }
-		// return false;
-	}
 
-	/**
-	 *
-	 * @param a
-	 *            write the article (if already exists) in the mediawiki
-	 * @throws ActionException
-	 *             on problems with http, cookies and io
-	 * @throws ProcessException on access problems
-	 * @supportedBy MediaWiki 1.9.x, 1.10.x, 1.11.x, 1.12.x, 1.13.x, 1.14.x
-	 * 
-	 */
-	public final void writeContent(final ContentAccessable a)
-			throws ActionException, ProcessException {
-		PostModifyContent.doWrite(this, a);
-	}
 
 	/**
 	 * Writes an iteration of ContentAccessables to the mediawiki.
@@ -998,37 +473,6 @@ public class MediaWikiBot extends HttpBot {
 			writeContent(cav.next());
 
 		}
-	}
-
-
-	public final Version getVersion() {
-		if (version == null) {
-			GetVersion gs = new GetVersion();
-
-			try {
-				performAction(gs);
-			} catch (ProcessException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (ActionException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-			version = gs.getSiteinfo().getVersion();
-
-			log.debug("Version is: " + version.name());
-
-		}
-		return version;
-	}
-	public Userinfo getUserinfo() throws ActionException, ProcessException {
-		if (ui == null) {
-		GetUserinfo a = new GetUserinfo(getVersion());
-		performAction(a);
-		ui =  a.getUserinfo();
-		}
-		return ui;
 	}
 
 }

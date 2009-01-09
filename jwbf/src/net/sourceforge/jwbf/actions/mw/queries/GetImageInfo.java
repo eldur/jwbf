@@ -4,27 +4,41 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.net.URLEncoder;
 import java.util.Iterator;
 
+import net.sourceforge.jwbf.actions.Get;
+import net.sourceforge.jwbf.actions.mw.HttpAction;
+import net.sourceforge.jwbf.actions.mw.util.ActionException;
 import net.sourceforge.jwbf.actions.mw.util.MWAction;
 import net.sourceforge.jwbf.actions.mw.util.ProcessException;
 import net.sourceforge.jwbf.actions.mw.util.VersionException;
 import net.sourceforge.jwbf.bots.MediaWikiBot;
+import net.sourceforge.jwbf.bots.MediaWikiBotImpl;
 import net.sourceforge.jwbf.contentRep.mw.Version;
 
-import org.apache.commons.httpclient.methods.GetMethod;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
 import org.xml.sax.InputSource;
 
+/**
+ * 
+ * @author Thomas Stock
+ * 
+ * @supportedBy MediaWikiAPI 1.11, 1.12, 1.13
+ *
+ */
+
 public class GetImageInfo extends MWAction {
 
 	private String urlOfImage  = "";
+	private Get msg;
 
-	public GetImageInfo(String name, Version v) throws VersionException {
+	GetImageInfo(String name, Version v) throws VersionException {
 		
 		switch (v) {
 		case MW1_09:
@@ -33,13 +47,12 @@ public class GetImageInfo extends MWAction {
 			
 		default:
 			try {
-				msgs.add(new GetMethod("/api.php?action=query&titles=Image:"
+				msg = new Get("/api.php?action=query&titles=Image:"
 						+ URLEncoder.encode(name, MediaWikiBot.CHARSET)
 						+ "&prop=imageinfo"
 						+ "&iiprop=url"
-						+ "&format=xml"));
+						+ "&format=xml");
 			} catch (UnsupportedEncodingException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			break;
@@ -92,7 +105,33 @@ public class GetImageInfo extends MWAction {
 			e.printStackTrace();
 		}
 		findContent(root);
-
 		
+	}
+
+	/**
+	 * 
+	 * Get a relativ url to an image.
+	 * @param bot a
+	 * @param imagename name of like "Test.gif"
+	 * @return position like "http://server.tld/path/to/Test.gif"
+	 * @throws ActionException on problems with http, cookies and io
+	 * @throws ProcessException on inner problems, like unsopportet version
+	 * @supportedBy MediaWikiAPI 1.11, 1.12, 1.13, 1.14
+	 */
+	public static String get(MediaWikiBotImpl bot, String imagename) throws ActionException, ProcessException {
+		GetImageInfo a = new GetImageInfo(imagename, bot.getVersion());
+		bot.performAction(a);
+		String out = a.getUrlAsString();
+		try {
+			new URL(out);
+		} catch (MalformedURLException e) {
+			out = bot.getHostUrl() + out;
+		}
+		
+		return out;
+	}
+
+	public HttpAction getNextMessage() {
+		return msg;
 	}
 }

@@ -5,11 +5,12 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.util.Iterator;
 
+import net.sourceforge.jwbf.actions.Get;
+import net.sourceforge.jwbf.actions.mw.HttpAction;
 import net.sourceforge.jwbf.actions.mw.util.MWAction;
 import net.sourceforge.jwbf.actions.mw.util.ProcessException;
 import net.sourceforge.jwbf.contentRep.mw.Siteinfo;
 
-import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.log4j.Logger;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -21,9 +22,10 @@ public class GetVersion extends MWAction {
 
 	protected Siteinfo site = new Siteinfo();
 	private final Logger log = Logger.getLogger(getClass());
+	private final Get msg;
 	public GetVersion() {
 	
-			msgs.add(new GetMethod("/api.php?action=query&meta=siteinfo&format=xml"));
+			msg = new Get("/api.php?action=query&meta=siteinfo&format=xml");
 
 	}
 	
@@ -83,5 +85,9 @@ public class GetVersion extends MWAction {
 				findContent(element);
 			}
 		}
+	}
+
+	public HttpAction getNextMessage() {
+		return msg;
 	}
 }

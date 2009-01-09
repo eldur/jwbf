@@ -52,9 +52,11 @@
 				</outputfilterchain>
 			</redirector>
 		</exec>
-		<condition property="build.number" value="${version.release}.${version.svn}" else="${version.release}.unknownVersion">
-			<matches string="${version.svn}" pattern="^[1-9]*$" />
+		<echo>Found svn version: ${version.svn}</echo>
+		<condition property="build.number" value="${version.release}-${version.svn}" else="${version.release}-unknownBuild">
+			<matches string="${version.svn}" pattern="^[1-9]" />
 		</condition>
+		<echo>Build number is: ${build.number}</echo>
 	</target>
 
 	<target name="compile" depends="init" description="--> compile the sources">

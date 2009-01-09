@@ -151,28 +151,7 @@ public class AllPagesTest extends LiveTestFather {
 //		Assert.assertTrue("i is: " + i , i > 50 );
 //	}
 	
-	
 
-	/**
-	 * Test category read. Test category must have more then 50 members.
-	 * @throws Exception a
-	 */
-	@Test
-	public final void allPagesCustomWiki() throws Exception {
-		
-		bot = new MediaWikiBot(getValue("allPages_customWiki_url"));
-		bot.login(getValue("allPages_customWiki_user"), getValue("allPages_customWiki_pass"));
-		Iterator<String> is = bot.getAllPageTitles(0).iterator();
-		int i = 0;
-		while (is.hasNext()) {
-			is.next();
-			i++;
-			if (i > 55) {
-				break;
-			}
-		}
-		Assert.assertTrue("i is: " + i , i > 50);
-	}
 	
 	
 	/**
@@ -184,7 +163,7 @@ public class AllPagesTest extends LiveTestFather {
 		
 		bot = new MediaWikiBot(getValue("wikiMW1_09_url"));
 		bot.login(getValue("wikiMW1_09_user"), getValue("wikiMW1_09_pass"));
-		Iterator<String> is = bot.getAllPageTitles(0).iterator();
+		Iterator<String> is = bot.getAllPageTitles(MediaWikiBot.NS_MAIN).iterator();
 		int i = 0;
 		while (is.hasNext()) {
 			is.next();

@@ -23,14 +23,14 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 
+import net.sourceforge.jwbf.actions.Post;
+import net.sourceforge.jwbf.actions.mw.HttpAction;
 import net.sourceforge.jwbf.actions.mw.util.ActionException;
 import net.sourceforge.jwbf.actions.mw.util.MWAction;
 import net.sourceforge.jwbf.actions.mw.util.ProcessException;
-import net.sourceforge.jwbf.bots.MediaWikiBot;
+import net.sourceforge.jwbf.bots.MediaWikiBotImpl;
 import net.sourceforge.jwbf.bots.util.LoginData;
 
-import org.apache.commons.httpclient.NameValuePair;
-import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.log4j.Logger;
 import org.jdom.DataConversionException;
 import org.jdom.Document;
@@ -47,34 +47,49 @@ import org.xml.sax.InputSource;
 public class PostLogin extends MWAction {
 	
 	private static final Logger LOG = Logger.getLogger(PostLogin.class);
+	private final Post msg;
 	
-	private LoginData login = null;
 	
 	private final String success = "Success";
 	private final String wrongPass = "WrongPass";
 	private final String notExists = "NotExists";
-	
-	private String exceptionText = "";
-
+	private LoginData login = null;
 	
 	/**
 	 * 
 	 * @param username the
 	 * @param pw password
 	 */
-	public PostLogin(final String username, final String pw) {
-
-		NameValuePair userid = new NameValuePair("lgname", username);
-		NameValuePair password = new NameValuePair("lgpassword", pw);
-
-		PostMethod pm = new PostMethod(
+	PostLogin(final String username, final String pw, LoginData login) {
+		this.login = login;
+		Post pm = new Post(
 				"/api.php?action=login&format=xml");
+		pm.addParam("lgname", username);
+		pm.addParam("lgpassword", pw);
+		
+		msg = pm;
+		
 
-		pm.setRequestBody(new NameValuePair[] {userid,
-						password });
-		pm.getParams().setContentCharset(MediaWikiBot.CHARSET);
-		msgs.add(pm);
+	}
+	
+	public static LoginData post(MediaWikiBotImpl bot, String user, String pass, String domain) throws ActionException, ProcessException {
+		LoginData login = new LoginData();
+		switch (bot.getVersion()) {
+		case MW1_09:
+		case MW1_10:
+		case MW1_11:
+		case MW1_12:
+			bot.performAction(new PostLoginOld(user, pass, domain, login));
+			break;
 
+		default:
+			bot.performAction(new PostLogin(user, pass, login));
+			break;
+		}
+		return login;
+
+
+		
 	}
 
 	/**
@@ -98,29 +113,26 @@ public class PostLogin extends MWAction {
 		LOG.debug(s);
 		findContent(root);
 		return s;
-	}
-	private void findContent(final Element api){
-		Element login = api.getChild("login");
-		String result = login.getAttributeValue("result");
+	} 
+	private void findContent(final Element api) throws ProcessException{
+		Element loginEl = api.getChild("login");
+		String result = loginEl.getAttributeValue("result");
 		if (result.equalsIgnoreCase(success)) {
 			try {
-				this.login = new LoginData(login.getAttribute("lguserid").getIntValue()
-						, login.getAttributeValue("lgusername")
-						, login.getAttributeValue("lgtoken"));
+				login.setup(loginEl.getAttribute("lguserid").getIntValue()
+						, loginEl.getAttributeValue("lgusername")
+						, loginEl.getAttributeValue("lgtoken"), true);
 			} catch (DataConversionException e) {
 				e.printStackTrace();
 			}
 		} else if (result.equalsIgnoreCase(wrongPass)) {
-			exceptionText = "Wrong Password";
+			throw new ProcessException("Wrong Password");
 		} else if (result.equalsIgnoreCase(notExists)) {
-			exceptionText = "No sutch User";
+			throw new ProcessException("No sutch User");
 		} 
 	}
 
-	public LoginData getLoginData() throws ActionException {
-		if (login == null) {
-			throw new ActionException(exceptionText);
-		}
-		return login;
+	public HttpAction getNextMessage() {
+		return msg;
 	}
 }

@@ -25,11 +25,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.InvalidPropertiesFormatException;
 import java.util.Properties;
+import java.util.Random;
 
 public class LiveTestFather {
 
 	private static Properties data;
 	private static final String filename = "test.xml";
+	private Random wheel = new Random();
 	
 	static {
 		if (data == null) {
@@ -73,8 +75,26 @@ public class LiveTestFather {
 		}
 		return data.getProperty(key);
 	}
+	
 	protected static int getIntValue(final String key)  throws Exception {
 		return Integer.parseInt(getValue(key));
 	}
 
+	protected String getRandom(int length) {
+		String out = "";
+		int charNum = 0;
+		int count = 1;  
+		while(count <= length)
+        {  
+            charNum = (wheel.nextInt(79) + 48);
+            if (charNum >= 48 && charNum <= 126)
+            {
+            	
+            	char d = (char)charNum;
+                out += d;
+                count++;
+            }
+        }
+		return out;
+	}
 }

@@ -22,13 +22,14 @@ package net.sourceforge.jwbf.actions.mw.login;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
+import net.sourceforge.jwbf.actions.Post;
+import net.sourceforge.jwbf.actions.mw.HttpAction;
 import net.sourceforge.jwbf.actions.mw.util.CookieException;
 import net.sourceforge.jwbf.actions.mw.util.MWAction;
 import net.sourceforge.jwbf.bots.MediaWikiBot;
+import net.sourceforge.jwbf.bots.util.LoginData;
 
 import org.apache.commons.httpclient.Cookie;
-import org.apache.commons.httpclient.NameValuePair;
-import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.log4j.Logger;
 
 /**
@@ -42,6 +43,9 @@ public class PostLoginOld extends MWAction {
 
 	private static final Logger LOG = Logger.getLogger(PostLoginOld.class);
 
+	private LoginData login;
+	private Post msg;
+	
 	/**
 	 * 
 	 * @param username
@@ -49,28 +53,21 @@ public class PostLoginOld extends MWAction {
 	 * @param pw
 	 *            password
 	 */
-	public PostLoginOld(final String username, final String pw,
-			final String domain) {
+	PostLoginOld(final String username, final String pw,
+			final String domain, LoginData login) {
 		this.username = username;
+		this.login = login;
 
-		NameValuePair action = new NameValuePair("wpLoginattempt", "Log in");
-		NameValuePair url = new NameValuePair("wpRemember", "1");
-		NameValuePair userid = new NameValuePair("wpName", username);
-		NameValuePair dom = new NameValuePair("wpDomain", domain);
-
-		String pwLabel = "wpPassword";
-
-		NameValuePair password = new NameValuePair(pwLabel, pw);
-
-		PostMethod pm = new PostMethod(
+		Post pm = new Post(
 				"/index.php?title=Special:Userlogin&action=submitlogin&type=login");
+		pm.addParam("wpLoginattempt", "Log in");
+		pm.addParam("wpRemember", "1");
+		pm.addParam("wpName", username);
+		pm.addParam("wpDomain", domain);
+		pm.addParam("wpPassword", pw);
+	
 
-		pm.getParams().setContentCharset(MediaWikiBot.CHARSET);
-
-		pm.setRequestBody(new NameValuePair[] { action, url, userid, dom,
-				password });
-
-		msgs.add(pm);
+		msg = pm;
 
 	}
 
@@ -99,6 +96,7 @@ public class PostLoginOld extends MWAction {
 			for (int i = 0; i < cs.length; i++) {
 				if (cs[i].toString().contains(compare)) {
 					LOG.info("Logged in as: " + username);
+					login.setup(0, username, "0", true);
 					return;
 				}
 				if (i == cs.length - 1) {
@@ -109,10 +107,8 @@ public class PostLoginOld extends MWAction {
 		}
 	}
 
-//	private class Requestor {
-//
-//		Requestor() {
-//
-//		}
-//	}
+	public HttpAction getNextMessage() {
+		return msg;
+	}
+
 }

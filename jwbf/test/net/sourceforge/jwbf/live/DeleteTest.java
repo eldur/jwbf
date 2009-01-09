@@ -23,7 +23,7 @@ import org.junit.Test;
  */
 public class DeleteTest extends LiveTestFather {
 	private MediaWikiBot bot = null;
-	private static final int COUNT = 6;
+	private static final int COUNT = 1;
 	@BeforeClass
 	public static void setUp() throws Exception {
 		PropertyConfigurator.configureAndWatch("test4log4j.properties",
@@ -50,7 +50,7 @@ public class DeleteTest extends LiveTestFather {
 	
 		for (int i = 0; i < COUNT; i++) {
 			ContentAccessable ca = bot.readContent("Delete " + i);
-			Assert.assertTrue(ca.getText().length() == 0);
+			Assert.assertTrue("textlength of Delete " + i + " is not 0", ca.getText().length() == 0);
 		}
 	}
 	
@@ -64,12 +64,12 @@ public class DeleteTest extends LiveTestFather {
 		
 		bot = new MediaWikiBot(getValue("wikiMW1_09_url"));
 		bot.login(getValue("wikiMW1_09_user"), getValue("wikiMW1_09_pass"));
-	
+		Assert.assertTrue( "Wrong Wiki Version " + bot.getVersion() , Version.MW1_09.equals(bot.getVersion()));
 		prepare(bot);
 		delete(bot);
 		test(bot);
 		
-		Assert.assertTrue( "Wrong Wiki Version " + bot.getVersion() , Version.MW1_09.equals(bot.getVersion()));
+		
 	}
 	/**
 	 * Test category read. Test category must have more then 50 members.
@@ -80,12 +80,12 @@ public class DeleteTest extends LiveTestFather {
 		
 		bot = new MediaWikiBot(getValue("wikiMW1_10_url"));
 		bot.login(getValue("wikiMW1_10_user"), getValue("wikiMW1_10_pass"));
-		
+		Assert.assertTrue( "Wrong Wiki Version " + bot.getVersion() , Version.MW1_10.equals(bot.getVersion()));
 		prepare(bot);
 		delete(bot);
 		test(bot);
 		
-		Assert.assertTrue( "Wrong Wiki Version " + bot.getVersion() , Version.MW1_10.equals(bot.getVersion()));
+		
 	}
 	
 	/**
@@ -97,12 +97,13 @@ public class DeleteTest extends LiveTestFather {
 		
 		bot = new MediaWikiBot(getValue("wikiMW1_11_url"));
 		bot.login(getValue("wikiMW1_11_user"), getValue("wikiMW1_11_pass"));
+		Assert.assertTrue( "Wrong Wiki Version " + bot.getVersion() , Version.MW1_11.equals(bot.getVersion()));
 		
 		prepare(bot);
 		delete(bot);
 		test(bot);
 		
-		Assert.assertTrue( "Wrong Wiki Version " + bot.getVersion() , Version.MW1_11.equals(bot.getVersion()));
+		
 	}
 	
 	/**
@@ -114,12 +115,12 @@ public class DeleteTest extends LiveTestFather {
 		
 		bot = new MediaWikiBot(getValue("wikiMW1_12_url"));
 		bot.login(getValue("wikiMW1_12_user"), getValue("wikiMW1_12_pass"));
-		
+		Assert.assertTrue( "Wrong Wiki Version " + bot.getVersion() , Version.MW1_12.equals(bot.getVersion()));
 		prepare(bot);
 		delete(bot);
 		test(bot);
 		
-		Assert.assertTrue( "Wrong Wiki Version " + bot.getVersion() , Version.MW1_12.equals(bot.getVersion()));
+		
 	}
 	/**
 	 * Test category read. Test category must have more then 50 members.
@@ -130,11 +131,12 @@ public class DeleteTest extends LiveTestFather {
 		bot = new MediaWikiBot(getValue("wikiMW1_13_url"));
 		bot.login(getValue("wikiMW1_13_user"), getValue("wikiMW1_13_pass"));
 		
+		Assert.assertTrue( "Wrong Wiki Version " + bot.getVersion() , Version.MW1_13.equals(bot.getVersion()));
 		prepare(bot);
 		delete(bot);
 		test(bot);
 		
-		Assert.assertTrue( "Wrong Wiki Version " + bot.getVersion() , Version.MW1_13.equals(bot.getVersion()));
+		
 	}
 	
 	

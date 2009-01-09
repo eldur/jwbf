@@ -18,15 +18,12 @@
  */
 package net.sourceforge.jwbf.actions;
 
-import java.util.List;
-import java.util.Vector;
-
+import net.sourceforge.jwbf.actions.mw.HttpAction;
 import net.sourceforge.jwbf.actions.mw.util.CookieException;
 import net.sourceforge.jwbf.actions.mw.util.ProcessException;
 
 import org.apache.commons.httpclient.Cookie;
 import org.apache.commons.httpclient.HttpMethod;
-import org.apache.commons.httpclient.methods.GetMethod;
 /**
  * Simple method to get plain HTML or XML data e.g. from custom specialpages
  * or xml newsfeeds or something else.
@@ -37,8 +34,8 @@ import org.apache.commons.httpclient.methods.GetMethod;
  */
 public class GetPage implements ContentProcessable {
 
-	private List<HttpMethod> msgs = new Vector<HttpMethod>();
-	
+	private final HttpAction msg;
+	private boolean hasMore = true;
 	private String text = "";
 	
 	/**
@@ -46,15 +43,23 @@ public class GetPage implements ContentProcessable {
 	 * @param u like "/index.php?title=Special:Recentchanges&feed=rss"
 	 */
 	public GetPage(String u) {		
-		msgs.add(new GetMethod(u));
+		msg = new Get(u);
 		
+	}
+	/**
+	 * @return true if
+	 */
+	public boolean hasMoreMessages() {
+		final boolean b = hasMore;
+		hasMore = false;
+		return b;
 	}
 	/**
 	 * @see ContentProcessable#getMessages()
 	 * @return a
 	 */
-	public List<HttpMethod> getMessages() {
-		return msgs;
+	public HttpAction getNextMessage() {
+		return msg;
 	}
 	/**
 	 * @see ContentProcessable#processReturningText(String, HttpMethod)
@@ -63,7 +68,7 @@ public class GetPage implements ContentProcessable {
 	 * @throws ProcessException on any problems with inner browser
 	 * @return the returning text
 	 */
-	public String processReturningText(String s, HttpMethod hm) throws ProcessException {
+	public String processReturningText(String s, HttpAction hm) throws ProcessException {
 		text = s;
 		return s;
 	}
@@ -74,7 +79,7 @@ public class GetPage implements ContentProcessable {
 	 * @param hm a
 	 * @throws CookieException on cookie problems
 	 */
-	public void validateReturningCookies(Cookie[] cs, HttpMethod hm)
+	public void validateReturningCookies(Cookie[] cs, HttpAction hm)
 			throws CookieException {
 
 	}

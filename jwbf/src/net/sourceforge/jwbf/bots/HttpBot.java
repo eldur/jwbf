@@ -24,13 +24,13 @@ import java.net.URL;
 
 import net.sourceforge.jwbf.JWBF;
 import net.sourceforge.jwbf.actions.ContentProcessable;
+import net.sourceforge.jwbf.actions.Get;
 import net.sourceforge.jwbf.actions.GetPage;
 import net.sourceforge.jwbf.actions.HttpActionClient;
 import net.sourceforge.jwbf.actions.mw.util.ActionException;
 import net.sourceforge.jwbf.actions.mw.util.ProcessException;
 
 import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.methods.GetMethod;
 
 /**
  * 
@@ -68,10 +68,15 @@ public abstract class HttpBot {
 				"JWBF " + JWBF.getVersion());
 		client.getHostConfiguration().setHost(u.getHost(), u.getPort(),
 				u.getProtocol());
+		
 		cc = new HttpActionClient(client, u.getPath());
 
 	}
 
+	
+	public final String getHostUrl() {
+		return client.getHostConfiguration().getHostURL();
+	}
 	/**
 	 * 
 	 * @param a
@@ -141,7 +146,7 @@ public abstract class HttpBot {
 		
 
 		try {
-			return cc.get(new GetMethod(u));
+			return cc.get(new Get(u));
 		} catch (ProcessException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

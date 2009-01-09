@@ -27,14 +27,28 @@ package net.sourceforge.jwbf.bots.util;
  */
 public class LoginData {
 	
-	private final int userid;
-	private final String botName;
-	private final String loginToken;
+	private int userid;
+	private String botName;
+	private String loginToken;
 	
-	public LoginData(int userid, String botName, String loginToken) {
+	private boolean isLoggedIn;
+	
+	public LoginData() {
+		this.userid = -1;
+		this.botName = "";
+		this.loginToken = "";
+		this.isLoggedIn = false;
+	}
+	
+	public void setup(int userid, String botName, String loginToken, boolean isLoggedIn) {
 		this.userid = userid;
 		this.botName = botName;
 		this.loginToken = loginToken;
+		this.isLoggedIn = isLoggedIn;
+	}
+	
+	public boolean isLoggedIn() {
+		return isLoggedIn;
 	}
 	
 	public String get() {

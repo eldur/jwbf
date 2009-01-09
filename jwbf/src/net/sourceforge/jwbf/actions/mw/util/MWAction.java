@@ -19,14 +19,12 @@
 package net.sourceforge.jwbf.actions.mw.util;
 
 import java.io.UnsupportedEncodingException;
-import java.util.List;
-import java.util.Vector;
 
 import net.sourceforge.jwbf.actions.ContentProcessable;
+import net.sourceforge.jwbf.actions.mw.HttpAction;
 import net.sourceforge.jwbf.bots.MediaWikiBot;
 
 import org.apache.commons.httpclient.Cookie;
-import org.apache.commons.httpclient.HttpMethod;
 
 /**
  * @author Thomas Stock
@@ -34,24 +32,24 @@ import org.apache.commons.httpclient.HttpMethod;
  */
 public abstract class MWAction implements ContentProcessable {
 
+	private boolean hasMore = true;
 	
-	protected List<HttpMethod> msgs;
 
 	/**
 	 * 
 	 * 
 	 */
 	public MWAction() {
-		msgs = new Vector<HttpMethod>();
+
 
 	}
 
-	/**
-	 * 
-	 * @return a
-	 */
-	public final List<HttpMethod> getMessages() {
-		return msgs;
+
+
+	public boolean hasMoreMessages() {
+		final boolean b = hasMore;
+		hasMore = false;
+		return b;
 	}
 
 	/**
@@ -63,7 +61,7 @@ public abstract class MWAction implements ContentProcessable {
 	 * @throws ProcessException on processing problems
 	 * 
 	 */
-	public String processReturningText(final String s, final HttpMethod hm) throws ProcessException {
+	public String processReturningText(final String s, final HttpAction hm) throws ProcessException {
 		return processAllReturningText(s);
 	}
 
@@ -76,7 +74,7 @@ public abstract class MWAction implements ContentProcessable {
 	 *             never
 	 * 
 	 */
-	public void validateReturningCookies(Cookie[] cs, HttpMethod hm)
+	public void validateReturningCookies(Cookie[] cs, HttpAction hm)
 			throws CookieException {
 		validateAllReturningCookies(cs);
 
@@ -125,6 +123,30 @@ public abstract class MWAction implements ContentProcessable {
 		
 //		java 1.6 version
 //		return new String(s.getBytes(), Charset.forName("UTF-8"));
+	}
+	
+	/**
+	 * helper method generating a namespace string as required by the MW-api.
+	 *
+	 * @param namespaces
+	 *            namespace as
+	 * @return with numbers seperated by |
+	 */
+	protected static String createNsString(int... namespaces) {
+
+		String namespaceString = "";
+
+		if (namespaces != null && namespaces.length != 0) {
+			for (int nsNumber : namespaces) {
+				namespaceString += nsNumber + "|";
+			}
+			// remove last '|'
+			if (namespaceString.endsWith("|")) {
+				namespaceString = namespaceString.substring(0, namespaceString
+						.length() - 1);
+			}
+		}
+		return namespaceString;
 	}
 	
 }

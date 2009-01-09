@@ -28,13 +28,14 @@ import java.net.URLEncoder;
 import java.text.ParseException;
 import java.util.Iterator;
 
+import net.sourceforge.jwbf.actions.Get;
+import net.sourceforge.jwbf.actions.mw.HttpAction;
 import net.sourceforge.jwbf.actions.mw.util.ApiException;
 import net.sourceforge.jwbf.actions.mw.util.MWAction;
 import net.sourceforge.jwbf.actions.mw.util.ProcessException;
 import net.sourceforge.jwbf.bots.MediaWikiBot;
 import net.sourceforge.jwbf.contentRep.mw.SimpleArticle;
 
-import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.log4j.Logger;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -60,6 +61,8 @@ public class GetRevision extends MWAction {
 	private static final Logger LOG = Logger.getLogger(GetRevision.class);
 
 	private final int property;
+	
+	private final Get msg;
 
 	/**
 	 * TODO follow redirects.
@@ -82,7 +85,7 @@ public class GetRevision extends MWAction {
 			e.printStackTrace();
 		}
 		LOG.debug(uS);
-		msgs.add(new GetMethod(uri.toString()));
+		msg = new Get(uri.toString());
 
 	}
 
@@ -138,7 +141,7 @@ public class GetRevision extends MWAction {
 	}
 
 	private void parse(final String xml) throws ApiException {
-		LOG.debug(xml);
+//		LOG.debug(xml);
 		SAXBuilder builder = new SAXBuilder();
 		Element root = null;
 		try {
@@ -189,7 +192,7 @@ public class GetRevision extends MWAction {
 						sa.setEditTimestamp(getAsStringValues(element,
 								"timestamp"));
 					} catch (ParseException e) {
-						e.printStackTrace();
+						LOG.debug("timestamp could not be parsed");
 					}
 				}
 
@@ -215,5 +218,11 @@ public class GetRevision extends MWAction {
 		// LOG.debug("value for " + attrName + " = \"" + buff + "\"");
 		return buff;
 	}
+
+	public HttpAction getNextMessage() {
+		return msg;
+	}
+
+
 
 }

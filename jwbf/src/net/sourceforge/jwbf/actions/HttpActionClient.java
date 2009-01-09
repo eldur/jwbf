@@ -19,11 +19,12 @@
 
 package net.sourceforge.jwbf.actions;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Iterator;
-import java.util.List;
 
+import net.sourceforge.jwbf.actions.mw.HttpAction;
 import net.sourceforge.jwbf.actions.mw.util.ActionException;
 import net.sourceforge.jwbf.actions.mw.util.CookieException;
 import net.sourceforge.jwbf.actions.mw.util.ProcessException;
@@ -34,7 +35,13 @@ import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.HttpStatus;
+import org.apache.commons.httpclient.NameValuePair;
 import org.apache.commons.httpclient.methods.GetMethod;
+import org.apache.commons.httpclient.methods.PostMethod;
+import org.apache.commons.httpclient.methods.multipart.FilePart;
+import org.apache.commons.httpclient.methods.multipart.MultipartRequestEntity;
+import org.apache.commons.httpclient.methods.multipart.Part;
+import org.apache.commons.httpclient.methods.multipart.StringPart;
 import org.apache.log4j.Logger;
 
 /**
@@ -94,29 +101,91 @@ public class HttpActionClient {
 	 * @throws ProcessException on inner problems
 	 */
 	public String performAction(ContentProcessable a) throws ActionException, ProcessException {
+		
 
-		List<HttpMethod> msgs = a.getMessages();
+		
 		String out = "";
-		Iterator<HttpMethod> it = msgs.iterator();
-		while (it.hasNext()) {
-			HttpMethod e = it.next();
-			if (path.length() > 1) {
+		while (a.hasMoreMessages()) {
+			
+			HttpMethod e = null;
+				try {
+					
+					HttpAction ha = a.getNextMessage();
+					
+					if (ha instanceof Get) {
+						e = new GetMethod(ha.getRequest());	
+						if (path.length() > 1) {
 
-				e.setPath(path + e.getPath());
-				LOG.debug("path is: " + e.getPath());
+							e.setPath(path + e.getPath());
+							LOG.debug("path is: " + e.getPath());
 
-			}
-			try {
-				if (e instanceof GetMethod) {
+						}
+						
+						// do get
+						out = get(e, a, ha);
+					} else if (ha instanceof Post) {
+						Post p = (Post) ha;
+						e = new PostMethod(p.getRequest());	
+						if (path.length() > 1) {
 
-					out = get(e, a);
+							e.setPath(path + e.getPath());
+							LOG.debug("path is: " + e.getPath());
 
-				} else {
-					out = post(e, a);
+						}
+						Iterator<String> keys = p.getParams().keySet().iterator();
+						int count = p.getParams().size();
+						NameValuePair[] val = new NameValuePair[count];
+						int i = 0;
+						while (keys.hasNext()) {
+							String key = (String) keys.next();
+							val[i++] = new NameValuePair(key, p.getParams().get(key));
+						}
+
+						((PostMethod) e).setRequestBody(val);
+						if (ha instanceof FilePost) {
+							LOG.debug("is filepost");
+							FilePost px = (FilePost) ha;
+							
+							
+							
+							// add multipart elements
+							
+							Part[] parts;
+							
+							Iterator<String> partKeys =  px.getParts().keySet().iterator();
+							int partCount = px.getParts().size();
+							parts = new Part[partCount];
+							
+							
+							int j = 0;
+							while (partKeys.hasNext()) {
+								String key = (String) partKeys.next();
+								Object po = px.getParts().get(key);
+								if (po instanceof String) {
+									parts[j++] = new StringPart(key, (String) po);
+								} else if (po instanceof File) {
+									parts[j++] = new FilePart(key, (File) po);
+								}
+								
+							}
+							
+							((PostMethod) e).setRequestEntity(new MultipartRequestEntity(parts, e
+									.getParams()));
+							
+							
+							
+						}
+						// do post
+						out = post(e, a, ha);
+					}
+					
+					
+					
+				} catch (IOException e1) {
+					throw new ActionException(e1);
 				}
-			} catch (IOException e1) {
-				throw new ActionException(e1);
-			}
+			
+			
 
 		}
 		return out;
@@ -135,12 +204,14 @@ public class HttpActionClient {
 	 * @throws ProcessException on problems
 	 * @throws CookieException on problems
 	 */
-	protected String post(HttpMethod authpost, ContentProcessable cp)
+	protected String post(HttpMethod authpost, ContentProcessable cp, HttpAction ha)
 			throws IOException, ProcessException,
 			CookieException {
 		showCookies(client);
+
 		authpost.getParams().setParameter("http.protocol.content-charset",
 				MediaWikiBot.CHARSET);
+		authpost.getParams().setContentCharset(MediaWikiBot.CHARSET);
 		String out = "";
 
 		client.executeMethod(authpost);
@@ -179,9 +250,10 @@ public class HttpActionClient {
 		}
 		
 		out = authpost.getResponseBodyAsString();
-		out = cp.processReturningText(out, authpost);
-
-		cp.validateReturningCookies(client.getState().getCookies(), authpost);
+		
+		out = cp.processReturningText(out, ha);
+		
+		cp.validateReturningCookies(client.getState().getCookies(), ha);
 		
 	
 
@@ -203,7 +275,7 @@ public class HttpActionClient {
 	 * @throws CookieException on problems
 	 * @throws ProcessException on problems
 	 */
-	protected String get(HttpMethod authgets, ContentProcessable cp)
+	protected String get(HttpMethod authgets, ContentProcessable cp, HttpAction ha)
 			throws IOException, CookieException, ProcessException {
 		showCookies(client);
 		String out = "";
@@ -212,13 +284,13 @@ public class HttpActionClient {
 //		System.err.println(authgets.getParams().getParameter("http.protocol.content-charset"));
 		
 		client.executeMethod(authgets);
-		cp.validateReturningCookies(client.getState().getCookies(), authgets);
+		cp.validateReturningCookies(client.getState().getCookies(), ha);
 		LOG.debug(authgets.getURI());
 		LOG.debug("GET: " + authgets.getStatusLine().toString());
 
 		out = authgets.getResponseBodyAsString();
 		
-		out = cp.processReturningText(out, authgets);
+		out = cp.processReturningText(out, ha);
 		// release any connection resources used by the method
 		authgets.releaseConnection();
 		int statuscode = authgets.getStatusCode();
@@ -244,9 +316,11 @@ public class HttpActionClient {
 	 * @throws CookieException on problems
 	 * @throws ProcessException on problems
 	 */
-	public byte[] get(HttpMethod authgets)
+	public byte[] get(Get ha)
 			throws IOException, CookieException, ProcessException {
 		showCookies(client);
+		
+		GetMethod authgets = new GetMethod(ha.getRequest());
 		byte[] out = null;
 		authgets.getParams().setParameter("http.protocol.content-charset",
 				MediaWikiBot.CHARSET);

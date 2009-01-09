@@ -26,6 +26,8 @@ import java.util.Collection;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import net.sourceforge.jwbf.actions.Get;
+import net.sourceforge.jwbf.actions.mw.HttpAction;
 import net.sourceforge.jwbf.actions.mw.MultiAction;
 import net.sourceforge.jwbf.actions.mw.util.MWAction;
 import net.sourceforge.jwbf.actions.mw.util.ProcessException;
@@ -33,15 +35,14 @@ import net.sourceforge.jwbf.actions.mw.util.VersionException;
 import net.sourceforge.jwbf.bots.MediaWikiBot;
 import net.sourceforge.jwbf.contentRep.mw.Version;
 
-import org.apache.commons.httpclient.methods.GetMethod;
-
 
 /**
  * action class using the MediaWiki-api's "list=backlinks" 
  *
  * @author Thomas Stock
  * @author Tobias Knerr
- * @since MediaWiki 1.9.0
+ * @since JWBF 1.1
+ * @supportedBy MediaWikiAPI 1.9, 1.10, 1.11, 1.12, 1.13, 1.14
  */
 public class GetBacklinkTitles extends MWAction implements MultiAction<String> {
 
@@ -56,7 +57,7 @@ public class GetBacklinkTitles extends MWAction implements MultiAction<String> {
 	 */
 	public static enum RedirectFilter {all, redirects, nonredirects};
 	
-	
+	private Get msg;
 	/** constant value for the bllimit-parameter. **/
 	private static final int LIMIT = 50;
 	
@@ -93,17 +94,17 @@ public class GetBacklinkTitles extends MWAction implements MultiAction<String> {
 	 * @throws VersionException  if general functionality or parameter values 
 	 *                           are not compatible with apiVersion value 
 	 */
-	public GetBacklinkTitles(String articleName, RedirectFilter redirectFilter,
-			                 String namespace, Version apiVersion) 
+	 public GetBacklinkTitles(String articleName, RedirectFilter redirectFilter,
+			                 Version apiVersion, int ... namespace) 
 							throws VersionException {
 		
 		assert apiVersion != null;
 		assert articleName != null && redirectFilter != null;
-		
+		String namespaces = createNsString(namespace);
 		requestBuilder = createRequestBuilder(apiVersion);
 		
 		try {
-			String request = requestBuilder.buildInitialRequest(articleName, redirectFilter, namespace);
+			String request = requestBuilder.buildInitialRequest(articleName, redirectFilter, namespaces);
 			sendRequest(request);
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
@@ -140,7 +141,7 @@ public class GetBacklinkTitles extends MWAction implements MultiAction<String> {
 	 
 		assert request != null;
 		
-	 	msgs.add(new GetMethod(request));
+	 	msg = new Get(request);
 		
 	}
 	
@@ -315,6 +316,11 @@ public class GetBacklinkTitles extends MWAction implements MultiAction<String> {
 			       + "&bllimit=" + LIMIT + "&format=xml";			
 		}
 		
+	}
+	
+
+	public HttpAction getNextMessage() {
+		return msg;
 	}
 	
 }

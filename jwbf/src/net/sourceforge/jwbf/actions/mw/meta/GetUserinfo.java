@@ -8,6 +8,8 @@ import java.net.URLEncoder;
 import java.util.Iterator;
 import java.util.Vector;
 
+import net.sourceforge.jwbf.actions.Get;
+import net.sourceforge.jwbf.actions.mw.HttpAction;
 import net.sourceforge.jwbf.actions.mw.util.MWAction;
 import net.sourceforge.jwbf.actions.mw.util.ProcessException;
 import net.sourceforge.jwbf.actions.mw.util.VersionException;
@@ -15,7 +17,6 @@ import net.sourceforge.jwbf.bots.MediaWikiBot;
 import net.sourceforge.jwbf.contentRep.mw.Userinfo;
 import net.sourceforge.jwbf.contentRep.mw.Version;
 
-import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.log4j.Logger;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -30,6 +31,8 @@ public class GetUserinfo extends MWAction {
 	private String username = "";
 	private final Vector<String> rights = new Vector<String>();
 	private final Vector<String> groups = new Vector<String>();
+	private Get msg;
+	
 	public GetUserinfo(Version v) throws VersionException {
 
 		switch (v) {
@@ -39,12 +42,12 @@ public class GetUserinfo extends MWAction {
 			
 		case MW1_11:
 			try {
-				msgs.add(new GetMethod(
+				msg = new Get(
 						"/api.php?"
 						+ "action=query&"
 						+ "meta=userinfo&"
 						+ "uiprop=" + URLEncoder.encode("blockinfo|hasmsg|groups|rights", MediaWikiBot.CHARSET) + "&"
-						+ "format=xml"));
+						+ "format=xml");
 			} catch (UnsupportedEncodingException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -52,12 +55,12 @@ public class GetUserinfo extends MWAction {
 			break;
 		default:
 			try {
-				msgs.add(new GetMethod(
+				msg = new Get(
 						"/api.php?"
 						+ "action=query&"
 						+ "meta=userinfo&"
 						+ "uiprop=" + URLEncoder.encode("blockinfo|hasmsg|groups|rights|options|editcount|ratelimits", MediaWikiBot.CHARSET) + "&"
-						+ "format=xml"));
+						+ "format=xml");
 			} catch (UnsupportedEncodingException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -89,6 +92,7 @@ public class GetUserinfo extends MWAction {
 	}
 	
 	/**
+	 *
 	 * @param s
 	 *            the returning text
 	 * @return empty string
@@ -137,5 +141,9 @@ public class GetUserinfo extends MWAction {
 		}
 		
 		
+	}
+
+	public HttpAction getNextMessage() {
+		return msg;
 	}
 }

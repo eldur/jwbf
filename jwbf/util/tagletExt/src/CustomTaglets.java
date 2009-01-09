@@ -5,6 +5,15 @@ import java.util.Map;
 import com.sun.javadoc.Tag;
 import com.sun.tools.doclets.Taglet;
 
+/*
+ * if there are problems with this class, find "tools.jar" 
+ * form your installed jdk and add it to the project.
+ * 
+ * to generate javadoc add the following parameters to javadoc
+ * 
+ * -taglet CustomTaglets 
+ * -tagletpath <absolute path to>/lib/tagletExt.jar
+ */
 
 public class CustomTaglets implements Taglet {
     
@@ -137,7 +146,8 @@ public class CustomTaglets implements Taglet {
     			typeOut = typeOut.replace("API", "<span style=\"color: red\">API</span>");
     		}
     		
-    		return "\n<DT><B>Supported by " + typeOut + ":</B><ul>" + result + "<ul>\n";
+    		return "\n<DT><B>Supported by " + typeOut + ":</B>" +
+    				"<ul style=\"-moz-column-count:3; column-count:3;\">" + result + "<ul>\n";
     	}
     }
 }

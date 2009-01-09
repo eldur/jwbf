@@ -43,6 +43,7 @@ public class CategoryTest extends LiveTestFather {
 	
 	private MediaWikiBot bot = null;
 	private static final int COUNT = 60;
+	private static final String TESTCATNAME = "TestCat";
 	
 	protected static final void prepareTestWikis() throws Exception {
 		
@@ -76,7 +77,7 @@ public class CategoryTest extends LiveTestFather {
 			for (int i = 0; i < COUNT; i++) {
 				a.setLabel("CategoryTest" + i);
 					a.setText("abc [[Category:" 
-							+ getValue("category_name")
+							+ TESTCATNAME
 							+ "]]");
 				bot.writeContent(a);
 			}
@@ -117,28 +118,6 @@ public class CategoryTest extends LiveTestFather {
 		Assert.assertTrue("i is: " + i , i > 50 );
 	}
 	
-	
-
-	/**
-	 * Test category read. Test category must have more then 50 members.
-	 * @throws Exception a
-	 */
-	@Test
-	public final void categoryCustomWiki() throws Exception {
-		
-		bot = new MediaWikiBot(getValue("category_customWiki_url"));
-		bot.login(getValue("category_customWiki_user"), getValue("category_customWiki_pass"));
-		Iterator<String> is = bot.getCategoryMembers(getValue("category_customWiki_category")).iterator();
-		int i = 0;
-		while (is.hasNext()) {
-			is.next();
-			i++;
-			if (i > 55) {
-				break;
-			}
-		}
-		Assert.assertTrue("i is: " + i , i > 50);
-	}
 	/**
 	 * Test category read. Test category must have more then 50 members.
 	 * @throws Exception a
@@ -148,7 +127,7 @@ public class CategoryTest extends LiveTestFather {
 		
 		bot = new MediaWikiBot(getValue("wikiMW1_09_url"));
 		bot.login(getValue("wikiMW1_09_user"), getValue("wikiMW1_09_pass"));
-		Iterator<String> is = bot.getCategoryMembers(getValue("category_name")).iterator();
+		Iterator<String> is = bot.getCategoryMembers(TESTCATNAME).iterator();
 		int i = 0;
 		while (is.hasNext()) {
 			is.next();
@@ -170,7 +149,7 @@ public class CategoryTest extends LiveTestFather {
 		
 		bot = new MediaWikiBot(getValue("wikiMW1_10_url"));
 		bot.login(getValue("wikiMW1_10_user"), getValue("wikiMW1_10_pass"));
-		Iterator<String> is = bot.getCategoryMembers(getValue("category_name")).iterator();
+		Iterator<String> is = bot.getCategoryMembers(TESTCATNAME).iterator();
 		int i = 0;
 		while (is.hasNext()) {
 			is.next();
@@ -192,7 +171,7 @@ public class CategoryTest extends LiveTestFather {
 		
 		bot = new MediaWikiBot(getValue("wikiMW1_11_url"));
 		bot.login(getValue("wikiMW1_11_user"), getValue("wikiMW1_11_pass"));
-		Iterator<String> is = bot.getCategoryMembers(getValue("category_name")).iterator();
+		Iterator<String> is = bot.getCategoryMembers(TESTCATNAME).iterator();
 		int i = 0;
 		while (is.hasNext()) {
 			is.next();
@@ -214,7 +193,7 @@ public class CategoryTest extends LiveTestFather {
 		
 		bot = new MediaWikiBot(getValue("wikiMW1_12_url"));
 		bot.login(getValue("wikiMW1_12_user"), getValue("wikiMW1_12_pass"));
-		Iterator<String> is = bot.getCategoryMembers(getValue("category_name")).iterator();
+		Iterator<String> is = bot.getCategoryMembers(TESTCATNAME).iterator();
 		int i = 0;
 		while (is.hasNext()) {
 			is.next();
@@ -236,7 +215,7 @@ public class CategoryTest extends LiveTestFather {
 		
 		bot = new MediaWikiBot(getValue("wikiMW1_13_url"));
 		bot.login(getValue("wikiMW1_13_user"), getValue("wikiMW1_13_pass"));
-		Iterator<String> is = bot.getCategoryMembers(getValue("category_name")).iterator();
+		Iterator<String> is = bot.getCategoryMembers(TESTCATNAME).iterator();
 		int i = 0;
 		while (is.hasNext()) {
 			is.next();

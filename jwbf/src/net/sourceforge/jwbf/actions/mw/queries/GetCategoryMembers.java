@@ -23,13 +23,12 @@ import java.net.URLEncoder;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import net.sourceforge.jwbf.actions.Get;
 import net.sourceforge.jwbf.actions.mw.util.MWAction;
 import net.sourceforge.jwbf.actions.mw.util.ProcessException;
 import net.sourceforge.jwbf.actions.mw.util.VersionException;
 import net.sourceforge.jwbf.bots.MediaWikiBot;
 import net.sourceforge.jwbf.contentRep.mw.Version;
-
-import org.apache.commons.httpclient.methods.GetMethod;
 
 
 /**
@@ -43,6 +42,7 @@ public abstract class GetCategoryMembers extends MWAction {
 	private static final int LIMIT = 50;
 	
 	
+	
 
 	/**
 	 * information necessary to get the next api page.
@@ -53,39 +53,25 @@ public abstract class GetCategoryMembers extends MWAction {
 	/**
 	 * Name of the category.
 	 */
-	protected String categoryName = "";
+	protected final String categoryName;
 	
 	protected Version v = Version.UNKNOWN;
 	private RequestBuilder r = null;
 	
 	protected String namespace = "";
 		
-	/**
-	 * The public constructor. It will have an MediaWiki-request generated,
-	 * which is then added to msgs. When it is answered,
-	 * the method processAllReturningText will be called
-	 * (from outside this class).
-	 * For the parameters, see {@link GetCategoryMembers#generateRequest(String, String, String)}
-	 * @throws VersionException on version problems
-	 */
-	protected GetCategoryMembers(String nextPageInfo, String categoryName, String namespace, Version v) throws VersionException{
-		this.categoryName = categoryName;
-		this.namespace = namespace;
-		this.v = v;
-		createRequestor();
-		generateContinueRequest(nextPageInfo);
-	}
+
 	
 	/**
 	 * The private constructor, which is used to create follow-up actions.
 	 * @throws VersionException on version problems
 	 */
-	public GetCategoryMembers(String categoryName, String namespace, Version v) throws VersionException {
+	GetCategoryMembers(String categoryName, String namespace, Version v) throws VersionException {
 		this.namespace = namespace;
+		this.categoryName = categoryName.replace(" ", "_");
 		this.v = v;
 		createRequestor();
 		
-		generateFirstRequest(categoryName);
 	}
 	
 	private void createRequestor() throws VersionException {
@@ -115,17 +101,18 @@ public abstract class GetCategoryMembers extends MWAction {
 	 * @param cmcontinue    the value for the blcontinue parameter,
 	 *                      null for the generation of the initial request
 	 */
-	protected final void generateFirstRequest(String categoryName) {
-		this.categoryName = categoryName.replace(" ", "_");
-	 	
+	protected final Get generateFirstRequest() {
+		
+
 		try {
-		
-			msgs.add(new GetMethod(r.first(categoryName)));
-		
+
+			return new Get(r.first(categoryName));
+
 		} catch (UnsupportedEncodingException e) {
-    	e.printStackTrace();
-		}		
-		
+			e.printStackTrace();
+			return null;
+		}
+
 	}
 	
 	/**
@@ -135,19 +122,20 @@ public abstract class GetCategoryMembers extends MWAction {
 	 * @param cmcontinue    the value for the blcontinue parameter,
 	 *                      null for the generation of the initial request
 	 */
-	protected final void generateContinueRequest(String cmcontinue) {
+	protected final Get generateContinueRequest(String cmcontinue) {
 	 
 	 	
 		
 		try {
 			
-			msgs.add(new GetMethod(r.continiue(cmcontinue)));
+			return new Get(r.continiue(cmcontinue));
 		
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		} catch (NullPointerException e) {
 			e.printStackTrace();
 		}
+		return null;
 		
 	}
 	/**

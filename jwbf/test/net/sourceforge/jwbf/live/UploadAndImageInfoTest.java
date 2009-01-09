@@ -29,7 +29,9 @@ import java.net.URL;
 import java.net.URLConnection;
 
 import net.sourceforge.jwbf.LiveTestFather;
-import net.sourceforge.jwbf.actions.mw.util.ProcessException;
+import net.sourceforge.jwbf.actions.mw.editing.FileUpload;
+import net.sourceforge.jwbf.actions.mw.queries.GetImageInfo;
+import net.sourceforge.jwbf.actions.mw.util.VersionException;
 import net.sourceforge.jwbf.bots.MediaWikiBot;
 import net.sourceforge.jwbf.contentRep.mw.SimpleFile;
 import net.sourceforge.jwbf.contentRep.mw.Version;
@@ -54,43 +56,18 @@ public class UploadAndImageInfoTest extends LiveTestFather {
 				60 * 1000);
 	}
 	
-
-	/**
-	 * Test upload. .txt must be a valid extension
-	 * @throws Exception a
-	 */
-	@Test
-	public final void uploadCustomWiki() throws Exception {
-		
-		bot = new MediaWikiBot(getValue("upload_customWiki_url"));
-		bot.login(getValue("upload_customWiki_user"),
-				getValue("upload_customWiki_pass"));
-		bot.uploadFile(getValue("validFile"));
-	}
-	/**
-	 * Test upload. .txt must be a valid extension
-	 * @throws Exception a
-	 */
-	@Test
-	public final void uploadCustomWikiComplex() throws Exception {
-		
-		bot = new MediaWikiBot(getValue("upload_customWiki_url"));
-		bot.login(getValue("upload_customWiki_user"),
-				getValue("upload_customWiki_pass"));
-		SimpleFile sf = new SimpleFile("Test.gif", getValue("validFile"));
-		
-		bot.uploadFile(sf);
-	}
+	
 	/**
 	 * Test upload.
 	 * @throws Exception a
 	 */
-	@Test(expected=ProcessException.class)
-	public final void uploadCustomWikiFail() throws Exception {
+	@Test(expected=VersionException.class)
+	public final void uploadMW1_09Fail() throws Exception {
 		
-		bot = new MediaWikiBot(getValue("upload_customWiki_url"));
-		bot.login(getValue("upload_customWiki_user"),
-				getValue("upload_customWiki_pass"));
+		bot = new MediaWikiBot(getValue("wikiMW1_09_url"));
+		bot.login(getValue("wikiMW1_09_user"),
+				getValue("wikiMW1_09_pass"));
+		Assert.assertEquals(bot.getVersion(), Version.MW1_09);
 		bot.uploadFile("README");
 	}
 	
@@ -98,26 +75,8 @@ public class UploadAndImageInfoTest extends LiveTestFather {
 	 * Test category read. Test category must have more then 50 members.
 	 * @throws Exception a
 	 */
-	@Test
-	public final void uploadMW1_09() throws Exception {
-		
-		bot = new MediaWikiBot(getValue("wikiMW1_09_url"));
-		bot.login(getValue("wikiMW1_09_user"),
-				getValue("wikiMW1_09_pass"));
-		Assert.assertEquals(bot.getVersion(), Version.MW1_09);
-		
-		SimpleFile sf = new SimpleFile("Test.gif", getValue("validFile"));
-
-
-		
-	}
-	
-	/**
-	 * Test category read. Test category must have more then 50 members.
-	 * @throws Exception a
-	 */
-	@Test
-	public final void uploadMW1_10() throws Exception {
+	@Test(expected=VersionException.class)
+	public final void uploadMW1_10Fail() throws Exception {
 		
 		bot = new MediaWikiBot(getValue("wikiMW1_10_url"));
 		bot.login(getValue("wikiMW1_10_user"),
@@ -125,7 +84,7 @@ public class UploadAndImageInfoTest extends LiveTestFather {
 		Assert.assertEquals(bot.getVersion(), Version.MW1_10);
 		
 		SimpleFile sf = new SimpleFile("Test.gif", getValue("validFile"));
-		String url = bot.getImageInfo(sf.getFilename());
+		URL url = new URL(bot.getImageInfo(sf.getFilename()));
 		assertFile(url, sf.getFile());
 
 	}
@@ -141,11 +100,14 @@ public class UploadAndImageInfoTest extends LiveTestFather {
 		bot.login(getValue("wikiMW1_11_user"),
 				getValue("wikiMW1_11_pass"));
 		Assert.assertEquals(bot.getVersion(), Version.MW1_11);
+		Assert.assertTrue(new File(getValue("validFile")).canRead());
 		SimpleFile sf = new SimpleFile("Test.gif", getValue("validFile"));
-		bot.uploadFile(sf);
+		FileUpload up = new FileUpload(sf, bot);
+		bot.performAction(up);
 		
-		String url = bot.getImageInfo(sf.getLabel());
-		Assert.assertTrue(url.length() > 2);
+		URL url = new URL(GetImageInfo.get(bot, sf.getLabel()));
+		System.out.println(url);
+		Assert.assertTrue("file not found " + url ,url.toExternalForm().length() - bot.getHostUrl().length() > 2);
 		assertFile(url, sf.getFile());
 	}
 	
@@ -160,10 +122,13 @@ public class UploadAndImageInfoTest extends LiveTestFather {
 		bot.login(getValue("wikiMW1_12_user"),
 				getValue("wikiMW1_12_pass"));
 		Assert.assertEquals(bot.getVersion(), Version.MW1_12);
+		Assert.assertTrue(new File(getValue("validFile")).canRead());
 		SimpleFile sf = new SimpleFile("Test.gif", getValue("validFile"));
-		String url = bot.getImageInfo(sf.getLabel());
+		FileUpload up = new FileUpload(sf, bot);
+		bot.performAction(up);
+		URL url = new URL(bot.getImageInfo(sf.getLabel()));
 		File file = new File(getValue("validFile"));
-		Assert.assertTrue("file not found", url.length() > 2);
+		Assert.assertTrue("file not found " + url, url.toExternalForm().length() - bot.getHostUrl().length() > 2);
 		assertFile(url, file);
 	}
 	
@@ -178,18 +143,20 @@ public class UploadAndImageInfoTest extends LiveTestFather {
 		bot.login(getValue("wikiMW1_13_user"),
 				getValue("wikiMW1_13_pass"));
 		Assert.assertEquals(bot.getVersion(), Version.MW1_13);
+		Assert.assertTrue(new File(getValue("validFile")).canRead());
 		SimpleFile sf = new SimpleFile("Test.gif", getValue("validFile"));
-		String url = bot.getImageInfo(sf.getFilename());
-		Assert.assertTrue("file not found", url.length() > 2);
+		FileUpload up = new FileUpload(sf, bot);
+		bot.performAction(up);
+		URL url = new URL(bot.getImageInfo(sf.getLabel()));
+		Assert.assertTrue("file not found " + url , url.toExternalForm().length() - bot.getHostUrl().length() > 2);
 		File file = new File(getValue("validFile"));
 		assertFile(url, file);
 	}
 	
-	protected final void assertFile(String url, File file) throws Exception {
-		System.err.println(url);
-		File temp = new File("temp");
-		download(url, temp);
-		Assert.assertTrue(filesAreIdentical(temp, file));
+	protected final void assertFile(URL url, File file) throws Exception {
+		File temp = new File("temp.file");
+		download(url.toExternalForm(), temp);
+		Assert.assertTrue("files are not ident", filesAreIdentical(temp, file));
 //		byte [] s = bot.getBytes(url);
 //		
 //		

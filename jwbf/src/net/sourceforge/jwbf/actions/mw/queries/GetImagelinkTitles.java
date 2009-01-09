@@ -26,12 +26,14 @@ import java.util.Collection;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import net.sourceforge.jwbf.actions.Get;
+import net.sourceforge.jwbf.actions.mw.HttpAction;
 import net.sourceforge.jwbf.actions.mw.MultiAction;
+import net.sourceforge.jwbf.actions.mw.util.ActionException;
 import net.sourceforge.jwbf.actions.mw.util.MWAction;
 import net.sourceforge.jwbf.actions.mw.util.ProcessException;
 import net.sourceforge.jwbf.bots.MediaWikiBot;
-
-import org.apache.commons.httpclient.methods.GetMethod;
+import net.sourceforge.jwbf.bots.MediaWikiBotImpl;
 
 
 /**
@@ -57,6 +59,7 @@ public class GetImagelinkTitles extends MWAction implements MultiAction<String> 
 	 */
 	private String nextPageInfo = null;
 		
+	private Get msg;
 		
 	/**
 	 * The public constructor. It will have an MediaWiki-request generated,
@@ -65,7 +68,7 @@ public class GetImagelinkTitles extends MWAction implements MultiAction<String> 
 	 * (from outside this class).
 	 * For the parameters, see {@link GetImagelinkTitles#generateRequest(String, String, String)}
 	 */
-	public GetImagelinkTitles(String imageName, String namespace) {
+	GetImagelinkTitles(String imageName, String namespace) {
 		generateRequest(imageName, namespace, null);
 	}
 	
@@ -111,7 +114,7 @@ public class GetImagelinkTitles extends MWAction implements MultiAction<String> 
 			
 			System.out.println(uS);
 			
-			msgs.add(new GetMethod(uS));
+			msg = new Get(uS);
 		
 		} catch (UnsupportedEncodingException e) {
     	e.printStackTrace();
@@ -197,6 +200,18 @@ public class GetImagelinkTitles extends MWAction implements MultiAction<String> 
 		else{
 			return new GetImagelinkTitles(nextPageInfo);
 		}
+	}
+
+	public static Iterable<String> get(MediaWikiBotImpl bot, String image,
+			int[] namespaces) throws ActionException {
+		GetImagelinkTitles a = new GetImagelinkTitles(image,
+				createNsString(namespaces));
+
+		return bot.performMultiAction(a);
+	}
+
+	public HttpAction getNextMessage() {
+		return msg;
 	}
 	
 	
