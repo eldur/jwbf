@@ -18,17 +18,15 @@
  */
 package net.sourceforge.jwbf.actions.mw.queries;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import net.sourceforge.jwbf.actions.Get;
+import net.sourceforge.jwbf.actions.mw.MediaWiki;
+import net.sourceforge.jwbf.actions.mw.MediaWiki.Version;
 import net.sourceforge.jwbf.actions.mw.util.MWAction;
 import net.sourceforge.jwbf.actions.mw.util.ProcessException;
 import net.sourceforge.jwbf.actions.mw.util.VersionException;
-import net.sourceforge.jwbf.bots.MediaWikiBot;
-import net.sourceforge.jwbf.contentRep.mw.Version;
 
 
 /**
@@ -102,17 +100,8 @@ public abstract class GetCategoryMembers extends MWAction {
 	 *                      null for the generation of the initial request
 	 */
 	protected final Get generateFirstRequest() {
-		
 
-		try {
-
-			return new Get(r.first(categoryName));
-
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-			return null;
-		}
-
+		return new Get(r.first(categoryName));
 	}
 	
 	/**
@@ -123,20 +112,16 @@ public abstract class GetCategoryMembers extends MWAction {
 	 *                      null for the generation of the initial request
 	 */
 	protected final Get generateContinueRequest(String cmcontinue) {
-	 
-	 	
-		
+
 		try {
-			
+
 			return new Get(r.continiue(cmcontinue));
-		
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
+
 		} catch (NullPointerException e) {
 			e.printStackTrace();
 		}
 		return null;
-		
+
 	}
 	/**
 	 * deals with the MediaWiki api's response by parsing the provided text.
@@ -205,21 +190,21 @@ public abstract class GetCategoryMembers extends MWAction {
 		RequestBuilder_1_11() {
 			super();
 		}
-		String continiue(String cmcontinue) throws UnsupportedEncodingException {
+		String continiue(String cmcontinue)  {
 			String uS = "";	
 			String nsinj = "";
 			if (namespace.length() > 0) {
 				nsinj = "&cmnamespace=" + namespace;
 			}
 				uS = "/api.php?action=query&list=categorymembers"
-						+ "&cmcategory=" + URLEncoder.encode(categoryName, MediaWikiBot.CHARSET) 
+						+ "&cmcategory=" + MediaWiki.encode(categoryName) 
 						+ nsinj
-						+ "&cmcontinue=" + URLEncoder.encode(cmcontinue, MediaWikiBot.CHARSET)
+						+ "&cmcontinue=" + MediaWiki.encode(cmcontinue)
 						+ "&cmlimit=" + LIMIT + "&format=xml";
 				return uS;
 		}
 		
-		String first(String categoryName) throws UnsupportedEncodingException {
+		String first(String categoryName) {
 			String uS = "";
 			String nsinj = "";
 			if (namespace.length() > 0) {
@@ -227,7 +212,7 @@ public abstract class GetCategoryMembers extends MWAction {
 			}
 			
 				uS = "/api.php?action=query&list=categorymembers"
-						+ "&cmcategory=" + URLEncoder.encode(categoryName, MediaWikiBot.CHARSET) 
+						+ "&cmcategory=" + MediaWiki.encode(categoryName) 
 						+ nsinj
 						+ "&cmlimit=" + LIMIT + "&format=xml";
 				return uS;
@@ -243,7 +228,7 @@ public abstract class GetCategoryMembers extends MWAction {
 			
 		}
 		
-		String continiue(String cmcontinue) throws UnsupportedEncodingException {
+		String continiue(String cmcontinue) {
 			String uS = "";	
 			String nsinj = "";
 			if (namespace.length() > 0) {
@@ -253,14 +238,14 @@ public abstract class GetCategoryMembers extends MWAction {
 			//TODO: do not add Category: - instead, change other methods' descs (e.g. in MediaWikiBot)
 			
 				uS = "/api.php?action=query&list=categorymembers"
-						+ "&cmtitle=Category:" + URLEncoder.encode(categoryName, MediaWikiBot.CHARSET) 
+						+ "&cmtitle=Category:" + MediaWiki.encode(categoryName) 
 						+ nsinj
-						+ "&cmcontinue=" + URLEncoder.encode(cmcontinue, MediaWikiBot.CHARSET)
+						+ "&cmcontinue=" + MediaWiki.encode(cmcontinue)
 						+ "&cmlimit=" + LIMIT + "&format=xml";
 				return uS;
 		}
 		
-		String first(String categoryName) throws UnsupportedEncodingException {
+		String first(String categoryName) {
 			String uS = "";
 			String nsinj = "";
 			if (namespace.length() > 0) {
@@ -270,7 +255,7 @@ public abstract class GetCategoryMembers extends MWAction {
 				//TODO: do not add Category: - instead, change other methods' descs (e.g. in MediaWikiBot)
 			
 				uS = "/api.php?action=query&list=categorymembers"
-						+ "&cmtitle=Category:" + URLEncoder.encode(categoryName, MediaWikiBot.CHARSET) 
+						+ "&cmtitle=Category:" + MediaWiki.encode(categoryName) 
 						+ nsinj
 						+ "&cmlimit=" + LIMIT + "&format=xml";
 				return uS;

@@ -21,20 +21,17 @@ package net.sourceforge.jwbf.actions.mw.editing;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
-import java.io.UnsupportedEncodingException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URLEncoder;
 import java.text.ParseException;
 import java.util.Iterator;
 
 import net.sourceforge.jwbf.actions.Get;
 import net.sourceforge.jwbf.actions.mw.HttpAction;
+import net.sourceforge.jwbf.actions.mw.MediaWiki;
 import net.sourceforge.jwbf.actions.mw.util.ApiException;
 import net.sourceforge.jwbf.actions.mw.util.MWAction;
 import net.sourceforge.jwbf.actions.mw.util.ProcessException;
-import net.sourceforge.jwbf.bots.MediaWikiBot;
 import net.sourceforge.jwbf.contentRep.mw.SimpleArticle;
+import net.sourceforge.jwbf.live.GetRevisionTest;
 
 import org.apache.log4j.Logger;
 import org.jdom.Document;
@@ -44,9 +41,18 @@ import org.jdom.input.SAXBuilder;
 import org.xml.sax.InputSource;
 
 /**
- * @author Thomas Stock
- * @since MediaWiki 1.9.0
+ * Reads the content of a given article.
  * 
+ * @author Thomas Stock
+ * 
+ * @supportedBy MediaWikiAPI 1.9.x
+ * @supportedBy MediaWikiAPI 1.10.x 
+ * @supportedBy MediaWikiAPI 1.11.x 
+ * @supportedBy MediaWikiAPI 1.12.x 
+ * @supportedBy MediaWikiAPI 1.13.x
+ * @supportedBy MediaWikiAPI 1.14.x 
+ * 
+ * @see GetRevisionTest
  */
 public class GetRevision extends MWAction {
 
@@ -71,21 +77,13 @@ public class GetRevision extends MWAction {
 		this.property = property;
 		sa = new SimpleArticle();
 		sa.setLabel(articlename);
-		String uS = "";
-		URI uri = null;
-		try {
-			uS = "/api.php?action=query&prop=revisions&titles="
-					+ URLEncoder.encode(articlename, MediaWikiBot.CHARSET)
-					+ "&rvprop=" + getDataProperties(property)
-					+ getReversion(property) + "&rvlimit=1" + "&format=xml";
-			uri = new URI(uS);
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		} catch (URISyntaxException e) {
-			e.printStackTrace();
-		}
-		LOG.debug(uS);
-		msg = new Get(uri.toString());
+		String uS = "/api.php?action=query&prop=revisions&titles="
+				+ MediaWiki.encode(articlename) + "&rvprop="
+				+ getDataProperties(property) + getReversion(property)
+				+ "&rvlimit=1" + "&format=xml";
+		msg = new Get(uS);
+		if (LOG.isDebugEnabled())
+			LOG.debug(uS);
 
 	}
 
@@ -117,14 +115,9 @@ public class GetRevision extends MWAction {
 		if ((property & USER) > 0) {
 			properties += "user|";
 		}
-		String enc = "";
-
-		try {
-			enc = URLEncoder.encode(properties.substring(0,
-					properties.length() - 1), MediaWikiBot.CHARSET);
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
+		String enc = MediaWiki.encode(properties.substring(0,
+					properties.length() - 1));
+	
 		return enc;
 	}
 

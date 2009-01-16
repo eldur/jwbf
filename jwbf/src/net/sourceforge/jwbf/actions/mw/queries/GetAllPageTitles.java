@@ -19,8 +19,6 @@
  */
 package net.sourceforge.jwbf.actions.mw.queries;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.regex.Matcher;
@@ -28,10 +26,10 @@ import java.util.regex.Pattern;
 
 import net.sourceforge.jwbf.actions.Get;
 import net.sourceforge.jwbf.actions.mw.HttpAction;
+import net.sourceforge.jwbf.actions.mw.MediaWiki;
 import net.sourceforge.jwbf.actions.mw.MultiAction;
 import net.sourceforge.jwbf.actions.mw.util.MWAction;
 import net.sourceforge.jwbf.actions.mw.util.ProcessException;
-import net.sourceforge.jwbf.bots.MediaWikiBot;
 
 import org.apache.log4j.Logger;
 
@@ -90,7 +88,7 @@ public class GetAllPageTitles extends MWAction implements MultiAction<String> {
 	 * @param nonredirects
 	 *            include nonredirects in the list (will be ignored if redirects
 	 *            is false!)
-	 * @param namespace
+	 * @param namespaces
 	 *            the namespace(s) that will be searched for links, as a string
 	 *            of numbers separated by '|'; if null, this parameter is
 	 *            omitted
@@ -134,28 +132,25 @@ public class GetAllPageTitles extends MWAction implements MultiAction<String> {
 			LOG
 					.trace("enter GetAllPagetitles.generateRequest(String,String,boolean,boolean,String)");
 		}
-		try {
-			String apfilterredir;
-			if (redirects && nonredirects) {
-				apfilterredir = "all";
-			} else if (redirects && !nonredirects) {
-				apfilterredir = "redirects";
-			} else {
-				apfilterredir = "nonredirects";
-			}
 
-			String uS = "/api.php?action=query&list=allpages&"
-					+ ((from != null) ? ("&apfrom=" + URLEncoder.encode(from,
-							MediaWikiBot.CHARSET)) : "")
-					+ ((prefix != null) ? ("&apprefix=" + URLEncoder.encode(
-							prefix, MediaWikiBot.CHARSET)) : "")
-					+ ((namespace != null && namespace.length() != 0) ? ("&apnamespace=" + namespace)
-							: "") + "&apfilterredir=" + apfilterredir
-					+ "&aplimit=" + LIMIT + "&format=xml";
-			msg = new Get(uS);
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
+		String apfilterredir;
+		if (redirects && nonredirects) {
+			apfilterredir = "all";
+		} else if (redirects && !nonredirects) {
+			apfilterredir = "redirects";
+		} else {
+			apfilterredir = "nonredirects";
 		}
+
+		String uS = "/api.php?action=query&list=allpages&"
+				+ ((from != null) ? ("&apfrom=" + MediaWiki.encode(from)) : "")
+				+ ((prefix != null) ? ("&apprefix=" + MediaWiki.encode(prefix))
+						: "")
+				+ ((namespace != null && namespace.length() != 0) ? ("&apnamespace=" + namespace)
+						: "") + "&apfilterredir=" + apfilterredir + "&aplimit="
+				+ LIMIT + "&format=xml";
+		msg = new Get(uS);
+
 	}
 
 	/**

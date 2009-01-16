@@ -60,7 +60,9 @@
 	</target>
 
 	<target name="compile" depends="init" description="--> compile the sources">
-		<javac classpathref="classpath" source="1.5" target="1.5" destdir="${classes.dir}" srcdir="src" />
+		<javac classpathref="classpath" source="1.5" target="1.5" destdir="${classes.dir}" >
+			<src path="src" /> <src path="test" />
+			</javac>
 		<copy todir="${classes.dir}">
 			<fileset dir="src">
 				<exclude name="**/*.java" />

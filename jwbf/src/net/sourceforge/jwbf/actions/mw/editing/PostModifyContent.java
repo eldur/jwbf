@@ -18,24 +18,27 @@
  */
 package net.sourceforge.jwbf.actions.mw.editing;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.Hashtable;
 
 import net.sourceforge.jwbf.actions.Get;
 import net.sourceforge.jwbf.actions.Post;
 import net.sourceforge.jwbf.actions.mw.HttpAction;
+import net.sourceforge.jwbf.actions.mw.MediaWiki;
 import net.sourceforge.jwbf.actions.mw.util.MWAction;
 import net.sourceforge.jwbf.actions.mw.util.ProcessException;
-import net.sourceforge.jwbf.bots.MediaWikiBot;
 import net.sourceforge.jwbf.contentRep.mw.ContentAccessable;
 
 import org.apache.log4j.Logger;
 
 /**
- * TODO no api use.
  * 
+ * 
+ * Writes an article.
+ * 
+ * 
+ * TODO no api use.
  * @author Thomas Stock
+ * @supportedBy MediaWiki 1.9.x, 1.10.x, 1.11.x, 1.12.x, 1.13.x, 1.14.x
  * 
  */
 public class PostModifyContent extends MWAction {
@@ -55,14 +58,9 @@ public class PostModifyContent extends MWAction {
 	 */
 	public PostModifyContent(final ContentAccessable a) {
 		this.a = a;
-		String uS = "";
-		try {
-			uS = "/index.php?title="
-					+ URLEncoder.encode(a.getLabel(), MediaWikiBot.CHARSET)
+		String uS = "/index.php?title="
+					+ MediaWiki.encode(a.getLabel())
 					+ "&action=edit&dontcountme=s";
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
 		g = new Get(uS);
 
 	}
@@ -75,14 +73,10 @@ public class PostModifyContent extends MWAction {
 		}
 
 		String uS = "";
-		uS = "";
-		try {
-			uS = "/index.php?title="
-					+ URLEncoder.encode(a.getLabel(), MediaWikiBot.CHARSET)
-					+ "&action=submit";
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
+
+		uS = "/index.php?title=" + MediaWiki.encode(a.getLabel())
+				+ "&action=submit";
+
 		Post pm = new Post(uS);
 		pm.addParam("wpSave", "Save");
 

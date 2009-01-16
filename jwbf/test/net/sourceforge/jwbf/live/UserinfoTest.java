@@ -4,10 +4,10 @@
 package net.sourceforge.jwbf.live;
 
 import net.sourceforge.jwbf.LiveTestFather;
+import net.sourceforge.jwbf.actions.mw.MediaWiki.Version;
 import net.sourceforge.jwbf.actions.mw.util.VersionException;
 import net.sourceforge.jwbf.bots.MediaWikiBot;
 import net.sourceforge.jwbf.contentRep.mw.Userinfo;
-import net.sourceforge.jwbf.contentRep.mw.Version;
 
 import org.apache.log4j.PropertyConfigurator;
 import org.junit.Assert;

@@ -27,10 +27,8 @@ import java.util.Iterator;
 
 import net.sourceforge.jwbf.actions.Get;
 import net.sourceforge.jwbf.actions.mw.HttpAction;
-import net.sourceforge.jwbf.actions.mw.util.ActionException;
 import net.sourceforge.jwbf.actions.mw.util.MWAction;
 import net.sourceforge.jwbf.actions.mw.util.ProcessException;
-import net.sourceforge.jwbf.bots.MediaWikiBotImpl;
 import net.sourceforge.jwbf.contentRep.mw.LogItem;
 
 import org.jdom.Document;
@@ -100,14 +98,14 @@ public class GetLogEvents extends MWAction  {
 	/**
 	 * 
 	 */
-	GetLogEvents(String... type) {
+	public GetLogEvents(String... type) {
 		generateRequest(type);
 	}
 
 	/**
 	 * 
 	 */
-	GetLogEvents(int limit, String... type) {
+	public GetLogEvents(int limit, String... type) {
 		this.limit = limit;
 		generateRequest(type);
 	}
@@ -182,13 +180,6 @@ public class GetLogEvents extends MWAction  {
 	}
 
 
-	public static Iterator<LogItem> get(MediaWikiBotImpl bot, int limit,
-			String[] type) throws ActionException, ProcessException {
-		GetLogEvents c = new GetLogEvents(limit, type);
-		
-		bot.performAction(c);
-		return c.getResults();
-	}
 
 
 	public HttpAction getNextMessage() {

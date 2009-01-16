@@ -20,7 +20,6 @@
 package net.sourceforge.jwbf.actions.mw.queries;
 
 import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.regex.Matcher;
@@ -28,12 +27,12 @@ import java.util.regex.Pattern;
 
 import net.sourceforge.jwbf.actions.Get;
 import net.sourceforge.jwbf.actions.mw.HttpAction;
+import net.sourceforge.jwbf.actions.mw.MediaWiki;
 import net.sourceforge.jwbf.actions.mw.MultiAction;
+import net.sourceforge.jwbf.actions.mw.MediaWiki.Version;
 import net.sourceforge.jwbf.actions.mw.util.MWAction;
 import net.sourceforge.jwbf.actions.mw.util.ProcessException;
 import net.sourceforge.jwbf.actions.mw.util.VersionException;
-import net.sourceforge.jwbf.bots.MediaWikiBot;
-import net.sourceforge.jwbf.contentRep.mw.Version;
 
 
 /**
@@ -270,19 +269,19 @@ public class GetBacklinkTitles extends MWAction implements MultiAction<String> {
 	private static class RequestBuilder_1_11 implements RequestBuilder {
 
 		public String buildInitialRequest(String articleName, 
-				RedirectFilter redirectFilter, String namespace) throws UnsupportedEncodingException {
+				RedirectFilter redirectFilter, String namespace)  {
 			
 			return "/api.php?action=query&list=backlinks"
-			       + "&bltitle=" + URLEncoder.encode(articleName, MediaWikiBot.CHARSET) 
+			       + "&bltitle=" + MediaWiki.encode(articleName) 
 			       + ((namespace!=null && namespace.length() != 0)?("&blnamespace="+namespace):"")
 			       + "&blfilterredir=" + redirectFilter.toString() 
 			       + "&bllimit=" + LIMIT + "&format=xml";			
 		}
 		
-		public String buildContinueRequest(String blcontinue) throws UnsupportedEncodingException {
+		public String buildContinueRequest(String blcontinue) {
 			
 			return "/api.php?action=query&list=backlinks"
-			       + "&blcontinue=" + URLEncoder.encode(blcontinue, MediaWikiBot.CHARSET)
+			       + "&blcontinue=" + MediaWiki.encode(blcontinue)
 			       + "&bllimit=" + LIMIT + "&format=xml";			
 		}
 		
@@ -296,23 +295,23 @@ public class GetBacklinkTitles extends MWAction implements MultiAction<String> {
 		 */
 		public String buildInitialRequest(String articleName, 
 				RedirectFilter redirectFilter, String namespace) 
-				throws UnsupportedEncodingException, VersionException {
+				throws VersionException {
 			
 			if (redirectFilter != RedirectFilter.all) {
 				throw new VersionException("redirect filtering is not available in this MediaWiki version");
 			}
 			
 			return "/api.php?action=query&list=backlinks"
-			       + "&titles=" + URLEncoder.encode(articleName, MediaWikiBot.CHARSET) 
+			       + "&titles=" + MediaWiki.encode(articleName) 
 			       + ((namespace!=null && namespace.length() != 0)?("&blnamespace="+namespace):"")
 			       + "&blfilterredir=" + redirectFilter.toString() 
 			       + "&bllimit=" + LIMIT + "&format=xml";			
 		}
 		
-		public String buildContinueRequest(String blcontinue) throws UnsupportedEncodingException {
+		public String buildContinueRequest(String blcontinue) {
 			
 			return "/api.php?action=query&list=backlinks"
-			       + "&blcontinue=" + URLEncoder.encode(blcontinue, MediaWikiBot.CHARSET)
+			       + "&blcontinue=" + MediaWiki.encode(blcontinue)
 			       + "&bllimit=" + LIMIT + "&format=xml";			
 		}
 		

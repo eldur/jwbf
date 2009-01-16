@@ -19,8 +19,6 @@
  */
 package net.sourceforge.jwbf.actions.mw.queries;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.regex.Matcher;
@@ -28,19 +26,26 @@ import java.util.regex.Pattern;
 
 import net.sourceforge.jwbf.actions.Get;
 import net.sourceforge.jwbf.actions.mw.HttpAction;
+import net.sourceforge.jwbf.actions.mw.MediaWiki;
 import net.sourceforge.jwbf.actions.mw.MultiAction;
-import net.sourceforge.jwbf.actions.mw.util.ActionException;
 import net.sourceforge.jwbf.actions.mw.util.MWAction;
 import net.sourceforge.jwbf.actions.mw.util.ProcessException;
-import net.sourceforge.jwbf.bots.MediaWikiBot;
-import net.sourceforge.jwbf.bots.MediaWikiBotImpl;
-
+import net.sourceforge.jwbf.live.GetImagelinkTitlesTest;
 
 /**
- * action class using the MediaWiki-api's "list=imagelinks" 
- *
+ * action class using the MediaWiki-api's "list=imagelinks"
+ * 
  * @author Tobias Knerr
  * @since MediaWiki 1.9.0
+ * 
+ *        TODO Pending Parameter Change;
+ *        http://www.mediawiki.org/wiki/API:Query_-_Lists TODO New API call,
+ *        decide if design a switch by version or support only newest
+ * 
+ * @supportedBy MediaWikiAPI 1.9 embeddedin / ei TODO Test Required
+ * @supportedBy MediaWikiAPI 1.10 embeddedin / ei TODO Test Required
+ * 
+ * @see GetImagelinkTitlesTest
  */
 public class GetImagelinkTitles extends MWAction implements MultiAction<String> {
 
@@ -68,8 +73,8 @@ public class GetImagelinkTitles extends MWAction implements MultiAction<String> 
 	 * (from outside this class).
 	 * For the parameters, see {@link GetImagelinkTitles#generateRequest(String, String, String)}
 	 */
-	GetImagelinkTitles(String imageName, String namespace) {
-		generateRequest(imageName, namespace, null);
+	public GetImagelinkTitles(String imageName, int... namespaces) {
+		generateRequest(imageName, createNsString(namespaces), null);
 	}
 	
 	/**
@@ -91,35 +96,30 @@ public class GetImagelinkTitles extends MWAction implements MultiAction<String> 
 	 *                      null for the generation of the initial request
 	 */
 	protected void generateRequest(String imageName, String namespace,
-		String ilcontinue){
-	 
-	 	String uS = "";
-		
-		try {
-		
-			if (ilcontinue == null) {
-		
-				uS = "/api.php?action=query&list=imageusage"
-						+ "&iutitle=" + URLEncoder.encode(imageName, MediaWikiBot.CHARSET) 
-						+ ((namespace!=null&&namespace.length() != 0)?("&ilnamespace="+namespace):"")
-						+ "&illimit=" + LIMIT + "&format=xml";
-			
-			} else {
-				
-				uS = "/api.php?action=query&list=imageusage"
-						+ "&ilcontinue=" + URLEncoder.encode(ilcontinue, MediaWikiBot.CHARSET)
-						+ "&illimit=" + LIMIT + "&format=xml";
-				
-			}
-			
-			System.out.println(uS);
-			
-			msg = new Get(uS);
-		
-		} catch (UnsupportedEncodingException e) {
-    	e.printStackTrace();
-		}		
-		
+		String ilcontinue) {
+
+		String uS = "";
+
+		if (ilcontinue == null) {
+
+			uS = "/api.php?action=query&list=imageusage"
+					+ "&iutitle="
+					+ MediaWiki.encode(imageName)
+					+ ((namespace != null && namespace.length() != 0) ? ("&ilnamespace=" + namespace)
+							: "") + "&illimit=" + LIMIT + "&format=xml";
+
+		} else {
+
+			uS = "/api.php?action=query&list=imageusage" + "&ilcontinue="
+					+ MediaWiki.encode(ilcontinue) + "&illimit=" + LIMIT
+					+ "&format=xml";
+
+		}
+
+		System.out.println(uS);
+
+		msg = new Get(uS);
+
 	}
 	
 	/**
@@ -200,14 +200,6 @@ public class GetImagelinkTitles extends MWAction implements MultiAction<String> 
 		else{
 			return new GetImagelinkTitles(nextPageInfo);
 		}
-	}
-
-	public static Iterable<String> get(MediaWikiBotImpl bot, String image,
-			int[] namespaces) throws ActionException {
-		GetImagelinkTitles a = new GetImagelinkTitles(image,
-				createNsString(namespaces));
-
-		return bot.performMultiAction(a);
 	}
 
 	public HttpAction getNextMessage() {

@@ -3,19 +3,17 @@ package net.sourceforge.jwbf.actions.mw.meta;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.Iterator;
 import java.util.Vector;
 
 import net.sourceforge.jwbf.actions.Get;
 import net.sourceforge.jwbf.actions.mw.HttpAction;
+import net.sourceforge.jwbf.actions.mw.MediaWiki;
+import net.sourceforge.jwbf.actions.mw.MediaWiki.Version;
 import net.sourceforge.jwbf.actions.mw.util.MWAction;
 import net.sourceforge.jwbf.actions.mw.util.ProcessException;
 import net.sourceforge.jwbf.actions.mw.util.VersionException;
-import net.sourceforge.jwbf.bots.MediaWikiBot;
 import net.sourceforge.jwbf.contentRep.mw.Userinfo;
-import net.sourceforge.jwbf.contentRep.mw.Version;
 
 import org.apache.log4j.Logger;
 import org.jdom.Document;
@@ -39,35 +37,26 @@ public class GetUserinfo extends MWAction {
 		case MW1_09:
 		case MW1_10:
 			throw new VersionException("Not supportet by this version of MW");
-			
+
 		case MW1_11:
-			try {
-				msg = new Get(
-						"/api.php?"
-						+ "action=query&"
-						+ "meta=userinfo&"
-						+ "uiprop=" + URLEncoder.encode("blockinfo|hasmsg|groups|rights", MediaWikiBot.CHARSET) + "&"
-						+ "format=xml");
-			} catch (UnsupportedEncodingException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			msg = new Get("/api.php?" + "action=query&" + "meta=userinfo&"
+					+ "uiprop="
+					+ MediaWiki.encode("blockinfo|hasmsg|groups|rights") + "&"
+					+ "format=xml");
+
 			break;
 		default:
-			try {
-				msg = new Get(
-						"/api.php?"
-						+ "action=query&"
-						+ "meta=userinfo&"
-						+ "uiprop=" + URLEncoder.encode("blockinfo|hasmsg|groups|rights|options|editcount|ratelimits", MediaWikiBot.CHARSET) + "&"
-						+ "format=xml");
-			} catch (UnsupportedEncodingException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			msg = new Get(
+					"/api.php?"
+							+ "action=query&"
+							+ "meta=userinfo&"
+							+ "uiprop="
+							+ MediaWiki
+									.encode("blockinfo|hasmsg|groups|rights|options|editcount|ratelimits")
+							+ "&" + "format=xml");
+
 			break;
 		}
-		
 
 	}
 	
@@ -82,10 +71,8 @@ public class GetUserinfo extends MWAction {
 			root = doc.getRootElement();
 			findContent(root);
 		} catch (JDOMException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		userinfo = new Userinfo(username, false, false, groups, rights);

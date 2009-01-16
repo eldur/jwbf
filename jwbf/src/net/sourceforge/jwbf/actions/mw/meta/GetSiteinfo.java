@@ -1,33 +1,32 @@
 package net.sourceforge.jwbf.actions.mw.meta;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.Iterator;
 
 import net.sourceforge.jwbf.actions.Get;
 import net.sourceforge.jwbf.actions.mw.HttpAction;
-import net.sourceforge.jwbf.bots.MediaWikiBot;
+import net.sourceforge.jwbf.actions.mw.MediaWiki;
+import net.sourceforge.jwbf.contentRep.mw.Siteinfo;
+import net.sourceforge.jwbf.live.SiteinfoTest;
 
 import org.jdom.Element;
-
+/**
+ * Gets details from the given MediaWiki installation like installed version. 
+ * @author Thomas Stock
+ * @supportedBy MediaWiki 1.09, 1.10
+ * @supportedBy MediaWikiAPI 1.11, 1.12, 1.13
+ * @see SiteinfoTest
+ * @see Siteinfo
+ *
+ */
 public class GetSiteinfo extends GetVersion {
 
 	
 	private Get msg;
 	public GetSiteinfo() {
-		
-		
 
-			try {
-				msg = new Get("/api.php?action=query&meta=siteinfo" +
-						"&siprop=" + URLEncoder.encode("general|namespaces", MediaWikiBot.CHARSET) +
-						"&format=xml");
-			} catch (UnsupportedEncodingException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		
-		
+		msg = new Get("/api.php?action=query&meta=siteinfo" + "&siprop="
+				+ MediaWiki.encode("general|namespaces") + "&format=xml");
+
 	}
 	@Override
 	public HttpAction getNextMessage() {

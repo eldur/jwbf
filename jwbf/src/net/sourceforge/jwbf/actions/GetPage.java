@@ -23,7 +23,6 @@ import net.sourceforge.jwbf.actions.mw.util.CookieException;
 import net.sourceforge.jwbf.actions.mw.util.ProcessException;
 
 import org.apache.commons.httpclient.Cookie;
-import org.apache.commons.httpclient.HttpMethod;
 /**
  * Simple method to get plain HTML or XML data e.g. from custom specialpages
  * or xml newsfeeds or something else.
@@ -55,14 +54,14 @@ public class GetPage implements ContentProcessable {
 		return b;
 	}
 	/**
-	 * @see ContentProcessable#getMessages()
+	 * @see ContentProcessable#getNextMessage()
 	 * @return a
 	 */
 	public HttpAction getNextMessage() {
 		return msg;
 	}
 	/**
-	 * @see ContentProcessable#processReturningText(String, HttpMethod)
+	 * @see ContentProcessable#processReturningText(String, HttpAction)
 	 * @param s the returning text
 	 * @param hm the
 	 * @throws ProcessException on any problems with inner browser
@@ -74,7 +73,7 @@ public class GetPage implements ContentProcessable {
 	}
 
 	/**
-	 * @see ContentProcessable#validateReturningCookies(Cookie[], HttpMethod)
+	 * @see ContentProcessable#validateReturningCookies(Cookie[], HttpAction)
 	 * @param cs a
 	 * @param hm a
 	 * @throws CookieException on cookie problems

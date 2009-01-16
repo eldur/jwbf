@@ -21,17 +21,15 @@ package net.sourceforge.jwbf.actions.mw.queries;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Vector;
 
 import net.sourceforge.jwbf.actions.Get;
 import net.sourceforge.jwbf.actions.mw.HttpAction;
 import net.sourceforge.jwbf.actions.mw.MultiAction;
-import net.sourceforge.jwbf.actions.mw.util.ActionException;
 import net.sourceforge.jwbf.actions.mw.util.MWAction;
 import net.sourceforge.jwbf.actions.mw.util.ProcessException;
-import net.sourceforge.jwbf.bots.MediaWikiBotImpl;
 
 import org.jdom.Document;
 import org.jdom.Element;
@@ -47,7 +45,7 @@ import org.xml.sax.InputSource;
  * max=500/5000) F
  * 
  * api.php ? action=query & list=recentchanges - List last 10 changes
-
+ * 
  * @author Thomas Stock
  * @supportedBy MediaWikiAPI 1.10 recentchanges / rc
  */
@@ -55,14 +53,18 @@ import org.xml.sax.InputSource;
 public class GetRecentchanges extends MWAction implements MultiAction<String> {
 
 	/** value for the bllimit-parameter. **/
-	private int limit = 10;
+	private final int limit = 10;
 	private Get msg;
+	private String timestamp = "";
+	private int find = 1;
+	
+	private String namespaces = "";
 	/**
 	 * Collection that will contain the result
 	 * (titles of articles linking to the target) 
 	 * after performing the action has finished.
 	 */
-	private Collection<String> titleCollection = new ArrayList<String>();
+	private Collection<String> titleCollection = new Vector<String>();
 
 	/**
 	 * information necessary to get the next api page.
@@ -77,17 +79,24 @@ public class GetRecentchanges extends MWAction implements MultiAction<String> {
 	 *                      as a string of numbers separated by '|';
 	 *                      if null, this parameter is omitted
 	 */
-	protected void generateRequest(String namespace) {
+	private void generateRequest(String namespace, String rcstart) {
 	 
 	 	String uS = "";
-
+	 	if (rcstart.length() > 0) {
 		uS = "/api.php?action=query&list=recentchanges"
+				
+				+ ((namespace != null)?("&rcnamespace="+namespace):"")
+				+ "&rcstart=" + rcstart
+				//+ "&rcusertype=" // (dflt=not|bot)
+				+ "&rclimit=" + limit + "&format=xml";
+	 	} else {
+	 		uS = "/api.php?action=query&list=recentchanges"
 				
 				+ ((namespace != null)?("&rcnamespace="+namespace):"")
 				//+ "&rcminor="
 				//+ "&rcusertype=" // (dflt=not|bot)
 				+ "&rclimit=" + limit + "&format=xml";
-			
+	 	}
 	
 			
 		msg = new Get(uS);
@@ -95,19 +104,27 @@ public class GetRecentchanges extends MWAction implements MultiAction<String> {
 		
 	}
 	
-	/**
-	 * 
-	 */
-	GetRecentchanges(String ns) {
-		generateRequest(ns);
+	private void generateRequest(String namespace) {
+		 
+		generateRequest(namespace, "");
+				
+		
 	}
 	
 	/**
 	 * 
 	 */
-	GetRecentchanges(int count, String ns) {
-		this.limit = count;
-		generateRequest(ns);
+	public GetRecentchanges(int... ns) {
+		namespaces = createNsString(ns);
+		generateRequest(namespaces);
+	}
+	
+	/**
+	 * 
+	 */
+	private GetRecentchanges(String timestamp, String ns) {
+		namespaces = ns;
+		generateRequest(namespaces, timestamp);
 	}
 	
 	/**
@@ -130,7 +147,6 @@ public class GetRecentchanges extends MWAction implements MultiAction<String> {
 	 * @param s   text for parsing
 	 */
 	public void parseArticleTitles(String s) {
-		
 		SAXBuilder builder = new SAXBuilder();
 		Element root = null;
 		try {
@@ -158,9 +174,13 @@ public class GetRecentchanges extends MWAction implements MultiAction<String> {
 		while (el.hasNext()) {
 			Element element = el.next();
 			if (element.getQualifiedName().equalsIgnoreCase("rc")) {
-
+				if (find < limit) {
 				titleCollection.add(element.getAttributeValue("title"));
-
+//				System.err.println(find);
+				}
+				
+				timestamp = element.getAttribute("timestamp").getValue();
+				find++;
 			} else {
 				findContent(element);
 			}
@@ -180,15 +200,9 @@ public class GetRecentchanges extends MWAction implements MultiAction<String> {
 	 *           or null if no next api page exists
 	 */
 	public GetRecentchanges getNextAction() {
-		return null;
+		return new GetRecentchanges(timestamp, namespaces) ;
 	}
 
-	public static Iterable<String> get(MediaWikiBotImpl bot, int count, int[] namespaces) throws ActionException {
-		GetRecentchanges a = new GetRecentchanges(count,
-				createNsString(namespaces));
-		
-		return bot.performMultiAction(a);
-	}
 
 	public HttpAction getNextMessage() {
 		return msg;

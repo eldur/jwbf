@@ -24,11 +24,10 @@ import java.util.Collection;
 import net.sourceforge.jwbf.actions.Get;
 import net.sourceforge.jwbf.actions.mw.HttpAction;
 import net.sourceforge.jwbf.actions.mw.MultiAction;
+import net.sourceforge.jwbf.actions.mw.MediaWiki.Version;
 import net.sourceforge.jwbf.actions.mw.util.ActionException;
 import net.sourceforge.jwbf.actions.mw.util.ProcessException;
-import net.sourceforge.jwbf.bots.MediaWikiBotImpl;
 import net.sourceforge.jwbf.bots.util.JwbfException;
-import net.sourceforge.jwbf.contentRep.mw.Version;
 
 public class GetSimpleCategoryMembers extends GetCategoryMembers implements MultiAction<String>{
 
@@ -47,8 +46,8 @@ public class GetSimpleCategoryMembers extends GetCategoryMembers implements Mult
 		msg = generateContinueRequest(nextPageInfo);
 	}
 
-	GetSimpleCategoryMembers(String categoryName, String namespace, Version v) throws ActionException, ProcessException {
-		super(categoryName, namespace, v);
+	public GetSimpleCategoryMembers(String categoryName, Version v, int... namespaces) throws ActionException, ProcessException {
+		super(categoryName, createNsString(namespaces), v);
 		msg = generateFirstRequest();
 	}
 	
@@ -81,11 +80,7 @@ public class GetSimpleCategoryMembers extends GetCategoryMembers implements Mult
 
 	}
 	
-	public static Iterable<String> get(MediaWikiBotImpl bot,
-			String category, int[] namespaces) throws ActionException, ProcessException {
-		GetSimpleCategoryMembers c = new GetSimpleCategoryMembers(category, createNsString(namespaces), bot.getVersion());
-		return bot.performMultiAction(c);
-	}
+	
 
 	public HttpAction getNextMessage() {
 		return msg;

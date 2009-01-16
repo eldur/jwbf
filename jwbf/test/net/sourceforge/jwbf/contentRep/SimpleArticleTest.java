@@ -101,7 +101,6 @@ public class SimpleArticleTest {
 			}
 
 			public Date getEditTimestamp() {
-				// TODO Auto-generated method stub
 				return null;
 			}
 		
@@ -112,6 +111,9 @@ public class SimpleArticleTest {
 		assertEquals("", sa.getEditSummary());
 		assertEquals("", sa.getLabel());
 		assertEquals("", sa.getText());
+		Date d = sa.getEditTimestamp();
+		assertTrue(d.getTime() > 0);
+		
 	}
 	
 	@Test
@@ -137,11 +139,6 @@ public class SimpleArticleTest {
 			public String getEditSummary() {
 				return null;
 			}
-
-			public Date getEditTimestamp() {
-				// TODO Auto-generated method stub
-				return null;
-			}
 		
 		};
 		
@@ -151,6 +148,20 @@ public class SimpleArticleTest {
 		assertEquals("", sa.getEditSummary());
 		assertEquals("MyTest", sa.getLabel());
 		assertEquals("test", sa.getText());
+	}
+	@Test
+	public void testNoNullpointer2() {
+		SimpleArticle sa = new SimpleArticle();
+		
+		assertEquals("", sa.getEditor());
+		assertEquals("", sa.getEditSummary());
+		assertEquals("", sa.getLabel());
+		assertEquals("", sa.getText());
+		assertTrue(sa.getEditTimestamp().getTime() > 0);
+		assertFalse(sa.isRedirect());
+		assertFalse(sa.isMinorEdit());
+		
+		
 	}
 	
 	@Test

@@ -29,12 +29,12 @@ import java.net.URL;
 import java.net.URLConnection;
 
 import net.sourceforge.jwbf.LiveTestFather;
+import net.sourceforge.jwbf.actions.mw.MediaWiki.Version;
 import net.sourceforge.jwbf.actions.mw.editing.FileUpload;
 import net.sourceforge.jwbf.actions.mw.queries.GetImageInfo;
 import net.sourceforge.jwbf.actions.mw.util.VersionException;
 import net.sourceforge.jwbf.bots.MediaWikiBot;
 import net.sourceforge.jwbf.contentRep.mw.SimpleFile;
-import net.sourceforge.jwbf.contentRep.mw.Version;
 
 import org.apache.log4j.PropertyConfigurator;
 import org.junit.Assert;
@@ -105,7 +105,10 @@ public class UploadAndImageInfoTest extends LiveTestFather {
 		FileUpload up = new FileUpload(sf, bot);
 		bot.performAction(up);
 		
-		URL url = new URL(GetImageInfo.get(bot, sf.getLabel()));
+		
+		GetImageInfo gi = new GetImageInfo(sf.getLabel(), bot.getVersion(), bot.getHostUrl());
+		bot.performAction(gi);
+		URL url = new URL(gi.getUrlAsString());
 		System.out.println(url);
 		Assert.assertTrue("file not found " + url ,url.toExternalForm().length() - bot.getHostUrl().length() > 2);
 		assertFile(url, sf.getFile());

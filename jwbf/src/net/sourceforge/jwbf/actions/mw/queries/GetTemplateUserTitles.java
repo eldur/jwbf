@@ -19,8 +19,6 @@
  */
 package net.sourceforge.jwbf.actions.mw.queries;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.regex.Matcher;
@@ -28,12 +26,10 @@ import java.util.regex.Pattern;
 
 import net.sourceforge.jwbf.actions.Get;
 import net.sourceforge.jwbf.actions.mw.HttpAction;
+import net.sourceforge.jwbf.actions.mw.MediaWiki;
 import net.sourceforge.jwbf.actions.mw.MultiAction;
-import net.sourceforge.jwbf.actions.mw.util.ActionException;
 import net.sourceforge.jwbf.actions.mw.util.MWAction;
 import net.sourceforge.jwbf.actions.mw.util.ProcessException;
-import net.sourceforge.jwbf.bots.MediaWikiBot;
-import net.sourceforge.jwbf.bots.MediaWikiBotImpl;
 
 
 /**
@@ -42,6 +38,10 @@ import net.sourceforge.jwbf.bots.MediaWikiBotImpl;
  *
  * @author Tobias Knerr
  * @since MediaWiki 1.9.0
+ * 
+ * 	 * @supportedBy MediaWikiAPI 1.9 embeddedin / ei TODO Test Required
+	 * @supportedBy MediaWikiAPI 1.10 embeddedin / ei TODO Test Required
+	 * @supportedBy MediaWikiAPI 1.11 embeddedin / ei TODO Test Required
  */
 public class GetTemplateUserTitles extends MWAction implements MultiAction<String> {
 
@@ -68,8 +68,8 @@ public class GetTemplateUserTitles extends MWAction implements MultiAction<Strin
 	 * (from outside this class).
 	 * For the parameters, see {@link GetTemplateUserTitles#generateRequest(String, String, String)}
 	 */
-	GetTemplateUserTitles(String templateName, String namespace){
-		generateRequest(templateName,namespace,null);
+	public GetTemplateUserTitles(String templateName, int ... namespaces){
+		generateRequest(templateName,createNsString(namespaces),null);
 	}
 	
 	/**
@@ -91,33 +91,28 @@ public class GetTemplateUserTitles extends MWAction implements MultiAction<Strin
 	 *                      null for the generation of the initial request
 	 */
 	protected void generateRequest(String templateName, String namespace,
-		String eicontinue){
-	 
-	 	String uS = "";
-		
-		try {
-		
-			if (eicontinue == null) {
-		
-				uS = "/api.php?action=query&list=embeddedin"
-						+ "&eititle=" + URLEncoder.encode(templateName, MediaWikiBot.CHARSET) 
-						+ ((namespace!=null&&namespace.length() != 0)?("&einamespace="+namespace):"")
-						+ "&eilimit=" + LIMIT + "&format=xml";
-			
-			} else {
-				
-				uS = "/api.php?action=query&list=embeddedin"
-						+ "&eicontinue=" + URLEncoder.encode(eicontinue, MediaWikiBot.CHARSET)
-						+ "&eilimit=" + LIMIT + "&format=xml";
-				
-			}
-			
-			msg = new Get(uS);
-		
-		} catch (UnsupportedEncodingException e) {
-    	e.printStackTrace();
-		}		
-		
+		String eicontinue) {
+
+		String uS = "";
+
+		if (eicontinue == null) {
+
+			uS = "/api.php?action=query&list=embeddedin"
+					+ "&eititle="
+					+ MediaWiki.encode(templateName)
+					+ ((namespace != null && namespace.length() != 0) ? ("&einamespace=" + namespace)
+							: "") + "&eilimit=" + LIMIT + "&format=xml";
+
+		} else {
+
+			uS = "/api.php?action=query&list=embeddedin" + "&eicontinue="
+					+ MediaWiki.encode(eicontinue) + "&eilimit=" + LIMIT
+					+ "&format=xml";
+
+		}
+
+		msg = new Get(uS);
+
 	}
 	
 	/**
@@ -196,13 +191,6 @@ public class GetTemplateUserTitles extends MWAction implements MultiAction<Strin
 		}
 	}
 
-	public static Iterable<String> get(MediaWikiBotImpl bot,
-			String template, int[] namespaces) throws ActionException {
-		GetTemplateUserTitles a = new GetTemplateUserTitles(template,
-				createNsString(namespaces));
-
-		return bot.performMultiAction(a);
-	}
 
 	public HttpAction getNextMessage() {
 		return msg;

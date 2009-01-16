@@ -21,18 +21,16 @@ package net.sourceforge.jwbf.actions.mw.editing;
 
 
 import java.io.FileNotFoundException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 
 import net.sourceforge.jwbf.actions.FilePost;
 import net.sourceforge.jwbf.actions.Get;
 import net.sourceforge.jwbf.actions.Post;
 import net.sourceforge.jwbf.actions.mw.HttpAction;
+import net.sourceforge.jwbf.actions.mw.MediaWiki;
 import net.sourceforge.jwbf.actions.mw.util.ActionException;
 import net.sourceforge.jwbf.actions.mw.util.MWAction;
 import net.sourceforge.jwbf.actions.mw.util.ProcessException;
 import net.sourceforge.jwbf.actions.mw.util.VersionException;
-import net.sourceforge.jwbf.bots.MediaWikiBot;
 import net.sourceforge.jwbf.bots.MediaWikiBotImpl;
 import net.sourceforge.jwbf.contentRep.mw.SimpleFile;
 
@@ -90,14 +88,10 @@ public class FileUpload extends MWAction {
 
 		
 		this.a = a;
-		String uS = "";
-		try {
-			uS = "/index.php?title="
-					+ URLEncoder.encode(a.getLabel(), MediaWikiBot.CHARSET)
+		String uS = "/index.php?title="
+					+ MediaWiki.encode(a.getLabel())
 					+ "&action=edit&dontcountme=s";
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
+	
 		g = new Get(uS);
 		
 	}

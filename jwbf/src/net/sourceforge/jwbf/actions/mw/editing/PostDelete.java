@@ -2,16 +2,15 @@ package net.sourceforge.jwbf.actions.mw.editing;
 
 import java.io.IOException;
 import java.io.StringReader;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 
 import net.sourceforge.jwbf.actions.Post;
 import net.sourceforge.jwbf.actions.mw.HttpAction;
+import net.sourceforge.jwbf.actions.mw.MediaWiki;
 import net.sourceforge.jwbf.actions.mw.util.ProcessException;
 import net.sourceforge.jwbf.actions.mw.util.VersionException;
-import net.sourceforge.jwbf.bots.MediaWikiBot;
 import net.sourceforge.jwbf.contentRep.mw.Siteinfo;
 import net.sourceforge.jwbf.contentRep.mw.Userinfo;
+import net.sourceforge.jwbf.live.DeleteTest;
 
 import org.apache.log4j.Logger;
 import org.jdom.Document;
@@ -35,20 +34,18 @@ import org.xml.sax.InputSource;
  *
  * <p>
  * Delete an article with
- *TODO Update doku
  * <pre>
- * String title = ...
+ * String name = ...
  * MediaWikiBot bot = ...
  * Siteinfo si = bot.getSiteinfo();
  * Userinfo ui = bot.getUserinfo();
- * GetToken t = new GetToken(Intoken.DELETE, name, si, ui);
- * bot.performAction(t);
- * bot.performAction(new PostDelete(name, t.getToken(), si, ui));
+ * bot.performAction(new PostDelete(name, si, ui));
  * </pre>
  *
  * @author Max Gensthaler
  * @supportedBy MediaWikiAPI 1.12
  * @supportedBy MediaWikiAPI 1.13
+ * @see DeleteTest
  */
 public class PostDelete extends GetApiToken {
 	private static final Logger LOG = Logger.getLogger(PostDelete.class);
@@ -60,7 +57,6 @@ public class PostDelete extends GetApiToken {
 	/**
 	 * Constructs a new <code>PostDelete</code> action.
 	 * @param title title of the article to delete
-	 * @param token the token returned by {@link GetApiToken#getToken()}
 	 * @param si site info object
 	 * @param ui user info object
 	 * @throws ProcessException on inner problems like a version mismatch
@@ -90,26 +86,23 @@ public class PostDelete extends GetApiToken {
 	protected HttpAction getSecondRequest() {
 		HttpAction msg = null;
 		if (getToken() == null || getToken().length() == 0) {
-			throw new IllegalArgumentException("The argument 'token' must not be \"" + String.valueOf(getToken()) + "\"");
+			throw new IllegalArgumentException(
+					"The argument 'token' must not be \""
+							+ String.valueOf(getToken()) + "\"");
 		}
-		if( LOG.isTraceEnabled()) {
+		if (LOG.isTraceEnabled()) {
 			LOG.trace("enter PostDelete.generateDeleteRequest(String)");
 		}
-		try {
-			String uS = "/api.php"
-				+ "?action=delete"
-				+ "&title=" + URLEncoder.encode(title, MediaWikiBot.CHARSET)
-				+ "&token=" + URLEncoder.encode(getToken(), MediaWikiBot.CHARSET)
-				+ "&format=xml"
-				;
-			if( LOG.isDebugEnabled()) {
-				LOG.debug("delete url: \""+uS+"\"");
-			}
-			Post pm = new Post(uS);
-			msg = pm;
-		} catch (UnsupportedEncodingException e) {
-			LOG.error(e.getMessage(), e);
+
+		String uS = "/api.php" + "?action=delete" + "&title="
+				+ MediaWiki.encode(title) + "&token="
+				+ MediaWiki.encode(getToken()) + "&format=xml";
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("delete url: \"" + uS + "\"");
 		}
+		Post pm = new Post(uS);
+		msg = pm;
+
 		this.msg = msg;
 		return msg;
 	}

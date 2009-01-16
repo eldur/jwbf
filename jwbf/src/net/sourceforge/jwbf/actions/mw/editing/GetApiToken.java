@@ -2,15 +2,13 @@ package net.sourceforge.jwbf.actions.mw.editing;
 
 import java.io.IOException;
 import java.io.StringReader;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 
 import net.sourceforge.jwbf.actions.Get;
 import net.sourceforge.jwbf.actions.mw.HttpAction;
+import net.sourceforge.jwbf.actions.mw.MediaWiki;
 import net.sourceforge.jwbf.actions.mw.util.MWAction;
 import net.sourceforge.jwbf.actions.mw.util.ProcessException;
 import net.sourceforge.jwbf.actions.mw.util.VersionException;
-import net.sourceforge.jwbf.bots.MediaWikiBot;
 import net.sourceforge.jwbf.contentRep.mw.Siteinfo;
 import net.sourceforge.jwbf.contentRep.mw.Userinfo;
 
@@ -75,17 +73,14 @@ abstract class GetApiToken extends MWAction {
 		if( LOG.isTraceEnabled()) {
 			LOG.trace("enter GetToken.generateTokenRequest()");
 		}
-		try {
 			String uS = "/api.php"
 					+ "?action=query"
 					+ "&prop=info"
 					+ "&intoken=" + intoken.toString().toLowerCase()
-					+ "&titles=" + URLEncoder.encode(title, MediaWikiBot.CHARSET)
+					+ "&titles=" + MediaWiki.encode(title)
 					+ "&format=xml";
 			msg = new Get(uS);
-		} catch (UnsupportedEncodingException e) {
-			LOG.error(e.getMessage(), e);
-		}
+	
 	}
 
 	/**

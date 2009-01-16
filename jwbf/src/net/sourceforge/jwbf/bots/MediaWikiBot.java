@@ -21,6 +21,8 @@
 package net.sourceforge.jwbf.bots;
 
 
+import static net.sourceforge.jwbf.actions.mw.MediaWiki.NS_MAIN;
+
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -45,16 +47,12 @@ import net.sourceforge.jwbf.contentRep.mw.ContentAccessable;
 import net.sourceforge.jwbf.contentRep.mw.LogItem;
 import net.sourceforge.jwbf.contentRep.mw.SimpleFile;
 
-/*
- * possible tag values: @supportedBy ------------------------------------------
- * MediaWiki 1.9.x MediaWiki 1.9.x API MediaWiki 1.10.x MediaWiki 1.10.x API
- *  ( current Wikipedia version ) MediaWiki 1.11.alpha MediaWiki 1.11.alpha API
- * ------------------------------------------
- */
-
 /**
  * 
- * This class helps you to interact with each mediawiki.
+ * This class helps you to interact with each MediaWiki. This class offers
+ * a set of methods which are defined in the package net.sourceforge.jwbf.actions.mw.*
+ * 
+ * If you need more options, use these classes directly.
  *
  * How to use:
  *
@@ -71,35 +69,6 @@ import net.sourceforge.jwbf.contentRep.mw.SimpleFile;
  */
 public class MediaWikiBot extends MediaWikiBotImpl {
 
-	public static final int ARTICLE = 1 << 1;
-	public static final int MEDIA = 1 << 2;
-	public static final int SUBCATEGORY = 1 << 3;
-
-	public static final String CHARSET = "utf-8";
-
-
-	public static final int NS_MAIN = 0;
-	public static final int NS_MAIN_TALK = 1;
-	public static final int NS_USER = 2;
-	public static final int NS_USER_TALK = 3;
-	public static final int NS_META = 4;
-	public static final int NS_META_TALK = 5;
-	public static final int NS_IMAGES = 6;
-	public static final int NS_IMAGES_TALK = 7;
-	public static final int NS_MEDIAWIKI = 8;
-	public static final int NS_MEDIAWIKI_TALK = 9;
-	public static final int NS_TEMPLATE = 10;
-	public static final int NS_TEMPLATE_TALK = 11;
-	public static final int NS_HELP = 12;
-	public static final int NS_HELP_TALK = 13;
-	public static final int NS_CATEGORY = 14;
-	public static final int NS_CATEGORY_TALK = 15;
-
-//	private static Logger log = Logger.getLogger(MediaWikiBot.class);
-//	private LoginData login;
-//
-//	private Version version = null;
-//	private Userinfo ui = null;
 
 	/**
 	 * Design only for extension.
@@ -182,7 +151,7 @@ public class MediaWikiBot extends MediaWikiBotImpl {
 		return getBacklinkTitles(article, RedirectFilter.all, namespaces);
 	}
 	/**
-	 * @see GetBacklinkTitle
+	 * @see GetBacklinkTitles
 	 */
 	public Iterable<String> getBacklinkTitles(String article, RedirectFilter redirectFilter)
 			throws ActionException, ProcessException {
@@ -192,7 +161,7 @@ public class MediaWikiBot extends MediaWikiBotImpl {
 
 
 	/**
-	 *  @see GetBacklinkTitle
+	 *  @see GetBacklinkTitles
 	 */
 	public Iterable<String> getBacklinkTitles(String article)
 			throws ActionException, ProcessException {
@@ -230,9 +199,9 @@ public class MediaWikiBot extends MediaWikiBotImpl {
 	 * @supportedBy MediaWikiAPI 1.11 categorymembers / cm  TODO Test Required
 	 */
 	public Iterable<String> getCategoryMembers(String category, int... namespaces) throws ActionException, ProcessException {
-		
-		
-		return GetSimpleCategoryMembers.get(this, category, namespaces);
+		GetSimpleCategoryMembers c = new GetSimpleCategoryMembers(category, getVersion(), namespaces);
+		return performMultiAction(c);
+
 	}
 	/**
 	 *
@@ -254,13 +223,15 @@ public class MediaWikiBot extends MediaWikiBotImpl {
 	 * @supportedBy MediaWikiAPI 1.11 categorymembers / cm TODO Test Required
 	 */
 	public Iterable<CategoryItem> getFullCategoryMembers(String category, int... namespaces) throws ActionException, ProcessException {
-		return GetFullCategoryMembers.get(this, category, namespaces);
+		GetFullCategoryMembers c = new GetFullCategoryMembers(category, getVersion(), namespaces );
+		return performMultiAction(c);
 		
 	}
 
 	/**
-	 * @deprecated  use {@link FileUpload} instead 
-	 * 
+	 * @param fileName a
+	 * @see FileUpload
+	 * TODO exception missing
 	 */
 	public final void uploadFile(final String fileName) throws ActionException,
 			ProcessException {
@@ -275,8 +246,9 @@ public class MediaWikiBot extends MediaWikiBotImpl {
 	}
 
 	/**
-	 * 
-	 * @deprecated  use {@link FileUpload} instead 
+	 * @param file a
+	 * @see FileUpload 
+	 * TODO exception missing
 	 */
 	public void uploadFile(SimpleFile file) throws ActionException,
 			ProcessException {
@@ -301,18 +273,16 @@ public class MediaWikiBot extends MediaWikiBotImpl {
 	 * @throws ActionException
 	 *             on problems with http, cookies and io
 	 *
-	 * TODO Pending Parameter Change;
-	 * http://www.mediawiki.org/wiki/API:Query_-_Lists TODO New API call, decide
-	 * if design a switch by version or support only newest
 	 *
-	 * @supportedBy MediaWikiAPI 1.9 embeddedin / ei TODO Test Required
-	 * @supportedBy MediaWikiAPI 1.10 embeddedin / ei TODO Test Required
+	 * @see GetImagelinkTitles
 	 *
 	 */
 	public Iterable<String> getImagelinkTitles(String image, int... namespaces)
 			throws ActionException {
-	
-		return GetImagelinkTitles.get(this, image, namespaces);
+		GetImagelinkTitles a = new GetImagelinkTitles(image,
+				namespaces);
+
+		return performMultiAction(a);
 
 	}
 
@@ -334,11 +304,14 @@ public class MediaWikiBot extends MediaWikiBotImpl {
 
 	}
 	/**
-	 * @deprecated  use {@link GetImageInfo} instead 
+	 * @param imagename a
+	 * @see GetImageInfo
 	 */
 	public String getImageInfo(String imagename) throws ActionException, ProcessException {
 		
-		return GetImageInfo.get(this, imagename);
+		GetImageInfo a = new GetImageInfo(imagename, getVersion(), getHostUrl());
+		performAction(a);
+		return a.getUrlAsString();
 	}
 
 	/**
@@ -367,8 +340,11 @@ public class MediaWikiBot extends MediaWikiBotImpl {
 	 * http://www.mediawiki.org/wiki/API:Query_-_Lists#logevents_.2F_le_.28semi-complete.29
 	 */
 	public Iterator<LogItem> getLogEvents(int limit, String ... type) throws ActionException, ProcessException {
+		GetLogEvents c = new GetLogEvents(limit, type);
 		
-		return GetLogEvents.get(this, limit, type);
+		performAction(c);
+		return c.getResults();
+		
 		
 	}
 	/**
@@ -389,14 +365,14 @@ public class MediaWikiBot extends MediaWikiBotImpl {
 	 * @throws ActionException
 	 *             on problems with http, cookies and io
 	 *
-	 * @supportedBy MediaWikiAPI 1.9 embeddedin / ei TODO Test Required
-	 * @supportedBy MediaWikiAPI 1.10 embeddedin / ei TODO Test Required
-	 * @supportedBy MediaWikiAPI 1.11 embeddedin / ei TODO Test Required
 	 */
 	public Iterable<String> getTemplateUserTitles(String template,
 			int... namespaces) throws ActionException {
 		
-		return GetTemplateUserTitles.get(this, template, namespaces);
+		GetTemplateUserTitles a = new GetTemplateUserTitles(template,
+				namespaces);
+
+		return performMultiAction(a);
 
 	}
 
@@ -429,12 +405,14 @@ public class MediaWikiBot extends MediaWikiBotImpl {
 	 * @return a
 	 * @throws ActionException
 	 *             on problems with http, cookies and io
-	 * @supportedBy MediaWikiAPI 1.10 recentchanges / rc TODO Test Required
-	 * @supportedBy MediaWikiAPI 1.10 recentchanges / rc TODO Test Required
+	 * @see GetRecentchanges
 	 */
-	public Iterable<String> getRecentchangesTitles(final int count,
+	public Iterable<String> getRecentchangesTitles(
 			int... namespaces) throws ActionException {
-		return GetRecentchanges.get(this, count, namespaces);
+		GetRecentchanges a = new GetRecentchanges(
+				namespaces);
+		
+		return performMultiAction(a);
 		
 	}
 
@@ -449,10 +427,10 @@ public class MediaWikiBot extends MediaWikiBotImpl {
 	 * @supportedBy MediaWikiAPI 1.10 recentchanges / rc
 	 * TODO TEST
 	 */
-	public Iterable<String> getRecentchangesTitles(final int count)
+	public Iterable<String> getRecentchangesTitles()
 			throws ActionException {
 
-		return getRecentchangesTitles(count, NS_MAIN);
+		return getRecentchangesTitles(NS_MAIN);
 	}
 
 

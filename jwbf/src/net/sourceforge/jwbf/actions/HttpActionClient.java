@@ -25,10 +25,10 @@ import java.io.IOException;
 import java.util.Iterator;
 
 import net.sourceforge.jwbf.actions.mw.HttpAction;
+import net.sourceforge.jwbf.actions.mw.MediaWiki;
 import net.sourceforge.jwbf.actions.mw.util.ActionException;
 import net.sourceforge.jwbf.actions.mw.util.CookieException;
 import net.sourceforge.jwbf.actions.mw.util.ProcessException;
-import net.sourceforge.jwbf.bots.MediaWikiBot;
 
 import org.apache.commons.httpclient.Cookie;
 import org.apache.commons.httpclient.Header;
@@ -210,8 +210,8 @@ public class HttpActionClient {
 		showCookies(client);
 
 		authpost.getParams().setParameter("http.protocol.content-charset",
-				MediaWikiBot.CHARSET);
-		authpost.getParams().setContentCharset(MediaWikiBot.CHARSET);
+				MediaWiki.getCharset());
+		authpost.getParams().setContentCharset(MediaWiki.getCharset());
 		String out = "";
 
 		client.executeMethod(authpost);
@@ -280,7 +280,7 @@ public class HttpActionClient {
 		showCookies(client);
 		String out = "";
 		authgets.getParams().setParameter("http.protocol.content-charset",
-				MediaWikiBot.CHARSET);
+				MediaWiki.getCharset());
 //		System.err.println(authgets.getParams().getParameter("http.protocol.content-charset"));
 		
 		client.executeMethod(authgets);
@@ -306,10 +306,7 @@ public class HttpActionClient {
 	
 	/**
 	 * Process a GET Message.
-	 * 
-	 * @param authgets
-	 *            a
-	 * @param cp
+	 * @param ha
 	 *            a
 	 * @return a returning message, not null
 	 * @throws IOException on problems
@@ -323,7 +320,7 @@ public class HttpActionClient {
 		GetMethod authgets = new GetMethod(ha.getRequest());
 		byte[] out = null;
 		authgets.getParams().setParameter("http.protocol.content-charset",
-				MediaWikiBot.CHARSET);
+				MediaWiki.getCharset());
 //		System.err.println(authgets.getParams().getParameter("http.protocol.content-charset"));
 		
 		client.executeMethod(authgets);

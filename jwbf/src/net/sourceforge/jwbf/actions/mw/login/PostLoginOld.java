@@ -19,14 +19,11 @@
 package net.sourceforge.jwbf.actions.mw.login;
 
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-
 import net.sourceforge.jwbf.actions.Post;
 import net.sourceforge.jwbf.actions.mw.HttpAction;
+import net.sourceforge.jwbf.actions.mw.MediaWiki;
 import net.sourceforge.jwbf.actions.mw.util.CookieException;
 import net.sourceforge.jwbf.actions.mw.util.MWAction;
-import net.sourceforge.jwbf.bots.MediaWikiBot;
 import net.sourceforge.jwbf.bots.util.LoginData;
 
 import org.apache.commons.httpclient.Cookie;
@@ -53,7 +50,7 @@ public class PostLoginOld extends MWAction {
 	 * @param pw
 	 *            password
 	 */
-	PostLoginOld(final String username, final String pw,
+	public PostLoginOld(final String username, final String pw,
 			final String domain, LoginData login) {
 		this.username = username;
 		this.login = login;
@@ -80,12 +77,8 @@ public class PostLoginOld extends MWAction {
 	public void validateAllReturningCookies(final Cookie[] cs)
 			throws CookieException {
 		String compare = username;
-		try {
-			compare = URLEncoder.encode(username, MediaWikiBot.CHARSET);
-		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+
+		compare = MediaWiki.encode(username);
 
 		if (cs == null) {
 			throw new CookieException("Cookiearray is null.");

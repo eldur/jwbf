@@ -37,7 +37,7 @@ public class SimpleArticle implements ContentAccessable, ArticleMeta {
 	private String text = "";
 	private String editor = "";
 	private boolean minorEdit = false;
-	private Date editTimestamp = null;
+	private Date editTimestamp = new Date();
 
 	/**
 	 * 
@@ -66,8 +66,7 @@ public class SimpleArticle implements ContentAccessable, ArticleMeta {
 		}	
 		if (ca.getEditor() != null) {
 			editor = ca.getEditor();
-		}
-			
+		}	
 
 	}
 

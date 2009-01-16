@@ -6,12 +6,11 @@ import java.util.Collection;
 import net.sourceforge.jwbf.actions.Get;
 import net.sourceforge.jwbf.actions.mw.HttpAction;
 import net.sourceforge.jwbf.actions.mw.MultiAction;
+import net.sourceforge.jwbf.actions.mw.MediaWiki.Version;
 import net.sourceforge.jwbf.actions.mw.util.ActionException;
 import net.sourceforge.jwbf.actions.mw.util.ProcessException;
-import net.sourceforge.jwbf.bots.MediaWikiBotImpl;
 import net.sourceforge.jwbf.bots.util.JwbfException;
 import net.sourceforge.jwbf.contentRep.mw.CategoryItem;
-import net.sourceforge.jwbf.contentRep.mw.Version;
 
 
 public class GetFullCategoryMembers extends GetCategoryMembers implements MultiAction<CategoryItem> {
@@ -24,8 +23,9 @@ public class GetFullCategoryMembers extends GetCategoryMembers implements MultiA
 	 */
 	private Collection<CategoryItem> titleCollection = new ArrayList<CategoryItem>();
 	
-	GetFullCategoryMembers(String categoryName, String namespace, Version v) throws ActionException, ProcessException {
-		super(categoryName, namespace, v);
+	public GetFullCategoryMembers(String categoryName, Version v, int... namespaces) throws ActionException, ProcessException {
+		
+		super(categoryName, createNsString(namespaces), v);
 		msg = generateFirstRequest();
 
 	}
@@ -65,11 +65,7 @@ public class GetFullCategoryMembers extends GetCategoryMembers implements MultiA
 		titleCollection.add(ci);
 		
 	}
-	public static Iterable<CategoryItem> get(MediaWikiBotImpl bot,
-			String category, int[] namespaces) throws ActionException, ProcessException {
-		GetFullCategoryMembers c = new GetFullCategoryMembers(category, createNsString(namespaces), bot.getVersion());
-		return bot.performMultiAction(c);
-	}
+
 	public HttpAction getNextMessage() {
 		return msg;
 	}

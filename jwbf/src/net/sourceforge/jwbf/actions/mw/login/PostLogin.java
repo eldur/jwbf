@@ -25,11 +25,10 @@ import java.io.StringReader;
 
 import net.sourceforge.jwbf.actions.Post;
 import net.sourceforge.jwbf.actions.mw.HttpAction;
-import net.sourceforge.jwbf.actions.mw.util.ActionException;
 import net.sourceforge.jwbf.actions.mw.util.MWAction;
 import net.sourceforge.jwbf.actions.mw.util.ProcessException;
-import net.sourceforge.jwbf.bots.MediaWikiBotImpl;
 import net.sourceforge.jwbf.bots.util.LoginData;
+import net.sourceforge.jwbf.live.LoginTest;
 
 import org.apache.log4j.Logger;
 import org.jdom.DataConversionException;
@@ -42,7 +41,8 @@ import org.xml.sax.InputSource;
 /**
  * 
  * @author Thomas Stock
- * @supportedBy MediaWiki 1.9.x
+ * @supportedBy MediaWikiAPI 1.11, 1.12, 1.13, 1.14
+ * @see LoginTest
  */
 public class PostLogin extends MWAction {
 	
@@ -60,7 +60,7 @@ public class PostLogin extends MWAction {
 	 * @param username the
 	 * @param pw password
 	 */
-	PostLogin(final String username, final String pw, LoginData login) {
+	public PostLogin(final String username, final String pw, LoginData login) {
 		this.login = login;
 		Post pm = new Post(
 				"/api.php?action=login&format=xml");
@@ -70,26 +70,6 @@ public class PostLogin extends MWAction {
 		msg = pm;
 		
 
-	}
-	
-	public static LoginData post(MediaWikiBotImpl bot, String user, String pass, String domain) throws ActionException, ProcessException {
-		LoginData login = new LoginData();
-		switch (bot.getVersion()) {
-		case MW1_09:
-		case MW1_10:
-		case MW1_11:
-		case MW1_12:
-			bot.performAction(new PostLoginOld(user, pass, domain, login));
-			break;
-
-		default:
-			bot.performAction(new PostLogin(user, pass, login));
-			break;
-		}
-		return login;
-
-
-		
 	}
 
 	/**

@@ -6,9 +6,11 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import net.sourceforge.jwbf.actions.mw.MultiAction;
+import net.sourceforge.jwbf.actions.mw.MediaWiki.Version;
 import net.sourceforge.jwbf.actions.mw.editing.GetRevision;
 import net.sourceforge.jwbf.actions.mw.editing.PostModifyContent;
 import net.sourceforge.jwbf.actions.mw.login.PostLogin;
+import net.sourceforge.jwbf.actions.mw.login.PostLoginOld;
 import net.sourceforge.jwbf.actions.mw.meta.GetSiteinfo;
 import net.sourceforge.jwbf.actions.mw.meta.GetUserinfo;
 import net.sourceforge.jwbf.actions.mw.meta.GetVersion;
@@ -16,39 +18,15 @@ import net.sourceforge.jwbf.actions.mw.util.ActionException;
 import net.sourceforge.jwbf.actions.mw.util.MWAction;
 import net.sourceforge.jwbf.actions.mw.util.ProcessException;
 import net.sourceforge.jwbf.bots.util.LoginData;
+import net.sourceforge.jwbf.contentRep.mw.Article;
 import net.sourceforge.jwbf.contentRep.mw.ContentAccessable;
-import net.sourceforge.jwbf.contentRep.mw.SimpleArticle;
 import net.sourceforge.jwbf.contentRep.mw.Siteinfo;
 import net.sourceforge.jwbf.contentRep.mw.Userinfo;
-import net.sourceforge.jwbf.contentRep.mw.Version;
 
 import org.apache.log4j.Logger;
 
 public class MediaWikiBotImpl extends HttpBot {
 
-	public static final int ARTICLE = 1 << 1;
-	public static final int MEDIA = 1 << 2;
-	public static final int SUBCATEGORY = 1 << 3;
-
-	public static final String CHARSET = "utf-8";
-
-
-	public static final int NS_MAIN = 0;
-	public static final int NS_MAIN_TALK = 1;
-	public static final int NS_USER = 2;
-	public static final int NS_USER_TALK = 3;
-	public static final int NS_META = 4;
-	public static final int NS_META_TALK = 5;
-	public static final int NS_IMAGES = 6;
-	public static final int NS_IMAGES_TALK = 7;
-	public static final int NS_MEDIAWIKI = 8;
-	public static final int NS_MEDIAWIKI_TALK = 9;
-	public static final int NS_TEMPLATE = 10;
-	public static final int NS_TEMPLATE_TALK = 11;
-	public static final int NS_HELP = 12;
-	public static final int NS_HELP_TALK = 13;
-	public static final int NS_CATEGORY = 14;
-	public static final int NS_CATEGORY_TALK = 15;
 
 	private static Logger log = Logger.getLogger(MediaWikiBotImpl.class);
 	private LoginData login = null;
@@ -57,8 +35,8 @@ public class MediaWikiBotImpl extends HttpBot {
 	private Version version = null;
 	private Userinfo ui = null;
 	
-	public MediaWikiBotImpl() {
-		// TODO Auto-generated constructor stub
+	protected MediaWikiBotImpl() {
+		// design for extension
 	}
 	
 	/**
@@ -102,7 +80,23 @@ public class MediaWikiBotImpl extends HttpBot {
 	 private void httpLogin(final String username, final String passwd, final String domain)
 			throws ActionException {
 		try {
-			login = PostLogin.post(this, username, passwd, domain);
+			
+			LoginData login = new LoginData();
+			switch (getVersion()) {
+			case MW1_09:
+			case MW1_10:
+			case MW1_11:
+			case MW1_12:
+				performAction(new PostLoginOld(username, passwd, domain, login));
+				break;
+
+			default:
+				performAction(new PostLogin(username, passwd, login));
+				break;
+			}
+
+			
+			this.login = login;
 
 		} catch (ProcessException e) {
 			throw new ActionException(e.getLocalizedMessage());
@@ -121,7 +115,8 @@ public class MediaWikiBotImpl extends HttpBot {
 	 *            login domain
 	 * @throws ActionException
 	 *             on problems with http, cookies and io
-	 * @supportedBy MediaWiki 1.9.x
+	 * @see PostLogin
+	 * @see PostLoginOld
 	 */
 	public void login(final String username, final String passwd, final String domain)
 			throws ActionException {
@@ -137,7 +132,8 @@ public class MediaWikiBotImpl extends HttpBot {
 	 *            the password
 	 * @throws ActionException
 	 *             on problems with http, cookies and io
-	 * @supportedBy MediaWiki 1.9.x
+	 * @see PostLogin
+	 * @see PostLoginOld
 	 */
 	public void login(final String username, final String passwd)
 			throws ActionException {
@@ -148,25 +144,20 @@ public class MediaWikiBotImpl extends HttpBot {
 	 *
 	 * @param name
 	 *            of article in a mediawiki like "Main Page"
-	 * @param properties {@link getRevision}
+	 * @param properties {@link GetRevision}
 	 * @return a content representation of requested article, never null
 	 * @throws ActionException
 	 *             on problems with http, cookies and io
 	 * @throws ProcessException on access problems
-	 * @supportedBy MediaWikiAPI 1.9.x TODO Test Required
-	 * @supportedBy MediaWikiAPI 1.10.x TODO Test Required
-	 * @supportedBy MediaWikiAPI 1.11.x TODO Test Required
-	 * @supportedBy MediaWikiAPI 1.12.x TODO Test Required
-	 * @supportedBy MediaWikiAPI 1.13.x TODO Test Required
-	 * @supportedBy MediaWikiAPI 1.14.x TODO Test Required
+	 * @see GetRevision
 	 */
-	public SimpleArticle readContent(final String name, final int properties)
+	public synchronized Article readContent(final String name, final int properties)
 			throws ActionException, ProcessException {
 	
 			GetRevision ac = new GetRevision(name, properties);
 
 			performAction(ac);
-			return ac.getArticle();
+			return new Article(ac.getArticle(), this);
 	}
 
 	/**
@@ -177,11 +168,9 @@ public class MediaWikiBotImpl extends HttpBot {
 	 * @throws ActionException
 	 *             on problems with http, cookies and io
 	 * @throws ProcessException on access problems
-	 * @supportedBy MediaWikiAPI 1.9.x
-	 * @supportedBy MediaWikiAPI 1.10.x
-	 * @supportedBy MediaWikiAPI 1.11.x
+	 * @see GetRevision
 	 */
-	public SimpleArticle readContent(final String name)
+	public synchronized Article readContent(final String name)
 			throws ActionException, ProcessException {
 		return readContent(name, GetRevision.CONTENT
 				| GetRevision.COMMENT | GetRevision.USER);
@@ -194,10 +183,10 @@ public class MediaWikiBotImpl extends HttpBot {
 	 * @throws ActionException
 	 *             on problems with http, cookies and io
 	 * @throws ProcessException on access problems
-	 * @supportedBy MediaWiki 1.9.x, 1.10.x, 1.11.x, 1.12.x, 1.13.x, 1.14.x
+	 * @see PostModifyContent
 	 * 
 	 */
-	public void writeContent(final ContentAccessable a)
+	public synchronized void writeContent(final ContentAccessable a)
 			throws ActionException, ProcessException {
 		if (!isLoggedIn()) {
 			throw new ActionException("Please login first");
@@ -242,7 +231,6 @@ public class MediaWikiBotImpl extends HttpBot {
 	 *
 	 * @throws ActionException
 	 *             on problems with http, cookies and io
-	 * @supportedBy MediaWiki 1.9.x API, 1.10.x API
 	 */
 	@SuppressWarnings("unchecked")
 	public final <R> Iterable<R> performMultiAction(MultiAction<R> initialAction)
@@ -366,7 +354,11 @@ public class MediaWikiBotImpl extends HttpBot {
 		return new MultiActionResultIterable(initialAction);
 
 	}
-	
+	/**
+	 * 
+	 * @return the
+	 * @see #getSiteinfo()
+	 */
 	public final Version getVersion() {
 		if (version == null) {
 			GetVersion gs = new GetVersion();
@@ -374,10 +366,8 @@ public class MediaWikiBotImpl extends HttpBot {
 			try {
 				performAction(gs);
 			} catch (ProcessException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (ActionException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 
@@ -394,7 +384,7 @@ public class MediaWikiBotImpl extends HttpBot {
 	 * @return a
 	 * @throws ActionException
 	 *             on problems with http, cookies and io
-	 * @supportedBy MediaWikiAPI 1.9, 1.10, 1.11, 1.12, 1.13, 1.14
+	 * @see GetSiteinfo
 	 */
 	public Siteinfo getSiteinfo() throws ActionException {
 		GetSiteinfo gs = new GetSiteinfo();
@@ -402,7 +392,6 @@ public class MediaWikiBotImpl extends HttpBot {
 		try {
 			performAction(gs);
 		} catch (ProcessException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 

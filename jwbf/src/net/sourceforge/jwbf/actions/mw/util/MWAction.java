@@ -18,11 +18,8 @@
  */
 package net.sourceforge.jwbf.actions.mw.util;
 
-import java.io.UnsupportedEncodingException;
-
 import net.sourceforge.jwbf.actions.ContentProcessable;
 import net.sourceforge.jwbf.actions.mw.HttpAction;
-import net.sourceforge.jwbf.bots.MediaWikiBot;
 
 import org.apache.commons.httpclient.Cookie;
 
@@ -103,27 +100,6 @@ public abstract class MWAction implements ContentProcessable {
 		return s;
 	}
 	
-	/**
-	 * changes to mediawiki default encoding.
-	 * @param s a
-	 * @return encoded s
-	 * @deprecated
-	 * TODO delete Method
-	 */
-	protected String encodeUtf8(final String s) {
-		
-		try {
-			return new String(s.getBytes(), MediaWikiBot.CHARSET);
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		} catch (NullPointerException npe) {
-			return s;
-		}
-		return s;
-		
-//		java 1.6 version
-//		return new String(s.getBytes(), Charset.forName("UTF-8"));
-	}
 	
 	/**
 	 * helper method generating a namespace string as required by the MW-api.

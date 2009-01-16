@@ -134,7 +134,7 @@ public class EditCustomWikiContentTest extends LiveTestFather {
 		SimpleArticle sa;
 		sa = new SimpleArticle(utf8value, label);
 		bot.writeContent(sa);
-
+		doWait();
 		sa = bot.readContent(label);
 
 		assertEquals(utf8value, sa.getText());
@@ -153,11 +153,11 @@ public class EditCustomWikiContentTest extends LiveTestFather {
 		SimpleArticle sa;
 		sa = new SimpleArticle(utf8value, label);
 		bot.writeContent(sa);
-
+		doWait();
 		sa = bot.readContent(label);
 
 		assertEquals(utf8value, sa.getText());
-		assertTrue(sa.getEditTimestamp() == null);
+		assertTrue(sa.getEditTimestamp() != null);
 	}
 	
 	/**
@@ -176,4 +176,18 @@ public class EditCustomWikiContentTest extends LiveTestFather {
 		assertTrue(sa.getEditTimestamp().getTime() > 1000);
 	}
 
+	private void doWait() {
+//		doWait(1500);
+	}
+	private void doWait(int milis) {
+		synchronized (this) {
+
+			try {
+				wait(milis);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
 }
