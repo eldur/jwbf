@@ -3,7 +3,7 @@ package net.sourceforge.jwbf.actions;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.sourceforge.jwbf.actions.mw.HttpAction;
+import net.sourceforge.jwbf.actions.util.HttpAction;
 
 public class Post implements HttpAction {
 

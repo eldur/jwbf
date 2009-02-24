@@ -16,12 +16,13 @@
  * Contributors:
  * 
  */
-package net.sourceforge.jwbf.contentRep.mw;
+package net.sourceforge.jwbf.contentRep;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.regex.Pattern;
+
 
 /**
  * This is a simple content helper class that implements the
@@ -30,7 +31,7 @@ import java.util.regex.Pattern;
  * @author Thomas Stock
  * 
  */
-public class SimpleArticle implements ContentAccessable, ArticleMeta {
+public class SimpleArticle implements ArticleMeta {
 
 	private String label = "";
 	private String editSummary = "";
@@ -67,6 +68,24 @@ public class SimpleArticle implements ContentAccessable, ArticleMeta {
 		if (ca.getEditor() != null) {
 			editor = ca.getEditor();
 		}	
+
+	}
+	
+	/**
+	 * 
+	 * @param sa
+	 *            a
+	 */
+	public SimpleArticle(ArticleMeta sa) {
+		this((ContentAccessable) sa);
+
+		
+		if (sa.getEditTimestamp() != null) {
+			editTimestamp = sa.getEditTimestamp();
+		}
+		
+		
+			
 
 	}
 
@@ -208,7 +227,15 @@ public class SimpleArticle implements ContentAccessable, ArticleMeta {
 	 */
 	public void setEditTimestamp(String editTimestamp) throws ParseException {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
-		this.editTimestamp = sdf.parse(editTimestamp);
+		try {
+			this.editTimestamp = sdf.parse(editTimestamp);
+		} catch (ParseException e) {
+			sdf = new SimpleDateFormat("MM/dd/yy' 'HH:mm:ss");
+			this.editTimestamp = sdf.parse(editTimestamp);
+		}
+
+		
+		
 	}
 
 }

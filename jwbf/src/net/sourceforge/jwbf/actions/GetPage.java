@@ -18,9 +18,9 @@
  */
 package net.sourceforge.jwbf.actions;
 
-import net.sourceforge.jwbf.actions.mw.HttpAction;
-import net.sourceforge.jwbf.actions.mw.util.CookieException;
-import net.sourceforge.jwbf.actions.mw.util.ProcessException;
+import net.sourceforge.jwbf.actions.util.CookieException;
+import net.sourceforge.jwbf.actions.util.HttpAction;
+import net.sourceforge.jwbf.actions.util.ProcessException;
 
 import org.apache.commons.httpclient.Cookie;
 /**

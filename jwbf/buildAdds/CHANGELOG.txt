@@ -1,4 +1,16 @@
 --------------------------------------------------------------------------------
+JWBF-1.2.180                                                           Feb 2009
+  * start support for other wiki systems
+  * fix a the clone constructor of the Article class
+  * resorting package contens
+  * test and fix for simple page get in HttpBot
+  * new Action for Mediawiki GetRendering
+  * until now MediaWikiBot contains only the basic set of mehtods 
+    (reading, writing, ...), for more see MediaWikiAdapterBot
+  * detection if chosen action is a MultiAction
+  * fix BacklinkTitles encoding of namespace variable
+  * remove multiaction system
+--------------------------------------------------------------------------------
 JWBF-1.2.178                                                           Jan 2009
   * some refactoring and javadoc
   * fix GetRecentChanges

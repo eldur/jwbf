@@ -24,11 +24,11 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Iterator;
 
-import net.sourceforge.jwbf.actions.mw.HttpAction;
-import net.sourceforge.jwbf.actions.mw.MediaWiki;
-import net.sourceforge.jwbf.actions.mw.util.ActionException;
-import net.sourceforge.jwbf.actions.mw.util.CookieException;
-import net.sourceforge.jwbf.actions.mw.util.ProcessException;
+import net.sourceforge.jwbf.actions.mediawiki.MediaWiki;
+import net.sourceforge.jwbf.actions.util.ActionException;
+import net.sourceforge.jwbf.actions.util.CookieException;
+import net.sourceforge.jwbf.actions.util.HttpAction;
+import net.sourceforge.jwbf.actions.util.ProcessException;
 
 import org.apache.commons.httpclient.Cookie;
 import org.apache.commons.httpclient.Header;
@@ -56,7 +56,7 @@ public class HttpActionClient {
 
 	private String path = "";
 
-	private static final Logger LOG = Logger.getLogger(HttpActionClient.class);
+	private Logger log = Logger.getLogger(getClass());
 
 	/**
 	 * 
@@ -100,92 +100,88 @@ public class HttpActionClient {
 	 *             on problems with http, cookies and io
 	 * @throws ProcessException on inner problems
 	 */
-	public String performAction(ContentProcessable a) throws ActionException, ProcessException {
-		
+	public synchronized String performAction(ContentProcessable a)
+			throws ActionException, ProcessException {
 
-		
 		String out = "";
 		while (a.hasMoreMessages()) {
-			
+
 			HttpMethod e = null;
-				try {
-					
-					HttpAction ha = a.getNextMessage();
-					
-					if (ha instanceof Get) {
-						e = new GetMethod(ha.getRequest());	
-						if (path.length() > 1) {
+			try {
 
-							e.setPath(path + e.getPath());
-							LOG.debug("path is: " + e.getPath());
+				HttpAction ha = a.getNextMessage();
+				
+				if (ha instanceof Get) {
+					e = new GetMethod(ha.getRequest());
+					if (path.length() > 1) {
 
-						}
-						
-						// do get
-						out = get(e, a, ha);
-					} else if (ha instanceof Post) {
-						Post p = (Post) ha;
-						e = new PostMethod(p.getRequest());	
-						if (path.length() > 1) {
+						e.setPath(path + e.getPath());
+						if (log.isDebugEnabled())
+							log.debug("path is: " + e.getPath());
 
-							e.setPath(path + e.getPath());
-							LOG.debug("path is: " + e.getPath());
-
-						}
-						Iterator<String> keys = p.getParams().keySet().iterator();
-						int count = p.getParams().size();
-						NameValuePair[] val = new NameValuePair[count];
-						int i = 0;
-						while (keys.hasNext()) {
-							String key = (String) keys.next();
-							val[i++] = new NameValuePair(key, p.getParams().get(key));
-						}
-
-						((PostMethod) e).setRequestBody(val);
-						if (ha instanceof FilePost) {
-							LOG.debug("is filepost");
-							FilePost px = (FilePost) ha;
-							
-							
-							
-							// add multipart elements
-							
-							Part[] parts;
-							
-							Iterator<String> partKeys =  px.getParts().keySet().iterator();
-							int partCount = px.getParts().size();
-							parts = new Part[partCount];
-							
-							
-							int j = 0;
-							while (partKeys.hasNext()) {
-								String key = (String) partKeys.next();
-								Object po = px.getParts().get(key);
-								if (po instanceof String) {
-									parts[j++] = new StringPart(key, (String) po);
-								} else if (po instanceof File) {
-									parts[j++] = new FilePart(key, (File) po);
-								}
-								
-							}
-							
-							((PostMethod) e).setRequestEntity(new MultipartRequestEntity(parts, e
-									.getParams()));
-							
-							
-							
-						}
-						// do post
-						out = post(e, a, ha);
 					}
-					
-					
-					
-				} catch (IOException e1) {
-					throw new ActionException(e1);
+
+					// do get
+					out = get(e, a, ha);
+				} else if (ha instanceof Post) {
+					Post p = (Post) ha;
+					e = new PostMethod(p.getRequest());
+					if (path.length() > 1) {
+
+						e.setPath(path + e.getPath());
+						log.debug("path is: " + e.getPath());
+
+					}
+					Iterator<String> keys = p.getParams().keySet().iterator();
+					int count = p.getParams().size();
+					NameValuePair[] val = new NameValuePair[count];
+					int i = 0;
+					while (keys.hasNext()) {
+						String key = (String) keys.next();
+						val[i++] = new NameValuePair(key, p.getParams()
+								.get(key));
+					}
+
+					((PostMethod) e).setRequestBody(val);
+					if (ha instanceof FilePost) {
+						log.debug("is filepost");
+						FilePost px = (FilePost) ha;
+
+						// add multipart elements
+
+						Part[] parts;
+
+						Iterator<String> partKeys = px.getParts().keySet()
+								.iterator();
+						int partCount = px.getParts().size();
+						parts = new Part[partCount];
+
+						int j = 0;
+						while (partKeys.hasNext()) {
+							String key = (String) partKeys.next();
+							Object po = px.getParts().get(key);
+							if (po instanceof String) {
+								parts[j++] = new StringPart(key, (String) po);
+							} else if (po instanceof File) {
+								parts[j++] = new FilePart(key, (File) po);
+							}
+
+						}
+
+						((PostMethod) e)
+								.setRequestEntity(new MultipartRequestEntity(
+										parts, e.getParams()));
+
+					}
+					// do post
+					out = post(e, a, ha);
 				}
-			
-			
+
+			} catch (IOException e1) {
+				throw new ActionException(e1);
+			} catch (IllegalArgumentException e2) {
+				throw new ActionException(e2);
+			}
 
 		}
 		return out;
@@ -238,11 +234,11 @@ public class HttpActionClient {
 				if ((newuri == null) || (newuri.equals(""))) {
 					newuri = "/";
 				}
-				LOG.debug("Redirect target: " + newuri);
+				log.debug("Redirect target: " + newuri);
 				GetMethod redirect = new GetMethod(newuri);
 
 				client.executeMethod(redirect);
-				LOG.debug("Redirect: " + redirect.getStatusLine().toString());
+				log.debug("Redirect: " + redirect.getStatusLine().toString());
 				// release any connection resources used by the method
 				authpost.releaseConnection();
 				authpost = redirect;
@@ -258,7 +254,7 @@ public class HttpActionClient {
 	
 
 		authpost.releaseConnection();
-		LOG.debug(authpost.getURI() + " || " + "POST: "
+		log.debug(authpost.getURI() + " || " + "POST: "
 				+ authpost.getStatusLine().toString());
 		return out;
 	}
@@ -285,8 +281,8 @@ public class HttpActionClient {
 		
 		client.executeMethod(authgets);
 		cp.validateReturningCookies(client.getState().getCookies(), ha);
-		LOG.debug(authgets.getURI());
-		LOG.debug("GET: " + authgets.getStatusLine().toString());
+		log.debug(authgets.getURI());
+		log.debug("GET: " + authgets.getStatusLine().toString());
 
 		out = authgets.getResponseBodyAsString();
 		
@@ -296,7 +292,7 @@ public class HttpActionClient {
 		int statuscode = authgets.getStatusCode();
 
 		if (statuscode == HttpStatus.SC_NOT_FOUND) {
-			LOG.warn("Not Found: " + authgets.getQueryString());
+			log.warn("Not Found: " + authgets.getQueryString());
 
 			throw new FileNotFoundException(authgets.getQueryString());
 		}
@@ -324,8 +320,8 @@ public class HttpActionClient {
 //		System.err.println(authgets.getParams().getParameter("http.protocol.content-charset"));
 		
 		client.executeMethod(authgets);
-		LOG.debug(authgets.getURI());
-		LOG.debug("GET: " + authgets.getStatusLine().toString());
+		log.debug(authgets.getURI());
+		log.debug("GET: " + authgets.getStatusLine().toString());
 
 		out = authgets.getResponseBody();
 		
@@ -334,7 +330,7 @@ public class HttpActionClient {
 		int statuscode = authgets.getStatusCode();
 
 		if (statuscode == HttpStatus.SC_NOT_FOUND) {
-			LOG.warn("Not Found: " + authgets.getQueryString());
+			log.warn("Not Found: " + authgets.getQueryString());
 
 			throw new FileNotFoundException(authgets.getQueryString());
 		}
@@ -352,7 +348,7 @@ public class HttpActionClient {
 		Cookie[] cookies = client.getState().getCookies();
 		if (cookies.length > 0) {
 			for (int i = 0; i < cookies.length; i++) {
-				LOG.trace("cookie: " + cookies[i].toString());
+				log.trace("cookie: " + cookies[i].toString());
 			}
 		}
 	}

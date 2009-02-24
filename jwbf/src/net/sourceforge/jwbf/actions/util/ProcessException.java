@@ -16,44 +16,40 @@
  * Contributors:
  * 
  */
-package net.sourceforge.jwbf.contentRep.mw;
+package net.sourceforge.jwbf.actions.util;
 
-
+import net.sourceforge.jwbf.actions.mediawiki.util.MWAction;
+import net.sourceforge.jwbf.bots.util.JwbfException;
 
 /**
+ * 
+ * This exception can be used in children of {@link MWAction} to handle 
+ * exceptions in these actions, like access to content or mismatching patterns e.g.
  * 
  * @author Thomas Stock
  *
  */
-public interface ContentAccessable {
-	
-	/**
-	 * 
-	 * @return the
-	 */
-	String getEditSummary();
-	
-	/**
-	 * 
-	 * @return the
-	 */
-	String getEditor();
-	/**
-	 * 
-	 * @return true, if is
-	 */
-	boolean isMinorEdit(); 
-	
-	/**
-	 * 
-	 * @return titel
-	 */
-	String getLabel(); 
-	
-	/**
-	 * 
-	 * @return content wiki syntax of this article
-	 */
-	String getText();
+public class ProcessException extends JwbfException {
 
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3830701798846228121L;
+
+	
+	/**
+	 * 
+	 */
+	public ProcessException() {
+		super();
+	}
+	
+	/**
+	 * 
+	 * @param msg exception text
+	 */
+	public ProcessException(final String msg) {
+		super(msg);
+	}
 }

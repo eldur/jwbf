@@ -1,6 +1,6 @@
 package net.sourceforge.jwbf.actions;
 
-import net.sourceforge.jwbf.actions.mw.HttpAction;
+import net.sourceforge.jwbf.actions.util.HttpAction;
 
 public class Get implements HttpAction {
 

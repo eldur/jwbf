@@ -1,7 +1,11 @@
 package net.sourceforge.jwbf.contentRep.mw;
 
 import java.util.Collection;
-
+/**
+ * Information about the current user.
+ * @author Thomas Stock
+ *
+ */
 public class Userinfo {
 
 	private final Collection<String> rights;

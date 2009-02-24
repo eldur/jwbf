@@ -23,5 +23,10 @@ public class LogItem {
 	public void setUser(String user) {
 		this.user = user;
 	}
+	@Override
+	public String toString() {
+
+		return "* " + getTitle() + " was " + getType() + " by " + getUser();
+	}
 
 }

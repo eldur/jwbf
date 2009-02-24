@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import net.sourceforge.jwbf.JWBF;
-import net.sourceforge.jwbf.actions.mw.MediaWiki.Version;
+import net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version;
 
 import org.apache.log4j.Logger;
 

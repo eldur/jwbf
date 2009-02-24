@@ -27,8 +27,8 @@ import net.sourceforge.jwbf.actions.ContentProcessable;
 import net.sourceforge.jwbf.actions.Get;
 import net.sourceforge.jwbf.actions.GetPage;
 import net.sourceforge.jwbf.actions.HttpActionClient;
-import net.sourceforge.jwbf.actions.mw.util.ActionException;
-import net.sourceforge.jwbf.actions.mw.util.ProcessException;
+import net.sourceforge.jwbf.actions.util.ActionException;
+import net.sourceforge.jwbf.actions.util.ProcessException;
 
 import org.apache.commons.httpclient.HttpClient;
 
@@ -86,7 +86,7 @@ public abstract class HttpBot {
 	 * @return text
 	 * @throws ProcessException on problems in the subst of ContentProcessable 
 	 */
-	public final synchronized String performAction(final ContentProcessable a)
+	public synchronized String performAction(final ContentProcessable a)
 			throws ActionException, ProcessException {
 		return cc.performAction(a);
 	}
@@ -120,8 +120,17 @@ public abstract class HttpBot {
 	 */
 	public String getPage(String u) throws ActionException {
 
+			try {
+				URL url = new URL(u);
+				
+				setConnection(url.getProtocol() + "://" + url.getHost());
+			} catch (MalformedURLException e) {
+				e.printStackTrace();
+			}
+		
 		GetPage gp = new GetPage(u);
 
+		
 		try {
 			performAction(gp);
 		} catch (ProcessException e) {

@@ -20,6 +20,8 @@ package net.sourceforge.jwbf.contentRep.mw;
 
 import java.io.File;
 
+import net.sourceforge.jwbf.contentRep.SimpleArticle;
+
 /**
  * This is a simple content helper class that implements the
  * EditContentAccesable interface, plus setter methods.
