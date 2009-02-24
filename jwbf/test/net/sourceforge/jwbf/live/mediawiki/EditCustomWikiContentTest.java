@@ -16,7 +16,7 @@
  * Contributors:
  * 
  */
-package net.sourceforge.jwbf.live;
+package net.sourceforge.jwbf.live.mediawiki;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -24,10 +24,10 @@ import static org.junit.Assert.assertTrue;
 import java.util.Random;
 
 import net.sourceforge.jwbf.LiveTestFather;
-import net.sourceforge.jwbf.actions.mw.editing.GetRevision;
-import net.sourceforge.jwbf.bots.MediaWikiBot;
-import net.sourceforge.jwbf.contentRep.mw.ArticleMeta;
-import net.sourceforge.jwbf.contentRep.mw.SimpleArticle;
+import net.sourceforge.jwbf.actions.mediawiki.editing.GetRevision;
+import net.sourceforge.jwbf.bots.MediaWikiAdapterBot;
+import net.sourceforge.jwbf.contentRep.ArticleMeta;
+import net.sourceforge.jwbf.contentRep.SimpleArticle;
 
 import org.apache.log4j.PropertyConfigurator;
 import org.junit.Before;
@@ -41,7 +41,7 @@ import org.junit.Test;
  */
 public class EditCustomWikiContentTest extends LiveTestFather {
 
-	private MediaWikiBot bot;
+	private MediaWikiAdapterBot bot;
 
 	/**
 	 * Setup log4j.
@@ -59,7 +59,7 @@ public class EditCustomWikiContentTest extends LiveTestFather {
 	 */
 	@Before
 	public void setUp() throws Exception {
-		bot = new MediaWikiBot(getValue("test_live_url"));
+		bot = new MediaWikiAdapterBot(getValue("test_live_url"));
 		bot.login(getValue("test_live_user"),
 				getValue("test_live_pass"));
 	}

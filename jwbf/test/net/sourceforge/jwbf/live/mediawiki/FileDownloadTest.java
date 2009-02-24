@@ -1,10 +1,10 @@
-package net.sourceforge.jwbf.live;
+package net.sourceforge.jwbf.live.mediawiki;
 
 import java.io.File;
 import java.io.FileInputStream;
 
 import net.sourceforge.jwbf.LiveTestFather;
-import net.sourceforge.jwbf.bots.MediaWikiBot;
+import net.sourceforge.jwbf.bots.MediaWikiAdapterBot;
 
 import org.apache.log4j.PropertyConfigurator;
 import org.junit.BeforeClass;
@@ -14,7 +14,7 @@ public class FileDownloadTest extends LiveTestFather {
 
 	
 
-	private MediaWikiBot bot = null;
+	private MediaWikiAdapterBot bot = null;
 	/**
 	 * Setup log4j.
 	 * @throws Exception a
@@ -32,7 +32,7 @@ public class FileDownloadTest extends LiveTestFather {
 	@Test
 	public final void uploadMW1_09() throws Exception {
 		
-		bot = new MediaWikiBot(getValue("wikiMW1_09_url"));
+		bot = new MediaWikiAdapterBot(getValue("wikiMW1_09_url"));
 		bot.login(getValue("wikiMW1_09_user"),
 				getValue("wikiMW1_09_pass"));
 

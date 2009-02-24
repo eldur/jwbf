@@ -26,8 +26,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import net.sourceforge.jwbf.contentRep.mw.ContentAccessable;
-import net.sourceforge.jwbf.contentRep.mw.SimpleArticle;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -75,6 +73,20 @@ public class SimpleArticleTest {
 			e.printStackTrace();
 		}
 	}
+	
+	@Test
+	public void testDateFormatTrac() throws ParseException {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+    
+        	
+        	String dateString = "02/04/09 14:04:36 (35 minutes ago)</dd>\n\n      \n";
+        	String dateStringTarget = "2009-02-04T14:04:36Z";
+        	article.setEditTimestamp(dateString);
+		
+			
+			assertEquals(dateStringTarget, sdf.format(article.getEditTimestamp()));
+	}
+
 	
 	@Test
 	public void testNoNullpointer() {

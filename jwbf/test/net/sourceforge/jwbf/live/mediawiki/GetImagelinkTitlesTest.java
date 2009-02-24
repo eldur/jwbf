@@ -1,7 +1,7 @@
-package net.sourceforge.jwbf.live;
+package net.sourceforge.jwbf.live.mediawiki;
 
 import net.sourceforge.jwbf.LiveTestFather;
-import net.sourceforge.jwbf.bots.MediaWikiBot;
+import net.sourceforge.jwbf.bots.MediaWikiAdapterBot;
 
 import org.apache.log4j.PropertyConfigurator;
 import org.junit.BeforeClass;
@@ -10,7 +10,7 @@ import org.junit.Test;
 public class GetImagelinkTitlesTest extends LiveTestFather {
 
 
-	private MediaWikiBot bot = null;
+	private MediaWikiAdapterBot bot = null;
 	
 	/**
 	 * Setup log4j.

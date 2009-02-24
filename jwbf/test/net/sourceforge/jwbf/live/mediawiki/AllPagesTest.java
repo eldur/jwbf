@@ -16,16 +16,18 @@
  * Contributors:
  * 
  */
-package net.sourceforge.jwbf.live;
+package net.sourceforge.jwbf.live.mediawiki;
 
 
 import java.util.Iterator;
 
 import net.sourceforge.jwbf.LiveTestFather;
-import net.sourceforge.jwbf.actions.mw.MediaWiki;
-import net.sourceforge.jwbf.actions.mw.MediaWiki.Version;
+import net.sourceforge.jwbf.actions.mediawiki.MediaWiki;
+import net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version;
+import net.sourceforge.jwbf.actions.mediawiki.queries.GetAllPageTitles;
+import net.sourceforge.jwbf.bots.MediaWikiAdapterBot;
 import net.sourceforge.jwbf.bots.MediaWikiBot;
-import net.sourceforge.jwbf.contentRep.mw.SimpleArticle;
+import net.sourceforge.jwbf.contentRep.SimpleArticle;
 
 import org.apache.log4j.PropertyConfigurator;
 import org.junit.Assert;
@@ -52,7 +54,7 @@ public class AllPagesTest extends LiveTestFather {
 	}
 	public static final void prepareTestWikis() throws Exception {
 		SimpleArticle a = new SimpleArticle("test", "0");
-		MediaWikiBot bot;
+		MediaWikiAdapterBot bot;
 		 
 		
 //		bot = new MediaWikiBot(getValue("wikiMW1_09_url"));
@@ -88,7 +90,7 @@ public class AllPagesTest extends LiveTestFather {
 //			bot.writeContent(a);
 //		}
 		
-		bot = new MediaWikiBot(getValue("wikiMW1_13_url"));
+		bot = new MediaWikiAdapterBot(getValue("wikiMW1_13_url"));
 		bot.login(getValue("wikiMW1_13_user"), getValue("wikiMW1_13_pass"));
 		
 		for (int i = 0; i < 60; i++) {
@@ -106,41 +108,9 @@ public class AllPagesTest extends LiveTestFather {
 	@Test
 	public final void allPagesWikipediaDe() throws Exception {
 		
-		bot = new MediaWikiBot("http://de.wikipedia.org/w/index.php");
+		bot = new MediaWikiAdapterBot("http://de.wikipedia.org/w/index.php");
 		doTest(bot);
 	}
-	
-//	/**
-//	 * Test category read. Test category must have more then 50 members.
-//	 * @throws Exception a
-//	 */
-//	@Test
-//	public final void allPagesWikipediaDeMax() throws Exception {
-//		
-//		bot = new MediaWikiBot("http://de.wikipedia.org/w/index.php");
-//		Iterator<String> is = bot.getAllPageTitles(0).iterator();
-//		int i = 0;
-//		String out = "";
-//		int max = 100;
-//		boolean found = false;
-//		while (is.hasNext()) {
-//			out = is.next();
-//			
-//			if (out.equals("Bienengift") || found) {
-//				i++;
-//				found = true;
-//			}
-//			if (i > max) {
-//				break;
-//			}
-//			
-//
-//		}
-//		System.err.println(out);
-//		Assert.assertTrue("i is: " + i , i > 50 );
-//	}
-	
-
 	
 	
 	/**
@@ -150,7 +120,7 @@ public class AllPagesTest extends LiveTestFather {
 	@Test
 	public final void allPagesWikiMW1_09() throws Exception {
 		
-		bot = new MediaWikiBot(getValue("wikiMW1_09_url"));
+		bot = new MediaWikiAdapterBot(getValue("wikiMW1_09_url"));
 		bot.login(getValue("wikiMW1_09_user"), getValue("wikiMW1_09_pass"));
 		doTest(bot);
 		Assert.assertTrue( "Wrong Wiki Version " + bot.getVersion() , Version.MW1_09.equals(bot.getVersion()));
@@ -162,7 +132,7 @@ public class AllPagesTest extends LiveTestFather {
 	@Test
 	public final void allPagesWikiMW1_10() throws Exception {
 		
-		bot = new MediaWikiBot(getValue("wikiMW1_10_url"));
+		bot = new MediaWikiAdapterBot(getValue("wikiMW1_10_url"));
 		bot.login(getValue("wikiMW1_10_user"), getValue("wikiMW1_10_pass"));
 		doTest(bot);
 		Assert.assertTrue( "Wrong Wiki Version " + bot.getVersion() , Version.MW1_10.equals(bot.getVersion()));
@@ -175,7 +145,7 @@ public class AllPagesTest extends LiveTestFather {
 	@Test
 	public final void allPagesWikiMW1_11() throws Exception {
 		
-		bot = new MediaWikiBot(getValue("wikiMW1_11_url"));
+		bot = new MediaWikiAdapterBot(getValue("wikiMW1_11_url"));
 		bot.login(getValue("wikiMW1_11_user"), getValue("wikiMW1_11_pass"));
 		doTest(bot);
 		Assert.assertTrue( "Wrong Wiki Version " + bot.getVersion() , Version.MW1_11.equals(bot.getVersion()));
@@ -188,7 +158,7 @@ public class AllPagesTest extends LiveTestFather {
 	@Test
 	public final void allPagesWikiMW1_12() throws Exception {
 		
-		bot = new MediaWikiBot(getValue("wikiMW1_12_url"));
+		bot = new MediaWikiAdapterBot(getValue("wikiMW1_12_url"));
 		bot.login(getValue("wikiMW1_12_user"), getValue("wikiMW1_12_pass"));
 		doTest(bot);
 		Assert.assertTrue( "Wrong Wiki Version " + bot.getVersion() , Version.MW1_12.equals(bot.getVersion()));
@@ -199,14 +169,16 @@ public class AllPagesTest extends LiveTestFather {
 	 */
 	@Test
 	public final void allPagesWikiMW1_13() throws Exception {
-		bot = new MediaWikiBot(getValue("wikiMW1_13_url"));
+		bot = new MediaWikiAdapterBot(getValue("wikiMW1_13_url"));
 		bot.login(getValue("wikiMW1_13_user"), getValue("wikiMW1_13_pass"));
 		doTest(bot);
 		Assert.assertTrue( "Wrong Wiki Version " + bot.getVersion() , Version.MW1_13.equals(bot.getVersion()));
 	}
 	
 	private void doTest(MediaWikiBot bot) throws Exception {
-		Iterator<String> is = bot.getAllPageTitles(MediaWiki.NS_MAIN).iterator();
+		GetAllPageTitles gat = new GetAllPageTitles(bot, MediaWiki.NS_MAIN);
+		
+		Iterator<String> is = gat.iterator();
 		int i = 0;
 		while (is.hasNext()) {
 			is.next();

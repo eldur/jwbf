@@ -1,17 +1,19 @@
 /**
  * 
  */
-package net.sourceforge.jwbf.live;
+package net.sourceforge.jwbf.live.mediawiki;
 
 import java.util.Iterator;
 import java.util.Vector;
 
 import net.sourceforge.jwbf.LiveTestFather;
-import net.sourceforge.jwbf.actions.mw.MediaWiki.Version;
-import net.sourceforge.jwbf.actions.mw.util.ActionException;
-import net.sourceforge.jwbf.actions.mw.util.ProcessException;
+import net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version;
+import net.sourceforge.jwbf.actions.mediawiki.queries.GetRecentchanges;
+import net.sourceforge.jwbf.actions.util.ActionException;
+import net.sourceforge.jwbf.actions.util.ProcessException;
+import net.sourceforge.jwbf.bots.MediaWikiAdapterBot;
 import net.sourceforge.jwbf.bots.MediaWikiBot;
-import net.sourceforge.jwbf.contentRep.mw.SimpleArticle;
+import net.sourceforge.jwbf.contentRep.SimpleArticle;
 
 import org.apache.log4j.PropertyConfigurator;
 import org.junit.Assert;
@@ -23,14 +25,12 @@ import org.junit.Test;
  *
  */
 public class RecentChangesTest extends LiveTestFather {
-	private MediaWikiBot bot = null;
+	private MediaWikiAdapterBot bot = null;
 	private static final int COUNT = 13;
 	@BeforeClass
 	public static void setUp() throws Exception {
 		PropertyConfigurator.configureAndWatch("test4log4j.properties",
 				60 * 1000);
-
-//		prepareTestWikis();
 	}
 	
 	
@@ -41,7 +41,7 @@ public class RecentChangesTest extends LiveTestFather {
 	@Test
 	public final void recentChangesWikiMW1_09() throws Exception {
 		
-		bot = new MediaWikiBot(getValue("wikiMW1_09_url"));
+		bot = new MediaWikiAdapterBot(getValue("wikiMW1_09_url"));
 		bot.login(getValue("wikiMW1_09_user"), getValue("wikiMW1_09_pass"));
 		doTest(bot);
 		Assert.assertTrue( "Wrong Wiki Version " + bot.getVersion() , Version.MW1_09.equals(bot.getVersion()));
@@ -53,7 +53,7 @@ public class RecentChangesTest extends LiveTestFather {
 	@Test
 	public final void recentChangesWikiMW1_10() throws Exception {
 		
-		bot = new MediaWikiBot(getValue("wikiMW1_10_url"));
+		bot = new MediaWikiAdapterBot(getValue("wikiMW1_10_url"));
 		bot.login(getValue("wikiMW1_10_user"), getValue("wikiMW1_10_pass"));
 		doTest(bot);
 		Assert.assertTrue( "Wrong Wiki Version " + bot.getVersion() , Version.MW1_10.equals(bot.getVersion()));
@@ -66,7 +66,7 @@ public class RecentChangesTest extends LiveTestFather {
 	@Test
 	public final void recentChangesWikiMW1_11() throws Exception {
 		
-		bot = new MediaWikiBot(getValue("wikiMW1_11_url"));
+		bot = new MediaWikiAdapterBot(getValue("wikiMW1_11_url"));
 		bot.login(getValue("wikiMW1_11_user"), getValue("wikiMW1_11_pass"));
 		doTest(bot);
 		Assert.assertTrue( "Wrong Wiki Version " + bot.getVersion() , Version.MW1_11.equals(bot.getVersion()));
@@ -79,7 +79,7 @@ public class RecentChangesTest extends LiveTestFather {
 	@Test
 	public final void recentChangesWikiMW1_12() throws Exception {
 		
-		bot = new MediaWikiBot(getValue("wikiMW1_12_url"));
+		bot = new MediaWikiAdapterBot(getValue("wikiMW1_12_url"));
 		bot.login(getValue("wikiMW1_12_user"), getValue("wikiMW1_12_pass"));
 		doTest(bot);
 		Assert.assertTrue( "Wrong Wiki Version " + bot.getVersion() , Version.MW1_12.equals(bot.getVersion()));
@@ -91,30 +91,23 @@ public class RecentChangesTest extends LiveTestFather {
 	@Test
 	public final void recentChangesWikiMW1_13() throws Exception {
 //		prepareTestWikis();
-		bot = new MediaWikiBot(getValue("wikiMW1_13_url"));
+		bot = new MediaWikiAdapterBot(getValue("wikiMW1_13_url"));
 		bot.login(getValue("wikiMW1_13_user"), getValue("wikiMW1_13_pass"));
 		doTest(bot);
 		Assert.assertTrue( "Wrong Wiki Version " + bot.getVersion() , Version.MW1_13.equals(bot.getVersion()));
 	}
 	private final void doTest(MediaWikiBot bot) throws ActionException,
 			ProcessException {
-		Iterator<String> is = bot.getRecentchangesTitles().iterator();
+		GetRecentchanges rc = new GetRecentchanges(bot);
+		
+		Iterator<String> is = rc.iterator();
 		int i = 0;
-		boolean hasNotEnough = true;
-		while (is.hasNext()) {
-			is.next();
-			i++;
-			if (i > COUNT - 1) {
-				hasNotEnough = false;
-				break;
-			}
-		}
-		if (hasNotEnough) {
-			change(bot);
-		}
+	
+		
+		
 		Vector<Integer> vi = new Vector<Integer>();
 		try {
-			is = bot.getRecentchangesTitles().iterator();
+			is = rc.iterator();
 
 			i = 0;
 			vi.clear();
@@ -140,7 +133,7 @@ public class RecentChangesTest extends LiveTestFather {
 			}
 		} catch (Exception e) {
 			change(bot);
-			is = bot.getRecentchangesTitles().iterator();
+			is = rc.iterator();
 
 			i = 0;
 			vi.clear();
@@ -153,8 +146,6 @@ public class RecentChangesTest extends LiveTestFather {
 			while (is.hasNext()) {
 				String s = is.next();
 				int x = Integer.parseInt(s.split(" ")[1]);
-				// System.out.println(vi);
-				// System.out.println("rm " + x );
 				vi.remove(new Integer(x));
 				i++;
 				if (i > COUNT) {

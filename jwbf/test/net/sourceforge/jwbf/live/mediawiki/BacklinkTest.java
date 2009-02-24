@@ -1,15 +1,18 @@
-package net.sourceforge.jwbf.live;
+package net.sourceforge.jwbf.live.mediawiki;
 
 import java.util.Iterator;
+import java.util.Vector;
 
 import net.sourceforge.jwbf.LiveTestFather;
-import net.sourceforge.jwbf.actions.mw.MediaWiki.Version;
-import net.sourceforge.jwbf.actions.mw.queries.GetBacklinkTitles.RedirectFilter;
-import net.sourceforge.jwbf.actions.mw.util.ActionException;
-import net.sourceforge.jwbf.actions.mw.util.ProcessException;
-import net.sourceforge.jwbf.actions.mw.util.VersionException;
+import net.sourceforge.jwbf.actions.mediawiki.MediaWiki;
+import net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version;
+import net.sourceforge.jwbf.actions.mediawiki.queries.GetBacklinkTitles;
+import net.sourceforge.jwbf.actions.mediawiki.queries.GetBacklinkTitles.RedirectFilter;
+import net.sourceforge.jwbf.actions.util.ActionException;
+import net.sourceforge.jwbf.actions.util.ProcessException;
+import net.sourceforge.jwbf.bots.MediaWikiAdapterBot;
 import net.sourceforge.jwbf.bots.MediaWikiBot;
-import net.sourceforge.jwbf.contentRep.mw.SimpleArticle;
+import net.sourceforge.jwbf.contentRep.SimpleArticle;
 
 import org.apache.log4j.PropertyConfigurator;
 import org.junit.Assert;
@@ -25,36 +28,36 @@ public class BacklinkTest extends LiveTestFather {
 
 	private static final String BACKLINKS = "Backlinks";
 	private static final int COUNT = 60;
-	private MediaWikiBot bot = null;
+	private MediaWikiAdapterBot bot = null;
 
 	
 	protected static final void prepareTestWikis() throws Exception {
 		
-		MediaWikiBot bot;
+		MediaWikiAdapterBot bot;
 		 
 		
-		bot = new MediaWikiBot(getValue("wikiMW1_09_url"));
+		bot = new MediaWikiAdapterBot(getValue("wikiMW1_09_url"));
 		bot.login(getValue("wikiMW1_09_user"), getValue("wikiMW1_09_pass"));
 		
 		doPreapare(bot);
 		
-		bot = new MediaWikiBot(getValue("wikiMW1_10_url"));
+		bot = new MediaWikiAdapterBot(getValue("wikiMW1_10_url"));
 		bot.login(getValue("wikiMW1_10_user"), getValue("wikiMW1_11_pass"));
 		
 		doPreapare(bot);
 		
-		bot = new MediaWikiBot(getValue("wikiMW1_11_url"));
+		bot = new MediaWikiAdapterBot(getValue("wikiMW1_11_url"));
 		bot.login(getValue("wikiMW1_11_user"), getValue("wikiMW1_11_pass"));
 		
 		doPreapare(bot);
 		
 
-		bot = new MediaWikiBot(getValue("wikiMW1_12_url"));
+		bot = new MediaWikiAdapterBot(getValue("wikiMW1_12_url"));
 		bot.login(getValue("wikiMW1_12_user"), getValue("wikiMW1_12_pass"));
 		
 		doPreapare(bot);
 		
-		bot = new MediaWikiBot(getValue("wikiMW1_13_url"));
+		bot = new MediaWikiAdapterBot(getValue("wikiMW1_13_url"));
 		bot.login(getValue("wikiMW1_13_user"), getValue("wikiMW1_13_pass"));
 		
 		doPreapare(bot);
@@ -62,7 +65,7 @@ public class BacklinkTest extends LiveTestFather {
 		
 	}
 	
-	protected static final void doPreapare(MediaWikiBot bot) throws ActionException, ProcessException {
+	protected static final void doPreapare(MediaWikiAdapterBot bot) throws ActionException, ProcessException {
 		SimpleArticle a = new SimpleArticle("test", "0");
 		a = new SimpleArticle("text", BACKLINKS);
 		bot.writeContent(a);
@@ -98,7 +101,7 @@ public class BacklinkTest extends LiveTestFather {
 	@Test
 	public final void backlinksWikipediaDe() throws Exception {
 
-		bot = new MediaWikiBot("http://de.wikipedia.org/w/index.php");
+		bot = new MediaWikiAdapterBot("http://de.wikipedia.org/w/index.php");
 		Iterator<String> is = bot.getBacklinkTitles(
 				getValue("backlinks_article")).iterator();
 		int i = 0;
@@ -125,48 +128,21 @@ public class BacklinkTest extends LiveTestFather {
 	@Test
 	public final void backlinksMW1_09() throws Exception {
 
-		bot = new MediaWikiBot(getValue("wikiMW1_09_url"));
+		bot = new MediaWikiAdapterBot(getValue("wikiMW1_09_url"));
 		bot.login(getValue("wikiMW1_09_user"),
 				getValue("wikiMW1_09_pass"));
 		Assert.assertEquals(bot.getVersion(), Version.MW1_09);
 		
-		Iterator<String> is = bot.getBacklinkTitles(
-				BACKLINKS).iterator();
-		int i = 0;
-		while (is.hasNext()) {
-			is.next();
-			i++;
-			if (i > COUNT ) {
-				break;
-			}
-		}
-
-		Assert.assertTrue("Fail: " + i + " < "
-				+ COUNT,
-				i > COUNT -1);
+		doTest(bot);
 	}
-	@Test(expected=VersionException.class)
+	@Test(expected=NullPointerException.class)
 	public final void backlinksMW1_09_redirectVar() throws Exception {
 
-		bot = new MediaWikiBot(getValue("wikiMW1_09_url"));
+		bot = new MediaWikiAdapterBot(getValue("wikiMW1_09_url"));
 		bot.login(getValue("wikiMW1_09_user"),
 				getValue("wikiMW1_09_pass"));
 		Assert.assertEquals(bot.getVersion(), Version.MW1_09);
-		
-		Iterator<String> is = bot.getBacklinkTitles(
-				BACKLINKS, RedirectFilter.nonredirects).iterator();
-		int i = 0;
-		while (is.hasNext()) {
-			is.next();
-			i++;
-			if (i > COUNT ) {
-				break;
-			}
-		}
-
-		Assert.assertTrue("Fail: " + i + " < "
-				+ COUNT,
-				i > COUNT -1);
+		doTest(bot, RedirectFilter.redirects);
 	}
 
 	/**
@@ -178,25 +154,12 @@ public class BacklinkTest extends LiveTestFather {
 	@Test
 	public final void backlinksMW1_10() throws Exception {
 
-		bot = new MediaWikiBot(getValue("wikiMW1_10_url"));
+		bot = new MediaWikiAdapterBot(getValue("wikiMW1_10_url"));
 		bot.login(getValue("wikiMW1_10_user"),
 				getValue("wikiMW1_10_pass"));
 		Assert.assertEquals(bot.getVersion(), Version.MW1_10);
 		
-		Iterator<String> is = bot.getBacklinkTitles(
-				BACKLINKS).iterator();
-		int i = 0;
-		while (is.hasNext()) {
-			is.next();
-			i++;
-			if (i > COUNT ) {
-				break;
-			}
-		}
-
-		Assert.assertTrue("Fail: " + i + " < "
-				+ COUNT,
-				i > COUNT -1);
+		doTest(bot);
 	}
 	
 
@@ -209,25 +172,12 @@ public class BacklinkTest extends LiveTestFather {
 	@Test
 	public final void backlinksMW1_11() throws Exception {
 
-		bot = new MediaWikiBot(getValue("wikiMW1_11_url"));
+		bot = new MediaWikiAdapterBot(getValue("wikiMW1_11_url"));
 		bot.login(getValue("wikiMW1_11_user"),
 				getValue("wikiMW1_11_pass"));
 		Assert.assertEquals(bot.getVersion(), Version.MW1_11);
 		
-		Iterator<String> is = bot.getBacklinkTitles(
-				BACKLINKS).iterator();
-		int i = 0;
-		while (is.hasNext()) {
-			is.next();
-			i++;
-			if (i > COUNT ) {
-				break;
-			}
-		}
-
-		Assert.assertTrue("Fail: " + i + " < "
-				+ COUNT,
-				i > COUNT - 1);
+		doTest(bot);
 	}
 	
 
@@ -240,25 +190,12 @@ public class BacklinkTest extends LiveTestFather {
 	@Test
 	public final void backlinksMW1_12() throws Exception {
 
-		bot = new MediaWikiBot(getValue("wikiMW1_12_url"));
+		bot = new MediaWikiAdapterBot(getValue("wikiMW1_12_url"));
 		bot.login(getValue("wikiMW1_12_user"),
 				getValue("wikiMW1_12_pass"));
 		Assert.assertEquals(bot.getVersion(), Version.MW1_12);
 		
-		Iterator<String> is = bot.getBacklinkTitles(
-				BACKLINKS).iterator();
-		int i = 0;
-		while (is.hasNext()) {
-			is.next();
-			i++;
-			if (i > COUNT ) {
-				break;
-			}
-		}
-
-		Assert.assertTrue("Fail: " + i + " < "
-				+ COUNT,
-				i > COUNT - 1);
+		doTest(bot);
 	}
 	
 
@@ -271,25 +208,42 @@ public class BacklinkTest extends LiveTestFather {
 	@Test
 	public final void backlinksMW1_13() throws Exception {
 
-		bot = new MediaWikiBot(getValue("wikiMW1_13_url"));
+		bot = new MediaWikiAdapterBot(getValue("wikiMW1_13_url"));
 		bot.login(getValue("wikiMW1_13_user"),
 				getValue("wikiMW1_13_pass"));
 		Assert.assertEquals(bot.getVersion(), Version.MW1_13);
+		doTest(bot);
 		
-		Iterator<String> is = bot.getBacklinkTitles(
-				BACKLINKS).iterator();
+	}
+
+	private final void doTest(MediaWikiBot bot) throws Exception {
+		doTest(bot, RedirectFilter.all);
+	}
+	
+	private final void doTest(MediaWikiBot bot, RedirectFilter rf) throws Exception {
+
+		GetBacklinkTitles gbt = new GetBacklinkTitles(BACKLINKS, rf, bot, MediaWiki.NS_MAIN , MediaWiki.NS_CATEGORY);
+
+		Vector<String> vx = new Vector<String>();
+		Iterator<String> is = gbt.iterator();
+		while(is.hasNext()) {
+			is.next();
+		}
+		is = gbt.iterator();
+		vx.add(is.next());
+		vx.add(is.next());
+		vx.add(is.next());
+		is = gbt.iterator();
 		int i = 0;
 		while (is.hasNext()) {
-			is.next();
+			String buff = is.next();
+			vx.remove(buff);
 			i++;
-			if (i > COUNT ) {
+			if (i > COUNT) {
 				break;
 			}
 		}
-
-		Assert.assertTrue("Fail: " + i + " < "
-				+ COUNT,
-				i > COUNT -1);
+		Assert.assertTrue("Iterator should contain: " + vx ,vx.isEmpty());
+		Assert.assertTrue("Fail: " + i + " < " + COUNT, i > COUNT - 1);
 	}
-
 }
