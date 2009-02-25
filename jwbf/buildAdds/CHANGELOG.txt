@@ -1,4 +1,7 @@
 --------------------------------------------------------------------------------
+JWBF-1.2.181                                                           Feb 2009
+  * fix GetRecentChangesTest
+--------------------------------------------------------------------------------
 JWBF-1.2.180                                                           Feb 2009
   * start support for other wiki systems
   * fix a the clone constructor of the Article class

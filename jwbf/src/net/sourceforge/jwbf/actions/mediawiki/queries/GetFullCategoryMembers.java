@@ -13,7 +13,11 @@ import net.sourceforge.jwbf.contentRep.mw.CategoryItem;
 
 import org.apache.log4j.Logger;
 
-
+/**
+ * 
+ * @author Thomas Stock
+ * @supportedBy MediaWikiAPI 1.11 categorymembers / cm TODO Test Required
+ */
 public class GetFullCategoryMembers extends GetCategoryMembers implements Iterable<CategoryItem>, Iterator<CategoryItem> {
 
 	private Get msg;
@@ -27,6 +31,13 @@ public class GetFullCategoryMembers extends GetCategoryMembers implements Iterab
 	
 	private Logger log = Logger.getLogger(getClass());
 	
+	/**
+	 *
+	 * @param category like "Buildings" or "Chemical elements" without prefix Category
+	 * @return of category items with more details as simple labels
+	 * @throws ActionException on any kind of http or version problems
+	 * @throws ProcessException on inner problems like a version mismatch
+	 */
 	public GetFullCategoryMembers(String categoryName, MediaWikiBot bot, int... namespaces) throws ActionException, ProcessException {
 		
 		super(categoryName, createNsString(namespaces), bot);

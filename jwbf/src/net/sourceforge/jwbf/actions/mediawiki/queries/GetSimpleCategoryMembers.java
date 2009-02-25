@@ -31,6 +31,11 @@ import net.sourceforge.jwbf.bots.MediaWikiBot;
 
 import org.apache.log4j.Logger;
 
+/**
+ * 
+ * @author Thomas Stock
+ * @supportedBy MediaWikiAPI 1.11
+ */
 public class GetSimpleCategoryMembers extends GetCategoryMembers implements Iterable<String>, Iterator<String> {
 
 	private Get msg;
@@ -45,12 +50,27 @@ public class GetSimpleCategoryMembers extends GetCategoryMembers implements Iter
 
 	
 	
-
+	/**
+	 * @param category like "Buildings" or "Chemical elements" without prefix "Category:" in {@link MediaWiki#NS_MAIN}
+	 * @param bot a
+	 * @return of article labels
+	 * @throws ActionException on any kind of http or version problems
+	 * @throws ProcessException on inner problems like mw version
+	 * 
+	 */
 	public GetSimpleCategoryMembers(String categoryName, MediaWikiBot bot) throws ActionException, ProcessException {
 		this(categoryName, bot, MediaWiki.NS_MAIN);
 		
 	}
-	
+	/**
+	 * @param category like "Buildings" or "Chemical elements" without prefix "Category:"
+	 * @param bot a
+	 * @param namespaces for search
+	 * @return of article labels
+	 * @throws ActionException on any kind of http or version problems
+	 * @throws ProcessException on inner problems like mw version
+	 * 
+	 */
 	public GetSimpleCategoryMembers(String categoryName, MediaWikiBot bot, int... namespaces) throws ActionException, ProcessException {
 		super(categoryName, createNsString(namespaces), bot);
 	}

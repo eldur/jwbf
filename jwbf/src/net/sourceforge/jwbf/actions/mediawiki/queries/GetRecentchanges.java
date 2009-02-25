@@ -50,7 +50,11 @@ import org.xml.sax.InputSource;
  * api.php ? action=query & list=recentchanges - List last 10 changes
  * 
  * @author Thomas Stock
- * @supportedBy MediaWikiAPI 1.10 recentchanges / rc
+ * @supportedBy MediaWikiAPI 1.09
+ * @supportedBy MediaWikiAPI 1.10
+ * @supportedBy MediaWikiAPI 1.11
+ * @supportedBy MediaWikiAPI 1.12
+ * @supportedBy MediaWikiAPI 1.13
  */
 
 public class GetRecentchanges extends MWAction implements Iterable<String>, Iterator<String> {
@@ -242,6 +246,7 @@ public class GetRecentchanges extends MWAction implements Iterable<String>, Iter
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	public Iterator<String> iterator() {
 		try {
 			return (Iterator<String>) this.clone();

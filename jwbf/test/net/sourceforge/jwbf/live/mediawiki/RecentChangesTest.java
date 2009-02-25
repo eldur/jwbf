@@ -27,6 +27,7 @@ import org.junit.Test;
 public class RecentChangesTest extends LiveTestFather {
 	private MediaWikiAdapterBot bot = null;
 	private static final int COUNT = 13;
+	private static final int LIMIT = COUNT *2;
 	@BeforeClass
 	public static void setUp() throws Exception {
 		PropertyConfigurator.configureAndWatch("test4log4j.properties",
@@ -96,8 +97,20 @@ public class RecentChangesTest extends LiveTestFather {
 		doTest(bot);
 		Assert.assertTrue( "Wrong Wiki Version " + bot.getVersion() , Version.MW1_13.equals(bot.getVersion()));
 	}
+	
+	private final void prepareWiki(MediaWikiBot bot) throws ActionException,
+	ProcessException {
+		SimpleArticle a = new SimpleArticle("Change", "0");
+		for (int i = 0; i < 5 + 1; i++) {
+			a.setLabel(getRandom(10));
+			a.setText(getRandom(255));
+			bot.writeContent(a);
+		}
+		
+	}
 	private final void doTest(MediaWikiBot bot) throws ActionException,
 			ProcessException {
+		prepareWiki(bot);
 		GetRecentchanges rc = new GetRecentchanges(bot);
 		
 		Iterator<String> is = rc.iterator();
@@ -121,10 +134,9 @@ public class RecentChangesTest extends LiveTestFather {
 				String s = is.next();
 				int x = Integer.parseInt(s.split(" ")[1]);
 				// System.out.println(vi);
-				// System.out.println("rm " + x );
 				vi.remove(new Integer(x));
 				i++;
-				if (i > COUNT) {
+				if (i > LIMIT || vi.isEmpty()) {
 					break;
 				}
 			}
@@ -146,9 +158,10 @@ public class RecentChangesTest extends LiveTestFather {
 			while (is.hasNext()) {
 				String s = is.next();
 				int x = Integer.parseInt(s.split(" ")[1]);
+//				System.err.println("rm " + s + " ~= " + x);
 				vi.remove(new Integer(x));
 				i++;
-				if (i > COUNT) {
+				if (i > LIMIT || vi.isEmpty()) {
 					break;
 				}
 			}

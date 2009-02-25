@@ -112,7 +112,7 @@ public class CategoryTest extends LiveTestFather {
 		
 		Assert.assertTrue( "Wrong Wiki Version " + bot.getVersion() , Version.UNKNOWN.equals(bot.getVersion()));
 		
-		doTest(bot);
+		doTest(bot, "Moose");
 	}
 	
 	/**
@@ -187,12 +187,16 @@ public class CategoryTest extends LiveTestFather {
 	}
 	
 	private final void doTest(MediaWikiBot bot) throws ActionException, ProcessException {
+		doTest(bot, TESTCATNAME);
+	}
+	
+	private final void doTest(MediaWikiBot bot, String catname) throws ActionException, ProcessException {
 		 
-		Iterator<String> is = new GetSimpleCategoryMembers(TESTCATNAME, bot).iterator();
+		Iterator<String> is = new GetSimpleCategoryMembers(catname, bot).iterator();
 		while(is.hasNext()) {
 			is.next();
 		}
-		is = new GetSimpleCategoryMembers(TESTCATNAME, bot).iterator();
+		is = new GetSimpleCategoryMembers(catname, bot).iterator();
 		int i = 0;
 		while (is.hasNext()) {
 			is.next();
@@ -203,7 +207,7 @@ public class CategoryTest extends LiveTestFather {
 		}
 		Assert.assertTrue("i is: " + i , i > 50);
 		
-		Iterator<CategoryItem> cit = new GetFullCategoryMembers(TESTCATNAME, bot).iterator();
+		Iterator<CategoryItem> cit = new GetFullCategoryMembers(catname, bot).iterator();
 		i = 0;
 		while (cit.hasNext()) {
 			cit.next();

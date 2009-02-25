@@ -44,7 +44,7 @@ public class GetRevisionTest extends LiveTestFather {
 
 		SimpleArticle sa = bot.readContent(label);
 
-		assertTrue(sa.getText().length() > 10);
+		assertTrue("text should be longer then 10 chars", sa.getText().length() > 10);
 		log.info("text: " + sa.getText().substring(0, 10) + "...");
 		assertTrue("editor maybe not okay: " + sa.getEditor(), sa.getEditor()
 				.length() > 4);

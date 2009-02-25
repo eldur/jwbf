@@ -110,14 +110,16 @@ public class HttpActionClient {
 			try {
 
 				HttpAction ha = a.getNextMessage();
-				
+				if (log.isDebugEnabled())
+					log.debug("message is: " +  client.getHostConfiguration().getHostURL() + ha.getRequest());
 				if (ha instanceof Get) {
 					e = new GetMethod(ha.getRequest());
 					if (path.length() > 1) {
 
 						e.setPath(path + e.getPath());
-						if (log.isDebugEnabled())
+						if (log.isDebugEnabled()) 
 							log.debug("path is: " + e.getPath());
+						
 
 					}
 
