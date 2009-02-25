@@ -5,7 +5,7 @@ import java.util.Iterator;
 import net.sourceforge.jwbf.actions.Get;
 import net.sourceforge.jwbf.actions.mediawiki.MediaWiki;
 import net.sourceforge.jwbf.actions.util.HttpAction;
-import net.sourceforge.jwbf.contentRep.mw.Siteinfo;
+import net.sourceforge.jwbf.contentRep.mediawiki.Siteinfo;
 import net.sourceforge.jwbf.live.mediawiki.SiteinfoTest;
 
 import org.jdom.Element;

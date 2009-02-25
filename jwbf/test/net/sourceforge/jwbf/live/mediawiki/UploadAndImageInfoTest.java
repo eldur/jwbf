@@ -34,7 +34,7 @@ import net.sourceforge.jwbf.actions.mediawiki.editing.FileUpload;
 import net.sourceforge.jwbf.actions.mediawiki.queries.GetImageInfo;
 import net.sourceforge.jwbf.actions.mediawiki.util.VersionException;
 import net.sourceforge.jwbf.bots.MediaWikiAdapterBot;
-import net.sourceforge.jwbf.contentRep.mw.SimpleFile;
+import net.sourceforge.jwbf.contentRep.mediawiki.SimpleFile;
 
 import org.apache.log4j.PropertyConfigurator;
 import org.junit.Assert;

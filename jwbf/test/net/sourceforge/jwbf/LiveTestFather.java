@@ -23,15 +23,28 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.InvalidPropertiesFormatException;
 import java.util.Properties;
 import java.util.Random;
+import java.util.Vector;
 
 public class LiveTestFather {
 
 	private static Properties data;
 	private static final String filename = "test.xml";
 	private Random wheel = new Random();
+	
+	private final Collection<String> specialChars = new Vector<String>();
+	
+	protected LiveTestFather () {
+		specialChars.add("\"");
+		specialChars.add("\'");
+		specialChars.add("?");
+		specialChars.add("%");
+		specialChars.add("&");
+	}
+	
 	
 	static {
 		if (data == null) {
@@ -79,7 +92,9 @@ public class LiveTestFather {
 	protected static int getIntValue(final String key)  throws Exception {
 		return Integer.parseInt(getValue(key));
 	}
-
+	protected Collection<String> getSpecialChars() {
+		return specialChars;
+	}
 	protected String getRandom(int length) {
 		String out = "";
 		int charNum = 0;

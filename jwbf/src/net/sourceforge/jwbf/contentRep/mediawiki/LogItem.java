@@ -1,4 +1,4 @@
-package net.sourceforge.jwbf.contentRep.mw;
+package net.sourceforge.jwbf.contentRep.mediawiki;
 
 public class LogItem {
 	private String title;

@@ -1,4 +1,4 @@
-package net.sourceforge.jwbf.contentRep.mw;
+package net.sourceforge.jwbf.contentRep.mediawiki;
 //package net.sourceforge.jwbf.contentRep.mw;
 //
 //import java.util.ArrayList;

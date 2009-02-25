@@ -197,8 +197,8 @@ public class GetRecentchanges extends MWAction implements Iterable<String>, Iter
 			Element element = el.next();
 			if (element.getQualifiedName().equalsIgnoreCase("rc")) {
 				if (find < limit) {
-				titleCollection.add(element.getAttributeValue("title"));
-				
+				titleCollection.add(MediaWiki.decode(element.getAttributeValue("title")));
+	
 				}
 				
 				timestamp = element.getAttribute("timestamp").getValue();

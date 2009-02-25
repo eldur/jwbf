@@ -8,8 +8,8 @@ import net.sourceforge.jwbf.actions.mediawiki.MediaWiki;
 import net.sourceforge.jwbf.actions.mediawiki.util.VersionException;
 import net.sourceforge.jwbf.actions.util.HttpAction;
 import net.sourceforge.jwbf.actions.util.ProcessException;
-import net.sourceforge.jwbf.contentRep.mw.Siteinfo;
-import net.sourceforge.jwbf.contentRep.mw.Userinfo;
+import net.sourceforge.jwbf.contentRep.mediawiki.Siteinfo;
+import net.sourceforge.jwbf.contentRep.mediawiki.Userinfo;
 import net.sourceforge.jwbf.live.mediawiki.DeleteTest;
 
 import org.apache.log4j.Logger;

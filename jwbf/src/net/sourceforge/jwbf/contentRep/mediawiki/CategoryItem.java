@@ -16,7 +16,7 @@
  * Contributors:
  * 
  */
-package net.sourceforge.jwbf.contentRep.mw;
+package net.sourceforge.jwbf.contentRep.mediawiki;
 
 import net.sourceforge.jwbf.actions.mediawiki.queries.GetFullCategoryMembers;
 

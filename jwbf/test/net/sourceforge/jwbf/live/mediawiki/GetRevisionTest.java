@@ -79,47 +79,6 @@ public class GetRevisionTest extends LiveTestFather {
 		doTest(bot);
 	}
 	
-//	/**
-//	 * Test write and read see following url
-//	 * @throws Exception a
-//	 * http://de.wikipedia.org/wiki/Benutzer_Diskussion:ComillaBot#Bug_bei_Apostroph.3F
-//	 */
-//	@Test
-//	public final void writeArticleWithSpecialLabels() throws Exception {
-//		bot = new MediaWikiAdapterBot(getValue("wikiMW1_13_url"));
-//		bot.login(getValue("wikiMW1_13_user"), getValue("wikiMW1_13_pass"));
-//		
-//		SimpleArticle sa;
-//		SimpleArticle saR;
-//		String testText = getRandom(255);
-//		String label1;
-//		String label2;
-//		
-//		label1 = "\"";
-//		sa = new SimpleArticle(testText, label1);
-//		bot.writeContent(sa);
-//		
-//		saR = bot.readContent(label1);
-//		assertEquals(testText, saR.getText());
-//		assertEquals(label1, saR.getLabel());
-//
-//		
-//		label2 = "&";
-//		sa = new SimpleArticle(testText, label2);
-//		bot.writeContent(sa);
-//		
-//		saR = bot.readContent(label2);
-//		assertEquals(testText, saR.getText());
-//		assertEquals(label2, saR.getLabel());
-//		
-//		GetRecentchanges rc = new GetRecentchanges(bot);
-//		String labelRef1 = rc.next();
-//		String labelRef2 = rc.next();
-//		assertEquals(label1,labelRef2);
-//		assertEquals(label2,labelRef1);
-//		
-//	
-//	}
 	
 	
 	private final void doTest(MediaWikiBot bot) throws Exception {

@@ -44,9 +44,9 @@ import net.sourceforge.jwbf.actions.mediawiki.queries.GetBacklinkTitles.Redirect
 import net.sourceforge.jwbf.actions.util.ActionException;
 import net.sourceforge.jwbf.actions.util.ProcessException;
 import net.sourceforge.jwbf.contentRep.ContentAccessable;
-import net.sourceforge.jwbf.contentRep.mw.CategoryItem;
-import net.sourceforge.jwbf.contentRep.mw.LogItem;
-import net.sourceforge.jwbf.contentRep.mw.SimpleFile;
+import net.sourceforge.jwbf.contentRep.mediawiki.CategoryItem;
+import net.sourceforge.jwbf.contentRep.mediawiki.LogItem;
+import net.sourceforge.jwbf.contentRep.mediawiki.SimpleFile;
 
 /**
  * 

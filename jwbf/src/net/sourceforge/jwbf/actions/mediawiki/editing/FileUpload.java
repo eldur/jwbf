@@ -32,7 +32,7 @@ import net.sourceforge.jwbf.actions.util.ActionException;
 import net.sourceforge.jwbf.actions.util.HttpAction;
 import net.sourceforge.jwbf.actions.util.ProcessException;
 import net.sourceforge.jwbf.bots.MediaWikiBot;
-import net.sourceforge.jwbf.contentRep.mw.SimpleFile;
+import net.sourceforge.jwbf.contentRep.mediawiki.SimpleFile;
 
 import org.apache.log4j.Logger;
 

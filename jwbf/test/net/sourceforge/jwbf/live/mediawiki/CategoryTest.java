@@ -31,7 +31,7 @@ import net.sourceforge.jwbf.actions.util.ProcessException;
 import net.sourceforge.jwbf.bots.MediaWikiAdapterBot;
 import net.sourceforge.jwbf.bots.MediaWikiBot;
 import net.sourceforge.jwbf.contentRep.SimpleArticle;
-import net.sourceforge.jwbf.contentRep.mw.CategoryItem;
+import net.sourceforge.jwbf.contentRep.mediawiki.CategoryItem;
 
 import org.apache.log4j.PropertyConfigurator;
 import org.junit.Assert;

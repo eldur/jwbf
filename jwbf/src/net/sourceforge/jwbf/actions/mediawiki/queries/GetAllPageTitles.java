@@ -92,6 +92,7 @@ public class GetAllPageTitles implements Iterable<String>, Iterator<String>, Con
 	 *            null
 	 * @param redirects
 	 *            include redirects in the list
+	 * @param bot a
 	 * @param nonredirects
 	 *            include nonredirects in the list (will be ignored if redirects
 	 *            is false!)
@@ -109,6 +110,7 @@ public class GetAllPageTitles implements Iterable<String>, Iterator<String>, Con
 		this(null, null, false, false, bot, namespaces);
 
 	}
+
 	protected GetAllPageTitles(String from, String prefix, boolean redirects,
 			boolean nonredirects, String namespaces, MediaWikiBot bot) {
 
@@ -169,17 +171,7 @@ public class GetAllPageTitles implements Iterable<String>, Iterator<String>, Con
 	
 
 	
-	/**
-	 * @return necessary information for the next action or null if no next api
-	 *         page exists
-	 */
-	public Get getNextAction() {
-		if (nextPageInfo == null) {
-			return null;
-		} else {
-			return generateRequest(nextPageInfo, prefix, redirects, nonredirects, namespace);
-		}
-	}
+
 
 		
 		
@@ -216,7 +208,7 @@ public class GetAllPageTitles implements Iterable<String>, Iterator<String>, Con
 			}
 			Matcher m = ARTICLE_TITLES_PATTERN.matcher(s);
 			while (m.find()) {
-				String title = m.group(1);
+				String title = MediaWiki.decode(m.group(1));
 				if (LOG.isDebugEnabled()) {
 					LOG.debug("Found article title: \"" + title + "\"");
 				}

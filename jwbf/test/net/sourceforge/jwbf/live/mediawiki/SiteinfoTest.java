@@ -22,7 +22,7 @@ package net.sourceforge.jwbf.live.mediawiki;
 import net.sourceforge.jwbf.LiveTestFather;
 import net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version;
 import net.sourceforge.jwbf.bots.MediaWikiAdapterBot;
-import net.sourceforge.jwbf.contentRep.mw.Siteinfo;
+import net.sourceforge.jwbf.contentRep.mediawiki.Siteinfo;
 
 import org.apache.log4j.PropertyConfigurator;
 import org.junit.Assert;

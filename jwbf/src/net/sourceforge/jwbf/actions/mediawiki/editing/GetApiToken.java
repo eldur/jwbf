@@ -9,8 +9,8 @@ import net.sourceforge.jwbf.actions.mediawiki.util.MWAction;
 import net.sourceforge.jwbf.actions.mediawiki.util.VersionException;
 import net.sourceforge.jwbf.actions.util.HttpAction;
 import net.sourceforge.jwbf.actions.util.ProcessException;
-import net.sourceforge.jwbf.contentRep.mw.Siteinfo;
-import net.sourceforge.jwbf.contentRep.mw.Userinfo;
+import net.sourceforge.jwbf.contentRep.mediawiki.Siteinfo;
+import net.sourceforge.jwbf.contentRep.mediawiki.Userinfo;
 
 import org.apache.log4j.Logger;
 import org.jdom.Document;

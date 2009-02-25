@@ -3,6 +3,7 @@ package net.sourceforge.jwbf.actions.mediawiki;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
+
 public final class MediaWiki {
 
 	public static final int ARTICLE = 1 << 1;
@@ -59,5 +60,11 @@ public final class MediaWiki {
 			e.printStackTrace();
 		}
 		return s;
+	}
+	
+	public static String decode(final String s) {
+		String out = HTMLEntities.unhtmlentities(s);
+		out = HTMLEntities.unhtmlQuotes(out);
+		return out;
 	}
 }

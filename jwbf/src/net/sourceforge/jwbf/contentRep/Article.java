@@ -3,13 +3,28 @@ package net.sourceforge.jwbf.contentRep;
 import net.sourceforge.jwbf.actions.util.ActionException;
 import net.sourceforge.jwbf.actions.util.ProcessException;
 import net.sourceforge.jwbf.bots.MediaWikiBot;
+import net.sourceforge.jwbf.bots.util.JwbfException;
 
 public class Article extends SimpleArticle {
 
 	private final MediaWikiBot bot;
+
 	
-	public Article(MediaWikiBot bot) {
+	@Override
+	public String getText() {
+		if (super.getText().length() < 1) {
+			try {
+				bot.readContent(super.getLabel());
+			} catch (JwbfException e) {
+				e.printStackTrace();
+			}
+		}
+		return super.getText();
+	}
+
+	public Article(String label, MediaWikiBot bot) {
 		this.bot = bot;
+		setLabel(label);
 	}
 
 	public Article(SimpleArticle ca, MediaWikiBot bot) {

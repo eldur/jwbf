@@ -4,8 +4,7 @@ import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.NS_CATEGORY;
 import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.NS_MAIN;
 import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.NS_TEMPLATE;
 import static org.junit.Assert.assertEquals;
-
-import net.sourceforge.jwbf.actions.mediawiki.util.MWAction;
+import net.sourceforge.jwbf.actions.mediawiki.MediaWiki;
 
 import org.junit.Test;
 
@@ -18,4 +17,16 @@ public class NsTest {
 		assertEquals(NS_MAIN + "|" + NS_TEMPLATE + "|" + NS_CATEGORY, s);
 	}
 
+	@Test
+	public final void testEntities() {
+		
+		
+
+		String s = "&#039;";
+		String t = "'";
+		assertEquals(t, MediaWiki.decode(s));
+		s = "&quot;";
+		t = "\"";
+		assertEquals(t, MediaWiki.decode(s));
+	}
 }

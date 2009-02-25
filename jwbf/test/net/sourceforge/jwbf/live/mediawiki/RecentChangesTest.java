@@ -3,6 +3,7 @@
  */
 package net.sourceforge.jwbf.live.mediawiki;
 
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.Vector;
 
@@ -13,6 +14,7 @@ import net.sourceforge.jwbf.actions.util.ActionException;
 import net.sourceforge.jwbf.actions.util.ProcessException;
 import net.sourceforge.jwbf.bots.MediaWikiAdapterBot;
 import net.sourceforge.jwbf.bots.MediaWikiBot;
+import net.sourceforge.jwbf.contentRep.Article;
 import net.sourceforge.jwbf.contentRep.SimpleArticle;
 
 import org.apache.log4j.PropertyConfigurator;
@@ -44,7 +46,8 @@ public class RecentChangesTest extends LiveTestFather {
 		
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_09_url"));
 		bot.login(getValue("wikiMW1_09_user"), getValue("wikiMW1_09_pass"));
-		doTest(bot);
+//		doRegularTest(bot);
+		doSpecialCharTest(bot);
 		Assert.assertTrue( "Wrong Wiki Version " + bot.getVersion() , Version.MW1_09.equals(bot.getVersion()));
 	}
 	/**
@@ -56,7 +59,8 @@ public class RecentChangesTest extends LiveTestFather {
 		
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_10_url"));
 		bot.login(getValue("wikiMW1_10_user"), getValue("wikiMW1_10_pass"));
-		doTest(bot);
+		doRegularTest(bot);
+		doSpecialCharTest(bot);
 		Assert.assertTrue( "Wrong Wiki Version " + bot.getVersion() , Version.MW1_10.equals(bot.getVersion()));
 	}
 	
@@ -69,7 +73,8 @@ public class RecentChangesTest extends LiveTestFather {
 		
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_11_url"));
 		bot.login(getValue("wikiMW1_11_user"), getValue("wikiMW1_11_pass"));
-		doTest(bot);
+		doRegularTest(bot);
+		doSpecialCharTest(bot);
 		Assert.assertTrue( "Wrong Wiki Version " + bot.getVersion() , Version.MW1_11.equals(bot.getVersion()));
 	}
 	
@@ -82,7 +87,8 @@ public class RecentChangesTest extends LiveTestFather {
 		
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_12_url"));
 		bot.login(getValue("wikiMW1_12_user"), getValue("wikiMW1_12_pass"));
-		doTest(bot);
+		doRegularTest(bot);
+		doSpecialCharTest(bot);
 		Assert.assertTrue( "Wrong Wiki Version " + bot.getVersion() , Version.MW1_12.equals(bot.getVersion()));
 	}
 	/**
@@ -94,7 +100,8 @@ public class RecentChangesTest extends LiveTestFather {
 //		prepareTestWikis();
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_13_url"));
 		bot.login(getValue("wikiMW1_13_user"), getValue("wikiMW1_13_pass"));
-		doTest(bot);
+		doRegularTest(bot);
+		doSpecialCharTest(bot);
 		Assert.assertTrue( "Wrong Wiki Version " + bot.getVersion() , Version.MW1_13.equals(bot.getVersion()));
 	}
 	
@@ -108,7 +115,35 @@ public class RecentChangesTest extends LiveTestFather {
 		}
 		
 	}
-	private final void doTest(MediaWikiBot bot) throws ActionException,
+	private final void doSpecialCharTest(MediaWikiBot bot) throws ActionException,
+	ProcessException {
+		Article sa;
+		String testText = getRandom(255);
+
+		
+		Collection<String> specialChars = getSpecialChars();
+			for (String label1 : specialChars) {
+				sa = new Article(testText, label1, bot);
+				sa.save();
+			}
+
+			GetRecentchanges rc = new GetRecentchanges(bot);
+			
+			Iterator<String> is = rc.iterator();
+			int i = 0;
+			int size = specialChars.size();
+			
+			while (is.hasNext() && i < (size * 1.2)) {
+				String nx = is.next();
+				System.err.println("rm " + nx);
+				specialChars.remove(nx);
+				i++;
+			}
+			Assert.assertTrue("tc sould be empty but is: " + specialChars, specialChars.isEmpty());
+		
+	}
+	
+	private final void doRegularTest(MediaWikiBot bot) throws ActionException,
 			ProcessException {
 		prepareWiki(bot);
 		GetRecentchanges rc = new GetRecentchanges(bot);
