@@ -1,6 +1,7 @@
 --------------------------------------------------------------------------------
 JWBF-1.2.182                                                           Feb 2009
   * fix GetRecentchanges and GetAllPagesTitles with html entities 
+  * first step to maven
 --------------------------------------------------------------------------------
 JWBF-1.2.181                                                           Feb 2009
   * fix GetRecentChangesTest
