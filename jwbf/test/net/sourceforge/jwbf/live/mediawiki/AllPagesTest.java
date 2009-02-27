@@ -121,7 +121,7 @@ public class AllPagesTest extends LiveTestFather {
 	@Test
 	public final void allPagesWikiMW1_09() throws Exception {
 		
-		bot = new MediaWikiAdapterBot(getValue("wikiMW1_09_url"));
+		bot = new MediaWikiAdapterBot(getURL("wikiMW1_09_url"), true);
 		bot.login(getValue("wikiMW1_09_user"), getValue("wikiMW1_09_pass"));
 		doTest(bot, true);
 		Assert.assertTrue( "Wrong Wiki Version " + bot.getVersion() , Version.MW1_09.equals(bot.getVersion()));
@@ -133,7 +133,7 @@ public class AllPagesTest extends LiveTestFather {
 	@Test
 	public final void allPagesWikiMW1_10() throws Exception {
 		
-		bot = new MediaWikiAdapterBot(getValue("wikiMW1_10_url"));
+		bot = new MediaWikiAdapterBot(getURL("wikiMW1_10_url"), true);
 		bot.login(getValue("wikiMW1_10_user"), getValue("wikiMW1_10_pass"));
 		doTest(bot, true);
 		Assert.assertTrue( "Wrong Wiki Version " + bot.getVersion() , Version.MW1_10.equals(bot.getVersion()));
@@ -146,7 +146,7 @@ public class AllPagesTest extends LiveTestFather {
 	@Test
 	public final void allPagesWikiMW1_11() throws Exception {
 		
-		bot = new MediaWikiAdapterBot(getValue("wikiMW1_11_url"));
+		bot = new MediaWikiAdapterBot(getURL("wikiMW1_11_url"), true);
 		bot.login(getValue("wikiMW1_11_user"), getValue("wikiMW1_11_pass"));
 		doTest(bot, true);
 		Assert.assertTrue( "Wrong Wiki Version " + bot.getVersion() , Version.MW1_11.equals(bot.getVersion()));
@@ -159,7 +159,7 @@ public class AllPagesTest extends LiveTestFather {
 	@Test
 	public final void allPagesWikiMW1_12() throws Exception {
 		
-		bot = new MediaWikiAdapterBot(getValue("wikiMW1_12_url"));
+		bot = new MediaWikiAdapterBot(getURL("wikiMW1_12_url"), true);
 		bot.login(getValue("wikiMW1_12_user"), getValue("wikiMW1_12_pass"));
 		doTest(bot, true);
 		Assert.assertTrue( "Wrong Wiki Version " + bot.getVersion() , Version.MW1_12.equals(bot.getVersion()));
@@ -170,7 +170,7 @@ public class AllPagesTest extends LiveTestFather {
 	 */
 	@Test
 	public final void allPagesWikiMW1_13() throws Exception {
-		bot = new MediaWikiAdapterBot(getValue("wikiMW1_13_url"));
+		bot = new MediaWikiAdapterBot(getURL("wikiMW1_13_url"), true);
 		bot.login(getValue("wikiMW1_13_user"), getValue("wikiMW1_13_pass"));
 		doTest(bot, true);
 		Assert.assertTrue( "Wrong Wiki Version " + bot.getVersion() , Version.MW1_13.equals(bot.getVersion()));

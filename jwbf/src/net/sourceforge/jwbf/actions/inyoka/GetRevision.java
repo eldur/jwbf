@@ -102,6 +102,7 @@ public class GetRevision implements ContentProcessable {
 //		   <dd class="time">02/04/09 01:49:20 (12 hours ago)</dd>
 //		   <dt class="property message">Comment:</dt>
 //		   <dd class="message"><p>
+//		System.err.println(s);
 		Pattern p = Pattern.compile("class=\"author\">([^\"]*)<",
 				Pattern.DOTALL | Pattern.MULTILINE);
 

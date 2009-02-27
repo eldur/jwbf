@@ -24,8 +24,10 @@ package net.sourceforge.jwbf.bots;
 import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.NS_MAIN;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.UnknownHostException;
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -96,6 +98,18 @@ public class MediaWikiAdapterBot extends MediaWikiBot {
 	 */
 	public MediaWikiAdapterBot(final String url) throws MalformedURLException {
 		super(url);
+
+	}
+	
+	/**
+	 * @param url
+	 *            wikihosturl like "http://www.mediawiki.org/wiki/"
+	 * @param testHostReachable if true, test if host reachable
+	 * @throws IOException a
+	 * @throws UnknownHostException a
+	 */
+	public MediaWikiAdapterBot(final URL url, boolean testHostReachable) throws UnknownHostException, IOException {
+		super(url, testHostReachable);
 
 	}
 

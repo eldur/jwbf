@@ -3,13 +3,17 @@
   <groupId>net.sourceforge</groupId>
   <artifactId>jwbf</artifactId>
   <name>JWBF</name>
-  <version>1.2.178</version>
+  <version>1.2-178</version>
   <description>Java Wiki Bot Framework - A Wiki helper</description>
+  <developers>
+  </developers>
   <build>
   	<sourceDirectory>src</sourceDirectory>
   	<testSourceDirectory>test</testSourceDirectory>
   	<outputDirectory>bin</outputDirectory>
   	<testOutputDirectory>bin</testOutputDirectory>
+  	<resources>
+  	</resources>
  
   	<plugins>
 	<plugin>
@@ -34,6 +38,8 @@
   		
   	</plugins>
   </build>
+  <profiles>
+  </profiles>
   <dependencies>
   	<dependency>
   		<groupId>commons-httpclient</groupId>

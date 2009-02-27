@@ -1,7 +1,9 @@
 package net.sourceforge.jwbf.bots;
 
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -86,6 +88,25 @@ public class MediaWikiBot extends HttpBot {
 		}
 		setConnection(url);
 
+	}
+
+	/**
+	 * 
+	 * @param url wikihosturl like "http://www.mediawiki.org/wiki/"
+	 * @param testHostReachable if true, test if host reachable
+	 * @throws UnknownHostException a
+	 * @throws IOException a
+	 */
+	public MediaWikiBot(URL url, boolean testHostReachable) throws UnknownHostException, IOException {
+		super();
+		if (testHostReachable) {
+			try {
+				getPage(url.toExternalForm());
+			} catch (ActionException e) {
+				throw new UnknownHostException(url.toExternalForm());
+			}
+		}
+		setConnection(url);
 	}
 
 	/**
