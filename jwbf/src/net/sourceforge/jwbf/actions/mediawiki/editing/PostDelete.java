@@ -10,7 +10,6 @@ import net.sourceforge.jwbf.actions.util.HttpAction;
 import net.sourceforge.jwbf.actions.util.ProcessException;
 import net.sourceforge.jwbf.contentRep.mediawiki.Siteinfo;
 import net.sourceforge.jwbf.contentRep.mediawiki.Userinfo;
-import net.sourceforge.jwbf.live.mediawiki.DeleteTest;
 
 import org.apache.log4j.Logger;
 import org.jdom.Document;
@@ -45,7 +44,6 @@ import org.xml.sax.InputSource;
  * @author Max Gensthaler
  * @supportedBy MediaWikiAPI 1.12
  * @supportedBy MediaWikiAPI 1.13
- * @see DeleteTest
  */
 public class PostDelete extends GetApiToken {
 	private static final Logger LOG = Logger.getLogger(PostDelete.class);

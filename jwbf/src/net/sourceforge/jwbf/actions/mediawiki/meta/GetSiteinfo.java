@@ -6,7 +6,6 @@ import net.sourceforge.jwbf.actions.Get;
 import net.sourceforge.jwbf.actions.mediawiki.MediaWiki;
 import net.sourceforge.jwbf.actions.util.HttpAction;
 import net.sourceforge.jwbf.contentRep.mediawiki.Siteinfo;
-import net.sourceforge.jwbf.live.mediawiki.SiteinfoTest;
 
 import org.jdom.Element;
 /**
@@ -14,7 +13,6 @@ import org.jdom.Element;
  * @author Thomas Stock
  * @supportedBy MediaWiki 1.09, 1.10
  * @supportedBy MediaWikiAPI 1.11, 1.12, 1.13
- * @see SiteinfoTest
  * @see Siteinfo
  *
  */

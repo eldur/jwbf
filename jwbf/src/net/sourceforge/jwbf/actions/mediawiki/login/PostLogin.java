@@ -28,7 +28,6 @@ import net.sourceforge.jwbf.actions.mediawiki.util.MWAction;
 import net.sourceforge.jwbf.actions.util.HttpAction;
 import net.sourceforge.jwbf.actions.util.ProcessException;
 import net.sourceforge.jwbf.bots.util.LoginData;
-import net.sourceforge.jwbf.live.mediawiki.LoginTest;
 
 import org.apache.log4j.Logger;
 import org.jdom.DataConversionException;
@@ -42,7 +41,7 @@ import org.xml.sax.InputSource;
  * 
  * @author Thomas Stock
  * @supportedBy MediaWikiAPI 1.11, 1.12, 1.13, 1.14
- * @see LoginTest
+
  */
 public class PostLogin extends MWAction {
 	

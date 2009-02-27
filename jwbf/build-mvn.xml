@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project name="jwbf-mvn" basedir=".">
+	<description>build and deploy jwbf</description>
+
+	<target name="package">
+		<echo>Build Dir: ${target}</echo>
+		<echo>Build number is: ${version}</echo>
+		<antcall target="releaseWithSrc" />
+		<antcall target="releaseBin" />
+		<antcall target="releaseSimpleJar" />
+	</target>
+	<target name="packageDemo">
+		<property name="target" value="${basedir}/target" />
+		<echo>Build Dir: ${target}</echo>
+
+		<property name="classpath.compile" value="/home/loki/workspace/jwbf/bin:/home/loki/.m2/repository/commons-httpclient/commons-httpclient/3.1/commons-httpclient-3.1.jar:/home/loki/.m2/repository/commons-logging/commons-logging/1.0.4/commons-logging-1.0.4.jar:/home/loki/.m2/repository/commons-codec/commons-codec/1.2/commons-codec-1.2.jar:/home/loki/.m2/repository/org/jdom/jdom/1.1/jdom-1.1.jar:/home/loki/.m2/repository/log4j/log4j/1.2.14/log4j-1.2.14.jar">
+		</property>
+		<antcall target="releaseWithSrc" />
+		<!--<antcall target="releaseBin" />
+			<antcall target="releaseSimpleJar" /> -->
+	</target>
+	<target name="clean">
+		<property name="release" value="${target}/release" />
+		<delete failonerror="false" dir="${release}" />
+		<mkdir dir="${release}" />
+	</target>
+	<target name="releaseWithSrc" depends="clean">
+
+		<echo message="package SRC" />
+		<mkdir dir="${release}" />
+		<copy todir="${release}/bin" >
+
+			<fileset  dir="${target}">
+				<include name="jwbf*.jar"/>
+			</fileset>
+
+		</copy>
+
+		<copy todir="${release}/src">
+			<fileset dir="src" includes="**/*" />
+		</copy>
+		<copy todir="${release}/test">
+			<fileset dir="test" includes="**/*" />
+		</copy>
+		<copy todir="${release}">
+			<fileset dir="buildAdds" includes="*" />
+		</copy>
+		<copy todir="${release}/lib" flatten="true" >
+			<path >
+				<pathelement path="${classpath.compile}" />
+				<pathelement path="${classpath.test}" />
+			</path>
+		</copy>
+		<delete includeemptydirs="true" verbose="true" >
+			<fileset dir="${release}/lib" excludes="*.jar"  />
+		</delete>
+
+		<tar tarfile="${target}/jwbf-${version}-src.tar.gz" basedir="${release}" compression="gzip" excludes="*.tar.gz" />
+		<delete includeemptydirs="true">
+			<fileset dir="${release}" includes="*/**" excludes="*.tar.gz, junit" />
+		</delete>
+
+	</target>
+
+	<target name="releaseBin" depends="clean">
+
+		<echo message="Release BIN: ${version}" />
+
+		<mkdir dir="${release}" />
+		<copy todir="${release}/bin" >
+
+			<fileset  dir="${target}">
+				<include name="jwbf*.jar"/>
+			</fileset>
+
+		</copy>
+
+		<copy todir="${release}/lib" flatten="true" >
+
+			<path >
+				<pathelement path="${classpath.compile}" />
+			</path>
+
+		</copy>
+		<delete includeemptydirs="true" verbose="true" >
+			<fileset dir="${release}/lib" excludes="*.jar"  />
+		</delete>
+		<copy todir="${release}">
+			<fileset dir="buildAdds" includes="*" />
+		</copy>
+
+
+
+		<tar tarfile="${target}/jwbf-${version}-bin.tar.gz" basedir="${release}" compression="gzip" excludes="*.tar.gz" />
+		<delete includeemptydirs="true">
+			<fileset dir="${release}" includes="*/**" excludes="*.tar.gz, junit" />
+		</delete>
+
+	</target>
+
+	<target name="releaseSimpleJar" depends="clean">
+
+		<echo message="Release BIN SIMPLE: ${version}" />
+
+		<mkdir dir="${release}" />
+		<copy todir="${release}/bin" >
+
+			<fileset  dir="${target}">
+				<include name="jwbf*.jar"/>
+			</fileset>
+
+		</copy>
+
+		<copy todir="${release}">
+			<fileset dir="buildAdds" includes="*" />
+		</copy>
+
+
+
+		<tar tarfile="${target}/jwbf-${version}-binSimple.tar.gz" basedir="${release}" compression="gzip" excludes="*.tar.gz" />
+		<delete includeemptydirs="true">
+			<fileset dir="${release}" includes="*/**" excludes="*.tar.gz, junit" />
+		</delete>
+	</target>
+</project>

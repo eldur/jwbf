@@ -30,7 +30,6 @@ import net.sourceforge.jwbf.actions.mediawiki.MediaWiki;
 import net.sourceforge.jwbf.actions.mediawiki.util.MWAction;
 import net.sourceforge.jwbf.actions.util.HttpAction;
 import net.sourceforge.jwbf.actions.util.ProcessException;
-import net.sourceforge.jwbf.live.mediawiki.GetImagelinkTitlesTest;
 
 /**
  * action class using the MediaWiki-api's "list=imagelinks"
@@ -45,7 +44,6 @@ import net.sourceforge.jwbf.live.mediawiki.GetImagelinkTitlesTest;
  * @supportedBy MediaWikiAPI 1.9 embeddedin / ei TODO Test Required
  * @supportedBy MediaWikiAPI 1.10 embeddedin / ei TODO Test Required
  * 
- * @see GetImagelinkTitlesTest
  */
 public class GetImagelinkTitles extends MWAction implements Iterable<String> {
 

@@ -28,7 +28,6 @@ import net.sourceforge.jwbf.actions.util.CookieException;
 import net.sourceforge.jwbf.actions.util.HttpAction;
 import net.sourceforge.jwbf.actions.util.ProcessException;
 import net.sourceforge.jwbf.contentRep.SimpleArticle;
-import net.sourceforge.jwbf.live.trac.GetRevisionTest;
 
 import org.apache.commons.httpclient.Cookie;
 import org.apache.log4j.Logger;
@@ -40,7 +39,6 @@ import org.apache.log4j.Logger;
  * 
  * @supportedBy Trac ??? TODO
  * 
- * @see GetRevisionTest
  */
 public class GetRevision implements ContentProcessable {
 

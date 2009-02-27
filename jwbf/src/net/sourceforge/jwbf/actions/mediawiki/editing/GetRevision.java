@@ -33,7 +33,6 @@ import net.sourceforge.jwbf.actions.util.HttpAction;
 import net.sourceforge.jwbf.actions.util.ProcessException;
 import net.sourceforge.jwbf.bots.MediaWikiBot;
 import net.sourceforge.jwbf.contentRep.SimpleArticle;
-import net.sourceforge.jwbf.live.mediawiki.GetRevisionTest;
 
 import org.apache.log4j.Logger;
 import org.jdom.Document;
@@ -54,7 +53,6 @@ import org.xml.sax.InputSource;
  * @supportedBy MediaWikiAPI 1.13.x
  * @supportedBy MediaWikiAPI 1.14.x 
  * 
- * @see GetRevisionTest
  */
 public class GetRevision extends MWAction {
 

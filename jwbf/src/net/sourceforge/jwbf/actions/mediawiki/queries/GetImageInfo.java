@@ -15,7 +15,6 @@ import net.sourceforge.jwbf.actions.mediawiki.util.VersionException;
 import net.sourceforge.jwbf.actions.util.HttpAction;
 import net.sourceforge.jwbf.actions.util.ProcessException;
 import net.sourceforge.jwbf.bots.MediaWikiBot;
-import net.sourceforge.jwbf.live.mediawiki.UploadAndImageInfoTest;
 
 import org.jdom.Document;
 import org.jdom.Element;
@@ -28,7 +27,6 @@ import org.xml.sax.InputSource;
  * @author Thomas Stock
  * 
  * @supportedBy MediaWikiAPI 1.11, 1.12, 1.13
- * @see UploadAndImageInfoTest
  *
  */
 

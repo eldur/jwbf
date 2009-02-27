@@ -146,9 +146,10 @@
 	</target>
 
 	<target name="releaseWithoutTest" depends="jar" description="--> create release without test">
-		<antcall target="releaseWithSrc" />
+		<echo>BUILD WITH MAVEN</echo>
+		<!--<antcall target="releaseWithSrc" />
 		<antcall target="releaseBin" />
-		<antcall target="releaseSimpleJar" />
+		<antcall target="releaseSimpleJar" /> -->
 	</target>
 
 	<target name="releaseWithSrc">
