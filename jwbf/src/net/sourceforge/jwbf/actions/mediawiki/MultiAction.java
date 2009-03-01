@@ -144,7 +144,6 @@ public abstract class MultiAction<R> {
 
 
 			public boolean hasNext() {
-				// TODO Auto-generated method stub
 				return false;
 			}
 

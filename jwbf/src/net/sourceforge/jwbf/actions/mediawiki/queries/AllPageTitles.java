@@ -46,9 +46,9 @@ import org.apache.log4j.Logger;
  * @supportedBy MediaWikiAPI 1.9, 1.10, 1.11, 1.12, 1.13, 1.14
  * 
  */
-public class GetAllPageTitles implements Iterable<String>, Iterator<String>, ContentProcessable {
+public class AllPageTitles implements Iterable<String>, Iterator<String>, ContentProcessable {
 	
-	private static final Logger LOG = Logger.getLogger(GetAllPageTitles.class);
+	private static final Logger LOG = Logger.getLogger(AllPageTitles.class);
 	
 	/** Pattern to parse returned page, @see {@link #parseHasMore(String)} */
 	private static final Pattern HAS_MORE_PATTERN = Pattern
@@ -83,7 +83,7 @@ public class GetAllPageTitles implements Iterable<String>, Iterator<String>, Con
 	 * which is then added to msgs. When it is answered, the method
 	 * processAllReturningText will be called (from outside this class). For the
 	 * parameters, see
-	 * {@link GetAllPageTitles#generateRequest(String, String, boolean, boolean, String)}
+	 * {@link AllPageTitles#generateRequest(String, String, boolean, boolean, String)}
 	 * 
 	 * @param from
 	 *            page title to start from, may be null
@@ -101,17 +101,17 @@ public class GetAllPageTitles implements Iterable<String>, Iterator<String>, Con
 	 *            of numbers separated by '|'; if null, this parameter is
 	 *            omitted
 	 */
-	public GetAllPageTitles(String from, String prefix, boolean redirects,
-			boolean nonredirects, MediaWikiBot bot, int ... namespaces) {
+	public AllPageTitles(MediaWikiBot bot, String from, String prefix, boolean redirects,
+			boolean nonredirects, int ... namespaces) {
 		this(from, prefix, redirects, nonredirects, MWAction.createNsString(namespaces), bot);
 
 	}
-	public GetAllPageTitles(MediaWikiBot bot, int ... namespaces) {
-		this(null, null, false, false, bot, namespaces);
+	public AllPageTitles(MediaWikiBot bot, int ... namespaces) {
+		this(bot, null, null, false, false, namespaces);
 
 	}
 
-	protected GetAllPageTitles(String from, String prefix, boolean redirects,
+	protected AllPageTitles(String from, String prefix, boolean redirects,
 			boolean nonredirects, String namespaces, MediaWikiBot bot) {
 
 		this.bot = bot;
@@ -280,7 +280,7 @@ public class GetAllPageTitles implements Iterable<String>, Iterator<String>, Con
 			return knownResults.get(index++);
 		}
 		public void remove() {
-			// TODO SD
+			// TODO add an iterator here
 			
 		}
 		

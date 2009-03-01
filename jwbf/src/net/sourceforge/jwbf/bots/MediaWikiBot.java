@@ -51,7 +51,7 @@ import org.apache.log4j.Logger;
  * @see MediaWikiAdapterBot
  *
  */
-public class MediaWikiBot extends HttpBot {
+public class MediaWikiBot extends HttpBot implements WikiBot {
 
 
 	private static Logger log = Logger.getLogger(MediaWikiBot.class);
@@ -202,7 +202,7 @@ public class MediaWikiBot extends HttpBot {
 			GetRevision ac = new GetRevision(name, properties, this);
 
 			performAction(ac);
-			return new Article(ac.getArticle(), this);
+			return new Article(this, ac.getArticle());
 	}
 
 	/**

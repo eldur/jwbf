@@ -58,8 +58,8 @@ public class GetSimpleCategoryMembers extends GetCategoryMembers implements Iter
 	 * @throws ProcessException on inner problems like mw version
 	 * 
 	 */
-	public GetSimpleCategoryMembers(String categoryName, MediaWikiBot bot) throws ActionException, ProcessException {
-		this(categoryName, bot, MediaWiki.NS_MAIN);
+	public GetSimpleCategoryMembers(MediaWikiBot bot, String categoryName) throws ActionException, ProcessException {
+		this(bot, categoryName, MediaWiki.NS_MAIN);
 		
 	}
 	/**
@@ -71,8 +71,8 @@ public class GetSimpleCategoryMembers extends GetCategoryMembers implements Iter
 	 * @throws ProcessException on inner problems like mw version
 	 * 
 	 */
-	public GetSimpleCategoryMembers(String categoryName, MediaWikiBot bot, int... namespaces) throws ActionException, ProcessException {
-		super(categoryName, createNsString(namespaces), bot);
+	public GetSimpleCategoryMembers(MediaWikiBot bot, String categoryName, int... namespaces) throws ActionException, ProcessException {
+		super(bot, categoryName, createNsString(namespaces));
 	}
 	
 	

@@ -56,7 +56,6 @@ public final class MediaWiki {
 		try {
 			return URLEncoder.encode(s, MediaWiki.CHARSET);
 		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return s;

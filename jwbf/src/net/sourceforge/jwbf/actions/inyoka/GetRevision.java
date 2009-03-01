@@ -37,7 +37,7 @@ import org.apache.log4j.Logger;
  * 
  * @author Thomas Stock
  * 
- * @supportedBy Inyoka ??? TODO
+ * @supportedBy Inyoka ??? TODO find out version
  * 
  */
 public class GetRevision implements ContentProcessable {
@@ -120,7 +120,6 @@ public class GetRevision implements ContentProcessable {
 				sa.setEditTimestamp(m.group(1).trim());
 
 			} catch (ParseException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		} else {
@@ -178,7 +177,7 @@ public class GetRevision implements ContentProcessable {
 
 	public void validateReturningCookies(Cookie[] cs, HttpAction hm)
 			throws CookieException {
-		// TODO Auto-generated method stub
+		// TODO is here an cookie handeling required?
 		
 	}
 

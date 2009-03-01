@@ -10,6 +10,7 @@ import net.sourceforge.jwbf.actions.trac.GetRevision;
 import net.sourceforge.jwbf.actions.util.ActionException;
 import net.sourceforge.jwbf.actions.util.ProcessException;
 import net.sourceforge.jwbf.contentRep.Article;
+import net.sourceforge.jwbf.contentRep.ContentAccessable;
 
 /**
 /**
@@ -22,7 +23,7 @@ import net.sourceforge.jwbf.contentRep.Article;
  *
  *
  */
-public class TracWikiBot extends HttpBot {
+public class TracWikiBot extends HttpBot implements WikiBot {
 
 	/**
 	 * @param url
@@ -51,8 +52,21 @@ public class TracWikiBot extends HttpBot {
 			throws ActionException, ProcessException {
 		GetRevision ac = new GetRevision(name);
 		performAction(ac);
-		return new Article(ac.getArticle(), null); // FIXME rm null
+		return new Article(this, ac.getArticle());
 
+	}
+
+
+	public void login(String user, String passwd) throws ActionException {
+		throw new ActionException("Login is not supported");
+		
+	}
+
+
+	public void writeContent(ContentAccessable sa) throws ActionException,
+			ProcessException {
+		throw new ActionException("Writing is not supported");
+		
 	}
 
 }

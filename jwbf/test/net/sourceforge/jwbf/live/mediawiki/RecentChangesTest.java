@@ -123,7 +123,7 @@ public class RecentChangesTest extends LiveTestFather {
 		
 		Collection<String> specialChars = getSpecialChars();
 			for (String label1 : specialChars) {
-				sa = new Article(testText, label1, bot);
+				sa = new Article(bot, testText, label1);
 				sa.save();
 			}
 

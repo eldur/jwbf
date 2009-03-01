@@ -104,8 +104,8 @@ public class GetBacklinkTitles extends MWAction implements Iterable<String>, Ite
 	 * @throws VersionException  if general functionality or parameter values 
 	 *                           are not compatible with apiVersion value 
 	 */
-	 public GetBacklinkTitles(String articleName, RedirectFilter redirectFilter,
-			 MediaWikiBot bot, int ... namespace) throws VersionException {
+	 public GetBacklinkTitles( MediaWikiBot bot, String articleName, RedirectFilter redirectFilter,
+			 int ... namespace) throws VersionException {
 		
 		assert bot != null;
 		assert articleName != null && redirectFilter != null;
@@ -125,9 +125,9 @@ public class GetBacklinkTitles extends MWAction implements Iterable<String>, Ite
 	 * @param bot a
 	 * @throws VersionException if action is not supported
 	 */
-	 public GetBacklinkTitles(String articleName, MediaWikiBot bot) 
+	 public GetBacklinkTitles( MediaWikiBot bot, String articleName) 
 			throws VersionException {
-		 this(articleName, RedirectFilter.all, bot, null);
+		 this(bot, articleName, RedirectFilter.all, null);
 		 
 	 }
 	 
@@ -384,7 +384,7 @@ public class GetBacklinkTitles extends MWAction implements Iterable<String>, Ite
 	@Override
 	protected Object clone() throws CloneNotSupportedException {
 		try {
-			return new GetBacklinkTitles(articleName,rf, bot, namespaces);
+			return new GetBacklinkTitles(bot, articleName,rf, namespaces);
 		} catch (VersionException e) {
 			throw new CloneNotSupportedException(e.getLocalizedMessage());
 		}

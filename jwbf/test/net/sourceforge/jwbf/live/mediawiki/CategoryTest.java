@@ -192,11 +192,11 @@ public class CategoryTest extends LiveTestFather {
 	
 	private final void doTest(MediaWikiBot bot, String catname) throws ActionException, ProcessException {
 		 
-		Iterator<String> is = new GetSimpleCategoryMembers(catname, bot).iterator();
+		Iterator<String> is = new GetSimpleCategoryMembers(bot, catname).iterator();
 		while(is.hasNext()) {
 			is.next();
 		}
-		is = new GetSimpleCategoryMembers(catname, bot).iterator();
+		is = new GetSimpleCategoryMembers(bot, catname).iterator();
 		int i = 0;
 		while (is.hasNext()) {
 			is.next();
@@ -207,7 +207,7 @@ public class CategoryTest extends LiveTestFather {
 		}
 		Assert.assertTrue("i is: " + i , i > 50);
 		
-		Iterator<CategoryItem> cit = new GetFullCategoryMembers(catname, bot).iterator();
+		Iterator<CategoryItem> cit = new GetFullCategoryMembers(bot,catname).iterator();
 		i = 0;
 		while (cit.hasNext()) {
 			cit.next();

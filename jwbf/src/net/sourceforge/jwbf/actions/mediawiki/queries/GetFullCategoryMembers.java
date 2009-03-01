@@ -38,9 +38,9 @@ public class GetFullCategoryMembers extends GetCategoryMembers implements Iterab
 	 * @throws ActionException on any kind of http or version problems
 	 * @throws ProcessException on inner problems like a version mismatch
 	 */
-	public GetFullCategoryMembers(String categoryName, MediaWikiBot bot, int... namespaces) throws ActionException, ProcessException {
+	public GetFullCategoryMembers(MediaWikiBot bot, String categoryName , int... namespaces) throws ActionException, ProcessException {
 		
-		super(categoryName, createNsString(namespaces), bot);
+		super(bot, categoryName, createNsString(namespaces));
 	
 
 	}

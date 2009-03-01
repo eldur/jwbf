@@ -3,6 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>net.sourceforge</groupId>
   <artifactId>jwbf</artifactId>
+  <packaging>jar</packaging>
   <name>JWBF</name>
   <version>1.2-186</version>
   <description>Java Wiki Bot Framework - A Wiki helper</description>
@@ -99,6 +100,8 @@
 	</plugin>
   		
   	</plugins>
+
+  	
   </build>
   <profiles>
   </profiles>
@@ -132,4 +135,41 @@
   		<scope>compile</scope>
   	</dependency>
   </dependencies>
+  <reporting>
+  	<plugins>
+  		<plugin>
+  			<groupId>org.apache.maven.plugins</groupId>
+  			<artifactId>maven-javadoc-plugin</artifactId>
+  		</plugin>
+  		<plugin>
+  			<groupId>org.apache.maven.plugins</groupId>
+  			<artifactId>maven-surefire-report-plugin</artifactId>
+
+  		</plugin>
+  		<plugin>
+  			<groupId>org.codehaus.mojo</groupId>
+  			<artifactId>taglist-maven-plugin</artifactId>
+  			<configuration>
+                       <tags>
+                           <tag>TODO</tag>
+                           <tag>FIXME</tag>
+                           <tag>REFACTOR</tag>
+                           <tag>@deprecated</tag>
+                       </tags>
+                  </configuration>
+
+  		</plugin>
+  	</plugins>
+  </reporting>
+  <distributionManagement>
+  	<repository>
+  	 <id>sourceforge.net</id>
+      <url>sftp://web.sourceforge.net/home/groups/j/jw/jwbf/m2repo-release</url>
+  	
+  	</repository>
+  	<snapshotRepository>
+  		<id>sourceforge.net-snapshot</id>
+  		<url>sftp://web.sourceforge.net/home/groups/j/jw/jwbf/m2repo-snapshot</url>
+  	</snapshotRepository>
+  </distributionManagement>
 </project>

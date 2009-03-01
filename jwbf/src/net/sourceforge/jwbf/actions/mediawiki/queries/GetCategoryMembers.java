@@ -65,7 +65,7 @@ public abstract class GetCategoryMembers extends MWAction {
 	 * The private constructor, which is used to create follow-up actions.
 	 * @throws VersionException on version problems
 	 */
-	protected GetCategoryMembers(String categoryName, String namespace, MediaWikiBot bot) throws VersionException {
+	protected GetCategoryMembers(MediaWikiBot bot, String categoryName, String namespace) throws VersionException {
 		this.namespace = namespace;
 		this.categoryName = categoryName.replace(" ", "_");
 		this.bot = bot;

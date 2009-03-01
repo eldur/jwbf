@@ -6,8 +6,10 @@ import java.io.StringReader;
 import net.sourceforge.jwbf.actions.Post;
 import net.sourceforge.jwbf.actions.mediawiki.MediaWiki;
 import net.sourceforge.jwbf.actions.mediawiki.util.VersionException;
+import net.sourceforge.jwbf.actions.util.ActionException;
 import net.sourceforge.jwbf.actions.util.HttpAction;
 import net.sourceforge.jwbf.actions.util.ProcessException;
+import net.sourceforge.jwbf.bots.MediaWikiBot;
 import net.sourceforge.jwbf.contentRep.mediawiki.Siteinfo;
 import net.sourceforge.jwbf.contentRep.mediawiki.Userinfo;
 
@@ -70,6 +72,25 @@ public class PostDelete extends GetApiToken {
 			throw new ProcessException("The given user doesn't have the rights to delete. Adding '$wgGroupPermissions['bot']['delete'] = true;' to your MediaWiki's LocalSettings.php might remove this problem.");
 		}
 		switch (si.getVersion()) {
+		case MW1_09:
+		case MW1_10:
+		case MW1_11:
+			throw new VersionException("Not supportet by this version of MW");
+		}
+		
+	}
+	
+	public PostDelete(MediaWikiBot bot, String title) throws ProcessException, ActionException {
+		super(Intoken.DELETE, title, bot.getSiteinfo(), bot.getUserinfo());
+		this.title = title;
+		if (title == null || title.length() == 0) {
+			throw new IllegalArgumentException("The argument 'title' must not be \"" + String.valueOf(title) + "\"");
+		}
+		
+		if (false == bot.getUserinfo().getRights().contains("delete")) {
+			throw new ProcessException("The given user doesn't have the rights to delete. Adding '$wgGroupPermissions['bot']['delete'] = true;' to your MediaWiki's LocalSettings.php might remove this problem.");
+		}
+		switch (bot.getVersion()) {
 		case MW1_09:
 		case MW1_10:
 		case MW1_11:

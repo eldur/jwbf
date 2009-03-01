@@ -117,10 +117,8 @@ public class GetRendering extends MWAction {
 		try {
 			bot.performAction(this);
 		} catch (ActionException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (ProcessException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

@@ -64,7 +64,7 @@ public class GetRevision extends MWAction {
 	public static final int FIRST = 1 << 5;
 	public static final int LAST = 1 << 6;
 
-	private static final Logger LOG = Logger.getLogger(GetRevision.class);
+	private final Logger log = Logger.getLogger(getClass());
 
 	private final int property;
 	
@@ -89,8 +89,8 @@ public class GetRevision extends MWAction {
 				+ getDataProperties(property) + getReversion(property)
 				+ "&rvlimit=1" + "&format=xml";
 		msg = new Get(uS);
-		if (LOG.isDebugEnabled())
-			LOG.debug(uS);
+		if (log.isDebugEnabled())
+			log.debug(uS);
 
 	}
 
@@ -151,10 +151,8 @@ public class GetRevision extends MWAction {
 			root = doc.getRootElement();
 
 		} catch (JDOMException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		findContent(root);
@@ -178,9 +176,9 @@ public class GetRevision extends MWAction {
 
 				try {
 					sa.setText(element.getText());
-					// LOG.debug("found text");
 				} catch (NullPointerException e) {
-					// TODO: handle exception
+					if(log.isDebugEnabled())
+						log.debug("no text found");
 				}
 
 				sa.setEditSummary(getAsStringValues(element, "comment"));
@@ -192,7 +190,7 @@ public class GetRevision extends MWAction {
 						sa.setEditTimestamp(getAsStringValues(element,
 								"timestamp"));
 					} catch (ParseException e) {
-						LOG.debug("timestamp could not be parsed");
+						log.debug("timestamp could not be parsed");
 					}
 				}
 

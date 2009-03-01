@@ -2,12 +2,12 @@ package net.sourceforge.jwbf.contentRep;
 
 import net.sourceforge.jwbf.actions.util.ActionException;
 import net.sourceforge.jwbf.actions.util.ProcessException;
-import net.sourceforge.jwbf.bots.MediaWikiBot;
+import net.sourceforge.jwbf.bots.WikiBot;
 import net.sourceforge.jwbf.bots.util.JwbfException;
 
 public class Article extends SimpleArticle {
 
-	private final MediaWikiBot bot;
+	private final WikiBot bot;
 
 	
 	@Override
@@ -22,17 +22,17 @@ public class Article extends SimpleArticle {
 		return super.getText();
 	}
 
-	public Article(String label, MediaWikiBot bot) {
+	public Article(WikiBot bot, String title) {
 		this.bot = bot;
-		setLabel(label);
+		setLabel(title);
 	}
 
-	public Article(SimpleArticle ca, MediaWikiBot bot) {
+	public Article(WikiBot bot, SimpleArticle ca) {
 		super(ca);
 		this.bot = bot;
 	}
 
-	public Article(String text, String label, MediaWikiBot bot) {
+	public Article(WikiBot bot, String text, String label) {
 		super(text, label);
 		this.bot = bot;
 	}
@@ -41,5 +41,14 @@ public class Article extends SimpleArticle {
 		bot.writeContent(this);
 	}
 	
+	public void clear() throws ActionException, ProcessException {
+		bot.writeContent(new SimpleArticle("", getLabel()));
+	}
+	
+	public boolean isEmpty() {
+		return getText().length() < 1;
+	}
+	
+
 
 }

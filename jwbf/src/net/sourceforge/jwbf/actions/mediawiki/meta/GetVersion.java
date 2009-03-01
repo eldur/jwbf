@@ -40,10 +40,8 @@ public class GetVersion extends MWAction {
 			root = doc.getRootElement();
 			findContent(root);
 		} catch (JDOMException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

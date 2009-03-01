@@ -33,7 +33,7 @@ import java.util.Iterator;
 
 import net.sourceforge.jwbf.actions.mediawiki.editing.FileUpload;
 import net.sourceforge.jwbf.actions.mediawiki.editing.PostDelete;
-import net.sourceforge.jwbf.actions.mediawiki.queries.GetAllPageTitles;
+import net.sourceforge.jwbf.actions.mediawiki.queries.AllPageTitles;
 import net.sourceforge.jwbf.actions.mediawiki.queries.GetBacklinkTitles;
 import net.sourceforge.jwbf.actions.mediawiki.queries.GetFullCategoryMembers;
 import net.sourceforge.jwbf.actions.mediawiki.queries.GetImageInfo;
@@ -115,17 +115,17 @@ public class MediaWikiAdapterBot extends MediaWikiBot {
 
 
 	/**
-	 * @see GetAllPageTitles
+	 * @see AllPageTitles
 	 */
 	public Iterable<String> getAllPageTitles(String from, String prefix,
 			boolean redirects, boolean nonredirects, int... namespaces)
 			throws ActionException {
-		GetAllPageTitles a = new GetAllPageTitles( from, prefix, redirects, nonredirects, this, namespaces );
+		AllPageTitles a = new AllPageTitles( this, from, prefix, redirects, nonredirects, namespaces );
 		return a;
 	}
 
 	/**
-	 * @see GetAllPageTitles
+	 * @see AllPageTitles
 	 */
 	public Iterable<String> getAllPageTitles(int... namespaces)
 			throws ActionException {
@@ -135,7 +135,7 @@ public class MediaWikiAdapterBot extends MediaWikiBot {
 	}
 
 	/**
-	 * @see GetAllPageTitles
+	 * @see AllPageTitles
 	 */
 	public Iterable<String> getAllPageTitles(String from, String prefix,
 			boolean redirects, boolean nonredirects) throws ActionException {
@@ -151,8 +151,8 @@ public class MediaWikiAdapterBot extends MediaWikiBot {
 			RedirectFilter redirectFilter, int... namespaces)
 			throws ActionException, ProcessException {
 
-		GetBacklinkTitles a = new GetBacklinkTitles(article,
-				redirectFilter, this, namespaces);
+		GetBacklinkTitles a = new GetBacklinkTitles(this, article,
+				redirectFilter, namespaces);
 
 		return a;
 	}
@@ -205,7 +205,7 @@ public class MediaWikiAdapterBot extends MediaWikiBot {
 	 * @see GetSimpleCategoryMembers
 	 */
 	public Iterable<String> getCategoryMembers(String category, int... namespaces) throws ActionException, ProcessException {
-		GetSimpleCategoryMembers c = new GetSimpleCategoryMembers(category, this, namespaces);
+		GetSimpleCategoryMembers c = new GetSimpleCategoryMembers(this, category, namespaces);
 		return c;
 
 	}
@@ -221,7 +221,7 @@ public class MediaWikiAdapterBot extends MediaWikiBot {
 	 * @see GetFullCategoryMembers
 	 */
 	public Iterable<CategoryItem> getFullCategoryMembers(String category, int... namespaces) throws ActionException, ProcessException {
-		GetFullCategoryMembers c = new GetFullCategoryMembers(category, this, namespaces );
+		GetFullCategoryMembers c = new GetFullCategoryMembers(this, category, namespaces );
 		return c;
 		
 	}

@@ -222,7 +222,7 @@ public class BacklinkTest extends LiveTestFather {
 	
 	private final void doTest(MediaWikiBot bot, RedirectFilter rf) throws Exception {
 
-		GetBacklinkTitles gbt = new GetBacklinkTitles(BACKLINKS, rf, bot, MediaWiki.NS_MAIN , MediaWiki.NS_CATEGORY);
+		GetBacklinkTitles gbt = new GetBacklinkTitles(bot, BACKLINKS, rf, MediaWiki.NS_MAIN , MediaWiki.NS_CATEGORY);
 
 		Vector<String> vx = new Vector<String>();
 		Iterator<String> is = gbt.iterator();

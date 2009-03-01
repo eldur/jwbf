@@ -5,6 +5,8 @@ import java.net.URL;
 import java.util.Iterator;
 import java.util.Vector;
 
+import net.sourceforge.jwbf.actions.mediawiki.MediaWiki;
+
 public class MediaWikiThreadBot extends MediaWikiBot {
 
 	private ThreadGroup tg = null;
