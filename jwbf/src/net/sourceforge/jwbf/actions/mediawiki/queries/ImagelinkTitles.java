@@ -19,22 +19,27 @@
  */
 package net.sourceforge.jwbf.actions.mediawiki.queries;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import net.sourceforge.jwbf.actions.Get;
 import net.sourceforge.jwbf.actions.mediawiki.MediaWiki;
 import net.sourceforge.jwbf.actions.mediawiki.util.MWAction;
+import net.sourceforge.jwbf.actions.util.ActionException;
 import net.sourceforge.jwbf.actions.util.HttpAction;
 import net.sourceforge.jwbf.actions.util.ProcessException;
+import net.sourceforge.jwbf.bots.MediaWikiBot;
+
+import org.apache.log4j.Logger;
 
 /**
  * action class using the MediaWiki-api's "list=imagelinks"
  * 
  * @author Tobias Knerr
+ * @author Thomas Stock
  * @since MediaWiki 1.9.0
  * 
  *        TODO Pending Parameter Change;
@@ -43,9 +48,10 @@ import net.sourceforge.jwbf.actions.util.ProcessException;
  * 
  * @supportedBy MediaWikiAPI 1.9 embeddedin / ei TODO Test Required
  * @supportedBy MediaWikiAPI 1.10 embeddedin / ei TODO Test Required
+ * @supportedBy MediaWikiAPI 1.11, 1.12, 1.13
  * 
  */
-public class GetImagelinkTitles extends MWAction implements Iterable<String> {
+public class ImagelinkTitles extends MWAction implements Iterable<String>, Iterator<String> {
 
 	/** constant value for the illimit-parameter. **/
 	private static final int LIMIT = 50;
@@ -55,7 +61,8 @@ public class GetImagelinkTitles extends MWAction implements Iterable<String> {
 	 * (titles of articles using the image) 
 	 * after performing the action has finished.
 	 */
-	private Collection<String> titleCollection = new ArrayList<String>();
+	private Collection<String> titleCollection = new Vector<String>();
+	private Iterator<String> titleIterator = null;
 
 	/**
 	 * information necessary to get the next api page.
@@ -63,23 +70,36 @@ public class GetImagelinkTitles extends MWAction implements Iterable<String> {
 	private String nextPageInfo = null;
 		
 	private Get msg;
+
+	private boolean hasMoreResults;
+
+	private boolean init = true;
+
+	private final MediaWikiBot bot;
+	
+	private final Logger log = Logger.getLogger(getClass());
+	
+	private final String imageName;
+	private final int [] namespaces;
 		
 	/**
 	 * The public constructor. It will have an MediaWiki-request generated,
 	 * which is then added to msgs. When it is answered,
 	 * the method processAllReturningText will be called
 	 * (from outside this class).
-	 * For the parameters, see {@link GetImagelinkTitles#generateRequest(String, String, String)}
+	 * For the parameters, see {@link ImagelinkTitles#generateRequest(String, String, String)}
 	 */
-	public GetImagelinkTitles(String imageName, int... namespaces) {
-		generateRequest(imageName, createNsString(namespaces), null);
+	public ImagelinkTitles(MediaWikiBot bot, String imageName, int... namespaces) {
+		this.bot = bot;
+		this.imageName = imageName;
+		this.namespaces = namespaces;
+		
 	}
 	
-	/**
-	 * The private constructor, which is used to create follow-up actions.
-	 */
-	private GetImagelinkTitles(String nextPageInfo) {
-		generateRequest(null, null, nextPageInfo);
+
+	public ImagelinkTitles(MediaWikiBot bot, String nextPageInfo) {
+		this(bot, nextPageInfo, MediaWiki.NS_ALL);
+		
 	}
 	
 	/**
@@ -93,7 +113,7 @@ public class GetImagelinkTitles extends MWAction implements Iterable<String> {
 	 * @param ilcontinue    the value for the ilcontinue parameter,
 	 *                      null for the generation of the initial request
 	 */
-	protected void generateRequest(String imageName, String namespace,
+	private Get generateRequest(String imageName, String namespace,
 		String ilcontinue) {
 
 		String uS = "";
@@ -103,20 +123,19 @@ public class GetImagelinkTitles extends MWAction implements Iterable<String> {
 			uS = "/api.php?action=query&list=imageusage"
 					+ "&iutitle="
 					+ MediaWiki.encode(imageName)
-					+ ((namespace != null && namespace.length() != 0) ? ("&ilnamespace=" + namespace)
-							: "") + "&illimit=" + LIMIT + "&format=xml";
+					+ ((namespace != null && namespace.length() != 0) ? ("&iunamespace=" + MediaWiki.encode(namespace))
+							: "") + "&iulimit=" + LIMIT + "&format=xml";
 
 		} else {
 
-			uS = "/api.php?action=query&list=imageusage" + "&ilcontinue="
-					+ MediaWiki.encode(ilcontinue) + "&illimit=" + LIMIT
+			uS = "/api.php?action=query&list=imageusage" + "&iucontinue="
+					+ MediaWiki.encode(ilcontinue) + "&iulimit=" + LIMIT
 					+ "&format=xml";
 
 		}
 
-		System.out.println(uS);
 
-		msg = new Get(uS);
+		return new Get(uS);
 
 	}
 	
@@ -128,9 +147,11 @@ public class GetImagelinkTitles extends MWAction implements Iterable<String> {
 	 * @return empty string
 	 */
 	public String processAllReturningText(final String s) throws ProcessException {
-		String t = s;
-		parseArticleTitles(t);
-		parseHasMore(t);
+		titleCollection.clear();
+		log.debug(s);
+		parseArticleTitles(s);
+		parseHasMore(s);
+		titleIterator = titleCollection.iterator();
 		return "";
 	}
 
@@ -155,7 +176,10 @@ public class GetImagelinkTitles extends MWAction implements Iterable<String> {
 		Matcher m = p.matcher(s);
 
 		if (m.find()) {			
-			nextPageInfo = m.group(1);			
+			nextPageInfo = m.group(1);
+			hasMoreResults = true;
+		} else {
+			hasMoreResults = false;
 		}
 
 	}
@@ -182,21 +206,16 @@ public class GetImagelinkTitles extends MWAction implements Iterable<String> {
 		
 	}
 	
-	/**
-	 * @return   the collected article names
-	 */
-	public Collection<String> getResults() {
-		return titleCollection;	 
-	}
 	
 	/**
 	 * @return   necessary information for the next action
 	 *           or null if no next api page exists
+	 *           @deprecated please never use this
 	 */
-	public GetImagelinkTitles getNextAction() {
+	public ImagelinkTitles getNextAction() {
 		if( nextPageInfo == null ){ return null; }
 		else{
-			return new GetImagelinkTitles(nextPageInfo);
+			return new ImagelinkTitles(bot,nextPageInfo);
 		}
 	}
 
@@ -204,9 +223,61 @@ public class GetImagelinkTitles extends MWAction implements Iterable<String> {
 		return msg;
 	}
 
+	private void prepareCollection() {
+
+		if (init  || (!titleIterator.hasNext() && hasMoreResults)) {
+			if(init) {
+				msg = generateRequest(imageName, createNsString(namespaces), null);
+			} else {
+				
+				msg = generateRequest(null, null, nextPageInfo);
+			}
+			init = false;
+			try {
+
+				bot.performAction(this);
+				setHasMoreMessages(true);
+				if (log.isDebugEnabled())
+					log.debug("preparing success");
+			} catch (ActionException e) {
+				e.printStackTrace();
+				setHasMoreMessages(false);
+			} catch (ProcessException e) {
+				e.printStackTrace();
+				setHasMoreMessages(false);
+			}
+
+		}
+	}
+	
 	public Iterator<String> iterator() {
-		// TODO Auto-generated method stub
-		return null;
+		try {
+			return (Iterator<String>) clone();
+		} catch (CloneNotSupportedException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	public boolean hasNext() {
+		prepareCollection();
+		return titleIterator.hasNext();
+	}
+
+	public String next() {
+		prepareCollection();
+		return titleIterator.next();
+	}
+
+	public void remove() {
+		titleIterator.remove();
+		
+	}
+
+
+	@Override
+	protected Object clone() throws CloneNotSupportedException {
+		return new ImagelinkTitles(bot, imageName, namespaces);
 	}
 	
 	

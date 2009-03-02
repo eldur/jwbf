@@ -54,7 +54,7 @@ import org.xml.sax.InputSource;
  * 
  */
 
-public class GetLogEvents extends MWAction  {
+public class LogEvents extends MWAction implements Iterator<LogItem>, Iterable<LogItem> {
 
 	/** value for the bllimit-parameter. * */
 	
@@ -110,10 +110,10 @@ public class GetLogEvents extends MWAction  {
 
 	
 	/**
-	 * @param type of like {@link #MOVE}
 	 * @param bot a
+	 * @param type of like {@link #MOVE}
 	 */
-	public GetLogEvents(String type, MediaWikiBot bot) throws VersionException {
+	public LogEvents(MediaWikiBot bot, String type) throws VersionException {
 		this(10, type, bot);
 	}
 
@@ -122,7 +122,7 @@ public class GetLogEvents extends MWAction  {
 	 * @param type of like {@link #MOVE}
 	 * @param bot a
 	 */
-	public GetLogEvents(int limit, String type, MediaWikiBot bot) throws VersionException {
+	public LogEvents(int limit, String type, MediaWikiBot bot) throws VersionException {
 		
 		switch (bot.getVersion()) {
 		case MW1_09:
@@ -200,18 +200,35 @@ public class GetLogEvents extends MWAction  {
 		}
 	}
 
-	/**
-	 * @return the collected article names
-	 */
-	public Collection<LogItem> getResults() {
-		return logArray;
-	}
-
 
 
 
 	public HttpAction getNextMessage() {
 		return msg;
+	}
+
+
+	public boolean hasNext() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+
+	public LogItem next() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	public void remove() {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	public Iterator<LogItem> iterator() {
+		// TODO Auto-generated method stub
+		return logArray.iterator();
 	}
 
 

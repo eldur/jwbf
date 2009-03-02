@@ -176,6 +176,18 @@ public class AllPagesTest extends LiveTestFather {
 		Assert.assertTrue( "Wrong Wiki Version " + bot.getVersion() , Version.MW1_13.equals(bot.getVersion()));
 	}
 	
+	/**
+	 * Test category read. Test category must have more then 50 members.
+	 * @throws Exception a
+	 */
+	@Test
+	public final void allPagesWikiMW1_14() throws Exception {
+		bot = new MediaWikiAdapterBot(getURL("wikiMW1_14_url"), true);
+		bot.login(getValue("wikiMW1_14_user"), getValue("wikiMW1_14_pass"));
+		doTest(bot, true);
+		Assert.assertTrue( "Wrong Wiki Version " + bot.getVersion() , Version.MW1_14.equals(bot.getVersion()));
+	}
+	
 	private void doTest(MediaWikiBot bot, boolean isFullTest) throws Exception {
 		AllPageTitles gat = new AllPageTitles(bot, null,null,true, true, MediaWiki.NS_MAIN);
 

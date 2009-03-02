@@ -6,8 +6,8 @@ import java.util.Vector;
 import net.sourceforge.jwbf.LiveTestFather;
 import net.sourceforge.jwbf.actions.mediawiki.MediaWiki;
 import net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version;
-import net.sourceforge.jwbf.actions.mediawiki.queries.GetBacklinkTitles;
-import net.sourceforge.jwbf.actions.mediawiki.queries.GetBacklinkTitles.RedirectFilter;
+import net.sourceforge.jwbf.actions.mediawiki.queries.BacklinkTitles;
+import net.sourceforge.jwbf.actions.mediawiki.queries.BacklinkTitles.RedirectFilter;
 import net.sourceforge.jwbf.actions.util.ActionException;
 import net.sourceforge.jwbf.actions.util.ProcessException;
 import net.sourceforge.jwbf.bots.MediaWikiAdapterBot;
@@ -31,41 +31,10 @@ public class BacklinkTest extends LiveTestFather {
 	private MediaWikiAdapterBot bot = null;
 
 	
-	protected static final void prepareTestWikis() throws Exception {
 		
-		MediaWikiAdapterBot bot;
-		 
-		
-		bot = new MediaWikiAdapterBot(getValue("wikiMW1_09_url"));
-		bot.login(getValue("wikiMW1_09_user"), getValue("wikiMW1_09_pass"));
-		
-		doPreapare(bot);
-		
-		bot = new MediaWikiAdapterBot(getValue("wikiMW1_10_url"));
-		bot.login(getValue("wikiMW1_10_user"), getValue("wikiMW1_11_pass"));
-		
-		doPreapare(bot);
-		
-		bot = new MediaWikiAdapterBot(getValue("wikiMW1_11_url"));
-		bot.login(getValue("wikiMW1_11_user"), getValue("wikiMW1_11_pass"));
-		
-		doPreapare(bot);
-		
-
-		bot = new MediaWikiAdapterBot(getValue("wikiMW1_12_url"));
-		bot.login(getValue("wikiMW1_12_user"), getValue("wikiMW1_12_pass"));
-		
-		doPreapare(bot);
-		
-		bot = new MediaWikiAdapterBot(getValue("wikiMW1_13_url"));
-		bot.login(getValue("wikiMW1_13_user"), getValue("wikiMW1_13_pass"));
-		
-		doPreapare(bot);
-		
-		
-	}
 	
-	protected static final void doPreapare(MediaWikiAdapterBot bot) throws ActionException, ProcessException {
+	
+	protected static final void doPreapare(MediaWikiBot bot) throws ActionException, ProcessException {
 		SimpleArticle a = new SimpleArticle("test", "0");
 		a = new SimpleArticle("text", BACKLINKS);
 		bot.writeContent(a);
@@ -215,6 +184,23 @@ public class BacklinkTest extends LiveTestFather {
 		doTest(bot);
 		
 	}
+	
+	/**
+	 * Test backlinks.
+	 * 
+	 * @throws Exception
+	 *             a
+	 */
+	@Test
+	public final void backlinksMW1_14() throws Exception {
+
+		bot = new MediaWikiAdapterBot(getValue("wikiMW1_14_url"));
+		bot.login(getValue("wikiMW1_14_user"),
+				getValue("wikiMW1_14_pass"));
+		Assert.assertEquals(bot.getVersion(), Version.MW1_14);
+		doTest(bot);
+		
+	}
 
 	private final void doTest(MediaWikiBot bot) throws Exception {
 		doTest(bot, RedirectFilter.all);
@@ -222,19 +208,29 @@ public class BacklinkTest extends LiveTestFather {
 	
 	private final void doTest(MediaWikiBot bot, RedirectFilter rf) throws Exception {
 
-		GetBacklinkTitles gbt = new GetBacklinkTitles(bot, BACKLINKS, rf, MediaWiki.NS_MAIN , MediaWiki.NS_CATEGORY);
+		BacklinkTitles gbt = new BacklinkTitles(bot, BACKLINKS, rf, MediaWiki.NS_MAIN , MediaWiki.NS_CATEGORY);
 
 		Vector<String> vx = new Vector<String>();
 		Iterator<String> is = gbt.iterator();
+		boolean notEnougth = true;
+		int i = 0;
 		while(is.hasNext()) {
 			is.next();
+			i++;
+			if (i > COUNT) {
+				notEnougth = false;
+				break;
+			}
+		}
+		if(notEnougth) {
+			doPreapare(bot);
 		}
 		is = gbt.iterator();
 		vx.add(is.next());
 		vx.add(is.next());
 		vx.add(is.next());
 		is = gbt.iterator();
-		int i = 0;
+		i = 0;
 		while (is.hasNext()) {
 			String buff = is.next();
 			vx.remove(buff);

@@ -18,11 +18,11 @@
  */
 package net.sourceforge.jwbf.contentRep.mediawiki;
 
-import net.sourceforge.jwbf.actions.mediawiki.queries.GetFullCategoryMembers;
+import net.sourceforge.jwbf.actions.mediawiki.queries.FullCategoryMembers;
 
 /**
  * This class helps to get detail information about category items 
- * and was returned by {@link GetFullCategoryMembers}.
+ * and was returned by {@link FullCategoryMembers}.
  * @author Thomas Stock
  *
  */

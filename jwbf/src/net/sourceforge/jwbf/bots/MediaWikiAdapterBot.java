@@ -28,21 +28,20 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.UnknownHostException;
-import java.util.Collection;
 import java.util.Iterator;
 
 import net.sourceforge.jwbf.actions.mediawiki.editing.FileUpload;
 import net.sourceforge.jwbf.actions.mediawiki.editing.PostDelete;
 import net.sourceforge.jwbf.actions.mediawiki.queries.AllPageTitles;
-import net.sourceforge.jwbf.actions.mediawiki.queries.GetBacklinkTitles;
-import net.sourceforge.jwbf.actions.mediawiki.queries.GetFullCategoryMembers;
+import net.sourceforge.jwbf.actions.mediawiki.queries.BacklinkTitles;
+import net.sourceforge.jwbf.actions.mediawiki.queries.FullCategoryMembers;
 import net.sourceforge.jwbf.actions.mediawiki.queries.GetImageInfo;
-import net.sourceforge.jwbf.actions.mediawiki.queries.GetImagelinkTitles;
-import net.sourceforge.jwbf.actions.mediawiki.queries.GetLogEvents;
+import net.sourceforge.jwbf.actions.mediawiki.queries.LogEvents;
 import net.sourceforge.jwbf.actions.mediawiki.queries.GetRecentchanges;
 import net.sourceforge.jwbf.actions.mediawiki.queries.GetSimpleCategoryMembers;
 import net.sourceforge.jwbf.actions.mediawiki.queries.GetTemplateUserTitles;
-import net.sourceforge.jwbf.actions.mediawiki.queries.GetBacklinkTitles.RedirectFilter;
+import net.sourceforge.jwbf.actions.mediawiki.queries.ImagelinkTitles;
+import net.sourceforge.jwbf.actions.mediawiki.queries.BacklinkTitles.RedirectFilter;
 import net.sourceforge.jwbf.actions.util.ActionException;
 import net.sourceforge.jwbf.actions.util.ProcessException;
 import net.sourceforge.jwbf.contentRep.ContentAccessable;
@@ -145,20 +144,20 @@ public class MediaWikiAdapterBot extends MediaWikiBot {
 	}
 
 	/**
-	 * @see GetBacklinkTitles
+	 * @see BacklinkTitles
 	 */
 	public Iterable<String> getBacklinkTitles(String article,
 			RedirectFilter redirectFilter, int... namespaces)
 			throws ActionException, ProcessException {
 
-		GetBacklinkTitles a = new GetBacklinkTitles(this, article,
+		BacklinkTitles a = new BacklinkTitles(this, article,
 				redirectFilter, namespaces);
 
 		return a;
 	}
 
 	/**
-	 * @see GetBacklinkTitles
+	 * @see BacklinkTitles
 	 */
 	public Iterable<String> getBacklinkTitles(String article, int... namespaces)
 			throws ActionException, ProcessException {
@@ -166,7 +165,7 @@ public class MediaWikiAdapterBot extends MediaWikiBot {
 		return getBacklinkTitles(article, RedirectFilter.all, namespaces);
 	}
 	/**
-	 * @see GetBacklinkTitles
+	 * @see BacklinkTitles
 	 */
 	public Iterable<String> getBacklinkTitles(String article, RedirectFilter redirectFilter)
 			throws ActionException, ProcessException {
@@ -176,7 +175,7 @@ public class MediaWikiAdapterBot extends MediaWikiBot {
 
 
 	/**
-	 *  @see GetBacklinkTitles
+	 *  @see BacklinkTitles
 	 */
 	public Iterable<String> getBacklinkTitles(String article)
 			throws ActionException, ProcessException {
@@ -211,17 +210,17 @@ public class MediaWikiAdapterBot extends MediaWikiBot {
 	}
 	/**
 	 *
-	 * @see GetFullCategoryMembers
+	 * @see FullCategoryMembers
 	 */
 	public Iterable<CategoryItem> getFullCategoryMembers(String category) throws ActionException, ProcessException {
 		return getFullCategoryMembers(category, NS_MAIN);
 	}
 	/**
 	 *
-	 * @see GetFullCategoryMembers
+	 * @see FullCategoryMembers
 	 */
 	public Iterable<CategoryItem> getFullCategoryMembers(String category, int... namespaces) throws ActionException, ProcessException {
-		GetFullCategoryMembers c = new GetFullCategoryMembers(this, category, namespaces );
+		FullCategoryMembers c = new FullCategoryMembers(this, category, namespaces );
 		return c;
 		
 	}
@@ -272,12 +271,12 @@ public class MediaWikiAdapterBot extends MediaWikiBot {
 	 *             on problems with http, cookies and io
 	 *
 	 *
-	 * @see GetImagelinkTitles
+	 * @see ImagelinkTitles
 	 *
 	 */
 	public Iterable<String> getImagelinkTitles(String image, int... namespaces)
 			throws ActionException {
-		GetImagelinkTitles a = new GetImagelinkTitles(image,
+		ImagelinkTitles a = new ImagelinkTitles(this, image,
 				namespaces);
 
 		return a;
@@ -321,7 +320,7 @@ public class MediaWikiAdapterBot extends MediaWikiBot {
 	 * @supportedBy MediaWikiAPI 1.11 logevents / le
 	 * @see #getLogEvents(int, String...)
 	 */
-	public Collection<LogItem> getLogEvents(String type) throws ActionException, ProcessException {
+	public Iterator<LogItem> getLogEvents(String type) throws ActionException, ProcessException {
 
 		return getLogEvents(10, type);
 	}
@@ -337,11 +336,10 @@ public class MediaWikiAdapterBot extends MediaWikiBot {
 	 * TODO API state is (semi-complete), see
 	 * http://www.mediawiki.org/wiki/API:Query_-_Lists#logevents_.2F_le_.28semi-complete.29
 	 */
-	public Collection<LogItem> getLogEvents(int limit, String type) throws ActionException, ProcessException {
-		GetLogEvents c = new GetLogEvents(limit, type, this);
+	public Iterator<LogItem> getLogEvents(int limit, String type) throws ActionException, ProcessException {
+		LogEvents c = new LogEvents(limit, type, this);
 		
-		performAction(c);
-		return c.getResults();
+		return c;
 		
 		
 	}
@@ -440,7 +438,7 @@ public class MediaWikiAdapterBot extends MediaWikiBot {
 	 *            a
 	 * @throws ActionException
 	 *             on problems with http, cookies and io
-	 * @throws ProcessException on acces problems
+	 * @throws ProcessException on access problems
 	 * @supportedBy MediaWiki 1.9.x, 1.10.x, 1.11.x, 1.12.x, 1.13.x, 1.14.x
 	 */
 	public final void writeMultContent(final Iterator<ContentAccessable> cav)

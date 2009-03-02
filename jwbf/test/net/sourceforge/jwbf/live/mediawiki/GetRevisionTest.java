@@ -79,6 +79,17 @@ public class GetRevisionTest extends LiveTestFather {
 		doTest(bot);
 	}
 	
+	/**
+	 * Test write and read 
+	 * @throws Exception a
+	 */
+	@Test
+	public final void getRevisionMW1_14() throws Exception {
+		bot = new MediaWikiAdapterBot(getValue("wikiMW1_14_url"));
+		bot.login(getValue("wikiMW1_14_user"), getValue("wikiMW1_14_pass"));
+		doTest(bot);
+	}
+	
 	
 	
 	private final void doTest(MediaWikiBot bot) throws Exception {

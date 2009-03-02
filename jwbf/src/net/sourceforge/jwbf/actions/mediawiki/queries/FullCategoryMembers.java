@@ -9,6 +9,7 @@ import net.sourceforge.jwbf.actions.util.ActionException;
 import net.sourceforge.jwbf.actions.util.HttpAction;
 import net.sourceforge.jwbf.actions.util.ProcessException;
 import net.sourceforge.jwbf.bots.MediaWikiBot;
+import net.sourceforge.jwbf.bots.util.JwbfException;
 import net.sourceforge.jwbf.contentRep.mediawiki.CategoryItem;
 
 import org.apache.log4j.Logger;
@@ -16,10 +17,11 @@ import org.apache.log4j.Logger;
 /**
  * 
  * @author Thomas Stock
- * @supportedBy MediaWikiAPI 1.11 categorymembers / cm TODO Test Required
+ * @supportedBy MediaWikiAPI 1.11, 1.12, 1.13, 1.14
  */
-public class GetFullCategoryMembers extends GetCategoryMembers implements Iterable<CategoryItem>, Iterator<CategoryItem> {
+public class FullCategoryMembers extends CategoryMembers implements Iterable<CategoryItem>, Iterator<CategoryItem> {
 
+	
 	private Get msg;
 	/**
 	 * Collection that will contain the result
@@ -38,9 +40,9 @@ public class GetFullCategoryMembers extends GetCategoryMembers implements Iterab
 	 * @throws ActionException on any kind of http or version problems
 	 * @throws ProcessException on inner problems like a version mismatch
 	 */
-	public GetFullCategoryMembers(MediaWikiBot bot, String categoryName , int... namespaces) throws ActionException, ProcessException {
+	public FullCategoryMembers(MediaWikiBot bot, String categoryName , int... namespaces) throws ActionException, ProcessException {
 		
-		super(bot, categoryName, createNsString(namespaces));
+		super(bot, categoryName, namespaces);
 	
 
 	}
@@ -62,7 +64,24 @@ public class GetFullCategoryMembers extends GetCategoryMembers implements Iterab
 	}
 	public Iterator<CategoryItem> iterator() {
 		return this;
+//		try {
+//			return (Iterator<CategoryItem>) this.clone();
+//		} catch (CloneNotSupportedException e) {
+//			e.printStackTrace();
+//			return null;
+//		}
 	}
+
+	@Override
+	protected Object clone() throws CloneNotSupportedException {
+		try {
+			return new FullCategoryMembers(bot, categoryName, namespace);
+		} catch (JwbfException e) {
+			throw new CloneNotSupportedException(e.getLocalizedMessage());
+		}
+	}
+
+
 
 	private void prepareCollection() {
 
@@ -92,9 +111,12 @@ public class GetFullCategoryMembers extends GetCategoryMembers implements Iterab
 	
 	@Override
 	public String processAllReturningText(String s) throws ProcessException {
+		titleCollection.clear();
 		String buff = super.processAllReturningText(s);
+		
 		titleIterator = titleCollection.iterator();
-		log.debug(titleCollection);
+		if (log.isDebugEnabled())
+			log.debug(titleCollection);
 		return buff;
 	}
 

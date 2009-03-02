@@ -46,7 +46,7 @@ import org.apache.log4j.Logger;
  * @since JWBF 1.1
  * @supportedBy MediaWikiAPI 1.9, 1.10, 1.11, 1.12, 1.13, 1.14
  */
-public class GetBacklinkTitles extends MWAction implements Iterable<String>, Iterator<String> {
+public class BacklinkTitles extends MWAction implements Iterable<String>, Iterator<String> {
 
 	/**
 	 * enum that defines the three posibilities of dealing with
@@ -104,7 +104,7 @@ public class GetBacklinkTitles extends MWAction implements Iterable<String>, Ite
 	 * @throws VersionException  if general functionality or parameter values 
 	 *                           are not compatible with apiVersion value 
 	 */
-	 public GetBacklinkTitles( MediaWikiBot bot, String articleName, RedirectFilter redirectFilter,
+	 public BacklinkTitles( MediaWikiBot bot, String articleName, RedirectFilter redirectFilter,
 			 int ... namespace) throws VersionException {
 		
 		assert bot != null;
@@ -125,7 +125,7 @@ public class GetBacklinkTitles extends MWAction implements Iterable<String>, Ite
 	 * @param bot a
 	 * @throws VersionException if action is not supported
 	 */
-	 public GetBacklinkTitles( MediaWikiBot bot, String articleName) 
+	 public BacklinkTitles( MediaWikiBot bot, String articleName) 
 			throws VersionException {
 		 this(bot, articleName, RedirectFilter.all, null);
 		 
@@ -248,7 +248,7 @@ public class GetBacklinkTitles extends MWAction implements Iterable<String>, Ite
 		
 		/**
 		 * generates an initial MediaWiki-request.
-		 * For params, see {@link GetBacklinkTitles#GetBacklinkTitles(String, net.sourceforge.jwbf.actions.mw.queries.GetBacklinkTitles.RedirectFilter, String, Version)}y
+		 * For params, see {@link BacklinkTitles#GetBacklinkTitles(String, net.sourceforge.jwbf.actions.mw.BacklinkTitles.GetBacklinkTitles.RedirectFilter, String, Version)}y
 		 *                       
 		 * @throws VersionException if a param is not compatible with the
 		 *                          associated MediaWiki version 
@@ -384,7 +384,7 @@ public class GetBacklinkTitles extends MWAction implements Iterable<String>, Ite
 	@Override
 	protected Object clone() throws CloneNotSupportedException {
 		try {
-			return new GetBacklinkTitles(bot, articleName,rf, namespaces);
+			return new BacklinkTitles(bot, articleName,rf, namespaces);
 		} catch (VersionException e) {
 			throw new CloneNotSupportedException(e.getLocalizedMessage());
 		}

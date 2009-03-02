@@ -36,7 +36,7 @@ import org.apache.log4j.Logger;
  * @author Thomas Stock
  * @supportedBy MediaWikiAPI 1.11
  */
-public class GetSimpleCategoryMembers extends GetCategoryMembers implements Iterable<String>, Iterator<String> {
+public class GetSimpleCategoryMembers extends CategoryMembers implements Iterable<String>, Iterator<String> {
 
 	private Get msg;
 	/**
@@ -72,7 +72,7 @@ public class GetSimpleCategoryMembers extends GetCategoryMembers implements Iter
 	 * 
 	 */
 	public GetSimpleCategoryMembers(MediaWikiBot bot, String categoryName, int... namespaces) throws ActionException, ProcessException {
-		super(bot, categoryName, createNsString(namespaces));
+		super(bot, categoryName, namespaces);
 	}
 	
 	
@@ -112,6 +112,7 @@ public class GetSimpleCategoryMembers extends GetCategoryMembers implements Iter
 
 	@Override
 	public String processAllReturningText(String s) throws ProcessException {
+		titleCollection.clear();
 		String buff = super.processAllReturningText(s);
 		titleIterator = titleCollection.iterator();
 		log.debug(titleCollection);

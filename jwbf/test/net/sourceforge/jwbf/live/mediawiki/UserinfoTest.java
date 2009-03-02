@@ -103,6 +103,17 @@ public class UserinfoTest extends LiveTestFather {
 		Assert.assertTrue( "Wrong Wiki Version " + bot.getVersion() , Version.MW1_13.equals(bot.getVersion()));
 		testDetails(bot, getValue("wikiMW1_13_user"));
 	}
-	
+	/**
+	 * Test category read. Test category must have more then 50 members.
+	 * @throws Exception a
+	 */
+	@Test
+	public final void userInfoWikiMW1_14() throws Exception {
+		bot = new MediaWikiAdapterBot(getValue("wikiMW1_14_url"));
+		bot.login(getValue("wikiMW1_14_user"), getValue("wikiMW1_14_pass"));
+		
+		Assert.assertTrue( "Wrong Wiki Version " + bot.getVersion() , Version.MW1_14.equals(bot.getVersion()));
+		testDetails(bot, getValue("wikiMW1_14_user"));
+	}
 	
 }

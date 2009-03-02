@@ -28,6 +28,7 @@ public class FileDownloadTest extends LiveTestFather {
 	/**
 	 * Test category read. Test category must have more then 50 members.
 	 * @throws Exception a
+	 * TODO looks strange ... {@link UploadAndImageInfoTest}
 	 */
 	@Test
 	public final void uploadMW1_09() throws Exception {

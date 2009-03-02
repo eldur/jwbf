@@ -97,12 +97,24 @@ public class RecentChangesTest extends LiveTestFather {
 	 */
 	@Test
 	public final void recentChangesWikiMW1_13() throws Exception {
-//		prepareTestWikis();
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_13_url"));
 		bot.login(getValue("wikiMW1_13_user"), getValue("wikiMW1_13_pass"));
 		doRegularTest(bot);
 		doSpecialCharTest(bot);
 		Assert.assertTrue( "Wrong Wiki Version " + bot.getVersion() , Version.MW1_13.equals(bot.getVersion()));
+	}
+	
+	/**
+	 * Test category read. Test category must have more then 50 members.
+	 * @throws Exception a
+	 */
+	@Test
+	public final void recentChangesWikiMW1_14() throws Exception {
+		bot = new MediaWikiAdapterBot(getValue("wikiMW1_14_url"));
+		bot.login(getValue("wikiMW1_14_user"), getValue("wikiMW1_14_pass"));
+		doRegularTest(bot);
+		doSpecialCharTest(bot);
+		Assert.assertTrue( "Wrong Wiki Version " + bot.getVersion() , Version.MW1_14.equals(bot.getVersion()));
 	}
 	
 	private final void prepareWiki(MediaWikiBot bot) throws ActionException,

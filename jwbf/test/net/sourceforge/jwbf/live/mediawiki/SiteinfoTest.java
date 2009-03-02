@@ -69,7 +69,7 @@ public class SiteinfoTest extends LiveTestFather {
 		
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_09_url"));
 
-		Assert.assertEquals(bot.getVersion(), Version.MW1_09);
+		Assert.assertEquals(Version.MW1_09, bot.getVersion());
 		
 	}
 	
@@ -82,7 +82,7 @@ public class SiteinfoTest extends LiveTestFather {
 		
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_10_url"));
 
-		Assert.assertEquals(bot.getVersion(), Version.MW1_10);
+		Assert.assertEquals(Version.MW1_10, bot.getVersion());
 	}
 	
 	/**
@@ -94,7 +94,7 @@ public class SiteinfoTest extends LiveTestFather {
 		
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_11_url"));
 
-		Assert.assertEquals(bot.getVersion(), Version.MW1_11);
+		Assert.assertEquals(Version.MW1_11, bot.getVersion());
 	}
 	
 	/**
@@ -106,7 +106,7 @@ public class SiteinfoTest extends LiveTestFather {
 		
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_12_url"));
 
-		Assert.assertEquals(bot.getVersion(), Version.MW1_12);
+		Assert.assertEquals(Version.MW1_12, bot.getVersion());
 //		Assert.assertTrue("WriteAPI is disabled", bot.getSiteinfo().isWriteAPI());
 	}
 	
@@ -118,8 +118,18 @@ public class SiteinfoTest extends LiveTestFather {
 	public final void siteInfoMW1_13() throws Exception {
 		
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_13_url"));
-		Assert.assertEquals(bot.getVersion(), Version.MW1_13);
-//		Assert.assertTrue("WriteAPI is disabled", bot.getSiteinfo().isWriteAPI());
+		Assert.assertEquals(Version.MW1_13, bot.getVersion());
+	}
+	
+	/**
+	 * Test get siteinfo on a MW.
+	 * @throws Exception a
+	 */
+	@Test
+	public final void siteInfoMW1_14() throws Exception {
+		
+		bot = new MediaWikiAdapterBot(getValue("wikiMW1_14_url"));
+		Assert.assertEquals(Version.MW1_14, bot.getVersion());
 	}
 
 	

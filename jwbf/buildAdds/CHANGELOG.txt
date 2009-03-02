@@ -1,5 +1,10 @@
+JWBF svn:188                                                           Feb 2009
+  * change action class names
+  * fix categroy iteration
+  * add test for ImagelinkTitles
+  * add test for MW 1.14 
 --------------------------------------------------------------------------------
-JWBF-1.2.187                                                           Feb 2009
+JWBF svn:187                                                           Feb 2009
   * small refactorings and pom changes
 --------------------------------------------------------------------------------
 JWBF-1.2.186                                                           Feb 2009

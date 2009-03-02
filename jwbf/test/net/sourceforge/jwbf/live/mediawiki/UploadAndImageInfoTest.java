@@ -83,7 +83,7 @@ public class UploadAndImageInfoTest extends LiveTestFather {
 				getValue("wikiMW1_10_pass"));
 		Assert.assertEquals(bot.getVersion(), Version.MW1_10);
 		
-		SimpleFile sf = new SimpleFile("Test.gif", getValue("validFile"));
+		SimpleFile sf = new SimpleFile(getValue("filename"), getValue("validFile"));
 		URL url = new URL(bot.getImageInfo(sf.getFilename()));
 		assertFile(url, sf.getFile());
 
@@ -101,7 +101,7 @@ public class UploadAndImageInfoTest extends LiveTestFather {
 				getValue("wikiMW1_11_pass"));
 		Assert.assertEquals(bot.getVersion(), Version.MW1_11);
 		Assert.assertTrue(new File(getValue("validFile")).canRead());
-		SimpleFile sf = new SimpleFile("Test.gif", getValue("validFile"));
+		SimpleFile sf = new SimpleFile(getValue("filename"), getValue("validFile"));
 		FileUpload up = new FileUpload(sf, bot);
 		bot.performAction(up);
 		
@@ -126,7 +126,7 @@ public class UploadAndImageInfoTest extends LiveTestFather {
 				getValue("wikiMW1_12_pass"));
 		Assert.assertEquals(bot.getVersion(), Version.MW1_12);
 		Assert.assertTrue("File (" + getValue("validFile") + ")not readable",new File(getValue("validFile")).canRead());
-		SimpleFile sf = new SimpleFile("Test.gif", getValue("validFile"));
+		SimpleFile sf = new SimpleFile(getValue("filename"), getValue("validFile"));
 		FileUpload up = new FileUpload(sf, bot);
 		bot.performAction(up);
 		URL url = new URL(bot.getImageInfo(sf.getLabel()));
@@ -147,7 +147,7 @@ public class UploadAndImageInfoTest extends LiveTestFather {
 				getValue("wikiMW1_13_pass"));
 		Assert.assertEquals(bot.getVersion(), Version.MW1_13);
 		Assert.assertTrue("File (" + getValue("validFile") + ")not readable",new File(getValue("validFile")).canRead());
-		SimpleFile sf = new SimpleFile("Test.gif", getValue("validFile"));
+		SimpleFile sf = new SimpleFile(getValue("filename"), getValue("validFile"));
 		FileUpload up = new FileUpload(sf, bot);
 		bot.performAction(up);
 		URL url = new URL(bot.getImageInfo(sf.getLabel()));
@@ -167,7 +167,7 @@ public class UploadAndImageInfoTest extends LiveTestFather {
 				getValue("wikiMW1_14_pass"));
 		Assert.assertEquals(bot.getVersion(), Version.MW1_14);
 		Assert.assertTrue("File (" + getValue("validFile") + ")not readable",new File(getValue("validFile")).canRead());
-		SimpleFile sf = new SimpleFile("Test.gif", getValue("validFile"));
+		SimpleFile sf = new SimpleFile(getValue("filename"), getValue("validFile"));
 		FileUpload up = new FileUpload(sf, bot);
 		bot.performAction(up);
 		URL url = new URL(bot.getImageInfo(sf.getLabel()));

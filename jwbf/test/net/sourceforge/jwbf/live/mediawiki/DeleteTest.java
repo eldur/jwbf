@@ -56,7 +56,7 @@ public class DeleteTest extends LiveTestFather {
 	
 	
 	/**
-	 * Test category read. Test category must have more then 50 members.
+	 * Test.
 	 * @throws Exception a
 	 */
 	@Test(expected=VersionException.class)
@@ -72,7 +72,7 @@ public class DeleteTest extends LiveTestFather {
 		
 	}
 	/**
-	 * Test category read. Test category must have more then 50 members.
+	 * Test.
 	 * @throws Exception a
 	 */
 	@Test(expected=VersionException.class)
@@ -89,7 +89,7 @@ public class DeleteTest extends LiveTestFather {
 	}
 	
 	/**
-	 * Test category read. Test category must have more then 50 members.
+	 * Test.
 	 * @throws Exception a
 	 */
 	@Test(expected=VersionException.class)
@@ -107,7 +107,7 @@ public class DeleteTest extends LiveTestFather {
 	}
 	
 	/**
-	 * Test category read. Test category must have more then 50 members.
+	 * Test.
 	 * @throws Exception a
 	 */
 	@Test
@@ -123,7 +123,7 @@ public class DeleteTest extends LiveTestFather {
 		
 	}
 	/**
-	 * Test category read. Test category must have more then 50 members.
+	 * Test.
 	 * @throws Exception a
 	 */
 	@Test
@@ -138,6 +138,21 @@ public class DeleteTest extends LiveTestFather {
 		
 		
 	}
-	
+	/**
+	 * Test.
+	 * @throws Exception a
+	 */
+	@Test
+	public final void deleteWikiMW1_14() throws Exception {
+		bot = new MediaWikiAdapterBot(getValue("wikiMW1_14_url"));
+		bot.login(getValue("wikiMW1_14_user"), getValue("wikiMW1_14_pass"));
+		
+		Assert.assertTrue( "Wrong Wiki Version " + bot.getVersion() , Version.MW1_14.equals(bot.getVersion()));
+		prepare(bot);
+		delete(bot);
+		test(bot);
+		
+		
+	}
 	
 }

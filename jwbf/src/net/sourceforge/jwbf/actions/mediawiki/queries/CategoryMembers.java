@@ -28,13 +28,15 @@ import net.sourceforge.jwbf.actions.mediawiki.util.VersionException;
 import net.sourceforge.jwbf.actions.util.ProcessException;
 import net.sourceforge.jwbf.bots.MediaWikiBot;
 
+import org.apache.log4j.Logger;
+
 
 /**
  * action class using the MediaWiki-api's "list=categorymembers " .
  *
  * @author Thomas Stock
  */
-public abstract class GetCategoryMembers extends MWAction {
+public abstract class CategoryMembers extends MWAction {
 
 	/** constant value for the bllimit-parameter. **/
 	private static final int LIMIT = 50;
@@ -57,16 +59,19 @@ public abstract class GetCategoryMembers extends MWAction {
 	
 	private RequestBuilder r = null;
 	
-	protected String namespace = "";
-		
+	protected final int [] namespace;
+	private String namespaceStr = "";
+	
+	private Logger log = Logger.getLogger(getClass());
 
 	
 	/**
 	 * The private constructor, which is used to create follow-up actions.
 	 * @throws VersionException on version problems
 	 */
-	protected GetCategoryMembers(MediaWikiBot bot, String categoryName, String namespace) throws VersionException {
+	protected CategoryMembers(MediaWikiBot bot, String categoryName, int [] namespace) throws VersionException {
 		this.namespace = namespace;
+		namespaceStr = createNsString(namespace);
 		this.categoryName = categoryName.replace(" ", "_");
 		this.bot = bot;
 		createRequestor();
@@ -162,6 +167,8 @@ public abstract class GetCategoryMembers extends MWAction {
 		} else {
 			hasMoreResults = false;
 		}
+		if (log.isDebugEnabled())
+			log.debug("has more = " + hasMoreResults);
 
 	}
 
@@ -198,8 +205,8 @@ public abstract class GetCategoryMembers extends MWAction {
 		String continiue(String cmcontinue)  {
 			String uS = "";	
 			String nsinj = "";
-			if (namespace.length() > 0) {
-				nsinj = "&cmnamespace=" + namespace;
+			if (namespaceStr.length() > 0) {
+				nsinj = "&cmnamespace=" + namespaceStr;
 			}
 				uS = "/api.php?action=query&list=categorymembers"
 						+ "&cmcategory=" + MediaWiki.encode(categoryName) 
@@ -212,8 +219,8 @@ public abstract class GetCategoryMembers extends MWAction {
 		String first(String categoryName) {
 			String uS = "";
 			String nsinj = "";
-			if (namespace.length() > 0) {
-				nsinj = "&cmnamespace=" + namespace;
+			if (namespaceStr.length() > 0) {
+				nsinj = "&cmnamespace=" + namespaceStr;
 			}
 			
 				uS = "/api.php?action=query&list=categorymembers"
@@ -236,8 +243,8 @@ public abstract class GetCategoryMembers extends MWAction {
 		String continiue(String cmcontinue) {
 			String uS = "";	
 			String nsinj = "";
-			if (namespace.length() > 0) {
-				nsinj = "&cmnamespace=" + namespace;
+			if (namespaceStr.length() > 0) {
+				nsinj = "&cmnamespace=" + namespaceStr;
 			}
 			
 			//TODO: do not add Category: - instead, change other methods' descs (e.g. in MediaWikiBot)
@@ -253,8 +260,8 @@ public abstract class GetCategoryMembers extends MWAction {
 		String first(String categoryName) {
 			String uS = "";
 			String nsinj = "";
-			if (namespace.length() > 0) {
-				nsinj = "&cmnamespace=" + namespace;
+			if (namespaceStr.length() > 0) {
+				nsinj = "&cmnamespace=" + namespaceStr;
 			}
 		
 				//TODO: do not add Category: - instead, change other methods' descs (e.g. in MediaWikiBot)

@@ -128,6 +128,18 @@ public class GetRenderingTest extends LiveTestFather {
 		Assert.assertTrue( "Wrong Wiki Version " + bot.getVersion() , Version.MW1_13.equals(bot.getVersion()));
 	}
 	
+	/**
+	 * 
+	 * @throws Exception a
+	 */
+	@Test
+	public final void getRenderingMW1_14() throws Exception {
+		bot = new MediaWikiAdapterBot(getValue("wikiMW1_14_url"));
+		bot.login(getValue("wikiMW1_14_user"), getValue("wikiMW1_14_pass"));
+		doTest(bot);
+		Assert.assertTrue( "Wrong Wiki Version " + bot.getVersion() , Version.MW1_14.equals(bot.getVersion()));
+	}
+	
 	private void doTest(MediaWikiBot bot) throws Exception {
 		GetRendering r = new GetRendering("bert", bot);
 		
