@@ -21,18 +21,22 @@ package net.sourceforge.jwbf.actions.mediawiki.queries;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Vector;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import net.sourceforge.jwbf.actions.Get;
 import net.sourceforge.jwbf.actions.mediawiki.util.MWAction;
 import net.sourceforge.jwbf.actions.mediawiki.util.VersionException;
+import net.sourceforge.jwbf.actions.util.ActionException;
 import net.sourceforge.jwbf.actions.util.HttpAction;
 import net.sourceforge.jwbf.actions.util.ProcessException;
 import net.sourceforge.jwbf.bots.MediaWikiBot;
 import net.sourceforge.jwbf.contentRep.mediawiki.LogItem;
 
+import org.apache.log4j.Logger;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -69,27 +73,81 @@ public class LogEvents extends MWAction implements Iterator<LogItem>, Iterable<L
 	public static final String PATROL = "patrol";
 	public static final String MERGE = "merge";
 	
-	private int limit = 10;
+	private final int limit;
 
 	private Get msg;
-	
+	private final MediaWikiBot bot;
+	private final Logger log = Logger.getLogger(getClass());
+	/* first run variable */
+	private boolean init = true;
 	/**
 	 * Collection that will contain the result (titles of articles linking to
 	 * the target) after performing the action has finished.
 	 */
-	private Collection<LogItem> logArray = new ArrayList<LogItem>();
-
+	private Collection<LogItem> logCollection = new Vector<LogItem>();
+	private Iterator<LogItem> logIterator = null;
+	private final String [] type;
+	private String nextPageInfo =  "";
+	private boolean hasMoreResults = true;
 	/**
 	 * information necessary to get the next api page.
 	 */
 
+	
+	/**
+	 * @param bot a
+	 * @param type of like {@link #MOVE}
+	 */
+	public LogEvents(MediaWikiBot bot, String type) throws VersionException {
+		this(bot, new String [] {type});
+	}
+	
+	/**
+	 * @param bot a
+	 * @param type of like {@link #MOVE}
+	 */
+	public LogEvents(MediaWikiBot bot, String [] type) throws VersionException {
+		this(bot, 50, type);
+	}
+
+	
+	/**
+	 * @param bot a
+	 * @param limit of events
+	 * @param type of like {@link #MOVE}
+	 */
+	public LogEvents(MediaWikiBot bot, int limit, String type) throws VersionException {
+		this(bot, limit, new String [] {type});
+	}
+	/**
+	 * @param bot a
+	 * @param limit of events
+	 * @param type of like {@link #MOVE}
+	 */
+	public LogEvents(MediaWikiBot bot, int limit, String [] type) throws VersionException {
+		
+		switch (bot.getVersion()) {
+		case MW1_09:
+		case MW1_10:
+			
+			throw new VersionException("unsupported version: " + bot.getVersion());
+
+		default:
+			
+			break;
+		}
+		this.bot = bot;
+		this.type = type;
+		this.limit = limit;
+	}
+	
 	/**
 	 * generates the next MediaWiki-request (GetMethod) and adds it to msgs.
 	 * 
 	 * @param logtype
 	 *            type of log, like upload
 	 */
-	protected void generateRequest(String... logtype) {
+	private Get generateRequest(String ... logtype) {
 
 		String uS = "";
 
@@ -104,38 +162,33 @@ public class LogEvents extends MWAction implements Iterator<LogItem>, Iterable<L
 			
 		uS += "&lelimit=" + limit + "&format=xml";
 
-		msg = new Get(uS);
+		return new Get(uS);
 
 	}
-
 	
 	/**
-	 * @param bot a
-	 * @param type of like {@link #MOVE}
+	 * generates the next MediaWiki-request (GetMethod) and adds it to msgs.
+	 * 
+	 * @param logtype
+	 *            type of log, like upload
 	 */
-	public LogEvents(MediaWikiBot bot, String type) throws VersionException {
-		this(10, type, bot);
-	}
+	private Get generateContinueRequest(String [] logtype, String continueing) {
 
-	/**
-	 * @param limit of events
-	 * @param type of like {@link #MOVE}
-	 * @param bot a
-	 */
-	public LogEvents(int limit, String type, MediaWikiBot bot) throws VersionException {
-		
-		switch (bot.getVersion()) {
-		case MW1_09:
-		case MW1_10:
-			
-			throw new VersionException("unsupported version: " + bot.getVersion());
+		String uS = "";
 
-		default:
-			this.limit = limit;
-			generateRequest(type);
-			break;
+		uS = "/api.php?action=query&list=logevents";
+		if (logtype.length > 0) {
+			String logtemp = "";
+			for (int i = 0; i < logtype.length; i++) {
+				logtemp += logtype[i] + "|";
+			}
+			uS += "&letype=" + logtemp.substring(0, logtemp.length() - 1);
 		}
-		
+			
+		uS += "&lelimit=" + limit + "&format=xml";
+
+		return new Get(uS);
+
 	}
 
 	/**
@@ -148,9 +201,10 @@ public class LogEvents extends MWAction implements Iterator<LogItem>, Iterable<L
 	 */
 	public String processAllReturningText(final String s)
 			throws ProcessException {
-		String t = s;
-		parseArticleTitles(t);
-
+		logCollection.clear();
+		parseArticleTitles(s);
+		parseHasMore(s);
+		logIterator = logCollection.iterator();
 		return "";
 	}
 
@@ -160,7 +214,7 @@ public class LogEvents extends MWAction implements Iterator<LogItem>, Iterable<L
 	 * @param s
 	 *            text for parsing
 	 */
-	public void parseArticleTitles(String s) {
+	private void parseArticleTitles(String s) {
 
 		SAXBuilder builder = new SAXBuilder();
 		Element root = null;
@@ -178,6 +232,35 @@ public class LogEvents extends MWAction implements Iterator<LogItem>, Iterable<L
 		findContent(root);
 
 	}
+	
+	/**
+	 * gets the information about a follow-up page from a provided api response.
+	 * If there is one, a new request is added to msgs by calling generateRequest.
+	 *	
+	 * @param s   text for parsing
+	 */
+	private void parseHasMore(final String s) {
+			
+		// get the blcontinue-value
+		
+		Pattern p = Pattern.compile(
+			"<query-continue>.*?"
+			+ "<logevents *lestart=\"([^\"]*)\" */>"
+			+ ".*?</query-continue>",
+			Pattern.DOTALL | Pattern.MULTILINE);
+			
+		Matcher m = p.matcher(s);
+
+		if (m.find()) {			
+			nextPageInfo = m.group(1);
+			hasMoreResults = true;
+		} else {
+			hasMoreResults = false;
+		}
+		if (log.isDebugEnabled())
+			log.debug("has more = " + hasMoreResults);
+
+	}
 
 	@SuppressWarnings("unchecked")
 	private void findContent(final Element root) {
@@ -191,7 +274,7 @@ public class LogEvents extends MWAction implements Iterator<LogItem>, Iterable<L
 				l.setTitle(element.getAttributeValue("title"));
 				l.setType(element.getAttributeValue("type"));
 				l.setUser(element.getAttributeValue("user"));
-				logArray.add(l);
+				logCollection.add(l);
 
 			} else {
 				findContent(element);
@@ -200,6 +283,32 @@ public class LogEvents extends MWAction implements Iterator<LogItem>, Iterable<L
 		}
 	}
 
+	
+	private void prepareCollection() {
+
+		if (init || (!logIterator.hasNext() && hasMoreResults)) {
+			if(init) {
+				msg = generateRequest(type);
+			} else {
+				msg = generateContinueRequest(type, nextPageInfo );
+			}
+			init = false;
+			try {
+
+				bot.performAction(this);
+				setHasMoreMessages(true);
+				if (log.isDebugEnabled())
+					log.debug("preparing success");
+			} catch (ActionException e) {
+				e.printStackTrace();
+				setHasMoreMessages(false);
+			} catch (ProcessException e) {
+				e.printStackTrace();
+				setHasMoreMessages(false);
+			}
+
+		}
+	}
 
 
 
@@ -209,26 +318,39 @@ public class LogEvents extends MWAction implements Iterator<LogItem>, Iterable<L
 
 
 	public boolean hasNext() {
-		// TODO Auto-generated method stub
-		return false;
+		prepareCollection();
+		return logIterator.hasNext();
 	}
 
 
 	public LogItem next() {
-		// TODO Auto-generated method stub
-		return null;
+		prepareCollection();
+		return logIterator.next();
 	}
 
 
 	public void remove() {
-		// TODO Auto-generated method stub
+		logIterator.remove();
 		
 	}
 
 
 	public Iterator<LogItem> iterator() {
-		// TODO Auto-generated method stub
-		return logArray.iterator();
+		try {
+			return (Iterator<LogItem>) clone();
+		} catch (CloneNotSupportedException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	@Override
+	protected Object clone() throws CloneNotSupportedException {
+		try {
+			return new LogEvents(bot, limit, type);
+		} catch (VersionException e) {
+			throw new CloneNotSupportedException(e.getLocalizedMessage());
+		}
 	}
 
 

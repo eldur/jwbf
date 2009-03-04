@@ -100,7 +100,7 @@ public class LiveTestFather {
 	}
 	
 	public static void main(String[] args) {
-		System.out.println(System.getenv());
+		System.out.println(new LiveTestFather().getRandomAlph(6));
 	}
 	
 	private static void addEmptyKey(String key) {
@@ -142,14 +142,20 @@ public class LiveTestFather {
 	protected Collection<String> getSpecialChars() {
 		return specialChars;
 	}
+	protected String getRandomAlph(int length) {
+		return getRandom(length, 65, 90);
+	}
 	protected String getRandom(int length) {
+		return getRandom(length, 48, 126);
+	}
+	protected String getRandom(int length, int begin, int end) {
 		String out = "";
 		int charNum = 0;
 		int count = 1;  
 		while(count <= length)
         {  
-            charNum = (wheel.nextInt(79) + 48);
-            if (charNum >= 48 && charNum <= 126)
+            charNum = (wheel.nextInt(79) + begin);
+            if (charNum >= begin && charNum <= end)
             {
             	
             	char d = (char)charNum;

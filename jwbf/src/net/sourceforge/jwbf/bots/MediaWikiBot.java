@@ -12,6 +12,7 @@ import net.sourceforge.jwbf.actions.ContentProcessable;
 import net.sourceforge.jwbf.actions.mediawiki.MultiAction;
 import net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version;
 import net.sourceforge.jwbf.actions.mediawiki.editing.GetRevision;
+import net.sourceforge.jwbf.actions.mediawiki.editing.PostDelete;
 import net.sourceforge.jwbf.actions.mediawiki.editing.PostModifyContent;
 import net.sourceforge.jwbf.actions.mediawiki.login.PostLogin;
 import net.sourceforge.jwbf.actions.mediawiki.login.PostLoginOld;
@@ -236,6 +237,8 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
 		if (!isLoggedIn()) {
 			throw new ActionException("Please login first");
 		}
+		if (a.getText().length() < 1) 
+			throw new RuntimeException("Content is empty");
 		performAction(new PostModifyContent(a));
 	}
 	
@@ -411,6 +414,14 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
 
 		return new MultiActionResultIterable(initialAction);
 
+	}
+	
+	/**
+	 * @see PostDelete
+	 */
+	public void postDelete(String title) throws ActionException, ProcessException {
+		
+		performAction(new PostDelete(title, getSiteinfo(), getUserinfo()));
 	}
 	@Override
 	public synchronized String performAction(ContentProcessable a)

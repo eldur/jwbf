@@ -69,4 +69,11 @@ public class TracWikiBot extends HttpBot implements WikiBot {
 		
 	}
 
+
+	public void postDelete(String title) throws ActionException,
+			ProcessException {
+		throw new ActionException("Deleting is not supported");
+		
+	}
+
 }

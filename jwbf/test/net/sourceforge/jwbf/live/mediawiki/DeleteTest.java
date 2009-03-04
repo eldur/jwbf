@@ -34,7 +34,7 @@ public class DeleteTest extends LiveTestFather {
 		
 		for (int i = 0; i < COUNT; i++) {
 			a.setLabel("Delete " + i);
-			a.setText("delete me");
+			a.setText(getRandom(23));
 			bot.writeContent(a);
 		}
 	}

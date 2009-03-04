@@ -10,7 +10,7 @@ public interface WikiBot {
 	
 	Article readContent(String label) throws ActionException, ProcessException ;
 	void writeContent(ContentAccessable sa) throws ActionException, ProcessException;
-	
+	public void postDelete(String title) throws ActionException, ProcessException; 
 	
 	
 	void login(String user, String passwd) throws ActionException;

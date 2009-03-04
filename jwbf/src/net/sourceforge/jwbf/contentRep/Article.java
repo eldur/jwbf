@@ -14,7 +14,7 @@ public class Article extends SimpleArticle {
 	public String getText() {
 		if (super.getText().length() < 1) {
 			try {
-				bot.readContent(super.getLabel());
+				setText(bot.readContent(super.getLabel()).getText());
 			} catch (JwbfException e) {
 				e.printStackTrace();
 			}
@@ -45,6 +45,9 @@ public class Article extends SimpleArticle {
 		bot.writeContent(new SimpleArticle("", getLabel()));
 	}
 	
+	public void delete() throws ActionException, ProcessException {
+		bot.postDelete(getLabel());
+	}
 	public boolean isEmpty() {
 		return getText().length() < 1;
 	}

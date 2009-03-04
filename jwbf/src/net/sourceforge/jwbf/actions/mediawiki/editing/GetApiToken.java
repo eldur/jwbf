@@ -32,13 +32,13 @@ import org.xml.sax.InputSource;
  * @supportedBy MediaWikiAPI 1.13
  */
 abstract class GetApiToken extends MWAction {
-	private static final Logger LOG = Logger.getLogger(GetApiToken.class);
 	/** Types that need a token. See API field intoken. */
 	// TODO this does not feel the elegant way.
 	// Probably put complete request URIs into this enum objects
 	// to support different URIs for different actions.
 	public enum Intoken { DELETE, EDIT, MOVE, PROTECT, EMAIL };
 	private String token = null;
+	private Logger log = Logger.getLogger(GetApiToken.class);
 
 	private boolean first = true;
 	private boolean second = true;
@@ -70,8 +70,8 @@ abstract class GetApiToken extends MWAction {
 	 * @param title title of the article to generate the token for
 	 */
 	private void generateTokenRequest(Intoken intoken, String title) {
-		if( LOG.isTraceEnabled()) {
-			LOG.trace("enter GetToken.generateTokenRequest()");
+		if( log.isTraceEnabled()) {
+			log.trace("enter GetToken.generateTokenRequest()");
 		}
 			String uS = "/api.php"
 					+ "?action=query"
@@ -100,11 +100,11 @@ abstract class GetApiToken extends MWAction {
 	public String processReturningText(String s, HttpAction hm)
 			throws ProcessException {
 		if (hm.getRequest().equals(msg.getRequest())) {
-			if (LOG.isTraceEnabled()) {
-				LOG.trace("enter GetToken.processAllReturningText(String)");
+			if (log.isTraceEnabled()) {
+				log.trace("enter GetToken.processAllReturningText(String)");
 			}
-			if (LOG.isDebugEnabled()) {
-				LOG.debug("Got returning text: \"" + s + "\"");
+			if (log.isDebugEnabled()) {
+				log.debug("Got returning text: \"" + s + "\"");
 			}
 			SAXBuilder builder = new SAXBuilder();
 			try {
@@ -113,14 +113,14 @@ abstract class GetApiToken extends MWAction {
 				process(doc);
 			} catch (JDOMException e) {
 				if (s.startsWith("unknown_action:")) {
-					LOG.error(
+					log.error(
 									"Adding '$wgEnableWriteAPI = true;' to your MediaWiki's LocalSettings.php might remove this problem.",
 									e);
 				} else {
-					LOG.error(e.getMessage(), e);
+					log.error(e.getMessage(), e);
 				}
 			} catch (IOException e) {
-				LOG.error(e.getMessage(), e);
+				log.error(e.getMessage(), e);
 			}
 		}
 		return "";
@@ -129,6 +129,9 @@ abstract class GetApiToken extends MWAction {
 	public HttpAction getNextMessage() {
 		if (first) {
 			first = false;
+			if (log.isTraceEnabled()) {
+				log.trace("enter getApiToken");
+			}
 			return msg;	
 		} else {
 			second = false;
@@ -157,8 +160,13 @@ abstract class GetApiToken extends MWAction {
 		if (elem != null) {
 			// process reply for token request
 			token = elem.getAttributeValue("deletetoken");
+			
 		} else {
-			LOG.error("Unknow reply. This is not a token.");
+			log.error("Unknow reply. This is not a token.");
 		}
+		if (log.isDebugEnabled()) 
+			log.debug("found token =" + token + "\n"
+					+ "for: " + msg.getRequest() + "\n" 
+					);
 	}
 }

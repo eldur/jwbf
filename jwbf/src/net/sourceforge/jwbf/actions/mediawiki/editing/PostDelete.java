@@ -48,7 +48,7 @@ import org.xml.sax.InputSource;
  * @supportedBy MediaWikiAPI 1.13
  */
 public class PostDelete extends GetApiToken {
-	private static final Logger LOG = Logger.getLogger(PostDelete.class);
+	private static final Logger log = Logger.getLogger(PostDelete.class);
 	
 
 	private final String title;
@@ -109,15 +109,15 @@ public class PostDelete extends GetApiToken {
 					"The argument 'token' must not be \""
 							+ String.valueOf(getToken()) + "\"");
 		}
-		if (LOG.isTraceEnabled()) {
-			LOG.trace("enter PostDelete.generateDeleteRequest(String)");
+		if (log.isTraceEnabled()) {
+			log.trace("enter PostDelete.generateDeleteRequest(String)");
 		}
 
 		String uS = "/api.php" + "?action=delete" + "&title="
 				+ MediaWiki.encode(title) + "&token="
 				+ MediaWiki.encode(getToken()) + "&format=xml";
-		if (LOG.isDebugEnabled()) {
-			LOG.debug("delete url: \"" + uS + "\"");
+		if (log.isDebugEnabled()) {
+			log.debug("delete url: \"" + uS + "\"");
 		}
 		Post pm = new Post(uS);
 		msg = pm;
@@ -140,11 +140,11 @@ public class PostDelete extends GetApiToken {
 		
 		
 		if (msg != null && hm.getClass().equals(msg.getRequest())) {
-			if (LOG.isTraceEnabled()) {
-				LOG.trace("enter PostDelete.processAllReturningText(String)");
+			if (log.isTraceEnabled()) {
+				log.trace("enter PostDelete.processAllReturningText(String)");
 			}
-			if (LOG.isDebugEnabled()) {
-				LOG.debug("Got returning text: \"" + s + "\"");
+			if (log.isDebugEnabled()) {
+				log.debug("Got returning text: \"" + s + "\"");
 			}
 			SAXBuilder builder = new SAXBuilder();
 			try {
@@ -155,15 +155,15 @@ public class PostDelete extends GetApiToken {
 				}
 			} catch (JDOMException e) {
 				if (s.startsWith("unknown_action:")) {
-					LOG
+					log
 							.error(
 									"Adding '$wgEnableWriteAPI = true;' to your MediaWiki's LocalSettings.php might remove this problem.",
 									e);
 				} else {
-					LOG.error(e.getMessage(), e);
+					log.error(e.getMessage(), e);
 				}
 			} catch (IOException e) {
-				LOG.error(e.getMessage(), e);
+				log.error(e.getMessage(), e);
 			}
 		}
 		
@@ -181,9 +181,9 @@ public class PostDelete extends GetApiToken {
 	private boolean containsError(Document doc) throws JDOMException {
 		Element elem = doc.getRootElement().getChild("error");
 		if( elem != null) {
-			LOG.error(elem.getAttributeValue("info"));
+			log.error(elem.getAttributeValue("info"));
 			if(elem.getAttributeValue("code").equals("inpermissiondenied")) {
-				LOG.error("Adding '$wgGroupPermissions['bot']['delete'] = true;' to your MediaWiki's LocalSettings.php might remove this problem.");
+				log.error("Adding '$wgGroupPermissions['bot']['delete'] = true;' to your MediaWiki's LocalSettings.php might remove this problem.");
 			}
 			return true;
 		}
@@ -199,12 +199,12 @@ public class PostDelete extends GetApiToken {
 		Element elem = doc.getRootElement().getChild("delete");
 		if (elem != null) {
 			// process reply for delete request
-			if(LOG.isInfoEnabled()) {
-				LOG.info("Deleted article '" + elem.getAttributeValue("title") + "'" +
+			if(log.isInfoEnabled()) {
+				log.info("Deleted article '" + elem.getAttributeValue("title") + "'" +
 					" with reason '" + elem.getAttributeValue("reason") + "'");
 			}
 		} else {
-			LOG.error("Unknow reply. This is not a reply for a delete action.");
+			log.error("Unknow reply. This is not a reply for a delete action.");
 		}
 	}
 }

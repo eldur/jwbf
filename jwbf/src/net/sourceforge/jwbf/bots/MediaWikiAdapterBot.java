@@ -31,16 +31,15 @@ import java.net.UnknownHostException;
 import java.util.Iterator;
 
 import net.sourceforge.jwbf.actions.mediawiki.editing.FileUpload;
-import net.sourceforge.jwbf.actions.mediawiki.editing.PostDelete;
 import net.sourceforge.jwbf.actions.mediawiki.queries.AllPageTitles;
 import net.sourceforge.jwbf.actions.mediawiki.queries.BacklinkTitles;
 import net.sourceforge.jwbf.actions.mediawiki.queries.FullCategoryMembers;
 import net.sourceforge.jwbf.actions.mediawiki.queries.GetImageInfo;
-import net.sourceforge.jwbf.actions.mediawiki.queries.LogEvents;
 import net.sourceforge.jwbf.actions.mediawiki.queries.GetRecentchanges;
 import net.sourceforge.jwbf.actions.mediawiki.queries.GetSimpleCategoryMembers;
 import net.sourceforge.jwbf.actions.mediawiki.queries.GetTemplateUserTitles;
-import net.sourceforge.jwbf.actions.mediawiki.queries.ImagelinkTitles;
+import net.sourceforge.jwbf.actions.mediawiki.queries.ImageUsageTitles;
+import net.sourceforge.jwbf.actions.mediawiki.queries.LogEvents;
 import net.sourceforge.jwbf.actions.mediawiki.queries.BacklinkTitles.RedirectFilter;
 import net.sourceforge.jwbf.actions.util.ActionException;
 import net.sourceforge.jwbf.actions.util.ProcessException;
@@ -184,13 +183,7 @@ public class MediaWikiAdapterBot extends MediaWikiBot {
 	}
 
 
-	/**
-	 * @see PostDelete
-	 */
-	public void postDelete(String title) throws ActionException, ProcessException {
-		
-		performAction(new PostDelete(title, getSiteinfo(), getUserinfo()));
-	}
+
 
 	/**
 	 *
@@ -271,12 +264,12 @@ public class MediaWikiAdapterBot extends MediaWikiBot {
 	 *             on problems with http, cookies and io
 	 *
 	 *
-	 * @see ImagelinkTitles
+	 * @see ImageUsageTitles
 	 *
 	 */
 	public Iterable<String> getImagelinkTitles(String image, int... namespaces)
 			throws ActionException {
-		ImagelinkTitles a = new ImagelinkTitles(this, image,
+		ImageUsageTitles a = new ImageUsageTitles(this, image,
 				namespaces);
 
 		return a;
@@ -337,7 +330,7 @@ public class MediaWikiAdapterBot extends MediaWikiBot {
 	 * http://www.mediawiki.org/wiki/API:Query_-_Lists#logevents_.2F_le_.28semi-complete.29
 	 */
 	public Iterator<LogItem> getLogEvents(int limit, String type) throws ActionException, ProcessException {
-		LogEvents c = new LogEvents(limit, type, this);
+		LogEvents c = new LogEvents(this, limit, type);
 		
 		return c;
 		

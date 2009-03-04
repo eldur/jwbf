@@ -36,22 +36,15 @@ import net.sourceforge.jwbf.bots.MediaWikiBot;
 import org.apache.log4j.Logger;
 
 /**
- * action class using the MediaWiki-api's "list=imagelinks"
+ * action class using the MediaWiki-api's "list=imagelinks" and later imageUsage
  * 
  * @author Tobias Knerr
  * @author Thomas Stock
  * @since MediaWiki 1.9.0
- * 
- *        TODO Pending Parameter Change;
- *        http://www.mediawiki.org/wiki/API:Query_-_Lists TODO New API call,
- *        decide if design a switch by version or support only newest
- * 
- * @supportedBy MediaWikiAPI 1.9 embeddedin / ei TODO Test Required
- * @supportedBy MediaWikiAPI 1.10 embeddedin / ei TODO Test Required
- * @supportedBy MediaWikiAPI 1.11, 1.12, 1.13
+ * @supportedBy MediaWikiAPI 1.9, 1.10, 1.11, 1.12, 1.13
  * 
  */
-public class ImagelinkTitles extends MWAction implements Iterable<String>, Iterator<String> {
+public class ImageUsageTitles extends MWAction implements Iterable<String>, Iterator<String> {
 
 	/** constant value for the illimit-parameter. **/
 	private static final int LIMIT = 50;
@@ -81,23 +74,35 @@ public class ImagelinkTitles extends MWAction implements Iterable<String>, Itera
 	
 	private final String imageName;
 	private final int [] namespaces;
+	private final VersionHandler handler;
 		
 	/**
 	 * The public constructor. It will have an MediaWiki-request generated,
 	 * which is then added to msgs. When it is answered,
 	 * the method processAllReturningText will be called
 	 * (from outside this class).
-	 * For the parameters, see {@link ImagelinkTitles#generateRequest(String, String, String)}
+	 * For the parameters, see {@link ImageUsageTitles#generateRequest(String, String, String)}
 	 */
-	public ImagelinkTitles(MediaWikiBot bot, String imageName, int... namespaces) {
+	public ImageUsageTitles(MediaWikiBot bot, String imageName, int... namespaces) {
 		this.bot = bot;
 		this.imageName = imageName;
 		this.namespaces = namespaces;
-		
+		switch (bot.getVersion()) {
+		case MW1_09:
+		case MW1_10:
+			handler = new Mw1_09Handler();
+			break;
+
+		default:
+
+			handler = new DefaultHandler();
+
+			break;
+		}
 	}
 	
 
-	public ImagelinkTitles(MediaWikiBot bot, String nextPageInfo) {
+	public ImageUsageTitles(MediaWikiBot bot, String nextPageInfo) {
 		this(bot, nextPageInfo, MediaWiki.NS_ALL);
 		
 	}
@@ -116,26 +121,14 @@ public class ImagelinkTitles extends MWAction implements Iterable<String>, Itera
 	private Get generateRequest(String imageName, String namespace,
 		String ilcontinue) {
 
-		String uS = "";
-
 		if (ilcontinue == null) {
-
-			uS = "/api.php?action=query&list=imageusage"
-					+ "&iutitle="
-					+ MediaWiki.encode(imageName)
-					+ ((namespace != null && namespace.length() != 0) ? ("&iunamespace=" + MediaWiki.encode(namespace))
-							: "") + "&iulimit=" + LIMIT + "&format=xml";
+			return handler.generateRequest(imageName, namespace);
 
 		} else {
-
-			uS = "/api.php?action=query&list=imageusage" + "&iucontinue="
-					+ MediaWiki.encode(ilcontinue) + "&iulimit=" + LIMIT
-					+ "&format=xml";
+			return handler.generateContinueRequest(imageName, namespace,
+					ilcontinue);
 
 		}
-
-
-		return new Get(uS);
 
 	}
 	
@@ -161,26 +154,9 @@ public class ImagelinkTitles extends MWAction implements Iterable<String>, Itera
 	 *	
 	 * @param s   text for parsing
 	 */
-	protected void parseHasMore(final String s) {
+	private void parseHasMore(final String s) {
 			
-		System.out.println(s);
-		
-		// get the ilcontinue-value
-		
-		Pattern p = Pattern.compile(
-			"<query-continue>.*?"
-			+ "<imageusage *iucontinue=\"([^\"]*)\" */>"
-			+ ".*?</query-continue>",
-			Pattern.DOTALL | Pattern.MULTILINE);
-			
-		Matcher m = p.matcher(s);
-
-		if (m.find()) {			
-			nextPageInfo = m.group(1);
-			hasMoreResults = true;
-		} else {
-			hasMoreResults = false;
-		}
+		handler.parseHasMore(s);
 
 	}
 
@@ -189,35 +165,13 @@ public class ImagelinkTitles extends MWAction implements Iterable<String>, Itera
 	 *	
 	 * @param s   text for parsing
 	 */
-	public void parseArticleTitles(String s) {
+	private void parseArticleTitles(String s) {
 		
-		System.out.println(s);
-
-		// get the backlink titles and add them all to the titleCollection
-			
-		Pattern p = Pattern.compile(
-			"<iu pageid=\".*?\" ns=\".*?\" title=\"(.*?)\" />");
-			
-		Matcher m = p.matcher(s);
-		
-		while (m.find()) {
-			titleCollection.add(m.group(1));
-		}
+		handler.parseArticleTitles(s);
 		
 	}
 	
 	
-	/**
-	 * @return   necessary information for the next action
-	 *           or null if no next api page exists
-	 *           @deprecated please never use this
-	 */
-	public ImagelinkTitles getNextAction() {
-		if( nextPageInfo == null ){ return null; }
-		else{
-			return new ImagelinkTitles(bot,nextPageInfo);
-		}
-	}
 
 	public HttpAction getNextMessage() {
 		return msg;
@@ -277,9 +231,143 @@ public class ImagelinkTitles extends MWAction implements Iterable<String>, Itera
 
 	@Override
 	protected Object clone() throws CloneNotSupportedException {
-		return new ImagelinkTitles(bot, imageName, namespaces);
+		return new ImageUsageTitles(bot, imageName, namespaces);
 	}
 	
+	private abstract class VersionHandler {
+		VersionHandler() {
+			
+		}
+		public abstract Get generateRequest(String imageName, String namespace);
+		
+		public abstract Get generateContinueRequest(String imageName, String namespace,
+				String ilcontinue);
+		public abstract void parseHasMore(final String s);
+		
+		public abstract void parseArticleTitles(String s);
+	}
 	
+	private class DefaultHandler extends VersionHandler {
+
+		@Override
+		public Get generateContinueRequest(String imageName, String namespace,
+				String ilcontinue) {
+
+			String uS = "/api.php?action=query&list=imageusage"
+					+ "&iucontinue=" + MediaWiki.encode(ilcontinue)
+					+ "&iulimit=" + LIMIT + "&format=xml";
+			return new Get(uS);
+		}
+
+		@Override
+		public Get generateRequest(String imageName, String namespace) {
+
+			String uS = "/api.php?action=query&list=imageusage"
+					+ "&iutitle="
+					+ MediaWiki.encode(imageName)
+					+ ((namespace != null && namespace.length() != 0) ? ("&iunamespace=" + MediaWiki
+							.encode(namespace))
+							: "") + "&iulimit=" + LIMIT + "&format=xml";
+			return new Get(uS);
+
+		}
+
+		@Override
+		public void parseArticleTitles(String s) {
+
+				
+			Pattern p = Pattern.compile(
+				"<iu pageid=\".*?\" ns=\".*?\" title=\"(.*?)\" />");
+				
+			Matcher m = p.matcher(s);
+			
+			while (m.find()) {
+				titleCollection.add(m.group(1));
+			}
+			
+		}
+
+		@Override
+		public void parseHasMore(String s) {
+			
+			Pattern p = Pattern.compile(
+				"<query-continue>.*?"
+				+ "<imageusage *iucontinue=\"([^\"]*)\" */>"
+				+ ".*?</query-continue>",
+				Pattern.DOTALL | Pattern.MULTILINE);
+				
+			Matcher m = p.matcher(s);
+
+			if (m.find()) {			
+				nextPageInfo = m.group(1);
+				hasMoreResults = true;
+			} else {
+				hasMoreResults = false;
+			}
+			
+		}
+		
+	}
+	private class Mw1_09Handler extends VersionHandler {
+
+		@Override
+		public Get generateContinueRequest(String imageName, String namespace,
+				String ilcontinue) {
+
+			String uS = "/api.php?action=query&list=imagelinks"
+					+ "&ilcontinue=" + MediaWiki.encode(ilcontinue)
+					+ "&illimit=" + LIMIT + "&format=xml";
+			return new Get(uS);
+		}
+
+		@Override
+		public Get generateRequest(String imageName, String namespace) {
+
+			String uS = "/api.php?action=query&list=imagelinks"
+				+ "&titles="
+				+ MediaWiki.encode(imageName)
+				+ ((namespace != null && namespace.length() != 0) ? ("&ilnamespace=" + MediaWiki.encode(namespace))
+						: "") + "&illimit=" + LIMIT + "&format=xml";
+			return new Get(uS);
+
+		}
+
+		@Override
+		public void parseArticleTitles(String s) {
+				
+			Pattern p = Pattern.compile(
+				"<il pageid=\".*?\" ns=\".*?\" title=\"(.*?)\" />");
+				
+			Matcher m = p.matcher(s);
+			
+			while (m.find()) {
+				titleCollection.add(m.group(1));
+			}
+			
+		}
+
+		@Override
+		public void parseHasMore(String s) {
+			
+			Pattern p = Pattern.compile(
+				"<query-continue>.*?"
+				+ "<imagelinks *ilcontinue=\"([^\"]*)\" */>"
+				+ ".*?</query-continue>",
+				Pattern.DOTALL | Pattern.MULTILINE);
+				
+			Matcher m = p.matcher(s);
+
+			if (m.find()) {			
+				nextPageInfo = m.group(1);
+				hasMoreResults = true;
+			} else {
+				hasMoreResults = false;
+			}
+			
+		
+			
+		}
+		
+	}
 
 }

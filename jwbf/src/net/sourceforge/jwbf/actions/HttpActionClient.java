@@ -110,17 +110,14 @@ public class HttpActionClient {
 			try {
 
 				HttpAction ha = a.getNextMessage();
-				if (log.isDebugEnabled())
-					log.debug("message is: " +  client.getHostConfiguration().getHostURL() + ha.getRequest());
+				
+				
+				
+				
 				if (ha instanceof Get) {
 					e = new GetMethod(ha.getRequest());
 					if (path.length() > 1) {
-
 						e.setPath(path + e.getPath());
-						if (log.isDebugEnabled()) 
-							log.debug("path is: " + e.getPath());
-						
-
 					}
 
 					// do get
@@ -131,7 +128,8 @@ public class HttpActionClient {
 					if (path.length() > 1) {
 
 						e.setPath(path + e.getPath());
-						log.debug("path is: " + e.getPath());
+						
+//						log.debug("path is: " + e.getPath());
 
 					}
 					Iterator<String> keys = p.getParams().keySet().iterator();
@@ -178,6 +176,7 @@ public class HttpActionClient {
 					// do post
 					out = post(e, a, ha);
 				}
+				
 
 			} catch (IOException e1) {
 				throw new ActionException(e1);
@@ -202,11 +201,12 @@ public class HttpActionClient {
 	 * @throws ProcessException on problems
 	 * @throws CookieException on problems
 	 */
-	protected String post(HttpMethod authpost, ContentProcessable cp, HttpAction ha)
+	private String post(HttpMethod authpost, ContentProcessable cp, HttpAction ha)
 			throws IOException, ProcessException,
 			CookieException {
+		debug(authpost, ha);
 		showCookies(client);
-
+		
 		authpost.getParams().setParameter("http.protocol.content-charset",
 				MediaWiki.getCharset());
 		authpost.getParams().setContentCharset(MediaWiki.getCharset());
@@ -236,11 +236,16 @@ public class HttpActionClient {
 				if ((newuri == null) || (newuri.equals(""))) {
 					newuri = "/";
 				}
-				log.debug("Redirect target: " + newuri);
+				
 				GetMethod redirect = new GetMethod(newuri);
 
 				client.executeMethod(redirect);
-				log.debug("Redirect: " + redirect.getStatusLine().toString());
+				if (!redirect.getStatusLine().toString().contains("200")
+						&& log.isDebugEnabled()) {
+					log.debug("Redirect target: " + newuri);
+					log.debug("Redirect: "
+							+ redirect.getStatusLine().toString());
+				}
 				// release any connection resources used by the method
 				authpost.releaseConnection();
 				authpost = redirect;
@@ -256,8 +261,8 @@ public class HttpActionClient {
 	
 
 		authpost.releaseConnection();
-		log.debug(authpost.getURI() + " || " + "POST: "
-				+ authpost.getStatusLine().toString());
+//		log.debug(authpost.getURI() + " || " + "POST: "
+//				+ authpost.getStatusLine().toString());
 		return out;
 	}
 
@@ -273,9 +278,10 @@ public class HttpActionClient {
 	 * @throws CookieException on problems
 	 * @throws ProcessException on problems
 	 */
-	protected String get(HttpMethod authgets, ContentProcessable cp, HttpAction ha)
+	private String get(HttpMethod authgets, ContentProcessable cp, HttpAction ha)
 			throws IOException, CookieException, ProcessException {
 		showCookies(client);
+		debug(authgets, ha);
 		String out = "";
 		authgets.getParams().setParameter("http.protocol.content-charset",
 				MediaWiki.getCharset());
@@ -283,8 +289,9 @@ public class HttpActionClient {
 		
 		client.executeMethod(authgets);
 		cp.validateReturningCookies(client.getState().getCookies(), ha);
-		log.debug(authgets.getURI());
-		log.debug("GET: " + authgets.getStatusLine().toString());
+//		log.debug(authgets.getURI());
+		if (!authgets.getStatusLine().toString().contains("200") && log.isDebugEnabled()) 
+			log.debug("GET: " + authgets.getStatusLine().toString());
 
 		out = authgets.getResponseBodyAsString();
 		
@@ -345,15 +352,35 @@ public class HttpActionClient {
 	 * 
 	 * @param client
 	 *            a
+	 *            @deprecated is a bit too chatty
 	 */
-	protected void showCookies(HttpClient client) {
+	private void showCookies(HttpClient client) {
 		Cookie[] cookies = client.getState().getCookies();
 		if (cookies.length > 0) {
+			String cStr = "";
 			for (int i = 0; i < cookies.length; i++) {
-				log.trace("cookie: " + cookies[i].toString());
+				cStr += cookies[i].toString() + ", ";
 			}
+			log.trace("cookie: {" + cStr + "}");
 		}
 	}
 
+	
+	private void debug(HttpMethod e, HttpAction ha) {
+		if (log.isDebugEnabled()) {
+			String epath = e.getPath();
+			int sl = epath.lastIndexOf("/");
+			epath = epath.substring(0, sl);
+			String type = "";
+			if (ha instanceof Post) {
+				type = "(POST)";
+			} if (ha instanceof Get) {
+				type = "(GET)";
+			}
+			log.debug("message " + type + " is: " 
+					+  client.getHostConfiguration().getHostURL() 
+					+ epath +  ha.getRequest());
+		}
+	}
 }
 

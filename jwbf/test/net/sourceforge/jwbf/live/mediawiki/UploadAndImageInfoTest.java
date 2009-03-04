@@ -160,6 +160,7 @@ public class UploadAndImageInfoTest extends LiveTestFather {
 	 * Test category read. Test category must have more then 50 members.
 	 * @throws Exception a
 	 */
+	@Test
 	public final void uploadMW1_14() throws Exception {
 		
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_14_url"));

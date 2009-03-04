@@ -5,7 +5,7 @@ import static org.junit.Assert.fail;
 import net.sourceforge.jwbf.LiveTestFather;
 import net.sourceforge.jwbf.actions.mediawiki.MediaWiki;
 import net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version;
-import net.sourceforge.jwbf.actions.mediawiki.queries.ImagelinkTitles;
+import net.sourceforge.jwbf.actions.mediawiki.queries.ImageUsageTitles;
 import net.sourceforge.jwbf.bots.MediaWikiAdapterBot;
 import net.sourceforge.jwbf.bots.MediaWikiBot;
 import net.sourceforge.jwbf.contentRep.Article;
@@ -14,7 +14,7 @@ import org.apache.log4j.PropertyConfigurator;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-public class ImagelinkTitlesTest extends LiveTestFather {
+public class ImageUsageTitlesTest extends LiveTestFather {
 
 
 	private MediaWikiBot bot = null;
@@ -110,7 +110,7 @@ public class ImagelinkTitlesTest extends LiveTestFather {
 		
 	}
 	private void test(MediaWikiBot bot2) throws Exception {
-		ImagelinkTitles il = new ImagelinkTitles(bot, "Image:" +getValue("filename"), MediaWiki.NS_ALL);
+		ImageUsageTitles il = new ImageUsageTitles(bot, "Image:" +getValue("filename"), MediaWiki.NS_ALL);
 		boolean notFound = true;
 		int x = 0;
 		for (String string : il) {
