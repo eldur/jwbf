@@ -5,6 +5,7 @@ import java.io.StringReader;
 
 import net.sourceforge.jwbf.actions.Post;
 import net.sourceforge.jwbf.actions.mediawiki.MediaWiki;
+import net.sourceforge.jwbf.actions.mediawiki.util.MWAction;
 import net.sourceforge.jwbf.actions.mediawiki.util.VersionException;
 import net.sourceforge.jwbf.actions.util.ActionException;
 import net.sourceforge.jwbf.actions.util.HttpAction;
@@ -47,12 +48,14 @@ import org.xml.sax.InputSource;
  * @supportedBy MediaWikiAPI 1.12
  * @supportedBy MediaWikiAPI 1.13
  */
-public class PostDelete extends GetApiToken {
+public class PostDelete extends MWAction {
 	private static final Logger log = Logger.getLogger(PostDelete.class);
 	
 
 	private final String title;
-	private HttpAction msg;
+
+	private final GetApiToken token;
+	private boolean delToken = true;
 	
 	/**
 	 * Constructs a new <code>PostDelete</code> action.
@@ -62,7 +65,7 @@ public class PostDelete extends GetApiToken {
 	 * @throws ProcessException on inner problems like a version mismatch
 	 */
 	public PostDelete(String title, Siteinfo si, Userinfo ui) throws ProcessException {
-		super(Intoken.DELETE, title, si, ui);
+		token = new GetApiToken(GetApiToken.Intoken.DELETE, title, si, ui);
 		this.title = title;
 		if (title == null || title.length() == 0) {
 			throw new IllegalArgumentException("The argument 'title' must not be \"" + String.valueOf(title) + "\"");
@@ -81,7 +84,7 @@ public class PostDelete extends GetApiToken {
 	}
 	
 	public PostDelete(MediaWikiBot bot, String title) throws ProcessException, ActionException {
-		super(Intoken.DELETE, title, bot.getSiteinfo(), bot.getUserinfo());
+		token = new GetApiToken(GetApiToken.Intoken.DELETE, title, bot.getSiteinfo(), bot.getUserinfo());
 		this.title = title;
 		if (title == null || title.length() == 0) {
 			throw new IllegalArgumentException("The argument 'title' must not be \"" + String.valueOf(title) + "\"");
@@ -102,12 +105,12 @@ public class PostDelete extends GetApiToken {
 	/**
 	 * @return the delete action
 	 */
-	protected HttpAction getSecondRequest() {
+	private HttpAction getSecondRequest() {
 		HttpAction msg = null;
-		if (getToken() == null || getToken().length() == 0) {
+		if (token.getToken() == null || token.getToken().length() == 0) {
 			throw new IllegalArgumentException(
 					"The argument 'token' must not be \""
-							+ String.valueOf(getToken()) + "\"");
+							+ String.valueOf(token.getToken()) + "\"");
 		}
 		if (log.isTraceEnabled()) {
 			log.trace("enter PostDelete.generateDeleteRequest(String)");
@@ -115,18 +118,18 @@ public class PostDelete extends GetApiToken {
 
 		String uS = "/api.php" + "?action=delete" + "&title="
 				+ MediaWiki.encode(title) + "&token="
-				+ MediaWiki.encode(getToken()) + "&format=xml";
+				+ MediaWiki.encode(token.getToken()) + "&format=xml";
 		if (log.isDebugEnabled()) {
 			log.debug("delete url: \"" + uS + "\"");
 		}
-		Post pm = new Post(uS);
-		msg = pm;
+		msg = new Post(uS);
 
-		this.msg = msg;
+		
 		return msg;
 	}
 
-	
+
+
 	/**
 	 * Deals with the MediaWiki API's response by parsing the provided text.
 	 * @param s the answer to the most recently generated MediaWiki API request
@@ -138,8 +141,11 @@ public class PostDelete extends GetApiToken {
 			throws ProcessException {
 		super.processReturningText(s, hm);
 		
-		
-		if (msg != null && hm.getClass().equals(msg.getRequest())) {
+		if (delToken) {
+			token.processReturningText(s, hm);
+			delToken = false;
+		} else {
+			
 			if (log.isTraceEnabled()) {
 				log.trace("enter PostDelete.processAllReturningText(String)");
 			}
@@ -165,6 +171,7 @@ public class PostDelete extends GetApiToken {
 			} catch (IOException e) {
 				log.error(e.getMessage(), e);
 			}
+			setHasMoreMessages(false);
 		}
 		
 		return "";
@@ -206,5 +213,13 @@ public class PostDelete extends GetApiToken {
 		} else {
 			log.error("Unknow reply. This is not a reply for a delete action.");
 		}
+	}
+	
+	public HttpAction getNextMessage() {
+		if (token.hasMoreMessages()) {
+			setHasMoreMessages(true);
+			return token.getNextMessage();
+		}
+		return getSecondRequest();
 	}
 }

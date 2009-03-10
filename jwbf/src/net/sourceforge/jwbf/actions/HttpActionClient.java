@@ -105,12 +105,12 @@ public class HttpActionClient {
 
 		String out = "";
 		while (a.hasMoreMessages()) {
-
+			
 			HttpMethod e = null;
 			try {
 
 				HttpAction ha = a.getNextMessage();
-				
+				log.debug("more  " + ha.getRequest()); // TODO RM
 				
 				
 				

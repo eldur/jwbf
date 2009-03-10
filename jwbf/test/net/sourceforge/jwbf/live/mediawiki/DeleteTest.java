@@ -50,7 +50,10 @@ public class DeleteTest extends LiveTestFather {
 	
 		for (int i = 0; i < COUNT; i++) {
 			ContentAccessable ca = bot.readContent("Delete " + i);
-			Assert.assertTrue("textlength of Delete " + i + " is not 0", ca.getText().length() == 0);
+			
+			Assert.assertTrue("textlength of Delete " 
+					+ i + " is greater then 0 (" + ca.getText().length() 
+					+ ")", ca.getText().length() == 0);
 		}
 	}
 	
@@ -60,7 +63,7 @@ public class DeleteTest extends LiveTestFather {
 	 * @throws Exception a
 	 */
 	@Test(expected=VersionException.class)
-	public final void deleteWikiMW1_09() throws Exception {
+	public final void deleteWikiMW1_09Fail() throws Exception {
 		
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_09_url"));
 		bot.login(getValue("wikiMW1_09_user"), getValue("wikiMW1_09_pass"));
@@ -76,7 +79,7 @@ public class DeleteTest extends LiveTestFather {
 	 * @throws Exception a
 	 */
 	@Test(expected=VersionException.class)
-	public final void deleteWikiMW1_10() throws Exception {
+	public final void deleteWikiMW1_10Fail() throws Exception {
 		
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_10_url"));
 		bot.login(getValue("wikiMW1_10_user"), getValue("wikiMW1_10_pass"));
@@ -93,7 +96,7 @@ public class DeleteTest extends LiveTestFather {
 	 * @throws Exception a
 	 */
 	@Test(expected=VersionException.class)
-	public final void deleteWikiMW1_11() throws Exception {
+	public final void deleteWikiMW1_11Fail() throws Exception {
 		
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_11_url"));
 		bot.login(getValue("wikiMW1_11_user"), getValue("wikiMW1_11_pass"));

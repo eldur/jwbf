@@ -43,7 +43,7 @@ public class UserinfoTest extends LiveTestFather {
 	 * @throws Exception a
 	 */
 	@Test(expected=VersionException.class)
-	public final void userInfoWikiMW1_09() throws Exception {
+	public final void userInfoWikiMW1_09Fail() throws Exception {
 		
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_09_url"));
 		bot.login(getValue("wikiMW1_09_user"), getValue("wikiMW1_09_pass"));
@@ -55,7 +55,7 @@ public class UserinfoTest extends LiveTestFather {
 	 * @throws Exception a
 	 */
 	@Test(expected=VersionException.class)
-	public final void userInfoWikiMW1_10() throws Exception {
+	public final void userInfoWikiMW1_10Fail() throws Exception {
 		
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_10_url"));
 		bot.login(getValue("wikiMW1_10_user"), getValue("wikiMW1_10_pass"));

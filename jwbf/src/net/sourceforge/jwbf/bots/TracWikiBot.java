@@ -4,6 +4,10 @@
 package net.sourceforge.jwbf.bots;
 
 
+import static net.sourceforge.jwbf.contentRep.SimpleArticle.COMMENT;
+import static net.sourceforge.jwbf.contentRep.SimpleArticle.CONTENT;
+import static net.sourceforge.jwbf.contentRep.SimpleArticle.USER;
+
 import java.net.MalformedURLException;
 
 import net.sourceforge.jwbf.actions.trac.GetRevision;
@@ -11,6 +15,7 @@ import net.sourceforge.jwbf.actions.util.ActionException;
 import net.sourceforge.jwbf.actions.util.ProcessException;
 import net.sourceforge.jwbf.contentRep.Article;
 import net.sourceforge.jwbf.contentRep.ContentAccessable;
+import net.sourceforge.jwbf.contentRep.SimpleArticle;
 
 /**
 /**
@@ -50,9 +55,9 @@ public class TracWikiBot extends HttpBot implements WikiBot {
 	 */
 	public synchronized Article readContent(final String name)
 			throws ActionException, ProcessException {
-		GetRevision ac = new GetRevision(name);
-		performAction(ac);
-		return new Article(this, ac.getArticle());
+		return readContent(name, CONTENT
+				| COMMENT | USER );
+		
 
 	}
 
@@ -74,6 +79,21 @@ public class TracWikiBot extends HttpBot implements WikiBot {
 			ProcessException {
 		throw new ActionException("Deleting is not supported");
 		
+	}
+
+
+	public Article readContent(String label, int properties)
+			throws ActionException, ProcessException {
+		GetRevision ac = new GetRevision(label);
+		performAction(ac);
+		return new Article(this, ac.getArticle());
+	}
+
+
+	public SimpleArticle readData(String name, int properties)
+			throws ActionException, ProcessException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

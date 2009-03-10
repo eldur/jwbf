@@ -1,3 +1,10 @@
+-------------------------------------------------------------------------------
+JWBF svn:189                                                           Mar 2009
+  * write over api MW 1.13
+  * add ZimExample
+  * some fixes related to the Article class
+  * experiments with article cache
+-------------------------------------------------------------------------------
 JWBF svn:188                                                           Feb 2009
   * change action class names
   * fix categroy iteration

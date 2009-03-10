@@ -39,6 +39,13 @@ public class SimpleArticle implements ArticleMeta {
 	private String editor = "";
 	private boolean minorEdit = false;
 	private Date editTimestamp = new Date();
+	
+	public static final int CONTENT = 1 << 1;
+	public static final int TIMESTAMP = 1 << 2;
+	public static final int USER = 1 << 3;
+	public static final int COMMENT = 1 << 4;
+	public static final int FIRST = 1 << 5;
+	public static final int LAST = 1 << 6;
 
 	/**
 	 * 

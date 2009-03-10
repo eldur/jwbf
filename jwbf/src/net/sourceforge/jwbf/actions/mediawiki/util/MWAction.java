@@ -31,18 +31,14 @@ import org.apache.commons.httpclient.Cookie;
  */
 public abstract class MWAction implements ContentProcessable {
 
-	
-
-
-
-	
-
-
+//	private Logger log = Logger.getLogger(getClass());
 	private boolean hasMore = true;
 	
 	public boolean hasMoreMessages() {
 		final boolean b = hasMore;
 		hasMore = false;
+//		if(log.isDebugEnabled())
+//		log.debug("hasmore = "+ b);
 		return b;
 	}
 	

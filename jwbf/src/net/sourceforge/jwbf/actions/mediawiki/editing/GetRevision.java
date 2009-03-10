@@ -18,6 +18,12 @@
  */
 package net.sourceforge.jwbf.actions.mediawiki.editing;
 
+import static net.sourceforge.jwbf.contentRep.SimpleArticle.COMMENT;
+import static net.sourceforge.jwbf.contentRep.SimpleArticle.CONTENT;
+import static net.sourceforge.jwbf.contentRep.SimpleArticle.FIRST;
+import static net.sourceforge.jwbf.contentRep.SimpleArticle.TIMESTAMP;
+import static net.sourceforge.jwbf.contentRep.SimpleArticle.USER;
+
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
@@ -57,18 +63,15 @@ import org.xml.sax.InputSource;
 public class GetRevision extends MWAction {
 
 	private final SimpleArticle sa;
-	public static final int CONTENT = 1 << 1;
-	public static final int TIMESTAMP = 1 << 2;
-	public static final int USER = 1 << 3;
-	public static final int COMMENT = 1 << 4;
-	public static final int FIRST = 1 << 5;
-	public static final int LAST = 1 << 6;
+
 
 	private final Logger log = Logger.getLogger(getClass());
 
 	private final int property;
 	
 	private final Get msg;
+	
+	private boolean q = true;
 
 	/**
 	 * TODO follow redirects.
@@ -79,7 +82,7 @@ public class GetRevision extends MWAction {
 		
 //		if (!bot.getUserinfo().getRights().contains("read")) {
 //			throw new ActionException("reading is not permited, make sure that this account is able to read");
-//		}
+//		} FIXME check if 
 		
 		this.property = property;
 		sa = new SimpleArticle();
@@ -89,8 +92,6 @@ public class GetRevision extends MWAction {
 				+ getDataProperties(property) + getReversion(property)
 				+ "&rvlimit=1" + "&format=xml";
 		msg = new Get(uS);
-		if (log.isDebugEnabled())
-			log.debug(uS);
 
 	}
 
@@ -100,10 +101,14 @@ public class GetRevision extends MWAction {
 	 * @return empty string
 	 * 
 	 */
-	public String processAllReturningText(final String s)
+	public String processReturningText(final String s, HttpAction ha)
 			throws ProcessException {
-
-		parse(s);
+		if (msg.getRequest().equals(ha.getRequest()) && q) {
+			log.debug(s);
+			parse(s);
+			q = false; // FIXME RM q
+			
+		}
 		return "";
 	}
 
@@ -165,14 +170,19 @@ public class GetRevision extends MWAction {
 
 	@SuppressWarnings("unchecked")
 	private void findContent(final Element root) throws ApiException {
-
+//		if(log.isDebugEnabled())
+//			log.debug("try to find content in " + root.getQualifiedName());
 		Iterator<Element> el = root.getChildren().iterator();
 		while (el.hasNext()) {
 			Element element = el.next();
 			if (element.getQualifiedName().equalsIgnoreCase("error")) {
 				throw new ApiException(element.getAttributeValue("code"),
 						element.getAttributeValue("info"));
-			} else if (element.getQualifiedName().equalsIgnoreCase("rev")) {
+			} 
+//			else if (element.getQualifiedName().equalsIgnoreCase("page") ) {
+//				
+//			} 
+			else if (element.getQualifiedName().equalsIgnoreCase("rev")) {
 
 				try {
 					sa.setText(element.getText());

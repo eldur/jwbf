@@ -31,7 +31,7 @@ import org.xml.sax.InputSource;
  * @supportedBy MediaWikiAPI 1.12
  * @supportedBy MediaWikiAPI 1.13
  */
-abstract class GetApiToken extends MWAction {
+final class GetApiToken extends MWAction {
 	/** Types that need a token. See API field intoken. */
 	// TODO this does not feel the elegant way.
 	// Probably put complete request URIs into this enum objects
@@ -41,7 +41,8 @@ abstract class GetApiToken extends MWAction {
 	private Logger log = Logger.getLogger(GetApiToken.class);
 
 	private boolean first = true;
-	private boolean second = true;
+
+	private Intoken intoken = null;
 	
 	private Get msg;
 	/**
@@ -52,13 +53,14 @@ abstract class GetApiToken extends MWAction {
 	 * @param ui user info object
 	 * @throws VersionException if this action is not supported of the MediaWiki version connected to
 	 */
-	protected GetApiToken(Intoken intoken, String title, Siteinfo si, Userinfo ui) throws VersionException {
+	GetApiToken(Intoken intoken, String title, Siteinfo si, Userinfo ui) throws VersionException {
 		switch (si.getVersion()) {
 		case MW1_09:
 		case MW1_10:
 		case MW1_11:
 			throw new VersionException("Not supportet by this version of MediaWiki");
 		default:
+			this.intoken = intoken;
 			generateTokenRequest(intoken, title);
 			break;
 		}
@@ -133,18 +135,15 @@ abstract class GetApiToken extends MWAction {
 				log.trace("enter getApiToken");
 			}
 			return msg;	
-		} else {
-			second = false;
-			
-			return getSecondRequest();
-		}
+		} 
+		return null;
 		
 	}
 	@Override
 	public boolean hasMoreMessages() {
-		return first || second;
+		return first;
 	}
-	abstract protected HttpAction getSecondRequest();
+	
 	/**
 	 * Processing the XML {@link Document} returned from the MediaWiki API.
 	 * @param doc XML <code>Document</code>
@@ -159,7 +158,18 @@ abstract class GetApiToken extends MWAction {
 		}
 		if (elem != null) {
 			// process reply for token request
-			token = elem.getAttributeValue("deletetoken");
+			switch (intoken) {
+			case DELETE:
+				token = elem.getAttributeValue("deletetoken");
+				break;
+			case EDIT:
+				token = elem.getAttributeValue("edittoken");
+				break;
+			default:
+				token = null;
+					break;
+			}
+			
 			
 		} else {
 			log.error("Unknow reply. This is not a token.");

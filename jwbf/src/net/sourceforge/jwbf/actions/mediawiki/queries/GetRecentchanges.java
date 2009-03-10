@@ -217,7 +217,7 @@ public class GetRecentchanges extends MWAction implements Iterable<String>, Iter
 		return msg;
 	}
 	
-	private synchronized void prepareCollection() {
+	private void prepareCollection() {
 
 		if (init || (!titleIterator.hasNext() && timestamp.length() > 0)) {
 			

@@ -1,15 +1,15 @@
 package net.sourceforge.jwbf.bots;
 
+import static net.sourceforge.jwbf.contentRep.SimpleArticle.COMMENT;
+import static net.sourceforge.jwbf.contentRep.SimpleArticle.CONTENT;
+import static net.sourceforge.jwbf.contentRep.SimpleArticle.USER;
+
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 
 import net.sourceforge.jwbf.actions.ContentProcessable;
-import net.sourceforge.jwbf.actions.mediawiki.MultiAction;
 import net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version;
 import net.sourceforge.jwbf.actions.mediawiki.editing.GetRevision;
 import net.sourceforge.jwbf.actions.mediawiki.editing.PostDelete;
@@ -21,9 +21,11 @@ import net.sourceforge.jwbf.actions.mediawiki.meta.GetUserinfo;
 import net.sourceforge.jwbf.actions.mediawiki.meta.GetVersion;
 import net.sourceforge.jwbf.actions.util.ActionException;
 import net.sourceforge.jwbf.actions.util.ProcessException;
+import net.sourceforge.jwbf.bots.util.CacheHandler;
 import net.sourceforge.jwbf.bots.util.LoginData;
 import net.sourceforge.jwbf.contentRep.Article;
 import net.sourceforge.jwbf.contentRep.ContentAccessable;
+import net.sourceforge.jwbf.contentRep.SimpleArticle;
 import net.sourceforge.jwbf.contentRep.mediawiki.Siteinfo;
 import net.sourceforge.jwbf.contentRep.mediawiki.Userinfo;
 
@@ -58,6 +60,7 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
 	private static Logger log = Logger.getLogger(MediaWikiBot.class);
 	private LoginData login = null;
 
+	private CacheHandler store = null;
 
 	private Version version = null;
 	private Userinfo ui = null;
@@ -199,11 +202,27 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
 	 */
 	public synchronized Article readContent(final String name, final int properties)
 			throws ActionException, ProcessException {
+		if (store != null && store.containsKey(name)) {
+			return new Article(this, store.get(name));
+		} else {
+			return new Article(this, readData(name, properties));
+		}
+	}
 	
+	public synchronized SimpleArticle readData(final String name, final int properties)
+			throws ActionException, ProcessException {
+
 			GetRevision ac = new GetRevision(name, properties, this);
 
 			performAction(ac);
-			return new Article(this, ac.getArticle());
+			if (store != null)
+				store.put(ac.getArticle());
+			return ac.getArticle();
+		
+	}
+	
+	public void setCacheHandler(CacheHandler ch) {
+		
 	}
 
 	/**
@@ -218,8 +237,8 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
 	 */
 	public synchronized Article readContent(final String name)
 			throws ActionException, ProcessException {
-		return readContent(name, GetRevision.CONTENT
-				| GetRevision.COMMENT | GetRevision.USER);
+		return readContent(name, CONTENT
+				| COMMENT | USER);
 
 	}
 	
@@ -237,9 +256,11 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
 		if (!isLoggedIn()) {
 			throw new ActionException("Please login first");
 		}
-		if (a.getText().length() < 1) 
+		if (a.getText().trim().length() < 1 ) 
 			throw new RuntimeException("Content is empty");
-		performAction(new PostModifyContent(a));
+		performAction(new PostModifyContent(this, a));
+		
+		
 	}
 	
 	/**
@@ -269,152 +290,7 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
 		}
 		return ui;
 	}
-	/**
-	 * @deprecated use {@link #performAction(ContentProcessable)}
-	 * generates an iterable with the results from a series of MultiAction when
-	 * given the first of the actions. The result type can vary to match the
-	 * result type of the MultiActions.
-	 *
-	 *
-	 * @param initialAction
-	 *            first action to perform, provides a next action.
-	 * @param <R>
-	 *            type like String
-	 * @return iterable providing access to the result values from the responses
-	 *         to the initial and subsequent actions. Attention: when the values
-	 *         from the subsequent actions are accessed for the first time, the
-	 *         connection to the MediaWiki must still exist, /*++ unless ...
-	 *
-	 * @throws ActionException
-	 *             on problems with http, cookies and io
-	 */
-	@SuppressWarnings("unchecked")
-	public final <R> Iterable<R> performMultiAction(MultiAction<R> initialAction)
-			throws ActionException {
-
-		/**
-		 * Iterable-class which will store all results which are already known
-		 * and perform the next action when more titles are needed
-		 */
-		@SuppressWarnings("hiding")
-		class MultiActionResultIterable<R> implements Iterable<R> {
-
-			private MultiAction<R> nextAction = null;
-
-			private List<R> knownResults = new ArrayList<R>();
-
-			/**
-			 * constructor.
-			 *
-			 * @param initialAction
-			 *            the
-			 */
-			public MultiActionResultIterable(MultiAction<R> initialAction) {
-				this.nextAction = initialAction;
-			}
-
-			/**
-			 * request more results if local interation seems to be empty.
-			 */
-			private void loadMoreResults() {
-
-				if (nextAction != null) {
-
-					try {
-
-						performAction(nextAction.getContentProcessable());
-						
-						Iterable<R> itr = nextAction.getResults();
-						for (R r : itr) {
-							knownResults.add(r);
-						}
-
-						nextAction = nextAction.getNextAction();
-
-					} catch (ActionException ae) {
-						ae.printStackTrace();
-						nextAction = null;
-					} catch (ProcessException e) {
-						e.printStackTrace();
-						nextAction = null;
-					}
-
-				} else {
-					log.debug("no next action");
-				}
-
-			}
-
-			/**
-			 * @return a
-			 */
-			public Iterator<R> iterator() {
-				return new MultiActionResultIterator<R>(this);
-			}
-
-			/**
-			 * matching Iterator, containing an index variable and a reference
-			 * to a MultiActionResultIterable
-			 */
-			class MultiActionResultIterator<R> implements Iterator<R> {
-
-				private int index = 0;
-
-				private MultiActionResultIterable<R> generatingIterable;
-
-				/**
-				 * constructor, relies on generatingIterable != null
-				 *
-				 * @param generatingIterable
-				 *            a
-				 */
-				MultiActionResultIterator(
-						MultiActionResultIterable<R> generatingIterable) {
-					this.generatingIterable = generatingIterable;
-				}
-
-				/**
-				 * if a new query is needed to request more; more results are
-				 * requested.
-				 *
-				 * @return true if has next
-				 */
-				public boolean hasNext() {
-					while (index >= generatingIterable.knownResults.size()
-							&& generatingIterable.nextAction != null) {
-						generatingIterable.loadMoreResults();
-					}
-					return index < generatingIterable.knownResults.size();
-				}
-
-				/**
-				 * if a new query is needed to request more; more results are
-				 * requested.
-				 *
-				 * @return a element of iteration
-				 */
-				public R next() {
-					while (index >= generatingIterable.knownResults.size()
-							&& generatingIterable.nextAction != null) {
-						generatingIterable.loadMoreResults();
-					}
-					return generatingIterable.knownResults.get(index++);
-				}
-
-				/**
-				 * is not supported
-				 */
-				public void remove() {
-					throw new UnsupportedOperationException();
-				}
-
-			}
-
-		}
-
-		return new MultiActionResultIterable(initialAction);
-
-	}
+	
 	
 	/**
 	 * @see PostDelete
@@ -426,10 +302,6 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
 	@Override
 	public synchronized String performAction(ContentProcessable a)
 			throws ActionException, ProcessException {
-		if (a instanceof MultiAction<?>) {
-			throw new ActionException("This Actions implements the MultiAction interface," +
-					" please preform it as a multiAction.");
-		}
 		return super.performAction(a);
 	}
 
@@ -477,5 +349,7 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
 		return gs.getSiteinfo();
 
 	}
+
+
 
 }

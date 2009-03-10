@@ -93,13 +93,21 @@ public class GetRevisionTest extends LiveTestFather {
 	
 	
 	private final void doTest(MediaWikiBot bot) throws Exception {
+		
 		String label = getValue("wikiMW1_12_user");
 		SimpleArticle sa;
+		// test with content length > 0
 		String testText = getRandom(255);
 		sa = new SimpleArticle(testText, label);
 		bot.writeContent(sa);
-		
+//		
 		String text = bot.readContent(label).getText();
+		assertEquals(testText, text);	
+		
+		// test with content length <= 0
+		testText = "";
+		label = "767676885340589358058903589035";
+		text = bot.readContent(label).getText();
 		assertEquals(testText, text);	
 		
 	}
