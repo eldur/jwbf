@@ -27,7 +27,7 @@ public class GetRevisionTest extends LiveTestFather {
 	}
 
 	/**
-	 * Test write and read
+	 * Test
 	 * 
 	 * @throws Exception
 	 *             a
@@ -35,6 +35,19 @@ public class GetRevisionTest extends LiveTestFather {
 	@Test
 	public final void getRevisionTrac() throws Exception {
 		bot = new TracWikiBot(getValue("trac_0_10_5_url"));
+
+		doTest(bot);
+	}
+	
+	/**
+	 * Test
+	 * 
+	 * @throws Exception
+	 *             a
+	 */
+	@Test
+	public final void getRevisionTrac0_11_1() throws Exception {
+		bot = new TracWikiBot(getValue("trac_0_11_2_1_url"));
 
 		doTest(bot);
 	}
