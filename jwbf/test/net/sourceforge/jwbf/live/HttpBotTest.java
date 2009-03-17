@@ -1,6 +1,9 @@
 package net.sourceforge.jwbf.live;
 
 import static org.junit.Assert.assertTrue;
+
+import java.net.URL;
+
 import net.sourceforge.jwbf.LiveTestFather;
 import net.sourceforge.jwbf.bots.HttpBot;
 
@@ -37,8 +40,8 @@ public class HttpBotTest extends LiveTestFather {
 	 */
 	@Test
 	public final void findContent() throws Exception {
-
-		String s = bot.getPage("http://localhost/");
+		URL u = new URL(getValue("wikiMW1_13_url"));
+		String s = bot.getPage(u.getProtocol() + "://" + u.getHost());
 		assertTrue("content shuld be longer then one", s.length() > 1);
 	}
 	

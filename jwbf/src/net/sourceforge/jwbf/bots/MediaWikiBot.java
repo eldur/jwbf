@@ -19,6 +19,7 @@ import net.sourceforge.jwbf.actions.mediawiki.login.PostLoginOld;
 import net.sourceforge.jwbf.actions.mediawiki.meta.GetSiteinfo;
 import net.sourceforge.jwbf.actions.mediawiki.meta.GetUserinfo;
 import net.sourceforge.jwbf.actions.mediawiki.meta.GetVersion;
+import net.sourceforge.jwbf.actions.mediawiki.util.VersionException;
 import net.sourceforge.jwbf.actions.util.ActionException;
 import net.sourceforge.jwbf.actions.util.ProcessException;
 import net.sourceforge.jwbf.bots.util.CacheHandler;
@@ -26,8 +27,8 @@ import net.sourceforge.jwbf.bots.util.LoginData;
 import net.sourceforge.jwbf.contentRep.Article;
 import net.sourceforge.jwbf.contentRep.ContentAccessable;
 import net.sourceforge.jwbf.contentRep.SimpleArticle;
+import net.sourceforge.jwbf.contentRep.Userinfo;
 import net.sourceforge.jwbf.contentRep.mediawiki.Siteinfo;
-import net.sourceforge.jwbf.contentRep.mediawiki.Userinfo;
 
 import org.apache.log4j.Logger;
 
@@ -113,23 +114,24 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
 		setConnection(url);
 	}
 
+
 	/**
-	 * Performs a old Login via cookie.
-	 *  Special for LDAPAuth extention to authenticate against LDAP users
+	 * Performs a Login. 
+	 *
 	 * @param username
 	 *            the username
 	 * @param passwd
 	 *            the password
 	 * @param domain
-	 *            the password
+	 *            login domain (Special for LDAPAuth extention to authenticate against LDAP users)
 	 * @throws ActionException
 	 *             on problems with http, cookies and io
-	 * @supportedBy MediaWiki 1.9.x
+	 * @see PostLogin
+	 * @see PostLoginOld
 	 */
-	 private void httpLogin(final String username, final String passwd, final String domain)
+	public void login(final String username, final String passwd, final String domain)
 			throws ActionException {
 		try {
-			
 			LoginData login = new LoginData();
 			switch (getVersion()) {
 			case MW1_09:
@@ -144,32 +146,12 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
 				break;
 			}
 
-			
 			this.login = login;
 
 		} catch (ProcessException e) {
 			throw new ActionException(e.getLocalizedMessage());
 		}
-		
-	}
-	/**
-	 * Performs a Login. Actual old cookie login works right, because is pending
-	 * on {@link #writeContent(ContentAccessable)}
-	 *
-	 * @param username
-	 *            the username
-	 * @param passwd
-	 *            the password
-	 * @param domain
-	 *            login domain
-	 * @throws ActionException
-	 *             on problems with http, cookies and io
-	 * @see PostLogin
-	 * @see PostLoginOld
-	 */
-	public void login(final String username, final String passwd, final String domain)
-			throws ActionException {
-		httpLogin(username, passwd, domain);
+	
 	}
 	/**
 	 * Performs a Login. Actual old cookie login works right, because is pending
@@ -187,7 +169,7 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
 	public void login(final String username, final String passwd)
 			throws ActionException {
 
-		httpLogin(username, passwd, null);
+		login(username, passwd, null);
 	}
 	/**
 	 *
@@ -284,9 +266,21 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
 	 */
 	public Userinfo getUserinfo() throws ActionException, ProcessException {
 		if (ui == null) {
-			GetUserinfo a = new GetUserinfo(getVersion());
-			performAction(a);
-			ui = a.getUserinfo();
+			GetUserinfo a;
+			try {
+				a = new GetUserinfo(getVersion());
+				performAction(a);
+				ui = a.getUserinfo();
+			} catch (VersionException e) {
+				e.printStackTrace();
+				if (login != null && login.getUserName().length() > 0) {
+					ui = new Userinfo(login.getUserName());
+				} else {
+					ui = new Userinfo("unknown");
+				}
+			}
+			
+			
 		}
 		return ui;
 	}

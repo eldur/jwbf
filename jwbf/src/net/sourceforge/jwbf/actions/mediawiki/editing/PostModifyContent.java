@@ -173,9 +173,10 @@ public class PostModifyContent extends MWAction {
 		} else if (apiGet != null && hm.getRequest().equals(apiGet.getRequest())) {
 			log.debug("parseapi"); //TODO RM
 			apiReq.processReturningText(s, hm);
-		} else {
-			log.debug(s); //TODO RM
-		}
+		} 
+//		else {
+//			log.debug(s); //TODO RM
+//		}
 		
 		return s;
 	}

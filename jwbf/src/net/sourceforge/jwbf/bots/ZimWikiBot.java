@@ -28,6 +28,7 @@ import net.sourceforge.jwbf.actions.util.ProcessException;
 import net.sourceforge.jwbf.contentRep.Article;
 import net.sourceforge.jwbf.contentRep.ContentAccessable;
 import net.sourceforge.jwbf.contentRep.SimpleArticle;
+import net.sourceforge.jwbf.contentRep.Userinfo;
 /**
  * 
  * @author Martin Koch
@@ -41,16 +42,19 @@ public class ZimWikiBot implements WikiBot {
 	/**
 	 * Constructor for a ZIM wiki-bot.
 	 * @param zimRootFolder this is the folder on your local machine
-	 * @param mwRootFolder folder of your remote wiki system
 	 * 
 	 */
 
 	public ZimWikiBot(String zimRootFolder) {
 		// specify the path to all zim files
-		rootFolder = new File(zimRootFolder);
-//		mwFolder =  mwRootFolder;
+		this( new File(zimRootFolder));
 	}
 
+	
+	public ZimWikiBot(File rootFolder) {
+		// specify the path to all zim files
+		this.rootFolder = rootFolder;
+	}
 	public void login(String user, String passwd) throws ActionException {
 		throw new ActionException(
 				"login is not supported because this is a desktopwiki");
@@ -133,6 +137,10 @@ public class ZimWikiBot implements WikiBot {
 
 	public File getRootFolder() {
 		return rootFolder;
+	}
+
+	public Userinfo getUserinfo() throws ActionException, ProcessException {
+		return new Userinfo(System.getProperty("user.name"));
 	}
 	
 //	public String getMWFolder() {

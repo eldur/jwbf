@@ -28,21 +28,21 @@ package net.sourceforge.jwbf.bots.util;
 public class LoginData {
 	
 	private int userid;
-	private String botName;
+	private String userName;
 	private String loginToken;
 	
 	private boolean isLoggedIn;
 	
 	public LoginData() {
 		this.userid = -1;
-		this.botName = "";
+		this.userName = "";
 		this.loginToken = "";
 		this.isLoggedIn = false;
 	}
 	
-	public void setup(int userid, String botName, String loginToken, boolean isLoggedIn) {
+	public void setup(int userid, String userName, String loginToken, boolean isLoggedIn) {
 		this.userid = userid;
-		this.botName = botName;
+		this.userName = userName;
 		this.loginToken = loginToken;
 		this.isLoggedIn = isLoggedIn;
 	}
@@ -51,8 +51,12 @@ public class LoginData {
 		return isLoggedIn;
 	}
 	
+	public String getUserName() {
+		return userName;
+	}
+
 	public String get() {
-		return "& lgtoken=123ABC & lgusername="+ botName + " & lguserid=23456";
+		return "& lgtoken=123ABC & lgusername="+ userName + " & lguserid=23456";
 	}
 
 }

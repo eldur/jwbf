@@ -31,7 +31,7 @@ public class Article extends SimpleArticle {
 	public String getEditor() {
 		if (super.getEditor().length() < 1) {
 			try {
-				setEditor(bot.readData(super.getLabel(), USER).getText());
+				setEditor(bot.readData(super.getLabel(), USER).getEditor());
 			} catch (JwbfException e) {
 				e.printStackTrace();
 			}
@@ -43,7 +43,7 @@ public class Article extends SimpleArticle {
 	public String getEditSummary() {
 		if (super.getEditSummary().length() < 1) {
 			try {
-				setEditSummary(bot.readData(super.getLabel(), COMMENT).getText());
+				setEditSummary(bot.readData(super.getLabel(), COMMENT).getEditSummary());
 			} catch (JwbfException e) {
 				e.printStackTrace();
 			}
@@ -80,6 +80,11 @@ public class Article extends SimpleArticle {
 	
 	public void save() throws ActionException, ProcessException {
 		bot.writeContent(this);
+	}
+	public void save(String summary) throws ActionException, ProcessException {
+		setEditSummary(summary);
+		bot.writeContent(this);
+		;
 	}
 	
 	public void clear() throws ActionException, ProcessException {

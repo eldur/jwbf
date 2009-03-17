@@ -11,8 +11,8 @@ import net.sourceforge.jwbf.actions.util.ActionException;
 import net.sourceforge.jwbf.actions.util.HttpAction;
 import net.sourceforge.jwbf.actions.util.ProcessException;
 import net.sourceforge.jwbf.bots.MediaWikiBot;
+import net.sourceforge.jwbf.contentRep.Userinfo;
 import net.sourceforge.jwbf.contentRep.mediawiki.Siteinfo;
-import net.sourceforge.jwbf.contentRep.mediawiki.Userinfo;
 
 import org.apache.log4j.Logger;
 import org.jdom.Document;

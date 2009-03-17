@@ -110,7 +110,6 @@ public class HttpActionClient {
 			try {
 
 				HttpAction ha = a.getNextMessage();
-				log.debug("more  " + ha.getRequest()); // TODO RM
 				
 				
 				

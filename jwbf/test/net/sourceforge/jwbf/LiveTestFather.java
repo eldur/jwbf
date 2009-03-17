@@ -61,8 +61,8 @@ public class LiveTestFather {
 			
 			// find jwftestfile
 			Collection<String> filepos = new Vector<String>();
-			filepos.add(System.getenv("HOME") + "/.jwbf/test.xml");
-			filepos.add(System.getenv("HOME") + "/jwbftest.xml");
+			filepos.add(System.getProperty("user.home") + "/.jwbf/test.xml");
+			filepos.add(System.getProperty("user.home") + "/jwbftest.xml");
 			filepos.add("test.xml");
 			for (String fname : filepos) {
 				if(new File(fname).canRead()) {
@@ -72,8 +72,8 @@ public class LiveTestFather {
 				}
 			}
 			if (filename.length() < 1) {
-				System.err.println("no testfile found. Use: " + System.getenv("HOME") + "/.jwbf/test.xml");
-				filename = System.getenv("HOME") + "/.jwbf/test.xml";
+				System.err.println("no testfile found. Use: " + System.getProperty("user.home") + "/.jwbf/test.xml");
+				filename = System.getProperty("user.home") + "/.jwbf/test.xml";
 			}
 			
 			try {
@@ -101,6 +101,10 @@ public class LiveTestFather {
 	
 	public static void main(String[] args) {
 		System.out.println(new LiveTestFather().getRandomAlph(6));
+		System.out.println(System.getenv());
+		System.out.println(System.getProperties());
+		System.out.println(System.getProperty("user.name"));
+		System.out.println(System.getProperty("user.home"));
 	}
 	
 	private static void addEmptyKey(String key) {

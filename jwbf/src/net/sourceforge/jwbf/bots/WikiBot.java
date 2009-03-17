@@ -5,6 +5,7 @@ import net.sourceforge.jwbf.actions.util.ProcessException;
 import net.sourceforge.jwbf.contentRep.Article;
 import net.sourceforge.jwbf.contentRep.ContentAccessable;
 import net.sourceforge.jwbf.contentRep.SimpleArticle;
+import net.sourceforge.jwbf.contentRep.Userinfo;
 
 public interface WikiBot {
 
@@ -17,5 +18,5 @@ public interface WikiBot {
 	
 	
 	void login(String user, String passwd) throws ActionException;
-	
+	Userinfo getUserinfo() throws ActionException, ProcessException;
 }

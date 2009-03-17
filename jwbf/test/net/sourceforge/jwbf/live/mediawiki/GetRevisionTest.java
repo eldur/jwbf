@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import net.sourceforge.jwbf.LiveTestFather;
 import net.sourceforge.jwbf.bots.MediaWikiAdapterBot;
 import net.sourceforge.jwbf.bots.MediaWikiBot;
+import net.sourceforge.jwbf.contentRep.ArticleMeta;
 import net.sourceforge.jwbf.contentRep.SimpleArticle;
 
 import org.apache.log4j.PropertyConfigurator;
@@ -95,20 +96,24 @@ public class GetRevisionTest extends LiveTestFather {
 	private final void doTest(MediaWikiBot bot) throws Exception {
 		
 		String label = getValue("wikiMW1_12_user");
+		String user = bot.getUserinfo().getUsername();
 		SimpleArticle sa;
 		// test with content length > 0
 		String testText = getRandom(255);
 		sa = new SimpleArticle(testText, label);
 		bot.writeContent(sa);
 //		
-		String text = bot.readContent(label).getText();
-		assertEquals(testText, text);	
 		
+		ArticleMeta a = bot.readContent(label);
+		assertEquals(testText, a.getText());	
+		assertEquals(user, a.getEditor());	
 		// test with content length <= 0
 		testText = "";
 		label = "767676885340589358058903589035";
-		text = bot.readContent(label).getText();
-		assertEquals(testText, text);	
+		a = bot.readContent(label);
+		
+		assertEquals(testText, a.getText());
+		
 		
 	}
 	

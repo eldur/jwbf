@@ -5,9 +5,9 @@ package net.sourceforge.jwbf.live.mediawiki;
 
 import net.sourceforge.jwbf.LiveTestFather;
 import net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version;
-import net.sourceforge.jwbf.actions.mediawiki.util.VersionException;
 import net.sourceforge.jwbf.bots.MediaWikiAdapterBot;
-import net.sourceforge.jwbf.contentRep.mediawiki.Userinfo;
+import net.sourceforge.jwbf.bots.MediaWikiBot;
+import net.sourceforge.jwbf.contentRep.Userinfo;
 
 import org.apache.log4j.PropertyConfigurator;
 import org.junit.Assert;
@@ -26,12 +26,21 @@ public class UserinfoTest extends LiveTestFather {
 		PropertyConfigurator.configureAndWatch("test4log4j.properties",
 				60 * 1000);
 	}
-	private final void testDetails(MediaWikiAdapterBot bot, String userName) throws Exception {
+	private final void testDetails(MediaWikiBot bot, String userName) throws Exception {
 		Userinfo u = bot.getUserinfo();
 		Assert.assertEquals(userName, u.getUsername());
-		Assert.assertFalse("User has no groups", u.getGroups().isEmpty());
-		Assert.assertTrue("User has no read rights", u.getRights().contains("read"));
-		;
+		
+		switch (bot.getSiteinfo().getVersion()) {
+		case MW1_09:
+		case MW1_10:	
+			break;
+
+		default:
+			Assert.assertFalse("User has no groups", u.getGroups().isEmpty());
+			Assert.assertTrue("User has no read rights", u.getRights().contains("read"));
+		}
+		
+		
 		
 	}
 	
@@ -42,8 +51,8 @@ public class UserinfoTest extends LiveTestFather {
 	 * Test category read. Test category must have more then 50 members.
 	 * @throws Exception a
 	 */
-	@Test(expected=VersionException.class)
-	public final void userInfoWikiMW1_09Fail() throws Exception {
+	@Test
+	public final void userInfoWikiMW1_09() throws Exception {
 		
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_09_url"));
 		bot.login(getValue("wikiMW1_09_user"), getValue("wikiMW1_09_pass"));
@@ -54,8 +63,8 @@ public class UserinfoTest extends LiveTestFather {
 	 * Test category read. Test category must have more then 50 members.
 	 * @throws Exception a
 	 */
-	@Test(expected=VersionException.class)
-	public final void userInfoWikiMW1_10Fail() throws Exception {
+	@Test
+	public final void userInfoWikiMW1_10() throws Exception {
 		
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_10_url"));
 		bot.login(getValue("wikiMW1_10_user"), getValue("wikiMW1_10_pass"));

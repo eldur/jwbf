@@ -16,6 +16,7 @@ import net.sourceforge.jwbf.actions.util.ProcessException;
 import net.sourceforge.jwbf.contentRep.Article;
 import net.sourceforge.jwbf.contentRep.ContentAccessable;
 import net.sourceforge.jwbf.contentRep.SimpleArticle;
+import net.sourceforge.jwbf.contentRep.Userinfo;
 
 /**
 /**
@@ -94,6 +95,11 @@ public class TracWikiBot extends HttpBot implements WikiBot {
 			throws ActionException, ProcessException {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+
+	public Userinfo getUserinfo() throws ActionException, ProcessException {
+		return new Userinfo("unknown");
 	}
 
 }
