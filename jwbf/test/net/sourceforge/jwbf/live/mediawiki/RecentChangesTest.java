@@ -38,7 +38,7 @@ public class RecentChangesTest extends LiveTestFather {
 	
 	
 	/**
-	 * Test category read. Test category must have more then 50 members.
+	 * Test.
 	 * @throws Exception a
 	 */
 	@Test
@@ -51,7 +51,7 @@ public class RecentChangesTest extends LiveTestFather {
 		Assert.assertTrue( "Wrong Wiki Version " + bot.getVersion() , Version.MW1_09.equals(bot.getVersion()));
 	}
 	/**
-	 * Test category read. Test category must have more then 50 members.
+	 * Test.
 	 * @throws Exception a
 	 */
 	@Test
@@ -65,7 +65,7 @@ public class RecentChangesTest extends LiveTestFather {
 	}
 	
 	/**
-	 * Test category read. Test category must have more then 50 members.
+	 * Test.
 	 * @throws Exception a
 	 */
 	@Test
@@ -79,7 +79,7 @@ public class RecentChangesTest extends LiveTestFather {
 	}
 	
 	/**
-	 * Test category read. Test category must have more then 50 members.
+	 * Test.
 	 * @throws Exception a
 	 */
 	@Test
@@ -92,7 +92,7 @@ public class RecentChangesTest extends LiveTestFather {
 		Assert.assertTrue( "Wrong Wiki Version " + bot.getVersion() , Version.MW1_12.equals(bot.getVersion()));
 	}
 	/**
-	 * Test category read. Test category must have more then 50 members.
+	 * Test.
 	 * @throws Exception a
 	 */
 	@Test
@@ -105,7 +105,7 @@ public class RecentChangesTest extends LiveTestFather {
 	}
 	
 	/**
-	 * Test category read. Test category must have more then 50 members.
+	 * Test.
 	 * @throws Exception a
 	 */
 	@Test

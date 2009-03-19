@@ -51,7 +51,7 @@ import org.apache.log4j.Logger;
  * @supportedBy MediaWikiAPI 1.11, 1.12, 1.13
  * 
  */
-public class ImagelinkTitles extends MWAction implements Iterable<String>, Iterator<String> {
+public class ImagelinkTitles extends TitleQuery {
 
 	/** constant value for the illimit-parameter. **/
 	private static final int LIMIT = 50;
@@ -62,7 +62,7 @@ public class ImagelinkTitles extends MWAction implements Iterable<String>, Itera
 	 * after performing the action has finished.
 	 */
 	private Collection<String> titleCollection = new Vector<String>();
-	private Iterator<String> titleIterator = null;
+
 
 	/**
 	 * information necessary to get the next api page.
@@ -223,7 +223,7 @@ public class ImagelinkTitles extends MWAction implements Iterable<String>, Itera
 		return msg;
 	}
 
-	private void prepareCollection() {
+	protected void prepareCollection() {
 
 		if (init  || (!titleIterator.hasNext() && hasMoreResults)) {
 			if(init) {
@@ -250,29 +250,7 @@ public class ImagelinkTitles extends MWAction implements Iterable<String>, Itera
 		}
 	}
 	
-	public Iterator<String> iterator() {
-		try {
-			return (Iterator<String>) clone();
-		} catch (CloneNotSupportedException e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
-
-	public boolean hasNext() {
-		prepareCollection();
-		return titleIterator.hasNext();
-	}
-
-	public String next() {
-		prepareCollection();
-		return titleIterator.next();
-	}
-
-	public void remove() {
-		titleIterator.remove();
-		
-	}
+	
 
 
 	@Override

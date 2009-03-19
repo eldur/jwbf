@@ -1,17 +1,12 @@
 package net.sourceforge.jwbf.live.mediawiki;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import net.sourceforge.jwbf.LiveTestFather;
 import net.sourceforge.jwbf.bots.MediaWikiAdapterBot;
 import net.sourceforge.jwbf.bots.WikiBot;
-import net.sourceforge.jwbf.contentRep.Article;
 import net.sourceforge.jwbf.live.ArticleTest;
 
 import org.apache.log4j.PropertyConfigurator;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Test;
 public class BasicTest extends ArticleTest {
 	
 	@BeforeClass

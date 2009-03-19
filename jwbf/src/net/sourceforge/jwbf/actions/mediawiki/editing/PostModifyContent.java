@@ -98,7 +98,7 @@ public class PostModifyContent extends MWAction {
 				return apiGet;
 
 			} catch (VersionException e) {
-				System.err.println(e.getLocalizedMessage());
+//				System.err.println(e.getLocalizedMessage()); // TODO RM
 
 				String uS = "/index.php?title="
 						+ MediaWiki.encode(a.getLabel())

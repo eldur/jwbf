@@ -21,15 +21,17 @@ package net.sourceforge.jwbf.actions.mediawiki.queries;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import net.sourceforge.jwbf.actions.Get;
 import net.sourceforge.jwbf.actions.mediawiki.MediaWiki;
-import net.sourceforge.jwbf.actions.mediawiki.util.MWAction;
+import net.sourceforge.jwbf.actions.util.ActionException;
 import net.sourceforge.jwbf.actions.util.HttpAction;
 import net.sourceforge.jwbf.actions.util.ProcessException;
+import net.sourceforge.jwbf.bots.MediaWikiBot;
+
+import org.apache.log4j.Logger;
 
 
 /**
@@ -37,16 +39,18 @@ import net.sourceforge.jwbf.actions.util.ProcessException;
  * all articles which use a template.
  * 
  * @author Tobias Knerr
+ * @author Thomas Stock
  * @since MediaWiki 1.9.0
  * 
  * @supportedBy MediaWikiAPI 1.9 embeddedin / ei TODO Test Required
  * @supportedBy MediaWikiAPI 1.10 embeddedin / ei TODO Test Required
  * @supportedBy MediaWikiAPI 1.11 embeddedin / ei TODO Test Required
  */
-public class GetTemplateUserTitles extends MWAction implements Iterable<String>  {
+public class TemplateUserTitles extends TitleQuery   {
 
 	/** constant value for the eilimit-parameter. **/
 	private static final int LIMIT = 50;
+	private final MediaWikiBot bot;
 	private Get msg;
 	/**
 	 * Collection that will contain the result
@@ -54,30 +58,31 @@ public class GetTemplateUserTitles extends MWAction implements Iterable<String> 
 	 * after performing the action has finished.
 	 */
 	private Collection<String> titleCollection = new ArrayList<String>();
+	private boolean init = true;
 
+	private final String templateName;
+	private final int [] namespaces;
+	private boolean hasMoreMesages = true;
 	/**
 	 * information necessary to get the next api page.
 	 */
 	private String nextPageInfo = null;
 		
-		
+	private Logger log = Logger.getLogger(getClass());
 	/**
 	 * The public constructor. It will have an MediaWiki-request generated,
 	 * which is then added to msgs. When it is answered,
 	 * the method processAllReturningText will be called
 	 * (from outside this class).
-	 * For the parameters, see {@link GetTemplateUserTitles#generateRequest(String, String, String)}
+	 * For the parameters, see {@link TemplateUserTitles#generateRequest(String, String, String)}
 	 */
-	public GetTemplateUserTitles(String templateName, int ... namespaces){
-		generateRequest(templateName,createNsString(namespaces),null);
+	public TemplateUserTitles(MediaWikiBot bot, String templateName, int ... namespaces){
+		this.bot = bot;
+		this.templateName = templateName;
+		this.namespaces = namespaces;
+		
 	}
-	
-	/**
-	 * The private constructor, which is used to create follow-up actions.
-	 */
-	private GetTemplateUserTitles(String nextPageInfo) {
-		generateRequest(null,null,nextPageInfo);
-	}
+
 	
 	/**
 	 * generates the next MediaWiki-request (GetMethod) and adds it to msgs.
@@ -90,23 +95,35 @@ public class GetTemplateUserTitles extends MWAction implements Iterable<String> 
 	 * @param eicontinue    the value for the eicontinue parameter,
 	 *                      null for the generation of the initial request
 	 */
-	protected void generateRequest(String templateName, String namespace,
+	private void generateRequest(String templateName, String namespace,
 		String eicontinue) {
 
 		String uS = "";
-
+		String titleVal = "";
 		if (eicontinue == null) {
+			switch (bot.getVersion()) {
+			case MW1_09:
+			case MW1_10:
+				titleVal = "&titles=";
+				break;
+
+			default:
+				titleVal = "&eititle=";
+				break;
+			}
 
 			uS = "/api.php?action=query&list=embeddedin"
-					+ "&eititle="
+
+					+ titleVal
 					+ MediaWiki.encode(templateName)
-					+ ((namespace != null && namespace.length() != 0) ? ("&einamespace=" + namespace)
+					+ ((namespace != null && namespace.length() != 0) ? ("&einamespace=" + MediaWiki.encode(namespace))
 							: "") + "&eilimit=" + LIMIT + "&format=xml";
 
 		} else {
 
 			uS = "/api.php?action=query&list=embeddedin" + "&eicontinue="
 					+ MediaWiki.encode(eicontinue) + "&eilimit=" + LIMIT
+					+ ((namespace != null && namespace.length() != 0) ? ("&einamespace=" + MediaWiki.encode(namespace)) : "")
 					+ "&format=xml";
 
 		}
@@ -123,9 +140,10 @@ public class GetTemplateUserTitles extends MWAction implements Iterable<String> 
 	 * @return empty string
 	 */
 	public String processAllReturningText(final String s) throws ProcessException {
-		String t = s;
-		parseArticleTitles(t);
-		parseHasMore(t);
+		System.out.println(s);
+		parseArticleTitles(s);
+		parseHasMore(s);
+		titleIterator = titleCollection.iterator();
 		return "";
 	}
 
@@ -135,7 +153,7 @@ public class GetTemplateUserTitles extends MWAction implements Iterable<String> 
 	 *	
 	 * @param s   text for parsing
 	 */
-	protected void parseHasMore(final String s) {
+	private void parseHasMore(final String s) {
 			
 		// get the eicontinue-value
 		
@@ -148,7 +166,11 @@ public class GetTemplateUserTitles extends MWAction implements Iterable<String> 
 		Matcher m = p.matcher(s);
 
 		if (m.find()) {			
-			nextPageInfo = m.group(1);			
+			nextPageInfo = m.group(1);	
+			hasMoreMesages = true;
+		} else {
+			nextPageInfo = null;	
+			hasMoreMesages = false;
 		}
 
 	}
@@ -158,7 +180,7 @@ public class GetTemplateUserTitles extends MWAction implements Iterable<String> 
 	 *	
 	 * @param s   text for parsing
 	 */
-	public void parseArticleTitles(String s) {
+	private void parseArticleTitles(String s) {
 		
 		// get the backlink titles and add them all to the titleCollection
 			
@@ -172,34 +194,50 @@ public class GetTemplateUserTitles extends MWAction implements Iterable<String> 
 		}
 		
 	}
+
 	
-	/**
-	 * @return   the collected article names
-	 */
-	public Collection<String> getResults() {
-		return titleCollection;	 
-	}
 	
-	/**
-	 * @return   necessary information for the next action
-	 *           or null if no next api page exists
-	 */
-	public GetTemplateUserTitles getNextAction() {
-		if( nextPageInfo == null ){ return null; }
-		else{
-			return new GetTemplateUserTitles(nextPageInfo);
+
+	protected void prepareCollection() {
+
+		if (init || (!titleIterator.hasNext() && hasMoreMesages)) {
+			
+			if(init) {
+				generateRequest(templateName,createNsString(namespaces),null);
+			} else {
+				generateRequest(null,createNsString(namespaces),nextPageInfo);
+			}
+			init = false;
+			
+			try {
+				if (log.isDebugEnabled())
+					log.debug("request more ...");
+				setHasMoreMessages(true);
+				bot.performAction(this);
+				
+	
+				
+			} catch (ActionException e) {
+				e.printStackTrace();
+	
+			} catch (ProcessException e) {
+				e.printStackTrace();
+
+			}
+
 		}
 	}
-
 
 	public HttpAction getNextMessage() {
 		return msg;
 	}
 
-	public Iterator<String> iterator() {
-		// TODO Auto-generated method stub
-		return null;
+
+	@Override
+	protected Object clone() throws CloneNotSupportedException {
+		return new TemplateUserTitles(bot, templateName, namespaces);
 	}
+	
 	
 	
 

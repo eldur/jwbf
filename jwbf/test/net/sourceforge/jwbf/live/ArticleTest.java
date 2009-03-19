@@ -29,8 +29,8 @@ public abstract class ArticleTest extends LiveTestFather {
 		
 		for (WikiBot bot : bots) {
 
-			for (int i = 0; i <= 5; i++) {
-				String title = getRandomAlph(6);
+			for (int i = 0; i <= 2; i++) {
+				String title = "z" + getRandomAlph(6);
 				String user = bot.getUserinfo().getUsername();
 				String editSum = getRandomAlph(6);
 				Article a = new Article(bot, title);

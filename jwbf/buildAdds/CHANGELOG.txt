@@ -1,3 +1,5 @@
+  * FIX TemplateUserTitles and add a testcase
+  * add a query superclass for title iterations
 -------------------------------------------------------------------------------
 JWBF svn:191                                                           Mar 2009
   * some zim updates thanks to Martin Koch

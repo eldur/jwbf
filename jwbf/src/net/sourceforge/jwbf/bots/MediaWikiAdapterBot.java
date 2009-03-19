@@ -37,7 +37,7 @@ import net.sourceforge.jwbf.actions.mediawiki.queries.FullCategoryMembers;
 import net.sourceforge.jwbf.actions.mediawiki.queries.GetImageInfo;
 import net.sourceforge.jwbf.actions.mediawiki.queries.GetRecentchanges;
 import net.sourceforge.jwbf.actions.mediawiki.queries.GetSimpleCategoryMembers;
-import net.sourceforge.jwbf.actions.mediawiki.queries.GetTemplateUserTitles;
+import net.sourceforge.jwbf.actions.mediawiki.queries.TemplateUserTitles;
 import net.sourceforge.jwbf.actions.mediawiki.queries.ImageUsageTitles;
 import net.sourceforge.jwbf.actions.mediawiki.queries.LogEvents;
 import net.sourceforge.jwbf.actions.mediawiki.queries.BacklinkTitles.RedirectFilter;
@@ -358,7 +358,7 @@ public class MediaWikiAdapterBot extends MediaWikiBot {
 	public Iterable<String> getTemplateUserTitles(String template,
 			int... namespaces) throws ActionException {
 		
-		GetTemplateUserTitles a = new GetTemplateUserTitles(template,
+		TemplateUserTitles a = new TemplateUserTitles(this, template,
 				namespaces);
 
 		return a;

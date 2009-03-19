@@ -50,14 +50,10 @@ import org.xml.sax.InputSource;
  * api.php ? action=query & list=recentchanges - List last 10 changes
  * 
  * @author Thomas Stock
- * @supportedBy MediaWikiAPI 1.09
- * @supportedBy MediaWikiAPI 1.10
- * @supportedBy MediaWikiAPI 1.11
- * @supportedBy MediaWikiAPI 1.12
- * @supportedBy MediaWikiAPI 1.13
+ * @supportedBy MediaWikiAPI 1.09, 1.10, 1.11, 1.12, 1.13, 1.14
  */
 
-public class GetRecentchanges extends MWAction implements Iterable<String>, Iterator<String> {
+public class GetRecentchanges extends TitleQuery {
 
 	/** value for the bllimit-parameter. **/
 	private final int limit = 10;
@@ -66,7 +62,7 @@ public class GetRecentchanges extends MWAction implements Iterable<String>, Iter
 	
 	private boolean init = true;
 	private int find = 1;
-	private Iterator<String> titleIterator;
+	
 	private final MediaWikiBot bot;
 	
 	private final int [] namespaces;
@@ -178,10 +174,8 @@ public class GetRecentchanges extends MWAction implements Iterable<String>, Iter
 			root = doc.getRootElement();
 
 		} catch (JDOMException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		findContent(root);
@@ -217,7 +211,7 @@ public class GetRecentchanges extends MWAction implements Iterable<String>, Iter
 		return msg;
 	}
 	
-	private void prepareCollection() {
+	protected void prepareCollection() {
 
 		if (init || (!titleIterator.hasNext() && timestamp.length() > 0)) {
 			
@@ -246,16 +240,7 @@ public class GetRecentchanges extends MWAction implements Iterable<String>, Iter
 		}
 	}
 
-	@SuppressWarnings("unchecked")
-	public Iterator<String> iterator() {
-		try {
-			return (Iterator<String>) this.clone();
-		} catch (CloneNotSupportedException e) {
-			
-			e.printStackTrace();
-			return null;
-		}
-	}
+	
 	
 	
 
@@ -265,18 +250,6 @@ public class GetRecentchanges extends MWAction implements Iterable<String>, Iter
 		return new GetRecentchanges(bot, namespaces);
 	}
 
-	public boolean hasNext() {
-		prepareCollection();
-		return titleIterator.hasNext();
-	}
-
-	public String next() {
-		prepareCollection();
-		return titleIterator.next();
-	}
-
-	public void remove() {
-		titleIterator.remove();
-	}
+	
 
 }

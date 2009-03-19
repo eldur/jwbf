@@ -20,7 +20,6 @@
 package net.sourceforge.jwbf.actions.mediawiki.queries;
 
 import java.io.UnsupportedEncodingException;
-import java.util.Iterator;
 import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -28,7 +27,6 @@ import java.util.regex.Pattern;
 import net.sourceforge.jwbf.actions.Get;
 import net.sourceforge.jwbf.actions.mediawiki.MediaWiki;
 import net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version;
-import net.sourceforge.jwbf.actions.mediawiki.util.MWAction;
 import net.sourceforge.jwbf.actions.mediawiki.util.VersionException;
 import net.sourceforge.jwbf.actions.util.ActionException;
 import net.sourceforge.jwbf.actions.util.HttpAction;
@@ -46,7 +44,7 @@ import org.apache.log4j.Logger;
  * @since JWBF 1.1
  * @supportedBy MediaWikiAPI 1.9, 1.10, 1.11, 1.12, 1.13, 1.14
  */
-public class BacklinkTitles extends MWAction implements Iterable<String>, Iterator<String> {
+public class BacklinkTitles extends TitleQuery {
 
 	/**
 	 * enum that defines the three posibilities of dealing with
@@ -76,7 +74,7 @@ public class BacklinkTitles extends MWAction implements Iterable<String>, Iterat
 	 * after performing the action has finished.
 	 */
 	private Vector<String> titleCollection = new Vector<String>();
-	private Iterator<String> titleIterator;
+	
 	/**
 	 * information necessary to get the next api page.
 	 */
@@ -317,7 +315,7 @@ public class BacklinkTitles extends MWAction implements Iterable<String>, Iterat
 		
 	}
 	
-	private void prepareCollection() {
+	protected void prepareCollection() {
 		try {
 			if (init || (!titleIterator.hasNext() && hasMoreResults)) {
 				if (init) {
@@ -358,29 +356,7 @@ public class BacklinkTitles extends MWAction implements Iterable<String>, Iterat
 		return msg;
 	}
 
-	public Iterator<String> iterator() {
-		try {
-			return (Iterator<String>) this.clone();
-		} catch (CloneNotSupportedException e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
 
-	public boolean hasNext() {
-		prepareCollection();
-		return titleIterator.hasNext(); 
-	}
-
-	public String next() {
-		prepareCollection();	
-		return titleIterator.next();
-	}
-
-	public void remove() {
-		titleIterator.remove();
-		
-	}
 	@Override
 	protected Object clone() throws CloneNotSupportedException {
 		try {

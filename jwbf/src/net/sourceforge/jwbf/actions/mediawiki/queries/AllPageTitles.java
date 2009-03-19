@@ -20,21 +20,17 @@
 package net.sourceforge.jwbf.actions.mediawiki.queries;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import net.sourceforge.jwbf.actions.ContentProcessable;
 import net.sourceforge.jwbf.actions.Get;
 import net.sourceforge.jwbf.actions.mediawiki.MediaWiki;
 import net.sourceforge.jwbf.actions.mediawiki.util.MWAction;
 import net.sourceforge.jwbf.actions.util.ActionException;
-import net.sourceforge.jwbf.actions.util.CookieException;
 import net.sourceforge.jwbf.actions.util.HttpAction;
 import net.sourceforge.jwbf.actions.util.ProcessException;
 import net.sourceforge.jwbf.bots.MediaWikiBot;
 
-import org.apache.commons.httpclient.Cookie;
 import org.apache.log4j.Logger;
 
 /**
@@ -46,7 +42,7 @@ import org.apache.log4j.Logger;
  * @supportedBy MediaWikiAPI 1.9, 1.10, 1.11, 1.12, 1.13, 1.14
  * 
  */
-public class AllPageTitles implements Iterable<String>, Iterator<String>, ContentProcessable {
+public class AllPageTitles extends TitleQuery {
 	
 	private static final Logger LOG = Logger.getLogger(AllPageTitles.class);
 	
@@ -64,6 +60,9 @@ public class AllPageTitles implements Iterable<String>, Iterator<String>, Conten
 
 	private boolean init = true;
 	
+	private int index = 0;
+	private ArrayList<String> knownResults = new ArrayList<String>();
+	
 	/**
 	 * Information given in the constructor, necessary for creating next action.
 	 */
@@ -77,6 +76,10 @@ public class AllPageTitles implements Iterable<String>, Iterator<String>, Conten
 	private String nextPageInfo = null;
 	
 	private HttpAction msg;
+
+	private String from;
+
+	private boolean hasMoreResults = true;
 	
 	/**
 	 * The public constructor. It will have an MediaWiki-request generated,
@@ -103,7 +106,7 @@ public class AllPageTitles implements Iterable<String>, Iterator<String>, Conten
 	 */
 	public AllPageTitles(MediaWikiBot bot, String from, String prefix, boolean redirects,
 			boolean nonredirects, int ... namespaces) {
-		this(from, prefix, redirects, nonredirects, MWAction.createNsString(namespaces), bot);
+		this(bot, from, prefix, redirects, nonredirects, MWAction.createNsString(namespaces));
 
 	}
 	public AllPageTitles(MediaWikiBot bot, int ... namespaces) {
@@ -111,8 +114,16 @@ public class AllPageTitles implements Iterable<String>, Iterator<String>, Conten
 
 	}
 
-	protected AllPageTitles(String from, String prefix, boolean redirects,
-			boolean nonredirects, String namespaces, MediaWikiBot bot) {
+	/**
+	 * @param from
+	 * @param prefix
+	 * @param redirects
+	 * @param nonredirects
+	 * @param namespaces
+	 * @param bot
+	 */
+	protected AllPageTitles(MediaWikiBot bot, String from, String prefix, boolean redirects,
+			boolean nonredirects, String namespaces) {
 
 		this.bot = bot;
 
@@ -120,6 +131,7 @@ public class AllPageTitles implements Iterable<String>, Iterator<String>, Conten
 		this.namespace = namespaces;
 		this.redirects = redirects;
 		this.nonredirects = nonredirects;
+		this.from = from;
 		msg = generateRequest(from, prefix, redirects, nonredirects, namespace);
 	}
 
@@ -141,7 +153,7 @@ public class AllPageTitles implements Iterable<String>, Iterator<String>, Conten
 	 *            of numbers separated by '|'; if null, this parameter is
 	 *            omitted
 	 */
-	protected Get generateRequest(String from, String prefix,
+	private Get generateRequest(String from, String prefix,
 			boolean redirects, boolean nonredirects, String namespace) {
 		if (LOG.isTraceEnabled()) {
 			LOG
@@ -176,7 +188,6 @@ public class AllPageTitles implements Iterable<String>, Iterator<String>, Conten
 		
 		
 		public HttpAction getNextMessage() {
-			init = false;
 			return msg;
 		}
 		/**
@@ -194,6 +205,7 @@ public class AllPageTitles implements Iterable<String>, Iterator<String>, Conten
 			}
 			parseArticleTitles(s);
 			parseHasMore(s);
+			titleIterator = knownResults.iterator();
 			return "";
 		}
 		/**
@@ -230,37 +242,25 @@ public class AllPageTitles implements Iterable<String>, Iterator<String>, Conten
 			Matcher m = HAS_MORE_PATTERN.matcher(s);
 			if (m.find()) {
 				nextPageInfo = m.group(1);
+				hasMoreResults = true;
 			} else {
 				nextPageInfo = null;
+				hasMoreResults  = false;
 			}
 		}
-		public Iterator<String> iterator() {
-			return this;
-		}
-		private int index = 0;
-		private ArrayList<String> knownResults = new ArrayList<String>();
-		/**
-		 * if a new query is needed to request more; more results are
-		 * requested.
-		 *
-		 * @return true if has next
-		 */
-		public boolean hasNext() {
+	
+		
+		
+	
+		@Override
+		protected void prepareCollection() {
 			
-			loadMoreResults();
-			
-			return index < knownResults.size();
-		}
-		/**
-		 * request more results if local interation seems to be empty.
-		 */
-		private synchronized void loadMoreResults() {
-			
-			if ((nextPageInfo != null && index >= knownResults.size()) || init) {
-				
+			if (init || (!titleIterator.hasNext() && hasMoreResults)) {
+				init = false;
 				try {
+					setHasMoreMessages(true);
 					msg = generateRequest(nextPageInfo, prefix, redirects, nonredirects, namespace);
-					init = true;
+					
 					bot.performAction(this);
 
 					
@@ -273,31 +273,12 @@ public class AllPageTitles implements Iterable<String>, Iterator<String>, Conten
 	
 				}
 			}
-
-		}
-		
-		public String next() {
-			return knownResults.get(index++);
-		}
-		public void remove() {
-			// TODO add an iterator here
 			
 		}
-		
-		public boolean hasMoreMessages() {
-			return init;
+		@Override
+		protected Object clone() throws CloneNotSupportedException {
+			return new AllPageTitles(bot, from, prefix, redirects, nonredirects, namespace);
 		}
-		public String processReturningText(String s, HttpAction hm)
-				throws ProcessException {
-			processAllReturningText(s);
-			return null;
-		}
-		public void validateReturningCookies(Cookie[] cs, HttpAction hm)
-				throws CookieException {
-			// TODO Auto-generated method stub
-			
-		}
-	
 
 
 }

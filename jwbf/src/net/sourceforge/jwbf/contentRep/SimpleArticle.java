@@ -206,7 +206,7 @@ public class SimpleArticle implements ArticleMeta {
 	}
 
 	/**
-	 * TODO method is untested.
+	 * TODO method is untested and MediaWiki special.
 	 * 
 	 * @return true if is
 	 */
@@ -243,6 +243,11 @@ public class SimpleArticle implements ArticleMeta {
 
 		
 		
+	}
+
+	public String getSyntaxType() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
