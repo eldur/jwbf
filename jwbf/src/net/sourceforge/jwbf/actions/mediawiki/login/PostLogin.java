@@ -45,7 +45,7 @@ import org.xml.sax.InputSource;
  */
 public class PostLogin extends MWAction {
 	
-	private static final Logger LOG = Logger.getLogger(PostLogin.class);
+	private static final Logger log = Logger.getLogger(PostLogin.class);
 	private final Post msg;
 	
 	
@@ -83,17 +83,24 @@ public class PostLogin extends MWAction {
 			Document doc = builder.build(new InputSource(i));
 			
 			root = doc.getRootElement();
-
+			findContent(root);
 		} catch (JDOMException e) {
-			e.printStackTrace();
+			log.error(e.getClass().getName() + e.getLocalizedMessage());
 		} catch (IOException e) {
-			e.printStackTrace();
+			log.error(e.getClass().getName() + e.getLocalizedMessage());
+		} catch (NullPointerException e) {
+			log.error(e.getClass().getName() + e.getLocalizedMessage());
+			throw new ProcessException("No regular content was found, check your api\n::" + s );
+		} catch (Exception e) {
+			log.error(e.getClass().getName() + e.getLocalizedMessage());
+			throw new ProcessException(e.getLocalizedMessage());
 		}
-		LOG.debug(s);
-		findContent(root);
+
+		
 		return s;
 	} 
-	private void findContent(final Element api) throws ProcessException{
+	private void findContent(final Element api) throws ProcessException, NullPointerException {
+		
 		Element loginEl = api.getChild("login");
 		String result = loginEl.getAttributeValue("result");
 		if (result.equalsIgnoreCase(success)) {
@@ -109,6 +116,7 @@ public class PostLogin extends MWAction {
 		} else if (result.equalsIgnoreCase(notExists)) {
 			throw new ProcessException("No sutch User");
 		} 
+		
 	}
 
 	public HttpAction getNextMessage() {

@@ -29,7 +29,7 @@ public class GetVersion extends MWAction {
 
 	}
 	
-	private void parse(final String xml) {
+	private void parse(final String xml) throws ProcessException {
 //		log.debug(xml);
 		SAXBuilder builder = new SAXBuilder();
 		Element root = null;
@@ -40,9 +40,12 @@ public class GetVersion extends MWAction {
 			root = doc.getRootElement();
 			findContent(root);
 		} catch (JDOMException e) {
-			e.printStackTrace();
+			log.error(e.getClass().getName() + e.getLocalizedMessage());
+			log.error(xml);
+			throw new ProcessException(e.getLocalizedMessage());
 		} catch (IOException e) {
-			e.printStackTrace();
+			log.error(e.getClass().getName() + e.getLocalizedMessage());
+			throw new ProcessException(e.getLocalizedMessage());
 		}
 	}
 	

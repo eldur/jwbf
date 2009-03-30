@@ -10,9 +10,6 @@ import net.sourceforge.jwbf.bots.util.JwbfException;
 public class Article extends SimpleArticle {
 
 	private final WikiBot bot;
-	// TODO remove all media wiki package references
-	private int properties = CONTENT
-	| COMMENT | USER;
 	
 	
 	@Override
@@ -60,11 +57,6 @@ public class Article extends SimpleArticle {
 
 	public Article(WikiBot bot, String title) {
 		this.bot = bot;
-		setLabel(title);
-	}
-	public Article(WikiBot bot, String title, int properties) {
-		this.bot = bot;
-		this.properties = properties;
 		setLabel(title);
 	}
 

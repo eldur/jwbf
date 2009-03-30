@@ -152,7 +152,33 @@ public class LoginTest extends LiveTestFather {
 	}
 	
 	
-	
+	/**
+	 * Test invalid installation of MW
+	 */
+	@Test(expected=ActionException.class)
+	public final void installationDefunct() throws Exception {
+		
 
+		String url = getValue("wikiMWinvalid_url");
+		bot = new MediaWikiAdapterBot(url);
+		
+		bot.login(getValue("wikiMW1_09_user"), getValue("wikiMW1_09_pass"));
+	
+		
+	}
+	
+	/**
+	 * Test invalid installation of MW
+	 */
+	@Test(expected=ActionException.class)
+	public final void conncetionProblem() throws Exception {
+		
+
+		String url = "http://www.google.com/invalidWiki/";
+		bot = new MediaWikiAdapterBot(url);
+	
+		bot.login(getValue("wikiMW1_09_user"), getValue("wikiMW1_09_pass"));
+
+	}
 
 }

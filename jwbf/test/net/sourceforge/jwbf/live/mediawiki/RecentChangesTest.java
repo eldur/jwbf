@@ -3,6 +3,8 @@
  */
 package net.sourceforge.jwbf.live.mediawiki;
 
+import static org.junit.Assert.assertTrue;
+
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Vector;
@@ -18,7 +20,6 @@ import net.sourceforge.jwbf.contentRep.Article;
 import net.sourceforge.jwbf.contentRep.SimpleArticle;
 
 import org.apache.log4j.PropertyConfigurator;
-import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -48,7 +49,7 @@ public class RecentChangesTest extends LiveTestFather {
 		bot.login(getValue("wikiMW1_09_user"), getValue("wikiMW1_09_pass"));
 //		doRegularTest(bot);
 		doSpecialCharTest(bot);
-		Assert.assertTrue( "Wrong Wiki Version " + bot.getVersion() , Version.MW1_09.equals(bot.getVersion()));
+		assertTrue( "Wrong Wiki Version " + bot.getVersion() , Version.MW1_09.equals(bot.getVersion()));
 	}
 	/**
 	 * Test.
@@ -61,7 +62,7 @@ public class RecentChangesTest extends LiveTestFather {
 		bot.login(getValue("wikiMW1_10_user"), getValue("wikiMW1_10_pass"));
 		doRegularTest(bot);
 		doSpecialCharTest(bot);
-		Assert.assertTrue( "Wrong Wiki Version " + bot.getVersion() , Version.MW1_10.equals(bot.getVersion()));
+		assertTrue( "Wrong Wiki Version " + bot.getVersion() , Version.MW1_10.equals(bot.getVersion()));
 	}
 	
 	/**
@@ -75,7 +76,7 @@ public class RecentChangesTest extends LiveTestFather {
 		bot.login(getValue("wikiMW1_11_user"), getValue("wikiMW1_11_pass"));
 		doRegularTest(bot);
 		doSpecialCharTest(bot);
-		Assert.assertTrue( "Wrong Wiki Version " + bot.getVersion() , Version.MW1_11.equals(bot.getVersion()));
+		assertTrue( "Wrong Wiki Version " + bot.getVersion() , Version.MW1_11.equals(bot.getVersion()));
 	}
 	
 	/**
@@ -89,7 +90,7 @@ public class RecentChangesTest extends LiveTestFather {
 		bot.login(getValue("wikiMW1_12_user"), getValue("wikiMW1_12_pass"));
 		doRegularTest(bot);
 		doSpecialCharTest(bot);
-		Assert.assertTrue( "Wrong Wiki Version " + bot.getVersion() , Version.MW1_12.equals(bot.getVersion()));
+		assertTrue( "Wrong Wiki Version " + bot.getVersion() , Version.MW1_12.equals(bot.getVersion()));
 	}
 	/**
 	 * Test.
@@ -101,7 +102,7 @@ public class RecentChangesTest extends LiveTestFather {
 		bot.login(getValue("wikiMW1_13_user"), getValue("wikiMW1_13_pass"));
 		doRegularTest(bot);
 		doSpecialCharTest(bot);
-		Assert.assertTrue( "Wrong Wiki Version " + bot.getVersion() , Version.MW1_13.equals(bot.getVersion()));
+		assertTrue( "Wrong Wiki Version " + bot.getVersion() , Version.MW1_13.equals(bot.getVersion()));
 	}
 	
 	/**
@@ -114,7 +115,7 @@ public class RecentChangesTest extends LiveTestFather {
 		bot.login(getValue("wikiMW1_14_user"), getValue("wikiMW1_14_pass"));
 		doRegularTest(bot);
 		doSpecialCharTest(bot);
-		Assert.assertTrue( "Wrong Wiki Version " + bot.getVersion() , Version.MW1_14.equals(bot.getVersion()));
+		assertTrue( "Wrong Wiki Version " + bot.getVersion() , Version.MW1_14.equals(bot.getVersion()));
 	}
 	
 	private final void prepareWiki(MediaWikiBot bot) throws ActionException,
@@ -151,7 +152,7 @@ public class RecentChangesTest extends LiveTestFather {
 				specialChars.remove(nx);
 				i++;
 			}
-			Assert.assertTrue("tc sould be empty but is: " + specialChars, specialChars.isEmpty());
+			assertTrue("tc sould be empty but is: " + specialChars, specialChars.isEmpty());
 		
 	}
 	
@@ -213,8 +214,8 @@ public class RecentChangesTest extends LiveTestFather {
 				}
 			}
 		}
-		Assert.assertTrue("shuld be empty but is : " + vi, vi.isEmpty());
-		Assert.assertTrue("i is: " + i, i > COUNT - 1);
+		assertTrue("shuld be empty but is : " + vi, vi.isEmpty());
+		assertTrue("i is: " + i, i > COUNT - 1);
 	}
 	private final void change(MediaWikiBot bot) throws ActionException, ProcessException {
 		SimpleArticle a = new SimpleArticle("Change", "0");

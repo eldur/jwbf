@@ -107,6 +107,15 @@ public class SimpleArticle implements ArticleMeta {
 		this.text = text;
 		this.label = label;
 	}
+	
+	/**
+	 * 
+	 * @param label
+	 *            of article
+	 */
+	public SimpleArticle(final String label) {
+		this("", label);
+	}
 
 	/**
 	 * @return the
@@ -235,14 +244,14 @@ public class SimpleArticle implements ArticleMeta {
 	public void setEditTimestamp(String editTimestamp) throws ParseException {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
 		try {
-			this.editTimestamp = sdf.parse(editTimestamp);
+			setEditTimestamp(sdf.parse(editTimestamp));
 		} catch (ParseException e) {
 			sdf = new SimpleDateFormat("MM/dd/yy' 'HH:mm:ss");
-			this.editTimestamp = sdf.parse(editTimestamp);
+			setEditTimestamp(sdf.parse(editTimestamp));
 		}
-
-		
-		
+	}
+	public void setEditTimestamp(Date d) {
+		this.editTimestamp = d;
 	}
 
 	public String getSyntaxType() {
@@ -250,4 +259,5 @@ public class SimpleArticle implements ArticleMeta {
 		return null;
 	}
 
+	
 }

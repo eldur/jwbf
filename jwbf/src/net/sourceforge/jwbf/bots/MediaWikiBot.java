@@ -23,6 +23,7 @@ import net.sourceforge.jwbf.actions.mediawiki.util.VersionException;
 import net.sourceforge.jwbf.actions.util.ActionException;
 import net.sourceforge.jwbf.actions.util.ProcessException;
 import net.sourceforge.jwbf.bots.util.CacheHandler;
+import net.sourceforge.jwbf.bots.util.JwbfException;
 import net.sourceforge.jwbf.bots.util.LoginData;
 import net.sourceforge.jwbf.contentRep.Article;
 import net.sourceforge.jwbf.contentRep.ContentAccessable;
@@ -150,6 +151,8 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
 
 		} catch (ProcessException e) {
 			throw new ActionException(e.getLocalizedMessage());
+		} catch (RuntimeException e) {
+			throw new ActionException(e.getMessage());
 		}
 	
 	}
@@ -185,6 +188,7 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
 	public synchronized Article readContent(final String name, final int properties)
 			throws ActionException, ProcessException {
 		if (store != null && store.containsKey(name)) {
+			log.debug("read from cache");
 			return new Article(this, store.get(name));
 		} else {
 			return new Article(this, readData(name, properties));
@@ -193,18 +197,29 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
 	
 	public synchronized SimpleArticle readData(final String name, final int properties)
 			throws ActionException, ProcessException {
+			
+		GetRevision ac;
+			if (store != null) {
+				if (store.containsKey(name)) {
+					return store.get(name);
+				} else {
+					ac = new GetRevision(name, properties, this);
 
-			GetRevision ac = new GetRevision(name, properties, this);
+					performAction(ac);
+					log.debug("update cache (read)");
+					store.put(ac.getArticle());
+				}
+			} else {
+				ac = new GetRevision(name, properties, this);
 
-			performAction(ac);
-			if (store != null)
-				store.put(ac.getArticle());
+				performAction(ac);
+			}
 			return ac.getArticle();
 		
 	}
 	
 	public void setCacheHandler(CacheHandler ch) {
-		
+		this.store = ch;
 	}
 
 	/**
@@ -240,6 +255,22 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
 		}
 		if (a.getText().trim().length() < 1 ) 
 			throw new RuntimeException("Content is empty");
+		if (store != null) {
+			String label = a.getLabel();
+			SimpleArticle sa;
+			if (store.containsKey(label)) {
+				sa = store.get(label);
+			} else {
+				sa = new SimpleArticle(label);
+			}
+			sa.setText(a.getText());
+			sa.setEditor(getUserinfo().getUsername());
+			sa.setEditSummary(a.getEditSummary());
+			sa.setMinorEdit(a.isMinorEdit());
+			log.debug("update cache (write)");
+			store.put(sa);
+		}
+			
 		performAction(new PostModifyContent(this, a));
 		
 		
@@ -304,20 +335,18 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
 	 * @return the
 	 * @see #getSiteinfo()
 	 */
-	public final Version getVersion() {
+	public final Version getVersion() throws RuntimeException {
 		if (version == null) {
 			GetVersion gs = new GetVersion();
 
 			try {
 				performAction(gs);
-			} catch (ProcessException e) {
-				e.printStackTrace();
-			} catch (ActionException e) {
-				e.printStackTrace();
+
+				version = gs.getSiteinfo().getVersion();
+			} catch (JwbfException e) {
+				log.error(e.getClass().getName() + e.getLocalizedMessage());
+				throw new RuntimeException(e.getLocalizedMessage());
 			}
-
-			version = gs.getSiteinfo().getVersion();
-
 			log.debug("Version is: " + version.name());
 
 		}
