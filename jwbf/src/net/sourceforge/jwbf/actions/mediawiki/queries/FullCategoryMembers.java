@@ -114,7 +114,7 @@ public class FullCategoryMembers extends CategoryMembers implements Iterable<Cat
 		titleCollection.clear();
 		String buff = super.processAllReturningText(s);
 		
-		titleIterator = titleCollection.iterator();
+		
 		if (log.isDebugEnabled())
 			log.debug(titleCollection);
 		return buff;
@@ -135,4 +135,9 @@ public class FullCategoryMembers extends CategoryMembers implements Iterable<Cat
 		
 	}
 	
+	@Override
+	protected void finalizeParse() {
+		titleIterator = titleCollection.iterator();
+		
+	}
 }

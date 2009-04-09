@@ -362,7 +362,7 @@
       <div id="navcolumn">
        #publishDate( "navigation-top" $decoration.publishDate $decoration.version )
        #mainMenu( $decoration.body.menus )
-       <!-- #poweredByLogo( $decoration.poweredBy ) -->
+       #poweredByLogo( $decoration.poweredBy )
        #publishDate( "navigation-bottom" $decoration.publishDate $decoration.version )
       </div>
     </div>

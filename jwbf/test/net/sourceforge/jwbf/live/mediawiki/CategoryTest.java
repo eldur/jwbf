@@ -211,6 +211,10 @@ public class CategoryTest extends LiveTestFather {
 	}
 	
 	private final void doTest(MediaWikiBot bot, String catname) throws ActionException, ProcessException {
+		
+		GetSimpleCategoryMembers g = new GetSimpleCategoryMembers(bot, catname);
+		bot.performAction(g);
+		assertTrue("shuld have next", g.hasNext());
 		Collection<String> compare1 = new Vector<String>();
 		Collection<CategoryItem> compare2 = new Vector<CategoryItem>();
 		Iterator<String> is = new GetSimpleCategoryMembers(bot, catname).iterator();
@@ -227,6 +231,7 @@ public class CategoryTest extends LiveTestFather {
 		if (notEnough) {
 			doPreapare(bot);
 		}
+		
 		
 		is = new GetSimpleCategoryMembers(bot, catname).iterator();
 		i = 0;

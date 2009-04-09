@@ -139,7 +139,6 @@ public abstract class CategoryMembers extends MWAction {
 	public String processAllReturningText(final String s) throws ProcessException {
 		parseArticleTitles(s);
 		parseHasMore(s);
-		
 		return "";
 	}
 
@@ -191,8 +190,9 @@ public abstract class CategoryMembers extends MWAction {
 			addCatItem(m.group(3), Integer.parseInt(m.group(1)), Integer.parseInt(m.group(2)));
 
 		}
-		
+		finalizeParse();
 	}
+	protected abstract void finalizeParse();
 	
 	protected abstract void addCatItem(String title, int pageid, int ns);
 	

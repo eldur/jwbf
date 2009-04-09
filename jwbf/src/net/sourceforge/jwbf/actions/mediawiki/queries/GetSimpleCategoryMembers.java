@@ -73,6 +73,7 @@ public class GetSimpleCategoryMembers extends CategoryMembers implements Iterabl
 	 */
 	public GetSimpleCategoryMembers(MediaWikiBot bot, String categoryName, int... namespaces) throws ActionException, ProcessException {
 		super(bot, categoryName, namespaces);
+	
 	}
 	
 	
@@ -83,10 +84,11 @@ public class GetSimpleCategoryMembers extends CategoryMembers implements Iterabl
 		titleCollection.add(title);
 
 	}
-	private void prepareCollection() {
+	private synchronized void prepareCollection() {
 
 		if (init || (!titleIterator.hasNext() && hasMoreResults)) {
 			if(init) {
+				setHasMoreMessages(true); // FIXME check if other action should have this too
 				msg = generateFirstRequest();
 			} else {
 				msg = generateContinueRequest(nextPageInfo);
@@ -112,10 +114,14 @@ public class GetSimpleCategoryMembers extends CategoryMembers implements Iterabl
 
 	@Override
 	public String processAllReturningText(String s) throws ProcessException {
+		
+		if (log.isDebugEnabled())
+			log.debug("processAllReturningText");
 		titleCollection.clear();
 		String buff = super.processAllReturningText(s);
+		
+		log.debug(titleCollection); // TODO RM 
 		titleIterator = titleCollection.iterator();
-		log.debug(titleCollection);
 		return buff;
 	}
 
@@ -140,6 +146,11 @@ public class GetSimpleCategoryMembers extends CategoryMembers implements Iterabl
 	public void remove() {
 		titleIterator.remove();
 		
+	}
+	@Override
+	protected void finalizeParse() {
+		titleIterator = titleCollection.iterator();
+		System.err.println("SDF");	// TODO RM
 	}
 
 }

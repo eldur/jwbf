@@ -146,7 +146,7 @@
 	</target>
 
 	<target name="releaseWithoutTest" depends="jar" description="--> create release without test">
-		<echo>BUILD WITH MAVEN</echo>
+		<echo>Deprecated: download maven and use this to build</echo>
 		<!--<antcall target="releaseWithSrc" />
 		<antcall target="releaseBin" />
 		<antcall target="releaseSimpleJar" /> -->

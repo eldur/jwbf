@@ -5,7 +5,7 @@
   <artifactId>jwbf</artifactId>
   <packaging>jar</packaging>
   <name>JWBF</name>
-  <version>1.3-SNAPSHOT</version>
+  <version>1.3.0-SNAPSHOT</version>
   <description>Java Wiki Bot Framework - A Wiki helper</description>
   <url>http://jwbf.sourceforge.net/</url>
   <issueManagement>
@@ -45,6 +45,10 @@
 		<groupId>org.apache.maven.plugins</groupId>
 		<artifactId>maven-site-plugin</artifactId>
 		<version>2.0-beta-7</version>
+		<configuration>
+          <templateFile>${basedir}/util/resources/default-site.vm</templateFile>
+        </configuration>
+		
 	</plugin>
 	<plugin>
 		<groupId>org.apache.maven.plugins</groupId>
@@ -55,6 +59,7 @@
 			<target>1.5</target>
 		</configuration>
 	</plugin>
+	
 	<plugin>
 		<groupId>org.apache.maven.plugins</groupId>
 		<artifactId>maven-antrun-plugin</artifactId>
@@ -100,6 +105,8 @@
 	</plugin>
   		
   	</plugins>
+  	<extensions>
+  	</extensions>
 
   	
   </build>
@@ -168,8 +175,9 @@
   	
   	</repository>
   	<snapshotRepository>
-  		<id>sourceforge.net-snapshot</id>
+  		<id>sourceforge.net</id>
   		<url>sftp://web.sourceforge.net/home/groups/j/jw/jwbf/m2repo-snapshot</url>
+  		<uniqueVersion>true</uniqueVersion>
   	</snapshotRepository>
   </distributionManagement>
 </project>
