@@ -31,13 +31,7 @@ public class CookieException extends ActionException {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	/**
-	 * 
-	 *
-	 */
-	public CookieException() {
-//		do nothing
-	}
+
 	/**
 	 * 
 	 * @param arg0 exception text

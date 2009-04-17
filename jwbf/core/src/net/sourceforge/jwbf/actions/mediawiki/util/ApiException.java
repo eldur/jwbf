@@ -5,16 +5,15 @@ import net.sourceforge.jwbf.actions.util.ProcessException;
 
 public class ApiException extends ProcessException {
 
-	private String msg = "";
 	
-	public ApiException(String code, String value) {
-		msg = "API ERROR CODE: " + code 
-		+ " VALUE: " + value;
-	}
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -959971173922381579L;
 
-	@Override
-	public String getMessage() {
-		return msg;
+	public ApiException(String code, String value) {
+		super("API ERROR CODE: " + code 
+		+ " VALUE: " + value);
 	}
 	
 

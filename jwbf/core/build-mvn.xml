@@ -124,7 +124,10 @@
 	</target>
 	
 	<target name="manifest" description="Sets the buildversion for the current build">
-			<exec executable="svnversion" outputproperty="version.svn" failifexecutionfails="no">
+		<property name="ant.regexp.regexpimpl"
+		value="org.apache.tools.ant.util.regexp.JakartaOroRegexp" />
+	
+		<exec executable="svnversion" outputproperty="version.svn" failifexecutionfails="no">
 				<arg line="-n -c" />
 				<redirector>
 					<outputfilterchain>
@@ -137,10 +140,13 @@
 					</outputfilterchain>
 				</redirector>
 			</exec>
-			<echo>Found svn version: ${version}${version.svn}</echo>
-		
+			<echo>Found svn version: ${version.svn}</echo>
+		<condition property="build.number" value="${version}-${version.svn}" else="${version.release}-unknownBuild">
+					<matches string="${version.svn}" pattern="^[1-9]" />
+				</condition>
+				<echo>Build number is: ${build.number}</echo>
 		<manifest file="${target}/MANIFEST.MF">
-			<attribute name="Implementation-Version" value="${version}-${version.svn}"/>
+			<attribute name="Implementation-Version" value="${build.number}"/>
 		</manifest>
 		</target>
 </project>

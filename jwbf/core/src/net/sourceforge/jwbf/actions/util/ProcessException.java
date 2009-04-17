@@ -38,12 +38,6 @@ public class ProcessException extends JwbfException {
 	private static final long serialVersionUID = -3830701798846228121L;
 
 	
-	/**
-	 * 
-	 */
-	public ProcessException() {
-		super();
-	}
 	
 	/**
 	 * 

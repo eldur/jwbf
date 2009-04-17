@@ -21,6 +21,8 @@
  */
 package net.sourceforge.jwbf.bots.util;
 
+import net.sourceforge.jwbf.JWBF;
+
 /**
  * @author Thomas Stock
  *
@@ -31,18 +33,13 @@ public class JwbfException extends Exception {
 	 * 
 	 */
 	private static final long serialVersionUID = -2456904376052276104L;
-	/**
-	 * 
-	 */
-	public JwbfException() {
-		super();
-	}
+
 
 	/**
 	 * @param arg0 a
 	 */
 	public JwbfException(String arg0) {
-		super(arg0);
+		super(JWBF.class.getName() + ":" + JWBF.getVersion() + " >> " + arg0);
 	}
 
 	/**
@@ -57,7 +54,7 @@ public class JwbfException extends Exception {
 	 * @param arg1 a
 	 */
 	public JwbfException(String arg0, Throwable arg1) {
-		super(arg0, arg1);
+		super(JWBF.class.getName() + ":" + JWBF.getVersion() + " >> " + arg0, arg1);
 	}
 
 }
