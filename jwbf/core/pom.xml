@@ -50,15 +50,7 @@
         </configuration>
 		
 	</plugin>
-	<plugin>
-		<groupId>org.apache.maven.plugins</groupId>
-		<artifactId>maven-compiler-plugin</artifactId>
-		<version>2.0.2</version>
-		<configuration>
-			<source>1.5</source>
-			<target>1.5</target>
-		</configuration>
-	</plugin>
+	
 	
 	<plugin>
 		<groupId>org.apache.maven.plugins</groupId>
@@ -90,6 +82,31 @@
               </tasks>
             </configuration>
 				
+			</execution>
+			<execution>
+				<id>manifest</id>
+				<phase>process-resources</phase>
+				<goals>
+					<goal>run</goal>
+				</goals>
+				<configuration>
+              <tasks>
+                <echo>Build Dir: ${project.build.directory}</echo>
+                <echo>${java.home}</echo>
+
+                <property name="classpath.compile" refid="maven.compile.classpath"/>
+                <property name="runtime_classpath" refid="maven.runtime.classpath"/>
+                <property name="classpath.test" refid="maven.test.classpath"/>
+                <property name="plugin_classpath" refid="maven.plugin.classpath"/>
+				<property name="target" value="${project.build.directory}"/>
+				<property name="version" value="${project.version}"/>
+
+              <ant antfile="${basedir}/build-mvn.xml" inheritRefs="true">
+                  <target name="manifest"/>
+                </ant>
+              
+              </tasks>
+            </configuration>
 			</execution>
 		</executions>
 		<dependencies>

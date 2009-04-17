@@ -43,7 +43,7 @@
 			<fileset dir="test" includes="**/*" />
 		</copy>
 		<copy todir="${release}">
-			<fileset dir="buildAdds" includes="*" />
+			<fileset dir="../buildAdds" includes="*" />
 		</copy>
 		<copy todir="${release}/lib" flatten="true" >
 			<path >
@@ -86,7 +86,7 @@
 			<fileset dir="${release}/lib" excludes="*.jar"  />
 		</delete>
 		<copy todir="${release}">
-			<fileset dir="buildAdds" includes="*" />
+			<fileset dir="../buildAdds" includes="*" />
 		</copy>
 
 
@@ -112,7 +112,7 @@
 		</copy>
 
 		<copy todir="${release}">
-			<fileset dir="buildAdds" includes="*" />
+			<fileset dir="../buildAdds" includes="*" />
 		</copy>
 
 
@@ -122,4 +122,25 @@
 			<fileset dir="${release}" includes="*/**" excludes="*.tar.gz, junit" />
 		</delete>
 	</target>
+	
+	<target name="manifest" description="Sets the buildversion for the current build">
+			<exec executable="svnversion" outputproperty="version.svn" failifexecutionfails="no">
+				<arg line="-n -c" />
+				<redirector>
+					<outputfilterchain>
+						<tokenfilter>
+							<replaceregex pattern="^([0-9]*:)?" replace="" flags="g" />
+						</tokenfilter>
+						<tokenfilter>
+							<replaceregex pattern="[MS].*$" replace="" flags="g" />
+						</tokenfilter>
+					</outputfilterchain>
+				</redirector>
+			</exec>
+			<echo>Found svn version: ${version}${version.svn}</echo>
+		
+		<manifest file="${target}/MANIFEST.MF">
+			<attribute name="Implementation-Version" value="${version}-${version.svn}"/>
+		</manifest>
+		</target>
 </project>
