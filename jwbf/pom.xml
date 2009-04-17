@@ -77,6 +77,7 @@
   </profiles>
   <modules>
   	<module>core</module>
+  	<module>wiki/mediawiki</module>
   </modules>
   <dependencies>
   	<dependency>

@@ -2,6 +2,7 @@
 <classpath>
 	<classpathentry kind="src" output="core/bin" path="core/src"/>
 	<classpathentry kind="src" output="core/bin" path="core/test"/>
+	<classpathentry kind="src" path="wiki/mediawiki/src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/J2SE-1.5"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/tools"/>
 	<classpathentry kind="con" path="org.maven.ide.eclipse.MAVEN2_CLASSPATH_CONTAINER"/>
