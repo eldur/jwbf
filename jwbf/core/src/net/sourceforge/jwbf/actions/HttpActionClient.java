@@ -24,7 +24,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Iterator;
 
-import net.sourceforge.jwbf.actions.mediawiki.MediaWiki;
 import net.sourceforge.jwbf.actions.util.ActionException;
 import net.sourceforge.jwbf.actions.util.CookieException;
 import net.sourceforge.jwbf.actions.util.HttpAction;
@@ -207,8 +206,8 @@ public class HttpActionClient {
 		showCookies(client);
 		
 		authpost.getParams().setParameter("http.protocol.content-charset",
-				MediaWiki.getCharset());
-		authpost.getParams().setContentCharset(MediaWiki.getCharset());
+				ha.getCharset());
+		authpost.getParams().setContentCharset(ha.getCharset());
 		String out = "";
 
 		client.executeMethod(authpost);
@@ -283,7 +282,7 @@ public class HttpActionClient {
 		debug(authgets, ha);
 		String out = "";
 		authgets.getParams().setParameter("http.protocol.content-charset",
-				MediaWiki.getCharset());
+				ha.getCharset());
 //		System.err.println(authgets.getParams().getParameter("http.protocol.content-charset"));
 		
 		client.executeMethod(authgets);
@@ -324,7 +323,7 @@ public class HttpActionClient {
 		GetMethod authgets = new GetMethod(ha.getRequest());
 		byte[] out = null;
 		authgets.getParams().setParameter("http.protocol.content-charset",
-				MediaWiki.getCharset());
+				ha.getCharset());
 //		System.err.println(authgets.getParams().getParameter("http.protocol.content-charset"));
 		
 		client.executeMethod(authgets);

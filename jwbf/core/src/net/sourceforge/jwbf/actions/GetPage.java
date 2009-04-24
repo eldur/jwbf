@@ -40,10 +40,18 @@ public class GetPage implements ContentProcessable {
 	/**
 	 * 
 	 * @param u like "/index.php?title=Special:Recentchanges&feed=rss"
+	 * @param charset like "uft-8"
+	 */
+	public GetPage(String u, String charset) {		
+		msg = new Get(u, charset);
+	}
+	
+	/**
+	 * 
+	 * @param u like "/index.php?title=Special:Recentchanges&feed=rss"
 	 */
 	public GetPage(String u) {		
-		msg = new Get(u);
-		
+		this(u, "utf-8");
 	}
 	/**
 	 * @return true if

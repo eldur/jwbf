@@ -8,8 +8,16 @@ public class FilePost extends Post {
 
 	private Map<String, Object> parts = new HashMap<String, Object>();
 	
+	public FilePost(String req, String charset) {
+		super(req, charset);
+	}
+	/**
+	 * use uft-8 as default charset
+	 * @param req
+	 * 
+	 */
 	public FilePost(String req) {
-		super(req);
+		this(req, "utf-8");
 	}
 	
 	

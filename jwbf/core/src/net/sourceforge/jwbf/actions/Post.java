@@ -7,12 +7,22 @@ import net.sourceforge.jwbf.actions.util.HttpAction;
 
 public class Post implements HttpAction {
 
-	final private String req;
+	private final String req;
 	private Map<String, String> params = new HashMap<String, String>();
+	private final String charset;
 	
-	public Post(String req) {
+	public Post(String req, String charset) {
 		this.req = req;
+		this.charset = charset;
 	}
+	/**
+	 * Use utf-8 as default charset
+	 * @param req a
+	 */
+	public Post(String req) {
+		this(req, "utf-8");
+	}
+	
 
 	public void addParam(String key, String value) {
 		params.put(key, value);
@@ -24,6 +34,10 @@ public class Post implements HttpAction {
 	
 	public String getRequest() {
 		return req;
+	}
+
+	public String getCharset() {
+		return charset;
 	}
 	
 	
