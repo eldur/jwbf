@@ -2,9 +2,9 @@
  <!-- -Dmaven.test.skip=true -->
   <modelVersion>4.0.0</modelVersion>
   <groupId>net.sourceforge</groupId>
-  <artifactId>jwbf</artifactId>
-  <packaging>pom</packaging>
-  <name>JWBF</name>
+  <artifactId>jwbf-zim</artifactId>
+  <name>JWBF-MediaWiki</name>
+  <packaging>jar</packaging>
   <version>1.3.0-SNAPSHOT</version>
   <description>Java Wiki Bot Framework - A Wiki helper</description>
   <url>http://jwbf.sourceforge.net/</url>
@@ -28,17 +28,19 @@
   </license>
 </licenses>
   <build>
+  	<sourceDirectory>src</sourceDirectory>
+  	<testSourceDirectory>test</testSourceDirectory>
+  	<outputDirectory>bin</outputDirectory>
+  	<testOutputDirectory>bin</testOutputDirectory>
   	<resources>
   	</resources>
  
   	<plugins>
 	<plugin>
 		<groupId>org.apache.maven.plugins</groupId>
-		<artifactId>maven-site-plugin</artifactId>
-		<version>2.0-beta-7</version>
-		<configuration>
-          <templateFile>${basedir}/util/resources/default-site.vm</templateFile>
-        </configuration>
+		<artifactId>maven-jar-plugin</artifactId>
+		<version>2.2</version>
+		
 	</plugin>
 	<plugin>
 		<groupId>org.apache.maven.plugins</groupId>
@@ -51,19 +53,11 @@
 	</plugin>
 	<plugin>
 		<groupId>org.apache.maven.plugins</groupId>
-		<artifactId>maven-antrun-plugin</artifactId>
-		<version>1.3</version>
-		<executions>
-		</executions>
-		<dependencies>
-                <dependency>
-                 <groupId>sun.jdk</groupId>
-                 <artifactId>tools</artifactId>
-                 <version>1.5</version>
-                 <scope>system</scope>
-                 <systemPath>${java.home}/../lib/tools.jar</systemPath>
-         </dependency>
-         </dependencies>
+		<artifactId>maven-site-plugin</artifactId>
+		<version>2.0-beta-7</version>
+		<configuration>
+          <templateFile>${basedir}/util/resources/default-site.vm</templateFile>
+        </configuration>
 		
 	</plugin>
   		
@@ -75,11 +69,6 @@
   </build>
   <profiles>
   </profiles>
-  <modules>
-  	<module>core</module>
-  	<module>wiki/mediawiki</module>
-  	<module>wiki/zim</module>
-  </modules>
   <dependencies>
   	<dependency>
   		<groupId>commons-httpclient</groupId>
@@ -106,6 +95,13 @@
   		<groupId>log4j</groupId>
   		<artifactId>log4j</artifactId>
   		<version>1.2.14</version>
+  		<type>jar</type>
+  		<scope>compile</scope>
+  	</dependency>
+  	<dependency>
+  		<groupId>net.sourceforge</groupId>
+  		<artifactId>jwbf-core</artifactId>
+  		<version>1.3.0-SNAPSHOT</version>
   		<type>jar</type>
   		<scope>compile</scope>
   	</dependency>

@@ -4,6 +4,8 @@
 	<classpathentry kind="src" output="core/bin" path="core/test"/>
 	<classpathentry kind="src" output="wiki/mediawiki/bin" path="wiki/mediawiki/src"/>
 	<classpathentry kind="src" output="wiki/mediawiki/bin" path="wiki/mediawiki/test"/>
+	<classpathentry kind="src" output="wiki/zim/bin" path="wiki/zim/src"/>
+	<classpathentry kind="src" output="wiki/zim/bin" path="wiki/zim/test"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/J2SE-1.5"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/tools"/>
 	<classpathentry kind="con" path="org.maven.ide.eclipse.MAVEN2_CLASSPATH_CONTAINER"/>
