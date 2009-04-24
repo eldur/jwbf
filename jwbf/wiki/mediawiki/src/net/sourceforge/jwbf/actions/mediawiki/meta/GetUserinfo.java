@@ -3,8 +3,9 @@ package net.sourceforge.jwbf.actions.mediawiki.meta;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
+import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Vector;
+import java.util.Set;
 
 import net.sourceforge.jwbf.actions.Get;
 import net.sourceforge.jwbf.actions.mediawiki.MediaWiki;
@@ -27,8 +28,8 @@ public class GetUserinfo extends MWAction {
 	private Userinfo userinfo;
 	private final Logger log = Logger.getLogger(getClass());
 	private String username = "";
-	private final Vector<String> rights = new Vector<String>();
-	private final Vector<String> groups = new Vector<String>();
+	private final Set<String> rights = new HashSet<String>();
+	private final Set<String> groups = new HashSet<String>();
 	private Get msg;
 	
 	public GetUserinfo(Version v) throws VersionException {
