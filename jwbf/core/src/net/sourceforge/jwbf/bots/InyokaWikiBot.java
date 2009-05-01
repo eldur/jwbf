@@ -95,4 +95,10 @@ public class InyokaWikiBot extends HttpBot implements WikiBot {
 
 		return new Userinfo("unknown");
 	}
+
+
+	public String getWikiType() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

@@ -142,6 +142,11 @@ public class ZimWikiBot implements WikiBot {
 	public Userinfo getUserinfo() throws ActionException, ProcessException {
 		return new Userinfo(System.getProperty("user.name"));
 	}
+
+
+	public String getWikiType() {
+		return "Zim";
+	}
 	
 //	public String getMWFolder() {
 //		return mwFolder;

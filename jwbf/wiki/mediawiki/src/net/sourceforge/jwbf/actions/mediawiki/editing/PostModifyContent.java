@@ -40,10 +40,9 @@ import org.apache.log4j.Logger;
  * Writes an article.
  * 
  * 
- * TODO no api use.
  * @author Thomas Stock
- * @supportedBy MediaWiki 1.9.x, 1.10.x, 1.11.x, 1.12.x, 1.13.x, 1.14.x
- * 
+ * @supportedBy MediaWiki 1.9.x, 1.10.x, 1.11.x, 1.12.x, 1.13.x
+ * @supportedBy MediaWikiAPI 1.14.x
  */
 public class PostModifyContent extends MWAction {
 
@@ -73,11 +72,13 @@ public class PostModifyContent extends MWAction {
 
 	}
 
-	
+
 	public HttpAction getNextMessage() {
 
 		if (first) {
 			try {
+				if (!bot.isEditApi()) 
+					throw new VersionException("write api off - user triggerd");
 				switch (bot.getSiteinfo().getVersion()) {
 				case MW1_09:
 				case MW1_10:
@@ -88,7 +89,8 @@ public class PostModifyContent extends MWAction {
 					break;
 				}
 				first = false;
-				if (!bot.getUserinfo().getRights().contains("edit")) {
+				if (!(bot.getUserinfo().getRights().contains("edit") 
+						&& bot.getUserinfo().getRights().contains("writeapi")  )) {
 					throw new VersionException("write api not avalibal");
 				}
 				apiReq = new GetApiToken(GetApiToken.Intoken.EDIT,
@@ -167,6 +169,12 @@ public class PostModifyContent extends MWAction {
 	@Override
 	public String processReturningText(String s, HttpAction hm)
 			throws ProcessException {
+		if (s.contains("error")) { // FIXME RM
+//			if (s.contains("edit") && bot.getVersion() == Version.MW1_13) { // FIXME invalid
+//				throw new ProcessException("please check if $wgEnableWriteAPI = true;");
+//			}
+			throw new ProcessException(s);
+		}
 		if (initOldGet != null && hm.getRequest().equals(initOldGet.getRequest())) {
 			getWpValues(s, tab);
 			log.debug(tab);

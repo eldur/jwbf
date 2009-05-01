@@ -125,4 +125,30 @@ public class UserinfoTest extends LiveTestFather {
 		testDetails(bot, getValue("wikiMW1_14_user"));
 	}
 	
+	/**
+	 * Test category read. Test category must have more then 50 members.
+	 * @throws Exception a
+	 */
+	@Test
+	public final void userInfoWikiMW1_14Rights() throws Exception {
+		bot = new MediaWikiAdapterBot(getValue("wikiMW1_14_url"));
+		
+		
+		Assert.assertTrue( "Wrong Wiki Version " + bot.getVersion() , Version.MW1_14.equals(bot.getVersion()));
+		
+		Userinfo u = bot.getUserinfo();
+		Assert.assertNotSame("unknown", u.getUsername());
+		Assert.assertNotSame(getValue("wikiMW1_14_user"), u.getUsername());
+		u = bot.getUserinfo();
+		Assert.assertNotSame("unknown", u.getUsername());
+		Assert.assertNotSame(getValue("wikiMW1_14_user"), u.getUsername());
+		bot.login(getValue("wikiMW1_14_user"), getValue("wikiMW1_14_pass"));
+		u = bot.getUserinfo();
+		Assert.assertEquals(getValue("wikiMW1_14_user"), u.getUsername());
+			Assert.assertFalse("User has no groups", u.getGroups().isEmpty());
+			Assert.assertTrue("User has no read rights", u.getRights().contains("read"));
+		
+	
+	}
+	
 }

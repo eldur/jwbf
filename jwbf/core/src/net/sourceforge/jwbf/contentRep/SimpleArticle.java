@@ -254,10 +254,7 @@ public class SimpleArticle implements ArticleMeta {
 		this.editTimestamp = d;
 	}
 
-	public String getSyntaxType() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	
 
 	
 }

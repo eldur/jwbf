@@ -21,6 +21,9 @@
  */
 package net.sourceforge.jwbf.bots.util;
 
+import java.io.PrintStream;
+import java.io.PrintWriter;
+
 import net.sourceforge.jwbf.JWBF;
 
 /**
@@ -39,7 +42,8 @@ public class JwbfException extends Exception {
 	 * @param arg0 a
 	 */
 	public JwbfException(String arg0) {
-		super(JWBF.class.getName() + ":" + JWBF.getVersion() + " >> " + arg0);
+		super(arg0);
+	
 	}
 
 	/**
@@ -54,7 +58,27 @@ public class JwbfException extends Exception {
 	 * @param arg1 a
 	 */
 	public JwbfException(String arg0, Throwable arg1) {
-		super(JWBF.class.getName() + ":" + JWBF.getVersion() + " >> " + arg0, arg1);
+		super(arg0, arg1);
 	}
 
+	
+	@Override
+	public void printStackTrace(PrintWriter arg0) {
+		arg0.println("JWBF.version:" + JWBF.getVersion());
+		super.printStackTrace(arg0);
+	}
+
+	@Override
+	public void printStackTrace() {
+		System.out.println("JWBF.version:" + JWBF.getVersion());
+		super.printStackTrace();
+	}
+
+	@Override
+	public void printStackTrace(PrintStream s) {
+		s.println("JWBF.version:" + JWBF.getVersion());
+		super.printStackTrace(s);
+	}
+
+	
 }

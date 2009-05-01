@@ -19,4 +19,5 @@ public interface WikiBot {
 	
 	void login(String user, String passwd) throws ActionException;
 	Userinfo getUserinfo() throws ActionException, ProcessException;
+	String getWikiType();
 }

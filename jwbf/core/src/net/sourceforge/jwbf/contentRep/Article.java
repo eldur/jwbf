@@ -90,6 +90,9 @@ public class Article extends SimpleArticle {
 		return getText().length() < 1;
 	}
 	
+	public WikiBot getBot() {
+		return bot;
+	}
 
 
 }

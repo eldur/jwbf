@@ -10,6 +10,7 @@ import java.net.URL;
 import java.net.UnknownHostException;
 
 import net.sourceforge.jwbf.actions.ContentProcessable;
+import net.sourceforge.jwbf.actions.mediawiki.MediaWiki;
 import net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version;
 import net.sourceforge.jwbf.actions.mediawiki.editing.GetRevision;
 import net.sourceforge.jwbf.actions.mediawiki.editing.PostDelete;
@@ -67,6 +68,12 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
 	private Version version = null;
 	private Userinfo ui = null;
 	
+	private boolean loginChangeUserInfo = false;
+	private boolean loginChangeVersion = false;
+	private boolean useEditApi = true;
+	
+	
+
 	protected MediaWikiBot() {
 		// design for extension
 	}
@@ -87,6 +94,7 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
 	 * @throws MalformedURLException
 	 *            if param url does not represent a well-formed url
 	 */
+	
 	public MediaWikiBot(final String url) throws MalformedURLException {
 		super();
 		if (!(url.endsWith(".php") || url.endsWith("/"))) {
@@ -148,7 +156,8 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
 			}
 
 			this.login = login;
-
+			loginChangeUserInfo = true;
+			loginChangeVersion = true;
 		} catch (ProcessException e) {
 			throw new ActionException(e.getLocalizedMessage());
 		} catch (RuntimeException e) {
@@ -253,8 +262,7 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
 		if (!isLoggedIn()) {
 			throw new ActionException("Please login first");
 		}
-		if (a.getText().trim().length() < 1 ) 
-			throw new RuntimeException("Content is empty");
+		
 		if (store != null) {
 			String label = a.getLabel();
 			SimpleArticle sa;
@@ -273,7 +281,8 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
 			
 		performAction(new PostModifyContent(this, a));
 		
-		
+		if (a.getText().trim().length() < 1 ) 
+			throw new RuntimeException("Content is empty, still written");
 	}
 	
 	/**
@@ -296,12 +305,15 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
 	 * @throws ProcessException on access problems
 	 */
 	public Userinfo getUserinfo() throws ActionException, ProcessException {
-		if (ui == null) {
+		log.debug("get userinfo");
+		if (ui == null || loginChangeUserInfo) {
 			GetUserinfo a;
 			try {
 				a = new GetUserinfo(getVersion());
+				
 				performAction(a);
 				ui = a.getUserinfo();
+				loginChangeUserInfo = false;
 			} catch (VersionException e) {
 				e.printStackTrace();
 				if (login != null && login.getUserName().length() > 0) {
@@ -336,13 +348,14 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
 	 * @see #getSiteinfo()
 	 */
 	public final Version getVersion() throws RuntimeException {
-		if (version == null) {
+		if (version == null || loginChangeVersion ) {
 			GetVersion gs = new GetVersion();
 
 			try {
 				performAction(gs);
 
 				version = gs.getSiteinfo().getVersion();
+				loginChangeVersion = false;
 			} catch (JwbfException e) {
 				log.error(e.getClass().getName() + e.getLocalizedMessage());
 				throw new RuntimeException(e.getLocalizedMessage());
@@ -372,6 +385,26 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
 		return gs.getSiteinfo();
 
 	}
+	/**
+	 * 
+	 * @return the
+	 */
+	public final boolean isEditApi() {
+		return useEditApi;
+	}
+
+	/**
+	 * 
+	 * @param useEditApi if
+	 */
+	public final void useEditApi(boolean useEditApi) {
+		this.useEditApi = useEditApi;
+	}
+
+	public final String getWikiType() {
+		return MediaWiki.class.getName();
+	}
+
 
 
 

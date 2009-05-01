@@ -64,12 +64,12 @@ public final class JWBF {
 		if (implementationVersion == null) {
 			return "DEVEL";
 		} else {
-			return prepareVersion(implementationVersion);
+			return implementationVersion;
 		}
 
 	}
 	/**
-	 * 
+	 * @deprecated
 	 * @param implementationVersion raw
 	 * @return formated version
 	 */

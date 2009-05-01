@@ -102,4 +102,10 @@ public class TracWikiBot extends HttpBot implements WikiBot {
 		return new Userinfo("unknown");
 	}
 
+
+	public String getWikiType() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

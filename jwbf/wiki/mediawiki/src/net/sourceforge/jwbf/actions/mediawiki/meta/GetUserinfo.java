@@ -63,6 +63,8 @@ public class GetUserinfo extends MWAction {
 	
 	private void parse(final String xml) {
 		log.debug(xml);
+		rights.clear();
+		groups.clear();
 		SAXBuilder builder = new SAXBuilder();
 		Element root = null;
 		try {

@@ -30,7 +30,8 @@ public class GetVersion extends MWAction {
 	}
 	
 	private void parse(final String xml) throws ProcessException {
-//		log.debug(xml);
+		log.debug(xml); // TODO RM
+
 		SAXBuilder builder = new SAXBuilder();
 		Element root = null;
 		try {

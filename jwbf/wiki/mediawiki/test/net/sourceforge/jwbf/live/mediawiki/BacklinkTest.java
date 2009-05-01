@@ -100,7 +100,7 @@ public class BacklinkTest extends LiveTestFather {
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_09_url"));
 		bot.login(getValue("wikiMW1_09_user"),
 				getValue("wikiMW1_09_pass"));
-		Assert.assertEquals(bot.getVersion(), Version.MW1_09);
+		Assert.assertEquals(Version.MW1_09, bot.getVersion());
 		
 		doTest(bot);
 	}
@@ -110,7 +110,7 @@ public class BacklinkTest extends LiveTestFather {
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_09_url"));
 		bot.login(getValue("wikiMW1_09_user"),
 				getValue("wikiMW1_09_pass"));
-		Assert.assertEquals(bot.getVersion(), Version.MW1_09);
+		Assert.assertEquals(Version.MW1_09, bot.getVersion() );
 		doTest(bot, RedirectFilter.redirects);
 	}
 
@@ -126,7 +126,7 @@ public class BacklinkTest extends LiveTestFather {
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_10_url"));
 		bot.login(getValue("wikiMW1_10_user"),
 				getValue("wikiMW1_10_pass"));
-		Assert.assertEquals(bot.getVersion(), Version.MW1_10);
+		Assert.assertEquals(Version.MW1_10, bot.getVersion());
 		
 		doTest(bot);
 	}
@@ -144,7 +144,7 @@ public class BacklinkTest extends LiveTestFather {
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_11_url"));
 		bot.login(getValue("wikiMW1_11_user"),
 				getValue("wikiMW1_11_pass"));
-		Assert.assertEquals(bot.getVersion(), Version.MW1_11);
+		Assert.assertEquals(Version.MW1_11, bot.getVersion());
 		
 		doTest(bot);
 	}
@@ -162,7 +162,7 @@ public class BacklinkTest extends LiveTestFather {
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_12_url"));
 		bot.login(getValue("wikiMW1_12_user"),
 				getValue("wikiMW1_12_pass"));
-		Assert.assertEquals(bot.getVersion(), Version.MW1_12);
+		Assert.assertEquals(Version.MW1_12, bot.getVersion());
 		
 		doTest(bot);
 	}
@@ -180,7 +180,7 @@ public class BacklinkTest extends LiveTestFather {
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_13_url"));
 		bot.login(getValue("wikiMW1_13_user"),
 				getValue("wikiMW1_13_pass"));
-		Assert.assertEquals(bot.getVersion(), Version.MW1_13);
+		Assert.assertEquals(Version.MW1_13, bot.getVersion() );
 		doTest(bot);
 		
 	}
@@ -197,7 +197,7 @@ public class BacklinkTest extends LiveTestFather {
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_14_url"));
 		bot.login(getValue("wikiMW1_14_user"),
 				getValue("wikiMW1_14_pass"));
-		Assert.assertEquals(bot.getVersion(), Version.MW1_14);
+		Assert.assertEquals(Version.MW1_14, bot.getVersion());
 		doTest(bot);
 		
 	}
