@@ -4,6 +4,7 @@ import java.util.Iterator;
 
 import net.sourceforge.jwbf.actions.Get;
 import net.sourceforge.jwbf.actions.mediawiki.MediaWiki;
+import net.sourceforge.jwbf.actions.mediawiki.util.VersionException;
 import net.sourceforge.jwbf.actions.util.HttpAction;
 import net.sourceforge.jwbf.contentRep.mediawiki.Siteinfo;
 
@@ -20,7 +21,7 @@ public class GetSiteinfo extends GetVersion {
 
 	
 	private Get msg;
-	public GetSiteinfo() {
+	public GetSiteinfo() throws VersionException {
 
 		msg = new Get("/api.php?action=query&meta=siteinfo" + "&siprop="
 				+ MediaWiki.encode("general|namespaces") + "&format=xml");

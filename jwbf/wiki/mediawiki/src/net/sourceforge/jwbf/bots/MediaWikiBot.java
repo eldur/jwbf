@@ -349,9 +349,10 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
 	 */
 	public final Version getVersion() throws RuntimeException {
 		if (version == null || loginChangeVersion ) {
-			GetVersion gs = new GetVersion();
+			
 
 			try {
+				GetVersion gs = new GetVersion();
 				performAction(gs);
 
 				version = gs.getSiteinfo().getVersion();
@@ -374,9 +375,10 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
 	 * @see GetSiteinfo
 	 */
 	public Siteinfo getSiteinfo() throws ActionException {
-		GetSiteinfo gs = new GetSiteinfo();
-
+		
+		GetSiteinfo gs = null;
 		try {
+			gs = new GetSiteinfo();
 			performAction(gs);
 		} catch (ProcessException e) {
 			e.printStackTrace();

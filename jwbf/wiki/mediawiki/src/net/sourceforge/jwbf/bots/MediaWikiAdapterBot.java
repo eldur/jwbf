@@ -33,14 +33,15 @@ import java.util.Iterator;
 import net.sourceforge.jwbf.actions.mediawiki.editing.FileUpload;
 import net.sourceforge.jwbf.actions.mediawiki.queries.AllPageTitles;
 import net.sourceforge.jwbf.actions.mediawiki.queries.BacklinkTitles;
-import net.sourceforge.jwbf.actions.mediawiki.queries.FullCategoryMembers;
-import net.sourceforge.jwbf.actions.mediawiki.queries.GetImageInfo;
-import net.sourceforge.jwbf.actions.mediawiki.queries.GetRecentchanges;
-import net.sourceforge.jwbf.actions.mediawiki.queries.GetSimpleCategoryMembers;
-import net.sourceforge.jwbf.actions.mediawiki.queries.TemplateUserTitles;
+import net.sourceforge.jwbf.actions.mediawiki.queries.CategoryMembersFull;
+import net.sourceforge.jwbf.actions.mediawiki.queries.CategoryMembersSimple;
+import net.sourceforge.jwbf.actions.mediawiki.queries.ImageInfo;
 import net.sourceforge.jwbf.actions.mediawiki.queries.ImageUsageTitles;
 import net.sourceforge.jwbf.actions.mediawiki.queries.LogEvents;
+import net.sourceforge.jwbf.actions.mediawiki.queries.RecentchangeTitles;
+import net.sourceforge.jwbf.actions.mediawiki.queries.TemplateUserTitles;
 import net.sourceforge.jwbf.actions.mediawiki.queries.BacklinkTitles.RedirectFilter;
+import net.sourceforge.jwbf.actions.mediawiki.util.VersionException;
 import net.sourceforge.jwbf.actions.util.ActionException;
 import net.sourceforge.jwbf.actions.util.ProcessException;
 import net.sourceforge.jwbf.contentRep.ContentAccessable;
@@ -117,7 +118,7 @@ public class MediaWikiAdapterBot extends MediaWikiBot {
 	 */
 	public Iterable<String> getAllPageTitles(String from, String prefix,
 			boolean redirects, boolean nonredirects, int... namespaces)
-			throws ActionException {
+			throws ActionException, VersionException {
 		AllPageTitles a = new AllPageTitles( this, from, prefix, redirects, nonredirects, namespaces );
 		return a;
 	}
@@ -126,7 +127,7 @@ public class MediaWikiAdapterBot extends MediaWikiBot {
 	 * @see AllPageTitles
 	 */
 	public Iterable<String> getAllPageTitles(int... namespaces)
-			throws ActionException {
+			throws ActionException, VersionException {
 		return getAllPageTitles(null, null, false, true, namespaces);
 
 
@@ -136,7 +137,7 @@ public class MediaWikiAdapterBot extends MediaWikiBot {
 	 * @see AllPageTitles
 	 */
 	public Iterable<String> getAllPageTitles(String from, String prefix,
-			boolean redirects, boolean nonredirects) throws ActionException {
+			boolean redirects, boolean nonredirects) throws ActionException, VersionException {
 
 		return getAllPageTitles(from, prefix, redirects, nonredirects, null);
 
@@ -187,33 +188,33 @@ public class MediaWikiAdapterBot extends MediaWikiBot {
 
 	/**
 	 *
-	 * @see GetSimpleCategoryMembers
+	 * @see CategoryMembersSimple
 	 */
 	public Iterable<String> getCategoryMembers(String category) throws ActionException, ProcessException {
 		return getCategoryMembers(category, NS_MAIN);
 	}
 
 	/**
-	 * @see GetSimpleCategoryMembers
+	 * @see CategoryMembersSimple
 	 */
 	public Iterable<String> getCategoryMembers(String category, int... namespaces) throws ActionException, ProcessException {
-		GetSimpleCategoryMembers c = new GetSimpleCategoryMembers(this, category, namespaces);
+		CategoryMembersSimple c = new CategoryMembersSimple(this, category, namespaces);
 		return c;
 
 	}
 	/**
 	 *
-	 * @see FullCategoryMembers
+	 * @see CategoryMembersFull
 	 */
 	public Iterable<CategoryItem> getFullCategoryMembers(String category) throws ActionException, ProcessException {
 		return getFullCategoryMembers(category, NS_MAIN);
 	}
 	/**
 	 *
-	 * @see FullCategoryMembers
+	 * @see CategoryMembersFull
 	 */
 	public Iterable<CategoryItem> getFullCategoryMembers(String category, int... namespaces) throws ActionException, ProcessException {
-		FullCategoryMembers c = new FullCategoryMembers(this, category, namespaces );
+		CategoryMembersFull c = new CategoryMembersFull(this, category, namespaces );
 		return c;
 		
 	}
@@ -268,7 +269,7 @@ public class MediaWikiAdapterBot extends MediaWikiBot {
 	 *
 	 */
 	public Iterable<String> getImagelinkTitles(String image, int... namespaces)
-			throws ActionException {
+			throws ActionException , VersionException{
 		ImageUsageTitles a = new ImageUsageTitles(this, image,
 				namespaces);
 
@@ -288,18 +289,18 @@ public class MediaWikiAdapterBot extends MediaWikiBot {
 	 * @see #getImagelinkTitles(String, int...)
 	 */
 	public Iterable<String> getImagelinkTitles(String image)
-			throws ActionException {
+			throws ActionException, VersionException {
 
 		return getImagelinkTitles(image, null);
 
 	}
 	/**
 	 * @param imagename a
-	 * @see GetImageInfo
+	 * @see ImageInfo
 	 */
 	public String getImageInfo(String imagename) throws ActionException, ProcessException {
 		
-		GetImageInfo a = new GetImageInfo(imagename, getVersion(), getHostUrl());
+		ImageInfo a = new ImageInfo(imagename, getVersion(), getHostUrl());
 		performAction(a);
 		return a.getUrlAsString();
 	}
@@ -356,7 +357,7 @@ public class MediaWikiAdapterBot extends MediaWikiBot {
 	 *
 	 */
 	public Iterable<String> getTemplateUserTitles(String template,
-			int... namespaces) throws ActionException {
+			int... namespaces) throws ActionException, VersionException {
 		
 		TemplateUserTitles a = new TemplateUserTitles(this, template,
 				namespaces);
@@ -377,7 +378,7 @@ public class MediaWikiAdapterBot extends MediaWikiBot {
 	 * @see #getTemplateUserTitles(String, int...)
 	 */
 	public Iterable<String> getTemplateUserTitles(String template)
-			throws ActionException {
+			throws ActionException, VersionException {
 		return getTemplateUserTitles(template, null);
 
 	}
@@ -394,11 +395,11 @@ public class MediaWikiAdapterBot extends MediaWikiBot {
 	 * @return a
 	 * @throws ActionException
 	 *             on problems with http, cookies and io
-	 * @see GetRecentchanges
+	 * @see RecentchangeTitles
 	 */
 	public Iterable<String> getRecentchangesTitles(
-			int... namespaces) throws ActionException {
-		GetRecentchanges a = new GetRecentchanges(this,
+			int... namespaces) throws ActionException, VersionException {
+		RecentchangeTitles a = new RecentchangeTitles(this,
 				namespaces);
 		
 		return a;
@@ -417,7 +418,7 @@ public class MediaWikiAdapterBot extends MediaWikiBot {
 	 * TODO TEST
 	 */
 	public Iterable<String> getRecentchangesTitles()
-			throws ActionException {
+			throws ActionException, VersionException {
 
 		return getRecentchangesTitles(NS_MAIN);
 	}

@@ -31,7 +31,7 @@ import java.net.URLConnection;
 import net.sourceforge.jwbf.LiveTestFather;
 import net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version;
 import net.sourceforge.jwbf.actions.mediawiki.editing.FileUpload;
-import net.sourceforge.jwbf.actions.mediawiki.queries.GetImageInfo;
+import net.sourceforge.jwbf.actions.mediawiki.queries.ImageInfo;
 import net.sourceforge.jwbf.actions.mediawiki.util.VersionException;
 import net.sourceforge.jwbf.bots.MediaWikiAdapterBot;
 import net.sourceforge.jwbf.contentRep.mediawiki.SimpleFile;
@@ -106,7 +106,7 @@ public class UploadAndImageInfoTest extends LiveTestFather {
 		bot.performAction(up);
 		
 		
-		GetImageInfo gi = new GetImageInfo(sf.getLabel(), bot.getVersion(), bot.getHostUrl());
+		ImageInfo gi = new ImageInfo(sf.getLabel(), bot.getVersion(), bot.getHostUrl());
 		bot.performAction(gi);
 		URL url = new URL(gi.getUrlAsString());
 		System.out.println(url);

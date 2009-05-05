@@ -30,7 +30,7 @@ import org.xml.sax.InputSource;
  *
  */
 
-public class GetImageInfo extends MWAction {
+public class ImageInfo extends MWAction {
 
 	private String urlOfImage  = "";
 	private Get msg;
@@ -45,7 +45,7 @@ public class GetImageInfo extends MWAction {
 	 * @throws VersionException if not supported
 	 * 
 	 */
-	public GetImageInfo(String name, Version v, String botHostUrl) throws VersionException {
+	public ImageInfo(String name, Version v, String botHostUrl) throws VersionException {
 		this.hostUrl = botHostUrl;
 		switch (v) {
 		case MW1_09:
@@ -69,7 +69,7 @@ public class GetImageInfo extends MWAction {
 	 * @throws VersionException if not supported
 	 * 
 	 */
-	public GetImageInfo(String name, Version v) throws VersionException {
+	public ImageInfo(String name, Version v) throws VersionException {
 		this(name, v, "");
 	}
 

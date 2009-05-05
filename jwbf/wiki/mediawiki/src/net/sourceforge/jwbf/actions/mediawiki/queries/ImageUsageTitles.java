@@ -20,14 +20,13 @@
 package net.sourceforge.jwbf.actions.mediawiki.queries;
 
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import net.sourceforge.jwbf.actions.Get;
 import net.sourceforge.jwbf.actions.mediawiki.MediaWiki;
-import net.sourceforge.jwbf.actions.mediawiki.util.MWAction;
+import net.sourceforge.jwbf.actions.mediawiki.util.VersionException;
 import net.sourceforge.jwbf.actions.util.ActionException;
 import net.sourceforge.jwbf.actions.util.HttpAction;
 import net.sourceforge.jwbf.actions.util.ProcessException;
@@ -83,7 +82,7 @@ public class ImageUsageTitles extends TitleQuery {
 	 * (from outside this class).
 	 * For the parameters, see {@link ImageUsageTitles#generateRequest(String, String, String)}
 	 */
-	public ImageUsageTitles(MediaWikiBot bot, String imageName, int... namespaces) {
+	public ImageUsageTitles(MediaWikiBot bot, String imageName, int... namespaces) throws VersionException {
 		this.bot = bot;
 		this.imageName = imageName;
 		this.namespaces = namespaces;
@@ -102,7 +101,7 @@ public class ImageUsageTitles extends TitleQuery {
 	}
 	
 
-	public ImageUsageTitles(MediaWikiBot bot, String nextPageInfo) {
+	public ImageUsageTitles(MediaWikiBot bot, String nextPageInfo) throws VersionException {
 		this(bot, nextPageInfo, MediaWiki.NS_ALL);
 		
 	}
@@ -205,10 +204,16 @@ public class ImageUsageTitles extends TitleQuery {
 	}
 
 
-
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	protected Object clone() throws CloneNotSupportedException {
-		return new ImageUsageTitles(bot, imageName, namespaces);
+		try {
+			return new ImageUsageTitles(bot, imageName, namespaces);
+		} catch (VersionException e) {
+			throw new CloneNotSupportedException(e.getLocalizedMessage());
+		}
 	}
 	
 	private abstract class VersionHandler {

@@ -26,6 +26,7 @@ import java.util.regex.Pattern;
 
 import net.sourceforge.jwbf.actions.Get;
 import net.sourceforge.jwbf.actions.mediawiki.MediaWiki;
+import net.sourceforge.jwbf.actions.mediawiki.util.VersionException;
 import net.sourceforge.jwbf.actions.util.ActionException;
 import net.sourceforge.jwbf.actions.util.HttpAction;
 import net.sourceforge.jwbf.actions.util.ProcessException;
@@ -76,7 +77,7 @@ public class TemplateUserTitles extends TitleQuery   {
 	 * (from outside this class).
 	 * For the parameters, see {@link TemplateUserTitles#generateRequest(String, String, String)}
 	 */
-	public TemplateUserTitles(MediaWikiBot bot, String templateName, int ... namespaces){
+	public TemplateUserTitles(MediaWikiBot bot, String templateName, int ... namespaces) throws VersionException {
 		this.bot = bot;
 		this.templateName = templateName;
 		this.namespaces = namespaces;
@@ -235,7 +236,11 @@ public class TemplateUserTitles extends TitleQuery   {
 
 	@Override
 	protected Object clone() throws CloneNotSupportedException {
-		return new TemplateUserTitles(bot, templateName, namespaces);
+		try {
+			return new TemplateUserTitles(bot, templateName, namespaces);
+		} catch (VersionException e) {
+			throw new CloneNotSupportedException(e.getLocalizedMessage());
+		}
 	}
 	
 	

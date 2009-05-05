@@ -28,8 +28,8 @@ import java.util.Vector;
 
 import net.sourceforge.jwbf.LiveTestFather;
 import net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version;
-import net.sourceforge.jwbf.actions.mediawiki.queries.FullCategoryMembers;
-import net.sourceforge.jwbf.actions.mediawiki.queries.GetSimpleCategoryMembers;
+import net.sourceforge.jwbf.actions.mediawiki.queries.CategoryMembersFull;
+import net.sourceforge.jwbf.actions.mediawiki.queries.CategoryMembersSimple;
 import net.sourceforge.jwbf.actions.mediawiki.util.VersionException;
 import net.sourceforge.jwbf.actions.util.ActionException;
 import net.sourceforge.jwbf.actions.util.ProcessException;
@@ -212,12 +212,12 @@ public class CategoryTest extends LiveTestFather {
 	
 	private final void doTest(MediaWikiBot bot, String catname) throws ActionException, ProcessException {
 		
-		GetSimpleCategoryMembers g = new GetSimpleCategoryMembers(bot, catname);
+		CategoryMembersSimple g = new CategoryMembersSimple(bot, catname);
 		bot.performAction(g);
 		assertTrue("shuld have next", g.hasNext());
 		Collection<String> compare1 = new Vector<String>();
 		Collection<CategoryItem> compare2 = new Vector<CategoryItem>();
-		Iterator<String> is = new GetSimpleCategoryMembers(bot, catname).iterator();
+		Iterator<String> is = new CategoryMembersSimple(bot, catname).iterator();
 		int i = 0;
 		boolean notEnough = true; 
 		while(is.hasNext()) {
@@ -233,7 +233,7 @@ public class CategoryTest extends LiveTestFather {
 		}
 		
 		
-		is = new GetSimpleCategoryMembers(bot, catname).iterator();
+		is = new CategoryMembersSimple(bot, catname).iterator();
 		i = 0;
 		while (is.hasNext()) {
 			String x = is.next();
@@ -250,7 +250,7 @@ public class CategoryTest extends LiveTestFather {
 		}
 		assertTrue("i is: " + i , i > 50);
 		
-		Iterator<CategoryItem> cit = new FullCategoryMembers(bot,catname).iterator();
+		Iterator<CategoryItem> cit = new CategoryMembersFull(bot,catname).iterator();
 		i = 0;
 		while (cit.hasNext()) {
 			CategoryItem x = cit.next();

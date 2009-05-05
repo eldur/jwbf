@@ -19,7 +19,7 @@ import org.apache.log4j.Logger;
  * @author Thomas Stock
  * @supportedBy MediaWikiAPI 1.11, 1.12, 1.13, 1.14
  */
-public class FullCategoryMembers extends CategoryMembers implements Iterable<CategoryItem>, Iterator<CategoryItem> {
+public class CategoryMembersFull extends CategoryMembers implements Iterable<CategoryItem>, Iterator<CategoryItem> {
 
 	
 	private Get msg;
@@ -40,7 +40,7 @@ public class FullCategoryMembers extends CategoryMembers implements Iterable<Cat
 	 * @throws ActionException on any kind of http or version problems
 	 * @throws ProcessException on inner problems like a version mismatch
 	 */
-	public FullCategoryMembers(MediaWikiBot bot, String categoryName , int... namespaces) throws ActionException, ProcessException {
+	public CategoryMembersFull(MediaWikiBot bot, String categoryName , int... namespaces) throws ActionException, ProcessException {
 		
 		super(bot, categoryName, namespaces);
 	
@@ -75,7 +75,7 @@ public class FullCategoryMembers extends CategoryMembers implements Iterable<Cat
 	@Override
 	protected Object clone() throws CloneNotSupportedException {
 		try {
-			return new FullCategoryMembers(bot, categoryName, namespace);
+			return new CategoryMembersFull(bot, categoryName, namespace);
 		} catch (JwbfException e) {
 			throw new CloneNotSupportedException(e.getLocalizedMessage());
 		}

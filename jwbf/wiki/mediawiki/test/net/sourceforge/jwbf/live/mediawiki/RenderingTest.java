@@ -35,7 +35,7 @@ import org.junit.Test;
  * @author Thomas Stock
  *
  */
-public class GetRenderingTest extends LiveTestFather {
+public class RenderingTest extends LiveTestFather {
 
 	
 	private MediaWikiBot bot = null;

@@ -27,7 +27,7 @@ import java.util.Vector;
 
 import net.sourceforge.jwbf.actions.Get;
 import net.sourceforge.jwbf.actions.mediawiki.MediaWiki;
-import net.sourceforge.jwbf.actions.mediawiki.util.MWAction;
+import net.sourceforge.jwbf.actions.mediawiki.util.VersionException;
 import net.sourceforge.jwbf.actions.util.ActionException;
 import net.sourceforge.jwbf.actions.util.HttpAction;
 import net.sourceforge.jwbf.actions.util.ProcessException;
@@ -53,7 +53,7 @@ import org.xml.sax.InputSource;
  * @supportedBy MediaWikiAPI 1.09, 1.10, 1.11, 1.12, 1.13, 1.14
  */
 
-public class GetRecentchanges extends TitleQuery {
+public class RecentchangeTitles extends TitleQuery {
 
 	/** value for the bllimit-parameter. **/
 	private final int limit = 10;
@@ -123,7 +123,7 @@ public class GetRecentchanges extends TitleQuery {
 	/**
 	 * 
 	 */
-	public GetRecentchanges(MediaWikiBot bot, int... ns) {
+	public RecentchangeTitles(MediaWikiBot bot, int... ns) throws VersionException {
 		namespaces = ns;
 		this.bot = bot;
 		
@@ -131,7 +131,7 @@ public class GetRecentchanges extends TitleQuery {
 	/**
 	 * 
 	 */
-	public GetRecentchanges(MediaWikiBot bot) {
+	public RecentchangeTitles(MediaWikiBot bot) throws VersionException {
 		namespaces = MediaWiki.NS_ALL;
 		this.bot = bot;
 	
@@ -247,7 +247,11 @@ public class GetRecentchanges extends TitleQuery {
 	@Override
 	protected Object clone() throws CloneNotSupportedException {
 
-		return new GetRecentchanges(bot, namespaces);
+		try {
+			return new RecentchangeTitles(bot, namespaces);
+		} catch (VersionException e) {
+			throw new CloneNotSupportedException(e.getLocalizedMessage());
+		}
 	}
 
 	

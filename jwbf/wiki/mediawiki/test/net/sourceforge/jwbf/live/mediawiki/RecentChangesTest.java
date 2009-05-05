@@ -11,7 +11,7 @@ import java.util.Vector;
 
 import net.sourceforge.jwbf.LiveTestFather;
 import net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version;
-import net.sourceforge.jwbf.actions.mediawiki.queries.GetRecentchanges;
+import net.sourceforge.jwbf.actions.mediawiki.queries.RecentchangeTitles;
 import net.sourceforge.jwbf.actions.util.ActionException;
 import net.sourceforge.jwbf.actions.util.ProcessException;
 import net.sourceforge.jwbf.bots.MediaWikiAdapterBot;
@@ -140,7 +140,7 @@ public class RecentChangesTest extends LiveTestFather {
 				sa.save();
 			}
 
-			GetRecentchanges rc = new GetRecentchanges(bot);
+			RecentchangeTitles rc = new RecentchangeTitles(bot);
 			
 			Iterator<String> is = rc.iterator();
 			int i = 0;
@@ -159,7 +159,7 @@ public class RecentChangesTest extends LiveTestFather {
 	private final void doRegularTest(MediaWikiBot bot) throws ActionException,
 			ProcessException {
 		prepareWiki(bot);
-		GetRecentchanges rc = new GetRecentchanges(bot);
+		RecentchangeTitles rc = new RecentchangeTitles(bot);
 		
 		Iterator<String> is = rc.iterator();
 		int i = 0;

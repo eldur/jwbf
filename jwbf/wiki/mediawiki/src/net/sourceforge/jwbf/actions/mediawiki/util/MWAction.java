@@ -38,7 +38,7 @@ public abstract class MWAction implements ContentProcessable {
 		final boolean b = hasMore;
 		hasMore = false;
 //		if(log.isDebugEnabled())
-//		log.debug("hasmore = "+ b);
+//		log.debug("hasmore = " + b);
 		return b;
 	}
 	
@@ -51,7 +51,7 @@ public abstract class MWAction implements ContentProcessable {
 	 * 
 	 * 
 	 */
-	protected MWAction() {
+	protected MWAction() throws VersionException {
 
 
 	}

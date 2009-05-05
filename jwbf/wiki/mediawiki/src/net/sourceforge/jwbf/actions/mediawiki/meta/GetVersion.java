@@ -7,6 +7,7 @@ import java.util.Iterator;
 
 import net.sourceforge.jwbf.actions.Get;
 import net.sourceforge.jwbf.actions.mediawiki.util.MWAction;
+import net.sourceforge.jwbf.actions.mediawiki.util.VersionException;
 import net.sourceforge.jwbf.actions.util.HttpAction;
 import net.sourceforge.jwbf.actions.util.ProcessException;
 import net.sourceforge.jwbf.contentRep.mediawiki.Siteinfo;
@@ -23,7 +24,7 @@ public class GetVersion extends MWAction {
 	protected Siteinfo site = new Siteinfo();
 	private final Logger log = Logger.getLogger(getClass());
 	private final Get msg;
-	public GetVersion() {
+	public GetVersion() throws VersionException {
 	
 			msg = new Get("/api.php?action=query&meta=siteinfo&format=xml");
 

@@ -25,6 +25,7 @@ import java.io.StringReader;
 
 import net.sourceforge.jwbf.actions.Post;
 import net.sourceforge.jwbf.actions.mediawiki.util.MWAction;
+import net.sourceforge.jwbf.actions.mediawiki.util.VersionException;
 import net.sourceforge.jwbf.actions.util.HttpAction;
 import net.sourceforge.jwbf.actions.util.ProcessException;
 import net.sourceforge.jwbf.bots.util.LoginData;
@@ -59,7 +60,7 @@ public class PostLogin extends MWAction {
 	 * @param username the
 	 * @param pw password
 	 */
-	public PostLogin(final String username, final String pw, LoginData login) {
+	public PostLogin(final String username, final String pw, LoginData login) throws VersionException {
 		this.login = login;
 		Post pm = new Post(
 				"/api.php?action=login&format=xml");

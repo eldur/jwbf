@@ -36,7 +36,7 @@ import org.apache.log4j.Logger;
  * @author Thomas Stock
  * @supportedBy MediaWikiAPI 1.11
  */
-public class GetSimpleCategoryMembers extends CategoryMembers implements Iterable<String>, Iterator<String> {
+public class CategoryMembersSimple extends CategoryMembers implements Iterable<String>, Iterator<String> {
 
 	private Get msg;
 	/**
@@ -58,7 +58,7 @@ public class GetSimpleCategoryMembers extends CategoryMembers implements Iterabl
 	 * @throws ProcessException on inner problems like mw version
 	 * 
 	 */
-	public GetSimpleCategoryMembers(MediaWikiBot bot, String categoryName) throws ActionException, ProcessException {
+	public CategoryMembersSimple(MediaWikiBot bot, String categoryName) throws ActionException, ProcessException {
 		this(bot, categoryName, MediaWiki.NS_MAIN);
 		
 	}
@@ -71,7 +71,7 @@ public class GetSimpleCategoryMembers extends CategoryMembers implements Iterabl
 	 * @throws ProcessException on inner problems like mw version
 	 * 
 	 */
-	public GetSimpleCategoryMembers(MediaWikiBot bot, String categoryName, int... namespaces) throws ActionException, ProcessException {
+	public CategoryMembersSimple(MediaWikiBot bot, String categoryName, int... namespaces) throws ActionException, ProcessException {
 		super(bot, categoryName, namespaces);
 	
 	}

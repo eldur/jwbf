@@ -26,6 +26,7 @@ import java.util.regex.Pattern;
 import net.sourceforge.jwbf.actions.Get;
 import net.sourceforge.jwbf.actions.mediawiki.MediaWiki;
 import net.sourceforge.jwbf.actions.mediawiki.util.MWAction;
+import net.sourceforge.jwbf.actions.mediawiki.util.VersionException;
 import net.sourceforge.jwbf.actions.util.ActionException;
 import net.sourceforge.jwbf.actions.util.HttpAction;
 import net.sourceforge.jwbf.actions.util.ProcessException;
@@ -105,11 +106,11 @@ public class AllPageTitles extends TitleQuery {
 	 *            omitted
 	 */
 	public AllPageTitles(MediaWikiBot bot, String from, String prefix, boolean redirects,
-			boolean nonredirects, int ... namespaces) {
+			boolean nonredirects, int ... namespaces) throws VersionException  {
 		this(bot, from, prefix, redirects, nonredirects, MWAction.createNsString(namespaces));
 
 	}
-	public AllPageTitles(MediaWikiBot bot, int ... namespaces) {
+	public AllPageTitles(MediaWikiBot bot, int ... namespaces) throws VersionException {
 		this(bot, null, null, false, false, namespaces);
 
 	}
@@ -123,7 +124,7 @@ public class AllPageTitles extends TitleQuery {
 	 * @param bot
 	 */
 	protected AllPageTitles(MediaWikiBot bot, String from, String prefix, boolean redirects,
-			boolean nonredirects, String namespaces) {
+			boolean nonredirects, String namespaces) throws VersionException {
 
 		this.bot = bot;
 
@@ -277,7 +278,11 @@ public class AllPageTitles extends TitleQuery {
 		}
 		@Override
 		protected Object clone() throws CloneNotSupportedException {
-			return new AllPageTitles(bot, from, prefix, redirects, nonredirects, namespace);
+			try {
+				return new AllPageTitles(bot, from, prefix, redirects, nonredirects, namespace);
+			} catch (VersionException e) {
+				throw new CloneNotSupportedException(e.getLocalizedMessage());
+			}
 		}
 
 

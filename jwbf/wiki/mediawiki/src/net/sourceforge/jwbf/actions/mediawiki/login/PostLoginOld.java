@@ -22,6 +22,7 @@ package net.sourceforge.jwbf.actions.mediawiki.login;
 import net.sourceforge.jwbf.actions.Post;
 import net.sourceforge.jwbf.actions.mediawiki.MediaWiki;
 import net.sourceforge.jwbf.actions.mediawiki.util.MWAction;
+import net.sourceforge.jwbf.actions.mediawiki.util.VersionException;
 import net.sourceforge.jwbf.actions.util.CookieException;
 import net.sourceforge.jwbf.actions.util.HttpAction;
 import net.sourceforge.jwbf.bots.util.LoginData;
@@ -51,7 +52,7 @@ public class PostLoginOld extends MWAction {
 	 *            password
 	 */
 	public PostLoginOld(final String username, final String pw,
-			final String domain, LoginData login) {
+			final String domain, LoginData login) throws VersionException {
 		this.username = username;
 		this.login = login;
 

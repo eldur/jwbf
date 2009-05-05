@@ -20,14 +20,13 @@
 package net.sourceforge.jwbf.actions.mediawiki.queries;
 
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import net.sourceforge.jwbf.actions.Get;
 import net.sourceforge.jwbf.actions.mediawiki.MediaWiki;
-import net.sourceforge.jwbf.actions.mediawiki.util.MWAction;
+import net.sourceforge.jwbf.actions.mediawiki.util.VersionException;
 import net.sourceforge.jwbf.actions.util.ActionException;
 import net.sourceforge.jwbf.actions.util.HttpAction;
 import net.sourceforge.jwbf.actions.util.ProcessException;
@@ -88,16 +87,22 @@ public class ImagelinkTitles extends TitleQuery {
 	 * the method processAllReturningText will be called
 	 * (from outside this class).
 	 * For the parameters, see {@link ImagelinkTitles#generateRequest(String, String, String)}
+	 * @throws VersionException if not supported 
 	 */
-	public ImagelinkTitles(MediaWikiBot bot, String imageName, int... namespaces) {
+	public ImagelinkTitles(MediaWikiBot bot, String imageName, int... namespaces) throws VersionException {
 		this.bot = bot;
 		this.imageName = imageName;
 		this.namespaces = namespaces;
 		
 	}
 	
-
-	public ImagelinkTitles(MediaWikiBot bot, String nextPageInfo) {
+	/**
+	 * 
+	 * @param bot a
+	 * @param nextPageInfo a
+	 * @throws VersionException if not supported 
+	 */
+	public ImagelinkTitles(MediaWikiBot bot, String nextPageInfo) throws VersionException {
 		this(bot, nextPageInfo, MediaWiki.NS_ALL);
 		
 	}
@@ -207,17 +212,17 @@ public class ImagelinkTitles extends TitleQuery {
 	}
 	
 	
-	/**
-	 * @return   necessary information for the next action
-	 *           or null if no next api page exists
-	 *           @deprecated please never use this
-	 */
-	public ImagelinkTitles getNextAction() {
-		if( nextPageInfo == null ){ return null; }
-		else{
-			return new ImagelinkTitles(bot,nextPageInfo);
-		}
-	}
+//	/**
+//	 * @return   necessary information for the next action
+//	 *           or null if no next api page exists
+//	 *           @deprecated please never use this
+//	 */
+//	public ImagelinkTitles getNextAction() {
+//		if( nextPageInfo == null ){ return null; }
+//		else{
+//			return new ImagelinkTitles(bot,nextPageInfo);
+//		}
+//	}
 
 	public HttpAction getNextMessage() {
 		return msg;
@@ -255,7 +260,11 @@ public class ImagelinkTitles extends TitleQuery {
 
 	@Override
 	protected Object clone() throws CloneNotSupportedException {
-		return new ImagelinkTitles(bot, imageName, namespaces);
+		try {
+			return new ImagelinkTitles(bot, imageName, namespaces);
+		} catch (VersionException e) {
+			throw new CloneNotSupportedException(e.getLocalizedMessage());
+		}
 	}
 	
 	

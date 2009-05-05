@@ -3,6 +3,7 @@ package net.sourceforge.jwbf.actions.mediawiki.queries;
 import java.util.Iterator;
 
 import net.sourceforge.jwbf.actions.mediawiki.util.MWAction;
+import net.sourceforge.jwbf.actions.mediawiki.util.VersionException;
 
 import org.apache.log4j.Logger;
 
@@ -10,8 +11,8 @@ public abstract class TitleQuery extends MWAction implements Iterable<String>, I
 
 	protected Iterator<String> titleIterator;
 	private Logger log = Logger.getLogger(getClass());
-	public TitleQuery() {
-		// TODO Auto-generated constructor stub
+	protected TitleQuery() throws VersionException {
+		super();
 	}
 
 

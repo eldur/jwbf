@@ -11,7 +11,7 @@ import org.apache.log4j.PropertyConfigurator;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-public class GetRevisionTest extends LiveTestFather {
+public class RevisionTest extends LiveTestFather {
 
 	private MediaWikiAdapterBot bot;
 	
