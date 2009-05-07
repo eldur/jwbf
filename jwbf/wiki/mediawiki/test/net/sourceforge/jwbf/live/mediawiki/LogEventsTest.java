@@ -132,6 +132,8 @@ public class LogEventsTest extends LiveTestFather {
 	
 	private void doTest(MediaWikiBot bot, boolean isDemo, String type) throws Exception {
 		LogEvents le = new LogEvents(bot, type );
+		if (bot.getVersion() != Version.DEVELOPMENT)
+			assertTrue("test not documented for version: " + bot.getVersion() , le.getSupportedVersions().contains(bot.getVersion()));
 		int i = 0;
 		boolean notEnough = true;
 		for (LogItem logItem : le) {

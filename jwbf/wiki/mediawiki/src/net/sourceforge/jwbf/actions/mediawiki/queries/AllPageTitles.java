@@ -19,6 +19,13 @@
  */
 package net.sourceforge.jwbf.actions.mediawiki.queries;
 
+import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_09;
+import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_10;
+import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_11;
+import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_12;
+import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_13;
+import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_14;
+
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -26,6 +33,7 @@ import java.util.regex.Pattern;
 import net.sourceforge.jwbf.actions.Get;
 import net.sourceforge.jwbf.actions.mediawiki.MediaWiki;
 import net.sourceforge.jwbf.actions.mediawiki.util.MWAction;
+import net.sourceforge.jwbf.actions.mediawiki.util.SupportedBy;
 import net.sourceforge.jwbf.actions.mediawiki.util.VersionException;
 import net.sourceforge.jwbf.actions.util.ActionException;
 import net.sourceforge.jwbf.actions.util.HttpAction;
@@ -39,10 +47,9 @@ import org.apache.log4j.Logger;
  * 
  * @author Tobias Knerr
  * @author Thomas Stock
- *  
- * @supportedBy MediaWikiAPI 1.9, 1.10, 1.11, 1.12, 1.13, 1.14
  * 
  */
+@SupportedBy({MW1_09, MW1_10, MW1_11, MW1_12, MW1_13, MW1_14})
 public class AllPageTitles extends TitleQuery {
 	
 	private static final Logger LOG = Logger.getLogger(AllPageTitles.class);
@@ -125,7 +132,7 @@ public class AllPageTitles extends TitleQuery {
 	 */
 	protected AllPageTitles(MediaWikiBot bot, String from, String prefix, boolean redirects,
 			boolean nonredirects, String namespaces) throws VersionException {
-
+		super(bot.getVersion());
 		this.bot = bot;
 
 		this.prefix = prefix;

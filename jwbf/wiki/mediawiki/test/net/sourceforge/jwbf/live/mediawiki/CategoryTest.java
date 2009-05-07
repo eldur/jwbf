@@ -114,7 +114,7 @@ public class CategoryTest extends LiveTestFather {
 		
 		bot = new MediaWikiAdapterBot("http://de.wikipedia.org/w/index.php");
 		
-		assertTrue( "Wrong Wiki Version " + bot.getVersion() , Version.UNKNOWN.equals(bot.getVersion()));
+		assertTrue( "Wrong Wiki Version " + bot.getVersion() , Version.DEVELOPMENT.equals(bot.getVersion()));
 		
 		doTest(bot, "Moose");
 	}
@@ -213,6 +213,8 @@ public class CategoryTest extends LiveTestFather {
 	private final void doTest(MediaWikiBot bot, String catname) throws ActionException, ProcessException {
 		
 		CategoryMembersSimple g = new CategoryMembersSimple(bot, catname);
+		if (bot.getVersion() != Version.DEVELOPMENT)
+			assertTrue("test not documented for version: " + bot.getVersion() , g.getSupportedVersions().contains(bot.getVersion()));
 		bot.performAction(g);
 		assertTrue("shuld have next", g.hasNext());
 		Collection<String> compare1 = new Vector<String>();

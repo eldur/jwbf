@@ -1,5 +1,9 @@
 package net.sourceforge.jwbf.actions.mediawiki.queries;
 
+import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_11;
+import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_12;
+import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_13;
+
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
@@ -11,6 +15,7 @@ import net.sourceforge.jwbf.actions.Get;
 import net.sourceforge.jwbf.actions.mediawiki.MediaWiki;
 import net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version;
 import net.sourceforge.jwbf.actions.mediawiki.util.MWAction;
+import net.sourceforge.jwbf.actions.mediawiki.util.SupportedBy;
 import net.sourceforge.jwbf.actions.mediawiki.util.VersionException;
 import net.sourceforge.jwbf.actions.util.HttpAction;
 import net.sourceforge.jwbf.actions.util.ProcessException;
@@ -29,7 +34,7 @@ import org.xml.sax.InputSource;
  * @supportedBy MediaWikiAPI 1.11, 1.12, 1.13
  *
  */
-
+@SupportedBy({MW1_11, MW1_12, MW1_13})
 public class ImageInfo extends MWAction {
 
 	private String urlOfImage  = "";
@@ -46,19 +51,12 @@ public class ImageInfo extends MWAction {
 	 * 
 	 */
 	public ImageInfo(String name, Version v, String botHostUrl) throws VersionException {
+		super(v);
 		this.hostUrl = botHostUrl;
-		switch (v) {
-		case MW1_09:
-		case MW1_10:
-			throw new VersionException("Not supportet by this version of MW");
-
-		default:
-			msg = new Get("/api.php?action=query&titles=Image:"
+		msg = new Get("/api.php?action=query&titles=Image:"
 					+ MediaWiki.encode(name) + "&prop=imageinfo"
 					+ "&iiprop=url" + "&format=xml");
 
-			break;
-		}
 
 	}
 	/**

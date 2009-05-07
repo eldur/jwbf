@@ -19,12 +19,18 @@
 package net.sourceforge.jwbf.actions.mediawiki.login;
 
 
+import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_11;
+import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_12;
+import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_13;
+import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_14;
+
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 
 import net.sourceforge.jwbf.actions.Post;
 import net.sourceforge.jwbf.actions.mediawiki.util.MWAction;
+import net.sourceforge.jwbf.actions.mediawiki.util.SupportedBy;
 import net.sourceforge.jwbf.actions.mediawiki.util.VersionException;
 import net.sourceforge.jwbf.actions.util.HttpAction;
 import net.sourceforge.jwbf.actions.util.ProcessException;
@@ -41,9 +47,8 @@ import org.xml.sax.InputSource;
 /**
  * 
  * @author Thomas Stock
- * @supportedBy MediaWikiAPI 1.11, 1.12, 1.13, 1.14
-
  */
+@SupportedBy({MW1_11, MW1_12, MW1_13, MW1_14})
 public class PostLogin extends MWAction {
 	
 	private static final Logger log = Logger.getLogger(PostLogin.class);
@@ -61,6 +66,7 @@ public class PostLogin extends MWAction {
 	 * @param pw password
 	 */
 	public PostLogin(final String username, final String pw, LoginData login) throws VersionException {
+		super();
 		this.login = login;
 		Post pm = new Post(
 				"/api.php?action=login&format=xml");

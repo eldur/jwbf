@@ -47,7 +47,7 @@ public class RecentChangesTest extends LiveTestFather {
 		
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_09_url"));
 		bot.login(getValue("wikiMW1_09_user"), getValue("wikiMW1_09_pass"));
-//		doRegularTest(bot);
+		doRegularTest(bot);
 		doSpecialCharTest(bot);
 		assertTrue( "Wrong Wiki Version " + bot.getVersion() , Version.MW1_09.equals(bot.getVersion()));
 	}
@@ -122,11 +122,15 @@ public class RecentChangesTest extends LiveTestFather {
 	ProcessException {
 		SimpleArticle a = new SimpleArticle("Change", "0");
 		for (int i = 0; i < 5 + 1; i++) {
-			a.setLabel(getRandom(10));
+			String label = getRandom(10);
+			for (char c : MediaWikiBot.INVALID_LABEL_CHARS) {
+				label = label.replace(c + "", "");
+			}
+			a.setLabel(label);
 			a.setText(getRandom(255));
 			bot.writeContent(a);
 		}
-		
+
 	}
 	private final void doSpecialCharTest(MediaWikiBot bot) throws ActionException,
 	ProcessException {
@@ -135,10 +139,21 @@ public class RecentChangesTest extends LiveTestFather {
 
 		
 		Collection<String> specialChars = getSpecialChars();
+		try {
 			for (String label1 : specialChars) {
 				sa = new Article(bot, testText, label1);
 				sa.save();
 			}
+		} catch (ActionException e) {
+			boolean found = false;
+			for (char ch : MediaWikiBot.INVALID_LABEL_CHARS) {
+				if (e.getMessage().contains(ch + "")) {
+					found = true;
+					break;
+				}
+			}
+			assertTrue("should be a know invalid char",  found);
+		}
 
 			RecentchangeTitles rc = new RecentchangeTitles(bot);
 			
@@ -152,6 +167,10 @@ public class RecentChangesTest extends LiveTestFather {
 				specialChars.remove(nx);
 				i++;
 			}
+			for (char c : MediaWikiBot.INVALID_LABEL_CHARS) {
+				specialChars.remove(c + "");
+			}
+			
 			assertTrue("tc sould be empty but is: " + specialChars, specialChars.isEmpty());
 		
 	}
@@ -161,6 +180,8 @@ public class RecentChangesTest extends LiveTestFather {
 		prepareWiki(bot);
 		RecentchangeTitles rc = new RecentchangeTitles(bot);
 		
+		assertTrue("test not documented for version: " + bot.getVersion() , rc.getSupportedVersions().contains(bot.getVersion()));
+		assertTrue("supported annotation is missing", rc.getSupportedVersions().contains(bot.getVersion()));
 		Iterator<String> is = rc.iterator();
 		int i = 0;
 	

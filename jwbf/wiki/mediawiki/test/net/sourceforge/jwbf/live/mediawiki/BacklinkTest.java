@@ -1,5 +1,7 @@
 package net.sourceforge.jwbf.live.mediawiki;
 
+import static org.junit.Assert.assertTrue;
+
 import java.util.Iterator;
 import java.util.Vector;
 
@@ -210,6 +212,7 @@ public class BacklinkTest extends LiveTestFather {
 
 		BacklinkTitles gbt = new BacklinkTitles(bot, BACKLINKS, rf, MediaWiki.NS_MAIN , MediaWiki.NS_CATEGORY);
 
+		assertTrue("test not documented for version: " + bot.getVersion() , gbt.getSupportedVersions().contains(bot.getVersion()));
 		Vector<String> vx = new Vector<String>();
 		Iterator<String> is = gbt.iterator();
 		boolean notEnougth = true;

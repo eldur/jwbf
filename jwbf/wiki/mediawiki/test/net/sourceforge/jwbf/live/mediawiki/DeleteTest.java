@@ -3,8 +3,10 @@
  */
 package net.sourceforge.jwbf.live.mediawiki;
 
+import static org.junit.Assert.assertTrue;
 import net.sourceforge.jwbf.LiveTestFather;
 import net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version;
+import net.sourceforge.jwbf.actions.mediawiki.editing.PostDelete;
 import net.sourceforge.jwbf.actions.mediawiki.util.VersionException;
 import net.sourceforge.jwbf.actions.util.ActionException;
 import net.sourceforge.jwbf.actions.util.ProcessException;
@@ -41,6 +43,7 @@ public class DeleteTest extends LiveTestFather {
 	
 	private final void delete(MediaWikiAdapterBot bot) throws ActionException, ProcessException {
 		
+		assertTrue("test not documented for version: " + bot.getVersion() , new PostDelete(bot, "x").getSupportedVersions().contains(bot.getVersion()));
 		for (int i = 0; i < COUNT ; i++) {
 			bot.postDelete("Delete " + i);
 		}

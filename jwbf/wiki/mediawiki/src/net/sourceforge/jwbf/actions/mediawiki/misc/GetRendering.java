@@ -1,5 +1,9 @@
 package net.sourceforge.jwbf.actions.mediawiki.misc;
 
+import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_12;
+import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_13;
+import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_14;
+
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
@@ -9,6 +13,7 @@ import java.util.NoSuchElementException;
 import net.sourceforge.jwbf.actions.Get;
 import net.sourceforge.jwbf.actions.mediawiki.MediaWiki;
 import net.sourceforge.jwbf.actions.mediawiki.util.MWAction;
+import net.sourceforge.jwbf.actions.mediawiki.util.SupportedBy;
 import net.sourceforge.jwbf.actions.mediawiki.util.VersionException;
 import net.sourceforge.jwbf.actions.util.ActionException;
 import net.sourceforge.jwbf.actions.util.HttpAction;
@@ -26,10 +31,9 @@ import org.xml.sax.InputSource;
  * <a href="http://www.mediawiki.org/wiki/API:Expanding_templates_and_rendering#parse">parse</a>.
  * 
  * @author Thomas Stock
- * @supportedBy MediaWikiAPI 1.12
- * @supportedBy MediaWikiAPI 1.13
  *
  */
+@SupportedBy({MW1_12, MW1_13, MW1_14})
 public class GetRendering extends MWAction {
 
 	private final Get msg;

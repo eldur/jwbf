@@ -18,20 +18,28 @@
  */
 package net.sourceforge.jwbf.actions.mediawiki.util;
 
+import java.util.Collection;
+import java.util.Vector;
+
 import net.sourceforge.jwbf.actions.ContentProcessable;
+import net.sourceforge.jwbf.actions.mediawiki.MediaWiki;
+import net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version;
 import net.sourceforge.jwbf.actions.util.CookieException;
 import net.sourceforge.jwbf.actions.util.HttpAction;
 import net.sourceforge.jwbf.actions.util.ProcessException;
 
 import org.apache.commons.httpclient.Cookie;
+import org.apache.log4j.Logger;
 
 /**
  * @author Thomas Stock
  *
  */
+@SupportedBy(MediaWiki.Version.MW1_11)
 public abstract class MWAction implements ContentProcessable {
 
-//	private Logger log = Logger.getLogger(getClass());
+	private Version [] v;
+	private Logger log = Logger.getLogger(getClass());
 	private boolean hasMore = true;
 	
 	public boolean hasMoreMessages() {
@@ -49,11 +57,15 @@ public abstract class MWAction implements ContentProcessable {
 
 	/**
 	 * 
-	 * 
+	 * @deprecated use {@link #MWAction(Version)} instead
 	 */
 	protected MWAction() throws VersionException {
 
-
+	}
+	
+	protected MWAction(Version v) throws VersionException {
+		checkVersionNewerEquals(v);
+		
 	}
 
 
@@ -109,6 +121,57 @@ public abstract class MWAction implements ContentProcessable {
 		return s;
 	}
 	
+	protected final Version [] getVersionArray() {
+		
+		
+		if (v != null)
+			return v;
+		v = findSupportedVersions(getClass());
+		return v;
+	}
+	
+	private Version [] findSupportedVersions(Class<?> clazz) {
+		if (clazz.getName().contains(MWAction.class.getName())) {
+			Version [] v = new MediaWiki.Version[1];
+			v[0] = Version.UNKNOWN;
+			return v;
+		} else if(clazz.isAnnotationPresent(SupportedBy.class)) {
+			SupportedBy sb = clazz.getAnnotation(SupportedBy.class);
+			System.err.println();
+			if (log.isDebugEnabled()) {
+				Version [] vtemp = sb.value();
+				String sv = "";
+				for (int i = 0; i < vtemp.length; i++) {
+					sv += vtemp[i].getNumber() + ", ";
+				}
+				log.debug("found support for: " + sv );
+			}
+			return sb.value();
+		} else {
+			return findSupportedVersions(clazz.getSuperclass());
+		}
+	}
+	
+	protected void checkVersionNewerEquals(Version v) throws VersionException {
+		if (getSupportedVersions().contains(v))
+			return;
+		for (Version vx: getSupportedVersions()) {
+			if (v.greaterEqThen(vx))
+				return;
+		}
+		throw new VersionException("unsupported version: " + v);
+	}
+	
+	public Collection<Version> getSupportedVersions() {
+		Collection<Version> v = new Vector<Version>();
+		
+		Version [] va = getVersionArray();
+		for (int i = 0; i < va.length; i++) {
+			v.add(va[i]);
+		}
+		
+		return v;
+	}
 	
 	/**
 	 * helper method generating a namespace string as required by the MW-api.

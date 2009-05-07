@@ -2,6 +2,7 @@ package net.sourceforge.jwbf.actions.mediawiki.queries;
 
 import java.util.Iterator;
 
+import net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version;
 import net.sourceforge.jwbf.actions.mediawiki.util.MWAction;
 import net.sourceforge.jwbf.actions.mediawiki.util.VersionException;
 
@@ -11,8 +12,8 @@ public abstract class TitleQuery extends MWAction implements Iterable<String>, I
 
 	protected Iterator<String> titleIterator;
 	private Logger log = Logger.getLogger(getClass());
-	protected TitleQuery() throws VersionException {
-		super();
+	protected TitleQuery(Version v) throws VersionException {
+		super(v);
 	}
 
 

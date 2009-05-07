@@ -1,5 +1,10 @@
 package net.sourceforge.jwbf.actions.mediawiki.meta;
 
+import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_11;
+import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_12;
+import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_13;
+import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_14;
+
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
@@ -11,6 +16,7 @@ import net.sourceforge.jwbf.actions.Get;
 import net.sourceforge.jwbf.actions.mediawiki.MediaWiki;
 import net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version;
 import net.sourceforge.jwbf.actions.mediawiki.util.MWAction;
+import net.sourceforge.jwbf.actions.mediawiki.util.SupportedBy;
 import net.sourceforge.jwbf.actions.mediawiki.util.VersionException;
 import net.sourceforge.jwbf.actions.util.HttpAction;
 import net.sourceforge.jwbf.actions.util.ProcessException;
@@ -22,7 +28,7 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
 import org.xml.sax.InputSource;
-
+@SupportedBy({MW1_11, MW1_12, MW1_13, MW1_14})
 public class GetUserinfo extends MWAction {
 
 	private Userinfo userinfo;
@@ -33,12 +39,8 @@ public class GetUserinfo extends MWAction {
 	private Get msg;
 	
 	public GetUserinfo(Version v) throws VersionException {
-
+		super(v);
 		switch (v) {
-		case MW1_09:
-		case MW1_10:
-			throw new VersionException("Not supportet by this version of MW");
-
 		case MW1_11:
 			msg = new Get("/api.php?" + "action=query&" + "meta=userinfo&"
 					+ "uiprop="

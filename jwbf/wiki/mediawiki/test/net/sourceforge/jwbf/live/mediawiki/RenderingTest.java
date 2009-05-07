@@ -19,6 +19,7 @@
 package net.sourceforge.jwbf.live.mediawiki;
 
 
+import static org.junit.Assert.assertTrue;
 import net.sourceforge.jwbf.LiveTestFather;
 import net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version;
 import net.sourceforge.jwbf.actions.mediawiki.misc.GetRendering;
@@ -71,7 +72,7 @@ public class RenderingTest extends LiveTestFather {
 	 * @throws Exception a
 	 */
 	@Test(expected=VersionException.class)
-	public final void getRenderingMW1_09() throws Exception {
+	public final void getRenderingMW1_09Fail() throws Exception {
 		
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_09_url"));
 		bot.login(getValue("wikiMW1_09_user"), getValue("wikiMW1_09_pass"));
@@ -83,7 +84,7 @@ public class RenderingTest extends LiveTestFather {
 	 * @throws Exception a
 	 */
 	@Test(expected=VersionException.class)
-	public final void getRenderingMW1_10() throws Exception {
+	public final void getRenderingMW1_10Fail() throws Exception {
 		
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_10_url"));
 		bot.login(getValue("wikiMW1_10_user"), getValue("wikiMW1_10_pass"));
@@ -96,7 +97,7 @@ public class RenderingTest extends LiveTestFather {
 	 * @throws Exception a
 	 */
 	@Test(expected=VersionException.class)
-	public final void getRenderingMW1_11() throws Exception {
+	public final void getRenderingMW1_11Fail() throws Exception {
 		
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_11_url"));
 		bot.login(getValue("wikiMW1_11_user"), getValue("wikiMW1_11_pass"));
@@ -142,7 +143,8 @@ public class RenderingTest extends LiveTestFather {
 	
 	private void doTest(MediaWikiBot bot) throws Exception {
 		GetRendering r = new GetRendering("bert", bot);
-		
+		if (bot.getVersion() != Version.DEVELOPMENT)
+			assertTrue("test not documented for version: " + bot.getVersion() , r.getSupportedVersions().contains(bot.getVersion()));
 		Assert.assertEquals("<p>bert</p>", r.getHtml());
 		// TODO more tests
 	}

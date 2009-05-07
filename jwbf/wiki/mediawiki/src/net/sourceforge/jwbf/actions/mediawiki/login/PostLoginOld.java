@@ -19,9 +19,11 @@
 package net.sourceforge.jwbf.actions.mediawiki.login;
 
 
+import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_09;
 import net.sourceforge.jwbf.actions.Post;
 import net.sourceforge.jwbf.actions.mediawiki.MediaWiki;
 import net.sourceforge.jwbf.actions.mediawiki.util.MWAction;
+import net.sourceforge.jwbf.actions.mediawiki.util.SupportedBy;
 import net.sourceforge.jwbf.actions.mediawiki.util.VersionException;
 import net.sourceforge.jwbf.actions.util.CookieException;
 import net.sourceforge.jwbf.actions.util.HttpAction;
@@ -33,8 +35,8 @@ import org.apache.log4j.Logger;
 /**
  * 
  * @author Thomas Stock
- * @supportedBy MediaWiki 1.8.x, 1.9.x
  */
+@SupportedBy({MW1_09})
 public class PostLoginOld extends MWAction {
 
 	private String username = "";
@@ -53,6 +55,7 @@ public class PostLoginOld extends MWAction {
 	 */
 	public PostLoginOld(final String username, final String pw,
 			final String domain, LoginData login) throws VersionException {
+		super();
 		this.username = username;
 		this.login = login;
 

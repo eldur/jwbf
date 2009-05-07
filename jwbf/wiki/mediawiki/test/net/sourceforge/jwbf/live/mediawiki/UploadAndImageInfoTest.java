@@ -18,6 +18,8 @@
  */
 package net.sourceforge.jwbf.live.mediawiki;
 
+import static org.junit.Assert.assertTrue;
+
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -103,6 +105,7 @@ public class UploadAndImageInfoTest extends LiveTestFather {
 		Assert.assertTrue(new File(getValue("validFile")).canRead());
 		SimpleFile sf = new SimpleFile(getValue("filename"), getValue("validFile"));
 		FileUpload up = new FileUpload(sf, bot);
+		assertTrue("test not documented for version: " + bot.getVersion() , up.getSupportedVersions().contains(bot.getVersion()));
 		bot.performAction(up);
 		
 		
@@ -128,6 +131,7 @@ public class UploadAndImageInfoTest extends LiveTestFather {
 		Assert.assertTrue("File (" + getValue("validFile") + ")not readable",new File(getValue("validFile")).canRead());
 		SimpleFile sf = new SimpleFile(getValue("filename"), getValue("validFile"));
 		FileUpload up = new FileUpload(sf, bot);
+		assertTrue("test not documented for version: " + bot.getVersion() , up.getSupportedVersions().contains(bot.getVersion()));
 		bot.performAction(up);
 		URL url = new URL(bot.getImageInfo(sf.getLabel()));
 		File file = new File(getValue("validFile"));
@@ -149,6 +153,7 @@ public class UploadAndImageInfoTest extends LiveTestFather {
 		Assert.assertTrue("File (" + getValue("validFile") + ")not readable",new File(getValue("validFile")).canRead());
 		SimpleFile sf = new SimpleFile(getValue("filename"), getValue("validFile"));
 		FileUpload up = new FileUpload(sf, bot);
+		assertTrue("test not documented for version: " + bot.getVersion() , up.getSupportedVersions().contains(bot.getVersion()));
 		bot.performAction(up);
 		URL url = new URL(bot.getImageInfo(sf.getLabel()));
 		Assert.assertTrue("file not found " + url , url.toExternalForm().length() - bot.getHostUrl().length() > 2);
@@ -170,6 +175,7 @@ public class UploadAndImageInfoTest extends LiveTestFather {
 		Assert.assertTrue("File (" + getValue("validFile") + ")not readable",new File(getValue("validFile")).canRead());
 		SimpleFile sf = new SimpleFile(getValue("filename"), getValue("validFile"));
 		FileUpload up = new FileUpload(sf, bot);
+		assertTrue("test not documented for version: " + bot.getVersion() , up.getSupportedVersions().contains(bot.getVersion()));
 		bot.performAction(up);
 		URL url = new URL(bot.getImageInfo(sf.getLabel()));
 		Assert.assertTrue("file not found " + url , url.toExternalForm().length() - bot.getHostUrl().length() > 2);

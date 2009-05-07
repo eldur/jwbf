@@ -18,6 +18,11 @@
  */
 package net.sourceforge.jwbf.actions.mediawiki.queries;
 
+import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_11;
+import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_12;
+import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_13;
+import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_14;
+
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
@@ -29,6 +34,7 @@ import java.util.regex.Pattern;
 
 import net.sourceforge.jwbf.actions.Get;
 import net.sourceforge.jwbf.actions.mediawiki.util.MWAction;
+import net.sourceforge.jwbf.actions.mediawiki.util.SupportedBy;
 import net.sourceforge.jwbf.actions.mediawiki.util.VersionException;
 import net.sourceforge.jwbf.actions.util.ActionException;
 import net.sourceforge.jwbf.actions.util.HttpAction;
@@ -57,7 +63,7 @@ import org.xml.sax.InputSource;
  * @supportedBy MediaWikiAPI 1.11 logevents / le (semi-complete)
  * 
  */
-
+@SupportedBy({MW1_11, MW1_12, MW1_13, MW1_14})
 public class LogEvents extends MWAction implements Iterator<LogItem>, Iterable<LogItem> {
 
 	/** value for the bllimit-parameter. * */
@@ -125,17 +131,7 @@ public class LogEvents extends MWAction implements Iterator<LogItem>, Iterable<L
 	 * @param type of like {@link #MOVE}
 	 */
 	public LogEvents(MediaWikiBot bot, int limit, String [] type) throws VersionException {
-		
-		switch (bot.getVersion()) {
-		case MW1_09:
-		case MW1_10:
-			
-			throw new VersionException("unsupported version: " + bot.getVersion());
-
-		default:
-			
-			break;
-		}
+		super(bot.getVersion());
 		this.bot = bot;
 		this.type = type;
 		this.limit = limit;

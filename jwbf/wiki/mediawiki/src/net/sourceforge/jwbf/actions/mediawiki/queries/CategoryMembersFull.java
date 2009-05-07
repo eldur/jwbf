@@ -17,7 +17,6 @@ import org.apache.log4j.Logger;
 /**
  * 
  * @author Thomas Stock
- * @supportedBy MediaWikiAPI 1.11, 1.12, 1.13, 1.14
  */
 public class CategoryMembersFull extends CategoryMembers implements Iterable<CategoryItem>, Iterator<CategoryItem> {
 

@@ -52,12 +52,12 @@ public class SiteinfoTest extends LiveTestFather {
 	 * Test get siteinfo on Wikipedia DE.
 	 * @throws Exception a
 	 */
-	//@Test
+	@Test
 	public final void siteInfoWikipediaDe() throws Exception {
 		
 		bot = new MediaWikiAdapterBot("http://de.wikipedia.org/w/index.php");
 		Siteinfo is = bot.getSiteinfo();
-		System.out.println(is);
+		Assert.assertEquals(Version.DEVELOPMENT, bot.getVersion());
 	}
 	
 	/**
@@ -118,6 +118,7 @@ public class SiteinfoTest extends LiveTestFather {
 	public final void siteInfoMW1_13() throws Exception {
 		
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_13_url"));
+		bot.login(getValue("wikiMW1_13_user"), getValue("wikiMW1_13_pass"));
 		Assert.assertEquals(Version.MW1_13, bot.getVersion());
 	}
 	

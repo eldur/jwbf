@@ -50,6 +50,8 @@ public class LiveTestFather {
 		specialChars.add("?");
 		specialChars.add("%");
 		specialChars.add("&");
+		specialChars.add("[");
+		specialChars.add("]");
 	}
 	
 	

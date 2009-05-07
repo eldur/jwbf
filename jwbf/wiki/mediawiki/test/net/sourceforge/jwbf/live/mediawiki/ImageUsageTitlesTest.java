@@ -111,6 +111,7 @@ public class ImageUsageTitlesTest extends LiveTestFather {
 	}
 	private void test(MediaWikiBot bot2) throws Exception {
 		ImageUsageTitles il = new ImageUsageTitles(bot, "Image:" +getValue("filename"), MediaWiki.NS_ALL);
+		assertTrue("test not documented for version: " + bot.getVersion() , il.getSupportedVersions().contains(bot.getVersion()));
 		boolean notFound = true;
 		int x = 0;
 		for (String string : il) {

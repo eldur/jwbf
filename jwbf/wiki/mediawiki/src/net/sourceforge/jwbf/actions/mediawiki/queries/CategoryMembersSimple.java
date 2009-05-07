@@ -34,7 +34,6 @@ import org.apache.log4j.Logger;
 /**
  * 
  * @author Thomas Stock
- * @supportedBy MediaWikiAPI 1.11
  */
 public class CategoryMembersSimple extends CategoryMembers implements Iterable<String>, Iterator<String> {
 
@@ -150,7 +149,6 @@ public class CategoryMembersSimple extends CategoryMembers implements Iterable<S
 	@Override
 	protected void finalizeParse() {
 		titleIterator = titleCollection.iterator();
-		System.err.println("SDF");	// TODO RM
 	}
 
 }

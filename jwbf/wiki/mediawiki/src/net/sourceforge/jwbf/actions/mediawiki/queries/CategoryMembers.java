@@ -17,6 +17,10 @@
  * 
  */
 package net.sourceforge.jwbf.actions.mediawiki.queries;
+import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_11;
+import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_12;
+import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_13;
+import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_14;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -24,6 +28,7 @@ import java.util.regex.Pattern;
 import net.sourceforge.jwbf.actions.Get;
 import net.sourceforge.jwbf.actions.mediawiki.MediaWiki;
 import net.sourceforge.jwbf.actions.mediawiki.util.MWAction;
+import net.sourceforge.jwbf.actions.mediawiki.util.SupportedBy;
 import net.sourceforge.jwbf.actions.mediawiki.util.VersionException;
 import net.sourceforge.jwbf.actions.util.ProcessException;
 import net.sourceforge.jwbf.bots.MediaWikiBot;
@@ -36,6 +41,7 @@ import org.apache.log4j.Logger;
  *
  * @author Thomas Stock
  */
+@SupportedBy({MW1_11, MW1_12, MW1_13, MW1_14})
 public abstract class CategoryMembers extends MWAction {
 
 	/** constant value for the bllimit-parameter. **/
@@ -70,6 +76,7 @@ public abstract class CategoryMembers extends MWAction {
 	 * @throws VersionException on version problems
 	 */
 	protected CategoryMembers(MediaWikiBot bot, String categoryName, int [] namespace) throws VersionException {
+		super(bot.getVersion());
 		this.namespace = namespace;
 		namespaceStr = createNsString(namespace);
 		this.categoryName = categoryName.replace(" ", "_");
@@ -81,10 +88,6 @@ public abstract class CategoryMembers extends MWAction {
 	private void createRequestor() throws VersionException {
 
 		switch (bot.getVersion()) {
-		case MW1_09:
-		case MW1_10:
-			throw new VersionException("Not supportet by this version of MW");
-
 		case MW1_11:
 			r = new RequestBuilder_1_11();
 			break;

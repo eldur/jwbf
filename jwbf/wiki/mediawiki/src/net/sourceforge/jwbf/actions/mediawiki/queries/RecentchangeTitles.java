@@ -18,6 +18,13 @@
  */
 package net.sourceforge.jwbf.actions.mediawiki.queries;
 
+import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_09;
+import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_10;
+import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_11;
+import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_12;
+import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_13;
+import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_14;
+
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
@@ -27,6 +34,7 @@ import java.util.Vector;
 
 import net.sourceforge.jwbf.actions.Get;
 import net.sourceforge.jwbf.actions.mediawiki.MediaWiki;
+import net.sourceforge.jwbf.actions.mediawiki.util.SupportedBy;
 import net.sourceforge.jwbf.actions.mediawiki.util.VersionException;
 import net.sourceforge.jwbf.actions.util.ActionException;
 import net.sourceforge.jwbf.actions.util.HttpAction;
@@ -52,7 +60,7 @@ import org.xml.sax.InputSource;
  * @author Thomas Stock
  * @supportedBy MediaWikiAPI 1.09, 1.10, 1.11, 1.12, 1.13, 1.14
  */
-
+@SupportedBy({MW1_09, MW1_10, MW1_11, MW1_12, MW1_13, MW1_14})
 public class RecentchangeTitles extends TitleQuery {
 
 	/** value for the bllimit-parameter. **/
@@ -124,6 +132,7 @@ public class RecentchangeTitles extends TitleQuery {
 	 * 
 	 */
 	public RecentchangeTitles(MediaWikiBot bot, int... ns) throws VersionException {
+		super(bot.getVersion());
 		namespaces = ns;
 		this.bot = bot;
 		
@@ -132,8 +141,8 @@ public class RecentchangeTitles extends TitleQuery {
 	 * 
 	 */
 	public RecentchangeTitles(MediaWikiBot bot) throws VersionException {
-		namespaces = MediaWiki.NS_ALL;
-		this.bot = bot;
+		this(bot, MediaWiki.NS_ALL);
+		
 	
 	}
 	

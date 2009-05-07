@@ -12,8 +12,6 @@ public final class MediaWiki {
 
 	static final String CHARSET = "utf-8";
 
-
-	
 	public static final int NS_MAIN = 0;
 	public static final int NS_MAIN_TALK = 1;
 	public static final int NS_USER = 2;
@@ -41,7 +39,27 @@ public final class MediaWiki {
 	 *
 	 */
 	public enum Version {
-	MW1_09, MW1_10, MW1_11, MW1_12, MW1_13, MW1_14, MW1_15, UNKNOWN;
+		MW1_09, MW1_10, MW1_11, MW1_12, MW1_13, MW1_14, MW1_15, UNKNOWN, DEVELOPMENT;
+		
+		public String getNumber() {
+			return name().replace("MW", "").replace("_0", "_").replace("_", ".");
+		}
+		
+		private int getIntValue() {
+			try {
+				return Integer.parseInt(getNumber().replace(".", ""));
+			} catch (Exception e) {
+				if (this == DEVELOPMENT)
+					return Integer.MAX_VALUE;
+				return -1;
+			}
+		}
+		
+		public boolean greaterEqThen(Version v) {
+			if (v.getIntValue() >= getIntValue())
+				return false;
+			return true;
+		}
 	}
 	
 	private MediaWiki() {

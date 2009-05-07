@@ -61,23 +61,22 @@ public class Siteinfo {
 	}
 
 	public Version getVersion() {
-		if (getGenerator().contains("1.9.")) {
-			return Version.MW1_09;
-		} else if (getGenerator().contains("1.10.")) {
-			return Version.MW1_10;
-		} else if (getGenerator().contains("1.11.")) {
-			return Version.MW1_11;
-		} else if (getGenerator().contains("1.12")) {
-			return Version.MW1_12;
-		} else if (getGenerator().contains("1.13")) {
-			return Version.MW1_13;
-		} else if (getGenerator().contains("1.14")) {
-			return Version.MW1_14;
-		} else {
+		if (getGenerator().contains("alpha")) {
+			return Version.DEVELOPMENT;
+		}
+		
+		Version [] versions = Version.values();
+		for (int i = 0; i < versions.length; i++) {
+			if (getGenerator().contains(versions[i].getNumber())) {
+				return versions[i];
+			}
+			
+		}
+		
 			log.info("\nVersion is UNKNOWN for JWBF (" + JWBF.getVersion() + ") : \n\t" + getGenerator() 
 					+ "\n\tUsing settings for actual Wikipedia development version");
 			return Version.UNKNOWN;
-		}
+		
 	
 	}
 

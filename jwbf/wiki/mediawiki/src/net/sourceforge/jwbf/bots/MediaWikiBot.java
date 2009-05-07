@@ -72,6 +72,10 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
 	private boolean loginChangeVersion = false;
 	private boolean useEditApi = true;
 	
+	/**
+	 * These chars are not allowed in article names
+	 */
+	public static final char [] INVALID_LABEL_CHARS = "[]{}<>|".toCharArray();
 	
 
 	protected MediaWikiBot() {
@@ -262,7 +266,12 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
 		if (!isLoggedIn()) {
 			throw new ActionException("Please login first");
 		}
-		
+
+		for (char invChar : INVALID_LABEL_CHARS) {
+			if(a.getLabel().contains(invChar + ""))
+				throw new ActionException("Invalid character in label\"" 
+						+ a.getLabel() +"\" : \"" + invChar + "\"");
+		}
 		if (store != null) {
 			String label = a.getLabel();
 			SimpleArticle sa;

@@ -18,6 +18,12 @@
  */
 package net.sourceforge.jwbf.actions.mediawiki.editing;
 
+import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_09;
+import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_10;
+import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_11;
+import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_12;
+import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_13;
+import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_14;
 import static net.sourceforge.jwbf.contentRep.SimpleArticle.COMMENT;
 import static net.sourceforge.jwbf.contentRep.SimpleArticle.CONTENT;
 import static net.sourceforge.jwbf.contentRep.SimpleArticle.FIRST;
@@ -34,6 +40,7 @@ import net.sourceforge.jwbf.actions.Get;
 import net.sourceforge.jwbf.actions.mediawiki.MediaWiki;
 import net.sourceforge.jwbf.actions.mediawiki.util.ApiException;
 import net.sourceforge.jwbf.actions.mediawiki.util.MWAction;
+import net.sourceforge.jwbf.actions.mediawiki.util.SupportedBy;
 import net.sourceforge.jwbf.actions.util.ActionException;
 import net.sourceforge.jwbf.actions.util.HttpAction;
 import net.sourceforge.jwbf.actions.util.ProcessException;
@@ -52,14 +59,9 @@ import org.xml.sax.InputSource;
  * 
  * @author Thomas Stock
  * 
- * @supportedBy MediaWikiAPI 1.9.x
- * @supportedBy MediaWikiAPI 1.10.x 
- * @supportedBy MediaWikiAPI 1.11.x 
- * @supportedBy MediaWikiAPI 1.12.x 
- * @supportedBy MediaWikiAPI 1.13.x
- * @supportedBy MediaWikiAPI 1.14.x 
  * 
  */
+@SupportedBy({MW1_09, MW1_10, MW1_11, MW1_12, MW1_13, MW1_14})
 public class GetRevision extends MWAction {
 
 	private final SimpleArticle sa;
@@ -75,11 +77,12 @@ public class GetRevision extends MWAction {
 
 	/**
 	 * TODO follow redirects.
+	 * TODO change constructor fild ordering; bot <<<
 	 * @throws ProcessException 
 	 * @throws ActionException 
 	 */
 	public GetRevision(final String articlename, final int property, MediaWikiBot bot) throws ActionException, ProcessException {
-		
+		super(bot.getVersion());
 //		if (!bot.getUserinfo().getRights().contains("read")) {
 //			throw new ActionException("reading is not permited, make sure that this account is able to read");
 //		} FIXME check if 

@@ -19,6 +19,8 @@
 package net.sourceforge.jwbf.live.mediawiki;
 
 
+import static org.junit.Assert.assertTrue;
+
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -26,6 +28,7 @@ import net.sourceforge.jwbf.LiveTestFather;
 import net.sourceforge.jwbf.actions.mediawiki.MediaWiki;
 import net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version;
 import net.sourceforge.jwbf.actions.mediawiki.queries.AllPageTitles;
+import net.sourceforge.jwbf.actions.util.ActionException;
 import net.sourceforge.jwbf.bots.MediaWikiAdapterBot;
 import net.sourceforge.jwbf.bots.MediaWikiBot;
 import net.sourceforge.jwbf.contentRep.SimpleArticle;
@@ -190,15 +193,27 @@ public class AllPagesTest extends LiveTestFather {
 	
 	private void doTest(MediaWikiBot bot, boolean isFullTest) throws Exception {
 		AllPageTitles gat = new AllPageTitles(bot, null,null,true, true, MediaWiki.NS_MAIN);
-
+		if (bot.getVersion() != Version.DEVELOPMENT)
+			assertTrue("test not documented for version: " + bot.getVersion() , gat.getSupportedVersions().contains(bot.getVersion()));
 		SimpleArticle sa;
 		String testText = getRandom(255);
 
 		Collection<String> specialChars = getSpecialChars();
 		if (isFullTest) {
+			try {
 			for (String label1 : specialChars) {
 				sa = new SimpleArticle(testText, label1);
 				bot.writeContent(sa);
+			}
+			} catch (ActionException e) {
+				boolean found = false;
+				for (char ch : MediaWikiBot.INVALID_LABEL_CHARS) {
+					if (e.getMessage().contains(ch + "")) {
+						found = true;
+						break;
+					}
+				}
+				assertTrue("should be a know invalid char",  found);
 			}
 		}
 
@@ -214,7 +229,11 @@ public class AllPagesTest extends LiveTestFather {
 			}
 		}
 		if (isFullTest) {
-		Assert.assertTrue("tc sould be empty but is: " + specialChars, specialChars.isEmpty());
+			for (char c : MediaWikiBot.INVALID_LABEL_CHARS) {
+				specialChars.remove(c + "");
+			}
+			Assert.assertTrue("tc sould be empty but is: " + specialChars,
+					specialChars.isEmpty());
 		}
 		Assert.assertTrue("i is: " + i, i > 50);
 	}

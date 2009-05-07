@@ -1,11 +1,15 @@
 package net.sourceforge.jwbf.actions.mediawiki.editing;
 
+import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_12;
+import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_13;
+
 import java.io.IOException;
 import java.io.StringReader;
 
 import net.sourceforge.jwbf.actions.Get;
 import net.sourceforge.jwbf.actions.mediawiki.MediaWiki;
 import net.sourceforge.jwbf.actions.mediawiki.util.MWAction;
+import net.sourceforge.jwbf.actions.mediawiki.util.SupportedBy;
 import net.sourceforge.jwbf.actions.mediawiki.util.VersionException;
 import net.sourceforge.jwbf.actions.util.HttpAction;
 import net.sourceforge.jwbf.actions.util.ProcessException;
@@ -28,9 +32,8 @@ import org.xml.sax.InputSource;
  *
  * @author Max Gensthaler
  * @author Thomas Stock
- * @supportedBy MediaWikiAPI 1.12
- * @supportedBy MediaWikiAPI 1.13
  */
+@SupportedBy({ MW1_12, MW1_13})
 final class GetApiToken extends MWAction {
 	/** Types that need a token. See API field intoken. */
 	// TODO this does not feel the elegant way.
@@ -54,16 +57,10 @@ final class GetApiToken extends MWAction {
 	 * @throws VersionException if this action is not supported of the MediaWiki version connected to
 	 */
 	GetApiToken(Intoken intoken, String title, Siteinfo si, Userinfo ui) throws VersionException {
-		switch (si.getVersion()) {
-		case MW1_09:
-		case MW1_10:
-		case MW1_11:
-			throw new VersionException("Not supportet by this version of MediaWiki");
-		default:
-			this.intoken = intoken;
-			generateTokenRequest(intoken, title);
-			break;
-		}
+		super(si.getVersion());
+		this.intoken = intoken;
+		generateTokenRequest(intoken, title);
+		
 	}
 
 	/**

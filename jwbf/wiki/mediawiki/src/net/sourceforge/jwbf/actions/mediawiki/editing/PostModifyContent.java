@@ -18,12 +18,20 @@
  */
 package net.sourceforge.jwbf.actions.mediawiki.editing;
 
+import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_09;
+import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_10;
+import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_11;
+import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_12;
+import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_13;
+import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_14;
+
 import java.util.Hashtable;
 
 import net.sourceforge.jwbf.actions.Get;
 import net.sourceforge.jwbf.actions.Post;
 import net.sourceforge.jwbf.actions.mediawiki.MediaWiki;
 import net.sourceforge.jwbf.actions.mediawiki.util.MWAction;
+import net.sourceforge.jwbf.actions.mediawiki.util.SupportedBy;
 import net.sourceforge.jwbf.actions.mediawiki.util.VersionException;
 import net.sourceforge.jwbf.actions.util.ActionException;
 import net.sourceforge.jwbf.actions.util.HttpAction;
@@ -41,9 +49,8 @@ import org.apache.log4j.Logger;
  * 
  * 
  * @author Thomas Stock
- * @supportedBy MediaWiki 1.9.x, 1.10.x, 1.11.x, 1.12.x, 1.13.x
- * @supportedBy MediaWikiAPI 1.14.x
  */
+@SupportedBy({MW1_09, MW1_10, MW1_11, MW1_12, MW1_13, MW1_14})
 public class PostModifyContent extends MWAction {
 
 	private boolean first = true;
@@ -66,6 +73,7 @@ public class PostModifyContent extends MWAction {
 	 * @throws VersionException a
 	 */
 	public PostModifyContent(MediaWikiBot bot, final ContentAccessable a) throws VersionException, ActionException, ProcessException {
+		super(bot.getVersion());
 		this.a = a;
 		this.bot = bot;
 		
@@ -100,8 +108,6 @@ public class PostModifyContent extends MWAction {
 				return apiGet;
 
 			} catch (VersionException e) {
-//				System.err.println(e.getLocalizedMessage()); // TODO RM
-
 				String uS = "/index.php?title="
 						+ MediaWiki.encode(a.getLabel())
 						+ "&action=edit&dontcountme=s";
@@ -173,7 +179,7 @@ public class PostModifyContent extends MWAction {
 //			if (s.contains("edit") && bot.getVersion() == Version.MW1_13) { // FIXME invalid
 //				throw new ProcessException("please check if $wgEnableWriteAPI = true;");
 //			}
-			throw new ProcessException(s);
+			throw new ProcessException(s.substring(0, 700));
 		}
 		if (initOldGet != null && hm.getRequest().equals(initOldGet.getRequest())) {
 			getWpValues(s, tab);
