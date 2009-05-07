@@ -29,6 +29,7 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Vector;
 
@@ -81,6 +82,7 @@ public class RecentchangeTitles extends TitleQuery {
 	 * after performing the action has finished.
 	 */
 	private Collection<String> titleCollection = new Vector<String>();
+	private final boolean uniqChanges;
 
 	/**
 	 * information necessary to get the next api page.
@@ -132,9 +134,17 @@ public class RecentchangeTitles extends TitleQuery {
 	 * 
 	 */
 	public RecentchangeTitles(MediaWikiBot bot, int... ns) throws VersionException {
+		this(bot,false, ns);
+		
+	}
+	/**
+	 * 
+	 */
+	public RecentchangeTitles(MediaWikiBot bot, boolean uniqChanges, int... ns) throws VersionException {
 		super(bot.getVersion());
 		namespaces = ns;
 		this.bot = bot;
+		this.uniqChanges = uniqChanges; 
 		
 	}
 	/**
@@ -163,6 +173,12 @@ public class RecentchangeTitles extends TitleQuery {
 		parseArticleTitles(t);
 		if (log.isInfoEnabled())
 			log.info("found: " + titleCollection);
+		if (uniqChanges) {
+			HashSet<String> hs = new HashSet<String>();
+			hs.addAll(titleCollection);
+			titleCollection.clear();
+			titleCollection.addAll(hs);
+		}
 		titleIterator = titleCollection.iterator();
 		
 		return "";
@@ -257,7 +273,7 @@ public class RecentchangeTitles extends TitleQuery {
 	protected Object clone() throws CloneNotSupportedException {
 
 		try {
-			return new RecentchangeTitles(bot, namespaces);
+			return new RecentchangeTitles(bot,uniqChanges, namespaces);
 		} catch (VersionException e) {
 			throw new CloneNotSupportedException(e.getLocalizedMessage());
 		}
