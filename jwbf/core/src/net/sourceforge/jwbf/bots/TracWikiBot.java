@@ -38,8 +38,7 @@ public class TracWikiBot extends HttpBot implements WikiBot {
 	 *            if param url does not represent a well-formed url
 	 */
 	public TracWikiBot(String url) throws MalformedURLException {
-		super();
-		setConnection(url);
+		super(url);
 	}
 
 	

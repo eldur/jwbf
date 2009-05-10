@@ -34,8 +34,7 @@ public class InyokaWikiBot extends HttpBot implements WikiBot {
 	 *            if param url does not represent a well-formed url
 	 */
 	public InyokaWikiBot(String url) throws MalformedURLException {
-		super();
-		setConnection(url);
+		super(url);
 	}
 
 	

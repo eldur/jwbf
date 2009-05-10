@@ -22,8 +22,12 @@ package net.sourceforge.jwbf.actions;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URL;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
+import net.sourceforge.jwbf.JWBF;
 import net.sourceforge.jwbf.actions.util.ActionException;
 import net.sourceforge.jwbf.actions.util.CookieException;
 import net.sourceforge.jwbf.actions.util.HttpAction;
@@ -61,34 +65,31 @@ public class HttpActionClient {
 	 * 
 	 * @param client
 	 *            a
-	 * @param path
-	 *            like "/w/"
+	 * @param url
+	 *            like "http://host/of/wiki/"
 	 */
-	public HttpActionClient(final HttpClient client, final String path) {
+	public HttpActionClient(final HttpClient client, final URL url) {
 		/*
 		 * see for docu
 		 * http://jakarta.apache.org/commons/httpclient/preference-api.html
 		 */
 
-		this.client = client;
+		
 //		this.client.getParams().setParameter("http.protocol.content-charset",
 //		 "UTF-8");
 		
-		if (path.length() > 1) {
-			this.path = path.substring(0, path.lastIndexOf("/"));
+		if (url.getPath().length() > 1) {
+			this.path = url.getPath().substring(0, url.getPath().lastIndexOf("/"));
 		}
 
+		client.getParams().setParameter("http.useragent",
+				"JWBF " + JWBF.getVersion());
+		client.getHostConfiguration().setHost(url.getHost(), url.getPort(),
+				url.getProtocol());
+		this.client = client;
 	}
 
-	/**
-	 * 
-	 * @param client
-	 *            a
-	 */
-	public HttpActionClient(final HttpClient client) {
-		this(client, "");
 
-	}
 
 	/**
 	 * 
@@ -253,8 +254,8 @@ public class HttpActionClient {
 		out = authpost.getResponseBodyAsString();
 		
 		out = cp.processReturningText(out, ha);
-		
-		cp.validateReturningCookies(client.getState().getCookies(), ha);
+		if (cp instanceof CookieValidateable)
+			((CookieValidateable) cp).validateReturningCookies(cookieTransform(client.getState().getCookies()), ha);
 		
 	
 
@@ -286,7 +287,8 @@ public class HttpActionClient {
 //		System.err.println(authgets.getParams().getParameter("http.protocol.content-charset"));
 		
 		client.executeMethod(authgets);
-		cp.validateReturningCookies(client.getState().getCookies(), ha);
+		if (cp instanceof CookieValidateable)
+			((CookieValidateable) cp).validateReturningCookies(cookieTransform(client.getState().getCookies()), ha);
 //		log.debug(authgets.getURI());
 		if (!authgets.getStatusLine().toString().contains("200") && log.isDebugEnabled()) 
 			log.debug("GET: " + authgets.getStatusLine().toString());
@@ -345,6 +347,13 @@ public class HttpActionClient {
 		return out;
 	}
 
+	private Map<String,String> cookieTransform(Cookie [] ca) {
+		Map<String,String> m = new HashMap<String, String>();
+		for (int i = 0; i < ca.length; i++) {
+			m.put(ca[i].getName(), ca[i].getValue());
+		}
+		return m;
+	}
 	/**
 	 * send the cookies to the logger.
 	 * 
@@ -379,6 +388,10 @@ public class HttpActionClient {
 					+  client.getHostConfiguration().getHostURL() 
 					+ epath +  ha.getRequest());
 		}
+	}
+	
+	public String getHostUrl() {
+		return client.getHostConfiguration().getHostURL();
 	}
 }
 

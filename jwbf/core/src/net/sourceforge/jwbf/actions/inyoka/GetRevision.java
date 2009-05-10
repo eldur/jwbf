@@ -19,6 +19,7 @@
 package net.sourceforge.jwbf.actions.inyoka;
 
 import java.text.ParseException;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -29,7 +30,6 @@ import net.sourceforge.jwbf.actions.util.HttpAction;
 import net.sourceforge.jwbf.actions.util.ProcessException;
 import net.sourceforge.jwbf.contentRep.SimpleArticle;
 
-import org.apache.commons.httpclient.Cookie;
 import org.apache.log4j.Logger;
 
 /**
@@ -175,7 +175,7 @@ public class GetRevision implements ContentProcessable {
 		
 	}
 
-	public void validateReturningCookies(Cookie[] cs, HttpAction hm)
+	public void validateReturningCookies(Map<String,String> cs, HttpAction hm)
 			throws CookieException {
 		// TODO is here an cookie handeling required?
 		

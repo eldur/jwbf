@@ -16,8 +16,8 @@ import org.junit.Test;
 public abstract class ArticleTest extends LiveTestFather {
 
 	protected static Collection<WikiBot> bots = new Vector<WikiBot>();
+
 	public ArticleTest() {
-		// TODO Auto-generated constructor stub
 	}
 
 	/**

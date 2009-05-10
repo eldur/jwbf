@@ -51,7 +51,6 @@ public class Article extends SimpleArticle {
 
 	@Override
 	public Date getEditTimestamp() {
-		// TODO Auto-generated method stub
 		return super.getEditTimestamp();
 	}
 

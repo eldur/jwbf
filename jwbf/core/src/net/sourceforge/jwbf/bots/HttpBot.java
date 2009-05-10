@@ -22,7 +22,6 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import net.sourceforge.jwbf.JWBF;
 import net.sourceforge.jwbf.actions.ContentProcessable;
 import net.sourceforge.jwbf.actions.Get;
 import net.sourceforge.jwbf.actions.GetPage;
@@ -38,21 +37,38 @@ import org.apache.commons.httpclient.HttpClient;
  * 
  */
 
-public abstract class HttpBot {
+public class HttpBot {
 
 	private HttpActionClient cc;
-
-	private HttpClient client;
+	private boolean init = true;
 
 	/**
 	 * protected because abstract.
 	 * 
 	 */
-	protected HttpBot() {
-		client = new HttpClient();
-
+	protected HttpBot(final String url) {
+		try {
+			setConnection(url);
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	protected HttpBot(HttpActionClient cc) {
+		this.cc = cc;
 	}
 
+	protected HttpBot(final URL url) {
+			setConnection(url);
+	}
+	
+	private HttpBot() {
+
+	}
+	
+	public static HttpBot getInstance() {
+		return new HttpBot();
+	}
 	/**
 	 * 
 	 * @param client
@@ -61,21 +77,14 @@ public abstract class HttpBot {
 	 *            like http://www.yourOwnWiki.org/w/index.php
 	 * 
 	 */
-	protected final void setConnection(final HttpClient client, final URL u) {
-
-		this.client = client;
-		client.getParams().setParameter("http.useragent",
-				"JWBF " + JWBF.getVersion());
-		client.getHostConfiguration().setHost(u.getHost(), u.getPort(),
-				u.getProtocol());
-		
-		cc = new HttpActionClient(client, u.getPath());
-
+	public final void setConnection(final HttpActionClient client) {
+		cc = client;
 	}
 
 	
 	public final String getHostUrl() {
-		return client.getHostConfiguration().getHostURL();
+		checkClient();
+		return cc.getHostUrl();
 	}
 	/**
 	 * 
@@ -101,10 +110,7 @@ public abstract class HttpBot {
 	 */
 	protected final void setConnection(final String hostUrl)
 			throws MalformedURLException {
-
-		client.getParams().setParameter("http.useragent",
-				"JWBF " + JWBF.getVersion());
-		setConnection(client, new URL(hostUrl));
+		setConnection(new URL(hostUrl));
 
 	}
 
@@ -153,14 +159,12 @@ public abstract class HttpBot {
 	public final byte[] getBytes(String u) throws ActionException {
 
 		
-
+		checkClient();
 		try {
 			return cc.get(new Get(u));
 		} catch (ProcessException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return null;
@@ -170,8 +174,9 @@ public abstract class HttpBot {
 	 * 
 	 * @return a
 	 */
-	public final HttpClient getClient() {
-		return client;
+	public final HttpActionClient getClient() {
+		checkClient();
+		return cc;
 	}
 
 	/**
@@ -180,8 +185,18 @@ public abstract class HttpBot {
 	 *            like http://www.yourOwnWiki.org/wiki/
 	 */
 	protected final void setConnection(final URL hostUrl) {
-		setConnection(client, hostUrl);
+		setConnection(new HttpActionClient(new HttpClient(), hostUrl));
 
 	}
 
+	private void checkClient() {
+		if (cc == null && init) {
+			init = false;
+			try {
+				cc = new HttpActionClient(new HttpClient(), new URL("http://localhost/"));
+			} catch (MalformedURLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
 }

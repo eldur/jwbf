@@ -24,11 +24,9 @@ import java.util.Vector;
 import net.sourceforge.jwbf.actions.ContentProcessable;
 import net.sourceforge.jwbf.actions.mediawiki.MediaWiki;
 import net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version;
-import net.sourceforge.jwbf.actions.util.CookieException;
 import net.sourceforge.jwbf.actions.util.HttpAction;
 import net.sourceforge.jwbf.actions.util.ProcessException;
 
-import org.apache.commons.httpclient.Cookie;
 import org.apache.log4j.Logger;
 
 /**
@@ -81,33 +79,6 @@ public abstract class MWAction implements ContentProcessable {
 	 */
 	public String processReturningText(final String s, final HttpAction hm) throws ProcessException {
 		return processAllReturningText(s);
-	}
-
-	/**
-	 * @param cs
-	 *            a
-	 * @param hm
-	 *            the method object
-	 * @throws CookieException
-	 *             never
-	 * 
-	 */
-	public void validateReturningCookies(Cookie[] cs, HttpAction hm)
-			throws CookieException {
-		validateAllReturningCookies(cs);
-
-	}
-
-	/**
-	 * @param cs
-	 *            a
-	 * @throws CookieException
-	 *             never
-	 * 
-	 */
-	public void validateAllReturningCookies(final Cookie[] cs)
-			throws CookieException {
-		// do nothing
 	}
 
 	/**

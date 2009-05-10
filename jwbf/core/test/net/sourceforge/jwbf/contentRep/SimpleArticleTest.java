@@ -26,7 +26,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-
 import org.junit.Before;
 import org.junit.Test;
 
@@ -69,7 +68,6 @@ public class SimpleArticleTest {
 			
 			assertEquals(dateString, sdf.format(article.getEditTimestamp()));
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

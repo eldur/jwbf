@@ -71,14 +71,6 @@ import net.sourceforge.jwbf.contentRep.mediawiki.SimpleFile;
  * 
  */
 public class MediaWikiAdapterBot extends MediaWikiBot {
-
-
-	/**
-	 * Design only for extension.
-	 */
-	protected MediaWikiAdapterBot() {
-		// do nothing, design only for extension
-	}
 	
 	/**
 	 * @param u

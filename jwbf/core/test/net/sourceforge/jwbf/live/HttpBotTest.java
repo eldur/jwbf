@@ -31,7 +31,7 @@ public class HttpBotTest extends LiveTestFather {
 	}
 	@Before
 	public void prepare() {
-		bot = new HttpBot() {
+		bot = new HttpBot("http://localhost/") {
 		};
 	}
 	/**

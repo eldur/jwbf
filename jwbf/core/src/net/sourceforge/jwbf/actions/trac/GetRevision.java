@@ -19,6 +19,7 @@
 package net.sourceforge.jwbf.actions.trac;
 
 import java.text.ParseException;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -29,7 +30,6 @@ import net.sourceforge.jwbf.actions.util.HttpAction;
 import net.sourceforge.jwbf.actions.util.ProcessException;
 import net.sourceforge.jwbf.contentRep.SimpleArticle;
 
-import org.apache.commons.httpclient.Cookie;
 import org.apache.log4j.Logger;
 
 /**
@@ -37,7 +37,7 @@ import org.apache.log4j.Logger;
  * 
  * @author Thomas Stock
  * 
- * @supportedBy Trac ??? TODO
+ * @supportedBy Trac ??? TODO find out version
  * 
  */
 public class GetRevision implements ContentProcessable {
@@ -119,7 +119,6 @@ public class GetRevision implements ContentProcessable {
 				sa.setEditTimestamp(m.group(1).trim());
 
 			} catch (ParseException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		} else {
@@ -175,9 +174,8 @@ public class GetRevision implements ContentProcessable {
 		
 	}
 
-	public void validateReturningCookies(Cookie[] cs, HttpAction hm)
+	public void validateReturningCookies(Map<String,String> cs, HttpAction hm)
 			throws CookieException {
-		// TODO Auto-generated method stub
 		
 	}
 

@@ -1,6 +1,5 @@
 package net.sourceforge.jwbf.contentRep.mediawiki;
-//package net.sourceforge.jwbf.contentRep.mw;
-//
+
 //import java.util.ArrayList;
 //import java.util.Comparator;
 //import java.util.Iterator;

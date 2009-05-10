@@ -19,11 +19,8 @@
 package net.sourceforge.jwbf.actions;
 
 
-import net.sourceforge.jwbf.actions.util.CookieException;
 import net.sourceforge.jwbf.actions.util.HttpAction;
 import net.sourceforge.jwbf.actions.util.ProcessException;
-
-import org.apache.commons.httpclient.Cookie;
 /**
  * 
  * @author Thomas Stock
@@ -31,13 +28,6 @@ import org.apache.commons.httpclient.Cookie;
  */
 public interface ContentProcessable {
 
-	/**
-	 * 
-	 * @param cs a
-	 * @param hm a
-	 * @throws CookieException on problems with cookies
-	 */
-	void validateReturningCookies(final Cookie[] cs, HttpAction hm) throws CookieException;
 
 	/**
 	 * 

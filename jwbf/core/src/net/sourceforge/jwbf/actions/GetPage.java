@@ -18,6 +18,8 @@
  */
 package net.sourceforge.jwbf.actions;
 
+import java.util.Map;
+
 import net.sourceforge.jwbf.actions.util.CookieException;
 import net.sourceforge.jwbf.actions.util.HttpAction;
 import net.sourceforge.jwbf.actions.util.ProcessException;
@@ -86,7 +88,7 @@ public class GetPage implements ContentProcessable {
 	 * @param hm a
 	 * @throws CookieException on cookie problems
 	 */
-	public void validateReturningCookies(Cookie[] cs, HttpAction hm)
+	public void validateReturningCookies(Map<String,String> cs, HttpAction hm)
 			throws CookieException {
 
 	}

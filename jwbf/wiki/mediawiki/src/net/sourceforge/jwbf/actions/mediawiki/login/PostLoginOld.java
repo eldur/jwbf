@@ -20,6 +20,10 @@ package net.sourceforge.jwbf.actions.mediawiki.login;
 
 
 import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_09;
+
+import java.util.Map;
+
+import net.sourceforge.jwbf.actions.CookieValidateable;
 import net.sourceforge.jwbf.actions.Post;
 import net.sourceforge.jwbf.actions.mediawiki.MediaWiki;
 import net.sourceforge.jwbf.actions.mediawiki.util.MWAction;
@@ -29,7 +33,6 @@ import net.sourceforge.jwbf.actions.util.CookieException;
 import net.sourceforge.jwbf.actions.util.HttpAction;
 import net.sourceforge.jwbf.bots.util.LoginData;
 
-import org.apache.commons.httpclient.Cookie;
 import org.apache.log4j.Logger;
 
 /**
@@ -37,8 +40,7 @@ import org.apache.log4j.Logger;
  * @author Thomas Stock
  */
 @SupportedBy({MW1_09})
-public class PostLoginOld extends MWAction {
-
+public class PostLoginOld extends MWAction implements CookieValidateable {
 	private String username = "";
 
 	private static final Logger LOG = Logger.getLogger(PostLoginOld.class);
@@ -71,6 +73,21 @@ public class PostLoginOld extends MWAction {
 		msg = pm;
 
 	}
+	/**
+	 * @param cs
+	 *            a
+	 * @param hm
+	 *            the method object
+	 * @throws CookieException
+	 *             never
+	 * 
+	 */
+	public final void validateReturningCookies(final Map<String,String> cs, HttpAction hm)
+			throws CookieException {
+		validateAllReturningCookies(cs);
+
+	}
+
 
 	/**
 	 * @param cs
@@ -78,7 +95,7 @@ public class PostLoginOld extends MWAction {
 	 * @throws CookieException
 	 *             when no cookies returning
 	 */
-	public void validateAllReturningCookies(final Cookie[] cs)
+	public void validateAllReturningCookies(final Map<String,String> cs)
 			throws CookieException {
 		String compare = username;
 
@@ -87,20 +104,21 @@ public class PostLoginOld extends MWAction {
 		if (cs == null) {
 			throw new CookieException("Cookiearray is null.");
 		}
-		if (cs.length == 0) {
+		if (cs.isEmpty()) {
 			throw new CookieException("No cookies found.");
 		} else {
-			for (int i = 0; i < cs.length; i++) {
-				if (cs[i].toString().contains(compare)) {
-					LOG.info("Logged in as: " + username);
-					login.setup(0, username, "0", true);
-					return;
-				}
-				if (i == cs.length - 1) {
-					throw new CookieException(
-							"Login failed: Check Username and Password.");
-				}
+			
+			if (cs.containsValue(compare)) {
+				LOG.info("Logged in as: " + username);
+				login.setup(0, username, "0", true);
+				return;
+			} else {
+				throw new CookieException(
+						"Login failed: Check Username and Password.");
 			}
+			
+				
+			
 		}
 	}
 

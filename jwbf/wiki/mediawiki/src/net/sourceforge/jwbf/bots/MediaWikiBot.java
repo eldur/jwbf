@@ -77,18 +77,13 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
 	 */
 	public static final char [] INVALID_LABEL_CHARS = "[]{}<>|".toCharArray();
 	
-
-	protected MediaWikiBot() {
-		// design for extension
-	}
 	
 	/**
 	 * @param u
 	 *            wikihosturl like "http://www.mediawiki.org/wiki/"
 	 */
 	public MediaWikiBot(final URL u) {
-		super();
-		setConnection(u);
+		super(u);
 
 	}
 	
@@ -100,7 +95,7 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
 	 */
 	
 	public MediaWikiBot(final String url) throws MalformedURLException {
-		super();
+		super(url);
 		if (!(url.endsWith(".php") || url.endsWith("/"))) {
 			throw new MalformedURLException("(" + url + ") url must end with slash or .php");
 		}
@@ -116,7 +111,7 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
 	 * @throws IOException a
 	 */
 	public MediaWikiBot(URL url, boolean testHostReachable) throws UnknownHostException, IOException {
-		super();
+		super(url);
 		if (testHostReachable) {
 			try {
 				getPage(url.toExternalForm());
