@@ -6,6 +6,7 @@ import net.sourceforge.jwbf.LiveTestFather;
 import net.sourceforge.jwbf.actions.mediawiki.MediaWiki;
 import net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version;
 import net.sourceforge.jwbf.actions.mediawiki.queries.ImagelinkTitles;
+import net.sourceforge.jwbf.actions.mediawiki.util.VersionException;
 import net.sourceforge.jwbf.bots.MediaWikiAdapterBot;
 import net.sourceforge.jwbf.bots.MediaWikiBot;
 import net.sourceforge.jwbf.contentRep.Article;
@@ -13,12 +14,16 @@ import net.sourceforge.jwbf.contentRep.Article;
 import org.apache.log4j.PropertyConfigurator;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
+/**
+ * @deprecated use {@link ImageUsageTitlesTest} instead
+ 
+ *
+ */
 public class ImageLinkTitlesTest extends LiveTestFather {
 
 
 	private MediaWikiBot bot = null;
-	private int LIMIT = 55;
+	private int limit = 55;
 	
 	/**
 	 * Setup log4j.
@@ -34,12 +39,12 @@ public class ImageLinkTitlesTest extends LiveTestFather {
 	 * Test.
 	 * @throws Exception a
 	 */
-	@Test
+	@Test(expected = VersionException.class)
 	public final void imageLinkMW1_09() throws Exception {
 		
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_09_url"));
 		bot.login(getValue("wikiMW1_09_user"), getValue("wikiMW1_09_pass"));
-		assertTrue( "Wrong Wiki Version " + bot.getVersion() , Version.MW1_09.equals(bot.getVersion()));
+		assertTrue("Wrong Wiki Version " + bot.getVersion(), Version.MW1_09.equals(bot.getVersion()));
 		test(bot);
 		
 	}
@@ -47,12 +52,12 @@ public class ImageLinkTitlesTest extends LiveTestFather {
 	 * Test.
 	 * @throws Exception a
 	 */
-	@Test
+	@Test(expected = VersionException.class)
 	public final void imageLinkMW1_10() throws Exception {
 		
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_10_url"));
 		bot.login(getValue("wikiMW1_10_user"), getValue("wikiMW1_10_pass"));
-		assertTrue( "Wrong Wiki Version " + bot.getVersion() , Version.MW1_10.equals(bot.getVersion()));
+		assertTrue("Wrong Wiki Version " + bot.getVersion(), Version.MW1_10.equals(bot.getVersion()));
 		test(bot);
 		
 	}
@@ -65,7 +70,7 @@ public class ImageLinkTitlesTest extends LiveTestFather {
 		
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_11_url"));
 		bot.login(getValue("wikiMW1_11_user"), getValue("wikiMW1_11_pass"));
-		assertTrue( "Wrong Wiki Version " + bot.getVersion() , Version.MW1_11.equals(bot.getVersion()));
+		assertTrue("Wrong Wiki Version " + bot.getVersion(), Version.MW1_11.equals(bot.getVersion()));
 		test(bot);
 		
 	}
@@ -78,7 +83,7 @@ public class ImageLinkTitlesTest extends LiveTestFather {
 		
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_12_url"));
 		bot.login(getValue("wikiMW1_12_user"), getValue("wikiMW1_12_pass"));
-		assertTrue( "Wrong Wiki Version " + bot.getVersion() , Version.MW1_12.equals(bot.getVersion()));
+		assertTrue("Wrong Wiki Version " + bot.getVersion(), Version.MW1_12.equals(bot.getVersion()));
 		test(bot);
 		
 	}
@@ -91,7 +96,7 @@ public class ImageLinkTitlesTest extends LiveTestFather {
 		
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_13_url"));
 		bot.login(getValue("wikiMW1_13_user"), getValue("wikiMW1_13_pass"));
-		assertTrue( "Wrong Wiki Version " + bot.getVersion() , Version.MW1_13.equals(bot.getVersion()));
+		assertTrue("Wrong Wiki Version " + bot.getVersion(), Version.MW1_13.equals(bot.getVersion()));
 		test(bot);
 		
 	}
@@ -105,7 +110,7 @@ public class ImageLinkTitlesTest extends LiveTestFather {
 		
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_14_url"));
 		bot.login(getValue("wikiMW1_14_user"), getValue("wikiMW1_14_pass"));
-		assertTrue( "Wrong Wiki Version " + bot.getVersion() , Version.MW1_14.equals(bot.getVersion()));
+		assertTrue("Wrong Wiki Version " + bot.getVersion(), Version.MW1_14.equals(bot.getVersion()));
 		test(bot);
 		
 	}
@@ -115,14 +120,14 @@ public class ImageLinkTitlesTest extends LiveTestFather {
 	 * @throws Exception
 	 */
 	private void test(MediaWikiBot bot2) throws Exception {
-		ImagelinkTitles il = new ImagelinkTitles(bot, "Image:" +getValue("filename"), MediaWiki.NS_ALL);
-		assertTrue("test not documented for version: " + bot.getVersion() , il.getSupportedVersions().contains(bot2.getVersion()));
+		ImagelinkTitles il = new ImagelinkTitles(bot, "Image:" + getValue("filename"), MediaWiki.NS_ALL);
+		assertTrue("test not documented for version: " + bot.getVersion(), il.getSupportedVersions().contains(bot2.getVersion()));
 		boolean notFound = true;
 		int x = 0;
 		for (String string : il) {
 			System.out.println(string);
 			x++;
-			if (x >= LIMIT) {
+			if (x >= limit) {
 				notFound = false;
 				break;
 			}
@@ -134,12 +139,12 @@ public class ImageLinkTitlesTest extends LiveTestFather {
 		for (String string : il) {
 			System.out.println(string);
 			x++;
-			if (x >= LIMIT) {
+			if (x >= limit) {
 				break;
 			}
 		}
 		
-		if (x < LIMIT) {
+		if (x < limit) {
 			fail("limit" + x);
 		}
 		
@@ -147,10 +152,10 @@ public class ImageLinkTitlesTest extends LiveTestFather {
 	private void prepare(MediaWikiBot bot2) throws Exception {
 		
 		String name = "";
-		for(int i = 0; i < LIMIT; i++) {
+		for (int i = 0; i < limit; i++) {
 			name = "TitleWithImg" + i;
 			Article a = new Article(bot2, name);
-			a.setText("Hello [[Image:" + getValue("filename") + "]] a image " + getRandom(10) );
+			a.setText("Hello [[Image:" + getValue("filename") + "]] a image " + getRandom(10));
 			a.save();
 		}
 		

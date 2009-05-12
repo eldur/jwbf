@@ -19,8 +19,6 @@
  */
 package net.sourceforge.jwbf.actions.mediawiki.queries;
 
-import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_09;
-import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_10;
 import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_11;
 import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_12;
 import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_13;
@@ -48,9 +46,9 @@ import org.apache.log4j.Logger;
  * @author Tobias Knerr
  * @author Thomas Stock
  * @since MediaWiki 1.9.0
- * 
+ * @deprecated use {@link ImageUsageTitles}
  */
-@SupportedBy({MW1_09, MW1_10, MW1_11, MW1_12, MW1_13, MW1_14})
+@SupportedBy({MW1_11, MW1_12, MW1_13, MW1_14 })
 public class ImagelinkTitles extends TitleQuery {
 
 	/** constant value for the illimit-parameter. **/
@@ -119,6 +117,7 @@ public class ImagelinkTitles extends TitleQuery {
 	 *                      if null, this parameter is omitted
 	 * @param ilcontinue    the value for the ilcontinue parameter,
 	 *                      null for the generation of the initial request
+	 * @return a
 	 */
 	private Get generateRequest(String imageName, String namespace,
 		String ilcontinue) {
@@ -233,7 +232,7 @@ public class ImagelinkTitles extends TitleQuery {
 	protected void prepareCollection() {
 
 		if (init  || (!titleIterator.hasNext() && hasMoreResults)) {
-			if(init) {
+			if (init) {
 				msg = generateRequest(imageName, createNsString(namespaces), null);
 			} else {
 				

@@ -33,7 +33,7 @@ import org.xml.sax.InputSource;
  * @author Max Gensthaler
  * @author Thomas Stock
  */
-@SupportedBy({ MW1_12, MW1_13})
+@SupportedBy({ MW1_12, MW1_13 })
 final class GetApiToken extends MWAction {
 	/** Types that need a token. See API field intoken. */
 	// TODO this does not feel the elegant way.
@@ -69,7 +69,7 @@ final class GetApiToken extends MWAction {
 	 * @param title title of the article to generate the token for
 	 */
 	private void generateTokenRequest(Intoken intoken, String title) {
-		if( log.isTraceEnabled()) {
+		if (log.isTraceEnabled()) {
 			log.trace("enter GetToken.generateTokenRequest()");
 		}
 			String uS = "/api.php"
@@ -151,7 +151,7 @@ final class GetApiToken extends MWAction {
 		try {
 			elem = doc.getRootElement().getChild("query").getChild("pages").getChild("page");
 		} catch (NullPointerException e) {
-			// do nothing
+			; // do nothing
 		}
 		if (elem != null) {
 			// process reply for token request

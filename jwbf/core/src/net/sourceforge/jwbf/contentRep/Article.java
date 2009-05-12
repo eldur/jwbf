@@ -12,6 +12,9 @@ public class Article extends SimpleArticle {
 	private final WikiBot bot;
 	
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public String getText() {
 		if (super.getText().length() < 1) {
@@ -24,6 +27,9 @@ public class Article extends SimpleArticle {
 		return super.getText();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public String getEditor() {
 		if (super.getEditor().length() < 1) {
@@ -36,6 +42,9 @@ public class Article extends SimpleArticle {
 		return super.getEditor();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public String getEditSummary() {
 		if (super.getEditSummary().length() < 1) {
@@ -49,6 +58,9 @@ public class Article extends SimpleArticle {
 		return super.getEditSummary();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public Date getEditTimestamp() {
 		return super.getEditTimestamp();
@@ -72,10 +84,10 @@ public class Article extends SimpleArticle {
 	public void save() throws ActionException, ProcessException {
 		bot.writeContent(this);
 	}
+
 	public void save(String summary) throws ActionException, ProcessException {
 		setEditSummary(summary);
 		bot.writeContent(this);
-		;
 	}
 	
 	public void clear() throws ActionException, ProcessException {

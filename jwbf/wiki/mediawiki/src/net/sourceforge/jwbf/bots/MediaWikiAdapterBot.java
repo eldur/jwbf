@@ -70,6 +70,7 @@ import net.sourceforge.jwbf.contentRep.mediawiki.SimpleFile;
  * @author Justus Bisser
  * 
  */
+
 public class MediaWikiAdapterBot extends MediaWikiBot {
 	
 	/**
@@ -111,7 +112,7 @@ public class MediaWikiAdapterBot extends MediaWikiBot {
 	public Iterable<String> getAllPageTitles(String from, String prefix,
 			boolean redirects, boolean nonredirects, int... namespaces)
 			throws ActionException, VersionException {
-		AllPageTitles a = new AllPageTitles( this, from, prefix, redirects, nonredirects, namespaces );
+		AllPageTitles a = new AllPageTitles(this, from, prefix, redirects, nonredirects, namespaces );
 		return a;
 	}
 
@@ -172,7 +173,7 @@ public class MediaWikiAdapterBot extends MediaWikiBot {
 	public Iterable<String> getBacklinkTitles(String article)
 			throws ActionException, ProcessException {
 
-		return getBacklinkTitles( article, RedirectFilter.all, null);
+		return getBacklinkTitles(article, RedirectFilter.all, null);
 	}
 
 
@@ -261,7 +262,7 @@ public class MediaWikiAdapterBot extends MediaWikiBot {
 	 *
 	 */
 	public Iterable<String> getImagelinkTitles(String image, int... namespaces)
-			throws ActionException , VersionException{
+			throws ActionException , VersionException {
 		ImageUsageTitles a = new ImageUsageTitles(this, image,
 				namespaces);
 
@@ -303,8 +304,6 @@ public class MediaWikiAdapterBot extends MediaWikiBot {
 	 * @return the last ten log events
 	 * @throws ActionException on problems with http, cookies and io
 	 * @throws ProcessException 
-	 * @supportedBy MediaWikiAPI 1.11 logevents / le
-	 * @see #getLogEvents(int, String...)
 	 */
 	public Iterator<LogItem> getLogEvents(String type) throws ActionException, ProcessException {
 
@@ -318,9 +317,6 @@ public class MediaWikiAdapterBot extends MediaWikiBot {
 	 * @return the last ten log events
 	 * @throws ActionException on problems with http, cookies and io
 	 * @throws ProcessException 
-	 * @supportedBy MediaWikiAPI 1.11 logevents / le TODO Test Required
-	 * TODO API state is (semi-complete), see
-	 * http://www.mediawiki.org/wiki/API:Query_-_Lists#logevents_.2F_le_.28semi-complete.29
 	 */
 	public Iterator<LogItem> getLogEvents(int limit, String type) throws ActionException, ProcessException {
 		LogEvents c = new LogEvents(this, limit, type);
@@ -380,8 +376,6 @@ public class MediaWikiAdapterBot extends MediaWikiBot {
 	/**
 	 * Get a number of recent changes from namespace.
 	 *
-	 * @param count
-	 *            of changes
 	 * @param namespaces
 	 *            namespacenumbers greater equals 0
 	 * @return a
@@ -401,13 +395,9 @@ public class MediaWikiAdapterBot extends MediaWikiBot {
 	/**
 	 * Get a number of recent changes from default namespace.
 	 *
-	 * @param count
-	 *            of changes
 	 * @return a
 	 * @throws ActionException
 	 *             on problems with http, cookies and io
-	 * @supportedBy MediaWikiAPI 1.10 recentchanges / rc
-	 * TODO TEST
 	 */
 	public Iterable<String> getRecentchangesTitles()
 			throws ActionException, VersionException {
@@ -425,7 +415,6 @@ public class MediaWikiAdapterBot extends MediaWikiBot {
 	 * @throws ActionException
 	 *             on problems with http, cookies and io
 	 * @throws ProcessException on access problems
-	 * @supportedBy MediaWiki 1.9.x, 1.10.x, 1.11.x, 1.12.x, 1.13.x, 1.14.x
 	 */
 	public final void writeMultContent(final Iterator<ContentAccessable> cav)
 			throws ActionException, ProcessException {

@@ -33,7 +33,7 @@ import org.xml.sax.InputSource;
  * @author Thomas Stock
  *
  */
-@SupportedBy({MW1_12, MW1_13, MW1_14})
+@SupportedBy({ MW1_12, MW1_13, MW1_14 })
 public class GetRendering extends MWAction {
 
 	private final Get msg;

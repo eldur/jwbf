@@ -28,7 +28,7 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
 import org.xml.sax.InputSource;
-@SupportedBy({MW1_11, MW1_12, MW1_13, MW1_14})
+@SupportedBy({ MW1_11, MW1_12, MW1_13, MW1_14 })
 public class GetUserinfo extends MWAction {
 
 	private Userinfo userinfo;
@@ -113,13 +113,13 @@ public class GetUserinfo extends MWAction {
 				username = element.getAttributeValue("name");
 				
 				
-			} else if (element.getQualifiedName().equalsIgnoreCase("groups")){
+			} else if (element.getQualifiedName().equalsIgnoreCase("groups")) {
 				Iterator<Element> git = element.getChildren("g").iterator();
 				while (git.hasNext()) {
 					String gel = git.next().getTextTrim();
 					groups.add(gel);
 				}
-			} else if (element.getQualifiedName().equalsIgnoreCase("rights")){
+			} else if (element.getQualifiedName().equalsIgnoreCase("rights")) {
 				
 				Iterator<Element> rit = element.getChildren("r").iterator();
 				while (rit.hasNext()) {

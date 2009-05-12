@@ -106,13 +106,13 @@ public class BacklinkTest extends LiveTestFather {
 		
 		doTest(bot);
 	}
-	@Test(expected=NullPointerException.class)
+	@Test(expected = NullPointerException.class)
 	public final void backlinksMW1_09_redirectVar() throws Exception {
 
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_09_url"));
 		bot.login(getValue("wikiMW1_09_user"),
 				getValue("wikiMW1_09_pass"));
-		Assert.assertEquals(Version.MW1_09, bot.getVersion() );
+		Assert.assertEquals(Version.MW1_09, bot.getVersion());
 		doTest(bot, RedirectFilter.redirects);
 	}
 
@@ -217,7 +217,7 @@ public class BacklinkTest extends LiveTestFather {
 		Iterator<String> is = gbt.iterator();
 		boolean notEnougth = true;
 		int i = 0;
-		while(is.hasNext()) {
+		while (is.hasNext()) {
 			is.next();
 			i++;
 			if (i > COUNT) {
@@ -225,7 +225,7 @@ public class BacklinkTest extends LiveTestFather {
 				break;
 			}
 		}
-		if(notEnougth) {
+		if (notEnougth) {
 			doPreapare(bot);
 		}
 		is = gbt.iterator();
@@ -242,7 +242,7 @@ public class BacklinkTest extends LiveTestFather {
 				break;
 			}
 		}
-		Assert.assertTrue("Iterator should contain: " + vx ,vx.isEmpty());
+		Assert.assertTrue("Iterator should contain: " + vx, vx.isEmpty());
 		Assert.assertTrue("Fail: " + i + " < " + COUNT, i > COUNT - 1);
 	}
 }

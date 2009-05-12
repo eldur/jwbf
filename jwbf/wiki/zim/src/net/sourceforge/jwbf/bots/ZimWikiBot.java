@@ -47,7 +47,7 @@ public class ZimWikiBot implements WikiBot {
 
 	public ZimWikiBot(String zimRootFolder) {
 		// specify the path to all zim files
-		this( new File(zimRootFolder));
+		this(new File(zimRootFolder));
 	}
 
 	

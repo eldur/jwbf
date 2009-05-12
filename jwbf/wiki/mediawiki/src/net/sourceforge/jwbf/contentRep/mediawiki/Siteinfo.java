@@ -18,8 +18,8 @@ public class Siteinfo {
 	private String generator = "";
 	private String theCase = "";
 
-	private Map<Integer,String> namespaces=new HashMap<Integer,String>();
-	private Map<String,String> interwiki=new HashMap<String,String>();
+	private Map<Integer, String> namespaces = new HashMap<Integer, String>();
+	private Map<String, String> interwiki = new HashMap<String, String>();
 	private boolean writeApi;
 	
 	private static Logger log = Logger.getLogger(Siteinfo.class);
@@ -102,7 +102,7 @@ public class Siteinfo {
 	}
 
 	public void addNamespace(Integer id, String name) {
-		namespaces.put(id,name);
+		namespaces.put(id, name);
 		
 	}
 
@@ -113,7 +113,7 @@ public class Siteinfo {
 	public void addInterwiki(String prefix, String name) {
 		interwiki.put(prefix, name);
 	}
-	public Map<String, String> getInterwikis(){
+	public Map<String, String> getInterwikis() {
 		return Collections.unmodifiableMap(interwiki);
 	}
 	/**

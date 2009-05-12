@@ -56,7 +56,7 @@ public class AllPageTitles implements Iterable<String>, Iterator<String> {
 		File[] fileList = dir.listFiles(new FilenameFilter() {
 		
 			public boolean accept(File dir, String name) {
-				if(name.endsWith(".txt"))
+				if (name.endsWith(".txt"))
 					return true;
 				return false;
 			}

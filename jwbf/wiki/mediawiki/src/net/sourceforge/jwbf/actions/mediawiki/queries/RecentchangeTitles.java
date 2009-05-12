@@ -59,9 +59,8 @@ import org.xml.sax.InputSource;
  * api.php ? action=query & list=recentchanges - List last 10 changes
  * 
  * @author Thomas Stock
- * @supportedBy MediaWikiAPI 1.09, 1.10, 1.11, 1.12, 1.13, 1.14
  */
-@SupportedBy({MW1_09, MW1_10, MW1_11, MW1_12, MW1_13, MW1_14})
+@SupportedBy({ MW1_09, MW1_10, MW1_11, MW1_12, MW1_13, MW1_14 })
 public class RecentchangeTitles extends TitleQuery {
 
 	/** value for the bllimit-parameter. **/
@@ -104,14 +103,14 @@ public class RecentchangeTitles extends TitleQuery {
 	 	if (rcstart.length() > 0) {
 		uS = "/api.php?action=query&list=recentchanges"
 				
-				+ ((namespace != null)?("&rcnamespace="+MediaWiki.encode(createNsString(namespace))):"")
+				+ ((namespace != null) ? ("&rcnamespace=" + MediaWiki.encode(createNsString(namespace))) : "")
 				+ "&rcstart=" + rcstart
 				//+ "&rcusertype=" // (dflt=not|bot)
 				+ "&rclimit=" + limit + "&format=xml";
 	 	} else {
 	 		uS = "/api.php?action=query&list=recentchanges"
 				
-				+ ((namespace != null)?("&rcnamespace="+MediaWiki.encode(createNsString(namespace))):"")
+				+ ((namespace != null) ? ("&rcnamespace=" + MediaWiki.encode(createNsString(namespace))) : "")
 				//+ "&rcminor="
 				//+ "&rcusertype=" // (dflt=not|bot)
 				+ "&rclimit=" + limit + "&format=xml";
@@ -134,7 +133,7 @@ public class RecentchangeTitles extends TitleQuery {
 	 * 
 	 */
 	public RecentchangeTitles(MediaWikiBot bot, int... ns) throws VersionException {
-		this(bot,false, ns);
+		this(bot, false, ns);
 		
 	}
 	/**
@@ -240,7 +239,7 @@ public class RecentchangeTitles extends TitleQuery {
 
 		if (init || (!titleIterator.hasNext() && timestamp.length() > 0)) {
 			
-			if(init) {
+			if (init) {
 				generateRequest(namespaces);
 			} else {
 				generateRequest(namespaces, timestamp);
@@ -273,7 +272,7 @@ public class RecentchangeTitles extends TitleQuery {
 	protected Object clone() throws CloneNotSupportedException {
 
 		try {
-			return new RecentchangeTitles(bot,uniqChanges, namespaces);
+			return new RecentchangeTitles(bot, uniqChanges, namespaces);
 		} catch (VersionException e) {
 			throw new CloneNotSupportedException(e.getLocalizedMessage());
 		}

@@ -28,13 +28,13 @@ import org.jdom.input.SAXBuilder;
 import org.xml.sax.InputSource;
 
 /**
+ * Action to receive the full address of an image. 
+ * Like "Img.gif" to "http://wikihost.tld/w/images/x/y/Img.gif".
  * 
  * @author Thomas Stock
- * 
- * @supportedBy MediaWikiAPI 1.11, 1.12, 1.13
  *
  */
-@SupportedBy({MW1_11, MW1_12, MW1_13})
+@SupportedBy({ MW1_11, MW1_12, MW1_13 })
 public class ImageInfo extends MWAction {
 
 	private String urlOfImage  = "";

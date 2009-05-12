@@ -44,9 +44,9 @@ public interface ContentProcessable {
 	 */
 	HttpAction getNextMessage();
 
-	/**xt
+	/**
 	 * 
-	 * @return
+	 * @return true if
 	 */
 	boolean hasMoreMessages();
 

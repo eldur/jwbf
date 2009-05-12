@@ -61,7 +61,7 @@ import org.xml.sax.InputSource;
  * 
  * 
  */
-@SupportedBy({MW1_09, MW1_10, MW1_11, MW1_12, MW1_13, MW1_14})
+@SupportedBy({ MW1_09, MW1_10, MW1_11, MW1_12, MW1_13, MW1_14 })
 public class GetRevision extends MWAction {
 
 	private final SimpleArticle sa;
@@ -77,7 +77,7 @@ public class GetRevision extends MWAction {
 
 	/**
 	 * TODO follow redirects.
-	 * TODO change constructor fild ordering; bot <<<
+	 * TODO change constructor fild ordering; bot
 	 * @throws ProcessException 
 	 * @throws ActionException 
 	 */
@@ -181,17 +181,14 @@ public class GetRevision extends MWAction {
 			if (element.getQualifiedName().equalsIgnoreCase("error")) {
 				throw new ApiException(element.getAttributeValue("code"),
 						element.getAttributeValue("info"));
-			} 
-//			else if (element.getQualifiedName().equalsIgnoreCase("page") ) {
-//				
-//			} 
-			else if (element.getQualifiedName().equalsIgnoreCase("rev")) {
+			} else if (element.getQualifiedName().equalsIgnoreCase("rev")) {
 
 				try {
 					sa.setText(element.getText());
 				} catch (NullPointerException e) {
-					if(log.isDebugEnabled())
+					if (log.isDebugEnabled()) {
 						log.debug("no text found");
+					}
 				}
 
 				sa.setEditSummary(getAsStringValues(element, "comment"));

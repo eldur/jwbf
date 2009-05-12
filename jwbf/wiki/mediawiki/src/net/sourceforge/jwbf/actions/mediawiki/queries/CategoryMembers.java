@@ -37,11 +37,14 @@ import org.apache.log4j.Logger;
 
 
 /**
- * action class using the MediaWiki-api's "list=categorymembers " .
+ * A abstract action class using the MediaWiki-api's "list=categorymembers ".
+ * For further information see 
+ * <a href="http://www.mediawiki.org/wiki/API:Query_-_Lists#categorymembers_.2F_cm">API documentation</a>.
+ * 
  *
  * @author Thomas Stock
  */
-@SupportedBy({MW1_11, MW1_12, MW1_13, MW1_14})
+@SupportedBy({ MW1_11, MW1_12, MW1_13, MW1_14 })
 public abstract class CategoryMembers extends MWAction {
 
 	/** constant value for the bllimit-parameter. **/
@@ -101,12 +104,7 @@ public abstract class CategoryMembers extends MWAction {
 
 	/**
 	 * generates the next MediaWiki-request (GetMethod) and adds it to msgs.
-	 *
-	 * @param categoryName   the title of the article,
-	 *                      may only be null if blcontinue is not null
-	 * 
-	 * @param cmcontinue    the value for the blcontinue parameter,
-	 *                      null for the generation of the initial request
+	 * @return a
 	 */
 	protected final Get generateFirstRequest() {
 
@@ -119,6 +117,7 @@ public abstract class CategoryMembers extends MWAction {
 	 * 
 	 * @param cmcontinue    the value for the blcontinue parameter,
 	 *                      null for the generation of the initial request
+	 * @return a
 	 */
 	protected final Get generateContinueRequest(String cmcontinue) {
 

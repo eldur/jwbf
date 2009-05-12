@@ -80,8 +80,7 @@ public class SimpleFile extends SimpleArticle {
 		return filename.getPath();
 	}
 
-	public File getFile()
-	{
+	public File getFile() {
 		return this.filename;
 	}
 	

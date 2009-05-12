@@ -19,13 +19,11 @@
 package net.sourceforge.jwbf.actions.trac;
 
 import java.text.ParseException;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import net.sourceforge.jwbf.actions.ContentProcessable;
 import net.sourceforge.jwbf.actions.Get;
-import net.sourceforge.jwbf.actions.util.CookieException;
 import net.sourceforge.jwbf.actions.util.HttpAction;
 import net.sourceforge.jwbf.actions.util.ProcessException;
 import net.sourceforge.jwbf.contentRep.SimpleArticle;
@@ -174,10 +172,7 @@ public class GetRevision implements ContentProcessable {
 		
 	}
 
-	public void validateReturningCookies(Map<String,String> cs, HttpAction hm)
-			throws CookieException {
-		
-	}
+
 
 
 

@@ -46,7 +46,7 @@ public class TemplateUserTitlesTest extends LiveTestFather {
 		bot.login(getValue("wikiMW1_09_user"), getValue("wikiMW1_09_pass"));
 		doRegularTest(bot);
 
-		assertTrue( "Wrong Wiki Version " + bot.getVersion() , Version.MW1_09.equals(bot.getVersion()));
+		assertTrue("Wrong Wiki Version " + bot.getVersion(), Version.MW1_09.equals(bot.getVersion()));
 	}
 	/**
 	 * Test.
@@ -59,7 +59,7 @@ public class TemplateUserTitlesTest extends LiveTestFather {
 		bot.login(getValue("wikiMW1_10_user"), getValue("wikiMW1_10_pass"));
 		doRegularTest(bot);
 
-		assertTrue( "Wrong Wiki Version " + bot.getVersion() , Version.MW1_10.equals(bot.getVersion()));
+		assertTrue("Wrong Wiki Version " + bot.getVersion(), Version.MW1_10.equals(bot.getVersion()));
 	}
 	
 	/**
@@ -73,7 +73,7 @@ public class TemplateUserTitlesTest extends LiveTestFather {
 		bot.login(getValue("wikiMW1_11_user"), getValue("wikiMW1_11_pass"));
 		doRegularTest(bot);
 
-		assertTrue( "Wrong Wiki Version " + bot.getVersion() , Version.MW1_11.equals(bot.getVersion()));
+		assertTrue("Wrong Wiki Version " + bot.getVersion(), Version.MW1_11.equals(bot.getVersion()));
 	}
 	
 	/**
@@ -87,7 +87,7 @@ public class TemplateUserTitlesTest extends LiveTestFather {
 		bot.login(getValue("wikiMW1_12_user"), getValue("wikiMW1_12_pass"));
 		doRegularTest(bot);
 
-		assertTrue( "Wrong Wiki Version " + bot.getVersion() , Version.MW1_12.equals(bot.getVersion()));
+		assertTrue("Wrong Wiki Version " + bot.getVersion(), Version.MW1_12.equals(bot.getVersion()));
 	}
 	/**
 	 * Test.
@@ -99,7 +99,7 @@ public class TemplateUserTitlesTest extends LiveTestFather {
 		bot.login(getValue("wikiMW1_13_user"), getValue("wikiMW1_13_pass"));
 		doRegularTest(bot);
 
-		assertTrue( "Wrong Wiki Version " + bot.getVersion() , Version.MW1_13.equals(bot.getVersion()));
+		assertTrue("Wrong Wiki Version " + bot.getVersion(), Version.MW1_13.equals(bot.getVersion()));
 	}
 	
 	/**
@@ -112,7 +112,7 @@ public class TemplateUserTitlesTest extends LiveTestFather {
 		bot.login(getValue("wikiMW1_14_user"), getValue("wikiMW1_14_pass"));
 		doRegularTest(bot);
 
-		assertTrue( "Wrong Wiki Version " + bot.getVersion() , Version.MW1_14.equals(bot.getVersion()));
+		assertTrue("Wrong Wiki Version " + bot.getVersion(), Version.MW1_14.equals(bot.getVersion()));
 	}
 
 	private void doRegularTest(MediaWikiBot bot) throws JwbfException {
@@ -152,7 +152,7 @@ public class TemplateUserTitlesTest extends LiveTestFather {
 		template.setText("a test");
 			template.save();
 		
-		for (String title: titles) {
+		for (String title : titles) {
 			Article a = new Article(bot, title);
 			a.setText(getRandom(1) + " {{" + TESTPATTERNNAME + "}}");
 			a.save();

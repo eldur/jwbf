@@ -42,14 +42,14 @@ import net.sourceforge.jwbf.bots.MediaWikiBot;
 import org.apache.log4j.Logger;
 
 /**
- * action class using the MediaWiki-api's "list=imagelinks" and later imageUsage
+ * action class using the MediaWiki-api's "list=imagelinks" and later imageUsage.
  * 
  * @author Tobias Knerr
  * @author Thomas Stock
  * @since MediaWiki 1.9.0
  * 
  */
-@SupportedBy({MW1_09, MW1_10, MW1_11, MW1_12, MW1_13, MW1_14})
+@SupportedBy({ MW1_09, MW1_10, MW1_11, MW1_12, MW1_13, MW1_14 })
 public class ImageUsageTitles extends TitleQuery {
 
 	/** constant value for the illimit-parameter. **/
@@ -124,6 +124,7 @@ public class ImageUsageTitles extends TitleQuery {
 	 *                      if null, this parameter is omitted
 	 * @param ilcontinue    the value for the ilcontinue parameter,
 	 *                      null for the generation of the initial request
+	 * @return a
 	 */
 	private Get generateRequest(String imageName, String namespace,
 		String ilcontinue) {
@@ -187,7 +188,7 @@ public class ImageUsageTitles extends TitleQuery {
 	protected void prepareCollection() {
 
 		if (init  || (!titleIterator.hasNext() && hasMoreResults)) {
-			if(init) {
+			if (init) {
 				msg = generateRequest(imageName, createNsString(namespaces), null);
 			} else {
 				

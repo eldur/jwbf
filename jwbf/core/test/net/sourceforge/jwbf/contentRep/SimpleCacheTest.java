@@ -115,9 +115,9 @@ public class SimpleCacheTest extends LiveTestFather {
 		try {
 			b.delete();
 		} catch (ActionException e) {
-//			e.printStackTrace();
+			e.printStackTrace();
 		} catch (ProcessException e) {
-//			e.printStackTrace();
+			e.printStackTrace();
 		}
 	}
 }

@@ -58,7 +58,7 @@ import org.apache.log4j.Logger;
  * @author Thomas Stock
  * 
  */
-@SupportedBy({MW1_11, MW1_12, MW1_13, MW1_14})
+@SupportedBy({ MW1_11, MW1_12, MW1_13, MW1_14 })
 public class FileUpload extends MWAction {
 
 	
@@ -165,7 +165,7 @@ public class FileUpload extends MWAction {
 	@Override
 	public String processAllReturningText(String s) throws ProcessException {
 		
-		if(s.contains("error")) {
+		if (s.contains("error")) {
 //			System.out.println(s);
 //			TODO nicer error handling 
 			LOG.error("Upload failed");

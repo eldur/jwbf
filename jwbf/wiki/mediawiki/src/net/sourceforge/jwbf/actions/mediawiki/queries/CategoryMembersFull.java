@@ -15,6 +15,7 @@ import net.sourceforge.jwbf.contentRep.mediawiki.CategoryItem;
 import org.apache.log4j.Logger;
 
 /**
+ * A specialization of {@link CategoryMembers} with contains {@link CategoryItem}s.
  * 
  * @author Thomas Stock
  */
@@ -34,8 +35,6 @@ public class CategoryMembersFull extends CategoryMembers implements Iterable<Cat
 	
 	/**
 	 *
-	 * @param category like "Buildings" or "Chemical elements" without prefix Category
-	 * @return of category items with more details as simple labels
 	 * @throws ActionException on any kind of http or version problems
 	 * @throws ProcessException on inner problems like a version mismatch
 	 */
@@ -85,7 +84,7 @@ public class CategoryMembersFull extends CategoryMembers implements Iterable<Cat
 	private void prepareCollection() {
 
 		if (init || (!titleIterator.hasNext() && hasMoreResults)) {
-			if(init) {
+			if (init) {
 				msg = generateFirstRequest();
 			} else {
 				msg = generateContinueRequest(nextPageInfo);

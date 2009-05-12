@@ -31,7 +31,7 @@ import net.sourceforge.jwbf.actions.mediawiki.util.SupportedBy;
 import net.sourceforge.jwbf.actions.mediawiki.util.VersionException;
 import net.sourceforge.jwbf.actions.util.CookieException;
 import net.sourceforge.jwbf.actions.util.HttpAction;
-import net.sourceforge.jwbf.bots.util.LoginData;
+import net.sourceforge.jwbf.contentRep.mediawiki.LoginData;
 
 import org.apache.log4j.Logger;
 
@@ -39,7 +39,7 @@ import org.apache.log4j.Logger;
  * 
  * @author Thomas Stock
  */
-@SupportedBy({MW1_09})
+@SupportedBy({ MW1_09 })
 public class PostLoginOld extends MWAction implements CookieValidateable {
 	private String username = "";
 
@@ -82,7 +82,7 @@ public class PostLoginOld extends MWAction implements CookieValidateable {
 	 *             never
 	 * 
 	 */
-	public final void validateReturningCookies(final Map<String,String> cs, HttpAction hm)
+	public final void validateReturningCookies(final Map<String, String> cs, HttpAction hm)
 			throws CookieException {
 		validateAllReturningCookies(cs);
 
@@ -95,7 +95,7 @@ public class PostLoginOld extends MWAction implements CookieValidateable {
 	 * @throws CookieException
 	 *             when no cookies returning
 	 */
-	public void validateAllReturningCookies(final Map<String,String> cs)
+	public void validateAllReturningCookies(final Map<String, String> cs)
 			throws CookieException {
 		String compare = username;
 

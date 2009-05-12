@@ -21,12 +21,15 @@ public class CustomTaglets implements Taglet {
     
     /**
      * Return the name of this custom tag.
+     * @return a
      */
     public String getName() {
         return NAME;
     }
-    
-
+    /**
+     * 
+     * @return if
+     */
     public boolean inField() {
         return false;
     }
@@ -130,24 +133,24 @@ public class CustomTaglets implements Taglet {
 
     		
     		String temp = value;
-    		if(temp.contains(type)) {
+    		if (temp.contains(type)) {
             	temp = temp.substring(type.length()).trim();
             }
     		
-    		result += "<li>"+temp+"</li>";
+    		result += "<li>" + temp + "</li>";
 
     	}
     	
     	public String toString() {
     		String typeOut = type;
     		
-    		if(typeOut.contains("API")) {
+    		if (typeOut.contains("API")) {
     			
     			typeOut = typeOut.replace("API", "<span style=\"color: red\">API</span>");
     		}
     		
-    		return "\n<DT><B>Supported by " + typeOut + ":</B>" +
-    				"<ul style=\"-moz-column-count:3; column-count:3;\">" + result + "<ul>\n";
+    		return "\n<DT><B>Supported by " + typeOut + ":</B>"
+					+ "<ul style=\"-moz-column-count:3; column-count:3;\">" + result + "<ul>\n";
     	}
     }
 }

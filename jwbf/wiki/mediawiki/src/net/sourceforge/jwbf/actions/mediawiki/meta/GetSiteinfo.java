@@ -12,8 +12,6 @@ import org.jdom.Element;
 /**
  * Gets details from the given MediaWiki installation like installed version. 
  * @author Thomas Stock
- * @supportedBy MediaWiki 1.09, 1.10
- * @supportedBy MediaWikiAPI 1.11, 1.12, 1.13
  * @see Siteinfo
  *
  */

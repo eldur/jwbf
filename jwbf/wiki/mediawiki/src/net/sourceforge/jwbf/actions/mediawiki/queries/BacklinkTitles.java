@@ -26,7 +26,6 @@ import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_12;
 import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_13;
 import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_14;
 
-import java.io.UnsupportedEncodingException;
 import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -45,13 +44,13 @@ import org.apache.log4j.Logger;
 
 
 /**
- * action class using the MediaWiki-api's "list=backlinks" 
+ * action class using the MediaWiki-api's "list=backlinks".
  *
  * @author Thomas Stock
  * @author Tobias Knerr
  * @since JWBF 1.1
  */
-@SupportedBy({MW1_09, MW1_10, MW1_11, MW1_12, MW1_13, MW1_14})
+@SupportedBy({ MW1_09, MW1_10, MW1_11, MW1_12, MW1_13, MW1_14 })
 public class BacklinkTitles extends TitleQuery {
 
 	/**
@@ -64,7 +63,7 @@ public class BacklinkTitles extends TitleQuery {
 	 * </ul>
 	 */
 	private Logger log = Logger.getLogger(getClass());
-	public static enum RedirectFilter {all, redirects, nonredirects};
+	public static enum RedirectFilter { all, redirects, nonredirects };
 	
 	private Get msg;
 	/** constant value for the bllimit-parameter. **/
@@ -110,7 +109,7 @@ public class BacklinkTitles extends TitleQuery {
 	 * @throws VersionException  if general functionality or parameter values 
 	 *                           are not compatible with apiVersion value 
 	 */
-	 public BacklinkTitles( MediaWikiBot bot, String articleName, RedirectFilter redirectFilter,
+	 public BacklinkTitles(MediaWikiBot bot, String articleName, RedirectFilter redirectFilter,
 			 int... namespace)
 			throws VersionException {
 		super(bot.getVersion());
@@ -130,7 +129,7 @@ public class BacklinkTitles extends TitleQuery {
 	 * @param bot a
 	 * @throws VersionException if action is not supported
 	 */
-	 public BacklinkTitles( MediaWikiBot bot, String articleName) 
+	 public BacklinkTitles(MediaWikiBot bot, String articleName) 
 			throws VersionException {
 		 this(bot, articleName, RedirectFilter.all, null);
 		 
@@ -139,19 +138,13 @@ public class BacklinkTitles extends TitleQuery {
 	/**
 	 * The private constructor, which is used to create follow-up actions.
 	 * 
-	 * @param nextPageInfo   value for the blcontinue parameter, != null
-	 * @param requestBuilder object to use for building requests, != null
 	 */
 	private void prepareContinueReq() {
 		
-		
-		
-		try {
+
 			String request = requestBuilder.buildContinueRequest(nextPageInfo);
 			msg = new Get(request);
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
+	
 	}
 		
 	
@@ -222,15 +215,13 @@ public class BacklinkTitles extends TitleQuery {
 		titleIterator = titleCollection.iterator();
 		
 	}
-	
-	
 
-	
 	/**
-	 * creates a request builder for the given api version
-	 * 
-	 * @throws VersionException  if no request builder class for the apiVersion
-	 *                           is known
+	 * creates a request builder for the given API version.
+	 * @param apiVersion a, for which the request builder is working.
+	 * @throws VersionException
+	 *             if no request builder class for the apiVersion is known
+	 * @return a
 	 */
 	private RequestBuilder createRequestBuilder(Version apiVersion)
 		throws VersionException {
@@ -253,36 +244,43 @@ public class BacklinkTitles extends TitleQuery {
 		
 		/**
 		 * generates an initial MediaWiki-request.
-		 * For params, see {@link BacklinkTitles#GetBacklinkTitles(String, net.sourceforge.jwbf.actions.mw.BacklinkTitles.GetBacklinkTitles.RedirectFilter, String, Version)}y
-		 *                       
+		 * @param articleName a
+		 * @param redirectFilter a
+		 * @param namespace a  
 		 * @throws VersionException if a param is not compatible with the
 		 *                          associated MediaWiki version 
+		 * @return the request in string form
 		 */
 		String buildInitialRequest(String articleName, 
                 RedirectFilter redirectFilter,
-                int [] namespace) throws UnsupportedEncodingException, VersionException;
+                int [] namespace) throws VersionException;
 
 		/**
 		 * generates a follow-up MediaWiki-request.
+		 * @param blcontinue key for continuing
+		 * @return the request in string form
 		 */
-		String buildContinueRequest(String blcontinue) 
-			throws UnsupportedEncodingException;
+		String buildContinueRequest(String blcontinue);
 		
 	}
 
 	/** request builder for MW versions 1_11 to (at least) 1_13 */
 	private static class RequestBuilder_1_11 implements RequestBuilder {
-
+		/**
+		 * {@inheritDoc}
+		 */
 		public String buildInitialRequest(String articleName, 
 				RedirectFilter redirectFilter, int [] namespace)  {
 			
 			return "/api.php?action=query&list=backlinks"
 			       + "&bltitle=" + MediaWiki.encode(articleName) 
-			       + ((namespace!=null && createNsString(namespace).length() != 0)?("&blnamespace="+MediaWiki.encode(createNsString(namespace))):"")
+			       + ((namespace != null && createNsString(namespace).length() != 0) ? ("&blnamespace=" + MediaWiki.encode(createNsString(namespace))) : "")
 			       + "&blfilterredir=" + MediaWiki.encode(redirectFilter.toString())
 			       + "&bllimit=" + LIMIT + "&format=xml";			
 		}
-		
+		/**
+		 * {@inheritDoc}
+		 */
 		public String buildContinueRequest(String blcontinue) {
 			
 			return "/api.php?action=query&list=backlinks"
@@ -294,9 +292,8 @@ public class BacklinkTitles extends TitleQuery {
 	
 	/** request builder for MW versions 1_09 and 1_10 */
 	private static class RequestBuilder_1_09 implements RequestBuilder {
-
 		/**
-		 * @throws UnsupportedEncodingException  if redirectFilter != all
+		 * {@inheritDoc}
 		 */
 		public String buildInitialRequest(String articleName, 
 				RedirectFilter redirectFilter, int [] namespace) 
@@ -308,11 +305,14 @@ public class BacklinkTitles extends TitleQuery {
 			
 			return "/api.php?action=query&list=backlinks"
 			       + "&titles=" + MediaWiki.encode(articleName) 
-			       + ((namespace!=null && createNsString(namespace).length() != 0)?("&blnamespace="+MediaWiki.encode(createNsString(namespace))):"")
+			       + ((namespace != null && createNsString(namespace).length() != 0) 
+			    		   ? ("&blnamespace=" + MediaWiki.encode(createNsString(namespace))) : "")
 			       + "&blfilterredir=" + MediaWiki.encode(redirectFilter.toString())
 			       + "&bllimit=" + LIMIT + "&format=xml";			
 		}
-		
+		/**
+		 * {@inheritDoc}
+		 */
 		public String buildContinueRequest(String blcontinue) {
 			
 			return "/api.php?action=query&list=backlinks"
@@ -327,15 +327,10 @@ public class BacklinkTitles extends TitleQuery {
 			if (init || (!titleIterator.hasNext() && hasMoreResults)) {
 				if (init) {
 
-					
+					String request = requestBuilder.buildInitialRequest(
+							articleName, rf, namespaces);
+					msg = new Get(request);
 
-					try {
-						String request = requestBuilder.buildInitialRequest(
-								articleName, rf, namespaces);
-						msg = new Get(request);
-					} catch (UnsupportedEncodingException e) {
-						e.printStackTrace();
-					}
 				}
 				init = false;
 				try {
@@ -367,7 +362,7 @@ public class BacklinkTitles extends TitleQuery {
 	@Override
 	protected Object clone() throws CloneNotSupportedException {
 		try {
-			return new BacklinkTitles(bot, articleName,rf, namespaces);
+			return new BacklinkTitles(bot, articleName, rf, namespaces);
 		} catch (VersionException e) {
 			throw new CloneNotSupportedException(e.getLocalizedMessage());
 		}

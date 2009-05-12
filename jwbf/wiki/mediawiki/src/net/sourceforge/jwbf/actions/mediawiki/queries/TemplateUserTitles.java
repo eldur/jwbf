@@ -52,7 +52,7 @@ import org.apache.log4j.Logger;
  * @since MediaWiki 1.9.0
  * 
  */
-@SupportedBy({MW1_09, MW1_10, MW1_11, MW1_12, MW1_13, MW1_14})
+@SupportedBy({ MW1_09, MW1_10, MW1_11, MW1_12, MW1_13, MW1_14 })
 public class TemplateUserTitles extends TitleQuery   {
 
 	/** constant value for the eilimit-parameter. **/
@@ -210,10 +210,10 @@ public class TemplateUserTitles extends TitleQuery   {
 
 		if (init || (!titleIterator.hasNext() && hasMoreMesages)) {
 			
-			if(init) {
-				generateRequest(templateName,createNsString(namespaces),null);
+			if (init) {
+				generateRequest(templateName, createNsString(namespaces), null);
 			} else {
-				generateRequest(null,createNsString(namespaces),nextPageInfo);
+				generateRequest(null, createNsString(namespaces), nextPageInfo);
 			}
 			init = false;
 			

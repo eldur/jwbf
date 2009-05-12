@@ -32,7 +32,7 @@ import net.sourceforge.jwbf.bots.MediaWikiBot;
 import org.apache.log4j.Logger;
 
 /**
- * 
+ * A specialization of {@link CategoryMembers} with contains {@link String}s. 
  * @author Thomas Stock
  */
 public class CategoryMembersSimple extends CategoryMembers implements Iterable<String>, Iterator<String> {
@@ -50,9 +50,8 @@ public class CategoryMembersSimple extends CategoryMembers implements Iterable<S
 	
 	
 	/**
-	 * @param category like "Buildings" or "Chemical elements" without prefix "Category:" in {@link MediaWiki#NS_MAIN}
+	 * @param categoryName like "Buildings" or "Chemical elements" without prefix "Category:" in {@link MediaWiki#NS_MAIN}
 	 * @param bot a
-	 * @return of article labels
 	 * @throws ActionException on any kind of http or version problems
 	 * @throws ProcessException on inner problems like mw version
 	 * 
@@ -62,10 +61,9 @@ public class CategoryMembersSimple extends CategoryMembers implements Iterable<S
 		
 	}
 	/**
-	 * @param category like "Buildings" or "Chemical elements" without prefix "Category:"
+	 * @param categoryName like "Buildings" or "Chemical elements" without prefix "Category:"
 	 * @param bot a
 	 * @param namespaces for search
-	 * @return of article labels
 	 * @throws ActionException on any kind of http or version problems
 	 * @throws ProcessException on inner problems like mw version
 	 * 
@@ -86,7 +84,7 @@ public class CategoryMembersSimple extends CategoryMembers implements Iterable<S
 	private synchronized void prepareCollection() {
 
 		if (init || (!titleIterator.hasNext() && hasMoreResults)) {
-			if(init) {
+			if (init) {
 				setHasMoreMessages(true); // FIXME check if other action should have this too
 				msg = generateFirstRequest();
 			} else {

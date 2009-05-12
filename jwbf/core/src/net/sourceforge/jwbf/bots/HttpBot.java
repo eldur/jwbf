@@ -40,11 +40,11 @@ import org.apache.commons.httpclient.HttpClient;
 public class HttpBot {
 
 	private HttpActionClient cc;
-	private boolean init = true;
+
 
 	/**
-	 * protected because abstract.
-	 * 
+	 * Design for extension.
+	 * @param url of the host
 	 */
 	protected HttpBot(final String url) {
 		try {
@@ -53,28 +53,42 @@ public class HttpBot {
 			e.printStackTrace();
 		}
 	}
-	
+	/**
+	 * Design for extension.
+	 * @param cc a
+	 */
 	protected HttpBot(HttpActionClient cc) {
 		this.cc = cc;
 	}
-
+	/**
+	 * Design for extension.
+	 * @param url of the host
+	 */
 	protected HttpBot(final URL url) {
 			setConnection(url);
 	}
 	
-	private HttpBot() {
-
-	}
-	
+	/**
+	 * Returns a {@link HttpBot} which supports only its basic methods. 
+	 * Use {@link #getPage(String)} for an basic read of content.
+	 *  
+	 * @return a
+	 */
 	public static HttpBot getInstance() {
-		return new HttpBot();
+		
+		HttpActionClient cc = null;
+			try {
+				cc = new HttpActionClient(new HttpClient(), new URL("http://localhost/"));
+			} catch (MalformedURLException e) {
+				e.printStackTrace();
+			}
+	
+			return new HttpBot(cc);
 	}
 	/**
 	 * 
 	 * @param client
 	 *            if you whant to add some specials
-	 * @param u
-	 *            like http://www.yourOwnWiki.org/w/index.php
 	 * 
 	 */
 	public final void setConnection(final HttpActionClient client) {
@@ -83,7 +97,6 @@ public class HttpBot {
 
 	
 	public final String getHostUrl() {
-		checkClient();
 		return cc.getHostUrl();
 	}
 	/**
@@ -124,7 +137,7 @@ public class HttpBot {
 	 * @throws ActionException
 	 *             on any requesing problems
 	 */
-	public String getPage(String u) throws ActionException {
+	public final String getPage(String u) throws ActionException {
 
 			try {
 				URL url = new URL(u);
@@ -158,8 +171,6 @@ public class HttpBot {
 	 */
 	public final byte[] getBytes(String u) throws ActionException {
 
-		
-		checkClient();
 		try {
 			return cc.get(new Get(u));
 		} catch (ProcessException e) {
@@ -175,7 +186,6 @@ public class HttpBot {
 	 * @return a
 	 */
 	public final HttpActionClient getClient() {
-		checkClient();
 		return cc;
 	}
 
@@ -189,14 +199,5 @@ public class HttpBot {
 
 	}
 
-	private void checkClient() {
-		if (cc == null && init) {
-			init = false;
-			try {
-				cc = new HttpActionClient(new HttpClient(), new URL("http://localhost/"));
-			} catch (MalformedURLException e) {
-				e.printStackTrace();
-			}
-		}
-	}
+
 }

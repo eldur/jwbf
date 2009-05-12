@@ -3,7 +3,7 @@
     This configuration file was written by the eclipse-cs plugin configuration editor
 -->
 <!--
-    Checkstyle-Configuration: jwbf checkstyle
+    Checkstyle-Configuration: jwbf checks
     Description: none
 -->
 <!DOCTYPE module PUBLIC "-//Puppy Crawl//DTD Check Configuration 1.2//EN" "http://www.puppycrawl.com/dtds/configuration_1_2.dtd">
@@ -68,7 +68,9 @@
         <module name="AvoidNestedBlocks"/>
         <module name="EmptyBlock"/>
         <module name="LeftCurly"/>
-        <module name="NeedBraces"/>
+        <module name="NeedBraces">
+            <property name="tokens" value="LITERAL_DO,LITERAL_ELSE,LITERAL_FOR,LITERAL_WHILE"/>
+        </module>
         <module name="RightCurly"/>
         <module name="AvoidInlineConditionals"/>
         <module name="DoubleCheckedLocking"/>
@@ -110,6 +112,11 @@
             <property name="severity" value="ignore"/>
         </module>
         <module name="UpperEll"/>
+        <module name="NeedBraces">
+            <metadata name="com.atlassw.tools.eclipse.checkstyle.comment" value="if ausnahme"/>
+            <property name="severity" value="info"/>
+            <property name="tokens" value="LITERAL_IF"/>
+        </module>
     </module>
     <module name="PackageHtml"/>
     <module name="NewlineAtEndOfFile">

@@ -10,9 +10,21 @@ import java.lang.annotation.Target;
 
 import net.sourceforge.jwbf.actions.mediawiki.MediaWiki;
 
-@Target( {CONSTRUCTOR, TYPE } ) 
-@Retention( RUNTIME )
+/**
+ * Annotation which indicates MediaWiki support. It will be used to validate if 
+ * the given version of MediaWiki supports the selected action. Works only 
+ * with {@link MWAction}.
+ * 
+ * @author Thomas Stock
+ *
+ */
+@Target({ CONSTRUCTOR, TYPE }) 
+@Retention(RUNTIME)
 @Documented
 public @interface SupportedBy {
+	/**
+	 * 
+	 * 
+	 */
 	MediaWiki.Version [] value();
 }

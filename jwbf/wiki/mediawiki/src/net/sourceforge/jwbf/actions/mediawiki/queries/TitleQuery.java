@@ -8,6 +8,12 @@ import net.sourceforge.jwbf.actions.mediawiki.util.VersionException;
 
 import org.apache.log4j.Logger;
 
+/**
+ * Abstract class which is superclass of all titleiterations, represented by the sufix "Titles".
+ * 
+ * @author Thomas Stock
+ *
+ */
 public abstract class TitleQuery extends MWAction implements Iterable<String>, Iterator<String> {
 
 	protected Iterator<String> titleIterator;

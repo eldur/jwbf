@@ -9,16 +9,6 @@
 		<antcall target="releaseBin" />
 		<antcall target="releaseSimpleJar" />
 	</target>
-	<target name="packageDemo">
-		<property name="target" value="${basedir}/target" />
-		<echo>Build Dir: ${target}</echo>
-
-		<property name="classpath.compile" value="/home/loki/workspace/jwbf/bin:/home/loki/.m2/repository/commons-httpclient/commons-httpclient/3.1/commons-httpclient-3.1.jar:/home/loki/.m2/repository/commons-logging/commons-logging/1.0.4/commons-logging-1.0.4.jar:/home/loki/.m2/repository/commons-codec/commons-codec/1.2/commons-codec-1.2.jar:/home/loki/.m2/repository/org/jdom/jdom/1.1/jdom-1.1.jar:/home/loki/.m2/repository/log4j/log4j/1.2.14/log4j-1.2.14.jar">
-		</property>
-		<antcall target="releaseWithSrc" />
-		<!--<antcall target="releaseBin" />
-			<antcall target="releaseSimpleJar" /> -->
-	</target>
 	<target name="clean">
 		<property name="release" value="${target}/release" />
 		<delete failonerror="false" dir="${release}" />

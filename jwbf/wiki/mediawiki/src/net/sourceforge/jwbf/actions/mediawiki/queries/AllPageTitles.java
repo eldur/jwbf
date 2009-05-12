@@ -49,12 +49,12 @@ import org.apache.log4j.Logger;
  * @author Thomas Stock
  * 
  */
-@SupportedBy({MW1_09, MW1_10, MW1_11, MW1_12, MW1_13, MW1_14})
+@SupportedBy({ MW1_09, MW1_10, MW1_11, MW1_12, MW1_13, MW1_14 })
 public class AllPageTitles extends TitleQuery {
 	
 	private static final Logger LOG = Logger.getLogger(AllPageTitles.class);
 	
-	/** Pattern to parse returned page, @see {@link #parseHasMore(String)} */
+	/** Pattern to parse returned page, @see {@link #parseHasMore(String)}. */
 	private static final Pattern HAS_MORE_PATTERN = Pattern
 			.compile(
 					"<query-continue>.*?<allpages *apfrom=\"([^\"]*)\" */>.*?</query-continue>",
@@ -123,12 +123,13 @@ public class AllPageTitles extends TitleQuery {
 	}
 
 	/**
-	 * @param from
-	 * @param prefix
-	 * @param redirects
-	 * @param nonredirects
-	 * @param namespaces
-	 * @param bot
+	 * @param from a
+	 * @param prefix a
+	 * @param redirects if
+	 * @param nonredirects if
+	 * @param namespaces the
+	 * @param bot the
+	 * @throws VersionException if not supported
 	 */
 	protected AllPageTitles(MediaWikiBot bot, String from, String prefix, boolean redirects,
 			boolean nonredirects, String namespaces) throws VersionException {
@@ -160,12 +161,13 @@ public class AllPageTitles extends TitleQuery {
 	 *            the namespace(s) that will be searched for links, as a string
 	 *            of numbers separated by '|'; if null, this parameter is
 	 *            omitted
+	 * @return a
 	 */
 	private Get generateRequest(String from, String prefix,
 			boolean redirects, boolean nonredirects, String namespace) {
 		if (LOG.isTraceEnabled()) {
-			LOG
-					.trace("enter GetAllPagetitles.generateRequest(String,String,boolean,boolean,String)");
+			LOG.trace("enter GetAllPagetitles.generateRequest"
+					+ "(String,String,boolean,boolean,String)");
 		}
 
 		String apfilterredir;

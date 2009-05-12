@@ -50,7 +50,7 @@ import org.apache.log4j.Logger;
  * 
  * @author Thomas Stock
  */
-@SupportedBy({MW1_09, MW1_10, MW1_11, MW1_12, MW1_13, MW1_14})
+@SupportedBy({ MW1_09, MW1_10, MW1_11, MW1_12, MW1_13, MW1_14 })
 public class PostModifyContent extends MWAction {
 
 	private boolean first = true;
@@ -66,7 +66,7 @@ public class PostModifyContent extends MWAction {
 	private Post postModify = null;
 	private boolean apiEdit = false;
 	/**
-	 * 
+	 * @param bot a
 	 * @param a the
 	 * @throws ProcessException a
 	 * @throws ActionException a
@@ -124,7 +124,7 @@ public class PostModifyContent extends MWAction {
 			postModify.addParam("summary", a.getEditSummary());
 			postModify.addParam("text", a.getText());
 //			postModify.addParam("watch", "unknown") // TODO add or rm
-			if(a.isMinorEdit())
+			if (a.isMinorEdit())
 				postModify.addParam("minor", "");
 			else 
 				postModify.addParam("notminor", "");

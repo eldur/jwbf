@@ -63,7 +63,7 @@ public class UploadAndImageInfoTest extends LiveTestFather {
 	 * Test upload.
 	 * @throws Exception a
 	 */
-	@Test(expected=VersionException.class)
+	@Test(expected = VersionException.class)
 	public final void uploadMW1_09Fail() throws Exception {
 		
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_09_url"));
@@ -77,7 +77,7 @@ public class UploadAndImageInfoTest extends LiveTestFather {
 	 * Test category read. Test category must have more then 50 members.
 	 * @throws Exception a
 	 */
-	@Test(expected=VersionException.class)
+	@Test(expected = VersionException.class)
 	public final void uploadMW1_10Fail() throws Exception {
 		
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_10_url"));
@@ -113,7 +113,7 @@ public class UploadAndImageInfoTest extends LiveTestFather {
 		bot.performAction(gi);
 		URL url = new URL(gi.getUrlAsString());
 		System.out.println(url);
-		Assert.assertTrue("file not found " + url ,url.toExternalForm().length() - bot.getHostUrl().length() > 2);
+		Assert.assertTrue("file not found " + url, url.toExternalForm().length() - bot.getHostUrl().length() > 2);
 		assertFile(url, sf.getFile());
 	}
 	
@@ -128,7 +128,7 @@ public class UploadAndImageInfoTest extends LiveTestFather {
 		bot.login(getValue("wikiMW1_12_user"),
 				getValue("wikiMW1_12_pass"));
 		Assert.assertEquals(bot.getVersion(), Version.MW1_12);
-		Assert.assertTrue("File (" + getValue("validFile") + ")not readable",new File(getValue("validFile")).canRead());
+		Assert.assertTrue("File (" + getValue("validFile") + ")not readable", new File(getValue("validFile")).canRead());
 		SimpleFile sf = new SimpleFile(getValue("filename"), getValue("validFile"));
 		FileUpload up = new FileUpload(sf, bot);
 		assertTrue("test not documented for version: " + bot.getVersion() , up.getSupportedVersions().contains(bot.getVersion()));
@@ -150,7 +150,7 @@ public class UploadAndImageInfoTest extends LiveTestFather {
 		bot.login(getValue("wikiMW1_13_user"),
 				getValue("wikiMW1_13_pass"));
 		Assert.assertEquals(bot.getVersion(), Version.MW1_13);
-		Assert.assertTrue("File (" + getValue("validFile") + ")not readable",new File(getValue("validFile")).canRead());
+		Assert.assertTrue("File (" + getValue("validFile") + ")not readable", new File(getValue("validFile")).canRead());
 		SimpleFile sf = new SimpleFile(getValue("filename"), getValue("validFile"));
 		FileUpload up = new FileUpload(sf, bot);
 		assertTrue("test not documented for version: " + bot.getVersion() , up.getSupportedVersions().contains(bot.getVersion()));
@@ -172,7 +172,7 @@ public class UploadAndImageInfoTest extends LiveTestFather {
 		bot.login(getValue("wikiMW1_14_user"),
 				getValue("wikiMW1_14_pass"));
 		Assert.assertEquals(bot.getVersion(), Version.MW1_14);
-		Assert.assertTrue("File (" + getValue("validFile") + ")not readable",new File(getValue("validFile")).canRead());
+		Assert.assertTrue("File (" + getValue("validFile") + ")not readable", new File(getValue("validFile")).canRead());
 		SimpleFile sf = new SimpleFile(getValue("filename"), getValue("validFile"));
 		FileUpload up = new FileUpload(sf, bot);
 		assertTrue("test not documented for version: " + bot.getVersion() , up.getSupportedVersions().contains(bot.getVersion()));
@@ -220,6 +220,7 @@ public class UploadAndImageInfoTest extends LiveTestFather {
 					out.close();
 				}
 			} catch (IOException ioe) {
+				;
 			}
 		}
 	}

@@ -205,7 +205,7 @@ public class EditCustomWikiContentTest extends LiveTestFather {
 		
 		Article a = new Article(bot, getValue("demoWiki_article"));
 //		System.out.println(a.getText());
-		a.addText(getRandom(5) +"\nK");
+		a.addText(getRandom(5) + "\nK");
 		a.save();
 		
 		Article b = new Article(bot, getValue("demoWiki_article"));

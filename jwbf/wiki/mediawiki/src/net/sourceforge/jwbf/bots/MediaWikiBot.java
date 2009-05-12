@@ -25,11 +25,11 @@ import net.sourceforge.jwbf.actions.util.ActionException;
 import net.sourceforge.jwbf.actions.util.ProcessException;
 import net.sourceforge.jwbf.bots.util.CacheHandler;
 import net.sourceforge.jwbf.bots.util.JwbfException;
-import net.sourceforge.jwbf.bots.util.LoginData;
 import net.sourceforge.jwbf.contentRep.Article;
 import net.sourceforge.jwbf.contentRep.ContentAccessable;
 import net.sourceforge.jwbf.contentRep.SimpleArticle;
 import net.sourceforge.jwbf.contentRep.Userinfo;
+import net.sourceforge.jwbf.contentRep.mediawiki.LoginData;
 import net.sourceforge.jwbf.contentRep.mediawiki.Siteinfo;
 
 import org.apache.log4j.Logger;
@@ -263,9 +263,9 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
 		}
 
 		for (char invChar : INVALID_LABEL_CHARS) {
-			if(a.getLabel().contains(invChar + ""))
+			if (a.getLabel().contains(invChar + ""))
 				throw new ActionException("Invalid character in label\"" 
-						+ a.getLabel() +"\" : \"" + invChar + "\"");
+						+ a.getLabel() + "\" : \"" + invChar + "\"");
 		}
 		if (store != null) {
 			String label = a.getLabel();
@@ -295,9 +295,9 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
 	 */
 	public final boolean isLoggedIn() {
 
-		 if(login != null) {
-		 return login.isLoggedIn();
-		 }
+		if (login != null) {
+			return login.isLoggedIn();
+		}
 		return false;
 
 	}

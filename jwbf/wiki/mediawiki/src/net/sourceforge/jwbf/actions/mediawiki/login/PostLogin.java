@@ -34,7 +34,7 @@ import net.sourceforge.jwbf.actions.mediawiki.util.SupportedBy;
 import net.sourceforge.jwbf.actions.mediawiki.util.VersionException;
 import net.sourceforge.jwbf.actions.util.HttpAction;
 import net.sourceforge.jwbf.actions.util.ProcessException;
-import net.sourceforge.jwbf.bots.util.LoginData;
+import net.sourceforge.jwbf.contentRep.mediawiki.LoginData;
 
 import org.apache.log4j.Logger;
 import org.jdom.DataConversionException;
@@ -48,10 +48,10 @@ import org.xml.sax.InputSource;
  * 
  * @author Thomas Stock
  */
-@SupportedBy({MW1_11, MW1_12, MW1_13, MW1_14})
+@SupportedBy({ MW1_11, MW1_12, MW1_13, MW1_14 })
 public class PostLogin extends MWAction {
 	
-	private static final Logger log = Logger.getLogger(PostLogin.class);
+	private final Logger log = Logger.getLogger(PostLogin.class);
 	private final Post msg;
 	
 	

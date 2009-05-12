@@ -347,8 +347,8 @@ public class HttpActionClient {
 		return out;
 	}
 
-	private Map<String,String> cookieTransform(Cookie [] ca) {
-		Map<String,String> m = new HashMap<String, String>();
+	private Map<String, String> cookieTransform(Cookie [] ca) {
+		Map<String, String> m = new HashMap<String, String>();
 		for (int i = 0; i < ca.length; i++) {
 			m.put(ca[i].getName(), ca[i].getValue());
 		}
@@ -381,7 +381,7 @@ public class HttpActionClient {
 			String type = "";
 			if (ha instanceof Post) {
 				type = "(POST)";
-			} if (ha instanceof Get) {
+			} else if (ha instanceof Get) {
 				type = "(GET)";
 			}
 			log.debug("message " + type + " is: " 

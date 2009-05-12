@@ -82,7 +82,7 @@ public class LoginTest extends LiveTestFather {
 	 * Test FAIL login on Wikipedia.
 	 * @throws Exception a
 	 */
-	@Test(expected=ActionException.class)
+	@Test(expected = ActionException.class)
 	public final void loginWikipedia1Fail() throws Exception {
 
 			bot = new MediaWikiAdapterBot(getValue("login_wikipedia1_url"));
@@ -155,7 +155,7 @@ public class LoginTest extends LiveTestFather {
 	/**
 	 * Test invalid installation of MW
 	 */
-	@Test(expected=ActionException.class)
+	@Test(expected = ActionException.class)
 	public final void installationDefunct() throws Exception {
 		
 
@@ -170,7 +170,7 @@ public class LoginTest extends LiveTestFather {
 	/**
 	 * Test invalid installation of MW
 	 */
-	@Test(expected=ActionException.class)
+	@Test(expected = ActionException.class)
 	public final void conncetionProblem() throws Exception {
 		
 

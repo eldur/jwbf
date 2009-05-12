@@ -30,7 +30,7 @@ import org.junit.Test;
 public class RecentChangesTest extends LiveTestFather {
 	private MediaWikiAdapterBot bot = null;
 	private static final int COUNT = 13;
-	private static final int LIMIT = COUNT *2;
+	private static final int LIMIT = COUNT * 2;
 	@BeforeClass
 	public static void setUp() throws Exception {
 		PropertyConfigurator.configureAndWatch("test4log4j.properties",
@@ -49,7 +49,7 @@ public class RecentChangesTest extends LiveTestFather {
 		bot.login(getValue("wikiMW1_09_user"), getValue("wikiMW1_09_pass"));
 		doRegularTest(bot);
 		doSpecialCharTest(bot);
-		assertTrue( "Wrong Wiki Version " + bot.getVersion() , Version.MW1_09.equals(bot.getVersion()));
+		assertTrue("Wrong Wiki Version " + bot.getVersion(), Version.MW1_09.equals(bot.getVersion()));
 	}
 	/**
 	 * Test.
@@ -62,7 +62,7 @@ public class RecentChangesTest extends LiveTestFather {
 		bot.login(getValue("wikiMW1_10_user"), getValue("wikiMW1_10_pass"));
 		doRegularTest(bot);
 		doSpecialCharTest(bot);
-		assertTrue( "Wrong Wiki Version " + bot.getVersion() , Version.MW1_10.equals(bot.getVersion()));
+		assertTrue("Wrong Wiki Version " + bot.getVersion(), Version.MW1_10.equals(bot.getVersion()));
 	}
 	
 	/**
@@ -76,7 +76,7 @@ public class RecentChangesTest extends LiveTestFather {
 		bot.login(getValue("wikiMW1_11_user"), getValue("wikiMW1_11_pass"));
 		doRegularTest(bot);
 		doSpecialCharTest(bot);
-		assertTrue( "Wrong Wiki Version " + bot.getVersion() , Version.MW1_11.equals(bot.getVersion()));
+		assertTrue("Wrong Wiki Version " + bot.getVersion(), Version.MW1_11.equals(bot.getVersion()));
 	}
 	
 	/**
@@ -90,7 +90,7 @@ public class RecentChangesTest extends LiveTestFather {
 		bot.login(getValue("wikiMW1_12_user"), getValue("wikiMW1_12_pass"));
 		doRegularTest(bot);
 		doSpecialCharTest(bot);
-		assertTrue( "Wrong Wiki Version " + bot.getVersion() , Version.MW1_12.equals(bot.getVersion()));
+		assertTrue("Wrong Wiki Version " + bot.getVersion(), Version.MW1_12.equals(bot.getVersion()));
 	}
 	/**
 	 * Test.
@@ -102,7 +102,7 @@ public class RecentChangesTest extends LiveTestFather {
 		bot.login(getValue("wikiMW1_13_user"), getValue("wikiMW1_13_pass"));
 		doRegularTest(bot);
 		doSpecialCharTest(bot);
-		assertTrue( "Wrong Wiki Version " + bot.getVersion() , Version.MW1_13.equals(bot.getVersion()));
+		assertTrue("Wrong Wiki Version " + bot.getVersion(), Version.MW1_13.equals(bot.getVersion()));
 	}
 	
 	/**
@@ -115,7 +115,7 @@ public class RecentChangesTest extends LiveTestFather {
 		bot.login(getValue("wikiMW1_14_user"), getValue("wikiMW1_14_pass"));
 		doRegularTest(bot);
 		doSpecialCharTest(bot);
-		assertTrue( "Wrong Wiki Version " + bot.getVersion() , Version.MW1_14.equals(bot.getVersion()));
+		assertTrue("Wrong Wiki Version " + bot.getVersion(), Version.MW1_14.equals(bot.getVersion()));
 	}
 	
 	private final void prepareWiki(MediaWikiBot bot) throws ActionException,

@@ -18,13 +18,8 @@
  */
 package net.sourceforge.jwbf.actions;
 
-import java.util.Map;
-
-import net.sourceforge.jwbf.actions.util.CookieException;
 import net.sourceforge.jwbf.actions.util.HttpAction;
 import net.sourceforge.jwbf.actions.util.ProcessException;
-
-import org.apache.commons.httpclient.Cookie;
 /**
  * Simple method to get plain HTML or XML data e.g. from custom specialpages
  * or xml newsfeeds or something else.
@@ -82,16 +77,6 @@ public class GetPage implements ContentProcessable {
 		return s;
 	}
 
-	/**
-	 * @see ContentProcessable#validateReturningCookies(Cookie[], HttpAction)
-	 * @param cs a
-	 * @param hm a
-	 * @throws CookieException on cookie problems
-	 */
-	public void validateReturningCookies(Map<String,String> cs, HttpAction hm)
-			throws CookieException {
-
-	}
 	/**
 	 * 
 	 * @return the requested text

@@ -60,10 +60,9 @@ import org.xml.sax.InputSource;
  * 
  * TODO This is a semi-complete extension point
  * @author Thomas Stock
- * @supportedBy MediaWikiAPI 1.11 logevents / le (semi-complete)
  * 
  */
-@SupportedBy({MW1_11, MW1_12, MW1_13, MW1_14})
+@SupportedBy({ MW1_11, MW1_12, MW1_13, MW1_14 })
 public class LogEvents extends MWAction implements Iterator<LogItem>, Iterable<LogItem> {
 
 	/** value for the bllimit-parameter. * */
@@ -142,6 +141,7 @@ public class LogEvents extends MWAction implements Iterator<LogItem>, Iterable<L
 	 * 
 	 * @param logtype
 	 *            type of log, like upload
+	 * @return a
 	 */
 	private Get generateRequest(String ... logtype) {
 
@@ -167,6 +167,7 @@ public class LogEvents extends MWAction implements Iterator<LogItem>, Iterable<L
 	 * 
 	 * @param logtype
 	 *            type of log, like upload
+	 * @return a
 	 */
 	private Get generateContinueRequest(String [] logtype, String continueing) {
 
@@ -283,10 +284,10 @@ public class LogEvents extends MWAction implements Iterator<LogItem>, Iterable<L
 	private void prepareCollection() {
 
 		if (init || (!logIterator.hasNext() && hasMoreResults)) {
-			if(init) {
+			if (init) {
 				msg = generateRequest(type);
 			} else {
-				msg = generateContinueRequest(type, nextPageInfo );
+				msg = generateContinueRequest(type, nextPageInfo);
 			}
 			init = false;
 			try {

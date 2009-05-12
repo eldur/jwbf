@@ -67,7 +67,7 @@ public class LiveTestFather {
 			filepos.add(System.getProperty("user.home") + "/jwbftest.xml");
 			filepos.add("test.xml");
 			for (String fname : filepos) {
-				if(new File(fname).canRead()) {
+				if (new File(fname).canRead()) {
 					filename = fname;
 					System.out.println("use testfile: " + filename);
 					break;
@@ -158,13 +158,11 @@ public class LiveTestFather {
 		String out = "";
 		int charNum = 0;
 		int count = 1;  
-		while(count <= length)
-        {  
+		while (count <= length) {  
             charNum = (wheel.nextInt(79) + begin);
-            if (charNum >= begin && charNum <= end)
-            {
+            if (charNum >= begin && charNum <= end) {
             	
-            	char d = (char)charNum;
+            	char d = (char) charNum;
                 out += d;
                 count++;
             }

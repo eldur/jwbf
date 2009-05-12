@@ -50,9 +50,9 @@ import org.xml.sax.InputSource;
  *
  * @author Max Gensthaler
  */
-@SupportedBy({MW1_12, MW1_13, MW1_14})
+@SupportedBy({ MW1_12, MW1_13, MW1_14 })
 public class PostDelete extends MWAction {
-	private static final Logger log = Logger.getLogger(PostDelete.class);
+	private final Logger log = Logger.getLogger(PostDelete.class);
 	
 
 	private final String title;
@@ -75,7 +75,7 @@ public class PostDelete extends MWAction {
 			throw new IllegalArgumentException("The argument 'title' must not be \"" + String.valueOf(title) + "\"");
 		}
 		
-		if (false == ui.getRights().contains("delete")) {
+		if (!ui.getRights().contains("delete")) {
 			throw new ProcessException("The given user doesn't have the rights to delete. Adding '$wgGroupPermissions['bot']['delete'] = true;' to your MediaWiki's LocalSettings.php might remove this problem.");
 		}
 		
@@ -89,7 +89,7 @@ public class PostDelete extends MWAction {
 			throw new IllegalArgumentException("The argument 'title' must not be null or empty");
 		}
 		
-		if (false == bot.getUserinfo().getRights().contains("delete")) {
+		if (!bot.getUserinfo().getRights().contains("delete")) {
 			throw new ProcessException("The given user doesn't have the rights to delete. Adding '$wgGroupPermissions['bot']['delete'] = true;' to your MediaWiki's LocalSettings.php might remove this problem.");
 		}
 		
@@ -149,7 +149,7 @@ public class PostDelete extends MWAction {
 			try {
 				Document doc = builder.build(new InputSource(
 						new StringReader(s)));
-				if (false == containsError(doc)) {
+				if (!containsError(doc)) {
 					process(doc);
 				}
 			} catch (JDOMException e) {
@@ -177,12 +177,13 @@ public class PostDelete extends MWAction {
 	 * which then would printed by the logger.
 	 * @param doc XML <code>Document</code>
 	 * @throws JDOMException thrown if the document could not be parsed
+	 * @return if
 	 */
 	private boolean containsError(Document doc) throws JDOMException {
 		Element elem = doc.getRootElement().getChild("error");
-		if( elem != null) {
+		if (elem != null) {
 			log.error(elem.getAttributeValue("info"));
-			if(elem.getAttributeValue("code").equals("inpermissiondenied")) {
+			if (elem.getAttributeValue("code").equals("inpermissiondenied")) {
 				log.error("Adding '$wgGroupPermissions['bot']['delete'] = true;' to your MediaWiki's LocalSettings.php might remove this problem.");
 			}
 			return true;
@@ -199,9 +200,10 @@ public class PostDelete extends MWAction {
 		Element elem = doc.getRootElement().getChild("delete");
 		if (elem != null) {
 			// process reply for delete request
-			if(log.isInfoEnabled()) {
-				log.info("Deleted article '" + elem.getAttributeValue("title") + "'" +
-					" with reason '" + elem.getAttributeValue("reason") + "'");
+			if (log.isInfoEnabled()) {
+				log.info("Deleted article '" + elem.getAttributeValue("title")
+						+ "'" + " with reason '"
+						+ elem.getAttributeValue("reason") + "'");
 			}
 		} else {
 			log.error("Unknow reply. This is not a reply for a delete action.");

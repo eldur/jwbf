@@ -100,13 +100,17 @@ public abstract class MWAction implements ContentProcessable {
 		v = findSupportedVersions(getClass());
 		return v;
 	}
-	
-	private Version [] findSupportedVersions(Class<?> clazz) {
+	/**
+	 * 
+	 * @param clazz a
+	 * @return an
+	 */
+	private Version [] findSupportedVersions(Class< ? > clazz) {
 		if (clazz.getName().contains(MWAction.class.getName())) {
 			Version [] v = new MediaWiki.Version[1];
 			v[0] = Version.UNKNOWN;
 			return v;
-		} else if(clazz.isAnnotationPresent(SupportedBy.class)) {
+		} else if (clazz.isAnnotationPresent(SupportedBy.class)) {
 			SupportedBy sb = clazz.getAnnotation(SupportedBy.class);
 			System.err.println();
 			if (log.isDebugEnabled()) {
@@ -115,7 +119,7 @@ public abstract class MWAction implements ContentProcessable {
 				for (int i = 0; i < vtemp.length; i++) {
 					sv += vtemp[i].getNumber() + ", ";
 				}
-				log.debug("found support for: " + sv );
+				log.debug("found support for: " + sv);
 			}
 			return sb.value();
 		} else {
@@ -126,7 +130,7 @@ public abstract class MWAction implements ContentProcessable {
 	protected void checkVersionNewerEquals(Version v) throws VersionException {
 		if (getSupportedVersions().contains(v))
 			return;
-		for (Version vx: getSupportedVersions()) {
+		for (Version vx : getSupportedVersions()) {
 			if (v.greaterEqThen(vx))
 				return;
 		}

@@ -114,7 +114,7 @@ public class CategoryTest extends LiveTestFather {
 		
 		bot = new MediaWikiAdapterBot("http://de.wikipedia.org/w/index.php");
 		
-		assertTrue( "Wrong Wiki Version " + bot.getVersion() , Version.DEVELOPMENT.equals(bot.getVersion()));
+		assertTrue("Wrong Wiki Version " + bot.getVersion(), Version.DEVELOPMENT.equals(bot.getVersion()));
 		
 		doTest(bot, "Moose");
 	}
@@ -123,12 +123,12 @@ public class CategoryTest extends LiveTestFather {
 	 * Test category read. Test category must have more then 50 members.
 	 * @throws Exception a
 	 */
-	@Test(expected=VersionException.class)
+	@Test(expected = VersionException.class)
 	public final void categoryWikiMW1_09() throws Exception {
 		
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_09_url"));
 		bot.login(getValue("wikiMW1_09_user"), getValue("wikiMW1_09_pass"));
-		assertTrue( "Wrong Wiki Version " + bot.getVersion() , Version.MW1_09.equals(bot.getVersion()));
+		assertTrue("Wrong Wiki Version " + bot.getVersion(), Version.MW1_09.equals(bot.getVersion()));
 		
 		doTest(bot);
 		
@@ -137,12 +137,12 @@ public class CategoryTest extends LiveTestFather {
 	 * Test category read. Test category must have more then 50 members.
 	 * @throws Exception a
 	 */
-	@Test(expected=VersionException.class)
+	@Test(expected = VersionException.class)
 	public final void categoryWikiMW1_10() throws Exception {
 		
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_10_url"));
 		bot.login(getValue("wikiMW1_10_user"), getValue("wikiMW1_10_pass"));
-		assertTrue( "Wrong Wiki Version " + bot.getVersion() , Version.MW1_10.equals(bot.getVersion()));
+		assertTrue("Wrong Wiki Version " + bot.getVersion(), Version.MW1_10.equals(bot.getVersion()));
 	
 		doTest(bot);
 		
@@ -156,7 +156,7 @@ public class CategoryTest extends LiveTestFather {
 		
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_11_url"));
 		bot.login(getValue("wikiMW1_11_user"), getValue("wikiMW1_11_pass"));
-		assertTrue( "Wrong Wiki Version " + bot.getVersion() , Version.MW1_11.equals(bot.getVersion()));
+		assertTrue("Wrong Wiki Version " + bot.getVersion(), Version.MW1_11.equals(bot.getVersion()));
 		
 		doTest(bot);
 		
@@ -170,7 +170,7 @@ public class CategoryTest extends LiveTestFather {
 		
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_12_url"));
 		bot.login(getValue("wikiMW1_12_user"), getValue("wikiMW1_12_pass"));
-		assertTrue( "Wrong Wiki Version " + bot.getVersion() , Version.MW1_12.equals(bot.getVersion()));
+		assertTrue("Wrong Wiki Version " + bot.getVersion(), Version.MW1_12.equals(bot.getVersion()));
 		doTest(bot);
 		
 	}
@@ -183,7 +183,7 @@ public class CategoryTest extends LiveTestFather {
 		
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_13_url"));
 		bot.login(getValue("wikiMW1_13_user"), getValue("wikiMW1_13_pass"));
-		assertTrue( "Wrong Wiki Version " + bot.getVersion() , Version.MW1_13.equals(bot.getVersion()));
+		assertTrue("Wrong Wiki Version " + bot.getVersion(), Version.MW1_13.equals(bot.getVersion()));
 		doTest(bot);
 		
 		
@@ -199,7 +199,7 @@ public class CategoryTest extends LiveTestFather {
 		
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_14_url"));
 		bot.login(getValue("wikiMW1_14_user"), getValue("wikiMW1_14_pass"));
-		assertTrue( "Wrong Wiki Version " + bot.getVersion() , Version.MW1_14.equals(bot.getVersion()));
+		assertTrue("Wrong Wiki Version " + bot.getVersion(), Version.MW1_14.equals(bot.getVersion()));
 		doTest(bot);
 		
 		
@@ -214,7 +214,7 @@ public class CategoryTest extends LiveTestFather {
 		
 		CategoryMembersSimple g = new CategoryMembersSimple(bot, catname);
 		if (bot.getVersion() != Version.DEVELOPMENT)
-			assertTrue("test not documented for version: " + bot.getVersion() , g.getSupportedVersions().contains(bot.getVersion()));
+			assertTrue("test not documented for version: " + bot.getVersion(), g.getSupportedVersions().contains(bot.getVersion()));
 		bot.performAction(g);
 		assertTrue("shuld have next", g.hasNext());
 		Collection<String> compare1 = new Vector<String>();
@@ -222,7 +222,7 @@ public class CategoryTest extends LiveTestFather {
 		Iterator<String> is = new CategoryMembersSimple(bot, catname).iterator();
 		int i = 0;
 		boolean notEnough = true; 
-		while(is.hasNext()) {
+		while (is.hasNext()) {
 			is.next();
 			i++;
 			if (i > 55) {
@@ -252,7 +252,7 @@ public class CategoryTest extends LiveTestFather {
 		}
 		assertTrue("i is: " + i , i > 50);
 		
-		Iterator<CategoryItem> cit = new CategoryMembersFull(bot,catname).iterator();
+		Iterator<CategoryItem> cit = new CategoryMembersFull(bot, catname).iterator();
 		i = 0;
 		while (cit.hasNext()) {
 			CategoryItem x = cit.next();
