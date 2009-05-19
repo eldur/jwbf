@@ -18,6 +18,8 @@
  */
 package net.sourceforge.jwbf;
 
+import static org.junit.Assert.assertTrue;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -25,14 +27,23 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.InvalidPropertiesFormatException;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Random;
+import java.util.Set;
 import java.util.Vector;
 
+import net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version;
+import net.sourceforge.jwbf.actions.mediawiki.util.MWAction;
+
+import org.junit.AfterClass;
+import org.junit.Test;
+
 /**
- * @author loki
- *
+ * @author Thomas Stock
+ * TODO MV to MW Module
  */
 public class LiveTestFather {
 
@@ -43,6 +54,11 @@ public class LiveTestFather {
 	private static String filename;
 	
 	private final Collection<String> specialChars = new Vector<String>();
+
+	private static boolean isVersionTestCase = false;
+	
+	protected static final Map<String, Version > testedVersions = new HashMap<String, Version >();
+	protected static final Map<String, Version >  documentedVersions = new HashMap<String, Version > ();
 	
 	protected LiveTestFather () {
 		specialChars.add("\"");
@@ -54,7 +70,7 @@ public class LiveTestFather {
 		specialChars.add("]");
 	}
 	
-	
+
 	static {
 		
 		if (data == null) {
@@ -100,7 +116,66 @@ public class LiveTestFather {
 		}
 
 	}
+	protected static void addInitSupporterVersions(Class < ? > mwc) {
+		isVersionTestCase = true;
+		Version [] vs = MWAction.findSupportedVersions(mwc);
+		for (int j = 0; j < vs.length; j++) {
+			documentedVersions.put(mwc.getCanonicalName() + vs[j], vs[j]);
+		}
+
+		
+	}
 	
+
+	
+	
+	protected static void registerTestedVersion(Class < ? > clazz, Version v) {
+		if (v != Version.DEVELOPMENT) {
+			testedVersions.put(clazz.getCanonicalName() + v, v);
+		}
+	}
+	
+	protected static Map<String, Version > getUntestedButDocumentedVersions() {
+		final Map<String, Version > data = new HashMap<String, Version>();
+		data.putAll(documentedVersions);
+		
+		final Set<String> testedKeys = testedVersions.keySet();
+		for (String key : testedKeys) {
+			data.remove(key);
+		}
+	
+		
+		return data;
+	}
+	
+	protected static Map<String, Version> getTestedButUndocmentedVersions() {
+		final Map<String, Version> data = new HashMap<String, Version>();
+		data.putAll(testedVersions);
+
+		final Set<String> documentedKeys = documentedVersions.keySet();
+		for (String key : documentedKeys) {
+			data.remove(key);
+		}
+		return data;
+	}
+	
+	@Test
+	public void yTestVersionDocumentation() throws Exception {
+		if (isVersionTestCase) {
+			assertTrue("no versions are supported", !documentedVersions.isEmpty());
+			assertTrue("not all documented versions are tested \n{ " 
+					+ getUntestedButDocumentedVersions() + " }", getUntestedButDocumentedVersions().isEmpty());
+			assertTrue("there are undocumented tests for versions \n{ " 
+					+ getTestedButUndocmentedVersions() + " }", getTestedButUndocmentedVersions().isEmpty());
+		}
+	}
+	
+	@AfterClass
+	public static void restData() throws Exception {
+		documentedVersions.clear();
+		testedVersions.clear();
+		isVersionTestCase = false;
+	}
 	public static void main(String[] args) {
 		System.out.println(new LiveTestFather().getRandomAlph(6));
 		System.out.println(System.getenv());

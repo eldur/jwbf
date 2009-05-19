@@ -33,11 +33,10 @@ import org.apache.log4j.Logger;
  * @author Thomas Stock
  *
  */
-@SupportedBy(MediaWiki.Version.MW1_11)
 public abstract class MWAction implements ContentProcessable {
 
 	private Version [] v;
-	private Logger log = Logger.getLogger(getClass());
+	private static Logger log = Logger.getLogger(MWAction.class);
 	private boolean hasMore = true;
 	
 	public boolean hasMoreMessages() {
@@ -48,7 +47,7 @@ public abstract class MWAction implements ContentProcessable {
 		return b;
 	}
 	
-	protected void setHasMoreMessages(boolean b) {
+	public void setHasMoreMessages(boolean b) {
 		hasMore = b;
 	}
 
@@ -92,7 +91,7 @@ public abstract class MWAction implements ContentProcessable {
 		return s;
 	}
 	
-	protected final Version [] getVersionArray() {
+	private final Version [] getVersionArray() {
 		
 		
 		if (v != null)
@@ -100,13 +99,14 @@ public abstract class MWAction implements ContentProcessable {
 		v = findSupportedVersions(getClass());
 		return v;
 	}
+
 	/**
 	 * 
 	 * @param clazz a
 	 * @return an
 	 */
-	private Version [] findSupportedVersions(Class< ? > clazz) {
-		if (clazz.getName().contains(MWAction.class.getName())) {
+	public static final Version [] findSupportedVersions(Class< ? > clazz) {
+		if (clazz.getName().contains(Object.class.getName())) {
 			Version [] v = new MediaWiki.Version[1];
 			v[0] = Version.UNKNOWN;
 			return v;
@@ -119,7 +119,9 @@ public abstract class MWAction implements ContentProcessable {
 				for (int i = 0; i < vtemp.length; i++) {
 					sv += vtemp[i].getNumber() + ", ";
 				}
-				log.debug("found support for: " + sv);
+				sv = sv.trim();
+				sv = sv.substring(0, sv.length() - 1);
+				log.debug("found support for: " + sv + "\n\tin class " + clazz.getCanonicalName());
 			}
 			return sb.value();
 		} else {
@@ -136,8 +138,11 @@ public abstract class MWAction implements ContentProcessable {
 		}
 		throw new VersionException("unsupported version: " + v);
 	}
-	
-	public Collection<Version> getSupportedVersions() {
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public final Collection<Version> getSupportedVersions() {
 		Collection<Version> v = new Vector<Version>();
 		
 		Version [] va = getVersionArray();

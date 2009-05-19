@@ -293,8 +293,7 @@ public class MediaWikiAdapterBot extends MediaWikiBot {
 	 */
 	public String getImageInfo(String imagename) throws ActionException, ProcessException {
 		
-		ImageInfo a = new ImageInfo(imagename, getVersion(), getHostUrl());
-		performAction(a);
+		ImageInfo a = new ImageInfo(this, imagename);
 		return a.getUrlAsString();
 	}
 

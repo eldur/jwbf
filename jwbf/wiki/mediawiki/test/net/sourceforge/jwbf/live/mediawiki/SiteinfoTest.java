@@ -21,7 +21,9 @@ package net.sourceforge.jwbf.live.mediawiki;
 
 import net.sourceforge.jwbf.LiveTestFather;
 import net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version;
+import net.sourceforge.jwbf.actions.mediawiki.meta.GetVersion;
 import net.sourceforge.jwbf.bots.MediaWikiAdapterBot;
+import net.sourceforge.jwbf.bots.MediaWikiBot;
 import net.sourceforge.jwbf.contentRep.mediawiki.Siteinfo;
 
 import org.apache.log4j.PropertyConfigurator;
@@ -45,6 +47,7 @@ public class SiteinfoTest extends LiveTestFather {
 	public static void setUp() throws Exception {
 		PropertyConfigurator.configureAndWatch("test4log4j.properties",
 				60 * 1000);
+		addInitSupporterVersions(GetVersion.class);
 	}
 	
 
@@ -69,7 +72,7 @@ public class SiteinfoTest extends LiveTestFather {
 		
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_09_url"));
 
-		Assert.assertEquals(Version.MW1_09, bot.getVersion());
+		doTest(bot, Version.MW1_09);
 		
 	}
 	
@@ -81,8 +84,7 @@ public class SiteinfoTest extends LiveTestFather {
 	public final void siteInfoMW1_10() throws Exception {
 		
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_10_url"));
-
-		Assert.assertEquals(Version.MW1_10, bot.getVersion());
+		doTest(bot, Version.MW1_10);
 	}
 	
 	/**
@@ -94,7 +96,7 @@ public class SiteinfoTest extends LiveTestFather {
 		
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_11_url"));
 
-		Assert.assertEquals(Version.MW1_11, bot.getVersion());
+		doTest(bot, Version.MW1_11);
 	}
 	
 	/**
@@ -106,8 +108,7 @@ public class SiteinfoTest extends LiveTestFather {
 		
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_12_url"));
 
-		Assert.assertEquals(Version.MW1_12, bot.getVersion());
-//		Assert.assertTrue("WriteAPI is disabled", bot.getSiteinfo().isWriteAPI());
+		doTest(bot, Version.MW1_12);
 	}
 	
 	/**
@@ -119,7 +120,7 @@ public class SiteinfoTest extends LiveTestFather {
 		
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_13_url"));
 		bot.login(getValue("wikiMW1_13_user"), getValue("wikiMW1_13_pass"));
-		Assert.assertEquals(Version.MW1_13, bot.getVersion());
+		doTest(bot, Version.MW1_13);
 	}
 	
 	/**
@@ -130,9 +131,13 @@ public class SiteinfoTest extends LiveTestFather {
 	public final void siteInfoMW1_14() throws Exception {
 		
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_14_url"));
-		Assert.assertEquals(Version.MW1_14, bot.getVersion());
+		doTest(bot, Version.MW1_14);
 	}
 
+	private void doTest(MediaWikiBot bot, Version v) throws Exception {
+		Assert.assertEquals(v, bot.getVersion());
+		registerTestedVersion(GetVersion.class, v);
+	}
 	
 	
 

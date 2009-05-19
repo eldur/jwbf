@@ -41,8 +41,8 @@ public class BasicTest extends ArticleTest {
 	}
 	
 	@Before
-	public void doNothing() {
-		
+	public void doNothing() throws Exception  {
+		  
 	}
 	
 	

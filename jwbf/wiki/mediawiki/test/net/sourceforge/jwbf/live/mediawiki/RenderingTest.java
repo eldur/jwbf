@@ -48,6 +48,7 @@ public class RenderingTest extends LiveTestFather {
 	public static void setUp() throws Exception {
 		PropertyConfigurator.configureAndWatch("test4log4j.properties",
 				60 * 1000);
+		addInitSupporterVersions(GetRendering.class);
 
 	}
 
@@ -125,8 +126,9 @@ public class RenderingTest extends LiveTestFather {
 	public final void getRenderingMW1_13() throws Exception {
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_13_url"));
 		bot.login(getValue("wikiMW1_13_user"), getValue("wikiMW1_13_pass"));
+		Assert.assertEquals("Wrong Wiki Version " + bot.getVersion(), bot.getVersion(), Version.MW1_13);
 		doTest(bot);
-		Assert.assertTrue("Wrong Wiki Version " + bot.getVersion(), Version.MW1_13.equals(bot.getVersion()));
+		
 	}
 	
 	/**
@@ -146,6 +148,8 @@ public class RenderingTest extends LiveTestFather {
 		if (bot.getVersion() != Version.DEVELOPMENT)
 			assertTrue("test not documented for version: " + bot.getVersion() , r.getSupportedVersions().contains(bot.getVersion()));
 		Assert.assertEquals("<p>bert</p>", r.getHtml());
+		
+		registerTestedVersion(GetRendering.class, bot.getVersion());
 		// TODO more tests
 	}
 }

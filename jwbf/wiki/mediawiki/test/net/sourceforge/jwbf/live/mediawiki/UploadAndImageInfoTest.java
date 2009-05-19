@@ -18,6 +18,7 @@
  */
 package net.sourceforge.jwbf.live.mediawiki;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.io.BufferedOutputStream;
@@ -33,7 +34,6 @@ import java.net.URLConnection;
 import net.sourceforge.jwbf.LiveTestFather;
 import net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version;
 import net.sourceforge.jwbf.actions.mediawiki.editing.FileUpload;
-import net.sourceforge.jwbf.actions.mediawiki.queries.ImageInfo;
 import net.sourceforge.jwbf.actions.mediawiki.util.VersionException;
 import net.sourceforge.jwbf.bots.MediaWikiAdapterBot;
 import net.sourceforge.jwbf.contentRep.mediawiki.SimpleFile;
@@ -56,6 +56,7 @@ public class UploadAndImageInfoTest extends LiveTestFather {
 	public static void setUp() throws Exception {
 		PropertyConfigurator.configureAndWatch("test4log4j.properties",
 				60 * 1000);
+		addInitSupporterVersions(FileUpload.class);
 	}
 	
 	
@@ -101,20 +102,7 @@ public class UploadAndImageInfoTest extends LiveTestFather {
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_11_url"));
 		bot.login(getValue("wikiMW1_11_user"),
 				getValue("wikiMW1_11_pass"));
-		Assert.assertEquals(bot.getVersion(), Version.MW1_11);
-		Assert.assertTrue(new File(getValue("validFile")).canRead());
-		SimpleFile sf = new SimpleFile(getValue("filename"), getValue("validFile"));
-		FileUpload up = new FileUpload(sf, bot);
-		assertTrue("test not documented for version: " + bot.getVersion() , up.getSupportedVersions().contains(bot.getVersion()));
-		bot.performAction(up);
-		
-		
-		ImageInfo gi = new ImageInfo(sf.getLabel(), bot.getVersion(), bot.getHostUrl());
-		bot.performAction(gi);
-		URL url = new URL(gi.getUrlAsString());
-		System.out.println(url);
-		Assert.assertTrue("file not found " + url, url.toExternalForm().length() - bot.getHostUrl().length() > 2);
-		assertFile(url, sf.getFile());
+		generalUploadImageInfoTest(bot, Version.MW1_11);
 	}
 	
 	/**
@@ -127,18 +115,8 @@ public class UploadAndImageInfoTest extends LiveTestFather {
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_12_url"));
 		bot.login(getValue("wikiMW1_12_user"),
 				getValue("wikiMW1_12_pass"));
-		Assert.assertEquals(bot.getVersion(), Version.MW1_12);
-		Assert.assertTrue("File (" + getValue("validFile") + ")not readable", new File(getValue("validFile")).canRead());
-		SimpleFile sf = new SimpleFile(getValue("filename"), getValue("validFile"));
-		FileUpload up = new FileUpload(sf, bot);
-		assertTrue("test not documented for version: " + bot.getVersion() , up.getSupportedVersions().contains(bot.getVersion()));
-		bot.performAction(up);
-		URL url = new URL(bot.getImageInfo(sf.getLabel()));
-		File file = new File(getValue("validFile"));
-		Assert.assertTrue("file not found " + url, url.toExternalForm().length() - bot.getHostUrl().length() > 2);
-		assertFile(url, file);
+		generalUploadImageInfoTest(bot, Version.MW1_12);
 	}
-	
 	/**
 	 * Test category read. Test category must have more then 50 members.
 	 * @throws Exception a
@@ -149,16 +127,7 @@ public class UploadAndImageInfoTest extends LiveTestFather {
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_13_url"));
 		bot.login(getValue("wikiMW1_13_user"),
 				getValue("wikiMW1_13_pass"));
-		Assert.assertEquals(bot.getVersion(), Version.MW1_13);
-		Assert.assertTrue("File (" + getValue("validFile") + ")not readable", new File(getValue("validFile")).canRead());
-		SimpleFile sf = new SimpleFile(getValue("filename"), getValue("validFile"));
-		FileUpload up = new FileUpload(sf, bot);
-		assertTrue("test not documented for version: " + bot.getVersion() , up.getSupportedVersions().contains(bot.getVersion()));
-		bot.performAction(up);
-		URL url = new URL(bot.getImageInfo(sf.getLabel()));
-		Assert.assertTrue("file not found " + url , url.toExternalForm().length() - bot.getHostUrl().length() > 2);
-		File file = new File(getValue("validFile"));
-		assertFile(url, file);
+		generalUploadImageInfoTest(bot, Version.MW1_13);
 	}
 	
 	/**
@@ -171,16 +140,24 @@ public class UploadAndImageInfoTest extends LiveTestFather {
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_14_url"));
 		bot.login(getValue("wikiMW1_14_user"),
 				getValue("wikiMW1_14_pass"));
-		Assert.assertEquals(bot.getVersion(), Version.MW1_14);
-		Assert.assertTrue("File (" + getValue("validFile") + ")not readable", new File(getValue("validFile")).canRead());
+		generalUploadImageInfoTest(bot, Version.MW1_14);
+		
+	}
+	protected final void generalUploadImageInfoTest(MediaWikiAdapterBot bot, Version v) throws Exception {
+		assertEquals(bot.getVersion(), v);
+		assertTrue("File (" + getValue("validFile") 
+				+ ") not readable", new File(getValue("validFile")).canRead());
 		SimpleFile sf = new SimpleFile(getValue("filename"), getValue("validFile"));
 		FileUpload up = new FileUpload(sf, bot);
-		assertTrue("test not documented for version: " + bot.getVersion() , up.getSupportedVersions().contains(bot.getVersion()));
+		assertTrue("test not documented for version: " 
+				+ bot.getVersion() , up.getSupportedVersions().contains(bot.getVersion()));
 		bot.performAction(up);
 		URL url = new URL(bot.getImageInfo(sf.getLabel()));
-		Assert.assertTrue("file not found " + url , url.toExternalForm().length() - bot.getHostUrl().length() > 2);
+		Assert.assertTrue("file not found " 
+				+ url , url.toExternalForm().length() - bot.getHostUrl().length() > 2);
 		File file = new File(getValue("validFile"));
 		assertFile(url, file);
+		registerTestedVersion(FileUpload.class, bot.getVersion());
 	}
 	
 	protected final void assertFile(URL url, File file) throws Exception {

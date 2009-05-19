@@ -13,10 +13,10 @@ import java.util.Iterator;
 
 import net.sourceforge.jwbf.actions.Get;
 import net.sourceforge.jwbf.actions.mediawiki.MediaWiki;
-import net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version;
 import net.sourceforge.jwbf.actions.mediawiki.util.MWAction;
 import net.sourceforge.jwbf.actions.mediawiki.util.SupportedBy;
 import net.sourceforge.jwbf.actions.mediawiki.util.VersionException;
+import net.sourceforge.jwbf.actions.util.ActionException;
 import net.sourceforge.jwbf.actions.util.HttpAction;
 import net.sourceforge.jwbf.actions.util.ProcessException;
 import net.sourceforge.jwbf.bots.MediaWikiBot;
@@ -39,53 +39,46 @@ public class ImageInfo extends MWAction {
 
 	private String urlOfImage  = "";
 	private Get msg;
-	private final String hostUrl;
+	private final MediaWikiBot bot;
 	
 	/**
 	 * 
 	 * Get an absolute url to an image.
+	 * @param bot a
 	 * @param name of, like "Test.gif"
-	 * @param v of
-	 * @param botHostUrl the, {@link MediaWikiBot#getHostUrl()}
 	 * @throws VersionException if not supported
-	 * 
 	 */
-	public ImageInfo(String name, Version v, String botHostUrl) throws VersionException {
-		super(v);
-		this.hostUrl = botHostUrl;
+	public ImageInfo(MediaWikiBot bot, String name) throws VersionException {
+		super(bot.getVersion());
+		this.bot = bot;
+		
 		msg = new Get("/api.php?action=query&titles=Image:"
 					+ MediaWiki.encode(name) + "&prop=imageinfo"
-					+ "&iiprop=url" + "&format=xml");
-
+					+ "&iiprop=url&format=xml");
 
 	}
-	/**
-	 * 
-	 * Get an absolute url to an image.
-	 * @param name of, like "Test.gif"
-	 * @param v of
-	 * @throws VersionException if not supported
-	 * 
-	 */
-	public ImageInfo(String name, Version v) throws VersionException {
-		this(name, v, "");
-	}
+	
 
 	/**
 	 * @return position like "http://server.tld/path/to/Test.gif"
+	 * @throws ActionException on
 	 */
-	public String getUrlAsString() throws ProcessException {
+	public String getUrlAsString() throws ProcessException, ActionException {
+		bot.performAction(this);
 		try {
 			new URL(urlOfImage);
 		} catch (MalformedURLException e) {
-			if (hostUrl.length() <= 0) {
+			if (bot.getHostUrl().length() <= 0) {
 				throw new ProcessException("please use the constructor with hostUrl");
 			}
-			urlOfImage = hostUrl + urlOfImage;
+			urlOfImage = bot.getHostUrl() + urlOfImage;
 		}
-		return urlOfImage  ;
+		return urlOfImage;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public String processAllReturningText(String s) throws ProcessException {
 		findUrlOfImage(s);
@@ -126,7 +119,10 @@ public class ImageInfo extends MWAction {
 		findContent(root);
 		
 	}
-
+	
+	/**
+	 * {@inheritDoc}
+	 */
 	public HttpAction getNextMessage() {
 		return msg;
 	}

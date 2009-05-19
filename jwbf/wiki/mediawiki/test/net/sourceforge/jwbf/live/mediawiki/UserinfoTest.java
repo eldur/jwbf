@@ -5,6 +5,7 @@ package net.sourceforge.jwbf.live.mediawiki;
 
 import net.sourceforge.jwbf.LiveTestFather;
 import net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version;
+import net.sourceforge.jwbf.actions.mediawiki.meta.GetSiteinfo;
 import net.sourceforge.jwbf.bots.MediaWikiAdapterBot;
 import net.sourceforge.jwbf.bots.MediaWikiBot;
 import net.sourceforge.jwbf.contentRep.Userinfo;
@@ -25,6 +26,7 @@ public class UserinfoTest extends LiveTestFather {
 	public static void setUp() throws Exception {
 		PropertyConfigurator.configureAndWatch("test4log4j.properties",
 				60 * 1000);
+		addInitSupporterVersions(GetSiteinfo.class);
 	}
 	private final void testDetails(MediaWikiBot bot, String userName) throws Exception {
 		Userinfo u = bot.getUserinfo();
@@ -40,7 +42,7 @@ public class UserinfoTest extends LiveTestFather {
 			Assert.assertTrue("User has no read rights", u.getRights().contains("read"));
 		}
 		
-		
+		registerTestedVersion(GetSiteinfo.class, bot.getVersion());
 		
 	}
 	

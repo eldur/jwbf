@@ -41,9 +41,10 @@ import org.apache.log4j.Logger;
  * For further information see 
  * <a href="http://www.mediawiki.org/wiki/API:Query_-_Lists#categorymembers_.2F_cm">API documentation</a>.
  * 
- *
+ * TODO change visibilty to package, refactor test
  * @author Thomas Stock
  */
+
 @SupportedBy({ MW1_11, MW1_12, MW1_13, MW1_14 })
 public abstract class CategoryMembers extends MWAction {
 

@@ -33,9 +33,9 @@ import java.util.regex.Pattern;
 
 import net.sourceforge.jwbf.actions.Get;
 import net.sourceforge.jwbf.actions.mediawiki.MediaWiki;
+import net.sourceforge.jwbf.actions.mediawiki.util.MWAction;
 import net.sourceforge.jwbf.actions.mediawiki.util.SupportedBy;
 import net.sourceforge.jwbf.actions.mediawiki.util.VersionException;
-import net.sourceforge.jwbf.actions.util.ActionException;
 import net.sourceforge.jwbf.actions.util.HttpAction;
 import net.sourceforge.jwbf.actions.util.ProcessException;
 import net.sourceforge.jwbf.bots.MediaWikiBot;
@@ -53,27 +53,22 @@ import org.apache.log4j.Logger;
  * 
  */
 @SupportedBy({ MW1_09, MW1_10, MW1_11, MW1_12, MW1_13, MW1_14 })
-public class TemplateUserTitles extends TitleQuery   {
+public class TemplateUserTitles extends TitleQuery<String> {
 
 	/** constant value for the eilimit-parameter. **/
 	private static final int LIMIT = 50;
 	private final MediaWikiBot bot;
-	private Get msg;
 	/**
 	 * Collection that will contain the result
 	 * (titles of articles using the template) 
 	 * after performing the action has finished.
 	 */
 	private Collection<String> titleCollection = new ArrayList<String>();
-	private boolean init = true;
+
 
 	private final String templateName;
 	private final int [] namespaces;
-	private boolean hasMoreMesages = true;
-	/**
-	 * information necessary to get the next api page.
-	 */
-	private String nextPageInfo = null;
+
 		
 	private Logger log = Logger.getLogger(getClass());
 	/**
@@ -84,7 +79,7 @@ public class TemplateUserTitles extends TitleQuery   {
 	 * For the parameters, see {@link TemplateUserTitles#generateRequest(String, String, String)}
 	 */
 	public TemplateUserTitles(MediaWikiBot bot, String templateName, int ... namespaces) throws VersionException {
-		super(bot.getVersion());
+		super(bot);
 		this.bot = bot;
 		this.templateName = templateName;
 		this.namespaces = namespaces;
@@ -103,7 +98,7 @@ public class TemplateUserTitles extends TitleQuery   {
 	 * @param eicontinue    the value for the eicontinue parameter,
 	 *                      null for the generation of the initial request
 	 */
-	private void generateRequest(String templateName, String namespace,
+	private HttpAction generateRequest(String templateName, String namespace,
 		String eicontinue) {
 
 		String uS = "";
@@ -136,7 +131,7 @@ public class TemplateUserTitles extends TitleQuery   {
 
 		}
 
-		msg = new Get(uS);
+		return new Get(uS);
 
 	}
 	
@@ -161,7 +156,7 @@ public class TemplateUserTitles extends TitleQuery   {
 	 *	
 	 * @param s   text for parsing
 	 */
-	private void parseHasMore(final String s) {
+	protected String parseHasMore(final String s) {
 			
 		// get the eicontinue-value
 		
@@ -174,11 +169,11 @@ public class TemplateUserTitles extends TitleQuery   {
 		Matcher m = p.matcher(s);
 
 		if (m.find()) {			
-			nextPageInfo = m.group(1);	
-			hasMoreMesages = true;
+			return m.group(1);	
+			
 		} else {
-			nextPageInfo = null;	
-			hasMoreMesages = false;
+			return "";	
+			
 		}
 
 	}
@@ -188,7 +183,7 @@ public class TemplateUserTitles extends TitleQuery   {
 	 *	
 	 * @param s   text for parsing
 	 */
-	private void parseArticleTitles(String s) {
+	protected Collection<String> parseArticleTitles(String s) {
 		
 		// get the backlink titles and add them all to the titleCollection
 			
@@ -201,43 +196,22 @@ public class TemplateUserTitles extends TitleQuery   {
 			titleCollection.add(m.group(1));
 		}
 		
+		return titleCollection;
 	}
 
 	
 	
 
-	protected void prepareCollection() {
+	protected HttpAction prepareCollection() {
 
-		if (init || (!titleIterator.hasNext() && hasMoreMesages)) {
-			
-			if (init) {
-				generateRequest(templateName, createNsString(namespaces), null);
-			} else {
-				generateRequest(null, createNsString(namespaces), nextPageInfo);
-			}
-			init = false;
-			
-			try {
-				if (log.isDebugEnabled())
-					log.debug("request more ...");
-				setHasMoreMessages(true);
-				bot.performAction(this);
-				
-	
-				
-			} catch (ActionException e) {
-				e.printStackTrace();
-	
-			} catch (ProcessException e) {
-				e.printStackTrace();
-
-			}
-
+		if (getNextPageInfo().length() <= 0) {
+			return generateRequest(templateName, MWAction
+					.createNsString(namespaces), null);
+		} else {
+			return generateRequest(null, MWAction.createNsString(namespaces),
+					getNextPageInfo());
 		}
-	}
 
-	public HttpAction getNextMessage() {
-		return msg;
 	}
 
 

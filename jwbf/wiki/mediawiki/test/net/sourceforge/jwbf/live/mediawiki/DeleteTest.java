@@ -30,6 +30,7 @@ public class DeleteTest extends LiveTestFather {
 	public static void setUp() throws Exception {
 		PropertyConfigurator.configureAndWatch("test4log4j.properties",
 				60 * 1000);
+		addInitSupporterVersions(PostDelete.class);
 	}
 	private final void prepare(MediaWikiAdapterBot bot) throws Exception {
 		SimpleArticle a = new SimpleArticle("Delete", "0");
@@ -57,6 +58,7 @@ public class DeleteTest extends LiveTestFather {
 			Assert.assertTrue("textlength of Delete " 
 					+ i + " is greater then 0 (" + ca.getText().length() 
 					+ ")", ca.getText().length() == 0);
+			registerTestedVersion(PostDelete.class, bot.getVersion());
 		}
 	}
 	

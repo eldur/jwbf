@@ -1,7 +1,5 @@
 package net.sourceforge.jwbf.live.mediawiki;
 
-import static org.junit.Assert.assertTrue;
-
 import java.util.Iterator;
 import java.util.Vector;
 
@@ -10,6 +8,7 @@ import net.sourceforge.jwbf.actions.mediawiki.MediaWiki;
 import net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version;
 import net.sourceforge.jwbf.actions.mediawiki.queries.BacklinkTitles;
 import net.sourceforge.jwbf.actions.mediawiki.queries.BacklinkTitles.RedirectFilter;
+import net.sourceforge.jwbf.actions.mediawiki.util.VersionException;
 import net.sourceforge.jwbf.actions.util.ActionException;
 import net.sourceforge.jwbf.actions.util.ProcessException;
 import net.sourceforge.jwbf.bots.MediaWikiAdapterBot;
@@ -40,7 +39,7 @@ public class BacklinkTest extends LiveTestFather {
 		SimpleArticle a = new SimpleArticle("test", "0");
 		a = new SimpleArticle("text", BACKLINKS);
 		bot.writeContent(a);
-		for (int i = 0; i < COUNT; i++) {
+		for (int i = 0; i <= COUNT; i++) {
 			a.setLabel("Back" + i);
 			if (i % 2 == 0) {
 			a.setText("#redirect [[" + BACKLINKS + "]]");
@@ -60,7 +59,7 @@ public class BacklinkTest extends LiveTestFather {
 	public static void setUp() throws Exception {
 		PropertyConfigurator.configureAndWatch("test4log4j.properties",
 				60 * 1000);
-//		prepareTestWikis();
+		addInitSupporterVersions(BacklinkTitles.class);
 	}
 
 	/**
@@ -106,7 +105,7 @@ public class BacklinkTest extends LiveTestFather {
 		
 		doTest(bot);
 	}
-	@Test(expected = NullPointerException.class)
+	@Test(expected = VersionException.class)
 	public final void backlinksMW1_09_redirectVar() throws Exception {
 
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_09_url"));
@@ -212,7 +211,6 @@ public class BacklinkTest extends LiveTestFather {
 
 		BacklinkTitles gbt = new BacklinkTitles(bot, BACKLINKS, rf, MediaWiki.NS_MAIN , MediaWiki.NS_CATEGORY);
 
-		assertTrue("test not documented for version: " + bot.getVersion() , gbt.getSupportedVersions().contains(bot.getVersion()));
 		Vector<String> vx = new Vector<String>();
 		Iterator<String> is = gbt.iterator();
 		boolean notEnougth = true;
@@ -226,6 +224,7 @@ public class BacklinkTest extends LiveTestFather {
 			}
 		}
 		if (notEnougth) {
+			System.err.println( i  + " is to less (" + COUNT + ")");
 			doPreapare(bot);
 		}
 		is = gbt.iterator();
@@ -244,5 +243,6 @@ public class BacklinkTest extends LiveTestFather {
 		}
 		Assert.assertTrue("Iterator should contain: " + vx, vx.isEmpty());
 		Assert.assertTrue("Fail: " + i + " < " + COUNT, i > COUNT - 1);
+		registerTestedVersion(BacklinkTitles.class, bot.getVersion());
 	}
 }

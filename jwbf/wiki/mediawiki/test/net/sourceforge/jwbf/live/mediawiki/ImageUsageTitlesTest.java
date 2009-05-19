@@ -28,7 +28,7 @@ public class ImageUsageTitlesTest extends LiveTestFather {
 	public static void setUp() throws Exception {
 		PropertyConfigurator.configureAndWatch("test4log4j.properties",
 				60 * 1000);
-//		prepareTestWikis();
+		addInitSupporterVersions(ImageUsageTitles.class);
 	}
 	/**
 	 * Test.
@@ -111,8 +111,7 @@ public class ImageUsageTitlesTest extends LiveTestFather {
 	}
 	private void test(MediaWikiBot bot2) throws Exception {
 		ImageUsageTitles il = new ImageUsageTitles(bot, "Image:" + getValue("filename"), MediaWiki.NS_ALL);
-		assertTrue("test not documented for version: " + bot.getVersion()
-				, il.getSupportedVersions().contains(bot.getVersion()));
+
 		boolean notFound = true;
 		int x = 0;
 		for (String string : il) {
@@ -138,6 +137,7 @@ public class ImageUsageTitlesTest extends LiveTestFather {
 		if (x < limit) {
 			fail("limit" + x);
 		}
+		registerTestedVersion(ImageUsageTitles.class, bot.getVersion());
 		
 	}
 	private void prepare(MediaWikiBot bot2) throws Exception {

@@ -35,9 +35,10 @@ import org.apache.log4j.Logger;
  * A specialization of {@link CategoryMembers} with contains {@link String}s. 
  * @author Thomas Stock
  */
-public class CategoryMembersSimple extends CategoryMembers implements Iterable<String>, Iterator<String> {
+public class CategoryMembersSimple  implements Iterable<String>, Iterator<String> {
 
 	private Get msg;
+	private final CategoryMembers cm;
 	/**
 	 * Collection that will contain the result
 	 * (titles of articles linking to the target) 
@@ -69,62 +70,69 @@ public class CategoryMembersSimple extends CategoryMembers implements Iterable<S
 	 * 
 	 */
 	public CategoryMembersSimple(MediaWikiBot bot, String categoryName, int... namespaces) throws ActionException, ProcessException {
-		super(bot, categoryName, namespaces);
+		cm = new CategoryMembers(bot, categoryName, namespaces) {
+			
+			public HttpAction getNextMessage() {
+				return msg;
+			}
+		
+			@Override
+			protected void finalizeParse() {
+				titleIterator = titleCollection.iterator();
+		
+			}
+		
+			@Override
+			protected void addCatItem(String title, int pageid, int ns) {
+				titleCollection.add(title);
+		
+			}
+			
+			@Override
+			public String processAllReturningText(String s) throws ProcessException {
+				
+				if (log.isDebugEnabled())
+					log.debug("processAllReturningText");
+				titleCollection.clear();
+				String buff = super.processAllReturningText(s);
+				
+				log.debug(titleCollection); // TODO RM 
+				titleIterator = titleCollection.iterator();
+				return buff;
+			}
+		};
 	
 	}
 	
+
 	
-
-
-	@Override
-	protected void addCatItem(String title, int pageid, int ns) {
-		titleCollection.add(title);
-
-	}
 	private synchronized void prepareCollection() {
 
-		if (init || (!titleIterator.hasNext() && hasMoreResults)) {
-			if (init) {
-				setHasMoreMessages(true); // FIXME check if other action should have this too
-				msg = generateFirstRequest();
+		if (cm.init || (!titleIterator.hasNext() && cm.hasMoreResults)) {
+			if (cm.init) {
+				cm.setHasMoreMessages(true); // FIXME check if other action should have this too
+				msg = cm.generateFirstRequest();
 			} else {
-				msg = generateContinueRequest(nextPageInfo);
+				msg = cm.generateContinueRequest(cm.nextPageInfo);
 			}
-			init = false;
+			cm.init = false;
 			try {
-
-				bot.performAction(this);
-				setHasMoreMessages(true);
+				
+				cm.bot.performAction(cm);
+				cm.setHasMoreMessages(true);
 				if (log.isDebugEnabled())
 					log.debug("preparing success");
 			} catch (ActionException e) {
 				e.printStackTrace();
-				setHasMoreMessages(false);
+				cm.setHasMoreMessages(false);
 			} catch (ProcessException e) {
 				e.printStackTrace();
-				setHasMoreMessages(false);
+				cm.setHasMoreMessages(false);
 			}
 
 		}
 	}
-	
 
-	@Override
-	public String processAllReturningText(String s) throws ProcessException {
-		
-		if (log.isDebugEnabled())
-			log.debug("processAllReturningText");
-		titleCollection.clear();
-		String buff = super.processAllReturningText(s);
-		
-		log.debug(titleCollection); // TODO RM 
-		titleIterator = titleCollection.iterator();
-		return buff;
-	}
-
-	public HttpAction getNextMessage() {
-		return msg;
-	}
 
 	public Iterator<String> iterator() {
 		return this;
@@ -144,9 +152,6 @@ public class CategoryMembersSimple extends CategoryMembers implements Iterable<S
 		titleIterator.remove();
 		
 	}
-	@Override
-	protected void finalizeParse() {
-		titleIterator = titleCollection.iterator();
-	}
+	
 
 }

@@ -26,17 +26,10 @@ import net.sourceforge.jwbf.actions.util.ProcessException;
  * @author Thomas Stock
  *
  */
-public interface ContentProcessable {
+public interface ContentProcessable extends ReturningText {
 
 
-	/**
-	 * 
-	 * @param s the returning text
-	 * @param hm a
-	 * @return the retruning text or a modification of it
-	 * @throws ProcessException on internal problems of implementing class
-	 */
-	String processReturningText(final String s, HttpAction hm) throws ProcessException;
+
 	
 	/**
 	 * @return the of messages in this action

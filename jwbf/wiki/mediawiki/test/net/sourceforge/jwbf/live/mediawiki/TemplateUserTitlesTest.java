@@ -33,6 +33,7 @@ public class TemplateUserTitlesTest extends LiveTestFather {
 	public static void setUp() throws Exception {
 		PropertyConfigurator.configureAndWatch("test4log4j.properties",
 				60 * 1000);
+		addInitSupporterVersions(TemplateUserTitles.class);
 	}
 	
 	/**
@@ -117,7 +118,7 @@ public class TemplateUserTitlesTest extends LiveTestFather {
 
 	private void doRegularTest(MediaWikiBot bot) throws JwbfException {
 		TemplateUserTitles a = new TemplateUserTitles(bot, TESTPATTERNNAME, MediaWiki.NS_ALL);
-		assertTrue("test not documented for version: " + bot.getVersion() , a.getSupportedVersions().contains(bot.getVersion()));
+		
 		int i = 0;
 		Collection<String> titles = new Vector<String>();
 		
@@ -145,6 +146,7 @@ public class TemplateUserTitlesTest extends LiveTestFather {
 		
 		Article template = new Article(bot, TESTPATTERNNAME);
 		assertEquals(TESTPATTERNNAME + " content ", "a test", template.getText());
+		registerTestedVersion(TemplateUserTitles.class, bot.getVersion());
 	}
 
 	private void prepare(MediaWikiBot bot, Collection<String> titles) throws JwbfException {

@@ -28,6 +28,7 @@ import java.util.Vector;
 
 import net.sourceforge.jwbf.LiveTestFather;
 import net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version;
+import net.sourceforge.jwbf.actions.mediawiki.queries.CategoryMembers;
 import net.sourceforge.jwbf.actions.mediawiki.queries.CategoryMembersFull;
 import net.sourceforge.jwbf.actions.mediawiki.queries.CategoryMembersSimple;
 import net.sourceforge.jwbf.actions.mediawiki.util.VersionException;
@@ -101,7 +102,7 @@ public class CategoryTest extends LiveTestFather {
 	public static void setUp() throws Exception {
 		PropertyConfigurator.configureAndWatch("test4log4j.properties",
 				60 * 1000);
-//		prepareTestWikis();
+		addInitSupporterVersions(CategoryMembers.class);
 	}
 	
 
@@ -205,18 +206,14 @@ public class CategoryTest extends LiveTestFather {
 		
 		
 	}
+
 	
 	private final void doTest(MediaWikiBot bot) throws ActionException, ProcessException {
 		doTest(bot, TESTCATNAME);
 	}
 	
 	private final void doTest(MediaWikiBot bot, String catname) throws ActionException, ProcessException {
-		
-		CategoryMembersSimple g = new CategoryMembersSimple(bot, catname);
-		if (bot.getVersion() != Version.DEVELOPMENT)
-			assertTrue("test not documented for version: " + bot.getVersion(), g.getSupportedVersions().contains(bot.getVersion()));
-		bot.performAction(g);
-		assertTrue("shuld have next", g.hasNext());
+	
 		Collection<String> compare1 = new Vector<String>();
 		Collection<CategoryItem> compare2 = new Vector<CategoryItem>();
 		Iterator<String> is = new CategoryMembersSimple(bot, catname).iterator();
@@ -267,6 +264,7 @@ public class CategoryTest extends LiveTestFather {
 			}
 		}
 		assertTrue("i is: " + i , i > 50);
+		registerTestedVersion(CategoryMembers.class, bot.getVersion());
 	}
 	
 }

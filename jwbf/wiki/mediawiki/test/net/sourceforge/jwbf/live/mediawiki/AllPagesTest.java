@@ -54,8 +54,12 @@ public class AllPagesTest extends LiveTestFather {
 	public static void setUp() throws Exception {
 		PropertyConfigurator.configureAndWatch("test4log4j.properties",
 				60 * 1000);
-//		prepareTestWikis();
+		addInitSupporterVersions(AllPageTitles.class);
 	}
+	
+	
+	
+	
 	public static final void prepareTestWikis() throws Exception {
 		SimpleArticle a = new SimpleArticle("test", "0");
 		MediaWikiAdapterBot bot;
@@ -193,12 +197,11 @@ public class AllPagesTest extends LiveTestFather {
 	
 	private void doTest(MediaWikiBot bot, boolean isFullTest) throws Exception {
 		AllPageTitles gat = new AllPageTitles(bot, null, null, true, true, MediaWiki.NS_MAIN);
-		if (bot.getVersion() != Version.DEVELOPMENT)
-			assertTrue("test not documented for version: " 
-					+ bot.getVersion() , gat.getSupportedVersions().contains(bot.getVersion()));
+	
 		SimpleArticle sa;
 		String testText = getRandom(255);
-
+	
+		
 		Collection<String> specialChars = getSpecialChars();
 		if (isFullTest) {
 			try {
@@ -237,6 +240,9 @@ public class AllPagesTest extends LiveTestFather {
 					specialChars.isEmpty());
 		}
 		Assert.assertTrue("i is: " + i, i > 50);
+		registerTestedVersion(AllPageTitles.class, bot.getVersion());
 	}
+	
+	
 }
 

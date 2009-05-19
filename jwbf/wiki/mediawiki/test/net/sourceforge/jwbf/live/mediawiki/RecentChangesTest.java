@@ -35,6 +35,7 @@ public class RecentChangesTest extends LiveTestFather {
 	public static void setUp() throws Exception {
 		PropertyConfigurator.configureAndWatch("test4log4j.properties",
 				60 * 1000);
+		addInitSupporterVersions(RecentchangeTitles.class);
 	}
 	
 	
@@ -180,8 +181,6 @@ public class RecentChangesTest extends LiveTestFather {
 		prepareWiki(bot);
 		RecentchangeTitles rc = new RecentchangeTitles(bot);
 		
-		assertTrue("test not documented for version: " + bot.getVersion() , rc.getSupportedVersions().contains(bot.getVersion()));
-		assertTrue("supported annotation is missing", rc.getSupportedVersions().contains(bot.getVersion()));
 		Iterator<String> is = rc.iterator();
 		int i = 0;
 	
@@ -237,6 +236,7 @@ public class RecentChangesTest extends LiveTestFather {
 		}
 		assertTrue("shuld be empty but is : " + vi, vi.isEmpty());
 		assertTrue("i is: " + i, i > COUNT - 1);
+		registerTestedVersion(RecentchangeTitles.class, bot.getVersion());
 	}
 	private final void change(MediaWikiBot bot) throws ActionException, ProcessException {
 		SimpleArticle a = new SimpleArticle("Change", "0");

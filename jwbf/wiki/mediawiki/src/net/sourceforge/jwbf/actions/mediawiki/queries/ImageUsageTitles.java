@@ -32,11 +32,10 @@ import java.util.regex.Pattern;
 
 import net.sourceforge.jwbf.actions.Get;
 import net.sourceforge.jwbf.actions.mediawiki.MediaWiki;
+import net.sourceforge.jwbf.actions.mediawiki.util.MWAction;
 import net.sourceforge.jwbf.actions.mediawiki.util.SupportedBy;
 import net.sourceforge.jwbf.actions.mediawiki.util.VersionException;
-import net.sourceforge.jwbf.actions.util.ActionException;
 import net.sourceforge.jwbf.actions.util.HttpAction;
-import net.sourceforge.jwbf.actions.util.ProcessException;
 import net.sourceforge.jwbf.bots.MediaWikiBot;
 
 import org.apache.log4j.Logger;
@@ -50,27 +49,15 @@ import org.apache.log4j.Logger;
  * 
  */
 @SupportedBy({ MW1_09, MW1_10, MW1_11, MW1_12, MW1_13, MW1_14 })
-public class ImageUsageTitles extends TitleQuery {
+public class ImageUsageTitles extends TitleQuery<String> {
 
 	/** constant value for the illimit-parameter. **/
 	private static final int LIMIT = 50;
 	
-	/**
-	 * Collection that will contain the result
-	 * (titles of articles using the image) 
-	 * after performing the action has finished.
-	 */
-	private Collection<String> titleCollection = new Vector<String>();
+	
 	
 
-	/**
-	 * information necessary to get the next api page.
-	 */
-	private String nextPageInfo = null;
-		
-	private Get msg;
 
-	private boolean hasMoreResults;
 
 	private boolean init = true;
 
@@ -90,7 +77,7 @@ public class ImageUsageTitles extends TitleQuery {
 	 * For the parameters, see {@link ImageUsageTitles#generateRequest(String, String, String)}
 	 */
 	public ImageUsageTitles(MediaWikiBot bot, String imageName, int... namespaces) throws VersionException {
-		super(bot.getVersion());
+		super(bot);
 		this.bot = bot;
 		this.imageName = imageName;
 		this.namespaces = namespaces;
@@ -140,21 +127,7 @@ public class ImageUsageTitles extends TitleQuery {
 
 	}
 	
-	/**
-	 * deals with the MediaWiki api's response by parsing the provided text.
-	 *
-	 * @param s   the answer to the most recently generated MediaWiki-request
-	 *
-	 * @return empty string
-	 */
-	public String processAllReturningText(final String s) throws ProcessException {
-		titleCollection.clear();
-		log.debug(s);
-		parseArticleTitles(s);
-		parseHasMore(s);
-		titleIterator = titleCollection.iterator();
-		return "";
-	}
+	
 
 	/**
 	 * gets the information about a follow-up page from a provided api response.
@@ -162,9 +135,9 @@ public class ImageUsageTitles extends TitleQuery {
 	 *	
 	 * @param s   text for parsing
 	 */
-	private void parseHasMore(final String s) {
+	protected String parseHasMore(final String s) {
 			
-		handler.parseHasMore(s);
+		return handler.parseHasMore(s);
 
 	}
 
@@ -173,43 +146,23 @@ public class ImageUsageTitles extends TitleQuery {
 	 *	
 	 * @param s   text for parsing
 	 */
-	private void parseArticleTitles(String s) {
+	protected Collection<String> parseArticleTitles(String s) {
 		
-		handler.parseArticleTitles(s);
+		return handler.parseArticleTitles(s);
 		
 	}
 	
-	
 
-	public HttpAction getNextMessage() {
-		return msg;
-	}
+	protected HttpAction prepareCollection() {
 
-	protected void prepareCollection() {
+		if (getNextPageInfo().length() <= 0) {
+			return generateRequest(imageName, MWAction
+					.createNsString(namespaces), null);
+		} else {
 
-		if (init  || (!titleIterator.hasNext() && hasMoreResults)) {
-			if (init) {
-				msg = generateRequest(imageName, createNsString(namespaces), null);
-			} else {
-				
-				msg = generateRequest(null, null, nextPageInfo);
-			}
-			init = false;
-			try {
-
-				bot.performAction(this);
-				setHasMoreMessages(true);
-				if (log.isDebugEnabled())
-					log.debug("preparing success");
-			} catch (ActionException e) {
-				e.printStackTrace();
-				setHasMoreMessages(false);
-			} catch (ProcessException e) {
-				e.printStackTrace();
-				setHasMoreMessages(false);
-			}
-
+			return generateRequest(null, null, getNextPageInfo());
 		}
+
 	}
 
 
@@ -233,9 +186,9 @@ public class ImageUsageTitles extends TitleQuery {
 		
 		public abstract Get generateContinueRequest(String imageName, String namespace,
 				String ilcontinue);
-		public abstract void parseHasMore(final String s);
+		public abstract String parseHasMore(final String s);
 		
-		public abstract void parseArticleTitles(String s);
+		public abstract Collection<String> parseArticleTitles(String s);
 	}
 	
 	private class DefaultHandler extends VersionHandler {
@@ -264,8 +217,8 @@ public class ImageUsageTitles extends TitleQuery {
 		}
 
 		@Override
-		public void parseArticleTitles(String s) {
-
+		public Collection<String> parseArticleTitles(String s) {
+			Collection<String> titleCollection = new Vector<String>();
 				
 			Pattern p = Pattern.compile(
 				"<iu pageid=\".*?\" ns=\".*?\" title=\"(.*?)\" />");
@@ -275,11 +228,11 @@ public class ImageUsageTitles extends TitleQuery {
 			while (m.find()) {
 				titleCollection.add(m.group(1));
 			}
-			
+			return titleCollection;
 		}
 
 		@Override
-		public void parseHasMore(String s) {
+		public String parseHasMore(String s) {
 			
 			Pattern p = Pattern.compile(
 				"<query-continue>.*?"
@@ -290,10 +243,9 @@ public class ImageUsageTitles extends TitleQuery {
 			Matcher m = p.matcher(s);
 
 			if (m.find()) {			
-				nextPageInfo = m.group(1);
-				hasMoreResults = true;
+				return m.group(1);
 			} else {
-				hasMoreResults = false;
+				return "";
 			}
 			
 		}
@@ -324,8 +276,8 @@ public class ImageUsageTitles extends TitleQuery {
 		}
 
 		@Override
-		public void parseArticleTitles(String s) {
-				
+		public Collection<String> parseArticleTitles(String s) {
+			Collection<String> titleCollection = new Vector<String>();
 			Pattern p = Pattern.compile(
 				"<il pageid=\".*?\" ns=\".*?\" title=\"(.*?)\" />");
 				
@@ -334,29 +286,25 @@ public class ImageUsageTitles extends TitleQuery {
 			while (m.find()) {
 				titleCollection.add(m.group(1));
 			}
-			
+			return titleCollection;
 		}
 
 		@Override
-		public void parseHasMore(String s) {
-			
-			Pattern p = Pattern.compile(
-				"<query-continue>.*?"
-				+ "<imagelinks *ilcontinue=\"([^\"]*)\" */>"
-				+ ".*?</query-continue>",
-				Pattern.DOTALL | Pattern.MULTILINE);
-				
+		public String parseHasMore(String s) {
+
+			Pattern p = Pattern.compile("<query-continue>.*?"
+					+ "<imagelinks *ilcontinue=\"([^\"]*)\" */>"
+					+ ".*?</query-continue>", Pattern.DOTALL
+					| Pattern.MULTILINE);
+
 			Matcher m = p.matcher(s);
 
-			if (m.find()) {			
-				nextPageInfo = m.group(1);
-				hasMoreResults = true;
+			if (m.find()) {
+				return m.group(1);
 			} else {
-				hasMoreResults = false;
+				return "";
 			}
-			
-		
-			
+
 		}
 		
 	}

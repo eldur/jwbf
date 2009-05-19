@@ -26,7 +26,8 @@ import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_12;
 import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_13;
 import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_14;
 
-import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -35,9 +36,7 @@ import net.sourceforge.jwbf.actions.mediawiki.MediaWiki;
 import net.sourceforge.jwbf.actions.mediawiki.util.MWAction;
 import net.sourceforge.jwbf.actions.mediawiki.util.SupportedBy;
 import net.sourceforge.jwbf.actions.mediawiki.util.VersionException;
-import net.sourceforge.jwbf.actions.util.ActionException;
 import net.sourceforge.jwbf.actions.util.HttpAction;
-import net.sourceforge.jwbf.actions.util.ProcessException;
 import net.sourceforge.jwbf.bots.MediaWikiBot;
 
 import org.apache.log4j.Logger;
@@ -50,7 +49,7 @@ import org.apache.log4j.Logger;
  * 
  */
 @SupportedBy({ MW1_09, MW1_10, MW1_11, MW1_12, MW1_13, MW1_14 })
-public class AllPageTitles extends TitleQuery {
+public class AllPageTitles extends TitleQuery<String> {
 	
 	private static final Logger LOG = Logger.getLogger(AllPageTitles.class);
 	
@@ -66,11 +65,6 @@ public class AllPageTitles extends TitleQuery {
 	private static final int LIMIT = 50;
 	
 
-	private boolean init = true;
-	
-	private int index = 0;
-	private ArrayList<String> knownResults = new ArrayList<String>();
-	
 	/**
 	 * Information given in the constructor, necessary for creating next action.
 	 */
@@ -80,14 +74,9 @@ public class AllPageTitles extends TitleQuery {
 	private boolean nonredirects;
 	private MediaWikiBot bot;
 
-	/** Information necessary to get the next api page. */
-	private String nextPageInfo = null;
-	
-	private HttpAction msg;
-
 	private String from;
 
-	private boolean hasMoreResults = true;
+
 	
 	/**
 	 * The public constructor. It will have an MediaWiki-request generated,
@@ -133,7 +122,9 @@ public class AllPageTitles extends TitleQuery {
 	 */
 	protected AllPageTitles(MediaWikiBot bot, String from, String prefix, boolean redirects,
 			boolean nonredirects, String namespaces) throws VersionException {
-		super(bot.getVersion());
+		super(bot);
+		
+		
 		this.bot = bot;
 
 		this.prefix = prefix;
@@ -141,7 +132,8 @@ public class AllPageTitles extends TitleQuery {
 		this.redirects = redirects;
 		this.nonredirects = nonredirects;
 		this.from = from;
-		msg = generateRequest(from, prefix, redirects, nonredirects, namespace);
+		HttpAction msg = generateRequest(from, prefix, redirects, nonredirects, namespace);
+	
 	}
 
 	/**
@@ -178,9 +170,10 @@ public class AllPageTitles extends TitleQuery {
 		} else {
 			apfilterredir = "nonredirects";
 		}
+	
 
 		String uS = "/api.php?action=query&list=allpages&"
-				+ ((from != null) ? ("&apfrom=" + MediaWiki.encode(from)) : "")
+				+ ((from != null && from.length() > 0) ? ("&apfrom=" + MediaWiki.encode(from)) : "")
 				+ ((prefix != null) ? ("&apprefix=" + MediaWiki.encode(prefix))
 						: "")
 				+ ((namespace != null && namespace.length() != 0) ? ("&apnamespace=" + namespace)
@@ -190,101 +183,62 @@ public class AllPageTitles extends TitleQuery {
 
 	}
 
-	
-
-	
 
 
-		
-		
-		public HttpAction getNextMessage() {
-			return msg;
-		}
-		/**
-		 * Deals with the MediaWiki api's response by parsing the provided text.
-		 * 
-		 * @param s
-		 *            the answer to the most recently generated MediaWiki-request
-		 * 
-		 * @return empty string
-		 */
-		public String processAllReturningText(final String s)
-				throws ProcessException {
-			if (LOG.isTraceEnabled()) {
-				LOG.trace("enter GetAllPagetitles.processAllReturningText(String)");
-			}
-			parseArticleTitles(s);
-			parseHasMore(s);
-			titleIterator = knownResults.iterator();
-			return "";
-		}
 		/**
 		 * Picks the article name from a MediaWiki api response.
 		 * 
 		 * @param s
 		 *            text for parsing
+		 * @return a
 		 */
-		private void parseArticleTitles(String s) {
+		protected Collection<String> parseArticleTitles(String s) {
 			if (LOG.isTraceEnabled()) {
 				LOG.trace("enter GetAllPagetitles.parseArticleTitles(String)");
 			}
+			Collection<String> c = new Vector<String>();
 			Matcher m = ARTICLE_TITLES_PATTERN.matcher(s);
 			while (m.find()) {
 				String title = MediaWiki.decode(m.group(1));
 				if (LOG.isDebugEnabled()) {
 					LOG.debug("Found article title: \"" + title + "\"");
 				}
-				knownResults.add(title);
+				c.add(title);
 			}
+			return c;
 		}
 		/**
 		 * Gets the information about a follow-up page from a provided api response.
 		 * If there is one, a new request is added to msgs by calling
-		 * generateRequest.
+		 * generateRequest. If no exists, the string is empty.
 		 * 
 		 * @param s
 		 *            text for parsing
+		 * @return the 
 		 */
-		private void parseHasMore(final String s) {
+		protected String parseHasMore(final String s) {
 			if (LOG.isTraceEnabled()) {
 				LOG.trace("enter GetAllPagetitles.parseHasMore(String)");
 			}
 			Matcher m = HAS_MORE_PATTERN.matcher(s);
 			if (m.find()) {
-				nextPageInfo = m.group(1);
-				hasMoreResults = true;
+				return  m.group(1);
 			} else {
-				nextPageInfo = null;
-				hasMoreResults  = false;
+				return "";
 			}
 		}
 	
-		
-		
+		/**
+		 * {@inheritDoc}
+		 */
+		protected HttpAction prepareCollection() {
 	
-		@Override
-		protected void prepareCollection() {
-			
-			if (init || (!titleIterator.hasNext() && hasMoreResults)) {
-				init = false;
-				try {
-					setHasMoreMessages(true);
-					msg = generateRequest(nextPageInfo, prefix, redirects, nonredirects, namespace);
-					
-					bot.performAction(this);
-
-					
-
-				} catch (ActionException ae) {
-					ae.printStackTrace();
-	
-				} catch (ProcessException e) {
-					e.printStackTrace();
-	
-				}
-			}
+			return generateRequest(getNextPageInfo(), prefix, redirects, nonredirects, namespace);
 			
 		}
+		/**
+		 * {@inheritDoc}
+		 */
 		@Override
 		protected Object clone() throws CloneNotSupportedException {
 			try {

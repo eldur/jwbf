@@ -25,6 +25,7 @@ import static org.junit.Assert.assertTrue;
 import java.net.MalformedURLException;
 
 import net.sourceforge.jwbf.LiveTestFather;
+import net.sourceforge.jwbf.actions.mediawiki.login.PostLoginOld;
 import net.sourceforge.jwbf.actions.util.ActionException;
 import net.sourceforge.jwbf.bots.MediaWikiAdapterBot;
 
@@ -101,6 +102,7 @@ public class LoginTest extends LiveTestFather {
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_09_url"));
 		bot.login(getValue("wikiMW1_09_user"), getValue("wikiMW1_09_pass"));
 		assertEquals(true, bot.isLoggedIn());
+		registerTestedVersion(PostLoginOld.class, bot.getVersion());
 	}
 	
 	/**

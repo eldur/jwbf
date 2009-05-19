@@ -27,6 +27,7 @@ public class LogEventsTest extends LiveTestFather {
 	public static void setUp() throws Exception {
 		PropertyConfigurator.configureAndWatch("test4log4j.properties",
 				60 * 1000);
+		addInitSupporterVersions(LogEvents.class);
 
 	}
 
@@ -156,5 +157,6 @@ public class LogEventsTest extends LiveTestFather {
 			}
 		}
 		assertTrue("should be greater then 50 but is " + i, i > LIMIT);
+		registerTestedVersion(LogEvents.class, bot.getVersion());
 	}
 }
