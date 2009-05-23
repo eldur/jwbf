@@ -28,7 +28,6 @@ import net.sourceforge.jwbf.actions.Post;
 import net.sourceforge.jwbf.actions.mediawiki.MediaWiki;
 import net.sourceforge.jwbf.actions.mediawiki.util.MWAction;
 import net.sourceforge.jwbf.actions.mediawiki.util.SupportedBy;
-import net.sourceforge.jwbf.actions.mediawiki.util.VersionException;
 import net.sourceforge.jwbf.actions.util.CookieException;
 import net.sourceforge.jwbf.actions.util.HttpAction;
 import net.sourceforge.jwbf.contentRep.mediawiki.LoginData;
@@ -54,9 +53,11 @@ public class PostLoginOld extends MWAction implements CookieValidateable {
 	 *            the
 	 * @param pw
 	 *            password
+	 * @param domain a
+	 * @param login a
 	 */
 	public PostLoginOld(final String username, final String pw,
-			final String domain, LoginData login) throws VersionException {
+			final String domain, LoginData login) {
 		super();
 		this.username = username;
 		this.login = login;
@@ -102,10 +103,10 @@ public class PostLoginOld extends MWAction implements CookieValidateable {
 		compare = MediaWiki.encode(username);
 
 		if (cs == null) {
-			throw new CookieException("Cookiearray is null.");
+			throw new CookieException("Cookiearray is null.", getClass());
 		}
 		if (cs.isEmpty()) {
-			throw new CookieException("No cookies found.");
+			throw new CookieException("No cookies found.", getClass());
 		} else {
 			
 			if (cs.containsValue(compare)) {
@@ -114,14 +115,16 @@ public class PostLoginOld extends MWAction implements CookieValidateable {
 				return;
 			} else {
 				throw new CookieException(
-						"Login failed: Check Username and Password.");
+						"Login failed: Check Username and Password.", getClass());
 			}
 			
 				
 			
 		}
 	}
-
+	/**
+	 * {@inheritDoc}
+	 */
 	public HttpAction getNextMessage() {
 		return msg;
 	}

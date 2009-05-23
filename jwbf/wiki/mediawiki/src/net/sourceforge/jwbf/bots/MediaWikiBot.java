@@ -73,7 +73,7 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
 	private boolean useEditApi = true;
 	
 	/**
-	 * These chars are not allowed in article names
+	 * These chars are not allowed in article names.
 	 */
 	public static final char [] INVALID_LABEL_CHARS = "[]{}<>|".toCharArray();
 	
@@ -107,10 +107,9 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
 	 * 
 	 * @param url wikihosturl like "http://www.mediawiki.org/wiki/"
 	 * @param testHostReachable if true, test if host reachable
-	 * @throws UnknownHostException a
 	 * @throws IOException a
 	 */
-	public MediaWikiBot(URL url, boolean testHostReachable) throws UnknownHostException, IOException {
+	public MediaWikiBot(URL url, boolean testHostReachable) throws IOException {
 		super(url);
 		if (testHostReachable) {
 			try {
@@ -158,9 +157,9 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
 			loginChangeUserInfo = true;
 			loginChangeVersion = true;
 		} catch (ProcessException e) {
-			throw new ActionException(e.getLocalizedMessage());
+			throw new ActionException(e.getLocalizedMessage(), getClass());
 		} catch (RuntimeException e) {
-			throw new ActionException(e.getMessage());
+			throw new ActionException(e.getMessage(), getClass());
 		}
 	
 	}
@@ -202,7 +201,9 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
 			return new Article(this, readData(name, properties));
 		}
 	}
-	
+	/**
+	 * {@inheritDoc}
+	 */
 	public synchronized SimpleArticle readData(final String name, final int properties)
 			throws ActionException, ProcessException {
 			
@@ -225,7 +226,10 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
 			return ac.getArticle();
 		
 	}
-	
+	/**
+	 * 
+	 * @param ch a
+	 */
 	public void setCacheHandler(CacheHandler ch) {
 		this.store = ch;
 	}
@@ -259,13 +263,13 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
 	public synchronized void writeContent(final ContentAccessable a)
 			throws ActionException, ProcessException {
 		if (!isLoggedIn()) {
-			throw new ActionException("Please login first");
+			throw new ActionException("Please login first", getClass());
 		}
 
 		for (char invChar : INVALID_LABEL_CHARS) {
 			if (a.getLabel().contains(invChar + ""))
 				throw new ActionException("Invalid character in label\"" 
-						+ a.getLabel() + "\" : \"" + invChar + "\"");
+						+ a.getLabel() + "\" : \"" + invChar + "\"", getClass());
 		}
 		if (store != null) {
 			String label = a.getLabel();
@@ -285,7 +289,7 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
 			
 		performAction(new PostModifyContent(this, a));
 		
-		if (a.getText().trim().length() < 1 ) 
+		if (a.getText().trim().length() < 1) 
 			throw new RuntimeException("Content is empty, still written");
 	}
 	
@@ -334,12 +338,17 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
 	
 	
 	/**
-	 * @see PostDelete
+	 * @param title to delete
+	 * @throws ActionException if
+	 * @throws ProcessException if
 	 */
 	public void postDelete(String title) throws ActionException, ProcessException {
 		
-		performAction(new PostDelete(title, getSiteinfo(), getUserinfo()));
+		performAction(new PostDelete(this, title));
 	}
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public synchronized String performAction(ContentProcessable a)
 			throws ActionException, ProcessException {
@@ -352,7 +361,7 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
 	 * @see #getSiteinfo()
 	 */
 	public final Version getVersion() throws RuntimeException {
-		if (version == null || loginChangeVersion ) {
+		if (version == null || loginChangeVersion) {
 			
 
 			try {
@@ -407,11 +416,11 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
 		this.useEditApi = useEditApi;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public final String getWikiType() {
 		return MediaWiki.class.getName();
 	}
-
-
-
 
 }

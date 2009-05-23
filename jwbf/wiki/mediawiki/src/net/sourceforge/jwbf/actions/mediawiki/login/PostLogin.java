@@ -31,7 +31,6 @@ import java.io.StringReader;
 import net.sourceforge.jwbf.actions.Post;
 import net.sourceforge.jwbf.actions.mediawiki.util.MWAction;
 import net.sourceforge.jwbf.actions.mediawiki.util.SupportedBy;
-import net.sourceforge.jwbf.actions.mediawiki.util.VersionException;
 import net.sourceforge.jwbf.actions.util.HttpAction;
 import net.sourceforge.jwbf.actions.util.ProcessException;
 import net.sourceforge.jwbf.contentRep.mediawiki.LoginData;
@@ -64,8 +63,9 @@ public class PostLogin extends MWAction {
 	 * 
 	 * @param username the
 	 * @param pw password
+	 * @param login a
 	 */
-	public PostLogin(final String username, final String pw, LoginData login) throws VersionException {
+	public PostLogin(final String username, final String pw, LoginData login) {
 		super();
 		this.login = login;
 		Post pm = new Post(
@@ -79,8 +79,7 @@ public class PostLogin extends MWAction {
 	}
 
 	/**
-	 * @param s incomming
-	 * @return after testing
+	 * {@inheritDoc}
 	 */
 	public String processAllReturningText(final String s) throws ProcessException {
 		SAXBuilder builder = new SAXBuilder();
@@ -97,18 +96,23 @@ public class PostLogin extends MWAction {
 			log.error(e.getClass().getName() + e.getLocalizedMessage());
 		} catch (NullPointerException e) {
 			log.error(e.getClass().getName() + e.getLocalizedMessage());
-			throw new ProcessException("No regular content was found, check your api\n::" + s );
+			throw new ProcessException("No regular content was found, check your api\n::" + s, getClass());
 		} catch (Exception e) {
 			log.error(e.getClass().getName() + e.getLocalizedMessage());
-			throw new ProcessException(e.getLocalizedMessage());
+			throw new ProcessException(e.getLocalizedMessage(), getClass());
 		}
 
 		
 		return s;
-	} 
-	private void findContent(final Element api) throws ProcessException, NullPointerException {
+	}
+	/**
+	 * 
+	 * @param startElement the, where the search begins
+	 * @throws ProcessException if problems with login
+	 */
+	private void findContent(final Element startElement) throws ProcessException {
 		
-		Element loginEl = api.getChild("login");
+		Element loginEl = startElement.getChild("login");
 		String result = loginEl.getAttributeValue("result");
 		if (result.equalsIgnoreCase(success)) {
 			try {
@@ -119,13 +123,15 @@ public class PostLogin extends MWAction {
 				e.printStackTrace();
 			}
 		} else if (result.equalsIgnoreCase(wrongPass)) {
-			throw new ProcessException("Wrong Password");
+			throw new ProcessException("Wrong Password", getClass());
 		} else if (result.equalsIgnoreCase(notExists)) {
-			throw new ProcessException("No sutch User");
+			throw new ProcessException("No sutch User", getClass());
 		} 
 		
 	}
-
+	/**
+	 * {@inheritDoc}
+	 */
 	public HttpAction getNextMessage() {
 		return msg;
 	}

@@ -32,28 +32,37 @@ public class ActionException extends JwbfException {
 	 */
 	private static final long serialVersionUID = 1L;
 
-
 	/**
 	 * 
-	 * @param arg0 exception text
+	 * @param arg0 a
+	 * @param clazz a
 	 */
-	public ActionException(final String arg0) {
-		super(arg0);
+	public ActionException(String arg0, Class< ? > clazz) {
+		super(arg0, clazz);
 	}
 	/**
-	 * 
-	 * @param arg0 sub
+	 * @deprecated use constructor with class parameter
+	 * @param arg0 a
+	 */
+	public ActionException(String arg0) {
+		super(arg0);
+
+	}
+	/**
+	 * @param arg0 a
+	 * @param clazz a
+	 */
+	public ActionException(Throwable arg0, Class< ? > clazz) {
+		super(arg0, clazz);
+	
+	}
+
+	/**
+	 * @deprecated use constructor with class parameter
+	 * @param arg0 a
 	 */
 	public ActionException(Throwable arg0) {
 		super(arg0);
-	}
-	/**
-	 * 
-	 * @param arg0 text
-	 * @param arg1 sub
-	 */
-	public ActionException(final String arg0, Throwable arg1) {
-		super(arg0, arg1);
-	}
 
+	}
 }

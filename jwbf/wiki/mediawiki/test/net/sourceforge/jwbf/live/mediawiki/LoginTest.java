@@ -97,7 +97,7 @@ public class LoginTest extends LiveTestFather {
 	 * @throws Exception a
 	 */
 	@Test
-	public final void loginWikiMW1_09() throws Exception {
+	public final void loginWikiMW1x09() throws Exception {
 		assertTrue("shuld end with .php" , getValue("wikiMW1_09_url").endsWith(".php"));
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_09_url"));
 		bot.login(getValue("wikiMW1_09_user"), getValue("wikiMW1_09_pass"));
@@ -106,22 +106,21 @@ public class LoginTest extends LiveTestFather {
 	}
 	
 	/**
-	 * Test FAIL login on english Mediawiki. 
+	 * Test FAIL login on Mediawiki. 
 	 * @throws Exception a
 	 */
-	@Test(expected = ActionException.class) 
-	public final void loginWikiMW1_09Fail() throws Exception {
-
-			bot = new MediaWikiAdapterBot(getValue("wikiMW1_09_url"));
-			bot.login("Klhjfd", "4sdf");
+	@Test(expected = ActionException.class)
+	public final void loginWikiMW1x09Fail() throws Exception {
+		bot = new MediaWikiAdapterBot(getValue("wikiMW1_09_url"));
+		bot.login("Klhjfd", "4sdf");
 
 	}
 	/**
-	 * Test login where the wiki is in a subfolder, like www.abc.com/wiki
+	 * Test login where the wiki is in a subfolder, like www.abc.com/wiki .
 	 * @throws Exception a
 	 */
 	@Test(expected = MalformedURLException.class) 
-	public final void loginWikiMW1_09UrlformatsFail() throws Exception {
+	public final void loginWikiMW1x09UrlformatsFail() throws Exception {
 		
 		String url = getValue("wikiMW1_09_url");
 		int lastSlash = url.lastIndexOf("/");
@@ -141,7 +140,7 @@ public class LoginTest extends LiveTestFather {
 	 * @throws Exception a
 	 */
 	@Test
-	public final void loginWikiMW1_09Urlformats() throws Exception {
+	public final void loginWikiMW1x09Urlformats() throws Exception {
 		
 
 		String url = getValue("wikiMW1_09_url");
@@ -155,7 +154,8 @@ public class LoginTest extends LiveTestFather {
 	
 	
 	/**
-	 * Test invalid installation of MW
+	 * Test invalid installation of MW.
+	 * @throws Exception a
 	 */
 	@Test(expected = ActionException.class)
 	public final void installationDefunct() throws Exception {
@@ -170,7 +170,8 @@ public class LoginTest extends LiveTestFather {
 	}
 	
 	/**
-	 * Test invalid installation of MW
+	 * Test invalid installation of MW.
+	 * @throws Exception a
 	 */
 	@Test(expected = ActionException.class)
 	public final void conncetionProblem() throws Exception {

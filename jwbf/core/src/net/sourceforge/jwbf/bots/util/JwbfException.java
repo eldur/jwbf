@@ -36,47 +36,73 @@ public class JwbfException extends Exception {
 	 * 
 	 */
 	private static final long serialVersionUID = -2456904376052276104L;
-
+	private Class < ? > clazz = Object.class;
 
 	/**
 	 * @param arg0 a
+	 * @param clazz where exception was thrown
 	 */
-	public JwbfException(String arg0) {
+	public JwbfException(String arg0, Class < ? > clazz) {
 		super(arg0);
+		this.clazz = clazz;
 	
 	}
-
+	
 	/**
+	 * Design for extension, use with {@link #setExceptionPackageClass(Class)}.
 	 * @param arg0 a
+	 * 
 	 */
-	public JwbfException(Throwable arg0) {
+	protected JwbfException(String arg0) {
 		super(arg0);
 	}
 
 	/**
 	 * @param arg0 a
-	 * @param arg1 a
+	 * @param clazz where exception was thrown
 	 */
-	public JwbfException(String arg0, Throwable arg1) {
-		super(arg0, arg1);
+	public JwbfException(Throwable arg0, Class < ? > clazz) {
+		super(arg0);
+		this.clazz = clazz;
 	}
 
-	
+	/**
+	 * Design for extension, use with {@link #setExceptionPackageClass(Class)}.
+	 * @param arg0 a
+	 * 
+	 */
+	protected JwbfException(Throwable arg0) {
+		super(arg0);
+	}
+	/**
+	 * 
+	 * @param clazz the
+	 */
+	protected void setExceptionPackageClass(Class < ? > clazz) {
+		this.clazz = clazz;
+	}
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void printStackTrace(PrintWriter arg0) {
-		arg0.println("JWBF.version:" + JWBF.getVersion());
+		arg0.println(JWBF.getArtifactId(clazz) + "-" + JWBF.getVersion(clazz));
 		super.printStackTrace(arg0);
 	}
-
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void printStackTrace() {
-		System.out.println("JWBF.version:" + JWBF.getVersion());
+		System.out.println(JWBF.getArtifactId(clazz) + "-" + JWBF.getVersion(clazz));
 		super.printStackTrace();
 	}
-
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void printStackTrace(PrintStream s) {
-		s.println("JWBF.version:" + JWBF.getVersion());
+		s.println(JWBF.getArtifactId(clazz) + "-" + JWBF.getVersion(clazz));
 		super.printStackTrace(s);
 	}
 

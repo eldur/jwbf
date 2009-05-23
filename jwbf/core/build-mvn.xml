@@ -6,10 +6,10 @@
 		<echo>Build Dir: ${target}</echo>
 		<echo>Build number is: ${version}</echo>
 		<antcall target="releaseWithSrc" />
-		<antcall target="releaseBin" />
-		<antcall target="releaseSimpleJar" />
+		<!-- <antcall target="releaseBin" />
+		<antcall target="releaseSimpleJar" /> -->
 	</target>
-	<target name="clean">
+	<target name="clean" depends="buildnumber">
 		<property name="release" value="${target}/release" />
 		<delete failonerror="false" dir="${release}" />
 		<mkdir dir="${release}" />
@@ -18,10 +18,10 @@
 
 		<echo message="package SRC" />
 		<mkdir dir="${release}" />
-		<copy todir="${release}/bin" >
+		<copy todir="${release}/lib" >
 
 			<fileset  dir="${target}">
-				<include name="jwbf*.jar"/>
+				<include name="${artifactId}*.jar"/>
 			</fileset>
 
 		</copy>
@@ -45,7 +45,7 @@
 			<fileset dir="${release}/lib" excludes="*.jar"  />
 		</delete>
 
-		<tar tarfile="${target}/jwbf-${version}-src.tar.gz" basedir="${release}" compression="gzip" excludes="*.tar.gz" />
+		<tar tarfile="${target}/${artifactId}-${version}-${svn.version}-src.tar.gz" basedir="${release}" compression="gzip" excludes="*.tar.gz" />
 		<delete includeemptydirs="true">
 			<fileset dir="${release}" includes="*/**" excludes="*.tar.gz, junit" />
 		</delete>
@@ -81,7 +81,7 @@
 
 
 
-		<tar tarfile="${target}/jwbf-${version}-bin.tar.gz" basedir="${release}" compression="gzip" excludes="*.tar.gz" />
+		<tar tarfile="${target}/${artifactId}-${version}-${svn.version}-bin.tar.gz" basedir="${release}" compression="gzip" excludes="*.tar.gz" />
 		<delete includeemptydirs="true">
 			<fileset dir="${release}" includes="*/**" excludes="*.tar.gz, junit" />
 		</delete>
@@ -107,36 +107,39 @@
 
 
 
-		<tar tarfile="${target}/jwbf-${version}-binSimple.tar.gz" basedir="${release}" compression="gzip" excludes="*.tar.gz" />
+		<tar tarfile="${target}/${artifactId}-${version}-${svn.version}-binSimple.tar.gz" basedir="${release}" compression="gzip" excludes="*.tar.gz" />
 		<delete includeemptydirs="true">
 			<fileset dir="${release}" includes="*/**" excludes="*.tar.gz, junit" />
 		</delete>
 	</target>
-	
-	<target name="manifest" description="Sets the buildversion for the current build">
-		<property name="ant.regexp.regexpimpl"
-		value="org.apache.tools.ant.util.regexp.JakartaOroRegexp" />
-	
-		<exec executable="svnversion" outputproperty="version.svn" failifexecutionfails="no">
-				<arg line="-n -c" />
-				<redirector>
-					<outputfilterchain>
-						<tokenfilter>
-							<replaceregex pattern="^([0-9]*:)?" replace="" flags="g" />
-						</tokenfilter>
-						<tokenfilter>
-							<replaceregex pattern="[MS].*$" replace="" flags="g" />
-						</tokenfilter>
-					</outputfilterchain>
-				</redirector>
-			</exec>
-			<echo>Found svn version: ${version.svn}</echo>
-		<condition property="build.number" value="${version}-${version.svn}" else="${version.release}-unknownBuild">
-					<matches string="${version.svn}" pattern="^[1-9]" />
-				</condition>
-				<echo>Build number is: ${build.number}</echo>
+
+	<target name="buildnumber">
+		<property name="ant.regexp.regexpimpl" value="org.apache.tools.ant.util.regexp.JakartaOroRegexp" />
+
+		<exec executable="svnversion" outputproperty="svn.version" failifexecutionfails="no">
+			<arg line="-n -c" />
+			<redirector>
+				<outputfilterchain>
+					<tokenfilter>
+						<replaceregex pattern="^([0-9]*:)?" replace="" flags="g" />
+					</tokenfilter>
+					<tokenfilter>
+						<replaceregex pattern="[MS].*$" replace="" flags="g" />
+					</tokenfilter>
+				</outputfilterchain>
+			</redirector>
+		</exec>
+		<echo>Found svn version: ${svn.version}</echo>
+		<condition property="build.number" value="${version}-${svn.version}" else="${version.release}-unknownBuild">
+			<matches string="${svn.version}" pattern="^[1-9]" />
+		</condition>
+		<echo>Build number is: ${build.number}</echo>
+	</target>
+
+	<target name="manifest" depends="buildnumber" description="Sets the buildversion for the current build">
 		<manifest file="${target}/MANIFEST.MF">
+			<attribute name="Implementation-Title" value="${artifactId}"/>
 			<attribute name="Implementation-Version" value="${build.number}"/>
 		</manifest>
-		</target>
+	</target>
 </project>

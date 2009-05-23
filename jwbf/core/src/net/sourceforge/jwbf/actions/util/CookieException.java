@@ -31,29 +31,24 @@ public class CookieException extends ActionException {
 	 */
 	private static final long serialVersionUID = 1L;
 
-
 	/**
 	 * 
 	 * @param arg0 exception text
+	 * @param clazz a
 	 */
-	public CookieException(String arg0) {
-		super(arg0);
+	
+	public CookieException(String arg0, Class< ? > clazz) {
+		super(arg0, clazz);
 	}
 
 	/**
-	 * 
-	 * @param arg0 sub
+	 * @deprecated use constructor with class parameter
+	 * @param arg0 exception text
 	 */
-	public CookieException(Throwable arg0) {
-		super(arg0);
+	
+	public CookieException(String arg0) {
+		super(arg0, CookieException.class);
 	}
-	/**
-	 * 
-	 * @param arg0 exception text 
-	 * @param arg1 sub
-	 */
-	public CookieException(String arg0, Throwable arg1) {
-		super(arg0, arg1);
-	}
+
 
 }

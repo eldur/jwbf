@@ -38,15 +38,19 @@ public abstract class MWAction implements ContentProcessable {
 	private Version [] v;
 	private static Logger log = Logger.getLogger(MWAction.class);
 	private boolean hasMore = true;
-	
+	/**
+	 * 
+	 * @return true if and changes state to false
+	 */
 	public boolean hasMoreMessages() {
 		final boolean b = hasMore;
 		hasMore = false;
-//		if(log.isDebugEnabled())
-//		log.debug("hasmore = " + b);
 		return b;
 	}
-	
+	/**
+	 * 
+	 * @param b if so
+	 */
 	public void setHasMoreMessages(boolean b) {
 		hasMore = b;
 	}
@@ -56,10 +60,14 @@ public abstract class MWAction implements ContentProcessable {
 	 * 
 	 * @deprecated use {@link #MWAction(Version)} instead
 	 */
-	protected MWAction() throws VersionException {
+	protected MWAction() {
 
 	}
-	
+	/**
+	 * 
+	 * @param v of the bot
+	 * @throws VersionException if action is incompatible
+	 */
 	protected MWAction(Version v) throws VersionException {
 		checkVersionNewerEquals(v);
 		
@@ -68,10 +76,11 @@ public abstract class MWAction implements ContentProcessable {
 
 
 	/**
+	 * Deals with the MediaWiki API's response by parsing the provided text.
 	 * @param s
-	 *            the returning text
+	 *            the answer to the most recently generated MediaWiki API request
 	 * @param hm
-	 *            the method object
+	 *            the requestor message
 	 * @return the returning text
 	 * @throws ProcessException on processing problems
 	 * 
@@ -90,8 +99,11 @@ public abstract class MWAction implements ContentProcessable {
 	public String processAllReturningText(final String s) throws ProcessException {
 		return s;
 	}
-	
-	private final Version [] getVersionArray() {
+	/**
+	 * 
+	 * @return a
+	 */
+	private Version [] getVersionArray() {
 		
 		
 		if (v != null)
@@ -128,7 +140,11 @@ public abstract class MWAction implements ContentProcessable {
 			return findSupportedVersions(clazz.getSuperclass());
 		}
 	}
-	
+	/**
+	 * 
+	 * @param v a
+	 * @throws VersionException if version is not supported
+	 */
 	protected void checkVersionNewerEquals(Version v) throws VersionException {
 		if (getSupportedVersions().contains(v))
 			return;

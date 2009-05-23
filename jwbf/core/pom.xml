@@ -89,6 +89,7 @@
                 <property name="plugin_classpath" refid="maven.plugin.classpath"/>
 				<property name="target" value="${project.build.directory}"/>
 				<property name="version" value="${project.version}"/>
+				<property name="artifactId" value="${project.artifactId}"/>
 
               <ant antfile="${basedir}/build-mvn.xml" inheritRefs="true">
                   <target name="package"/>
@@ -115,6 +116,7 @@
                 <property name="plugin_classpath" refid="maven.plugin.classpath"/>
 				<property name="target" value="${project.build.directory}"/>
 				<property name="version" value="${project.version}"/>
+				<property name="artifactId" value="${project.artifactId}"/>
 
               <ant antfile="${basedir}/build-mvn.xml" inheritRefs="true">
                   <target name="manifest"/>

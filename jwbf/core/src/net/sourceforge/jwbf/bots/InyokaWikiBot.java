@@ -56,21 +56,21 @@ public class InyokaWikiBot extends HttpBot implements WikiBot {
 	}
 	
 	public void login(String user, String passwd) throws ActionException {
-		throw new ActionException("Login is not supported");
+		throw new ActionException("Login is not supported", getClass());
 		
 	}
 
 
 	public void writeContent(ContentAccessable sa) throws ActionException,
 			ProcessException {
-		throw new ActionException("Writing is not supported");
+		throw new ActionException("Writing is not supported", getClass());
 		
 	}
 
 
 	public void postDelete(String title) throws ActionException,
 			ProcessException {
-		throw new ActionException("Deleting is not supported");
+		throw new ActionException("Deleting is not supported", getClass());
 		
 	}
 

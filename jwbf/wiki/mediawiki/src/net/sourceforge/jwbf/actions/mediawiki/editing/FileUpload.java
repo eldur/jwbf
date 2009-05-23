@@ -44,7 +44,7 @@ import org.apache.log4j.Logger;
 
 /**
  * <p>
- * To allow your bot to upload media in your MediaWiki add at least the following line
+ * To allow your bot to upload media in your MediaWiki. Add at least the following line
  * to your MediaWiki's LocalSettings.php:<br>
  *
  * <pre>
@@ -78,11 +78,11 @@ public class FileUpload extends MWAction {
 	public FileUpload(final SimpleFile a, MediaWikiBot bot) throws ActionException, VersionException {
 		super(bot.getVersion());
 		if (!a.getFile().isFile() || !a.getFile().canRead()) {
-			throw new ActionException("no such file " + a.getFile());
+			throw new ActionException("no such file " + a.getFile(), getClass());
 		}
 		
 		if (!bot.isLoggedIn()) {
-			throw new ActionException("Please login first");
+			throw new ActionException("Please login first", getClass());
 		}
 
 		
@@ -94,7 +94,9 @@ public class FileUpload extends MWAction {
 		g = new Get(uS);
 		
 	}
-	
+	/**
+	 * {@inheritDoc}
+	 */
 	public HttpAction getNextMessage() {
 		if (first) {
 			first = false;
@@ -156,12 +158,17 @@ public class FileUpload extends MWAction {
 		}
 		return msg;
 	}
-	
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public boolean hasMoreMessages() {
 		return first || second;
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public String processAllReturningText(String s) throws ProcessException {
 		
@@ -169,7 +176,7 @@ public class FileUpload extends MWAction {
 //			System.out.println(s);
 //			TODO nicer error handling 
 			LOG.error("Upload failed");
-			throw new ProcessException("Upload failed");
+			throw new ProcessException("Upload failed", getClass());
 		}
 		return "";
 	}

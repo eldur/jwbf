@@ -83,7 +83,7 @@ public class HttpActionClient {
 		}
 
 		client.getParams().setParameter("http.useragent",
-				"JWBF " + JWBF.getVersion());
+				"JWBF " + JWBF.getVersion(getClass()));
 		client.getHostConfiguration().setHost(url.getHost(), url.getPort(),
 				url.getProtocol());
 		this.client = client;
@@ -178,9 +178,9 @@ public class HttpActionClient {
 				
 
 			} catch (IOException e1) {
-				throw new ActionException(e1);
+				throw new ActionException(e1, getClass());
 			} catch (IllegalArgumentException e2) {
-				throw new ActionException(e2);
+				throw new ActionException(e2, getClass());
 			}
 
 		}

@@ -42,8 +42,18 @@ public class ProcessException extends JwbfException {
 	/**
 	 * 
 	 * @param msg exception text
+	 * @param clazz a
+	 */
+	public ProcessException(final String msg, Class < ? > clazz) {
+		super(msg, clazz);
+	}
+	
+	/**
+	 * 
+	 * @param msg exception text
+	 * @deprecated use constructor with class param
 	 */
 	public ProcessException(final String msg) {
-		super(msg);
+		super(msg, ProcessException.class);
 	}
 }

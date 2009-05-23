@@ -9,7 +9,11 @@ import net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version;
 
 import org.apache.log4j.Logger;
 
-
+/**
+ * @author Thomas Stock
+ * TODO join with related action
+ *
+ */
 public class Siteinfo {
 
 	private String mainpage = "";
@@ -73,7 +77,7 @@ public class Siteinfo {
 			
 		}
 		
-			log.info("\nVersion is UNKNOWN for JWBF (" + JWBF.getVersion() + ") : \n\t" + getGenerator() 
+			log.info("\nVersion is UNKNOWN for JWBF (" + JWBF.getVersion(getClass()) + ") : \n\t" + getGenerator() 
 					+ "\n\tUsing settings for actual Wikipedia development version");
 			return Version.UNKNOWN;
 		

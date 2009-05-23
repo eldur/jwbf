@@ -42,7 +42,11 @@ import org.apache.log4j.PropertyConfigurator;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
+/**
+ * 
+ * @author Thomas Stock
+ *
+ */
 public class UploadAndImageInfoTest extends LiveTestFather {
 
 	
@@ -65,7 +69,7 @@ public class UploadAndImageInfoTest extends LiveTestFather {
 	 * @throws Exception a
 	 */
 	@Test(expected = VersionException.class)
-	public final void uploadMW1_09Fail() throws Exception {
+	public final void uploadMW1x09Fail() throws Exception {
 		
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_09_url"));
 		bot.login(getValue("wikiMW1_09_user"),
@@ -79,7 +83,7 @@ public class UploadAndImageInfoTest extends LiveTestFather {
 	 * @throws Exception a
 	 */
 	@Test(expected = VersionException.class)
-	public final void uploadMW1_10Fail() throws Exception {
+	public final void uploadMW1x10Fail() throws Exception {
 		
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_10_url"));
 		bot.login(getValue("wikiMW1_10_user"),
@@ -97,7 +101,7 @@ public class UploadAndImageInfoTest extends LiveTestFather {
 	 * @throws Exception a
 	 */
 	@Test
-	public final void uploadMW1_11() throws Exception {
+	public final void uploadMW1x11() throws Exception {
 		
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_11_url"));
 		bot.login(getValue("wikiMW1_11_user"),
@@ -110,7 +114,7 @@ public class UploadAndImageInfoTest extends LiveTestFather {
 	 * @throws Exception a
 	 */
 	@Test
-	public final void uploadMW1_12() throws Exception {
+	public final void uploadMW1x12() throws Exception {
 		
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_12_url"));
 		bot.login(getValue("wikiMW1_12_user"),
@@ -122,7 +126,7 @@ public class UploadAndImageInfoTest extends LiveTestFather {
 	 * @throws Exception a
 	 */
 	@Test
-	public final void uploadMW1_13() throws Exception {
+	public final void uploadMW1x13() throws Exception {
 		
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_13_url"));
 		bot.login(getValue("wikiMW1_13_user"),
@@ -135,14 +139,20 @@ public class UploadAndImageInfoTest extends LiveTestFather {
 	 * @throws Exception a
 	 */
 	@Test
-	public final void uploadMW1_14() throws Exception {
+	public final void uploadMW1x14() throws Exception {
 		
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_14_url"));
-		bot.login(getValue("wikiMW1_14_user"),
-				getValue("wikiMW1_14_pass"));
+//		bot.login(getValue("wikiMW1_14_user"),
+//				getValue("wikiMW1_14_pass"));
 		generalUploadImageInfoTest(bot, Version.MW1_14);
 		
 	}
+	/**
+	 * 
+	 * @param bot a
+	 * @param v a
+	 * @throws Exception a
+	 */
 	protected final void generalUploadImageInfoTest(MediaWikiAdapterBot bot, Version v) throws Exception {
 		assertEquals(bot.getVersion(), v);
 		assertTrue("File (" + getValue("validFile") 
@@ -159,7 +169,12 @@ public class UploadAndImageInfoTest extends LiveTestFather {
 		assertFile(url, file);
 		registerTestedVersion(FileUpload.class, bot.getVersion());
 	}
-	
+	/**
+	 * 
+	 * @param url a
+	 * @param file a
+	 * @throws Exception a
+	 */
 	protected final void assertFile(URL url, File file) throws Exception {
 		File temp = new File("temp.file");
 		download(url.toExternalForm(), temp);
@@ -167,7 +182,11 @@ public class UploadAndImageInfoTest extends LiveTestFather {
 
 		temp.delete();
 	}
-
+	/**
+	 * 
+	 * @param address a
+	 * @param localFileName a
+	 */
 	protected static final void download(String address, File localFileName) {
 		OutputStream out = null;
 		URLConnection conn = null;
@@ -197,12 +216,18 @@ public class UploadAndImageInfoTest extends LiveTestFather {
 					out.close();
 				}
 			} catch (IOException ioe) {
-				;
+				System.err.println(ioe.getMessage());
 			}
 		}
 	}
 
-	
+	/**
+	 * 
+	 * @param left a
+	 * @param right a
+	 * @return true if
+	 * @throws IOException a
+	 */
 	protected static final boolean filesAreIdentical(File left, File right)
 			throws IOException {
 		assert left != null;

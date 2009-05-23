@@ -66,6 +66,7 @@ public class PostDelete extends MWAction {
 	 * @param si site info object
 	 * @param ui user info object
 	 * @throws ProcessException on inner problems like a version mismatch
+	 * @deprecated use {@link #PostDelete(MediaWikiBot, String)} instead
 	 */
 	public PostDelete(String title, Siteinfo si, Userinfo ui) throws ProcessException {
 		super(si.getVersion());
@@ -80,7 +81,13 @@ public class PostDelete extends MWAction {
 		}
 		
 	}
-	
+	/**
+	 * Constructs a new <code>PostDelete</code> action.
+	 * @param bot a
+	 * @param title a
+	 * @throws ProcessException a
+	 * @throws ActionException a
+	 */
 	public PostDelete(MediaWikiBot bot, String title) throws ProcessException, ActionException {
 		super(bot.getVersion());
 		token = new GetApiToken(GetApiToken.Intoken.DELETE, title, bot.getSiteinfo(), bot.getUserinfo());
@@ -90,7 +97,11 @@ public class PostDelete extends MWAction {
 		}
 		
 		if (!bot.getUserinfo().getRights().contains("delete")) {
-			throw new ProcessException("The given user doesn't have the rights to delete. Adding '$wgGroupPermissions['bot']['delete'] = true;' to your MediaWiki's LocalSettings.php might remove this problem.");
+			throw new ProcessException(
+					"The given user doesn't have the rights to delete. "
+							+ "Add '$wgGroupPermissions['bot']['delete'] = true;' "
+							+ "to your MediaWiki's LocalSettings.php might solve this problem.",
+					getClass());
 		}
 		
 	}
@@ -124,10 +135,8 @@ public class PostDelete extends MWAction {
 
 
 	/**
-	 * Deals with the MediaWiki API's response by parsing the provided text.
-	 * @param s the answer to the most recently generated MediaWiki API request
-	 * @param hm the requestor message
-	 * @return empty string
+	 * 
+	 * {@inheritDoc}
 	 */
 	@Override
 	public String processReturningText(String s, HttpAction hm)
@@ -209,7 +218,9 @@ public class PostDelete extends MWAction {
 			log.error("Unknow reply. This is not a reply for a delete action.");
 		}
 	}
-	
+	/**
+	 * {@inheritDoc}
+	 */
 	public HttpAction getNextMessage() {
 		if (token.hasMoreMessages()) {
 			setHasMoreMessages(true);
