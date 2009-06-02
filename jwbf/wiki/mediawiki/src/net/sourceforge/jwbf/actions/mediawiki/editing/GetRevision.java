@@ -24,11 +24,6 @@ import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_11;
 import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_12;
 import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_13;
 import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_14;
-import static net.sourceforge.jwbf.contentRep.SimpleArticle.COMMENT;
-import static net.sourceforge.jwbf.contentRep.SimpleArticle.CONTENT;
-import static net.sourceforge.jwbf.contentRep.SimpleArticle.FIRST;
-import static net.sourceforge.jwbf.contentRep.SimpleArticle.TIMESTAMP;
-import static net.sourceforge.jwbf.contentRep.SimpleArticle.USER;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -66,10 +61,16 @@ public class GetRevision extends MWAction {
 
 	private final SimpleArticle sa;
 
+	public static final int CONTENT = 1 << 1;
+	public static final int TIMESTAMP = 1 << 2;
+	public static final int USER = 1 << 3;
+	public static final int COMMENT = 1 << 4;
+	public static final int FIRST = 1 << 5;
+	public static final int LAST = 1 << 6;
 
 	private final Logger log = Logger.getLogger(getClass());
 
-	private final int property;
+	private final int properties;
 	
 	private final Get msg;
 	
@@ -81,18 +82,18 @@ public class GetRevision extends MWAction {
 	 * @throws ProcessException 
 	 * @throws ActionException 
 	 */
-	public GetRevision(final String articlename, final int property, MediaWikiBot bot) throws ActionException, ProcessException {
+	public GetRevision(final String articlename, final int properties, MediaWikiBot bot) throws ActionException, ProcessException {
 		super(bot.getVersion());
 //		if (!bot.getUserinfo().getRights().contains("read")) {
 //			throw new ActionException("reading is not permited, make sure that this account is able to read");
 //		} FIXME check if 
 		
-		this.property = property;
+		this.properties = properties;
 		sa = new SimpleArticle();
 		sa.setLabel(articlename);
 		String uS = "/api.php?action=query&prop=revisions&titles="
 				+ MediaWiki.encode(articlename) + "&rvprop="
-				+ getDataProperties(property) + getReversion(property)
+				+ getDataProperties(properties) + getReversion(properties)
 				+ "&rvlimit=1" + "&format=xml";
 		msg = new Get(uS);
 
@@ -194,7 +195,7 @@ public class GetRevision extends MWAction {
 				sa.setEditSummary(getAsStringValues(element, "comment"));
 				sa.setEditor(getAsStringValues(element, "user"));
 
-				if ((property & TIMESTAMP) > 0) {
+				if ((properties & TIMESTAMP) > 0) {
 
 					try {
 						sa.setEditTimestamp(getAsStringValues(element,

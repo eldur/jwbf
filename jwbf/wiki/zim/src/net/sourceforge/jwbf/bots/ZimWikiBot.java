@@ -147,6 +147,13 @@ public class ZimWikiBot implements WikiBot {
 	public String getWikiType() {
 		return "Zim";
 	}
+
+
+	public SimpleArticle readData(String name) throws ActionException,
+			ProcessException {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 //	public String getMWFolder() {
 //		return mwFolder;

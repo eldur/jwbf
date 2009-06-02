@@ -25,6 +25,7 @@ import java.util.Random;
 
 import net.sourceforge.jwbf.LiveTestFather;
 import net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version;
+import net.sourceforge.jwbf.actions.mediawiki.editing.GetRevision;
 import net.sourceforge.jwbf.bots.MediaWikiAdapterBot;
 import net.sourceforge.jwbf.bots.MediaWikiBot;
 import net.sourceforge.jwbf.contentRep.Article;
@@ -130,7 +131,7 @@ public class EditCustomWikiContentTest extends LiveTestFather {
 		sa = new SimpleArticle(utf8value, label);
 		bot.writeContent(sa);
 
-		sa = bot.readContent(label, SimpleArticle.CONTENT);
+		sa = bot.readContent(label, GetRevision.CONTENT);
 
 		assertEquals(utf8value, sa.getText());
 	}
@@ -184,7 +185,7 @@ public class EditCustomWikiContentTest extends LiveTestFather {
 		ArticleMeta sa;
 
 
-		sa = bot.readContent(label, SimpleArticle.TIMESTAMP | SimpleArticle.CONTENT);
+		sa = bot.readContent(label);
 
 		assertTrue(sa.getEditTimestamp().getTime() > 1000);
 	}

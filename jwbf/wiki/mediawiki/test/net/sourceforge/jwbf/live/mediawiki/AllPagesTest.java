@@ -28,6 +28,7 @@ import net.sourceforge.jwbf.LiveTestFather;
 import net.sourceforge.jwbf.actions.mediawiki.MediaWiki;
 import net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version;
 import net.sourceforge.jwbf.actions.mediawiki.queries.AllPageTitles;
+import net.sourceforge.jwbf.actions.mediawiki.util.RedirectFilter;
 import net.sourceforge.jwbf.actions.util.ActionException;
 import net.sourceforge.jwbf.bots.MediaWikiAdapterBot;
 import net.sourceforge.jwbf.bots.MediaWikiBot;
@@ -196,7 +197,7 @@ public class AllPagesTest extends LiveTestFather {
 	}
 	
 	private void doTest(MediaWikiBot bot, boolean isFullTest) throws Exception {
-		AllPageTitles gat = new AllPageTitles(bot, null, null, true, true, MediaWiki.NS_MAIN);
+		AllPageTitles gat = new AllPageTitles(bot, null, null, RedirectFilter.all, MediaWiki.NS_MAIN);
 	
 		SimpleArticle sa;
 		String testText = getRandom(255);

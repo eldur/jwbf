@@ -45,7 +45,7 @@ import org.junit.Test;
  * @author Thomas Stock
  * TODO MV to MW Module
  */
-public class LiveTestFather {
+public abstract class LiveTestFather {
 
 	private static Properties data;
 	
@@ -57,10 +57,12 @@ public class LiveTestFather {
 
 	private static boolean isVersionTestCase = false;
 	
-	protected static final Map<String, Version > testedVersions = new HashMap<String, Version >();
-	protected static final Map<String, Version >  documentedVersions = new HashMap<String, Version > ();
-	
-	protected LiveTestFather () {
+	protected static final Map<String, Version > TESTEDVERSIONS = new HashMap<String, Version >();
+	protected static final Map<String, Version >  DOCUMENTEDVERSIONS = new HashMap<String, Version >();
+	/**
+	 * Inits.
+	 */
+	protected LiveTestFather() {
 		specialChars.add("\"");
 		specialChars.add("\'");
 		specialChars.add("?");
@@ -120,7 +122,7 @@ public class LiveTestFather {
 		isVersionTestCase = true;
 		Version [] vs = MWAction.findSupportedVersions(mwc);
 		for (int j = 0; j < vs.length; j++) {
-			documentedVersions.put(mwc.getCanonicalName() + vs[j], vs[j]);
+			DOCUMENTEDVERSIONS.put(mwc.getCanonicalName() + vs[j], vs[j]);
 		}
 
 		
@@ -131,15 +133,15 @@ public class LiveTestFather {
 	
 	protected static void registerTestedVersion(Class < ? > clazz, Version v) {
 		if (v != Version.DEVELOPMENT) {
-			testedVersions.put(clazz.getCanonicalName() + v, v);
+			TESTEDVERSIONS.put(clazz.getCanonicalName() + v, v);
 		}
 	}
 	
 	protected static Map<String, Version > getUntestedButDocumentedVersions() {
 		final Map<String, Version > data = new HashMap<String, Version>();
-		data.putAll(documentedVersions);
+		data.putAll(DOCUMENTEDVERSIONS);
 		
-		final Set<String> testedKeys = testedVersions.keySet();
+		final Set<String> testedKeys = TESTEDVERSIONS.keySet();
 		for (String key : testedKeys) {
 			data.remove(key);
 		}
@@ -150,9 +152,9 @@ public class LiveTestFather {
 	
 	protected static Map<String, Version> getTestedButUndocmentedVersions() {
 		final Map<String, Version> data = new HashMap<String, Version>();
-		data.putAll(testedVersions);
+		data.putAll(TESTEDVERSIONS);
 
-		final Set<String> documentedKeys = documentedVersions.keySet();
+		final Set<String> documentedKeys = DOCUMENTEDVERSIONS.keySet();
 		for (String key : documentedKeys) {
 			data.remove(key);
 		}
@@ -162,7 +164,7 @@ public class LiveTestFather {
 	@Test
 	public void yTestVersionDocumentation() throws Exception {
 		if (isVersionTestCase) {
-			assertTrue("no versions are supported", !documentedVersions.isEmpty());
+			assertTrue("no versions are supported", !DOCUMENTEDVERSIONS.isEmpty());
 			assertTrue("not all documented versions are tested \n{ " 
 					+ getUntestedButDocumentedVersions() + " }", getUntestedButDocumentedVersions().isEmpty());
 			assertTrue("there are undocumented tests for versions \n{ " 
@@ -172,12 +174,12 @@ public class LiveTestFather {
 	
 	@AfterClass
 	public static void restData() throws Exception {
-		documentedVersions.clear();
-		testedVersions.clear();
+		DOCUMENTEDVERSIONS.clear();
+		TESTEDVERSIONS.clear();
 		isVersionTestCase = false;
 	}
 	public static void main(String[] args) {
-		System.out.println(new LiveTestFather().getRandomAlph(6));
+	
 		System.out.println(System.getenv());
 		System.out.println(System.getProperties());
 		System.out.println(System.getProperty("user.name"));

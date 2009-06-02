@@ -6,9 +6,18 @@ import net.sourceforge.jwbf.actions.util.ActionException;
 import net.sourceforge.jwbf.actions.util.ProcessException;
 import net.sourceforge.jwbf.bots.WikiBot;
 import net.sourceforge.jwbf.bots.util.JwbfException;
-
+/**
+ * 
+ * @author Thomas Stock
+ *
+ */
 public class Article extends SimpleArticle {
 
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5892823865821665643L;
 	private final WikiBot bot;
 	
 	
@@ -19,7 +28,7 @@ public class Article extends SimpleArticle {
 	public String getText() {
 		if (super.getText().length() < 1) {
 			try {
-				setText(bot.readData(super.getLabel(), CONTENT).getText());
+				setText(bot.readData(super.getLabel()).getText());
 			} catch (JwbfException e) {
 				e.printStackTrace();
 			}
@@ -34,7 +43,7 @@ public class Article extends SimpleArticle {
 	public String getEditor() {
 		if (super.getEditor().length() < 1) {
 			try {
-				setEditor(bot.readData(super.getLabel(), USER).getEditor());
+				setEditor(bot.readData(super.getLabel()).getEditor());
 			} catch (JwbfException e) {
 				e.printStackTrace();
 			}
@@ -49,7 +58,7 @@ public class Article extends SimpleArticle {
 	public String getEditSummary() {
 		if (super.getEditSummary().length() < 1) {
 			try {
-				setEditSummary(bot.readData(super.getLabel(), COMMENT).getEditSummary());
+				setEditSummary(bot.readData(super.getLabel()).getEditSummary());
 			} catch (JwbfException e) {
 				e.printStackTrace();
 			}

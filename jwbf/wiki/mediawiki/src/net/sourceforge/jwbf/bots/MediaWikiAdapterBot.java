@@ -27,7 +27,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.UnknownHostException;
 import java.util.Iterator;
 
 import net.sourceforge.jwbf.actions.mediawiki.editing.FileUpload;
@@ -40,7 +39,7 @@ import net.sourceforge.jwbf.actions.mediawiki.queries.ImageUsageTitles;
 import net.sourceforge.jwbf.actions.mediawiki.queries.LogEvents;
 import net.sourceforge.jwbf.actions.mediawiki.queries.RecentchangeTitles;
 import net.sourceforge.jwbf.actions.mediawiki.queries.TemplateUserTitles;
-import net.sourceforge.jwbf.actions.mediawiki.queries.BacklinkTitles.RedirectFilter;
+import net.sourceforge.jwbf.actions.mediawiki.util.RedirectFilter;
 import net.sourceforge.jwbf.actions.mediawiki.util.VersionException;
 import net.sourceforge.jwbf.actions.util.ActionException;
 import net.sourceforge.jwbf.actions.util.ProcessException;
@@ -98,9 +97,8 @@ public class MediaWikiAdapterBot extends MediaWikiBot {
 	 *            wikihosturl like "http://www.mediawiki.org/wiki/"
 	 * @param testHostReachable if true, test if host reachable
 	 * @throws IOException a
-	 * @throws UnknownHostException a
 	 */
-	public MediaWikiAdapterBot(final URL url, boolean testHostReachable) throws UnknownHostException, IOException {
+	public MediaWikiAdapterBot(final URL url, boolean testHostReachable) throws  IOException {
 		super(url, testHostReachable);
 
 	}
@@ -108,16 +106,18 @@ public class MediaWikiAdapterBot extends MediaWikiBot {
 
 	/**
 	 * @see AllPageTitles
+	 * @deprecated use {@link AllPageTitles} directly
 	 */
 	public Iterable<String> getAllPageTitles(String from, String prefix,
 			boolean redirects, boolean nonredirects, int... namespaces)
 			throws ActionException, VersionException {
-		AllPageTitles a = new AllPageTitles(this, from, prefix, redirects, nonredirects, namespaces );
+		AllPageTitles a = new AllPageTitles(this, from, prefix, RedirectFilter.nonredirects, namespaces );
 		return a;
 	}
 
 	/**
 	 * @see AllPageTitles
+	 * @deprecated use {@link AllPageTitles} directly
 	 */
 	public Iterable<String> getAllPageTitles(int... namespaces)
 			throws ActionException, VersionException {
@@ -128,6 +128,7 @@ public class MediaWikiAdapterBot extends MediaWikiBot {
 
 	/**
 	 * @see AllPageTitles
+	 * @deprecated use {@link AllPageTitles} directly
 	 */
 	public Iterable<String> getAllPageTitles(String from, String prefix,
 			boolean redirects, boolean nonredirects) throws ActionException, VersionException {

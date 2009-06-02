@@ -6,6 +6,6 @@ public interface CacheHandler {
 
 	
 	void put(SimpleArticle sa);
-	SimpleArticle get(String titel);
+	SimpleArticle get(String title);
 	boolean containsKey(String title);
 }

@@ -142,8 +142,8 @@ public class UploadAndImageInfoTest extends LiveTestFather {
 	public final void uploadMW1x14() throws Exception {
 		
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_14_url"));
-//		bot.login(getValue("wikiMW1_14_user"),
-//				getValue("wikiMW1_14_pass"));
+		bot.login(getValue("wikiMW1_14_user"),
+				getValue("wikiMW1_14_pass"));
 		generalUploadImageInfoTest(bot, Version.MW1_14);
 		
 	}

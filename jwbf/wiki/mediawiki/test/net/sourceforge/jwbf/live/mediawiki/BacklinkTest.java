@@ -7,7 +7,7 @@ import net.sourceforge.jwbf.LiveTestFather;
 import net.sourceforge.jwbf.actions.mediawiki.MediaWiki;
 import net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version;
 import net.sourceforge.jwbf.actions.mediawiki.queries.BacklinkTitles;
-import net.sourceforge.jwbf.actions.mediawiki.queries.BacklinkTitles.RedirectFilter;
+import net.sourceforge.jwbf.actions.mediawiki.util.RedirectFilter;
 import net.sourceforge.jwbf.actions.mediawiki.util.VersionException;
 import net.sourceforge.jwbf.actions.util.ActionException;
 import net.sourceforge.jwbf.actions.util.ProcessException;
@@ -96,7 +96,7 @@ public class BacklinkTest extends LiveTestFather {
 	 *             a
 	 */
 	@Test
-	public final void backlinksMW1_09() throws Exception {
+	public final void backlinksMW1x09() throws Exception {
 
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_09_url"));
 		bot.login(getValue("wikiMW1_09_user"),
@@ -105,8 +105,12 @@ public class BacklinkTest extends LiveTestFather {
 		
 		doTest(bot);
 	}
+	/**
+	 * 
+	 * @throws Exception a
+	 */
 	@Test(expected = VersionException.class)
-	public final void backlinksMW1_09_redirectVar() throws Exception {
+	public final void backlinksMW1x09xredirectVar() throws Exception {
 
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_09_url"));
 		bot.login(getValue("wikiMW1_09_user"),
@@ -122,7 +126,7 @@ public class BacklinkTest extends LiveTestFather {
 	 *             a
 	 */
 	@Test
-	public final void backlinksMW1_10() throws Exception {
+	public final void backlinksMW1x10() throws Exception {
 
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_10_url"));
 		bot.login(getValue("wikiMW1_10_user"),
@@ -140,7 +144,7 @@ public class BacklinkTest extends LiveTestFather {
 	 *             a
 	 */
 	@Test
-	public final void backlinksMW1_11() throws Exception {
+	public final void backlinksMW1x11() throws Exception {
 
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_11_url"));
 		bot.login(getValue("wikiMW1_11_user"),
@@ -158,7 +162,7 @@ public class BacklinkTest extends LiveTestFather {
 	 *             a
 	 */
 	@Test
-	public final void backlinksMW1_12() throws Exception {
+	public final void backlinksMW1x12() throws Exception {
 
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_12_url"));
 		bot.login(getValue("wikiMW1_12_user"),
@@ -176,12 +180,12 @@ public class BacklinkTest extends LiveTestFather {
 	 *             a
 	 */
 	@Test
-	public final void backlinksMW1_13() throws Exception {
+	public final void backlinksMW1x13() throws Exception {
 
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_13_url"));
 		bot.login(getValue("wikiMW1_13_user"),
 				getValue("wikiMW1_13_pass"));
-		Assert.assertEquals(Version.MW1_13, bot.getVersion() );
+		Assert.assertEquals(Version.MW1_13, bot.getVersion());
 		doTest(bot);
 		
 	}
@@ -193,7 +197,7 @@ public class BacklinkTest extends LiveTestFather {
 	 *             a
 	 */
 	@Test
-	public final void backlinksMW1_14() throws Exception {
+	public final void backlinksMW1x14() throws Exception {
 
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_14_url"));
 		bot.login(getValue("wikiMW1_14_user"),
@@ -203,11 +207,11 @@ public class BacklinkTest extends LiveTestFather {
 		
 	}
 
-	private final void doTest(MediaWikiBot bot) throws Exception {
+	private void doTest(MediaWikiBot bot) throws Exception {
 		doTest(bot, RedirectFilter.all);
 	}
 	
-	private final void doTest(MediaWikiBot bot, RedirectFilter rf) throws Exception {
+	private void doTest(MediaWikiBot bot, RedirectFilter rf) throws Exception {
 
 		BacklinkTitles gbt = new BacklinkTitles(bot, BACKLINKS, rf, MediaWiki.NS_MAIN , MediaWiki.NS_CATEGORY);
 
@@ -224,7 +228,7 @@ public class BacklinkTest extends LiveTestFather {
 			}
 		}
 		if (notEnougth) {
-			System.err.println( i  + " is to less (" + COUNT + ")");
+			System.err.println(i  + " is to less (" + COUNT + ")");
 			doPreapare(bot);
 		}
 		is = gbt.iterator();

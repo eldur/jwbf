@@ -196,4 +196,40 @@ public class SimpleArticleTest {
 		article.setText("Text# redirect [[A]]");
 		assertFalse(article.isRedirect());
 	}
+	
+	@Test
+	public synchronized void testEquals() {
+	
+		Date d2 = new Date(System.currentTimeMillis());
+		try {
+			wait(10);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		Date d3 = new Date(System.currentTimeMillis());
+
+		
+		SimpleArticle sa = new SimpleArticle();
+		SimpleArticle sax = new SimpleArticle();
+		assertTrue("1", sa.equals(sax));
+		sa.setLabel("A");
+		assertFalse("2", sa.equals(sax));
+		sax.setLabel("A");
+		assertTrue("3", sa.equals(sax));
+		sax.setLabel("B");
+		assertFalse("4", sa.equals(sax));
+		sax.setLabel("A");
+		sax.setText("ABC");
+		assertFalse("5", sa.equals(sax));
+		sa.setText("ABC");
+		assertTrue("6", sa.equals(sax));
+		sax.setEditTimestamp(d2);
+		assertFalse("7", sa.equals(sax));
+		sa.setEditTimestamp(d3);
+		assertFalse("8", sa.equals(sax));
+		sa.setEditTimestamp(d2);
+		assertTrue("9", sa.equals(sax));
+		
+
+	}
 }

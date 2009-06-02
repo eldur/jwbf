@@ -11,8 +11,9 @@
     <property name="severity" value="warning"/>
     <module name="TreeWalker">
         <property name="tabWidth" value="4"/>
-        <module name="JavadocMethod"/>
-        <module name="JavadocType"/>
+        <module name="JavadocMethod">
+            <property name="scope" value="public"/>
+        </module>
         <module name="JavadocVariable">
             <property name="severity" value="ignore"/>
         </module>
@@ -69,7 +70,7 @@
         <module name="EmptyBlock"/>
         <module name="LeftCurly"/>
         <module name="NeedBraces">
-            <property name="tokens" value="LITERAL_DO,LITERAL_ELSE,LITERAL_FOR,LITERAL_WHILE"/>
+            <property name="tokens" value="LITERAL_DO,LITERAL_FOR,LITERAL_WHILE"/>
         </module>
         <module name="RightCurly"/>
         <module name="AvoidInlineConditionals"/>
@@ -113,9 +114,15 @@
         </module>
         <module name="UpperEll"/>
         <module name="NeedBraces">
-            <metadata name="com.atlassw.tools.eclipse.checkstyle.comment" value="if ausnahme"/>
+            <metadata name="com.atlassw.tools.eclipse.checkstyle.comment" value="if else"/>
             <property name="severity" value="info"/>
-            <property name="tokens" value="LITERAL_IF"/>
+            <property name="tokens" value="LITERAL_ELSE,LITERAL_IF"/>
+        </module>
+        <module name="JavadocType"/>
+        <module name="JavadocMethod">
+            <property name="severity" value="info"/>
+            <property name="logLoadErrors" value="true"/>
+            <property name="suppressLoadErrors" value="true"/>
         </module>
     </module>
     <module name="PackageHtml"/>

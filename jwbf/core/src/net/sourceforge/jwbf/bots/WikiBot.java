@@ -13,6 +13,7 @@ public interface WikiBot {
 	Article readContent(String title) throws ActionException, ProcessException ;
 	Article readContent(String title, int properties) throws ActionException, ProcessException;
 	SimpleArticle readData(final String name, final int properties) throws ActionException, ProcessException;
+	SimpleArticle readData(final String name) throws ActionException, ProcessException;
 	void writeContent(ContentAccessable sa) throws ActionException, ProcessException;
 	public void postDelete(String title) throws ActionException, ProcessException; 
 	

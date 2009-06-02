@@ -70,9 +70,8 @@ public class PostModifyContent extends MWAction {
 	 * @param a the
 	 * @throws ProcessException a
 	 * @throws ActionException a
-	 * @throws VersionException a
 	 */
-	public PostModifyContent(MediaWikiBot bot, final ContentAccessable a) throws VersionException, ActionException, ProcessException {
+	public PostModifyContent(MediaWikiBot bot, final ContentAccessable a) throws ActionException, ProcessException {
 		super(bot.getVersion());
 		this.a = a;
 		this.bot = bot;
@@ -80,7 +79,9 @@ public class PostModifyContent extends MWAction {
 
 	}
 
-
+	/**
+	 * {@inheritDoc}
+	 */
 	public HttpAction getNextMessage() {
 
 		if (first) {
@@ -98,7 +99,7 @@ public class PostModifyContent extends MWAction {
 				}
 				first = false;
 				if (!(bot.getUserinfo().getRights().contains("edit") 
-						&& bot.getUserinfo().getRights().contains("writeapi")  )) {
+						&& bot.getUserinfo().getRights().contains("writeapi"))) {
 					throw new VersionException("write api not avalibal");
 				}
 				apiReq = new GetApiToken(GetApiToken.Intoken.EDIT,
@@ -123,14 +124,13 @@ public class PostModifyContent extends MWAction {
 			postModify = new Post(uS);
 			postModify.addParam("summary", a.getEditSummary());
 			postModify.addParam("text", a.getText());
-//			postModify.addParam("watch", "unknown") // TODO add or rm
+//			postModify.addParam("watch", "unknown") 
 			if (a.isMinorEdit())
 				postModify.addParam("minor", "");
 			else 
 				postModify.addParam("notminor", "");
 			postModify.addParam("token", apiReq.getToken());
 			
-//			&section=new&watch&basetimestamp=2008-03-20T17:26:39Z&
 		} else {
 			String uS = "/index.php?title=" + MediaWiki.encode(a.getLabel())
 					+ "&action=submit";
@@ -167,11 +167,16 @@ public class PostModifyContent extends MWAction {
 		return postModify;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public boolean hasMoreMessages() {
 		return first || second;
 	}
-
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public String processReturningText(String s, HttpAction hm)
 			throws ProcessException {
@@ -188,9 +193,7 @@ public class PostModifyContent extends MWAction {
 			log.debug("parseapi"); //TODO RM
 			apiReq.processReturningText(s, hm);
 		} 
-//		else {
-//			log.debug(s); //TODO RM
-//		}
+
 		
 		return s;
 	}

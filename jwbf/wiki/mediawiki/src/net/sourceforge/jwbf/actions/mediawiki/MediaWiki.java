@@ -3,7 +3,11 @@ package net.sourceforge.jwbf.actions.mediawiki;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
-
+/**
+ * 
+ * @author Thomas Stock
+ *
+ */
 public final class MediaWiki {
 
 	public static final int ARTICLE = 1 << 1;

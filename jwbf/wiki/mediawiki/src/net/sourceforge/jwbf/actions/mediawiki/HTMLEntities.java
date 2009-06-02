@@ -21,7 +21,7 @@ final class HTMLEntities {
 	 * Translation table for HTML entities.<br/>
 	 * reference: W3C - Character entity references in HTML 4 [<a href="http://www.w3.org/TR/html401/sgml/entities.html" target="_blank">http://www.w3.org/TR/html401/sgml/entities.html</a>].
 	 */
-	private static final Object[][] html_entities_table = {
+	private static final Object[][] HTML_ENTITIES_TABLE = {
 		{ new String("&Aacute;"), new Integer(193) },
 		{ new String("&aacute;"), new Integer(225) },
 		{ new String("&Acirc;"), new Integer(194) },
@@ -275,12 +275,12 @@ final class HTMLEntities {
 	/**
 	 * Map to convert extended characters in html entities.
 	 */
-	private static final Hashtable htmlentities_map = new Hashtable();
+	private static final Hashtable<Integer, String> HTMLENTITIES_MAP = new Hashtable<Integer, String>();
 	
 	/**
 	 * Map to convert html entities in exteden characters.
 	 */
-	private static final Hashtable unhtmlentities_map = new Hashtable();
+	private static final Hashtable<String, Integer> UNHTMLENTITIES_MAP = new Hashtable<String, Integer>();
 	
 	//==============================================================================
 	// METHODS
@@ -298,56 +298,16 @@ final class HTMLEntities {
 	 */
 	private static void initializeEntitiesTables() {
 		// initialize html translation maps
-		for (int i = 0; i < html_entities_table.length; ++i) {
-			htmlentities_map.put(html_entities_table[i][1],
-					html_entities_table[i][0]);
-			unhtmlentities_map.put(html_entities_table[i][0],
-					html_entities_table[i][1]);
+		for (int i = 0; i < HTML_ENTITIES_TABLE.length; ++i) {
+			HTMLENTITIES_MAP.put((Integer) HTML_ENTITIES_TABLE[i][1],
+					(String) HTML_ENTITIES_TABLE[i][0]);
+			UNHTMLENTITIES_MAP.put((String) HTML_ENTITIES_TABLE[i][0],
+					(Integer) HTML_ENTITIES_TABLE[i][1]);
 		}
 	}
 	
-	/**
-	 * Get the html entities translation table.
-	 * 
-	 * @return translation table
-	 */
-	public static Object[][] getEntitiesTable() {
-		return html_entities_table;
-	}
+
 	
-	/**
-	 * Convert special and extended characters into HTML entitities.
-	 * @param str input string
-	 * @return formatted string
-	 * @see #unhtmlentities(String)
-	 */
-	public static String htmlentities(String str) {
-		
-		if (str == null) {
-			return "";
-		}
-		//initialize html translation maps table the first time is called
-		if (htmlentities_map.isEmpty()) {
-			initializeEntitiesTables();
-		}
-		
-		StringBuffer buf = new StringBuffer(); //the otput string buffer
-		
-		for (int i = 0; i < str.length(); ++i) {
-			char ch = str.charAt(i);
-			String entity = (String) htmlentities_map.get(new Integer((int) ch)); //get equivalent html entity
-			if (entity == null) { //if entity has not been found
-				if (((int) ch) > 128) { //check if is an extended character
-					buf.append("&#" + ((int) ch) + ";"); //convert extended character
-				} else {
-					buf.append(ch); //append the character as is
-				}
-			} else {
-				buf.append(entity); //append the html entity
-			}
-		}
-		return buf.toString();
-	}
 	
 	/**
 	 * Convert HTML entities to special and extended unicode characters
@@ -359,7 +319,7 @@ final class HTMLEntities {
 	public static String unhtmlentities(String str) {
 		
 		//initialize html translation maps table the first time is called
-		if (htmlentities_map.isEmpty()) {
+		if (HTMLENTITIES_MAP.isEmpty()) {
 			initializeEntitiesTables();
 		}
 		
@@ -386,7 +346,7 @@ final class HTMLEntities {
 						iso = new Integer(entity.substring(2, entity.length() - 1));
 					}
 				} else {
-					iso = (Integer) unhtmlentities_map.get(entity);
+					iso = (Integer) UNHTMLENTITIES_MAP.get(entity);
 				}
 				if (iso == null) {
 					buf.append(entity);
@@ -403,19 +363,7 @@ final class HTMLEntities {
 	
 	// methods to convert special characters
 	
-	/**
-	 * Replace single quotes characters with HTML entities.
-	 * 
-	 * @param str the input string
-	 * @return string with replaced single quotes
-	 */
-	public static String htmlSingleQuotes(String str) {
-		str = str.replaceAll("[\']", "&rsquo;");
-		str = str.replaceAll("&#039;", "&rsquo;");
-		str = str.replaceAll("&#145;", "&rsquo;");
-		str = str.replaceAll("&#146;", "&rsquo;");
-		return str;
-	}
+	
 	
 	/**
 	 * Replace single quotes HTML entities with equivalent character.
@@ -423,22 +371,10 @@ final class HTMLEntities {
 	 * @param str the input string
 	 * @return string with replaced single quotes
 	 */
-	public static String unhtmlSingleQuotes(String str) {
+	private static String unhtmlSingleQuotes(String str) {
 		return str.replaceAll("&rsquo;", "\'");
 	}
 	
-	/**
-	 * Replace double quotes characters with HTML entities.
-	 * 
-	 * @param str the input string
-	 * @return string with replaced double quotes
-	 */
-	public static String htmlDoubleQuotes(String str) {
-		str = str.replaceAll("[\"]", "&quot;");
-		str = str.replaceAll("&#147;", "&quot;");
-		str = str.replaceAll("&#148;", "&quot;");
-		return str;
-	}
 	
 	/**
 	 * Replace single quotes HTML entities with equivalent character.
@@ -446,21 +382,11 @@ final class HTMLEntities {
 	 * @param str the input string
 	 * @return string with replaced single quotes
 	 */
-	public static String unhtmlDoubleQuotes(String str) {
+	private static String unhtmlDoubleQuotes(String str) {
 		return str.replaceAll("&quot;", "\"");
 	}
 	
-	/**
-	 * Replace single and double quotes characters with HTML entities.
-	 * 
-	 * @param str the input string
-	 * @return string with replaced quotes
-	 */
-	public static String htmlQuotes(String str) {
-		str = htmlDoubleQuotes(str); //convert double quotes
-		str = htmlSingleQuotes(str); //convert single quotes
-		return str;
-	}
+	
 	
 	/**
 	 * Replace single and double quotes HTML entities with equivalent characters.
@@ -474,48 +400,12 @@ final class HTMLEntities {
 		return str;
 	}
 	
-	/**
-	 * Replace &lt; &gt; characters with &amp;lt; &amp;gt; entities.
-	 * 
-	 * @param str the input string
-	 * @return string with replaced characters
-	 */
-	public static String htmlAngleBrackets(String str) {
-		str = str.replaceAll("<", "&lt;");
-		str = str.replaceAll(">", "&gt;");
-		return str;
-	}
+
 	
-	/**
-	 * Replace &amp;lt; &amp;gt; entities with &lt; &gt; characters.
-	 * 
-	 * @param str the input string
-	 * @return string with replaced entities
-	 */
-	public static String unhtmlAngleBrackets(String str) {
-		str = str.replaceAll("&lt;", "<");
-		str = str.replaceAll("&gt;", ">");
-		return str;
-	}
+
 	
-	/**
-	 * Replace &amp; characters with &amp;amp; HTML entities.
-	 * 
-	 * @param str the input string
-	 * @return string with replaced characters
-	 */
-	public static String htmlAmpersand(String str) {
-		return str.replaceAll("&", "&amp;");
-	}
+
 	
-	/**
-	 * Replace &amp;amp; HTML entities with &amp; characters.
-	 * 
-	 * @param str the input string
-	 * @return string with replaced entities
-	 */
-	public static String unhtmlAmpersand(String str) {
-		return str.replaceAll("&amp;", "&");
-	}
+
 	
 }

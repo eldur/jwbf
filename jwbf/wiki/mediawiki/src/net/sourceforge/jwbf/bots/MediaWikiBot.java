@@ -1,9 +1,5 @@
 package net.sourceforge.jwbf.bots;
 
-import static net.sourceforge.jwbf.contentRep.SimpleArticle.COMMENT;
-import static net.sourceforge.jwbf.contentRep.SimpleArticle.CONTENT;
-import static net.sourceforge.jwbf.contentRep.SimpleArticle.USER;
-
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -185,7 +181,7 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
 	 *
 	 * @param name
 	 *            of article in a mediawiki like "Main Page"
-	 * @param properties {@link GetRevision}
+	 * @param properties {@link GetRevision} TODO Where are the properties
 	 * @return a content representation of requested article, never null
 	 * @throws ActionException
 	 *             on problems with http, cookies and io
@@ -194,37 +190,47 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
 	 */
 	public synchronized Article readContent(final String name, final int properties)
 			throws ActionException, ProcessException {
-		if (store != null && store.containsKey(name)) {
-			log.debug("read from cache");
-			return new Article(this, store.get(name));
-		} else {
 			return new Article(this, readData(name, properties));
-		}
 	}
 	/**
 	 * {@inheritDoc}
 	 */
 	public synchronized SimpleArticle readData(final String name, final int properties)
 			throws ActionException, ProcessException {
-			
+
 		GetRevision ac;
-			if (store != null) {
-				if (store.containsKey(name)) {
-					return store.get(name);
-				} else {
-					ac = new GetRevision(name, properties, this);
-
-					performAction(ac);
-					log.debug("update cache (read)");
-					store.put(ac.getArticle());
-				}
-			} else {
-				ac = new GetRevision(name, properties, this);
-
+		if (store != null) {
+			if (store.containsKey(name)) {
+				ac = new GetRevision(name, GetRevision.TIMESTAMP, this);
 				performAction(ac);
+				
+				SimpleArticle ssa = store.get(name);
+				if (ac.getArticle().getEditTimestamp().equals(ssa.getEditTimestamp())) {
+
+					return store.get(name);
+				}
 			}
-			return ac.getArticle();
+
+			ac = new GetRevision(name, properties, this);
+
+			performAction(ac);
+			log.debug("update cache (read)");
+			store.put(ac.getArticle());
+
+		} else {
+			ac = new GetRevision(name, properties, this);
+
+			performAction(ac);
+		}
+		return ac.getArticle();
+
+	}
+
+	public SimpleArticle readData(String name) throws ActionException,
+			ProcessException {
 		
+		return readData(name, GetRevision.CONTENT
+				| GetRevision.COMMENT | GetRevision.USER | GetRevision.TIMESTAMP);
 	}
 	/**
 	 * 
@@ -246,8 +252,8 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
 	 */
 	public synchronized Article readContent(final String name)
 			throws ActionException, ProcessException {
-		return readContent(name, CONTENT
-				| COMMENT | USER);
+		return readContent(name, GetRevision.CONTENT
+				| GetRevision.COMMENT | GetRevision.USER | GetRevision.TIMESTAMP);
 
 	}
 	
@@ -275,10 +281,12 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
 			String label = a.getLabel();
 			SimpleArticle sa;
 			if (store.containsKey(label)) {
+				log.debug("contains article: " + label); // TODO RM
 				sa = store.get(label);
 			} else {
 				sa = new SimpleArticle(label);
 			}
+			log.debug("sa == " + sa); // TODO RM
 			sa.setText(a.getText());
 			sa.setEditor(getUserinfo().getUsername());
 			sa.setEditSummary(a.getEditSummary());
@@ -422,5 +430,6 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
 	public final String getWikiType() {
 		return MediaWiki.class.getName();
 	}
+
 
 }

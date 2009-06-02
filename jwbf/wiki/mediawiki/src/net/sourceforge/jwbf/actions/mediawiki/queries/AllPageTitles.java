@@ -34,6 +34,7 @@ import java.util.regex.Pattern;
 import net.sourceforge.jwbf.actions.Get;
 import net.sourceforge.jwbf.actions.mediawiki.MediaWiki;
 import net.sourceforge.jwbf.actions.mediawiki.util.MWAction;
+import net.sourceforge.jwbf.actions.mediawiki.util.RedirectFilter;
 import net.sourceforge.jwbf.actions.mediawiki.util.SupportedBy;
 import net.sourceforge.jwbf.actions.mediawiki.util.VersionException;
 import net.sourceforge.jwbf.actions.util.HttpAction;
@@ -70,11 +71,12 @@ public class AllPageTitles extends TitleQuery<String> {
 	 */
 	private String prefix;
 	private String namespace;
-	private boolean redirects;
-	private boolean nonredirects;
+
 	private MediaWikiBot bot;
 
 	private String from;
+
+	private RedirectFilter rf;
 
 
 	
@@ -90,49 +92,50 @@ public class AllPageTitles extends TitleQuery<String> {
 	 * @param prefix
 	 *            restricts search to titles that begin with this value, may be
 	 *            null
-	 * @param redirects
+	 * @param rf
 	 *            include redirects in the list
 	 * @param bot a
-	 * @param nonredirects
-	 *            include nonredirects in the list (will be ignored if redirects
-	 *            is false!)
 	 * @param namespaces
 	 *            the namespace(s) that will be searched for links, as a string
 	 *            of numbers separated by '|'; if null, this parameter is
 	 *            omitted
+	 * @throws VersionException if version is incompatible
 	 */
-	public AllPageTitles(MediaWikiBot bot, String from, String prefix, boolean redirects,
-			boolean nonredirects, int ... namespaces) throws VersionException  {
-		this(bot, from, prefix, redirects, nonredirects, MWAction.createNsString(namespaces));
+	public AllPageTitles(MediaWikiBot bot, String from, 
+			String prefix, RedirectFilter rf, int ... namespaces) throws VersionException {
+		this(bot, from, prefix, rf, MWAction.createNsString(namespaces));
 
 	}
+	/**
+	 * 
+	 * @param bot a
+	 * @param namespaces the
+	 * @throws VersionException if version is incompatible
+	 */
 	public AllPageTitles(MediaWikiBot bot, int ... namespaces) throws VersionException {
-		this(bot, null, null, false, false, namespaces);
+		this(bot, null, null, RedirectFilter.nonredirects, namespaces);
 
 	}
 
 	/**
 	 * @param from a
 	 * @param prefix a
-	 * @param redirects if
-	 * @param nonredirects if
+	 * @param rf the
 	 * @param namespaces the
 	 * @param bot the
 	 * @throws VersionException if not supported
 	 */
-	protected AllPageTitles(MediaWikiBot bot, String from, String prefix, boolean redirects,
-			boolean nonredirects, String namespaces) throws VersionException {
+	protected AllPageTitles(MediaWikiBot bot, String from
+			, String prefix, RedirectFilter rf, String namespaces) throws VersionException {
 		super(bot);
 		
 		
 		this.bot = bot;
-
+		this.rf = rf;
 		this.prefix = prefix;
 		this.namespace = namespaces;
-		this.redirects = redirects;
-		this.nonredirects = nonredirects;
 		this.from = from;
-		HttpAction msg = generateRequest(from, prefix, redirects, nonredirects, namespace);
+		generateRequest(from, prefix, rf, namespace);
 	
 	}
 
@@ -144,11 +147,7 @@ public class AllPageTitles extends TitleQuery<String> {
 	 * @param prefix
 	 *            restricts search to titles that begin with this value, may be
 	 *            null
-	 * @param redirects
-	 *            include redirects in the list
-	 * @param nonredirects
-	 *            include nonredirects in the list (will be ignored if redirects
-	 *            is false!)
+	 * @param rf include redirects in the list
 	 * @param namespace
 	 *            the namespace(s) that will be searched for links, as a string
 	 *            of numbers separated by '|'; if null, this parameter is
@@ -156,16 +155,16 @@ public class AllPageTitles extends TitleQuery<String> {
 	 * @return a
 	 */
 	private Get generateRequest(String from, String prefix,
-			boolean redirects, boolean nonredirects, String namespace) {
+			RedirectFilter rf, String namespace) {
 		if (LOG.isTraceEnabled()) {
 			LOG.trace("enter GetAllPagetitles.generateRequest"
 					+ "(String,String,boolean,boolean,String)");
 		}
 
 		String apfilterredir;
-		if (redirects && nonredirects) {
+		if (rf == RedirectFilter.all) {
 			apfilterredir = "all";
-		} else if (redirects && !nonredirects) {
+		} else if (rf == RedirectFilter.redirects) {
 			apfilterredir = "redirects";
 		} else {
 			apfilterredir = "nonredirects";
@@ -233,7 +232,7 @@ public class AllPageTitles extends TitleQuery<String> {
 		 */
 		protected HttpAction prepareCollection() {
 	
-			return generateRequest(getNextPageInfo(), prefix, redirects, nonredirects, namespace);
+			return generateRequest(getNextPageInfo(), prefix, rf, namespace);
 			
 		}
 		/**
@@ -242,7 +241,7 @@ public class AllPageTitles extends TitleQuery<String> {
 		@Override
 		protected Object clone() throws CloneNotSupportedException {
 			try {
-				return new AllPageTitles(bot, from, prefix, redirects, nonredirects, namespace);
+				return new AllPageTitles(bot, from, prefix, rf, namespace);
 			} catch (VersionException e) {
 				throw new CloneNotSupportedException(e.getLocalizedMessage());
 			}

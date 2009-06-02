@@ -35,6 +35,7 @@ import net.sourceforge.jwbf.actions.Get;
 import net.sourceforge.jwbf.actions.mediawiki.MediaWiki;
 import net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version;
 import net.sourceforge.jwbf.actions.mediawiki.util.MWAction;
+import net.sourceforge.jwbf.actions.mediawiki.util.RedirectFilter;
 import net.sourceforge.jwbf.actions.mediawiki.util.SupportedBy;
 import net.sourceforge.jwbf.actions.mediawiki.util.VersionException;
 import net.sourceforge.jwbf.actions.util.HttpAction;
@@ -63,20 +64,13 @@ public class BacklinkTitles extends TitleQuery<String> {
 	 * </ul>
 	 */
 	private Logger log = Logger.getLogger(getClass());
-	/**
-	 * 
-	 * 
-	 */
-	public static enum RedirectFilter { all, redirects, nonredirects };
-	
-	private Get msg;
+
 	/** constant value for the bllimit-parameter. **/
 	private static final int LIMIT = 50;
 	
 	/** object creating the requests that are sent to the api. */
 	private RequestBuilder requestBuilder = null;
-	private boolean init = true;
-	private boolean hasMoreResults = true;
+
 	private final String articleName; 
 
 	
@@ -154,7 +148,6 @@ public class BacklinkTitles extends TitleQuery<String> {
 	protected String parseHasMore(final String s) {
 		
 		// get the blcontinue-value
-		hasMoreResults = false;
 		Pattern p = Pattern.compile(
 			"<query-continue>.*?"
 			+ "<backlinks *blcontinue=\"([^\"]*)\" */>"
@@ -191,7 +184,6 @@ public class BacklinkTitles extends TitleQuery<String> {
 			titleCollection.add(m.group(1));
 			
 		}
-		System.err.println(titleCollection); // TODO RM
 		return titleCollection;
 		
 	}
@@ -210,25 +202,23 @@ public class BacklinkTitles extends TitleQuery<String> {
 
 		case MW1_09:
 		case MW1_10:
-			return new RequestBuilder_1_09();
+			return new RequestBuilder1x09();
 
 		default: //MW1_11 and up
-			return new RequestBuilder_1_11();
+			return new RequestBuilder1x11();
 
 		}
 		
 	}
 	
-	/** interface for classes that create a request strings */	
-	private static interface RequestBuilder {
+	/** interface for classes that create a request strings. */	
+	private interface RequestBuilder {
 		
 		/**
 		 * generates an initial MediaWiki-request.
 		 * @param articleName a
 		 * @param redirectFilter a
 		 * @param namespace a  
-		 * @throws VersionException if a param is not compatible with the
-		 *                          associated MediaWiki version 
 		 * @return the request in string form
 		 */
 		String buildInitialRequest(String articleName, 
@@ -244,8 +234,8 @@ public class BacklinkTitles extends TitleQuery<String> {
 		
 	}
 
-	/** request builder for MW versions 1_11 to (at least) 1_13 */
-	private static class RequestBuilder_1_11 implements RequestBuilder {
+	/** request builder for MW versions 1_11 to (at least) 1_13. */
+	private class RequestBuilder1x11 implements RequestBuilder {
 		/**
 		 * {@inheritDoc}
 		 */
@@ -270,8 +260,8 @@ public class BacklinkTitles extends TitleQuery<String> {
 		
 	}
 	
-	/** request builder for MW versions 1_09 and 1_10 */
-	private static class RequestBuilder_1_09 implements RequestBuilder {
+	/** request builder for MW versions 1_09 and 1_10. */
+	private class RequestBuilder1x09 implements RequestBuilder {
 		/**
 		 * {@inheritDoc}
 		 */

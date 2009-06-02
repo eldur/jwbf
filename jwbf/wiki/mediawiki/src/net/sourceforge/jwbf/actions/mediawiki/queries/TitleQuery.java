@@ -18,7 +18,7 @@ import org.apache.log4j.Logger;
  * Abstract class which is superclass of all titleiterations, represented by the sufix "Titles".
  * 
  * @author Thomas Stock
- *
+ * @param <T> of 
  */
 public abstract class TitleQuery<T> implements Iterable<T>, Iterator<T> {
 
@@ -30,7 +30,7 @@ public abstract class TitleQuery<T> implements Iterable<T>, Iterator<T> {
 	/** Information necessary to get the next api page. */
 	protected String nextPageInfo = "";
 	
-	public final String getNextPageInfo() {
+	protected final String getNextPageInfo() {
 		return nextPageInfo;
 	}
 
@@ -42,7 +42,9 @@ public abstract class TitleQuery<T> implements Iterable<T>, Iterator<T> {
 	protected InnerAction getInnerAction(Version v) throws VersionException {
 		return new InnerAction(v);
 	}
-
+	/**
+	 * {@inheritDoc}
+	 */
 	@SuppressWarnings("unchecked")
 	public final Iterator<T> iterator() {
 		try {
@@ -53,17 +55,23 @@ public abstract class TitleQuery<T> implements Iterable<T>, Iterator<T> {
 			return null;
 		}
 	}
-
+	/**
+	 * {@inheritDoc}
+	 */
 	public final boolean hasNext() {
 		doCollection();
 		return titleIterator.hasNext();
 	}
-
+	/**
+	 * {@inheritDoc}
+	 */
 	public final T next() {
 		doCollection();
 		return titleIterator.next();
 	}
-
+	/**
+	 * {@inheritDoc}
+	 */
 	public final void remove() {
 		titleIterator.remove();
 	}
@@ -102,7 +110,11 @@ public abstract class TitleQuery<T> implements Iterable<T>, Iterator<T> {
 	
 	protected abstract Collection<T> parseArticleTitles(String s);
 	protected abstract String parseHasMore(final String s);
-	
+	/**
+	 * Inner helper class for this type.
+	 * @author Thomas Stock
+	 *
+	 */
 	public class InnerAction extends MWAction {
 
 		private HttpAction msg;
@@ -115,19 +127,16 @@ public abstract class TitleQuery<T> implements Iterable<T>, Iterator<T> {
 		protected void setMessage(HttpAction msg) {
 			this.msg = msg;
 		}
-
+		/**
+		 * {@inheritDoc}
+		 */
 		public HttpAction getNextMessage() {
 			return msg;
 		}
 
 		
 		/**
-		 * Deals with the MediaWiki api's response by parsing the provided text.
-		 * 
-		 * @param s
-		 *            the answer to the most recently generated MediaWiki-request
-		 * 
-		 * @return empty string
+		 * {@inheritDoc}
 		 */
 		public String processAllReturningText(final String s)
 				throws ProcessException {

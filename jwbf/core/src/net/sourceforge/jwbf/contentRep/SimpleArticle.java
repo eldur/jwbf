@@ -18,6 +18,7 @@
  */
 package net.sourceforge.jwbf.contentRep;
 
+import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -31,8 +32,12 @@ import java.util.regex.Pattern;
  * @author Thomas Stock
  * 
  */
-public class SimpleArticle implements ArticleMeta {
+public class SimpleArticle implements ArticleMeta, Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1368796410854055279L;
 	private String label = "";
 	private String editSummary = "";
 	private String text = "";
@@ -40,13 +45,6 @@ public class SimpleArticle implements ArticleMeta {
 	private boolean minorEdit = false;
 	private Date editTimestamp = new Date();
 	
-	public static final int CONTENT = 1 << 1;
-	public static final int TIMESTAMP = 1 << 2;
-	public static final int USER = 1 << 3;
-	public static final int COMMENT = 1 << 4;
-	public static final int FIRST = 1 << 5;
-	public static final int LAST = 1 << 6;
-
 	/**
 	 * 
 	 * 
@@ -151,6 +149,7 @@ public class SimpleArticle implements ArticleMeta {
 
 	/**
 	 * @return the label, like "Main Page"
+	 * TODO REFACTOR getTitle
 	 */
 	public String getLabel() {
 		return label;
@@ -160,6 +159,7 @@ public class SimpleArticle implements ArticleMeta {
 	 * 
 	 * @param label
 	 *            the label, like "Main Page"
+	 *            TODO REFACTOR setTitle
 	 */
 	public void setLabel(final String label) {
 		this.label = label;
@@ -254,6 +254,31 @@ public class SimpleArticle implements ArticleMeta {
 		this.editTimestamp = d;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == this)
+            return true;
+        
+        if (!(obj instanceof SimpleArticle))
+            return false;
+
+        SimpleArticle sa = (SimpleArticle) obj;
+		return sa.getLabel().equals(getLabel()) 
+			&& sa.getText().equals(getText()) 
+			&& sa.getEditTimestamp().equals(getEditTimestamp());
+		
+	}
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public int hashCode() {
+		// TODO Auto-generated method stub
+		return super.hashCode();
+	}
 	
 
 	
