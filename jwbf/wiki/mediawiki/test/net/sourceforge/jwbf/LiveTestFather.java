@@ -43,7 +43,6 @@ import org.junit.Test;
 
 /**
  * @author Thomas Stock
- * TODO MV to MW Module
  */
 public abstract class LiveTestFather {
 

@@ -63,16 +63,17 @@ public class PostLogin extends MWAction {
 	 * 
 	 * @param username the
 	 * @param pw password
+	 * @param domain a
 	 * @param login a
 	 */
-	public PostLogin(final String username, final String pw, LoginData login) {
+	public PostLogin(final String username, final String pw, final String domain, LoginData login) {
 		super();
 		this.login = login;
 		Post pm = new Post(
 				"/api.php?action=login&format=xml");
 		pm.addParam("lgname", username);
 		pm.addParam("lgpassword", pw);
-		
+		pm.addParam("lgdomain", domain);
 		msg = pm;
 		
 

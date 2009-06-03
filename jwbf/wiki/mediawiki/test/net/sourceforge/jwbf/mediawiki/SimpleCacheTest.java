@@ -1,4 +1,4 @@
-package net.sourceforge.jwbf.contentRep;
+package net.sourceforge.jwbf.mediawiki;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -13,6 +13,8 @@ import net.sourceforge.jwbf.actions.util.ProcessException;
 import net.sourceforge.jwbf.bots.MediaWikiBot;
 import net.sourceforge.jwbf.bots.util.CacheHandler;
 import net.sourceforge.jwbf.bots.util.SimpleCache;
+import net.sourceforge.jwbf.contentRep.Article;
+import net.sourceforge.jwbf.contentRep.SimpleArticle;
 
 import org.apache.log4j.PropertyConfigurator;
 import org.junit.After;
@@ -22,7 +24,6 @@ import org.junit.Test;
 /**
  * Tests cache.
  * @author Thomas Stock
- * TODO MV to Mediawiki
  */
 public class SimpleCacheTest extends LiveTestFather {
 

@@ -145,7 +145,7 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
 				break;
 
 			default:
-				performAction(new PostLogin(username, passwd, login));
+				performAction(new PostLogin(username, passwd, domain, login));
 				break;
 			}
 
