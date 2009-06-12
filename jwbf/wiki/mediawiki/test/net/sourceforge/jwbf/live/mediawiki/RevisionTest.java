@@ -2,7 +2,10 @@ package net.sourceforge.jwbf.live.mediawiki;
 
 import static org.junit.Assert.assertEquals;
 import net.sourceforge.jwbf.LiveTestFather;
+import net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version;
+import net.sourceforge.jwbf.actions.mediawiki.editing.GetApiToken;
 import net.sourceforge.jwbf.actions.mediawiki.editing.GetRevision;
+import net.sourceforge.jwbf.actions.mediawiki.editing.PostModifyContent;
 import net.sourceforge.jwbf.bots.MediaWikiAdapterBot;
 import net.sourceforge.jwbf.bots.MediaWikiBot;
 import net.sourceforge.jwbf.contentRep.ArticleMeta;
@@ -29,6 +32,9 @@ public class RevisionTest extends LiveTestFather {
 		PropertyConfigurator.configureAndWatch("test4log4j.properties",
 				60 * 1000);
 		addInitSupporterVersions(GetRevision.class);
+		addInitSupporterVersions(PostModifyContent.class);
+		addInitSupporterVersions(GetApiToken.class);
+		
 	}
 
 	/**
@@ -131,7 +137,10 @@ public class RevisionTest extends LiveTestFather {
 		
 		assertEquals(testText, a.getText());
 		registerTestedVersion(GetRevision.class, bot.getVersion());
-		
+		registerTestedVersion(PostModifyContent.class, bot.getVersion());
+		if (bot.getVersion().greaterEqThen(Version.MW1_12)) {
+			registerTestedVersion(GetApiToken.class, bot.getVersion());
+		}
 		
 	}
 	

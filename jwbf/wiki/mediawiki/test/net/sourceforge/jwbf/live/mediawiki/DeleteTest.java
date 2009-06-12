@@ -5,9 +5,7 @@ package net.sourceforge.jwbf.live.mediawiki;
 
 import net.sourceforge.jwbf.LiveTestFather;
 import net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version;
-import net.sourceforge.jwbf.actions.mediawiki.editing.GetApiToken;
 import net.sourceforge.jwbf.actions.mediawiki.editing.PostDelete;
-import net.sourceforge.jwbf.actions.mediawiki.editing.PostModifyContent;
 import net.sourceforge.jwbf.actions.mediawiki.util.VersionException;
 import net.sourceforge.jwbf.actions.util.ActionException;
 import net.sourceforge.jwbf.actions.util.ProcessException;
@@ -37,8 +35,8 @@ public class DeleteTest extends LiveTestFather {
 		PropertyConfigurator.configureAndWatch("test4log4j.properties",
 				60 * 1000);
 		addInitSupporterVersions(PostDelete.class);
-		addInitSupporterVersions(PostModifyContent.class);
-		addInitSupporterVersions(GetApiToken.class);
+		
+		
 	}
 	private void prepare(MediaWikiAdapterBot bot) throws Exception {
 		SimpleArticle a = new SimpleArticle("Delete", "0");
@@ -66,6 +64,8 @@ public class DeleteTest extends LiveTestFather {
 					+ i + " is greater then 0 (" + ca.getText().length() 
 					+ ")", ca.getText().length() == 0);
 			registerTestedVersion(PostDelete.class, bot.getVersion());
+			
+			
 		}
 	}
 	

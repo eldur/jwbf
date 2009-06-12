@@ -1,5 +1,5 @@
 -------------------------------------------------------------------------------
-JWBF svn:217    													   Jun 2009
+JWBF svn:218    													   Jun 2009
   * ContentAccessable#getLabel() is now getTitle()
   * fix ImageInfo output format change
   * add test for MW 1.15 

@@ -197,10 +197,19 @@ public class AllPagesTest extends LiveTestFather {
 				break;
 			}
 		}
+		
+		
+		
 		if (isFullTest) {
 			for (char c : MediaWikiBot.INVALID_LABEL_CHARS) {
 				specialChars.remove(c + "");
 			}
+			if (!specialChars.isEmpty()) {
+				while (is.hasNext() || !specialChars.isEmpty()) {
+						specialChars.remove(is.next());
+				}
+			}
+			
 			Assert.assertTrue("tc sould be empty but is: " + specialChars,
 					specialChars.isEmpty());
 		}

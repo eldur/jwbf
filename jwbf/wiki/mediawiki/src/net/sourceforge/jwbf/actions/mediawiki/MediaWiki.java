@@ -68,7 +68,7 @@ public final class MediaWiki {
 		 * @return true if
 		 */
 		public boolean greaterEqThen(Version v) {
-			if (v.getIntValue() >= getIntValue())
+			if (v.getIntValue() > getIntValue())
 				return false;
 			return true;
 		}

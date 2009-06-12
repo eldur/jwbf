@@ -7,6 +7,7 @@ import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_11;
 import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_12;
 import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.UNKNOWN;
 import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertTrue;
 import net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version;
 import net.sourceforge.jwbf.actions.mediawiki.util.MWAction;
 import net.sourceforge.jwbf.actions.mediawiki.util.SupportedBy;
@@ -37,6 +38,14 @@ public class VersionDetectionTest {
 	public static void tearDownAfterClass() throws Exception {
 	}
 
+	
+	@Test
+	public void testVersionEq() throws Exception {
+	
+		assertTrue(MW1_11.greaterEqThen(MW1_09));
+		assertTrue(MW1_11.greaterEqThen(MW1_10));
+		assertTrue(MW1_11.greaterEqThen(MW1_11));
+	}
 
 	@Test
 	public void testMW109() throws Exception {

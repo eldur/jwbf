@@ -3,6 +3,7 @@ package net.sourceforge.jwbf.actions.mediawiki.editing;
 import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_12;
 import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_13;
 import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_14;
+import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_15;
 
 import java.io.IOException;
 import java.io.StringReader;
@@ -34,7 +35,7 @@ import org.xml.sax.InputSource;
  * @author Max Gensthaler
  * @author Thomas Stock
  */
-@SupportedBy({ MW1_12, MW1_13, MW1_14 })
+@SupportedBy({ MW1_12, MW1_13, MW1_14, MW1_15 })
 public final class GetApiToken extends MWAction {
 	/** Types that need a token. See API field intoken. */
 	// TODO this does not feel the elegant way.
