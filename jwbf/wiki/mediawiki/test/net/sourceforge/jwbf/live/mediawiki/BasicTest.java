@@ -7,8 +7,16 @@ import net.sourceforge.jwbf.live.ArticleTest;
 import org.apache.log4j.PropertyConfigurator;
 import org.junit.Before;
 import org.junit.BeforeClass;
+/**
+ * 
+ * @author Thomas Stock
+ *
+ */
 public class BasicTest extends ArticleTest {
-	
+	/**
+	 * Do.
+	 * @throws Exception a
+	 */
 	@BeforeClass
 	public static void setUp() throws Exception {
 		PropertyConfigurator.configureAndWatch("test4log4j.properties",
@@ -38,8 +46,15 @@ public class BasicTest extends ArticleTest {
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_14_url"));
 		bot.login(getValue("wikiMW1_14_user"), getValue("wikiMW1_14_pass"));
 		bots.add(bot);
+		
+		bot = new MediaWikiAdapterBot(getValue("wikiMW1_15_url"));
+		bot.login(getValue("wikiMW1_15_user"), getValue("wikiMW1_15_pass"));
+		bots.add(bot);
 	}
-	
+	/**
+	 * Required for extension.
+	 * @throws Exception a
+	 */
 	@Before
 	public void doNothing() throws Exception  {
 		  

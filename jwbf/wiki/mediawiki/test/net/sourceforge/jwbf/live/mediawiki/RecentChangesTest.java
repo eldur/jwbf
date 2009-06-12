@@ -24,13 +24,17 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
- * @author Thomas
+ * @author Thomas Stock
  *
  */
 public class RecentChangesTest extends LiveTestFather {
 	private MediaWikiAdapterBot bot = null;
 	private static final int COUNT = 13;
 	private static final int LIMIT = COUNT * 2;
+	/**
+	 * 
+	 * @throws Exception a
+	 */
 	@BeforeClass
 	public static void setUp() throws Exception {
 		PropertyConfigurator.configureAndWatch("test4log4j.properties",
@@ -44,7 +48,7 @@ public class RecentChangesTest extends LiveTestFather {
 	 * @throws Exception a
 	 */
 	@Test
-	public final void recentChangesWikiMW1_09() throws Exception {
+	public final void recentChangesWikiMW1x09() throws Exception {
 		
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_09_url"));
 		bot.login(getValue("wikiMW1_09_user"), getValue("wikiMW1_09_pass"));
@@ -57,7 +61,7 @@ public class RecentChangesTest extends LiveTestFather {
 	 * @throws Exception a
 	 */
 	@Test
-	public final void recentChangesWikiMW1_10() throws Exception {
+	public final void recentChangesWikiMW1x10() throws Exception {
 		
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_10_url"));
 		bot.login(getValue("wikiMW1_10_user"), getValue("wikiMW1_10_pass"));
@@ -71,7 +75,7 @@ public class RecentChangesTest extends LiveTestFather {
 	 * @throws Exception a
 	 */
 	@Test
-	public final void recentChangesWikiMW1_11() throws Exception {
+	public final void recentChangesWikiMW1x11() throws Exception {
 		
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_11_url"));
 		bot.login(getValue("wikiMW1_11_user"), getValue("wikiMW1_11_pass"));
@@ -85,7 +89,7 @@ public class RecentChangesTest extends LiveTestFather {
 	 * @throws Exception a
 	 */
 	@Test
-	public final void recentChangesWikiMW1_12() throws Exception {
+	public final void recentChangesWikiMW1x12() throws Exception {
 		
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_12_url"));
 		bot.login(getValue("wikiMW1_12_user"), getValue("wikiMW1_12_pass"));
@@ -98,7 +102,7 @@ public class RecentChangesTest extends LiveTestFather {
 	 * @throws Exception a
 	 */
 	@Test
-	public final void recentChangesWikiMW1_13() throws Exception {
+	public final void recentChangesWikiMW1x13() throws Exception {
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_13_url"));
 		bot.login(getValue("wikiMW1_13_user"), getValue("wikiMW1_13_pass"));
 		doRegularTest(bot);
@@ -111,15 +115,27 @@ public class RecentChangesTest extends LiveTestFather {
 	 * @throws Exception a
 	 */
 	@Test
-	public final void recentChangesWikiMW1_14() throws Exception {
+	public final void recentChangesWikiMW1x14() throws Exception {
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_14_url"));
 		bot.login(getValue("wikiMW1_14_user"), getValue("wikiMW1_14_pass"));
 		doRegularTest(bot);
 		doSpecialCharTest(bot);
 		assertTrue("Wrong Wiki Version " + bot.getVersion(), Version.MW1_14.equals(bot.getVersion()));
 	}
+	/**
+	 * Test.
+	 * @throws Exception a
+	 */
+	@Test
+	public final void recentChangesWikiMW1x15() throws Exception {
+		bot = new MediaWikiAdapterBot(getValue("wikiMW1_15_url"));
+		bot.login(getValue("wikiMW1_15_user"), getValue("wikiMW1_15_pass"));
+		doRegularTest(bot);
+		doSpecialCharTest(bot);
+		assertTrue("Wrong Wiki Version " + bot.getVersion(), Version.MW1_15.equals(bot.getVersion()));
+	}
 	
-	private final void prepareWiki(MediaWikiBot bot) throws ActionException,
+	private void prepareWiki(MediaWikiBot bot) throws ActionException,
 	ProcessException {
 		SimpleArticle a = new SimpleArticle("Change", "0");
 		for (int i = 0; i < 5 + 1; i++) {
@@ -133,7 +149,7 @@ public class RecentChangesTest extends LiveTestFather {
 		}
 
 	}
-	private final void doSpecialCharTest(MediaWikiBot bot) throws ActionException,
+	private void doSpecialCharTest(MediaWikiBot bot) throws ActionException,
 	ProcessException {
 		Article sa;
 		String testText = getRandom(255);
@@ -176,7 +192,7 @@ public class RecentChangesTest extends LiveTestFather {
 		
 	}
 	
-	private final void doRegularTest(MediaWikiBot bot) throws ActionException,
+	private void doRegularTest(MediaWikiBot bot) throws ActionException,
 			ProcessException {
 		prepareWiki(bot);
 		RecentchangeTitles rc = new RecentchangeTitles(bot);
@@ -238,7 +254,7 @@ public class RecentChangesTest extends LiveTestFather {
 		assertTrue("i is: " + i, i > COUNT - 1);
 		registerTestedVersion(RecentchangeTitles.class, bot.getVersion());
 	}
-	private final void change(MediaWikiBot bot) throws ActionException, ProcessException {
+	private void change(MediaWikiBot bot) throws ActionException, ProcessException {
 		SimpleArticle a = new SimpleArticle("Change", "0");
 		for (int i = 0; i < COUNT + 1; i++) {
 			a.setLabel("Change " + i);

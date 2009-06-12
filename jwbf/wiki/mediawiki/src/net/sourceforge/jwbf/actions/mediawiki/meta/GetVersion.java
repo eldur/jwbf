@@ -6,6 +6,7 @@ import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_11;
 import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_12;
 import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_13;
 import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_14;
+import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_15;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -35,7 +36,7 @@ import org.xml.sax.InputSource;
  *
  */
 
-@SupportedBy({ MW1_09, MW1_10, MW1_11, MW1_12, MW1_13, MW1_14 })
+@SupportedBy({ MW1_09, MW1_10, MW1_11, MW1_12, MW1_13, MW1_14, MW1_15 })
 public class GetVersion extends MWAction {
 
 	protected Siteinfo site = new Siteinfo();
@@ -51,8 +52,6 @@ public class GetVersion extends MWAction {
 	}
 	
 	private void parse(final String xml) throws ProcessException {
-		log.debug(xml); // TODO RM
-
 		SAXBuilder builder = new SAXBuilder();
 		Element root = null;
 		try {
@@ -64,10 +63,10 @@ public class GetVersion extends MWAction {
 		} catch (JDOMException e) {
 			log.error(e.getClass().getName() + e.getLocalizedMessage());
 			log.error(xml);
-			throw new ProcessException(e.getLocalizedMessage());
+			throw new ProcessException(e.getLocalizedMessage(), getClass());
 		} catch (IOException e) {
 			log.error(e.getClass().getName() + e.getLocalizedMessage());
-			throw new ProcessException(e.getLocalizedMessage());
+			throw new ProcessException(e.getLocalizedMessage(), getClass());
 		}
 	}
 	
@@ -83,7 +82,10 @@ public class GetVersion extends MWAction {
 		return "";
 	}
 
-	
+	/**
+	 * 
+	 * @return the
+	 */
 	public Siteinfo getSiteinfo() {
 		return site;
 	}

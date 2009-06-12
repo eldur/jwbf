@@ -3,7 +3,10 @@ package net.sourceforge.jwbf.actions.mediawiki.queries;
 import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_11;
 import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_12;
 import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_13;
+import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_14;
+import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_15;
 
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
@@ -11,8 +14,11 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Iterator;
 
+import javax.imageio.ImageIO;
+
 import net.sourceforge.jwbf.actions.Get;
 import net.sourceforge.jwbf.actions.mediawiki.MediaWiki;
+import net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version;
 import net.sourceforge.jwbf.actions.mediawiki.util.MWAction;
 import net.sourceforge.jwbf.actions.mediawiki.util.SupportedBy;
 import net.sourceforge.jwbf.actions.mediawiki.util.VersionException;
@@ -34,7 +40,7 @@ import org.xml.sax.InputSource;
  * @author Thomas Stock
  *
  */
-@SupportedBy({ MW1_11, MW1_12, MW1_13 })
+@SupportedBy({ MW1_11, MW1_12, MW1_13, MW1_14, MW1_15 })
 public class ImageInfo extends MWAction {
 
 	private String urlOfImage  = "";
@@ -52,9 +58,15 @@ public class ImageInfo extends MWAction {
 		super(bot.getVersion());
 		this.bot = bot;
 		
-		msg = new Get("/api.php?action=query&titles=Image:"
+		if (bot.getVersion().greaterEqThen(Version.MW1_15)) {
+			msg = new Get("/api.php?action=query&titles=File:"
 					+ MediaWiki.encode(name) + "&prop=imageinfo"
 					+ "&iiprop=url&format=xml");
+		} else {
+			msg = new Get("/api.php?action=query&titles=Image:"
+					+ MediaWiki.encode(name) + "&prop=imageinfo"
+					+ "&iiprop=url&format=xml");
+		}
 
 	}
 	
@@ -62,6 +74,7 @@ public class ImageInfo extends MWAction {
 	/**
 	 * @return position like "http://server.tld/path/to/Test.gif"
 	 * @throws ActionException on
+	 * @throws ProcessException on
 	 */
 	public String getUrlAsString() throws ProcessException, ActionException {
 		bot.performAction(this);
@@ -69,11 +82,21 @@ public class ImageInfo extends MWAction {
 			new URL(urlOfImage);
 		} catch (MalformedURLException e) {
 			if (bot.getHostUrl().length() <= 0) {
-				throw new ProcessException("please use the constructor with hostUrl");
+				throw new ProcessException("please use the constructor with hostUrl", getClass());
 			}
 			urlOfImage = bot.getHostUrl() + urlOfImage;
 		}
 		return urlOfImage;
+	}
+	/**
+	 * @return a
+	 * @throws ProcessException on
+	 * @throws ActionException on
+	 * @throws IOException on
+	 */
+	public BufferedImage getAsImage() throws ProcessException 
+		, ActionException, IOException {
+		return ImageIO.read(new URL(getUrlAsString()));
 	}
 
 	/**
@@ -81,28 +104,30 @@ public class ImageInfo extends MWAction {
 	 */
 	@Override
 	public String processAllReturningText(String s) throws ProcessException {
+		System.err.println(s); // FIXME RM
 		findUrlOfImage(s);
 		return "";
 	}
 	
 
 	@SuppressWarnings("unchecked")
-	private void findContent(final Element root) {
+	private void findContent(final Element root) throws ProcessException {
 
 		Iterator<Element> el = root.getChildren().iterator();
 		while (el.hasNext()) {
 			Element element = el.next();
 			if (element.getQualifiedName().equalsIgnoreCase("ii")) {
 				urlOfImage = element.getAttributeValue("url");
+
 				return;
 			} else {
 				findContent(element);
 			}
-
 		}
+		
 	}
 
-	private void findUrlOfImage(String s) {
+	private void findUrlOfImage(String s) throws ProcessException {
 		SAXBuilder builder = new SAXBuilder();
 		Element root = null;
 		try {
@@ -117,7 +142,8 @@ public class ImageInfo extends MWAction {
 			e.printStackTrace();
 		}
 		findContent(root);
-		
+		if (urlOfImage.length() < 1)
+			throw new ProcessException("Could not find this image", getClass());
 	}
 	
 	/**

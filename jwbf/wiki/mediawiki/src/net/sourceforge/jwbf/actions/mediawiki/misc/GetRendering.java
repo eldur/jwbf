@@ -3,6 +3,7 @@ package net.sourceforge.jwbf.actions.mediawiki.misc;
 import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_12;
 import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_13;
 import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_14;
+import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_15;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -33,7 +34,7 @@ import org.xml.sax.InputSource;
  * @author Thomas Stock
  *
  */
-@SupportedBy({ MW1_12, MW1_13, MW1_14 })
+@SupportedBy({ MW1_12, MW1_13, MW1_14, MW1_15 })
 public class GetRendering extends MWAction {
 
 	private final Get msg;
@@ -42,29 +43,26 @@ public class GetRendering extends MWAction {
 	
 	/**
 	 * 
-	 * @param wikitext
-	 * @param bot
+	 * @param wikitext a
+	 * @param bot a
 	 * @throws VersionException if not supported
 	 */
 	public GetRendering(String wikitext, MediaWikiBot bot) throws VersionException {
+		super(bot.getVersion());
 		this.bot = bot;
-		switch (bot.getVersion()) {
-		case MW1_09:
-		case MW1_10:
-		case MW1_11:
-			throw new VersionException(bot.getVersion().name() + " does not support this action");
-
-
-		default:
-			msg = new Get("/api.php?action=parse&text=" + MediaWiki.encode(wikitext) + "&titles=API&format=xml");
-		}
+		msg = new Get("/api.php?action=parse&text=" + MediaWiki.encode(wikitext) + "&titles=API&format=xml");
+		
 		
 	}
-
+	/**
+	 * {@inheritDoc}
+	 */
 	public HttpAction getNextMessage() {
 		return msg;
 	}
-
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public String processAllReturningText(String s) throws ProcessException {
 		html = findElement("text", s).getTextTrim();
@@ -97,8 +95,10 @@ public class GetRendering extends MWAction {
 		
 	}
 	
+	
 	private Element findContent(final Element e, final String name) {
 		Element found = null;
+		@SuppressWarnings("unchecked")
 		Iterator<Element> el = e.getChildren().iterator();
 		while (el.hasNext()) {
 			Element element = el.next();
@@ -112,12 +112,13 @@ public class GetRendering extends MWAction {
 			}
 
 		} 
-		if (found == null)
-		throw new NoSuchElementException();
+		if (found == null) {
+			throw new NoSuchElementException();
+		}
 		return found;
 	}
 
-	public void update() {
+	private void update() {
 		try {
 			bot.performAction(this);
 		} catch (ActionException e) {
@@ -126,7 +127,10 @@ public class GetRendering extends MWAction {
 			e.printStackTrace();
 		}
 	}
-	
+	/**
+	 * 
+	 * @return the
+	 */
 	public String getHtml() {
 		if (html.length() < 1) {
 			update();

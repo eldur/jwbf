@@ -207,6 +207,23 @@ public class BacklinkTest extends LiveTestFather {
 		
 	}
 
+	/**
+	 * Test backlinks.
+	 * 
+	 * @throws Exception
+	 *             a
+	 */
+	@Test
+	public final void backlinksMW1x15() throws Exception {
+
+		bot = new MediaWikiAdapterBot(getValue("wikiMW1_15_url"));
+		bot.login(getValue("wikiMW1_15_user"),
+				getValue("wikiMW1_15_pass"));
+		Assert.assertEquals(Version.MW1_15, bot.getVersion());
+		doTest(bot);
+		
+	}
+	
 	private void doTest(MediaWikiBot bot) throws Exception {
 		doTest(bot, RedirectFilter.all);
 	}

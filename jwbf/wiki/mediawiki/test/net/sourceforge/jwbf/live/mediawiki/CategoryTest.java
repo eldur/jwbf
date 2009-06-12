@@ -54,40 +54,16 @@ public class CategoryTest extends LiveTestFather {
 	private static final int COUNT = 60;
 	private static final String TESTCATNAME = "TestCat";
 	
-	protected static final void prepareTestWikis() throws Exception {
-		
-		MediaWikiAdapterBot bot;
-		 
-		
-		bot = new MediaWikiAdapterBot(getValue("wikiMW1_11_url"));
-		bot.login(getValue("wikiMW1_11_user"), getValue("wikiMW1_11_pass"));
-		
-		doPreapare(bot);
-		
-
-		bot = new MediaWikiAdapterBot(getValue("wikiMW1_12_url"));
-		bot.login(getValue("wikiMW1_12_user"), getValue("wikiMW1_12_pass"));
-		
-		doPreapare(bot);
-		
-		bot = new MediaWikiAdapterBot(getValue("wikiMW1_13_url"));
-		bot.login(getValue("wikiMW1_13_user"), getValue("wikiMW1_13_pass"));
-		
-		doPreapare(bot);
-		
-		
-	}
 	
-	protected static final void doPreapare(MediaWikiBot bot)
+	
+	protected void doPreapare(MediaWikiBot bot)
 			throws ActionException, ProcessException {
 		try {
 			SimpleArticle a = new SimpleArticle();
-			bot.writeContent(a);
+			
 			for (int i = 0; i < COUNT; i++) {
-				a.setLabel("CategoryTest" + i);
-					a.setText("abc [[Category:" 
-							+ TESTCATNAME
-							+ "]]");
+				a.setTitle("CategoryTest" + i);
+				a.setText("abc [[Category:" + TESTCATNAME + "]]");
 				bot.writeContent(a);
 			}
 		} catch (Exception e) {
@@ -125,7 +101,7 @@ public class CategoryTest extends LiveTestFather {
 	 * @throws Exception a
 	 */
 	@Test(expected = VersionException.class)
-	public final void categoryWikiMW1_09() throws Exception {
+	public final void categoryWikiMW1x09() throws Exception {
 		
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_09_url"));
 		bot.login(getValue("wikiMW1_09_user"), getValue("wikiMW1_09_pass"));
@@ -139,7 +115,7 @@ public class CategoryTest extends LiveTestFather {
 	 * @throws Exception a
 	 */
 	@Test(expected = VersionException.class)
-	public final void categoryWikiMW1_10() throws Exception {
+	public final void categoryWikiMW1x10() throws Exception {
 		
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_10_url"));
 		bot.login(getValue("wikiMW1_10_user"), getValue("wikiMW1_10_pass"));
@@ -153,7 +129,7 @@ public class CategoryTest extends LiveTestFather {
 	 * @throws Exception a
 	 */
 	@Test
-	public final void categoryWikiMW1_11() throws Exception {
+	public final void categoryWikiMW1x11() throws Exception {
 		
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_11_url"));
 		bot.login(getValue("wikiMW1_11_user"), getValue("wikiMW1_11_pass"));
@@ -167,7 +143,7 @@ public class CategoryTest extends LiveTestFather {
 	 * @throws Exception a
 	 */
 	@Test
-	public final void categoryWikiMW1_12() throws Exception {
+	public final void categoryWikiMW1x12() throws Exception {
 		
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_12_url"));
 		bot.login(getValue("wikiMW1_12_user"), getValue("wikiMW1_12_pass"));
@@ -180,7 +156,7 @@ public class CategoryTest extends LiveTestFather {
 	 * @throws Exception a
 	 */
 	@Test
-	public final void categoryWikiMW1_13() throws Exception {
+	public final void categoryWikiMW1x13() throws Exception {
 		
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_13_url"));
 		bot.login(getValue("wikiMW1_13_user"), getValue("wikiMW1_13_pass"));
@@ -196,23 +172,33 @@ public class CategoryTest extends LiveTestFather {
 	 * @throws Exception a
 	 */
 	@Test
-	public final void categoryWikiMW1_14() throws Exception {
+	public final void categoryWikiMW1x14() throws Exception {
 		
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_14_url"));
 		bot.login(getValue("wikiMW1_14_user"), getValue("wikiMW1_14_pass"));
 		assertTrue("Wrong Wiki Version " + bot.getVersion(), Version.MW1_14.equals(bot.getVersion()));
 		doTest(bot);
-		
-		
-		
 	}
 
 	
-	private final void doTest(MediaWikiBot bot) throws ActionException, ProcessException {
+	/**
+	 * Test category read. Test category must have more then 50 members.
+	 * @throws Exception a
+	 */
+	@Test
+	public final void categoryWikiMW1x15() throws Exception {
+		
+		bot = new MediaWikiAdapterBot(getValue("wikiMW1_15_url"));
+		bot.login(getValue("wikiMW1_15_user"), getValue("wikiMW1_15_pass"));
+		assertTrue("Wrong Wiki Version " + bot.getVersion(), Version.MW1_15.equals(bot.getVersion()));
+		doTest(bot);
+	}
+	
+	private void doTest(MediaWikiBot bot) throws ActionException, ProcessException {
 		doTest(bot, TESTCATNAME);
 	}
 	
-	private final void doTest(MediaWikiBot bot, String catname) throws ActionException, ProcessException {
+	private void doTest(MediaWikiBot bot, String catname) throws ActionException, ProcessException {
 	
 		Collection<String> compare1 = new Vector<String>();
 		Collection<CategoryItem> compare2 = new Vector<CategoryItem>();
@@ -228,6 +214,7 @@ public class CategoryTest extends LiveTestFather {
 			}
 		}
 		if (notEnough) {
+			System.err.println("begin prepare");
 			doPreapare(bot);
 		}
 		

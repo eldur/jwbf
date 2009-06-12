@@ -3,10 +3,11 @@
  */
 package net.sourceforge.jwbf.live.mediawiki;
 
-import static org.junit.Assert.assertTrue;
 import net.sourceforge.jwbf.LiveTestFather;
 import net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version;
+import net.sourceforge.jwbf.actions.mediawiki.editing.GetApiToken;
 import net.sourceforge.jwbf.actions.mediawiki.editing.PostDelete;
+import net.sourceforge.jwbf.actions.mediawiki.editing.PostModifyContent;
 import net.sourceforge.jwbf.actions.mediawiki.util.VersionException;
 import net.sourceforge.jwbf.actions.util.ActionException;
 import net.sourceforge.jwbf.actions.util.ProcessException;
@@ -26,13 +27,20 @@ import org.junit.Test;
 public class DeleteTest extends LiveTestFather {
 	private MediaWikiAdapterBot bot = null;
 	private static final int COUNT = 1;
+	
+	/***
+	 * 
+	 * @throws Exception a
+	 */
 	@BeforeClass
 	public static void setUp() throws Exception {
 		PropertyConfigurator.configureAndWatch("test4log4j.properties",
 				60 * 1000);
 		addInitSupporterVersions(PostDelete.class);
+		addInitSupporterVersions(PostModifyContent.class);
+		addInitSupporterVersions(GetApiToken.class);
 	}
-	private final void prepare(MediaWikiAdapterBot bot) throws Exception {
+	private void prepare(MediaWikiAdapterBot bot) throws Exception {
 		SimpleArticle a = new SimpleArticle("Delete", "0");
 		
 		for (int i = 0; i < COUNT; i++) {
@@ -42,15 +50,14 @@ public class DeleteTest extends LiveTestFather {
 		}
 	}
 	
-	private final void delete(MediaWikiAdapterBot bot) throws ActionException, ProcessException {
+	private void delete(MediaWikiAdapterBot bot) throws ActionException, ProcessException {
 		
-		assertTrue("test not documented for version: " + bot.getVersion() , new PostDelete(bot, "x").getSupportedVersions().contains(bot.getVersion()));
-		for (int i = 0; i < COUNT ; i++) {
+		for (int i = 0; i < COUNT; i++) {
 			bot.postDelete("Delete " + i);
 		}
 	}
 	
-	private final void test(MediaWikiAdapterBot bot) throws ActionException, ProcessException {
+	private void test(MediaWikiAdapterBot bot) throws ActionException, ProcessException {
 	
 		for (int i = 0; i < COUNT; i++) {
 			ContentAccessable ca = bot.readContent("Delete " + i);
@@ -68,7 +75,7 @@ public class DeleteTest extends LiveTestFather {
 	 * @throws Exception a
 	 */
 	@Test(expected = VersionException.class)
-	public final void deleteWikiMW1_09Fail() throws Exception {
+	public final void deleteWikiMW1x09Fail() throws Exception {
 		
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_09_url"));
 		bot.login(getValue("wikiMW1_09_user"), getValue("wikiMW1_09_pass"));
@@ -84,7 +91,7 @@ public class DeleteTest extends LiveTestFather {
 	 * @throws Exception a
 	 */
 	@Test(expected = VersionException.class)
-	public final void deleteWikiMW1_10Fail() throws Exception {
+	public final void deleteWikiMW1x10Fail() throws Exception {
 		
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_10_url"));
 		bot.login(getValue("wikiMW1_10_user"), getValue("wikiMW1_10_pass"));
@@ -101,7 +108,7 @@ public class DeleteTest extends LiveTestFather {
 	 * @throws Exception a
 	 */
 	@Test(expected = VersionException.class)
-	public final void deleteWikiMW1_11Fail() throws Exception {
+	public final void deleteWikiMW1x11Fail() throws Exception {
 		
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_11_url"));
 		bot.login(getValue("wikiMW1_11_user"), getValue("wikiMW1_11_pass"));
@@ -119,7 +126,7 @@ public class DeleteTest extends LiveTestFather {
 	 * @throws Exception a
 	 */
 	@Test
-	public final void deleteWikiMW1_12() throws Exception {
+	public final void deleteWikiMW1x12() throws Exception {
 		
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_12_url"));
 		bot.login(getValue("wikiMW1_12_user"), getValue("wikiMW1_12_pass"));
@@ -135,7 +142,7 @@ public class DeleteTest extends LiveTestFather {
 	 * @throws Exception a
 	 */
 	@Test
-	public final void deleteWikiMW1_13() throws Exception {
+	public final void deleteWikiMW1x13() throws Exception {
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_13_url"));
 		bot.login(getValue("wikiMW1_13_user"), getValue("wikiMW1_13_pass"));
 		
@@ -151,7 +158,7 @@ public class DeleteTest extends LiveTestFather {
 	 * @throws Exception a
 	 */
 	@Test
-	public final void deleteWikiMW1_14() throws Exception {
+	public final void deleteWikiMW1x14() throws Exception {
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_14_url"));
 		bot.login(getValue("wikiMW1_14_user"), getValue("wikiMW1_14_pass"));
 		
@@ -159,8 +166,20 @@ public class DeleteTest extends LiveTestFather {
 		prepare(bot);
 		delete(bot);
 		test(bot);
-		
-		
 	}
 	
+	/**
+	 * Test.
+	 * @throws Exception a
+	 */
+	@Test
+	public final void deleteWikiMW1x15() throws Exception {
+		bot = new MediaWikiAdapterBot(getValue("wikiMW1_15_url"));
+		bot.login(getValue("wikiMW1_15_user"), getValue("wikiMW1_15_pass"));
+		
+		Assert.assertTrue("Wrong Wiki Version " + bot.getVersion(), Version.MW1_15.equals(bot.getVersion()));
+		prepare(bot);
+		delete(bot);
+		test(bot);
+	}
 }

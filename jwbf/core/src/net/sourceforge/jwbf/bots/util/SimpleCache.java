@@ -10,6 +10,8 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.zip.CRC32;
+import java.util.zip.Checksum;
 
 import net.sourceforge.jwbf.contentRep.ArticleMeta;
 import net.sourceforge.jwbf.contentRep.SimpleArticle;
@@ -33,33 +35,44 @@ public class SimpleCache implements CacheHandler {
 
 	}
 
-
+	/**
+	 * {@inheritDoc}
+	 */
 	public boolean containsKey(String title) {
-		File f = new File(folder, title + ext);
+		maintain(title);
+		File f = new File(folder, getChecksum(title) + ext);
 		
 		return f.exists();
 	}
 	
 	private void maintain(String title) {
+		File fx = new File(folder, getChecksum(title) + ext);
+		if (fx.exists()) {
 		CachSA it = readFromFile(title);
+		
 		long dif = it.getSaveDate().getTime() - System.currentTimeMillis() + maxSaveTimeMils;
 		System.out.println(dif); // TODO RM
 		if (dif < 0) {
 			
-			File f = new File(folder, title + ext);
-			f.delete();
+		
+			fx.delete();
 			
 		}
+		}
 	}
-
+	/**
+	 * {@inheritDoc}
+	 */
 	public SimpleArticle get(String title) {
 		if (containsKey(title))
 			return readFromFile(title);
 		return new SimpleArticle(title);
 	}
-
+	/**
+	 * {@inheritDoc}
+	 */
 	public void put(SimpleArticle sa) {
-		
+		log.debug("put file" + getChecksum(sa.getLabel())); // TODO RM
 		write2File(new CachSA(sa));
 		
 		
@@ -69,7 +82,7 @@ public class SimpleCache implements CacheHandler {
 		OutputStream fos = null;
 
 		try {
-			fos = new FileOutputStream(new File(folder, sa.getLabel() + ext));
+			fos = new FileOutputStream(new File(folder, getChecksum(sa.getLabel()) + ext));
 			ObjectOutputStream o = new ObjectOutputStream(fos);
 			o.writeObject(sa);
 		} catch (IOException e) {
@@ -83,12 +96,22 @@ public class SimpleCache implements CacheHandler {
 		}
 	}
 	
+	private String getChecksum(String s) {
+		byte[] bytes = s.getBytes();
+	   
+	    Checksum checksumEngine = new CRC32();
+	    checksumEngine.update(bytes, 0, bytes.length);
+	    long checksum = checksumEngine.getValue();
+	    return Long.toHexString(checksum);
+
+	}
+	
 	private CachSA readFromFile(String title) {
 		InputStream fis = null;
 		
 		try {
-			fis = new FileInputStream(new File(folder, title + ext));
-			log.debug("try to read from file: " + new File(folder, title + ext).getAbsolutePath());
+			fis = new FileInputStream(new File(folder, getChecksum(title) + ext));
+			log.debug("try to read from file: " + new File(folder, getChecksum(title) + ext).getAbsolutePath());
 			ObjectInputStream o = new ObjectInputStream(fis);
 			CachSA sa = (CachSA) o.readObject();
 
@@ -105,7 +128,7 @@ public class SimpleCache implements CacheHandler {
 				e.printStackTrace();
 			}
 		}
-		return null;
+		return new CachSA();
 	}
 
 	private class CachSA extends SimpleArticle implements Serializable {
@@ -116,17 +139,22 @@ public class SimpleCache implements CacheHandler {
 		private static final long serialVersionUID = -3759968702455312374L;
 		private Date d;
 		
+		public CachSA() {
+			super();
+			setSaveDate(1L);
+		}
+		
 		public CachSA(ArticleMeta ca) {
 			super(ca);
-			setSaveDate();
+			setSaveDate(System.currentTimeMillis());
 		}
 		
 		public Date getSaveDate() {
 			return d;
 		}
 		
-		public void setSaveDate() {
-			d = new Date(System.currentTimeMillis());
+		public void setSaveDate(long milis) {
+			d = new Date(milis);
 		}
 	}
 

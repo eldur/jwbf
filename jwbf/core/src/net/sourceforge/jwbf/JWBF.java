@@ -104,7 +104,12 @@ public final class JWBF {
 	 */
 	public static void printVersion() {
 		System.out.println(MODULES);
-
+	}
+	/**
+	 * @return the JWBF Version.
+	 */
+	public static Map<String, String> getVersion() {
+		return MODULES;
 	}
 
 	/**

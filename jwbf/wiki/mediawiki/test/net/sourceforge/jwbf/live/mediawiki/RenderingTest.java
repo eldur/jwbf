@@ -64,16 +64,12 @@ public class RenderingTest extends LiveTestFather {
 		doTest(bot);
 	}
 
-	
-
-	
-	
 	/**
 	 * 
 	 * @throws Exception a
 	 */
 	@Test(expected = VersionException.class)
-	public final void getRenderingMW1_09Fail() throws Exception {
+	public final void getRenderingMW1x09Fail() throws Exception {
 		
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_09_url"));
 		bot.login(getValue("wikiMW1_09_user"), getValue("wikiMW1_09_pass"));
@@ -85,7 +81,7 @@ public class RenderingTest extends LiveTestFather {
 	 * @throws Exception a
 	 */
 	@Test(expected = VersionException.class)
-	public final void getRenderingMW1_10Fail() throws Exception {
+	public final void getRenderingMW1x10Fail() throws Exception {
 		
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_10_url"));
 		bot.login(getValue("wikiMW1_10_user"), getValue("wikiMW1_10_pass"));
@@ -98,7 +94,7 @@ public class RenderingTest extends LiveTestFather {
 	 * @throws Exception a
 	 */
 	@Test(expected = VersionException.class)
-	public final void getRenderingMW1_11Fail() throws Exception {
+	public final void getRenderingMW1x11Fail() throws Exception {
 		
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_11_url"));
 		bot.login(getValue("wikiMW1_11_user"), getValue("wikiMW1_11_pass"));
@@ -111,7 +107,7 @@ public class RenderingTest extends LiveTestFather {
 	 * @throws Exception a
 	 */
 	@Test
-	public final void getRenderingMW1_12() throws Exception {
+	public final void getRenderingMW1x12() throws Exception {
 		
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_12_url"));
 		bot.login(getValue("wikiMW1_12_user"), getValue("wikiMW1_12_pass"));
@@ -123,7 +119,7 @@ public class RenderingTest extends LiveTestFather {
 	 * @throws Exception a
 	 */
 	@Test
-	public final void getRenderingMW1_13() throws Exception {
+	public final void getRenderingMW1x13() throws Exception {
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_13_url"));
 		bot.login(getValue("wikiMW1_13_user"), getValue("wikiMW1_13_pass"));
 		Assert.assertEquals("Wrong Wiki Version " + bot.getVersion(), bot.getVersion(), Version.MW1_13);
@@ -136,11 +132,23 @@ public class RenderingTest extends LiveTestFather {
 	 * @throws Exception a
 	 */
 	@Test
-	public final void getRenderingMW1_14() throws Exception {
+	public final void getRenderingMW1x14() throws Exception {
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_14_url"));
 		bot.login(getValue("wikiMW1_14_user"), getValue("wikiMW1_14_pass"));
 		doTest(bot);
 		Assert.assertTrue("Wrong Wiki Version " + bot.getVersion(), Version.MW1_14.equals(bot.getVersion()));
+	}
+	
+	/**
+	 * 
+	 * @throws Exception a
+	 */
+	@Test
+	public final void getRenderingMW1x15() throws Exception {
+		bot = new MediaWikiAdapterBot(getValue("wikiMW1_15_url"));
+		bot.login(getValue("wikiMW1_15_user"), getValue("wikiMW1_15_pass"));
+		doTest(bot);
+		Assert.assertTrue("Wrong Wiki Version " + bot.getVersion(), Version.MW1_15.equals(bot.getVersion()));
 	}
 	
 	private void doTest(MediaWikiBot bot) throws Exception {

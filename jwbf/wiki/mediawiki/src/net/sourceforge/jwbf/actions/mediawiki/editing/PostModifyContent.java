@@ -24,6 +24,7 @@ import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_11;
 import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_12;
 import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_13;
 import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_14;
+import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_15;
 
 import java.util.Hashtable;
 
@@ -50,7 +51,7 @@ import org.apache.log4j.Logger;
  * 
  * @author Thomas Stock
  */
-@SupportedBy({ MW1_09, MW1_10, MW1_11, MW1_12, MW1_13, MW1_14 })
+@SupportedBy({ MW1_09, MW1_10, MW1_11, MW1_12, MW1_13, MW1_14, MW1_15 })
 public class PostModifyContent extends MWAction {
 
 	private boolean first = true;
@@ -73,6 +74,9 @@ public class PostModifyContent extends MWAction {
 	 */
 	public PostModifyContent(MediaWikiBot bot, final ContentAccessable a) throws ActionException, ProcessException {
 		super(bot.getVersion());
+		if (a.getTitle().length() < 1) {
+			throw new ActionException("imposible request, no title", getClass());
+		}
 		this.a = a;
 		this.bot = bot;
 		
@@ -103,14 +107,14 @@ public class PostModifyContent extends MWAction {
 					throw new VersionException("write api not avalibal");
 				}
 				apiReq = new GetApiToken(GetApiToken.Intoken.EDIT,
-						a.getLabel(), bot.getSiteinfo(), bot.getUserinfo());
+						a.getTitle(), bot.getSiteinfo(), bot.getUserinfo());
 				apiGet = apiReq.getNextMessage();
 				apiEdit = true;
 				return apiGet;
 
 			} catch (VersionException e) {
 				String uS = "/index.php?title="
-						+ MediaWiki.encode(a.getLabel())
+						+ MediaWiki.encode(a.getTitle())
 						+ "&action=edit&dontcountme=s";
 				initOldGet = new Get(uS);
 				first = false;
@@ -120,7 +124,7 @@ public class PostModifyContent extends MWAction {
 			}
 		}
 		if (apiEdit) {
-			String uS = "/api.php?action=edit&title=" + MediaWiki.encode(a.getLabel());
+			String uS = "/api.php?action=edit&title=" + MediaWiki.encode(a.getTitle());
 			postModify = new Post(uS);
 			postModify.addParam("summary", a.getEditSummary());
 			postModify.addParam("text", a.getText());
@@ -132,7 +136,7 @@ public class PostModifyContent extends MWAction {
 			postModify.addParam("token", apiReq.getToken());
 			
 		} else {
-			String uS = "/index.php?title=" + MediaWiki.encode(a.getLabel())
+			String uS = "/index.php?title=" + MediaWiki.encode(a.getTitle())
 					+ "&action=submit";
 
 			postModify = new Post(uS);
@@ -158,7 +162,7 @@ public class PostModifyContent extends MWAction {
 
 			}
 
-			log.info("WRITE: " + a.getLabel());
+			log.info("WRITE: " + a.getTitle());
 
 			
 		}
@@ -180,11 +184,11 @@ public class PostModifyContent extends MWAction {
 	@Override
 	public String processReturningText(String s, HttpAction hm)
 			throws ProcessException {
-		if (s.contains("error")) { // FIXME RM
+		if (s.contains("error")) { // FIXME RM or see FileUpload#processAllReturningText() error handling
 //			if (s.contains("edit") && bot.getVersion() == Version.MW1_13) { // FIXME invalid
 //				throw new ProcessException("please check if $wgEnableWriteAPI = true;");
 //			}
-			throw new ProcessException(s.substring(0, 700));
+			throw new ProcessException(s.substring(0, 700), getClass());
 		}
 		if (initOldGet != null && hm.getRequest().equals(initOldGet.getRequest())) {
 			getWpValues(s, tab);

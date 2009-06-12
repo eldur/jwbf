@@ -24,6 +24,7 @@ import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_11;
 import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_12;
 import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_13;
 import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_14;
+import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_15;
 
 import java.util.Collection;
 import java.util.Vector;
@@ -48,7 +49,7 @@ import org.apache.log4j.Logger;
  * @since MediaWiki 1.9.0
  * 
  */
-@SupportedBy({ MW1_09, MW1_10, MW1_11, MW1_12, MW1_13, MW1_14 })
+@SupportedBy({ MW1_09, MW1_10, MW1_11, MW1_12, MW1_13, MW1_14, MW1_15 })
 public class ImageUsageTitles extends TitleQuery<String> {
 
 	/** constant value for the illimit-parameter. **/

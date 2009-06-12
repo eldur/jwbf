@@ -24,8 +24,11 @@ import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_11;
 import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_12;
 import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_13;
 import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_14;
+import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_15;
 
 import java.io.FileNotFoundException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import net.sourceforge.jwbf.actions.FilePost;
 import net.sourceforge.jwbf.actions.Get;
@@ -58,7 +61,7 @@ import org.apache.log4j.Logger;
  * @author Thomas Stock
  * 
  */
-@SupportedBy({ MW1_11, MW1_12, MW1_13, MW1_14 })
+@SupportedBy({ MW1_11, MW1_12, MW1_13, MW1_14, MW1_15 })
 public class FileUpload extends MWAction {
 
 	
@@ -173,10 +176,17 @@ public class FileUpload extends MWAction {
 	public String processAllReturningText(String s) throws ProcessException {
 		
 		if (s.contains("error")) {
-//			System.out.println(s);
-//			TODO nicer error handling 
-			LOG.error("Upload failed");
-			throw new ProcessException("Upload failed", getClass());
+			Pattern errFinder = Pattern
+			.compile("<p>(.*?)</p>",
+					Pattern.DOTALL | Pattern.MULTILINE);
+			Matcher m = errFinder.matcher(s);
+			String lastP = "";
+			while (m.find()) {
+				lastP = MediaWiki.decode(m.group(1));
+				LOG.error("Upload failed: " + lastP);
+			}
+			
+			throw new ProcessException("Upload failed - " + lastP, getClass());
 		}
 		return "";
 	}

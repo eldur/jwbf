@@ -13,7 +13,11 @@ import net.sourceforge.jwbf.contentRep.Article;
 import org.apache.log4j.PropertyConfigurator;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
+/**
+ * 
+ * @author Thomas Stock
+ *
+ */
 public class ImageUsageTitlesTest extends LiveTestFather {
 
 
@@ -35,7 +39,7 @@ public class ImageUsageTitlesTest extends LiveTestFather {
 	 * @throws Exception a
 	 */
 	@Test
-	public final void imageUsageMW1_09() throws Exception {
+	public final void imageUsageMW1x09() throws Exception {
 		
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_09_url"));
 		bot.login(getValue("wikiMW1_09_user"), getValue("wikiMW1_09_pass"));
@@ -48,7 +52,7 @@ public class ImageUsageTitlesTest extends LiveTestFather {
 	 * @throws Exception a
 	 */
 	@Test
-	public final void imageUsageMW1_10() throws Exception {
+	public final void imageUsageMW1x10() throws Exception {
 		
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_10_url"));
 		bot.login(getValue("wikiMW1_10_user"), getValue("wikiMW1_10_pass"));
@@ -61,7 +65,7 @@ public class ImageUsageTitlesTest extends LiveTestFather {
 	 * @throws Exception a
 	 */
 	@Test
-	public final void imageUsageMW1_11() throws Exception {
+	public final void imageUsageMW1x11() throws Exception {
 		
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_11_url"));
 		bot.login(getValue("wikiMW1_11_user"), getValue("wikiMW1_11_pass"));
@@ -74,7 +78,7 @@ public class ImageUsageTitlesTest extends LiveTestFather {
 	 * @throws Exception a
 	 */
 	@Test
-	public final void imageUsageMW1_12() throws Exception {
+	public final void imageUsageMW1x12() throws Exception {
 		
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_12_url"));
 		bot.login(getValue("wikiMW1_12_user"), getValue("wikiMW1_12_pass"));
@@ -87,7 +91,7 @@ public class ImageUsageTitlesTest extends LiveTestFather {
 	 * @throws Exception a
 	 */
 	@Test
-	public final void imageUsageMW1_13() throws Exception {
+	public final void imageUsageMW1x13() throws Exception {
 		
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_13_url"));
 		bot.login(getValue("wikiMW1_13_user"), getValue("wikiMW1_13_pass"));
@@ -101,7 +105,7 @@ public class ImageUsageTitlesTest extends LiveTestFather {
 	 * @throws Exception a
 	 */
 	@Test
-	public final void imageUsageMW1_14() throws Exception {
+	public final void imageUsageMW1x14() throws Exception {
 		
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_14_url"));
 		bot.login(getValue("wikiMW1_14_user"), getValue("wikiMW1_14_pass"));
@@ -109,6 +113,20 @@ public class ImageUsageTitlesTest extends LiveTestFather {
 		test(bot);
 		
 	}
+	/**
+	 * Test.
+	 * @throws Exception a
+	 */
+	@Test
+	public final void imageUsageMW1x15() throws Exception {
+		
+		bot = new MediaWikiAdapterBot(getValue("wikiMW1_15_url"));
+		bot.login(getValue("wikiMW1_15_user"), getValue("wikiMW1_15_pass"));
+		assertTrue("Wrong Wiki Version " + bot.getVersion(), Version.MW1_15.equals(bot.getVersion()));
+		test(bot);
+		
+	}
+	
 	private void test(MediaWikiBot bot2) throws Exception {
 		ImageUsageTitles il = new ImageUsageTitles(bot, "Image:" + getValue("filename"), MediaWiki.NS_ALL);
 

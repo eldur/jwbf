@@ -14,11 +14,16 @@ import org.apache.log4j.PropertyConfigurator;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+/**
+ * 
+ * @author Thomas Stock
+ *
+ */
 public class LogEventsTest extends LiveTestFather {
 
 
 	private MediaWikiBot bot = null;
-	private static int LIMIT = 55;
+	private static final int LIMIT = 55;
 	/**
 	 * Setup log4j.
 	 * @throws Exception a
@@ -31,7 +36,6 @@ public class LogEventsTest extends LiveTestFather {
 
 	}
 
-
 	/**
 	 * 
 	 * @throws Exception a
@@ -43,16 +47,12 @@ public class LogEventsTest extends LiveTestFather {
 		doTest(bot, false, LogEvents.DELETE);
 	}
 
-	
-
-	
-	
 	/**
 	 * 
 	 * @throws Exception a
 	 */
 	@Test(expected = VersionException.class)
-	public final void logEventsMW1_09() throws Exception {
+	public final void logEventsMW1x09Fail() throws Exception {
 		
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_09_url"));
 		bot.login(getValue("wikiMW1_09_user"), getValue("wikiMW1_09_pass"));
@@ -64,7 +64,7 @@ public class LogEventsTest extends LiveTestFather {
 	 * @throws Exception a
 	 */
 	@Test(expected = VersionException.class)
-	public final void logEventsMW1_10() throws Exception {
+	public final void logEventsMW1x10Fail() throws Exception {
 		
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_10_url"));
 		bot.login(getValue("wikiMW1_10_user"), getValue("wikiMW1_10_pass"));
@@ -77,7 +77,7 @@ public class LogEventsTest extends LiveTestFather {
 	 * @throws Exception a
 	 */
 	@Test
-	public final void logEventsMW1_11() throws Exception {
+	public final void logEventsMW1x11() throws Exception {
 		
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_11_url"));
 		bot.login(getValue("wikiMW1_11_user"), getValue("wikiMW1_11_pass"));
@@ -90,7 +90,7 @@ public class LogEventsTest extends LiveTestFather {
 	 * @throws Exception a
 	 */
 	@Test
-	public final void logEventsMW1_12() throws Exception {
+	public final void logEventsMW1x12() throws Exception {
 		
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_12_url"));
 		bot.login(getValue("wikiMW1_12_user"), getValue("wikiMW1_12_pass"));
@@ -102,7 +102,7 @@ public class LogEventsTest extends LiveTestFather {
 	 * @throws Exception a
 	 */
 	@Test
-	public final void logEventsMW1_13() throws Exception {
+	public final void logEventsMW1x13() throws Exception {
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_13_url"));
 		bot.login(getValue("wikiMW1_13_user"), getValue("wikiMW1_13_pass"));
 		doTest(bot, true, LogEvents.DELETE);
@@ -113,11 +113,23 @@ public class LogEventsTest extends LiveTestFather {
 	 * @throws Exception a
 	 */
 	@Test
-	public final void logEventsMW1_14() throws Exception {
+	public final void logEventsMW1x14() throws Exception {
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_14_url"));
 		bot.login(getValue("wikiMW1_14_user"), getValue("wikiMW1_14_pass"));
 		doTest(bot, true, LogEvents.DELETE);
 		assertTrue("Wrong Wiki Version " + bot.getVersion(), Version.MW1_14.equals(bot.getVersion()));
+	}
+	
+	/**
+	 * 
+	 * @throws Exception a
+	 */
+	@Test
+	public final void logEventsMW1x15() throws Exception {
+		bot = new MediaWikiAdapterBot(getValue("wikiMW1_15_url"));
+		bot.login(getValue("wikiMW1_15_user"), getValue("wikiMW1_15_pass"));
+		doTest(bot, true, LogEvents.DELETE);
+		assertTrue("Wrong Wiki Version " + bot.getVersion(), Version.MW1_15.equals(bot.getVersion()));
 	}
 	
 	private void doPrepare(MediaWikiBot bot) throws Exception {
@@ -133,9 +145,7 @@ public class LogEventsTest extends LiveTestFather {
 	
 	private void doTest(MediaWikiBot bot, boolean isDemo, String type) throws Exception {
 		LogEvents le = new LogEvents(bot, type);
-		if (bot.getVersion() != Version.DEVELOPMENT)
-			assertTrue("test not documented for version: " + bot.getVersion()
-					, le.getSupportedVersions().contains(bot.getVersion()));
+
 		int i = 0;
 		boolean notEnough = true;
 		for (@SuppressWarnings("unused") LogItem logItem : le) {

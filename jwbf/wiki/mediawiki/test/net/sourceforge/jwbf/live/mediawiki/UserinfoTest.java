@@ -21,14 +21,18 @@ import org.junit.Test;
  */
 public class UserinfoTest extends LiveTestFather {
 	private MediaWikiAdapterBot bot = null;
-	private static final int COUNT = 5;
+
+	/**
+	 * 
+	 * @throws Exception a
+	 */
 	@BeforeClass
 	public static void setUp() throws Exception {
 		PropertyConfigurator.configureAndWatch("test4log4j.properties",
 				60 * 1000);
 		addInitSupporterVersions(GetSiteinfo.class);
 	}
-	private final void testDetails(MediaWikiBot bot, String userName) throws Exception {
+	private void testDetails(MediaWikiBot bot, String userName) throws Exception {
 		Userinfo u = bot.getUserinfo();
 		Assert.assertEquals(userName, u.getUsername());
 		
@@ -45,16 +49,13 @@ public class UserinfoTest extends LiveTestFather {
 		registerTestedVersion(GetSiteinfo.class, bot.getVersion());
 		
 	}
-	
 
-	
-	
 	/**
 	 * Test category read. Test category must have more then 50 members.
 	 * @throws Exception a
 	 */
 	@Test
-	public final void userInfoWikiMW1_09() throws Exception {
+	public final void userInfoWikiMW1x09() throws Exception {
 		
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_09_url"));
 		bot.login(getValue("wikiMW1_09_user"), getValue("wikiMW1_09_pass"));
@@ -66,7 +67,7 @@ public class UserinfoTest extends LiveTestFather {
 	 * @throws Exception a
 	 */
 	@Test
-	public final void userInfoWikiMW1_10() throws Exception {
+	public final void userInfoWikiMW1x10() throws Exception {
 		
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_10_url"));
 		bot.login(getValue("wikiMW1_10_user"), getValue("wikiMW1_10_pass"));
@@ -80,7 +81,7 @@ public class UserinfoTest extends LiveTestFather {
 	 * @throws Exception a
 	 */
 	@Test
-	public final void userInfoWikiMW1_11() throws Exception {
+	public final void userInfoWikiMW1x11() throws Exception {
 		
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_11_url"));
 		bot.login(getValue("wikiMW1_11_user"), getValue("wikiMW1_11_pass"));
@@ -94,7 +95,7 @@ public class UserinfoTest extends LiveTestFather {
 	 * @throws Exception a
 	 */
 	@Test
-	public final void userInfoWikiMW1_12() throws Exception {
+	public final void userInfoWikiMW1x12() throws Exception {
 		
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_12_url"));
 		bot.login(getValue("wikiMW1_12_user"), getValue("wikiMW1_12_pass"));
@@ -107,7 +108,7 @@ public class UserinfoTest extends LiveTestFather {
 	 * @throws Exception a
 	 */
 	@Test
-	public final void userInfoWikiMW1_13() throws Exception {
+	public final void userInfoWikiMW1x13() throws Exception {
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_13_url"));
 		bot.login(getValue("wikiMW1_13_user"), getValue("wikiMW1_13_pass"));
 		
@@ -119,12 +120,24 @@ public class UserinfoTest extends LiveTestFather {
 	 * @throws Exception a
 	 */
 	@Test
-	public final void userInfoWikiMW1_14() throws Exception {
+	public final void userInfoWikiMW1x14() throws Exception {
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_14_url"));
 		bot.login(getValue("wikiMW1_14_user"), getValue("wikiMW1_14_pass"));
 		
 		Assert.assertTrue("Wrong Wiki Version " + bot.getVersion(), Version.MW1_14.equals(bot.getVersion()));
 		testDetails(bot, getValue("wikiMW1_14_user"));
+	}
+	/**
+	 * Test category read. Test category must have more then 50 members.
+	 * @throws Exception a
+	 */
+	@Test
+	public final void userInfoWikiMW1x15() throws Exception {
+		bot = new MediaWikiAdapterBot(getValue("wikiMW1_15_url"));
+		bot.login(getValue("wikiMW1_15_user"), getValue("wikiMW1_15_pass"));
+		
+		Assert.assertTrue("Wrong Wiki Version " + bot.getVersion(), Version.MW1_15.equals(bot.getVersion()));
+		testDetails(bot, getValue("wikiMW1_15_user"));
 	}
 	
 	/**
@@ -132,7 +145,7 @@ public class UserinfoTest extends LiveTestFather {
 	 * @throws Exception a
 	 */
 	@Test
-	public final void userInfoWikiMW1_14Rights() throws Exception {
+	public final void userInfoWikiMW1x14Rights() throws Exception {
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_14_url"));
 		
 		

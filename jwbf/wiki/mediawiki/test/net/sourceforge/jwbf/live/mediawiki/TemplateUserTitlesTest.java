@@ -19,7 +19,11 @@ import net.sourceforge.jwbf.contentRep.Article;
 import org.apache.log4j.PropertyConfigurator;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
+/**
+ * 
+ * @author Thomas Stock
+ *
+ */
 public class TemplateUserTitlesTest extends LiveTestFather {
 
 	
@@ -41,7 +45,7 @@ public class TemplateUserTitlesTest extends LiveTestFather {
 	 * @throws Exception a
 	 */
 	@Test
-	public final void templateUserWikiMW1_09() throws Exception {
+	public final void templateUserWikiMW1x09() throws Exception {
 		
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_09_url"));
 		bot.login(getValue("wikiMW1_09_user"), getValue("wikiMW1_09_pass"));
@@ -54,7 +58,7 @@ public class TemplateUserTitlesTest extends LiveTestFather {
 	 * @throws Exception a
 	 */
 	@Test
-	public final void templateUserWikiMW1_10() throws Exception {
+	public final void templateUserWikiMW1x10() throws Exception {
 		
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_10_url"));
 		bot.login(getValue("wikiMW1_10_user"), getValue("wikiMW1_10_pass"));
@@ -68,7 +72,7 @@ public class TemplateUserTitlesTest extends LiveTestFather {
 	 * @throws Exception a
 	 */
 	@Test
-	public final void templateUserWikiMW1_11() throws Exception {
+	public final void templateUserWikiMW1x11() throws Exception {
 		
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_11_url"));
 		bot.login(getValue("wikiMW1_11_user"), getValue("wikiMW1_11_pass"));
@@ -82,7 +86,7 @@ public class TemplateUserTitlesTest extends LiveTestFather {
 	 * @throws Exception a
 	 */
 	@Test
-	public final void templateUserWikiMW1_12() throws Exception {
+	public final void templateUserWikiMW1x12() throws Exception {
 		
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_12_url"));
 		bot.login(getValue("wikiMW1_12_user"), getValue("wikiMW1_12_pass"));
@@ -95,7 +99,7 @@ public class TemplateUserTitlesTest extends LiveTestFather {
 	 * @throws Exception a
 	 */
 	@Test
-	public final void templateUserWikiMW1_13() throws Exception {
+	public final void templateUserWikiMW1x13() throws Exception {
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_13_url"));
 		bot.login(getValue("wikiMW1_13_user"), getValue("wikiMW1_13_pass"));
 		doRegularTest(bot);
@@ -108,12 +112,25 @@ public class TemplateUserTitlesTest extends LiveTestFather {
 	 * @throws Exception a
 	 */
 	@Test
-	public final void templateUserWikiMW1_14() throws Exception {
+	public final void templateUserWikiMW1x14() throws Exception {
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_14_url"));
 		bot.login(getValue("wikiMW1_14_user"), getValue("wikiMW1_14_pass"));
 		doRegularTest(bot);
 
 		assertTrue("Wrong Wiki Version " + bot.getVersion(), Version.MW1_14.equals(bot.getVersion()));
+	}
+	
+	/**
+	 * Test.
+	 * @throws Exception a
+	 */
+	@Test
+	public final void templateUserWikiMW1x15() throws Exception {
+		bot = new MediaWikiAdapterBot(getValue("wikiMW1_15_url"));
+		bot.login(getValue("wikiMW1_15_user"), getValue("wikiMW1_15_pass"));
+		doRegularTest(bot);
+
+		assertTrue("Wrong Wiki Version " + bot.getVersion(), Version.MW1_15.equals(bot.getVersion()));
 	}
 
 	private void doRegularTest(MediaWikiBot bot) throws JwbfException {
@@ -122,10 +139,12 @@ public class TemplateUserTitlesTest extends LiveTestFather {
 		int i = 0;
 		Collection<String> titles = new Vector<String>();
 		
-		for (int j = 0; j < 55; j++)
-		titles.add("Patx" + j);
+		for (int j = 0; j < 55; j++) {
+			titles.add("Patx" + j);
+		}
 		
 		for (String pageTitle : a) {
+			pageTitle += "";
 			i++;
 		}
 		if (i < 50) {

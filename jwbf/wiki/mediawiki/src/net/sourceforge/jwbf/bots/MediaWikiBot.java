@@ -201,31 +201,38 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
 		GetRevision ac;
 		if (store != null) {
 			if (store.containsKey(name)) {
-				ac = new GetRevision(name, GetRevision.TIMESTAMP, this);
+				ac = new GetRevision(this, name, GetRevision.TIMESTAMP);
 				performAction(ac);
 				
-				SimpleArticle ssa = store.get(name);
-				if (ac.getArticle().getEditTimestamp().equals(ssa.getEditTimestamp())) {
+				SimpleArticle storeSa = store.get(name);
+				if(log.isDebugEnabled())
+					log.debug("stored article (" + storeSa.getLabel() + ") timestamp: " + storeSa.getEditTimestamp());
+				SimpleArticle liveSa = ac.getArticle();
+				if(log.isDebugEnabled())
+					log.debug("live article timestamp: " + liveSa.getEditTimestamp());
+				if (liveSa.getEditTimestamp().equals(storeSa.getEditTimestamp())) {
 
 					return store.get(name);
 				}
 			}
 
-			ac = new GetRevision(name, properties, this);
+			ac = new GetRevision(this, name, properties);
 
 			performAction(ac);
 			log.debug("update cache (read)");
 			store.put(ac.getArticle());
 
 		} else {
-			ac = new GetRevision(name, properties, this);
+			ac = new GetRevision(this, name, properties);
 
 			performAction(ac);
 		}
 		return ac.getArticle();
 
 	}
-
+	/**
+	 * {@inheritDoc}
+	 */
 	public SimpleArticle readData(String name) throws ActionException,
 			ProcessException {
 		
@@ -273,12 +280,12 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
 		}
 
 		for (char invChar : INVALID_LABEL_CHARS) {
-			if (a.getLabel().contains(invChar + ""))
+			if (a.getTitle().contains(invChar + ""))
 				throw new ActionException("Invalid character in label\"" 
-						+ a.getLabel() + "\" : \"" + invChar + "\"", getClass());
+						+ a.getTitle() + "\" : \"" + invChar + "\"", getClass());
 		}
 		if (store != null) {
-			String label = a.getLabel();
+			String label = a.getTitle();
 			SimpleArticle sa;
 			if (store.containsKey(label)) {
 				log.debug("contains article: " + label); // TODO RM
@@ -366,6 +373,7 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
 	/**
 	 * 
 	 * @return the
+	 * @throws RuntimeException if no version was found.
 	 * @see #getSiteinfo()
 	 */
 	public final Version getVersion() throws RuntimeException {

@@ -74,6 +74,14 @@ public class JwbfException extends Exception {
 	protected JwbfException(Throwable arg0) {
 		super(arg0);
 	}
+	
+	/**
+	 * 
+	 * @return the
+	 */
+	public Class < ? > getExceptionSrcClass() {
+		return clazz;
+	}
 	/**
 	 * 
 	 * @param clazz the
@@ -82,11 +90,18 @@ public class JwbfException extends Exception {
 		this.clazz = clazz;
 	}
 	/**
+	 * 
+	 * @return the
+	 */
+	private String getModulInfo() {
+		return "( " + JWBF.getArtifactId(clazz) + "-" + JWBF.getVersion(clazz) + " )";
+	}
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public void printStackTrace(PrintWriter arg0) {
-		arg0.println(JWBF.getArtifactId(clazz) + "-" + JWBF.getVersion(clazz));
+		arg0.println(getModulInfo());
 		super.printStackTrace(arg0);
 	}
 	/**
@@ -94,7 +109,7 @@ public class JwbfException extends Exception {
 	 */
 	@Override
 	public void printStackTrace() {
-		System.out.println(JWBF.getArtifactId(clazz) + "-" + JWBF.getVersion(clazz));
+		System.err.println(getModulInfo());
 		super.printStackTrace();
 	}
 	/**
@@ -102,7 +117,7 @@ public class JwbfException extends Exception {
 	 */
 	@Override
 	public void printStackTrace(PrintStream s) {
-		s.println(JWBF.getArtifactId(clazz) + "-" + JWBF.getVersion(clazz));
+		s.println(getModulInfo());
 		super.printStackTrace(s);
 	}
 

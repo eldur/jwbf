@@ -19,15 +19,16 @@
 package net.sourceforge.jwbf.live.mediawiki;
 
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import net.sourceforge.jwbf.LiveTestFather;
 import net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version;
 import net.sourceforge.jwbf.actions.mediawiki.meta.GetVersion;
 import net.sourceforge.jwbf.bots.MediaWikiAdapterBot;
 import net.sourceforge.jwbf.bots.MediaWikiBot;
-import net.sourceforge.jwbf.contentRep.mediawiki.Siteinfo;
+import net.sourceforge.jwbf.contentRep.Article;
 
 import org.apache.log4j.PropertyConfigurator;
-import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 /**
@@ -59,8 +60,8 @@ public class SiteinfoTest extends LiveTestFather {
 	public final void siteInfoWikipediaDe() throws Exception {
 		
 		bot = new MediaWikiAdapterBot("http://de.wikipedia.org/w/index.php");
-		Siteinfo is = bot.getSiteinfo();
-		Assert.assertEquals(Version.DEVELOPMENT, bot.getVersion());
+		bot.getSiteinfo();
+		assertEquals(Version.DEVELOPMENT, bot.getVersion());
 	}
 	
 	/**
@@ -68,7 +69,7 @@ public class SiteinfoTest extends LiveTestFather {
 	 * @throws Exception a
 	 */
 	@Test
-	public final void siteInfoMW1_09() throws Exception {
+	public final void siteInfoMW1x09() throws Exception {
 		
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_09_url"));
 
@@ -81,7 +82,7 @@ public class SiteinfoTest extends LiveTestFather {
 	 * @throws Exception a
 	 */
 	@Test
-	public final void siteInfoMW1_10() throws Exception {
+	public final void siteInfoMW1x10() throws Exception {
 		
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_10_url"));
 		doTest(bot, Version.MW1_10);
@@ -92,7 +93,7 @@ public class SiteinfoTest extends LiveTestFather {
 	 * @throws Exception a
 	 */
 	@Test
-	public final void siteInfoMW1_11() throws Exception {
+	public final void siteInfoMW1x11() throws Exception {
 		
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_11_url"));
 
@@ -104,7 +105,7 @@ public class SiteinfoTest extends LiveTestFather {
 	 * @throws Exception a
 	 */
 	@Test
-	public final void siteInfoMW1_12() throws Exception {
+	public final void siteInfoMW1x12() throws Exception {
 		
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_12_url"));
 
@@ -116,7 +117,7 @@ public class SiteinfoTest extends LiveTestFather {
 	 * @throws Exception a
 	 */
 	@Test
-	public final void siteInfoMW1_13() throws Exception {
+	public final void siteInfoMW1x13() throws Exception {
 		
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_13_url"));
 		bot.login(getValue("wikiMW1_13_user"), getValue("wikiMW1_13_pass"));
@@ -128,14 +129,41 @@ public class SiteinfoTest extends LiveTestFather {
 	 * @throws Exception a
 	 */
 	@Test
-	public final void siteInfoMW1_14() throws Exception {
+	public final void siteInfoMW1x14() throws Exception {
 		
 		bot = new MediaWikiAdapterBot(getValue("wikiMW1_14_url"));
 		doTest(bot, Version.MW1_14);
 	}
+	
+	/**
+	 * Test get siteinfo on a MW.
+	 * @throws Exception a
+	 */
+	@Test
+	public final void siteInfoMW1x15() throws Exception {
+		
+		bot = new MediaWikiAdapterBot(getValue("wikiMW1_15_url"));
+		doTest(bot, Version.MW1_15);
+	}
+	
+	/**
+	 * Test last Version.
+	 * @throws Exception a
+	 */
+	@Test
+	public final void siteInfoLastVersion() throws Exception {
+		Version v = Version.MW1_15;
+		String versionInfoTemplate = "Template:MW stable release number";
+		MediaWikiBot bot = new MediaWikiBot("http://www.mediawiki.org/w/api.php");
+		
+		Article a = new Article(bot, versionInfoTemplate);
+		
+		
+		assertTrue(a.getText() + " should contains " + v.getNumber() , a.getText().contains(v.getNumber()));
+	}
 
 	private void doTest(MediaWikiBot bot, Version v) throws Exception {
-		Assert.assertEquals(v, bot.getVersion());
+		assertEquals(v, bot.getVersion());
 		registerTestedVersion(GetVersion.class, v);
 	}
 	

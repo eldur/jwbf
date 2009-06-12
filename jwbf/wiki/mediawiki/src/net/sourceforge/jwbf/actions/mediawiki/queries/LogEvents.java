@@ -22,6 +22,7 @@ import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_11;
 import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_12;
 import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_13;
 import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_14;
+import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_15;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -62,7 +63,7 @@ import org.xml.sax.InputSource;
  * @author Thomas Stock
  * 
  */
-@SupportedBy({ MW1_11, MW1_12, MW1_13, MW1_14 })
+@SupportedBy({ MW1_11, MW1_12, MW1_13, MW1_14, MW1_15 })
 public class LogEvents extends MWAction implements Iterator<LogItem>, Iterable<LogItem> {
 
 	/** value for the bllimit-parameter. * */
@@ -102,6 +103,7 @@ public class LogEvents extends MWAction implements Iterator<LogItem>, Iterable<L
 	/**
 	 * @param bot a
 	 * @param type of like {@link #MOVE}
+	 * @throws VersionException if incompatible with this version
 	 */
 	public LogEvents(MediaWikiBot bot, String type) throws VersionException {
 		this(bot, new String [] {type});
@@ -110,6 +112,7 @@ public class LogEvents extends MWAction implements Iterator<LogItem>, Iterable<L
 	/**
 	 * @param bot a
 	 * @param type of like {@link #MOVE}
+	 * @throws VersionException if incompatible with this version
 	 */
 	public LogEvents(MediaWikiBot bot, String [] type) throws VersionException {
 		this(bot, 50, type);
@@ -120,6 +123,7 @@ public class LogEvents extends MWAction implements Iterator<LogItem>, Iterable<L
 	 * @param bot a
 	 * @param limit of events
 	 * @param type of like {@link #MOVE}
+	 * @throws VersionException if incompatible with this version
 	 */
 	public LogEvents(MediaWikiBot bot, int limit, String type) throws VersionException {
 		this(bot, limit, new String [] {type});
@@ -128,6 +132,7 @@ public class LogEvents extends MWAction implements Iterator<LogItem>, Iterable<L
 	 * @param bot a
 	 * @param limit of events
 	 * @param type of like {@link #MOVE}
+	 * @throws VersionException if incompatible with this version
 	 */
 	public LogEvents(MediaWikiBot bot, int limit, String [] type) throws VersionException {
 		super(bot.getVersion());
@@ -189,12 +194,7 @@ public class LogEvents extends MWAction implements Iterator<LogItem>, Iterable<L
 	}
 
 	/**
-	 * deals with the MediaWiki api's response by parsing the provided text.
-	 * 
-	 * @param s
-	 *            the answer to the most recently generated MediaWiki-request
-	 * 
-	 * @return empty string
+	 * {@inheritDoc}
 	 */
 	public String processAllReturningText(final String s)
 			throws ProcessException {
@@ -308,30 +308,41 @@ public class LogEvents extends MWAction implements Iterator<LogItem>, Iterable<L
 	}
 
 
-
+	/**
+	 * {@inheritDoc}
+	 */
 	public HttpAction getNextMessage() {
 		return msg;
 	}
 
-
+	/**
+	 * {@inheritDoc}
+	 */
 	public boolean hasNext() {
 		prepareCollection();
 		return logIterator.hasNext();
 	}
 
-
+	/**
+	 * {@inheritDoc}
+	 */
 	public LogItem next() {
 		prepareCollection();
 		return logIterator.next();
 	}
 
-
+	/**
+	 * {@inheritDoc}
+	 */
 	public void remove() {
 		logIterator.remove();
 		
 	}
 
-
+	/**
+	 * {@inheritDoc}
+	 */
+	@SuppressWarnings("unchecked")
 	public Iterator<LogItem> iterator() {
 		try {
 			return (Iterator<LogItem>) clone();
@@ -340,7 +351,9 @@ public class LogEvents extends MWAction implements Iterator<LogItem>, Iterable<L
 			return null;
 		}
 	}
-
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	protected Object clone() throws CloneNotSupportedException {
 		try {

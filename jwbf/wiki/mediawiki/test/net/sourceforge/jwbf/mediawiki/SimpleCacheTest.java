@@ -51,11 +51,11 @@ public class SimpleCacheTest extends LiveTestFather {
 	 * @throws Exception a
 	 */
 	@Test
-	public final void cacheTestSimple() throws Exception {
+	public final void cacheTestWithBot() throws Exception {
 		
 		
 		
-		CacheHandler c = new SimpleCache(f, 1000);
+		CacheHandler c = new SimpleCache(f, 10000);
 		bot.setCacheHandler(c);
 		Article a = new Article(bot, label);
 		String text = getRandom(8);
@@ -73,23 +73,24 @@ public class SimpleCacheTest extends LiveTestFather {
 	public synchronized void basic1() throws Exception {
 
 		String title = getRandom(8);
-		CacheHandler db = new SimpleCache(f, 1000);
+		CacheHandler db = new SimpleCache(f, 10000);
 		SimpleArticle sai = new SimpleArticle();
 		sai.setLabel(title);
 		sai.setText(getRandom(8));
 		sai.setEditTimestamp(new Date());
 		db.put(sai);
 		SimpleArticle sa = new SimpleArticle();
-		db = new SimpleCache(f, 1000);
+		db = new SimpleCache(f, 10000);
 		assertTrue("should contains", db.containsKey(title));
-		
+		assertTrue("should have a", db.get(title).getLabel().length() > 1);
 		SimpleArticle sa2 = new SimpleArticle();
 		sa2.setLabel(title);
 		sa2.setText(getRandom(8));
 		db.put(sa);
 		sa.setLabel(title);
-		db = new SimpleCache(f, 1000);
+		db = new SimpleCache(f, 10000);
 		assertTrue("should contains", db.containsKey(title));
+		assertTrue("should have a", db.get(title).getLabel().length() > 1);
 
 	}
 	
@@ -155,9 +156,9 @@ public class SimpleCacheTest extends LiveTestFather {
 		
 		File [] fs = f.listFiles();
 		for (int i = 0; i < fs.length; i++) {
-			fs[i].delete();
+//			fs[i].delete(); // TODO comment in
 		}
-		f.deleteOnExit();
+//		f.deleteOnExit();  // TODO comment in
 		Article b = new Article(bot, label);
 		try {
 			b.delete();

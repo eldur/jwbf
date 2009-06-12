@@ -38,7 +38,7 @@ public class SimpleArticle implements ArticleMeta, Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = -1368796410854055279L;
-	private String label = "";
+	private String title = "";
 	private String editSummary = "";
 	private String text = "";
 	private String editor = "";
@@ -61,8 +61,8 @@ public class SimpleArticle implements ArticleMeta, Serializable {
 	public SimpleArticle(ContentAccessable ca) {
 		
 
-		if (ca.getLabel() != null) {
-			label = ca.getLabel();
+		if (ca.getTitle() != null) {
+			title = ca.getTitle();
 		}
 		if (ca.getText() != null) {
 			text = ca.getText();
@@ -103,7 +103,7 @@ public class SimpleArticle implements ArticleMeta, Serializable {
 	 */
 	public SimpleArticle(final String text, final String label) {
 		this.text = text;
-		this.label = label;
+		this.title = label;
 	}
 	
 	/**
@@ -116,7 +116,7 @@ public class SimpleArticle implements ArticleMeta, Serializable {
 	}
 
 	/**
-	 * @return the
+	 * {@inheritDoc}
 	 */
 	public String getEditSummary() {
 		return editSummary;
@@ -132,7 +132,7 @@ public class SimpleArticle implements ArticleMeta, Serializable {
 	}
 
 	/**
-	 * @return true if it is a minjor edit on the article
+	 * {@inheritDoc}
 	 */
 	public boolean isMinorEdit() {
 		return minorEdit;
@@ -148,25 +148,39 @@ public class SimpleArticle implements ArticleMeta, Serializable {
 	}
 
 	/**
-	 * @return the label, like "Main Page"
-	 * TODO REFACTOR getTitle
+	 * {@inheritDoc}
 	 */
 	public String getLabel() {
-		return label;
+		return getTitle();
+	}
+	/**
+	 * {@inheritDoc}
+	 */
+	public String getTitle() {
+		return title;
 	}
 
 	/**
 	 * 
 	 * @param label
 	 *            the label, like "Main Page"
-	 *            TODO REFACTOR setTitle
+	 * @deprecated use #setTitle() instead
 	 */
 	public void setLabel(final String label) {
-		this.label = label;
+		setTitle(label);
 	}
-
 	/**
-	 * @return the content of the article
+	 * 
+	 * @param title
+	 *            the label, like "Main Page"
+	 */
+	public void setTitle(final String title) {
+		this.title = title;
+	}
+	
+	
+	/**
+	 * {@inheritDoc}
 	 */
 	public String getText() {
 		return text;
@@ -200,7 +214,7 @@ public class SimpleArticle implements ArticleMeta, Serializable {
 	}
 
 	/**
-	 * @return the
+	 * {@inheritDoc}
 	 */
 	public String getEditor() {
 		return editor;
@@ -215,9 +229,7 @@ public class SimpleArticle implements ArticleMeta, Serializable {
 	}
 
 	/**
-	 * TODO method is untested and MediaWiki special.
-	 * 
-	 * @return true if is
+	 * {@inheritDoc}
 	 */
 	public boolean isRedirect() {
 
@@ -231,7 +243,7 @@ public class SimpleArticle implements ArticleMeta, Serializable {
 	}
 
 	/**
-	 * @return get it, format is wiki related.
+	 * {@inheritDoc}
 	 */
 	public Date getEditTimestamp() {
 		return editTimestamp;
@@ -250,6 +262,10 @@ public class SimpleArticle implements ArticleMeta, Serializable {
 			setEditTimestamp(sdf.parse(editTimestamp));
 		}
 	}
+	/**
+	 * 
+	 * @param d the
+	 */
 	public void setEditTimestamp(Date d) {
 		this.editTimestamp = d;
 	}

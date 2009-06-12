@@ -4,6 +4,7 @@ import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.NS_CATEGORY;
 import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.NS_MAIN;
 import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.NS_TEMPLATE;
 import static org.junit.Assert.assertEquals;
+import net.sourceforge.jwbf.JWBF;
 import net.sourceforge.jwbf.actions.mediawiki.MediaWiki;
 
 import org.junit.Test;
@@ -28,5 +29,10 @@ public class NsTest {
 		s = "&quot;";
 		t = "\"";
 		assertEquals(t, MediaWiki.decode(s));
+	}
+	@Test
+	public final void showVersions() {
+		
+		JWBF.printVersion();
 	}
 }

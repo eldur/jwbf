@@ -35,13 +35,13 @@ import org.xml.sax.InputSource;
  * @author Thomas Stock
  */
 @SupportedBy({ MW1_12, MW1_13, MW1_14 })
-final class GetApiToken extends MWAction {
+public final class GetApiToken extends MWAction {
 	/** Types that need a token. See API field intoken. */
 	// TODO this does not feel the elegant way.
 	// Probably put complete request URIs into this enum objects
 	// to support different URIs for different actions.
 	public enum Intoken { DELETE, EDIT, MOVE, PROTECT, EMAIL };
-	private String token = null;
+	private String token = ""; 
 	private Logger log = Logger.getLogger(GetApiToken.class);
 
 	private boolean first = true;
@@ -92,9 +92,7 @@ final class GetApiToken extends MWAction {
 	}
 
 	/**
-	 * Deals with the MediaWiki API's response by parsing the provided text.
-	 * @param s the answer to the most recently generated MediaWiki API request
-	 * @return empty string
+	 * {@inheritDoc}
 	 */
 	@Override
 	public String processReturningText(String s, HttpAction hm)
@@ -110,6 +108,7 @@ final class GetApiToken extends MWAction {
 			try {
 				Document doc = builder.build(new InputSource(
 						new StringReader(s)));
+				
 				process(doc);
 			} catch (JDOMException e) {
 				if (s.startsWith("unknown_action:")) {
@@ -152,7 +151,7 @@ final class GetApiToken extends MWAction {
 		try {
 			elem = doc.getRootElement().getChild("query").getChild("pages").getChild("page");
 		} catch (NullPointerException e) {
-			; // do nothing
+			e.printStackTrace();
 		}
 		if (elem != null) {
 			// process reply for token request
@@ -164,8 +163,8 @@ final class GetApiToken extends MWAction {
 				token = elem.getAttributeValue("edittoken");
 				break;
 			default:
-				token = null;
-					break;
+				token = ""; // TODO was changed from null to empty string, test if good
+				break;
 			}
 			
 			

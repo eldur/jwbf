@@ -1,3 +1,12 @@
+-------------------------------------------------------------------------------
+JWBF svn:217    													   Jun 2009
+  * ContentAccessable#getLabel() is now getTitle()
+  * fix ImageInfo output format change
+  * add test for MW 1.15 
+  * domain login option with API
+  * more tests
+  * split in wiki core- and mediawiki related stuff  
+  * many cleanups
   * FIX TemplateUserTitles and add a testcase
   * add a query superclass for title iterations
 -------------------------------------------------------------------------------

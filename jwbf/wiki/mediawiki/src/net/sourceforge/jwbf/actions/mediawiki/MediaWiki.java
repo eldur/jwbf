@@ -45,6 +45,10 @@ public final class MediaWiki {
 	public enum Version {
 		MW1_09, MW1_10, MW1_11, MW1_12, MW1_13, MW1_14, MW1_15, UNKNOWN, DEVELOPMENT;
 		
+		/**
+		 * 
+		 * @return a, like 1.15
+		 */
 		public String getNumber() {
 			return name().replace("MW", "").replace("_0", "_").replace("_", ".");
 		}
@@ -58,7 +62,11 @@ public final class MediaWiki {
 				return -1;
 			}
 		}
-		
+		/**
+		 * 
+		 * @param v a
+		 * @return true if
+		 */
 		public boolean greaterEqThen(Version v) {
 			if (v.getIntValue() >= getIntValue())
 				return false;
@@ -69,11 +77,18 @@ public final class MediaWiki {
 	private MediaWiki() {
 //		do nothing
 	}
-	
+	/**
+	 * 
+	 * @return the
+	 */
 	public static String getCharset() {
 		return CHARSET;
 	}
-	
+	/**
+	 * 
+	 * @param s a
+	 * @return encoded s
+	 */
 	public static String encode(String s) {
 		try {
 			return URLEncoder.encode(s, MediaWiki.CHARSET);
@@ -82,7 +97,11 @@ public final class MediaWiki {
 		}
 		return s;
 	}
-	
+	/**
+	 * 
+	 * @param s a
+	 * @return decoded s
+	 */
 	public static String decode(final String s) {
 		String out = HTMLEntities.unhtmlentities(s);
 		out = HTMLEntities.unhtmlQuotes(out);

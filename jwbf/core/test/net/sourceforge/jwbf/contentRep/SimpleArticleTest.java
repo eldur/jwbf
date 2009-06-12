@@ -98,7 +98,7 @@ public class SimpleArticleTest {
 				return null;
 			}
 		
-			public String getLabel() {
+			public String getTitle() {
 				return null;
 			}
 		
@@ -138,7 +138,7 @@ public class SimpleArticleTest {
 				return "test";
 			}
 		
-			public String getLabel() {
+			public String getTitle() {
 				return "MyTest";
 			}
 		

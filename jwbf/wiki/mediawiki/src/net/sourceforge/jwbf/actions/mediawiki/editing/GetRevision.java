@@ -24,6 +24,7 @@ import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_11;
 import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_12;
 import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_13;
 import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_14;
+import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_15;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -56,7 +57,7 @@ import org.xml.sax.InputSource;
  * 
  * 
  */
-@SupportedBy({ MW1_09, MW1_10, MW1_11, MW1_12, MW1_13, MW1_14 })
+@SupportedBy({ MW1_09, MW1_10, MW1_11, MW1_12, MW1_13, MW1_14, MW1_15 })
 public class GetRevision extends MWAction {
 
 	private final SimpleArticle sa;
@@ -82,7 +83,7 @@ public class GetRevision extends MWAction {
 	 * @throws ProcessException 
 	 * @throws ActionException 
 	 */
-	public GetRevision(final String articlename, final int properties, MediaWikiBot bot) throws ActionException, ProcessException {
+	public GetRevision(MediaWikiBot bot, final String articlename, final int properties) throws ActionException, ProcessException {
 		super(bot.getVersion());
 //		if (!bot.getUserinfo().getRights().contains("read")) {
 //			throw new ActionException("reading is not permited, make sure that this account is able to read");
@@ -100,10 +101,7 @@ public class GetRevision extends MWAction {
 	}
 
 	/**
-	 * @param s
-	 *            the returning text
-	 * @return empty string
-	 * 
+	 * {@inheritDoc}
 	 */
 	public String processReturningText(final String s, HttpAction ha)
 			throws ProcessException {
@@ -166,16 +164,20 @@ public class GetRevision extends MWAction {
 		}
 		findContent(root);
 	}
-
+	/**
+	 * 
+	 * @return the
+	 */
 	public SimpleArticle getArticle() {
 
 		return sa;
 	}
 
-	@SuppressWarnings("unchecked")
+	
 	private void findContent(final Element root) throws ApiException {
 //		if(log.isDebugEnabled())
 //			log.debug("try to find content in " + root.getQualifiedName());
+		@SuppressWarnings("unchecked")
 		Iterator<Element> el = root.getChildren().iterator();
 		while (el.hasNext()) {
 			Element element = el.next();
@@ -227,7 +229,9 @@ public class GetRevision extends MWAction {
 		// LOG.debug("value for " + attrName + " = \"" + buff + "\"");
 		return buff;
 	}
-
+	/**
+	 * {@inheritDoc}
+	 */
 	public HttpAction getNextMessage() {
 		return msg;
 	}

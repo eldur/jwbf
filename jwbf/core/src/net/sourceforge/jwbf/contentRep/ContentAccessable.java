@@ -39,20 +39,17 @@ public interface ContentAccessable {
 	 */
 	String getEditor();
 	/**
-	 * 
-	 * @return true, if is
+	 * @return true if it is a minjor edit on the article
 	 */
 	boolean isMinorEdit(); 
 	
+
 	/**
-	 * 
-	 * @return titel
+	 * @return the title, like "Main Page"
 	 */
-	String getLabel(); 
-	
+	String getTitle();
 	/**
-	 * 
-	 * @return content wiki syntax of this article
+	 * @return the content of the article
 	 */
 	String getText();
 

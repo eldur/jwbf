@@ -81,8 +81,8 @@ public class EditCustomWikiContentTest extends LiveTestFather {
 		sa = new SimpleArticle("", label);
 		try {
 			bot.writeContent(sa);
-		} catch (RuntimeException e) {
-			;
+		} catch (RuntimeException e) { 
+			e.printStackTrace();
 		}
 		sa = bot.readContent(label);
 		//System.out.println("Content is: " + sa.getText());
@@ -108,7 +108,7 @@ public class EditCustomWikiContentTest extends LiveTestFather {
 		try {
 			bot.writeContent(t);
 		} catch (RuntimeException e) {
-			;
+			e.printStackTrace();
 		}
 		SimpleArticle sa = bot.readContent(label);
 		assertEquals(label, sa.getLabel());
@@ -175,7 +175,7 @@ public class EditCustomWikiContentTest extends LiveTestFather {
 	}
 	
 	/**
-	 * Test getTimestamp
+	 * Test getTimestamp.
 	 * @throws Exception a
 	 */
 	@Test
@@ -214,7 +214,7 @@ public class EditCustomWikiContentTest extends LiveTestFather {
 		assertEquals(a.getText(), b.getText());
 	}
 	private void doWait() {
-//		doWait(1500);
+		doWait(1500);
 	}
 	private void doWait(int milis) {
 		synchronized (this) {

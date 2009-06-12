@@ -34,7 +34,9 @@ import java.net.URLConnection;
 import net.sourceforge.jwbf.LiveTestFather;
 import net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version;
 import net.sourceforge.jwbf.actions.mediawiki.editing.FileUpload;
+import net.sourceforge.jwbf.actions.mediawiki.queries.ImageInfo;
 import net.sourceforge.jwbf.actions.mediawiki.util.VersionException;
+import net.sourceforge.jwbf.actions.util.ProcessException;
 import net.sourceforge.jwbf.bots.MediaWikiAdapterBot;
 import net.sourceforge.jwbf.contentRep.mediawiki.SimpleFile;
 
@@ -61,6 +63,7 @@ public class UploadAndImageInfoTest extends LiveTestFather {
 		PropertyConfigurator.configureAndWatch("test4log4j.properties",
 				60 * 1000);
 		addInitSupporterVersions(FileUpload.class);
+		addInitSupporterVersions(ImageInfo.class);
 	}
 	
 	
@@ -148,6 +151,33 @@ public class UploadAndImageInfoTest extends LiveTestFather {
 		
 	}
 	/**
+	 * Test category read. Test category must have more then 50 members.
+	 * @throws Exception a
+	 */
+	@Test
+	public final void uploadMW1x15() throws Exception {
+		
+		bot = new MediaWikiAdapterBot(getValue("wikiMW1_15_url"));
+		bot.login(getValue("wikiMW1_15_user"),
+				getValue("wikiMW1_15_pass"));
+		generalUploadImageInfoTest(bot, Version.MW1_15);
+		
+	}
+	/**
+	 * 
+	 * @throws Exception a
+	 */
+	@Test(expected = ProcessException.class)
+	public final void imageInfoFail() throws Exception {
+		
+		bot = new MediaWikiAdapterBot(getValue("wikiMW1_14_url"));
+		bot.login(getValue("wikiMW1_14_user"),
+				getValue("wikiMW1_14_pass"));
+		ImageInfo a = new ImageInfo(bot, "UnknownImage.jpg");
+		System.out.println(a.getUrlAsString());
+		
+	}
+	/**
 	 * 
 	 * @param bot a
 	 * @param v a
@@ -159,15 +189,20 @@ public class UploadAndImageInfoTest extends LiveTestFather {
 				+ ") not readable", new File(getValue("validFile")).canRead());
 		SimpleFile sf = new SimpleFile(getValue("filename"), getValue("validFile"));
 		FileUpload up = new FileUpload(sf, bot);
-		assertTrue("test not documented for version: " 
-				+ bot.getVersion() , up.getSupportedVersions().contains(bot.getVersion()));
+	
 		bot.performAction(up);
-		URL url = new URL(bot.getImageInfo(sf.getLabel()));
+		URL url = null;
+		try {
+		url = new URL(bot.getImageInfo(sf.getLabel()));
+		} catch (ProcessException e) {
+			throw new ProcessException(e.getLocalizedMessage() + "; \n is upload enabled ?", e.getExceptionSrcClass());
+		}
 		Assert.assertTrue("file not found " 
 				+ url , url.toExternalForm().length() - bot.getHostUrl().length() > 2);
 		File file = new File(getValue("validFile"));
 		assertFile(url, file);
 		registerTestedVersion(FileUpload.class, bot.getVersion());
+		registerTestedVersion(ImageInfo.class, bot.getVersion());
 	}
 	/**
 	 * 
