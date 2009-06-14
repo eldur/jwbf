@@ -280,9 +280,10 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
 		}
 
 		for (char invChar : INVALID_LABEL_CHARS) {
-			if (a.getTitle().contains(invChar + ""))
+			if (a.getTitle().contains(invChar + "")) {
 				throw new ActionException("Invalid character in label\"" 
 						+ a.getTitle() + "\" : \"" + invChar + "\"", getClass());
+			}
 		}
 		if (store != null) {
 			String label = a.getTitle();

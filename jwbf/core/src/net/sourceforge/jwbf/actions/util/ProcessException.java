@@ -18,12 +18,11 @@
  */
 package net.sourceforge.jwbf.actions.util;
 
-import net.sourceforge.jwbf.actions.mediawiki.util.MWAction;
 import net.sourceforge.jwbf.bots.util.JwbfException;
 
 /**
  * 
- * This exception can be used in children of {@link MWAction} to handle 
+ * This exception can be used in children of a wikiaction to handle 
  * exceptions in these actions, like access to content or mismatching patterns e.g.
  * 
  * @author Thomas Stock

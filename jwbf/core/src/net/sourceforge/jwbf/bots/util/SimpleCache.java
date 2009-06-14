@@ -8,12 +8,11 @@ import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
-import java.io.Serializable;
-import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.zip.CRC32;
 import java.util.zip.Checksum;
 
-import net.sourceforge.jwbf.contentRep.ArticleMeta;
 import net.sourceforge.jwbf.contentRep.SimpleArticle;
 
 import org.apache.log4j.Logger;
@@ -27,6 +26,8 @@ public class SimpleCache implements CacheHandler {
 	private final File folder;
 	private final String ext = ".txt";
 	private final int maxSaveTimeMils;
+	private final int objectLiveTimeMilis = 100;
+	private final Map<String, CachArticle> dynStore = new HashMap<String, CachArticle>();
 	
 	
 	public SimpleCache(File folder, int maxSaveTimeMils) {
@@ -46,15 +47,19 @@ public class SimpleCache implements CacheHandler {
 	}
 	
 	private void maintain(String title) {
+		
+		if (dynStore.containsKey(title)) {
+			 dynStore.get(title);
+		}
 		File fx = new File(folder, getChecksum(title) + ext);
 		if (fx.exists()) {
-		CachSA it = readFromFile(title);
+			CachArticle it = read(title);
 		
 		long dif = it.getSaveDate().getTime() - System.currentTimeMillis() + maxSaveTimeMils;
-		System.out.println(dif); // TODO RM
+		System.out.println("maintain: timedif " +  dif); // TODO RM
 		if (dif < 0) {
 			
-		
+			log.debug("maintain: delete: " + fx.getAbsolutePath()); // TODO RM
 			fx.delete();
 			
 		}
@@ -65,26 +70,28 @@ public class SimpleCache implements CacheHandler {
 	 */
 	public SimpleArticle get(String title) {
 		if (containsKey(title))
-			return readFromFile(title);
+			return read(title);
 		return new SimpleArticle(title);
 	}
 	/**
 	 * {@inheritDoc}
 	 */
 	public void put(SimpleArticle sa) {
-		log.debug("put file" + getChecksum(sa.getLabel())); // TODO RM
-		write2File(new CachSA(sa));
+	
+		write2File(new CachArticle(sa));
 		
 		
 	}
 	
-	private void write2File(CachSA sa) {
+	protected void write2File(CachArticle ca) {
 		OutputStream fos = null;
 
 		try {
-			fos = new FileOutputStream(new File(folder, getChecksum(sa.getLabel()) + ext));
+			File sf = new File(folder, getChecksum(ca.getTitle()) + ext);
+			log.debug("write2File " + sf.getAbsolutePath()); // TODO RM
+			fos = new FileOutputStream(sf);
 			ObjectOutputStream o = new ObjectOutputStream(fos);
-			o.writeObject(sa);
+			o.writeObject(ca);
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
@@ -96,7 +103,7 @@ public class SimpleCache implements CacheHandler {
 		}
 	}
 	
-	private String getChecksum(String s) {
+	protected String getChecksum(String s) {
 		byte[] bytes = s.getBytes();
 	   
 	    Checksum checksumEngine = new CRC32();
@@ -106,14 +113,26 @@ public class SimpleCache implements CacheHandler {
 
 	}
 	
-	private CachSA readFromFile(String title) {
+	private CachArticle read(String title) {
+		if (dynStore.containsKey(title)) {
+			log.debug("readFrom Map"); // TODO RM
+			return dynStore.get(title);
+		} else {
+			CachArticle temp = readFromFile(title);
+			dynStore.put(title, temp);
+			return temp;
+		}
+	}
+	
+	protected CachArticle readFromFile(String title) {
 		InputStream fis = null;
 		
 		try {
-			fis = new FileInputStream(new File(folder, getChecksum(title) + ext));
-			log.debug("try to read from file: " + new File(folder, getChecksum(title) + ext).getAbsolutePath());
+			File rf = new File(folder, getChecksum(title) + ext);
+			fis = new FileInputStream(rf);
+			log.debug("readFromFile: " + rf.getAbsolutePath()); // TODO RM
 			ObjectInputStream o = new ObjectInputStream(fis);
-			CachSA sa = (CachSA) o.readObject();
+			CachArticle sa = (CachArticle) o.readObject();
 
 			return sa;
 
@@ -128,34 +147,9 @@ public class SimpleCache implements CacheHandler {
 				e.printStackTrace();
 			}
 		}
-		return new CachSA();
+		return new CachArticle();
 	}
 
-	private class CachSA extends SimpleArticle implements Serializable {
-
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = -3759968702455312374L;
-		private Date d;
-		
-		public CachSA() {
-			super();
-			setSaveDate(1L);
-		}
-		
-		public CachSA(ArticleMeta ca) {
-			super(ca);
-			setSaveDate(System.currentTimeMillis());
-		}
-		
-		public Date getSaveDate() {
-			return d;
-		}
-		
-		public void setSaveDate(long milis) {
-			d = new Date(milis);
-		}
-	}
+	
 
 }

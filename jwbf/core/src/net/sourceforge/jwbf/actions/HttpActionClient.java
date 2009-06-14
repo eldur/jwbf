@@ -384,12 +384,15 @@ public class HttpActionClient {
 			} else if (ha instanceof Get) {
 				type = "(GET)";
 			}
-			log.debug("message " + type + " is: " 
+			log.debug("message " + type + " is: \n\t own: " 
 					+  client.getHostConfiguration().getHostURL() 
-					+ epath +  ha.getRequest());
+					+ epath + "\n\t act: " + ha.getRequest());
 		}
 	}
-	
+	/**
+	 * 
+	 * @return the
+	 */
 	public String getHostUrl() {
 		return client.getHostConfiguration().getHostURL();
 	}

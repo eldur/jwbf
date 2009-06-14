@@ -1,5 +1,5 @@
 -------------------------------------------------------------------------------
-JWBF svn:218    													   Jun 2009
+JWBF 1.3 - svn:219    												   Jun 2009
   * ContentAccessable#getLabel() is now getTitle()
   * fix ImageInfo output format change
   * add test for MW 1.15 
@@ -9,6 +9,7 @@ JWBF svn:218    													   Jun 2009
   * many cleanups
   * FIX TemplateUserTitles and add a testcase
   * add a query superclass for title iterations
+  * implement all list queries as an iterable type
 -------------------------------------------------------------------------------
 JWBF svn:191                                                           Mar 2009
   * some zim updates thanks to Martin Koch

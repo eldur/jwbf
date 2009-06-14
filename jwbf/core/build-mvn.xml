@@ -137,6 +137,7 @@
 	</target>
 
 	<target name="manifest" depends="buildnumber" description="Sets the buildversion for the current build">
+		<mkdir dir="${target}" />
 		<manifest file="${target}/MANIFEST.MF">
 			<attribute name="Implementation-Title" value="${artifactId}"/>
 			<attribute name="Implementation-Version" value="${build.number}"/>

@@ -73,6 +73,8 @@ public class SimpleArticle implements ArticleMeta, Serializable {
 		if (ca.getEditor() != null) {
 			editor = ca.getEditor();
 		}	
+		
+		setMinorEdit(ca.isMinorEdit());
 
 	}
 	
@@ -148,7 +150,8 @@ public class SimpleArticle implements ArticleMeta, Serializable {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @return the
+	 * @deprecated use getTitle
 	 */
 	public String getLabel() {
 		return getTitle();
