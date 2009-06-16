@@ -14,6 +14,8 @@ import net.sourceforge.jwbf.bots.util.JwbfException;
 public class Article extends SimpleArticle {
 
 
+
+
 	/**
 	 * 
 	 */
@@ -28,14 +30,28 @@ public class Article extends SimpleArticle {
 	public String getText() {
 		if (super.getText().length() < 1) {
 			try {
-				setText(bot.readData(super.getLabel()).getText());
+				setText(bot.readData(super.getTitle()).getText());
 			} catch (JwbfException e) {
 				e.printStackTrace();
 			}
 		}
 		return super.getText();
 	}
-
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public String getRevisionId() {
+		if (super.getRevisionId().length() < 1) {
+			try {
+				setRevisionId(bot.readData(super.getTitle()).getRevisionId());
+			} catch (JwbfException e) {
+				e.printStackTrace();
+			}
+		}
+		return super.getRevisionId();
+	}
+	
 	/**
 	 * {@inheritDoc}
 	 */
@@ -43,7 +59,7 @@ public class Article extends SimpleArticle {
 	public String getEditor() {
 		if (super.getEditor().length() < 1) {
 			try {
-				setEditor(bot.readData(super.getLabel()).getEditor());
+				setEditor(bot.readData(super.getTitle()).getEditor());
 			} catch (JwbfException e) {
 				e.printStackTrace();
 			}
@@ -58,7 +74,7 @@ public class Article extends SimpleArticle {
 	public String getEditSummary() {
 		if (super.getEditSummary().length() < 1) {
 			try {
-				setEditSummary(bot.readData(super.getLabel()).getEditSummary());
+				setEditSummary(bot.readData(super.getTitle()).getEditSummary());
 			} catch (JwbfException e) {
 				e.printStackTrace();
 			}
@@ -77,7 +93,7 @@ public class Article extends SimpleArticle {
 
 	public Article(WikiBot bot, String title) {
 		this.bot = bot;
-		setLabel(title);
+		setTitle(title);
 	}
 
 	public Article(WikiBot bot, SimpleArticle ca) {

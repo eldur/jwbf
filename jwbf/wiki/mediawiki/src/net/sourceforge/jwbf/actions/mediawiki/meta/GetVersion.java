@@ -13,14 +13,15 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.util.Iterator;
 
+import net.sourceforge.jwbf.JWBF;
 import net.sourceforge.jwbf.actions.Get;
 import net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version;
 import net.sourceforge.jwbf.actions.mediawiki.util.MWAction;
 import net.sourceforge.jwbf.actions.mediawiki.util.SupportedBy;
-import net.sourceforge.jwbf.actions.mediawiki.util.VersionException;
+import net.sourceforge.jwbf.actions.util.ActionException;
 import net.sourceforge.jwbf.actions.util.HttpAction;
 import net.sourceforge.jwbf.actions.util.ProcessException;
-import net.sourceforge.jwbf.contentRep.mediawiki.Siteinfo;
+import net.sourceforge.jwbf.bots.MediaWikiBot;
 
 import org.apache.log4j.Logger;
 import org.jdom.Document;
@@ -39,18 +40,38 @@ import org.xml.sax.InputSource;
 @SupportedBy({ MW1_09, MW1_10, MW1_11, MW1_12, MW1_13, MW1_14, MW1_15 })
 public class GetVersion extends MWAction {
 
-	protected Siteinfo site = new Siteinfo();
 	private final Logger log = Logger.getLogger(getClass());
 	private final Get msg;
+	private String generator = "";
+	private String sitename = "";
+	private String base = "";
+	private String theCase = "";
+	private String mainpage = "";
+	
+
+	/**
+	 * Create and submit the request to the Wiki. 
+	 * Do not use {@link MediaWikiBot#performAction(net.sourceforge.jwbf.actions.ContentProcessable)}.
+	 * @param bot a
+	 * @throws ProcessException a
+	 * @throws ActionException a
+	 */
+	public GetVersion(MediaWikiBot bot) throws ActionException, ProcessException {
+		this();
+		bot.performAction(this);
+	}
+	
 	/* In this case the superconstructor with no value is allowed, because
 	 * the versionrequest is mandatory */
+	/**
+	 * Create the request.
+	 */
 	@SuppressWarnings("deprecation")
-	public GetVersion() throws VersionException {
-
+	public GetVersion()  {
+			
 			msg = new Get("/api.php?action=query&meta=siteinfo&format=xml");
 
 	}
-	
 	private void parse(final String xml) throws ProcessException {
 		SAXBuilder builder = new SAXBuilder();
 		Element root = null;
@@ -71,10 +92,7 @@ public class GetVersion extends MWAction {
 	}
 	
 	/**
-	 * @param s
-	 *            the returning text
-	 * @return empty string
-	 * 
+	 * {@inheritDoc}
 	 */
 	public final String processAllReturningText(final String s)
 			throws ProcessException {
@@ -82,12 +100,67 @@ public class GetVersion extends MWAction {
 		return "";
 	}
 
+
+	/**
+	 * 
+	 * @return the, like "Wikipedia"
+	 */
+	public String getSitename() {
+		return sitename;
+	}
+	/**
+	 * 
+	 * @return the, like "http://de.wikipedia.org/wiki/Wikipedia:Hauptseite"
+	 */
+	public String getBase() {
+		return base;
+	}
+	/**
+	 * 
+	 * @return the, like "first-letter"
+	 */
+	public String getCase() {
+		return theCase;
+	}
 	/**
 	 * 
 	 * @return the
+	 * @see Version
 	 */
-	public Siteinfo getSiteinfo() {
-		return site;
+	public Version getVersion() {
+		if (getGenerator().contains("alpha")) {
+			return Version.DEVELOPMENT;
+		}
+
+		Version[] versions = Version.values();
+		for (int i = 0; i < versions.length; i++) {
+			if (getGenerator().contains(versions[i].getNumber())) {
+				return versions[i];
+			}
+
+		}
+
+		log.info("\nVersion is UNKNOWN for JWBF ("
+						+ JWBF.getVersion(getClass())
+						+ ") : \n\t"
+						+ getGenerator()
+						+ "\n\tUsing settings for actual Wikipedia development version");
+		return Version.UNKNOWN;
+
+	}
+	/**
+	 * 
+	 * @return the MediaWiki Generator, like "MediaWiki 1.16alpha"
+	 */
+	public String getGenerator() {
+		return generator;
+	}
+	/**
+	 * 
+	 * @return the, like "Main Page"
+	 */
+	public String getMainpage() {
+		return mainpage;
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -98,20 +171,22 @@ public class GetVersion extends MWAction {
 			Element element = el.next();
 			if (element.getQualifiedName().equalsIgnoreCase("general")) {
 
-				site.setMainpage(element
-						.getAttributeValue("mainpage"));
-				site.setBase(element.getAttributeValue("base"));
-				site.setSitename(element
-						.getAttributeValue("sitename"));
-				site.setGenerator(element
-						.getAttributeValue("generator"));
-				site.setCase(element.getAttributeValue("case"));
+				mainpage = element
+						.getAttributeValue("mainpage");
+				base = element.getAttributeValue("base");
+				sitename = element
+						.getAttributeValue("sitename");
+				generator = element
+						.getAttributeValue("generator");
+				theCase = element.getAttributeValue("case");
 			} else {
 				findContent(element);
 			}
 		}
 	}
-
+	/**
+	 * {@inheritDoc}
+	 */
 	public HttpAction getNextMessage() {
 		return msg;
 	}

@@ -4,10 +4,12 @@ import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_11;
 import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_12;
 import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_13;
 import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_14;
+import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_15;
 
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -28,16 +30,25 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
 import org.xml.sax.InputSource;
-@SupportedBy({ MW1_11, MW1_12, MW1_13, MW1_14 })
-public class GetUserinfo extends MWAction {
+/**
+ * 
+ * @author Thomas Stock
+ *
+ */
+@SupportedBy({ MW1_11, MW1_12, MW1_13, MW1_14, MW1_15 })
+public class GetUserinfo extends MWAction implements Userinfo {
 
-	private Userinfo userinfo;
+	
 	private final Logger log = Logger.getLogger(getClass());
 	private String username = "";
 	private final Set<String> rights = new HashSet<String>();
 	private final Set<String> groups = new HashSet<String>();
 	private Get msg;
-	
+	/**
+	 * 
+	 * @param v a
+	 * @throws VersionException  a
+	 */
 	public GetUserinfo(Version v) throws VersionException {
 		super(v);
 		switch (v) {
@@ -80,25 +91,33 @@ public class GetUserinfo extends MWAction {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		userinfo = new Userinfo(username, false, false, groups, rights);
 	}
 	
 	/**
-	 *
-	 * @param s
-	 *            the returning text
-	 * @return empty string
-	 * 
+	 * {@inheritDoc}
 	 */
 	public final String processAllReturningText(final String s)
 			throws ProcessException {
 		parse(s);
 		return "";
 	}
-
-	
-	public Userinfo getUserinfo() {
-		return userinfo;
+	/**
+	 * {@inheritDoc}
+	 */
+	public Collection<String> getRights() {
+		return rights;
+	}
+	/**
+	 * {@inheritDoc}
+	 */
+	public Collection<String> getGroups() {
+		return groups;
+	}
+	/**
+	 * {@inheritDoc}
+	 */
+	public String getUsername() {
+		return username;
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -134,7 +153,9 @@ public class GetUserinfo extends MWAction {
 		
 		
 	}
-
+	/**
+	 * {@inheritDoc}
+	 */
 	public HttpAction getNextMessage() {
 		return msg;
 	}

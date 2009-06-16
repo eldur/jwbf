@@ -2,11 +2,13 @@ package net.sourceforge.jwbf.mediawiki;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 
 import net.sourceforge.jwbf.LiveTestFather;
+import net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version;
 import net.sourceforge.jwbf.bots.MediaWikiBot;
 import net.sourceforge.jwbf.bots.util.CacheHandler;
 import net.sourceforge.jwbf.bots.util.SimpleCachTest;
@@ -66,7 +68,69 @@ public class SimpleCacheMWBotTest extends LiveTestFather {
 		
 	}
 	
+	/**
+	 * Test.
+	 * @throws Exception a
+	 */
+	@Test
+	public final void cacheTestSpeedBonus() throws Exception {
+		
+		MediaWikiBot bot;
+		bot = new MediaWikiBot("http://en.wikipedia.org/w/api.php");
+		
+		
+		CacheHandler c = new SimpleCache(f, 10000);
+		bot.setCacheHandler(c);
+		long tx = System.currentTimeMillis();
+		Article a = new Article(bot, "Line of succession to the British throne");
+		a.getText();
+		long first = System.currentTimeMillis() - tx;
+		System.out.println(first);
+		bot = new MediaWikiBot("http://en.wikipedia.org/w/api.php");
+		c = new SimpleCache(f, 10000);
+		bot.setCacheHandler(c);
+		tx = System.currentTimeMillis();
+		a = new Article(bot, "Line of succession to the British throne");
+		a.getText();
+		long last = System.currentTimeMillis() - tx;
+		System.out.println(last + " vs. " + first);
+		assertTrue("loading from cach should be faster", first > last);
+	}
+	
+	/**
+	 * Test.
+	 * @throws Exception a
+	 */
+	@Test
+	public final void cacheModifcationTest() throws Exception {
+		
+		MediaWikiBot bot;
+		bot = getMediaWikiBot(Version.MW1_15, true);
+		CacheHandler c = new SimpleCache(f, 10000);
+		bot.setCacheHandler(c);
+		Article a = new Article(bot, label);
+		String text = getRandom(32);
+		a.setText(text);
+		a.save();
+		assertTrue("shuld have a revId", a.getRevisionId().length() > 0);
+		
+		Article b = new Article(bot, label);
 
+		assertEquals(text, b.getText());
+		text = getRandom(32);
+		b.setText(text);
+		b.save();
+		assertEquals(text, a.getText());
+//		MediaWikiBot bot2;
+//		bot2 = getMediaWikiBot(Version.MW1_15, true);
+//		synchronized (this) {
+//			wait(1000);
+//		}
+		
+
+
+	}
+	
 	/**
 	 * Test.
 	 * @throws Exception a
@@ -82,7 +146,6 @@ public class SimpleCacheMWBotTest extends LiveTestFather {
 		SimpleArticle a = new SimpleArticle(label);
 		String text = getRandom(8);
 		a.setText(text);
-		c.put(a);
 		assertTrue("should contains the article", c.containsKey(label));
 		assertEquals(text, c.get(label).getText());
 		
@@ -94,7 +157,7 @@ public class SimpleCacheMWBotTest extends LiveTestFather {
 		
 		assertFalse("should not contains the article", c.containsKey(label));
 		SimpleArticle d = c.get(label);
-		assertEquals(text, d.getText());
+		assertNotSame(text, d.getText());
 	}
 	
 	
@@ -104,9 +167,9 @@ public class SimpleCacheMWBotTest extends LiveTestFather {
 		
 		File [] fs = f.listFiles();
 		for (int i = 0; i < fs.length; i++) {
-//			fs[i].delete(); // TODO comment in
+			fs[i].delete(); // TODO comment in
 		}
-//		f.deleteOnExit();  // TODO comment in
+		f.deleteOnExit();  // TODO comment in
 
 	}
 }

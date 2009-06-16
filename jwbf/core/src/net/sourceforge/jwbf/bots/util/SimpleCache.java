@@ -47,23 +47,34 @@ public class SimpleCache implements CacheHandler {
 	}
 	
 	private void maintain(String title) {
-		
-		if (dynStore.containsKey(title)) {
-			 dynStore.get(title);
-		}
 		File fx = new File(folder, getChecksum(title) + ext);
 		if (fx.exists()) {
 			CachArticle it = read(title);
+
+			long dif = it.getSaveDate().getTime() - System.currentTimeMillis()
+					+ maxSaveTimeMils;
+			System.out.println("maintain: timedif file " + dif); // TODO RM
+			if (dif < 0) {
+
+				log.debug("maintain: delete: " + fx.getAbsolutePath()); // TODO RM
+				dynStore.remove(it.getTitle());								
+				fx.delete();
+
+			}
+		}
+		if (dynStore.containsKey(title)) {
+			CachArticle it = dynStore.get(title);
+			long dif = it.getSaveDate().getTime() - System.currentTimeMillis()
+					+ objectLiveTimeMilis;
+			System.out.println("maintain: timedif dyn  " + dif); // TODO RM
+			if (dif < 0) {
+
+				log.debug("maintain: remove: " + it.getTitle()); // TODO RM
+				dynStore.remove(it.getTitle());
+
+			}
+		}
 		
-		long dif = it.getSaveDate().getTime() - System.currentTimeMillis() + maxSaveTimeMils;
-		System.out.println("maintain: timedif " +  dif); // TODO RM
-		if (dif < 0) {
-			
-			log.debug("maintain: delete: " + fx.getAbsolutePath()); // TODO RM
-			fx.delete();
-			
-		}
-		}
 	}
 	/**
 	 * {@inheritDoc}

@@ -92,7 +92,7 @@ public class PostModifyContent extends MWAction {
 			try {
 				if (!bot.isEditApi()) 
 					throw new VersionException("write api off - user triggerd");
-				switch (bot.getSiteinfo().getVersion()) {
+				switch (bot.getVersion()) {
 				case MW1_09:
 				case MW1_10:
 				case MW1_11:
@@ -107,7 +107,7 @@ public class PostModifyContent extends MWAction {
 					throw new VersionException("write api not avalibal");
 				}
 				apiReq = new GetApiToken(GetApiToken.Intoken.EDIT,
-						a.getTitle(), bot.getSiteinfo(), bot.getUserinfo());
+						a.getTitle(), bot.getVersion(), bot.getUserinfo());
 				apiGet = apiReq.getNextMessage();
 				apiEdit = true;
 				return apiGet;

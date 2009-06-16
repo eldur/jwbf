@@ -44,6 +44,7 @@ public class SimpleArticle implements ArticleMeta, Serializable {
 	private String editor = "";
 	private boolean minorEdit = false;
 	private Date editTimestamp = new Date();
+	private String revId = "";
 	
 	/**
 	 * 
@@ -89,6 +90,10 @@ public class SimpleArticle implements ArticleMeta, Serializable {
 		
 		if (sa.getEditTimestamp() != null) {
 			editTimestamp = sa.getEditTimestamp();
+		}
+		
+		if (sa.getRevisionId() != null) {
+			revId = sa.getRevisionId();
 		}
 		
 		
@@ -295,8 +300,21 @@ public class SimpleArticle implements ArticleMeta, Serializable {
 	 */
 	@Override
 	public int hashCode() {
-		// TODO Auto-generated method stub
 		return super.hashCode();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public String getRevisionId() {
+		return revId;
+	}
+	/**
+	 * 
+	 * @param revId the
+	 */
+	public void setRevisionId(String revId) {
+		this.revId = revId;
 	}
 	
 

@@ -133,7 +133,10 @@ public abstract class MWAction implements ContentProcessable {
 				}
 				sv = sv.trim();
 				sv = sv.substring(0, sv.length() - 1);
-				log.debug("found support for: " + sv + "\n\tin class " + clazz.getCanonicalName());
+				
+					
+				log.debug("found support for: " + sv + " in ↲ \n\t class " + clazz.getCanonicalName());
+				
 			}
 			return sb.value();
 		} else {

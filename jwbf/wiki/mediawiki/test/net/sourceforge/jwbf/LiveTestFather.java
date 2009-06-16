@@ -37,6 +37,7 @@ import java.util.Vector;
 
 import net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version;
 import net.sourceforge.jwbf.actions.mediawiki.util.MWAction;
+import net.sourceforge.jwbf.bots.MediaWikiBot;
 
 import org.junit.AfterClass;
 import org.junit.Test;
@@ -206,6 +207,25 @@ public abstract class LiveTestFather {
 		return data.getProperty(key);
 	}
 	
+	protected static String getWikiUrl(Version v) throws Exception {
+		
+		return getValue("wiki" + v.name() + "_url");
+	}
+	protected static String getWikiUser(Version v) throws Exception {
+		return getValue("wiki" + v.name() + "_user");
+	}
+	protected static String getWikiPass(Version v) throws Exception {
+		return getValue("wiki" + v.name() + "_pass");
+	}
+	
+	protected static MediaWikiBot getMediaWikiBot(Version v, final boolean login) throws Exception {
+		MediaWikiBot bot =new MediaWikiBot(getWikiUrl(v));
+		if (login) {
+			bot.login(getWikiUser(v), getWikiPass(v));
+		}
+		return bot;
+	}
+
 	protected static URL getURL(final String key) throws Exception {
 		URL u = new URL(getValue(key));
 		String host = u.getHost();

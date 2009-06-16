@@ -10,13 +10,13 @@ import java.io.StringReader;
 
 import net.sourceforge.jwbf.actions.Get;
 import net.sourceforge.jwbf.actions.mediawiki.MediaWiki;
+import net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version;
 import net.sourceforge.jwbf.actions.mediawiki.util.MWAction;
 import net.sourceforge.jwbf.actions.mediawiki.util.SupportedBy;
 import net.sourceforge.jwbf.actions.mediawiki.util.VersionException;
 import net.sourceforge.jwbf.actions.util.HttpAction;
 import net.sourceforge.jwbf.actions.util.ProcessException;
 import net.sourceforge.jwbf.contentRep.Userinfo;
-import net.sourceforge.jwbf.contentRep.mediawiki.Siteinfo;
 
 import org.apache.log4j.Logger;
 import org.jdom.Document;
@@ -58,8 +58,8 @@ public final class GetApiToken extends MWAction {
 	 * @param ui user info object
 	 * @throws VersionException if this action is not supported of the MediaWiki version connected to
 	 */
-	GetApiToken(Intoken intoken, String title, Siteinfo si, Userinfo ui) throws VersionException {
-		super(si.getVersion());
+	GetApiToken(Intoken intoken, String title, Version v, Userinfo ui) throws VersionException {
+		super(v);
 		this.intoken = intoken;
 		generateTokenRequest(intoken, title);
 		
@@ -125,7 +125,9 @@ public final class GetApiToken extends MWAction {
 		}
 		return "";
 	}
-
+	/**
+	 * {@inheritDoc}
+	 */
 	public HttpAction getNextMessage() {
 		if (first) {
 			first = false;
@@ -137,6 +139,9 @@ public final class GetApiToken extends MWAction {
 		return null;
 		
 	}
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public boolean hasMoreMessages() {
 		return first;
@@ -164,7 +169,7 @@ public final class GetApiToken extends MWAction {
 				token = elem.getAttributeValue("edittoken");
 				break;
 			default:
-				token = ""; // TODO was changed from null to empty string, test if good
+				token = "";
 				break;
 			}
 			

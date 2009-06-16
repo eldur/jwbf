@@ -1,7 +1,12 @@
 package net.sourceforge.jwbf.live.mediawiki;
 
-import net.sourceforge.jwbf.bots.MediaWikiAdapterBot;
-import net.sourceforge.jwbf.bots.WikiBot;
+import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_09;
+import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_10;
+import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_11;
+import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_12;
+import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_13;
+import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_14;
+import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_15;
 import net.sourceforge.jwbf.live.ArticleTest;
 
 import org.apache.log4j.PropertyConfigurator;
@@ -21,35 +26,14 @@ public class BasicTest extends ArticleTest {
 	public static void setUp() throws Exception {
 		PropertyConfigurator.configureAndWatch("test4log4j.properties",
 				60 * 1000);
-		WikiBot bot;
 		
-		bot = new MediaWikiAdapterBot(getValue("wikiMW1_09_url"));
-		bot.login(getValue("wikiMW1_09_user"), getValue("wikiMW1_09_pass"));
-		bots.add(bot);
-		
-		bot = new MediaWikiAdapterBot(getValue("wikiMW1_10_url"));
-		bot.login(getValue("wikiMW1_10_user"), getValue("wikiMW1_10_pass"));
-		bots.add(bot);
-		
-		bot = new MediaWikiAdapterBot(getValue("wikiMW1_11_url"));
-		bot.login(getValue("wikiMW1_11_user"), getValue("wikiMW1_11_pass"));
-		bots.add(bot);
-		
-		bot = new MediaWikiAdapterBot(getValue("wikiMW1_12_url"));
-		bot.login(getValue("wikiMW1_12_user"), getValue("wikiMW1_12_pass"));
-		bots.add(bot);
-		
-		bot = new MediaWikiAdapterBot(getValue("wikiMW1_13_url"));
-		bot.login(getValue("wikiMW1_13_user"), getValue("wikiMW1_13_pass"));
-		bots.add(bot);
-		
-		bot = new MediaWikiAdapterBot(getValue("wikiMW1_14_url"));
-		bot.login(getValue("wikiMW1_14_user"), getValue("wikiMW1_14_pass"));
-		bots.add(bot);
-		
-		bot = new MediaWikiAdapterBot(getValue("wikiMW1_15_url"));
-		bot.login(getValue("wikiMW1_15_user"), getValue("wikiMW1_15_pass"));
-		bots.add(bot);
+		bots.add(getMediaWikiBot(MW1_09, true));
+		bots.add(getMediaWikiBot(MW1_10, true));
+		bots.add(getMediaWikiBot(MW1_11, true));
+		bots.add(getMediaWikiBot(MW1_12, true));
+		bots.add(getMediaWikiBot(MW1_13, true));
+		bots.add(getMediaWikiBot(MW1_14, true));
+		bots.add(getMediaWikiBot(MW1_15, true));
 	}
 	/**
 	 * Required for extension.

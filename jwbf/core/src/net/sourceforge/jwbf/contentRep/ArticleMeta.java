@@ -18,4 +18,10 @@ public interface ArticleMeta extends ContentAccessable {
 	 * @return the
 	 */
 	Date getEditTimestamp();
+	
+	/**
+	 * 
+	 * @return the
+	 */
+	String getRevisionId();
 }

@@ -22,6 +22,8 @@ package net.sourceforge.jwbf.bots;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.util.Collection;
+import java.util.Vector;
 
 import net.sourceforge.jwbf.actions.util.ActionException;
 import net.sourceforge.jwbf.actions.util.ProcessException;
@@ -140,7 +142,27 @@ public class ZimWikiBot implements WikiBot {
 	}
 
 	public Userinfo getUserinfo() throws ActionException, ProcessException {
-		return new Userinfo(System.getProperty("user.name"));
+		return new Userinfo() {
+		
+			public String getUsername() {
+				return System.getProperty("user.name");
+			}
+		
+			public Collection<String> getRights() {
+				Vector<String> v = new Vector<String>();
+				if (rootFolder.canRead()) {
+					v.add("read");
+				}
+				if (rootFolder.canWrite()) {
+					v.add("write");
+				}
+				return v;
+			}
+		
+			public Collection<String> getGroups() {
+				return new Vector<String>();
+			}
+		};
 	}
 
 

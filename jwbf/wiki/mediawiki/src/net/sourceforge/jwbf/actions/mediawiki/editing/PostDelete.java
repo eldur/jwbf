@@ -16,8 +16,6 @@ import net.sourceforge.jwbf.actions.util.ActionException;
 import net.sourceforge.jwbf.actions.util.HttpAction;
 import net.sourceforge.jwbf.actions.util.ProcessException;
 import net.sourceforge.jwbf.bots.MediaWikiBot;
-import net.sourceforge.jwbf.contentRep.Userinfo;
-import net.sourceforge.jwbf.contentRep.mediawiki.Siteinfo;
 
 import org.apache.log4j.Logger;
 import org.jdom.Document;
@@ -63,27 +61,6 @@ public class PostDelete extends MWAction {
 	
 	/**
 	 * Constructs a new <code>PostDelete</code> action.
-	 * @param title title of the article to delete
-	 * @param si site info object
-	 * @param ui user info object
-	 * @throws ProcessException on inner problems like a version mismatch
-	 * @deprecated use {@link #PostDelete(MediaWikiBot, String)} instead
-	 */
-	public PostDelete(String title, Siteinfo si, Userinfo ui) throws ProcessException {
-		super(si.getVersion());
-		token = new GetApiToken(GetApiToken.Intoken.DELETE, title, si, ui);
-		this.title = title;
-		if (title == null || title.length() == 0) {
-			throw new IllegalArgumentException("The argument 'title' must not be \"" + String.valueOf(title) + "\"");
-		}
-		
-		if (!ui.getRights().contains("delete")) {
-			throw new ProcessException("The given user doesn't have the rights to delete. Adding '$wgGroupPermissions['bot']['delete'] = true;' to your MediaWiki's LocalSettings.php might remove this problem.");
-		}
-		
-	}
-	/**
-	 * Constructs a new <code>PostDelete</code> action.
 	 * @param bot a
 	 * @param title a
 	 * @throws ProcessException a
@@ -91,7 +68,7 @@ public class PostDelete extends MWAction {
 	 */
 	public PostDelete(MediaWikiBot bot, String title) throws ProcessException, ActionException {
 		super(bot.getVersion());
-		token = new GetApiToken(GetApiToken.Intoken.DELETE, title, bot.getSiteinfo(), bot.getUserinfo());
+		token = new GetApiToken(GetApiToken.Intoken.DELETE, title, bot.getVersion(), bot.getUserinfo());
 		this.title = title;
 		if (title == null || title.length() == 0) {
 			throw new IllegalArgumentException("The argument 'title' must not be null or empty");

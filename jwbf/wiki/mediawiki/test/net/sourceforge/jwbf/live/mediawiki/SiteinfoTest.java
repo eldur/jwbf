@@ -24,6 +24,7 @@ import static org.junit.Assert.assertTrue;
 import net.sourceforge.jwbf.LiveTestFather;
 import net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version;
 import net.sourceforge.jwbf.actions.mediawiki.meta.GetVersion;
+import net.sourceforge.jwbf.actions.mediawiki.meta.Siteinfo;
 import net.sourceforge.jwbf.bots.MediaWikiAdapterBot;
 import net.sourceforge.jwbf.bots.MediaWikiBot;
 import net.sourceforge.jwbf.contentRep.Article;
@@ -49,6 +50,7 @@ public class SiteinfoTest extends LiveTestFather {
 		PropertyConfigurator.configureAndWatch("test4log4j.properties",
 				60 * 1000);
 		addInitSupporterVersions(GetVersion.class);
+		addInitSupporterVersions(Siteinfo.class);
 	}
 	
 
@@ -60,8 +62,8 @@ public class SiteinfoTest extends LiveTestFather {
 	public final void siteInfoWikipediaDe() throws Exception {
 		
 		bot = new MediaWikiAdapterBot("http://de.wikipedia.org/w/index.php");
-		bot.getSiteinfo();
-		assertEquals(Version.DEVELOPMENT, bot.getVersion());
+		doTest(bot, Version.DEVELOPMENT);
+		
 	}
 	
 	/**
@@ -164,6 +166,36 @@ public class SiteinfoTest extends LiveTestFather {
 
 	private void doTest(MediaWikiBot bot, Version v) throws Exception {
 		assertEquals(v, bot.getVersion());
+		
+		GetVersion gv = new GetVersion();
+		bot.performAction(gv);
+		
+		System.out.println(gv.getBase());
+		assertTrue(gv.getBase().length() > 0);
+		
+		System.out.println(gv.getCase());
+		assertTrue(gv.getCase().length() > 0);
+		
+		System.out.println(gv.getGenerator());
+		assertTrue(gv.getGenerator().length() > 0);
+		
+		System.out.println(gv.getMainpage());
+		assertTrue(gv.getMainpage().length() > 0);
+		
+		System.out.println(gv.getSitename());
+		assertTrue(gv.getSitename().length() > 0);
+		
+		
+		Siteinfo si = new Siteinfo();
+		bot.performAction(si);
+		if (v.greaterEqThen(Version.MW1_11)) {
+			System.out.println(si.getInterwikis());
+			assertTrue("shuld have interwikis", si.getInterwikis().size() > 5);
+		
+			System.out.println(si.getNamespaces());
+			assertTrue("shuld have namespaces", si.getNamespaces().size() > 15);
+			registerTestedVersion(Siteinfo.class, v);
+		}
 		registerTestedVersion(GetVersion.class, v);
 	}
 	

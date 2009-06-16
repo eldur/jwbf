@@ -68,6 +68,7 @@ public class GetRevision extends MWAction {
 	public static final int COMMENT = 1 << 4;
 	public static final int FIRST = 1 << 5;
 	public static final int LAST = 1 << 6;
+	public static final int IDS = 1 << 7;
 
 	private final Logger log = Logger.getLogger(getClass());
 
@@ -113,7 +114,11 @@ public class GetRevision extends MWAction {
 		}
 		return "";
 	}
-
+	/**
+	 * TODO Not very nice implementation.
+	 * @param property
+	 * @return a
+	 */
 	private String getDataProperties(final int property) {
 		String properties = "";
 
@@ -129,6 +134,9 @@ public class GetRevision extends MWAction {
 		if ((property & USER) > 0) {
 			properties += "user|";
 		}
+		properties += "ids|";
+		
+		
 		String enc = MediaWiki.encode(properties.substring(0,
 					properties.length() - 1));
 	
@@ -193,7 +201,8 @@ public class GetRevision extends MWAction {
 						log.debug("no text found");
 					}
 				}
-
+				
+				sa.setRevisionId(getAsStringValues(element, "revid"));
 				sa.setEditSummary(getAsStringValues(element, "comment"));
 				sa.setEditor(getAsStringValues(element, "user"));
 

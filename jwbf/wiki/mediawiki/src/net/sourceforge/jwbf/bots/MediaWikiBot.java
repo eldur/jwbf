@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.UnknownHostException;
+import java.util.Collection;
+import java.util.Vector;
 
 import net.sourceforge.jwbf.actions.ContentProcessable;
 import net.sourceforge.jwbf.actions.mediawiki.MediaWiki;
@@ -13,9 +15,9 @@ import net.sourceforge.jwbf.actions.mediawiki.editing.PostDelete;
 import net.sourceforge.jwbf.actions.mediawiki.editing.PostModifyContent;
 import net.sourceforge.jwbf.actions.mediawiki.login.PostLogin;
 import net.sourceforge.jwbf.actions.mediawiki.login.PostLoginOld;
-import net.sourceforge.jwbf.actions.mediawiki.meta.GetSiteinfo;
 import net.sourceforge.jwbf.actions.mediawiki.meta.GetUserinfo;
 import net.sourceforge.jwbf.actions.mediawiki.meta.GetVersion;
+import net.sourceforge.jwbf.actions.mediawiki.meta.Siteinfo;
 import net.sourceforge.jwbf.actions.mediawiki.util.VersionException;
 import net.sourceforge.jwbf.actions.util.ActionException;
 import net.sourceforge.jwbf.actions.util.ProcessException;
@@ -26,7 +28,6 @@ import net.sourceforge.jwbf.contentRep.ContentAccessable;
 import net.sourceforge.jwbf.contentRep.SimpleArticle;
 import net.sourceforge.jwbf.contentRep.Userinfo;
 import net.sourceforge.jwbf.contentRep.mediawiki.LoginData;
-import net.sourceforge.jwbf.contentRep.mediawiki.Siteinfo;
 
 import org.apache.log4j.Logger;
 
@@ -205,12 +206,14 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
 				performAction(ac);
 				
 				SimpleArticle storeSa = store.get(name);
-				if(log.isDebugEnabled())
-					log.debug("stored article (" + storeSa.getLabel() + ") timestamp: " + storeSa.getEditTimestamp());
+				if (log.isDebugEnabled()) {
+					log.debug("stored article (" + storeSa.getTitle() + ") revid: " + storeSa.getRevisionId());
+				}
 				SimpleArticle liveSa = ac.getArticle();
-				if(log.isDebugEnabled())
-					log.debug("live article timestamp: " + liveSa.getEditTimestamp());
-				if (liveSa.getEditTimestamp().equals(storeSa.getEditTimestamp())) {
+				if (log.isDebugEnabled()) {
+					log.debug("live article revid: " + liveSa.getRevisionId());
+				}
+				if (liveSa.getRevisionId().equals(storeSa.getRevisionId())) {
 
 					return store.get(name);
 				}
@@ -285,6 +288,9 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
 						+ a.getTitle() + "\" : \"" + invChar + "\"", getClass());
 			}
 		}
+		
+			
+		performAction(new PostModifyContent(this, a));
 		if (store != null) {
 			String label = a.getTitle();
 			SimpleArticle sa;
@@ -294,17 +300,14 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
 			} else {
 				sa = new SimpleArticle(label);
 			}
-			log.debug("sa == " + sa); // TODO RM
 			sa.setText(a.getText());
 			sa.setEditor(getUserinfo().getUsername());
 			sa.setEditSummary(a.getEditSummary());
 			sa.setMinorEdit(a.isMinorEdit());
+//			sa.setRevisionId((Integer.parseInt(sa.getRevisionId()) + 1) + "");
 			log.debug("update cache (write)");
 			store.put(sa);
 		}
-			
-		performAction(new PostModifyContent(this, a));
-		
 		if (a.getText().trim().length() < 1) 
 			throw new RuntimeException("Content is empty, still written");
 	}
@@ -336,14 +339,40 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
 				a = new GetUserinfo(getVersion());
 				
 				performAction(a);
-				ui = a.getUserinfo();
+				ui = a;
 				loginChangeUserInfo = false;
 			} catch (VersionException e) {
 				e.printStackTrace();
 				if (login != null && login.getUserName().length() > 0) {
-					ui = new Userinfo(login.getUserName());
+					ui = new Userinfo() {
+					
+						public String getUsername() {
+							return login.getUserName();
+						}
+					
+						public Collection<String> getRights() {
+							return new Vector<String>();
+						}
+					
+						public Collection<String> getGroups() {
+							return new Vector<String>();
+						}
+					};
 				} else {
-					ui = new Userinfo("unknown");
+					ui = new Userinfo() {
+						
+						public String getUsername() {
+							return "unknown";
+						}
+					
+						public Collection<String> getRights() {
+							return new Vector<String>();
+						}
+					
+						public Collection<String> getGroups() {
+							return new Vector<String>();
+						}
+					};
 				}
 			}
 			
@@ -385,7 +414,7 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
 				GetVersion gs = new GetVersion();
 				performAction(gs);
 
-				version = gs.getSiteinfo().getVersion();
+				version = gs.getVersion();
 				loginChangeVersion = false;
 			} catch (JwbfException e) {
 				log.error(e.getClass().getName() + e.getLocalizedMessage());
@@ -402,19 +431,19 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
 	 * @return a
 	 * @throws ActionException
 	 *             on problems with http, cookies and io
-	 * @see GetSiteinfo
+	 * @see Siteinfo
 	 */
 	public Siteinfo getSiteinfo() throws ActionException {
 		
-		GetSiteinfo gs = null;
+		Siteinfo gs = null;
 		try {
-			gs = new GetSiteinfo();
+			gs = new Siteinfo();
 			performAction(gs);
 		} catch (ProcessException e) {
 			e.printStackTrace();
 		}
 
-		return gs.getSiteinfo();
+		return gs;
 
 	}
 	/**
@@ -426,8 +455,9 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
 	}
 
 	/**
-	 * 
+	 * Set to false, to force editing without the API.
 	 * @param useEditApi if
+	 * 
 	 */
 	public final void useEditApi(boolean useEditApi) {
 		this.useEditApi = useEditApi;
