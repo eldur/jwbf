@@ -143,7 +143,7 @@ public class RecentChangesTest extends LiveTestFather {
 			for (char c : MediaWikiBot.INVALID_LABEL_CHARS) {
 				label = label.replace(c + "", "");
 			}
-			a.setLabel(label);
+			a.setTitle(label);
 			a.setText(getRandom(255));
 			bot.writeContent(a);
 		}
@@ -257,7 +257,7 @@ public class RecentChangesTest extends LiveTestFather {
 	private void change(MediaWikiBot bot) throws ActionException, ProcessException {
 		SimpleArticle a = new SimpleArticle("Change", "0");
 		for (int i = 0; i < COUNT + 1; i++) {
-			a.setLabel("Change " + i);
+			a.setTitle("Change " + i);
 			a.setText(getRandom(255));
 			bot.writeContent(a);
 		}

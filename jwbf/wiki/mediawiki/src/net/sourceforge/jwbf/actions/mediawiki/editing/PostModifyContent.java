@@ -75,7 +75,7 @@ public class PostModifyContent extends MWAction {
 	public PostModifyContent(MediaWikiBot bot, final ContentAccessable a) throws ActionException, ProcessException {
 		super(bot.getVersion());
 		if (a.getTitle().length() < 1) {
-			throw new ActionException("imposible request, no title", getClass());
+			throw new ActionException("imposible request, no title");
 		}
 		this.a = a;
 		this.bot = bot;
@@ -188,7 +188,7 @@ public class PostModifyContent extends MWAction {
 //			if (s.contains("edit") && bot.getVersion() == Version.MW1_13) { // FIXME invalid
 //				throw new ProcessException("please check if $wgEnableWriteAPI = true;");
 //			}
-			throw new ProcessException(s.substring(0, 700), getClass());
+			throw new ProcessException(s.substring(0, 700));
 		}
 		if (initOldGet != null && hm.getRequest().equals(initOldGet.getRequest())) {
 			getWpValues(s, tab);

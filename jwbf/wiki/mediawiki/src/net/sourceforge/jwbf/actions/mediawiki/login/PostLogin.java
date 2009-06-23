@@ -97,10 +97,10 @@ public class PostLogin extends MWAction {
 			log.error(e.getClass().getName() + e.getLocalizedMessage());
 		} catch (NullPointerException e) {
 			log.error(e.getClass().getName() + e.getLocalizedMessage());
-			throw new ProcessException("No regular content was found, check your api\n::" + s, getClass());
+			throw new ProcessException("No regular content was found, check your api\n::" + s);
 		} catch (Exception e) {
 			log.error(e.getClass().getName() + e.getLocalizedMessage());
-			throw new ProcessException(e.getLocalizedMessage(), getClass());
+			throw new ProcessException(e.getLocalizedMessage());
 		}
 
 		
@@ -124,9 +124,9 @@ public class PostLogin extends MWAction {
 				e.printStackTrace();
 			}
 		} else if (result.equalsIgnoreCase(wrongPass)) {
-			throw new ProcessException("Wrong Password", getClass());
+			throw new ProcessException("Wrong Password");
 		} else if (result.equalsIgnoreCase(notExists)) {
-			throw new ProcessException("No sutch User", getClass());
+			throw new ProcessException("No sutch User");
 		} 
 		
 	}

@@ -32,54 +32,65 @@ import net.sourceforge.jwbf.contentRep.SimpleArticle;
  */
 public class SimpleFile extends SimpleArticle {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 90640839252699902L;
 	private File filename;
 	
 	/**
 	 * 
-	 * @param Label new filename
-	 * @param Filename local filename
+	 * @param label new filename
+	 * @param filename local filename
 	 */
-	public SimpleFile(final String Label, String Filename) {
+	public SimpleFile(final String label, String filename) {
 		setText("");
-		setLabel(Label);
-		filename = new File(Filename);
+		setTitle(label);
+		this.filename = new File(filename);
 	}
 
 	/**
 	 * 
-	 * @param Label new filename
-	 * @param Filename local filename
+	 * @param label new filename
+	 * @param filename local filename
 	 */
-	public SimpleFile(final String Label, File Filename) {
+	public SimpleFile(final String label, File filename) {
 		setText("");
-		setLabel(Label);
-		filename = Filename;
+		setTitle(label);
+		this.filename = filename;
 	}
 	
 	/**
 	 * 
-	 * @param Filename local filename
+	 * @param filename local filename
 	 */
-	public SimpleFile(File Filename) {
+	public SimpleFile(File filename) {
 		setText("");
-		setLabel(Filename.getName());
-		filename = Filename;
+		setTitle(filename.getName());
+		this.filename = filename;
 	}
 	
 	/**
 	 * 
-	 * @param Filename local filename
+	 * @param filename local filename
 	 */
-	public SimpleFile(String Filename) {
+	public SimpleFile(String filename) {
 		setText("");
-		filename = new File(Filename);
-		setLabel(filename.getName());
+		this.filename = new File(filename);
+		setTitle(this.filename.getName());
 	}
 
+	/**
+	 * 
+	 * @return the
+	 */
 	public String getFilename() {
 		return filename.getPath();
 	}
-
+	/**
+	 * 
+	 * @return the
+	 */
 	public File getFile() {
 		return this.filename;
 	}

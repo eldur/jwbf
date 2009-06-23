@@ -34,6 +34,7 @@ import java.util.Iterator;
 
 import net.sourceforge.jwbf.actions.Get;
 import net.sourceforge.jwbf.actions.mediawiki.MediaWiki;
+import net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version;
 import net.sourceforge.jwbf.actions.mediawiki.util.ApiException;
 import net.sourceforge.jwbf.actions.mediawiki.util.MWAction;
 import net.sourceforge.jwbf.actions.mediawiki.util.SupportedBy;
@@ -77,6 +78,8 @@ public class GetRevision extends MWAction {
 	private final Get msg;
 	
 	private boolean q = true;
+	
+	private final Version botVersion;
 
 	/**
 	 * TODO follow redirects.
@@ -86,13 +89,14 @@ public class GetRevision extends MWAction {
 	 */
 	public GetRevision(MediaWikiBot bot, final String articlename, final int properties) throws ActionException, ProcessException {
 		super(bot.getVersion());
+		botVersion = bot.getVersion(); 
 //		if (!bot.getUserinfo().getRights().contains("read")) {
 //			throw new ActionException("reading is not permited, make sure that this account is able to read");
 //		} FIXME check if 
 		
 		this.properties = properties;
 		sa = new SimpleArticle();
-		sa.setLabel(articlename);
+		sa.setTitle(articlename);
 		String uS = "/api.php?action=query&prop=revisions&titles="
 				+ MediaWiki.encode(articlename) + "&rvprop="
 				+ getDataProperties(properties) + getReversion(properties)
@@ -134,13 +138,17 @@ public class GetRevision extends MWAction {
 		if ((property & USER) > 0) {
 			properties += "user|";
 		}
-		properties += "ids|";
+		if ((property & IDS) > 0 && botVersion.greaterEqThen(MW1_11)) {
+			properties += "ids|";
+		}
 		
 		
-		String enc = MediaWiki.encode(properties.substring(0,
+		if (properties.length() > 0) {
+			return MediaWiki.encode(properties.substring(0,
 					properties.length() - 1));
+		}
 	
-		return enc;
+		return "";
 	}
 
 	private String getReversion(final int property) {

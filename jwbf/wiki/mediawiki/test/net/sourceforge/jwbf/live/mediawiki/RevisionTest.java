@@ -1,13 +1,16 @@
 package net.sourceforge.jwbf.live.mediawiki;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import net.sourceforge.jwbf.LiveTestFather;
 import net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version;
 import net.sourceforge.jwbf.actions.mediawiki.editing.GetApiToken;
 import net.sourceforge.jwbf.actions.mediawiki.editing.GetRevision;
 import net.sourceforge.jwbf.actions.mediawiki.editing.PostModifyContent;
+import net.sourceforge.jwbf.actions.mediawiki.util.ApiException;
 import net.sourceforge.jwbf.bots.MediaWikiAdapterBot;
 import net.sourceforge.jwbf.bots.MediaWikiBot;
+import net.sourceforge.jwbf.bots.util.JwbfException;
 import net.sourceforge.jwbf.contentRep.ArticleMeta;
 import net.sourceforge.jwbf.contentRep.SimpleArticle;
 
@@ -121,15 +124,57 @@ public class RevisionTest extends LiveTestFather {
 		String label = getValue("wikiMW1_12_user");
 		String user = bot.getUserinfo().getUsername();
 		SimpleArticle sa;
-		// test with content length > 0
+		// write init content
 		String testText = getRandom(255);
 		sa = new SimpleArticle(testText, label);
-		bot.writeContent(sa);
-//		
+		bot.writeContent(sa);	
+		// Test parameters
+		try {
+			bot.readContent(label, GetRevision.COMMENT);
+		} catch (ApiException e) {
+			throw new JwbfException("Problems with COMMENT receiving");
+		}
+		try {
+			bot.readContent(label, GetRevision.CONTENT);
+		} catch (ApiException e) {
+			throw new JwbfException("Problems with CONTENT receiving");
+		}
+		try {
+			bot.readContent(label, GetRevision.FIRST | GetRevision.CONTENT);
+		} catch (ApiException e) {
+			throw new JwbfException("Problems with FIRST receiving");
+		}
+		try {
+			bot.readContent(label, GetRevision.IDS | GetRevision.CONTENT);
+		} catch (ApiException e) {
+			throw new JwbfException("Problems with IDS receiving");
+		}
+		try {
+			bot.readContent(label, GetRevision.LAST | GetRevision.CONTENT);
+		} catch (ApiException e) {
+			throw new JwbfException("Problems with LAST receiving");
+		}
+		try {
+			bot.readContent(label, GetRevision.TIMESTAMP | GetRevision.CONTENT);
+		} catch (ApiException e) {
+			throw new JwbfException("Problems with TIMESTAMP receiving");
+		}
+		try {
+			bot.readContent(label, GetRevision.USER | GetRevision.CONTENT);
+		} catch (ApiException e) {
+			throw new JwbfException("Problems with USER receiving");
+		}
 		
+		
+		
+		
+		
+		// test with content length > 0
 		ArticleMeta a = bot.readContent(label);
 		assertEquals(testText, a.getText());	
-		assertEquals(user, a.getEditor());	
+		assertEquals(user, a.getEditor());
+		assertTrue("should be greater then 0", a.getRevisionId().length() > 0);
+		
 		// test with content length <= 0
 		testText = "";
 		label = "767676885340589358058903589035";

@@ -39,7 +39,7 @@ public abstract class ArticleTest extends LiveTestFather {
 				a.save(editSum);
 
 				Article b = new Article(bot, title);
-				assertEquals(a.getLabel(), b.getLabel());
+				assertEquals(a.getTitle(), b.getTitle());
 				assertEquals(a.getText(), b.getText());
 				assertEquals(user, b.getEditor());
 				assertEquals(editSum, b.getEditSummary());

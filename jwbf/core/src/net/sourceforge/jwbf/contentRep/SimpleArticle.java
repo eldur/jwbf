@@ -156,7 +156,7 @@ public class SimpleArticle implements ArticleMeta, Serializable {
 
 	/**
 	 * @return the
-	 * @deprecated use getTitle
+	 * @deprecated use {@link #getTitle()} instead
 	 */
 	public String getLabel() {
 		return getTitle();
@@ -172,7 +172,7 @@ public class SimpleArticle implements ArticleMeta, Serializable {
 	 * 
 	 * @param label
 	 *            the label, like "Main Page"
-	 * @deprecated use #setTitle() instead
+	 * @deprecated use {@link #setTitle(String)} instead
 	 */
 	public void setLabel(final String label) {
 		setTitle(label);
@@ -290,7 +290,7 @@ public class SimpleArticle implements ArticleMeta, Serializable {
             return false;
 
         SimpleArticle sa = (SimpleArticle) obj;
-		return sa.getLabel().equals(getLabel()) 
+		return sa.getTitle().equals(getTitle()) 
 			&& sa.getText().equals(getText()) 
 			&& sa.getEditTimestamp().equals(getEditTimestamp());
 		

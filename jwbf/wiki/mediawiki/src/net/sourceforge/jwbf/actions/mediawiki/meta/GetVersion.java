@@ -84,10 +84,10 @@ public class GetVersion extends MWAction {
 		} catch (JDOMException e) {
 			log.error(e.getClass().getName() + e.getLocalizedMessage());
 			log.error(xml);
-			throw new ProcessException(e.getLocalizedMessage(), getClass());
+			throw new ProcessException(e.getLocalizedMessage());
 		} catch (IOException e) {
 			log.error(e.getClass().getName() + e.getLocalizedMessage());
-			throw new ProcessException(e.getLocalizedMessage(), getClass());
+			throw new ProcessException(e.getLocalizedMessage());
 		}
 	}
 	

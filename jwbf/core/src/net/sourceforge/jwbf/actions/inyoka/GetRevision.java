@@ -64,7 +64,7 @@ public class GetRevision implements ContentProcessable {
 			throw new ProcessException("articlename is empty");
 		}
 		sa = new SimpleArticle();
-		sa.setLabel(articlename);
+		sa.setTitle(articlename);
 
 		
 		contentGet = new Get("/" + articlename + "?action=export&format=raw&");
@@ -83,7 +83,7 @@ public class GetRevision implements ContentProcessable {
 			sa.setText(s);
 		} else if (hm == versionGet) {
 			parseVersion(s);
-			metaGet = new Get("/" + sa.getLabel() + "?action=diff&version=" + version);
+			metaGet = new Get("/" + sa.getTitle() + "?action=diff&version=" + version);
 			
 		} else if (hm == metaGet) {
 			parse(s);

@@ -28,6 +28,7 @@ public class Article extends SimpleArticle {
 	 */
 	@Override
 	public String getText() {
+		// FIXME receive data always from the bot, if an Cache exists
 		if (super.getText().length() < 1) {
 			try {
 				setText(bot.readData(super.getTitle()).getText());
@@ -42,6 +43,7 @@ public class Article extends SimpleArticle {
 	 */
 	@Override
 	public String getRevisionId() {
+		// FIXME receive data always from the bot, if an Cache exists
 		if (super.getRevisionId().length() < 1) {
 			try {
 				setRevisionId(bot.readData(super.getTitle()).getRevisionId());
@@ -57,6 +59,7 @@ public class Article extends SimpleArticle {
 	 */
 	@Override
 	public String getEditor() {
+		// FIXME receive data always from the bot, if an Cache exists
 		if (super.getEditor().length() < 1) {
 			try {
 				setEditor(bot.readData(super.getTitle()).getEditor());
@@ -72,6 +75,7 @@ public class Article extends SimpleArticle {
 	 */
 	@Override
 	public String getEditSummary() {
+		// FIXME receive data always from the bot, if an Cache exists
 		if (super.getEditSummary().length() < 1) {
 			try {
 				setEditSummary(bot.readData(super.getTitle()).getEditSummary());
@@ -116,11 +120,11 @@ public class Article extends SimpleArticle {
 	}
 	
 	public void clear() throws ActionException, ProcessException {
-		bot.writeContent(new SimpleArticle("", getLabel()));
+		bot.writeContent(new SimpleArticle("", getTitle()));
 	}
 	
 	public void delete() throws ActionException, ProcessException {
-		bot.postDelete(getLabel());
+		bot.postDelete(getTitle());
 	}
 	public boolean isEmpty() {
 		return getText().length() < 1;

@@ -193,9 +193,9 @@ public class UploadAndImageInfoTest extends LiveTestFather {
 		bot.performAction(up);
 		URL url = null;
 		try {
-		url = new URL(bot.getImageInfo(sf.getLabel()));
+		url = new URL(bot.getImageInfo(sf.getTitle()));
 		} catch (ProcessException e) {
-			throw new ProcessException(e.getLocalizedMessage() + "; \n is upload enabled ?", e.getExceptionSrcClass());
+			throw new ProcessException(e.getLocalizedMessage() + "; \n is upload enabled ?");
 		}
 		Assert.assertTrue("file not found " 
 				+ url , url.toExternalForm().length() - bot.getHostUrl().length() > 2);

@@ -35,34 +35,16 @@ public class ActionException extends JwbfException {
 	/**
 	 * 
 	 * @param arg0 a
-	 * @param clazz a
-	 */
-	public ActionException(String arg0, Class< ? > clazz) {
-		super(arg0, clazz);
-	}
-	/**
-	 * @deprecated use constructor with class parameter
-	 * @param arg0 a
 	 */
 	public ActionException(String arg0) {
 		super(arg0);
-
-	}
-	/**
-	 * @param arg0 a
-	 * @param clazz a
-	 */
-	public ActionException(Throwable arg0, Class< ? > clazz) {
-		super(arg0, clazz);
-	
 	}
 
 	/**
-	 * @deprecated use constructor with class parameter
 	 * @param arg0 a
 	 */
 	public ActionException(Throwable arg0) {
 		super(arg0);
-
+	
 	}
 }

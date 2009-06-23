@@ -81,17 +81,17 @@ public class FileUpload extends MWAction {
 	public FileUpload(final SimpleFile a, MediaWikiBot bot) throws ActionException, VersionException {
 		super(bot.getVersion());
 		if (!a.getFile().isFile() || !a.getFile().canRead()) {
-			throw new ActionException("no such file " + a.getFile(), getClass());
+			throw new ActionException("no such file " + a.getFile());
 		}
 		
 		if (!bot.isLoggedIn()) {
-			throw new ActionException("Please login first", getClass());
+			throw new ActionException("Please login first");
 		}
 
 		
 		this.a = a;
 		String uS = "/index.php?title="
-					+ MediaWiki.encode(a.getLabel())
+					+ MediaWiki.encode(a.getTitle())
 					+ "&action=edit&dontcountme=s";
 	
 		g = new Get(uS);
@@ -118,11 +118,11 @@ public class FileUpload extends MWAction {
 
 		try {
 
-			LOG.info("WRITE: " + a.getLabel());
+			LOG.info("WRITE: " + a.getTitle());
 			FilePost post = new FilePost(uS);
 	
 			if (a.getText().length() == 0) {
-				post.addPart("wpDestFile", a.getLabel());
+				post.addPart("wpDestFile", a.getTitle());
 			
 				post.addPart("wpIgnoreWarning", "true");
 				post.addPart("wpSourceType", "file");
@@ -135,7 +135,7 @@ public class FileUpload extends MWAction {
 
 			
 			} else {
-				post.addPart("wpDestFile", a.getLabel());
+				post.addPart("wpDestFile", a.getTitle());
 				
 				post.addPart("wpIgnoreWarning", "true");
 				post.addPart("wpSourceType", "file");
@@ -186,7 +186,7 @@ public class FileUpload extends MWAction {
 				LOG.error("Upload failed: " + lastP);
 			}
 			
-			throw new ProcessException("Upload failed - " + lastP, getClass());
+			throw new ProcessException("Upload failed - " + lastP);
 		}
 		return "";
 	}

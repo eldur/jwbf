@@ -34,21 +34,13 @@ public class CookieException extends ActionException {
 	/**
 	 * 
 	 * @param arg0 exception text
-	 * @param clazz a
-	 */
-	
-	public CookieException(String arg0, Class< ? > clazz) {
-		super(arg0, clazz);
-	}
-
-	/**
-	 * @deprecated use constructor with class parameter
-	 * @param arg0 exception text
 	 */
 	
 	public CookieException(String arg0) {
-		super(arg0, CookieException.class);
+		super(arg0);
 	}
+
+
 
 
 }

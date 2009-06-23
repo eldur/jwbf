@@ -119,7 +119,7 @@ public class SimpleArticleTest {
 		SimpleArticle sa = new SimpleArticle(ca);
 		assertEquals("", sa.getEditor());
 		assertEquals("", sa.getEditSummary());
-		assertEquals("", sa.getLabel());
+		assertEquals("", sa.getTitle());
 		assertEquals("", sa.getText());
 		Date d = sa.getEditTimestamp();
 		assertTrue(d.getTime() > 0);
@@ -156,7 +156,7 @@ public class SimpleArticleTest {
 		
 		assertEquals("", sa.getEditor());
 		assertEquals("", sa.getEditSummary());
-		assertEquals("MyTest", sa.getLabel());
+		assertEquals("MyTest", sa.getTitle());
 		assertEquals("test", sa.getText());
 	}
 	@Test
@@ -165,7 +165,7 @@ public class SimpleArticleTest {
 		
 		assertEquals("", sa.getEditor());
 		assertEquals("", sa.getEditSummary());
-		assertEquals("", sa.getLabel());
+		assertEquals("", sa.getTitle());
 		assertEquals("", sa.getText());
 		assertTrue(sa.getEditTimestamp().getTime() > 0);
 		assertFalse(sa.isRedirect());
@@ -212,13 +212,13 @@ public class SimpleArticleTest {
 		SimpleArticle sa = new SimpleArticle();
 		SimpleArticle sax = new SimpleArticle();
 		assertTrue("1", sa.equals(sax));
-		sa.setLabel("A");
+		sa.setTitle("A");
 		assertFalse("2", sa.equals(sax));
-		sax.setLabel("A");
+		sax.setTitle("A");
 		assertTrue("3", sa.equals(sax));
-		sax.setLabel("B");
+		sax.setTitle("B");
 		assertFalse("4", sa.equals(sax));
-		sax.setLabel("A");
+		sax.setTitle("A");
 		sax.setText("ABC");
 		assertFalse("5", sa.equals(sax));
 		sa.setText("ABC");

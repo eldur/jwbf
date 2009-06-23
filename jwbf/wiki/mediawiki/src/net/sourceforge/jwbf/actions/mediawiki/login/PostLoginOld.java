@@ -103,10 +103,10 @@ public class PostLoginOld extends MWAction implements CookieValidateable {
 		compare = MediaWiki.encode(username);
 
 		if (cs == null) {
-			throw new CookieException("Cookiearray is null.", getClass());
+			throw new CookieException("Cookiearray is null.");
 		}
 		if (cs.isEmpty()) {
-			throw new CookieException("No cookies found.", getClass());
+			throw new CookieException("No cookies found.");
 		} else {
 			
 			if (cs.containsValue(compare)) {
@@ -115,7 +115,7 @@ public class PostLoginOld extends MWAction implements CookieValidateable {
 				return;
 			} else {
 				throw new CookieException(
-						"Login failed: Check Username and Password.", getClass());
+						"Login failed: Check Username and Password.");
 			}
 			
 				

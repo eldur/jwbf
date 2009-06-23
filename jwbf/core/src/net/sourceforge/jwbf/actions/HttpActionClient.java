@@ -178,9 +178,9 @@ public class HttpActionClient {
 				
 
 			} catch (IOException e1) {
-				throw new ActionException(e1, getClass());
+				throw new ActionException(e1);
 			} catch (IllegalArgumentException e2) {
-				throw new ActionException(e2, getClass());
+				throw new ActionException(e2);
 			}
 
 		}

@@ -167,7 +167,7 @@ public class SimpleCachTest extends LiveTestFather {
 		SimpleArticle sa = new SimpleArticle();
 		db = new SimpleCache(f, 10000);
 		assertTrue("should contains", db.containsKey(title));
-		assertTrue("should have a", db.get(title).getLabel().length() > 1);
+		assertTrue("should have a", db.get(title).getTitle().length() > 1);
 		SimpleArticle sa2 = new SimpleArticle();
 		sa2.setTitle(title);
 		sa2.setText(getRandom(8));
@@ -175,7 +175,7 @@ public class SimpleCachTest extends LiveTestFather {
 		sa.setTitle(title);
 		db = new SimpleCache(f, 10000);
 		assertTrue("should contains", db.containsKey(title));
-		assertTrue("should have a", db.get(title).getLabel().length() > 1);
+		assertTrue("should have a", db.get(title).getTitle().length() > 1);
 
 	}
 	

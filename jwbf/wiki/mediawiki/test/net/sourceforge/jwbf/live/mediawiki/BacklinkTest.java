@@ -40,7 +40,7 @@ public class BacklinkTest extends LiveTestFather {
 		a = new SimpleArticle("text", BACKLINKS);
 		bot.writeContent(a);
 		for (int i = 0; i <= COUNT; i++) {
-			a.setLabel("Back" + i);
+			a.setTitle("Back" + i);
 			if (i % 2 == 0) {
 			a.setText("#redirect [[" + BACKLINKS + "]]");
 			} else {

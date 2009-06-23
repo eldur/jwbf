@@ -37,6 +37,7 @@ public class VersionException extends ProcessException {
 	/**
 	 * 
 	 * @param s exeption text
+	 * @param clazz where the exception was thrown
 	 */
 	public VersionException(String s) {
 		super(s);

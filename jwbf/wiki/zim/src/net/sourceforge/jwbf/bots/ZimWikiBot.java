@@ -91,7 +91,7 @@ public class ZimWikiBot implements WikiBot {
 			throws ActionException, ProcessException {
 		File f = new File(getRootFolder(), name + ZIMEXT);
 		SimpleArticle sa = new SimpleArticle();
-		sa.setLabel(name);
+		sa.setTitle(name);
 		String text = "";
 		// create a file reader
 		try {

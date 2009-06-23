@@ -36,35 +36,19 @@ public class JwbfException extends Exception {
 	 * 
 	 */
 	private static final long serialVersionUID = -2456904376052276104L;
-	private Class < ? > clazz = Object.class;
+//	private Class < ? > clazz = Object.class;
 
-	/**
-	 * @param arg0 a
-	 * @param clazz where exception was thrown
-	 */
-	public JwbfException(String arg0, Class < ? > clazz) {
-		super(arg0);
-		this.clazz = clazz;
-	
-	}
+
 	
 	/**
 	 * Design for extension, use with {@link #setExceptionPackageClass(Class)}.
 	 * @param arg0 a
 	 * 
 	 */
-	protected JwbfException(String arg0) {
+	public JwbfException(String arg0) {
 		super(arg0);
 	}
 
-	/**
-	 * @param arg0 a
-	 * @param clazz where exception was thrown
-	 */
-	public JwbfException(Throwable arg0, Class < ? > clazz) {
-		super(arg0);
-		this.clazz = clazz;
-	}
 
 	/**
 	 * Design for extension, use with {@link #setExceptionPackageClass(Class)}.
@@ -80,20 +64,28 @@ public class JwbfException extends Exception {
 	 * @return the
 	 */
 	public Class < ? > getExceptionSrcClass() {
-		return clazz;
+		return getStackTraceClass();
 	}
-	/**
-	 * 
-	 * @param clazz the
-	 */
-	protected void setExceptionPackageClass(Class < ? > clazz) {
-		this.clazz = clazz;
+
+	private Class < ? > getStackTraceClass() {
+		
+		ClassLoader loader = getClass().getClassLoader();
+		try {
+			return loader.loadClass(getStackTrace()[0].getClassName());
+		} catch (ClassNotFoundException e) {
+			return Object.class;
+		}
+		
 	}
+	
 	/**
 	 * 
 	 * @return the
 	 */
 	private String getModulInfo() {
+		
+		Class < ? > clazz = getStackTraceClass();
+
 		return "( " + JWBF.getArtifactId(clazz) + "-" + JWBF.getVersion(clazz) + " )";
 	}
 	/**
@@ -104,14 +96,14 @@ public class JwbfException extends Exception {
 		arg0.println(getModulInfo());
 		super.printStackTrace(arg0);
 	}
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void printStackTrace() {
-		System.err.println(getModulInfo());
-		super.printStackTrace();
-	}
+//	/**
+//	 * {@inheritDoc}
+//	 */
+//	@Override
+//	public void printStackTrace() {
+////		System.err.println(getModulInfo());
+//		super.printStackTrace();
+//	}
 	/**
 	 * {@inheritDoc}
 	 */

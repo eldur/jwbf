@@ -82,7 +82,7 @@ public class ImageInfo extends MWAction {
 			new URL(urlOfImage);
 		} catch (MalformedURLException e) {
 			if (bot.getHostUrl().length() <= 0) {
-				throw new ProcessException("please use the constructor with hostUrl", getClass());
+				throw new ProcessException("please use the constructor with hostUrl");
 			}
 			urlOfImage = bot.getHostUrl() + urlOfImage;
 		}
@@ -143,7 +143,7 @@ public class ImageInfo extends MWAction {
 		}
 		findContent(root);
 		if (urlOfImage.length() < 1)
-			throw new ProcessException("Could not find this image", getClass());
+			throw new ProcessException("Could not find this image");
 	}
 	
 	/**

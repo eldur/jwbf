@@ -42,7 +42,7 @@ public class DeleteTest extends LiveTestFather {
 		SimpleArticle a = new SimpleArticle("Delete", "0");
 		
 		for (int i = 0; i < COUNT; i++) {
-			a.setLabel("Delete " + i);
+			a.setTitle("Delete " + i);
 			a.setText(getRandom(23));
 			bot.writeContent(a);
 		}

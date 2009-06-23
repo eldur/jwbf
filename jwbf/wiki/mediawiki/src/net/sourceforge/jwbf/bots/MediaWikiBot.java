@@ -73,7 +73,8 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
 	 * These chars are not allowed in article names.
 	 */
 	public static final char [] INVALID_LABEL_CHARS = "[]{}<>|".toCharArray();
-	
+	private final static int READVAL = GetRevision.CONTENT
+	| GetRevision.COMMENT | GetRevision.USER | GetRevision.TIMESTAMP | GetRevision.IDS;
 	
 	/**
 	 * @param u
@@ -154,9 +155,9 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
 			loginChangeUserInfo = true;
 			loginChangeVersion = true;
 		} catch (ProcessException e) {
-			throw new ActionException(e.getLocalizedMessage(), getClass());
+			throw new ActionException(e.getLocalizedMessage());
 		} catch (RuntimeException e) {
-			throw new ActionException(e.getMessage(), getClass());
+			throw new ActionException(e.getMessage());
 		}
 	
 	}
@@ -233,14 +234,14 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
 		return ac.getArticle();
 
 	}
+	
 	/**
 	 * {@inheritDoc}
 	 */
 	public SimpleArticle readData(String name) throws ActionException,
 			ProcessException {
 		
-		return readData(name, GetRevision.CONTENT
-				| GetRevision.COMMENT | GetRevision.USER | GetRevision.TIMESTAMP);
+		return readData(name, READVAL);
 	}
 	/**
 	 * 
@@ -262,8 +263,7 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
 	 */
 	public synchronized Article readContent(final String name)
 			throws ActionException, ProcessException {
-		return readContent(name, GetRevision.CONTENT
-				| GetRevision.COMMENT | GetRevision.USER | GetRevision.TIMESTAMP);
+		return readContent(name, READVAL);
 
 	}
 	
@@ -279,13 +279,13 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
 	public synchronized void writeContent(final ContentAccessable a)
 			throws ActionException, ProcessException {
 		if (!isLoggedIn()) {
-			throw new ActionException("Please login first", getClass());
+			throw new ActionException("Please login first");
 		}
 
 		for (char invChar : INVALID_LABEL_CHARS) {
 			if (a.getTitle().contains(invChar + "")) {
 				throw new ActionException("Invalid character in label\"" 
-						+ a.getTitle() + "\" : \"" + invChar + "\"", getClass());
+						+ a.getTitle() + "\" : \"" + invChar + "\"");
 			}
 		}
 		

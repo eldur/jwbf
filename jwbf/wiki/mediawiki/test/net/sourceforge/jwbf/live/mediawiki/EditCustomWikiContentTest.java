@@ -111,7 +111,7 @@ public class EditCustomWikiContentTest extends LiveTestFather {
 			e.printStackTrace();
 		}
 		SimpleArticle sa = bot.readContent(label);
-		assertEquals(label, sa.getLabel());
+		assertEquals(label, sa.getTitle());
 		//		System.out.println(sa.getEditSummary());
 		assertEquals(summary, sa.getEditSummary());
 		assertEquals(bot.getUserinfo().getUsername(), sa.getEditor());

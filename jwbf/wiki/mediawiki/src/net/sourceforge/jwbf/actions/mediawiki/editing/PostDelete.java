@@ -78,8 +78,7 @@ public class PostDelete extends MWAction {
 			throw new ProcessException(
 					"The given user doesn't have the rights to delete. "
 							+ "Add '$wgGroupPermissions['bot']['delete'] = true;' "
-							+ "to your MediaWiki's LocalSettings.php might solve this problem.",
-					getClass());
+							+ "to your MediaWiki's LocalSettings.php might solve this problem.");
 		}
 		
 	}
