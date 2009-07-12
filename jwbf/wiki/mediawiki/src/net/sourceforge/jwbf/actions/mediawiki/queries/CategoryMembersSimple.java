@@ -18,12 +18,19 @@
  */
 package net.sourceforge.jwbf.actions.mediawiki.queries;
 
+import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_11;
+import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_12;
+import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_13;
+import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_14;
+import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_15;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
 import net.sourceforge.jwbf.actions.Get;
 import net.sourceforge.jwbf.actions.mediawiki.MediaWiki;
+import net.sourceforge.jwbf.actions.mediawiki.util.SupportedBy;
 import net.sourceforge.jwbf.actions.util.ActionException;
 import net.sourceforge.jwbf.actions.util.HttpAction;
 import net.sourceforge.jwbf.actions.util.ProcessException;
@@ -35,6 +42,7 @@ import org.apache.log4j.Logger;
  * A specialization of {@link CategoryMembers} with contains {@link String}s. 
  * @author Thomas Stock
  */
+@SupportedBy({ MW1_11, MW1_12, MW1_13, MW1_14, MW1_15 })
 public class CategoryMembersSimple  implements Iterable<String>, Iterator<String> {
 
 	private Get msg;

@@ -16,13 +16,12 @@ class CachArticle extends SimpleArticle implements Serializable {
 	 */
 	private static final long serialVersionUID = -8061809995421543211L;
 	private Date d;
-	private Date innerDate;
+
 	
 	
 	CachArticle() {
 		super();
 		setSaveDate(1L);
-	
 	}
 
 
@@ -42,7 +41,6 @@ class CachArticle extends SimpleArticle implements Serializable {
 
 	void setSaveDate(long milis) {
 		d = new Date(milis);
-		innerDate = new Date(milis);
 	}
 
 	

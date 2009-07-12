@@ -45,6 +45,8 @@ public final class MediaWiki {
 	public enum Version {
 		MW1_09, MW1_10, MW1_11, MW1_12, MW1_13, MW1_14, MW1_15, UNKNOWN, DEVELOPMENT;
 		
+		
+		private static Version last = UNKNOWN;
 		/**
 		 * 
 		 * @return a, like 1.15
@@ -64,6 +66,21 @@ public final class MediaWiki {
 		}
 		/**
 		 * 
+		 * @return the last version
+		 */
+		public static Version getLast() {
+			if (last == UNKNOWN) {
+				Version [] as = valuesStable();
+				for (int i = 0; i < as.length; i++) {
+					if (as[i].getIntValue() > last.getIntValue()) {
+						last = as[i];
+					}
+				}
+			}
+			return last;
+		}
+		/**
+		 * 
 		 * @param v a
 		 * @return true if
 		 */
@@ -72,6 +89,23 @@ public final class MediaWiki {
 				return false;
 			return true;
 		}
+		/**
+		 * 
+		 * @return all known stable MW Versions
+		 */
+		public static Version [] valuesStable() {
+			Version [] vxN = new Version [Version.values().length - 2];
+			
+			Version [] vx = Version.values();
+			int j = 0;
+			for (int i = 0; i < vx.length; i++) {
+				if (!(vx[i].equals(DEVELOPMENT) || vx[i].equals(UNKNOWN))) {
+					vxN[j++] = vx[i];
+				}
+			}
+			return vxN;
+		}
+		
 	}
 	
 	private MediaWiki() {

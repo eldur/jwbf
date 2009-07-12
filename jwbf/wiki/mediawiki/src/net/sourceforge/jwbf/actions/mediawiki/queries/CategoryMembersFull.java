@@ -1,10 +1,17 @@
 package net.sourceforge.jwbf.actions.mediawiki.queries;
 
+import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_11;
+import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_12;
+import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_13;
+import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_14;
+import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_15;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
 import net.sourceforge.jwbf.actions.Get;
+import net.sourceforge.jwbf.actions.mediawiki.util.SupportedBy;
 import net.sourceforge.jwbf.actions.util.ActionException;
 import net.sourceforge.jwbf.actions.util.HttpAction;
 import net.sourceforge.jwbf.actions.util.ProcessException;
@@ -19,6 +26,7 @@ import org.apache.log4j.Logger;
  * 
  * @author Thomas Stock
  */
+@SupportedBy({ MW1_11, MW1_12, MW1_13, MW1_14, MW1_15 })
 public class CategoryMembersFull extends CategoryMembers implements Iterable<CategoryItem>, Iterator<CategoryItem> {
 
 	
@@ -38,15 +46,15 @@ public class CategoryMembersFull extends CategoryMembers implements Iterable<Cat
 	 * @throws ActionException on any kind of http or version problems
 	 * @throws ProcessException on inner problems like a version mismatch
 	 */
-	public CategoryMembersFull(MediaWikiBot bot, String categoryName , int... namespaces) throws ActionException, ProcessException {
-		
+	public CategoryMembersFull(MediaWikiBot bot, 
+			String categoryName , int... namespaces) throws ActionException, ProcessException {
 		super(bot, categoryName, namespaces);
-	
-
 	}
 
 	
-
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	protected void addCatItem(String title, int pageid, int ns) {
 		CategoryItem ci = new CategoryItem();
@@ -56,20 +64,21 @@ public class CategoryMembersFull extends CategoryMembers implements Iterable<Cat
 		titleCollection.add(ci);
 		
 	}
-
+	/**
+	 * {@inheritDoc}
+	 */
 	public HttpAction getNextMessage() {
 		return msg;
 	}
+	/**
+	 * {@inheritDoc}
+	 */
 	public Iterator<CategoryItem> iterator() {
 		return this;
-//		try {
-//			return (Iterator<CategoryItem>) this.clone();
-//		} catch (CloneNotSupportedException e) {
-//			e.printStackTrace();
-//			return null;
-//		}
 	}
-
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	protected Object clone() throws CloneNotSupportedException {
 		try {
@@ -106,7 +115,9 @@ public class CategoryMembersFull extends CategoryMembers implements Iterable<Cat
 
 		}
 	}
-	
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public String processAllReturningText(String s) throws ProcessException {
 		titleCollection.clear();
@@ -117,17 +128,23 @@ public class CategoryMembersFull extends CategoryMembers implements Iterable<Cat
 			log.debug(titleCollection);
 		return buff;
 	}
-
+	/**
+	 * {@inheritDoc}
+	 */
 	public boolean hasNext() {
 		prepareCollection();
 		return titleIterator.hasNext(); 
 	}
-
+	/**
+	 * {@inheritDoc}
+	 */
 	public CategoryItem next() {
 		prepareCollection();	
 		return titleIterator.next();
 	}
-
+	/**
+	 * {@inheritDoc}
+	 */
 	public void remove() {
 		titleIterator.remove();
 		

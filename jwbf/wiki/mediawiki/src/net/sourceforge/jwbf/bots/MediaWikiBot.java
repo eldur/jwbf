@@ -73,8 +73,8 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
 	 * These chars are not allowed in article names.
 	 */
 	public static final char [] INVALID_LABEL_CHARS = "[]{}<>|".toCharArray();
-	private final static int READVAL = GetRevision.CONTENT
-	| GetRevision.COMMENT | GetRevision.USER | GetRevision.TIMESTAMP | GetRevision.IDS;
+	private static final int READVAL = GetRevision.CONTENT
+	| GetRevision.COMMENT | GetRevision.USER | GetRevision.TIMESTAMP | GetRevision.IDS | GetRevision.FLAGS;
 	
 	/**
 	 * @param u
@@ -183,7 +183,7 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
 	 *
 	 * @param name
 	 *            of article in a mediawiki like "Main Page"
-	 * @param properties {@link GetRevision} TODO Where are the properties
+	 * @param properties {@link GetRevision}
 	 * @return a content representation of requested article, never null
 	 * @throws ActionException
 	 *             on problems with http, cookies and io
@@ -203,7 +203,7 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
 		GetRevision ac;
 		if (store != null) {
 			if (store.containsKey(name)) {
-				ac = new GetRevision(this, name, GetRevision.TIMESTAMP);
+				ac = new GetRevision(this.getVersion(), name, GetRevision.TIMESTAMP);
 				performAction(ac);
 				
 				SimpleArticle storeSa = store.get(name);
@@ -220,14 +220,14 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
 				}
 			}
 
-			ac = new GetRevision(this, name, properties);
+			ac = new GetRevision(this.getVersion(), name, properties);
 
 			performAction(ac);
 			log.debug("update cache (read)");
 			store.put(ac.getArticle());
 
 		} else {
-			ac = new GetRevision(this, name, properties);
+			ac = new GetRevision(this.getVersion(), name, properties);
 
 			performAction(ac);
 		}
@@ -245,12 +245,20 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
 	}
 	/**
 	 * 
-	 * @param ch a
+	 * {@inheritDoc}
 	 */
 	public void setCacheHandler(CacheHandler ch) {
 		this.store = ch;
 	}
-
+	/**
+	 * 
+	 * {@inheritDoc}
+	 */
+	public boolean hasCacheHandler() {
+		if (store != null)
+			return true;
+		return false;
+	}
 	/**
 	 *
 	 * @param name
@@ -397,6 +405,10 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
 	@Override
 	public synchronized String performAction(ContentProcessable a)
 			throws ActionException, ProcessException {
+		if (a.isSelfExecuter()) {
+			throw new ActionException("this is a selfexcecuting action, "
+					+ "please do not perform this action manually");
+		}
 		return super.performAction(a);
 	}
 
@@ -467,7 +479,7 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
 	 * {@inheritDoc}
 	 */
 	public final String getWikiType() {
-		return MediaWiki.class.getName();
+		return MediaWiki.class.getName() + " " + getVersion();
 	}
 
 

@@ -47,7 +47,9 @@ import org.apache.log4j.Logger;
  */
 
 @SupportedBy({ MW1_11, MW1_12, MW1_13, MW1_14, MW1_15 })
-public abstract class CategoryMembers extends MWAction {
+abstract class CategoryMembers extends MWAction {
+
+	
 
 	/** constant value for the bllimit-parameter. **/
 	private static final int LIMIT = 50;
@@ -279,7 +281,6 @@ public abstract class CategoryMembers extends MWAction {
 		
 	}
 
-	
 	
 
 }

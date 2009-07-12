@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.io.File;
 
@@ -76,17 +77,26 @@ public class SimpleCacheMWBotTest extends LiveTestFather {
 	public final void cacheTestSpeedBonus() throws Exception {
 		
 		MediaWikiBot bot;
-		bot = new MediaWikiBot("http://en.wikipedia.org/w/api.php");
+		bot = new MediaWikiBot(getValue("wikiMW1_14_url"));
+		bot.login(getValue("wikiMW1_14_user"), getValue("wikiMW1_14_pass"));
 		
 		
-		CacheHandler c = new SimpleCache(f, 10000);
+		CacheHandler c = new SimpleCache(f, 1000);
 		bot.setCacheHandler(c);
 		long tx = System.currentTimeMillis();
-		Article a = new Article(bot, "Line of succession to the British throne");
-		a.getText();
+		Article a = new Article(bot, "CacheMax");
+		
+		if (a.getText().length() < 1000) {
+			for (int i = 0; i < 1000; i++) {
+				a.addTextnl(getRandom(128));
+			}
+			a.save();
+			fail();
+		}
+		
 		long first = System.currentTimeMillis() - tx;
 		System.out.println(first);
-		bot = new MediaWikiBot("http://en.wikipedia.org/w/api.php");
+		bot = new MediaWikiBot(getValue("wikiMW1_14_url"));
 		c = new SimpleCache(f, 10000);
 		bot.setCacheHandler(c);
 		tx = System.currentTimeMillis();
@@ -94,7 +104,8 @@ public class SimpleCacheMWBotTest extends LiveTestFather {
 		a.getText();
 		long last = System.currentTimeMillis() - tx;
 		System.out.println(last + " vs. " + first);
-		assertTrue("loading from cach should be faster", first > last);
+		assertTrue("loading from cach should be faster (first read: " 
+				+ first + "ms / cache read: " + last + "ms )", first > last);
 	}
 	
 	/**

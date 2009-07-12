@@ -5,7 +5,7 @@ import net.sourceforge.jwbf.LiveTestFather;
 import net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version;
 import net.sourceforge.jwbf.actions.mediawiki.queries.LogEvents;
 import net.sourceforge.jwbf.actions.mediawiki.util.VersionException;
-import net.sourceforge.jwbf.bots.MediaWikiAdapterBot;
+import net.sourceforge.jwbf.actions.util.ActionException;
 import net.sourceforge.jwbf.bots.MediaWikiBot;
 import net.sourceforge.jwbf.contentRep.Article;
 import net.sourceforge.jwbf.contentRep.mediawiki.LogItem;
@@ -35,7 +35,17 @@ public class LogEventsTest extends LiveTestFather {
 		addInitSupporterVersions(LogEvents.class);
 
 	}
-
+	/**
+	 * Test category read. Test category must have more then 50 members.
+	 * @throws Exception a
+	 */
+	@Test(expected = ActionException.class)
+	public final void logEventsPerformManual() throws Exception {
+		
+		bot = new MediaWikiBot("http://de.wikipedia.org/w/index.php");
+		LogEvents le = new LogEvents(bot, LogEvents.DELETE);
+		bot.performAction(le);
+	}
 	/**
 	 * 
 	 * @throws Exception a
@@ -43,7 +53,7 @@ public class LogEventsTest extends LiveTestFather {
 	@Test
 	public final void logEventsWikipediaDe() throws Exception {
 		
-		bot = new MediaWikiAdapterBot("http://de.wikipedia.org/w/index.php");
+		bot = new MediaWikiBot("http://de.wikipedia.org/w/index.php");
 		doTest(bot, false, LogEvents.DELETE);
 	}
 
@@ -54,8 +64,8 @@ public class LogEventsTest extends LiveTestFather {
 	@Test(expected = VersionException.class)
 	public final void logEventsMW1x09Fail() throws Exception {
 		
-		bot = new MediaWikiAdapterBot(getValue("wikiMW1_09_url"));
-		bot.login(getValue("wikiMW1_09_user"), getValue("wikiMW1_09_pass"));
+		bot = getMediaWikiBot(Version.MW1_09, true);
+		registerUnTestedVersion(LogEvents.class, bot.getVersion());
 		doTest(bot, true, LogEvents.DELETE);
 		assertTrue("Wrong Wiki Version " + bot.getVersion(), Version.MW1_09.equals(bot.getVersion()));
 	}
@@ -66,8 +76,8 @@ public class LogEventsTest extends LiveTestFather {
 	@Test(expected = VersionException.class)
 	public final void logEventsMW1x10Fail() throws Exception {
 		
-		bot = new MediaWikiAdapterBot(getValue("wikiMW1_10_url"));
-		bot.login(getValue("wikiMW1_10_user"), getValue("wikiMW1_10_pass"));
+		bot = getMediaWikiBot(Version.MW1_10, true);
+		registerUnTestedVersion(LogEvents.class, bot.getVersion());
 		doTest(bot, true, LogEvents.DELETE);
 		assertTrue("Wrong Wiki Version " + bot.getVersion(), Version.MW1_10.equals(bot.getVersion()));
 	}
@@ -79,8 +89,7 @@ public class LogEventsTest extends LiveTestFather {
 	@Test
 	public final void logEventsMW1x11() throws Exception {
 		
-		bot = new MediaWikiAdapterBot(getValue("wikiMW1_11_url"));
-		bot.login(getValue("wikiMW1_11_user"), getValue("wikiMW1_11_pass"));
+		bot = getMediaWikiBot(Version.MW1_11, true);
 		doTest(bot, true, LogEvents.UPLOAD);
 		assertTrue("Wrong Wiki Version " + bot.getVersion(), Version.MW1_11.equals(bot.getVersion()));
 	}
@@ -92,8 +101,7 @@ public class LogEventsTest extends LiveTestFather {
 	@Test
 	public final void logEventsMW1x12() throws Exception {
 		
-		bot = new MediaWikiAdapterBot(getValue("wikiMW1_12_url"));
-		bot.login(getValue("wikiMW1_12_user"), getValue("wikiMW1_12_pass"));
+		bot = getMediaWikiBot(Version.MW1_12, true);
 		doTest(bot, true, LogEvents.DELETE);
 		assertTrue("Wrong Wiki Version " + bot.getVersion(), Version.MW1_12.equals(bot.getVersion()));
 	}
@@ -103,8 +111,7 @@ public class LogEventsTest extends LiveTestFather {
 	 */
 	@Test
 	public final void logEventsMW1x13() throws Exception {
-		bot = new MediaWikiAdapterBot(getValue("wikiMW1_13_url"));
-		bot.login(getValue("wikiMW1_13_user"), getValue("wikiMW1_13_pass"));
+		bot = getMediaWikiBot(Version.MW1_13, true);
 		doTest(bot, true, LogEvents.DELETE);
 		assertTrue("Wrong Wiki Version " + bot.getVersion(), Version.MW1_13.equals(bot.getVersion()));
 	}
@@ -114,8 +121,7 @@ public class LogEventsTest extends LiveTestFather {
 	 */
 	@Test
 	public final void logEventsMW1x14() throws Exception {
-		bot = new MediaWikiAdapterBot(getValue("wikiMW1_14_url"));
-		bot.login(getValue("wikiMW1_14_user"), getValue("wikiMW1_14_pass"));
+		bot = getMediaWikiBot(Version.MW1_14, true);
 		doTest(bot, true, LogEvents.DELETE);
 		assertTrue("Wrong Wiki Version " + bot.getVersion(), Version.MW1_14.equals(bot.getVersion()));
 	}
@@ -126,8 +132,7 @@ public class LogEventsTest extends LiveTestFather {
 	 */
 	@Test
 	public final void logEventsMW1x15() throws Exception {
-		bot = new MediaWikiAdapterBot(getValue("wikiMW1_15_url"));
-		bot.login(getValue("wikiMW1_15_user"), getValue("wikiMW1_15_pass"));
+		bot = getMediaWikiBot(Version.MW1_15, true);
 		doTest(bot, true, LogEvents.DELETE);
 		assertTrue("Wrong Wiki Version " + bot.getVersion(), Version.MW1_15.equals(bot.getVersion()));
 	}

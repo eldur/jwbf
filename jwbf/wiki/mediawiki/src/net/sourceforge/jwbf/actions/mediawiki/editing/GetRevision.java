@@ -41,7 +41,6 @@ import net.sourceforge.jwbf.actions.mediawiki.util.SupportedBy;
 import net.sourceforge.jwbf.actions.util.ActionException;
 import net.sourceforge.jwbf.actions.util.HttpAction;
 import net.sourceforge.jwbf.actions.util.ProcessException;
-import net.sourceforge.jwbf.bots.MediaWikiBot;
 import net.sourceforge.jwbf.contentRep.SimpleArticle;
 
 import org.apache.log4j.Logger;
@@ -67,9 +66,11 @@ public class GetRevision extends MWAction {
 	public static final int TIMESTAMP = 1 << 2;
 	public static final int USER = 1 << 3;
 	public static final int COMMENT = 1 << 4;
-	public static final int FIRST = 1 << 5;
-	public static final int LAST = 1 << 6;
-	public static final int IDS = 1 << 7;
+	public static final int IDS = 1 << 5;
+	public static final int FLAGS = 1 << 6;
+	
+	public static final int FIRST = 1 << 30;
+	public static final int LAST = 1 << 31;
 
 	private final Logger log = Logger.getLogger(getClass());
 
@@ -84,12 +85,16 @@ public class GetRevision extends MWAction {
 	/**
 	 * TODO follow redirects.
 	 * TODO change constructor fild ordering; bot
-	 * @throws ProcessException 
-	 * @throws ActionException 
+	 * @throws ProcessException a
+	 * @throws ActionException  a
+	 * @param articlename of
+	 * @param properties the
+	 * @param v the
 	 */
-	public GetRevision(MediaWikiBot bot, final String articlename, final int properties) throws ActionException, ProcessException {
-		super(bot.getVersion());
-		botVersion = bot.getVersion(); 
+	public GetRevision(Version v, final String articlename, final int properties)
+			throws ActionException, ProcessException {
+		super(v);
+		botVersion = v; 
 //		if (!bot.getUserinfo().getRights().contains("read")) {
 //			throw new ActionException("reading is not permited, make sure that this account is able to read");
 //		} FIXME check if 
@@ -120,7 +125,7 @@ public class GetRevision extends MWAction {
 	}
 	/**
 	 * TODO Not very nice implementation.
-	 * @param property
+	 * @param property the
 	 * @return a
 	 */
 	private String getDataProperties(final int property) {
@@ -140,6 +145,9 @@ public class GetRevision extends MWAction {
 		}
 		if ((property & IDS) > 0 && botVersion.greaterEqThen(MW1_11)) {
 			properties += "ids|";
+		}
+		if ((property & FLAGS) > 0 && botVersion.greaterEqThen(MW1_11)) {
+			properties += "flags|";
 		}
 		
 		
@@ -164,7 +172,7 @@ public class GetRevision extends MWAction {
 	}
 
 	private void parse(final String xml) throws ApiException {
-
+		System.err.println(xml); // FIXME RM
 		SAXBuilder builder = new SAXBuilder();
 		Element root = null;
 		try {
@@ -209,6 +217,17 @@ public class GetRevision extends MWAction {
 						log.debug("no text found");
 					}
 				}
+				if ((properties & FLAGS) > 0) {
+					if (element.getAttribute("minor") != null) {
+						sa.setMinorEdit(true);
+					} else {
+						sa.setMinorEdit(false);
+					}
+//					log.debug(getAsStringValues(element, "minor"));
+
+					 
+				}
+				
 				
 				sa.setRevisionId(getAsStringValues(element, "revid"));
 				sa.setEditSummary(getAsStringValues(element, "comment"));

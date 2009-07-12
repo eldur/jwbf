@@ -195,5 +195,11 @@ public abstract class MWAction implements ContentProcessable {
 		}
 		return namespaceString;
 	}
-	
+	/**
+	 * {@inheritDoc}
+	 * @deprecated see interface
+	 */
+	public boolean isSelfExecuter() {
+		return false;
+	}
 }

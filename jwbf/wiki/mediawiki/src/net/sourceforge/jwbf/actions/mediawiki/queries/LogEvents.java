@@ -66,6 +66,7 @@ import org.xml.sax.InputSource;
 @SupportedBy({ MW1_11, MW1_12, MW1_13, MW1_14, MW1_15 })
 public class LogEvents extends MWAction implements Iterator<LogItem>, Iterable<LogItem> {
 
+	
 	/** value for the bllimit-parameter. * */
 	
 	
@@ -86,6 +87,7 @@ public class LogEvents extends MWAction implements Iterator<LogItem>, Iterable<L
 	private final Logger log = Logger.getLogger(getClass());
 	/* first run variable */
 	private boolean init = true;
+	private boolean selvEx = true;
 	/**
 	 * Collection that will contain the result (titles of articles linking to
 	 * the target) after performing the action has finished.
@@ -291,8 +293,9 @@ public class LogEvents extends MWAction implements Iterator<LogItem>, Iterable<L
 			}
 			init = false;
 			try {
-
+				selvEx = false; // TODO not good
 				bot.performAction(this);
+				selvEx = true; // TODO not good
 				setHasMoreMessages(true);
 				if (log.isDebugEnabled())
 					log.debug("preparing success");
@@ -362,7 +365,14 @@ public class LogEvents extends MWAction implements Iterator<LogItem>, Iterable<L
 			throw new CloneNotSupportedException(e.getLocalizedMessage());
 		}
 	}
-
+	/**
+	 * {@inheritDoc}
+	 * @deprecated see super
+	 */
+	@Override
+	public boolean isSelfExecuter() {
+		return selvEx;
+	}
 
 
 }

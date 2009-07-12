@@ -46,6 +46,7 @@ public class ImageInfo extends MWAction {
 	private String urlOfImage  = "";
 	private Get msg;
 	private final MediaWikiBot bot;
+	private boolean selfEx = true;
 	
 	/**
 	 * 
@@ -73,11 +74,17 @@ public class ImageInfo extends MWAction {
 
 	/**
 	 * @return position like "http://server.tld/path/to/Test.gif"
-	 * @throws ActionException on
 	 * @throws ProcessException on
 	 */
-	public String getUrlAsString() throws ProcessException, ActionException {
-		bot.performAction(this);
+	public String getUrlAsString() throws ProcessException {
+		try {
+			selfEx = false;
+			bot.performAction(this);
+		} catch (ActionException e1) {
+			e1.printStackTrace();
+		} finally {
+			selfEx = true;
+		}
 		try {
 			new URL(urlOfImage);
 		} catch (MalformedURLException e) {
@@ -88,6 +95,16 @@ public class ImageInfo extends MWAction {
 		}
 		return urlOfImage;
 	}
+	/**
+	 * {@inheritDoc}
+	 * @deprecated see super
+	 */
+	@Override
+	public boolean isSelfExecuter() {
+		return selfEx;
+	}
+
+
 	/**
 	 * @return a
 	 * @throws ProcessException on
@@ -104,7 +121,6 @@ public class ImageInfo extends MWAction {
 	 */
 	@Override
 	public String processAllReturningText(String s) throws ProcessException {
-		System.err.println(s); // FIXME RM
 		findUrlOfImage(s);
 		return "";
 	}
@@ -133,7 +149,6 @@ public class ImageInfo extends MWAction {
 		try {
 			Reader i = new StringReader(s);
 			Document doc = builder.build(new InputSource(i));
-
 			root = doc.getRootElement();
 
 		} catch (JDOMException e) {

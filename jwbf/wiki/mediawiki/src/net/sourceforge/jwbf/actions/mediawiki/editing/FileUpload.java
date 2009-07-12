@@ -97,6 +97,17 @@ public class FileUpload extends MWAction {
 		g = new Get(uS);
 		
 	}
+	
+	/**
+	 * 
+	 * @param filename to uplad
+	 * @param bot a 
+	 * @throws ActionException on problems with file
+	 * @throws VersionException on wrong MediaWiki version
+	 */
+	public FileUpload(MediaWikiBot bot, String filename) throws ActionException, VersionException {
+		this(new SimpleFile(filename), bot);
+	}
 	/**
 	 * {@inheritDoc}
 	 */

@@ -27,6 +27,7 @@ import java.util.Vector;
 
 import net.sourceforge.jwbf.actions.util.ActionException;
 import net.sourceforge.jwbf.actions.util.ProcessException;
+import net.sourceforge.jwbf.bots.util.CacheHandler;
 import net.sourceforge.jwbf.contentRep.Article;
 import net.sourceforge.jwbf.contentRep.ContentAccessable;
 import net.sourceforge.jwbf.contentRep.SimpleArticle;
@@ -175,6 +176,18 @@ public class ZimWikiBot implements WikiBot {
 			ProcessException {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+
+	public boolean hasCacheHandler() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+
+	public void setCacheHandler(CacheHandler ch) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 //	public String getMWFolder() {

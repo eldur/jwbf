@@ -25,7 +25,6 @@ import net.sourceforge.jwbf.LiveTestFather;
 import net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version;
 import net.sourceforge.jwbf.actions.mediawiki.meta.GetVersion;
 import net.sourceforge.jwbf.actions.mediawiki.meta.Siteinfo;
-import net.sourceforge.jwbf.bots.MediaWikiAdapterBot;
 import net.sourceforge.jwbf.bots.MediaWikiBot;
 import net.sourceforge.jwbf.contentRep.Article;
 
@@ -40,7 +39,7 @@ import org.junit.Test;
 public class SiteinfoTest extends LiveTestFather {
 
 	
-	private MediaWikiAdapterBot bot = null;
+	private MediaWikiBot bot = null;
 	/**
 	 * Setup log4j.
 	 * @throws Exception a
@@ -61,7 +60,7 @@ public class SiteinfoTest extends LiveTestFather {
 	@Test
 	public final void siteInfoWikipediaDe() throws Exception {
 		
-		bot = new MediaWikiAdapterBot("http://de.wikipedia.org/w/index.php");
+		bot = new MediaWikiBot("http://de.wikipedia.org/w/index.php");
 		doTest(bot, Version.DEVELOPMENT);
 		
 	}
@@ -73,7 +72,7 @@ public class SiteinfoTest extends LiveTestFather {
 	@Test
 	public final void siteInfoMW1x09() throws Exception {
 		
-		bot = new MediaWikiAdapterBot(getValue("wikiMW1_09_url"));
+		bot = getMediaWikiBot(Version.MW1_09, false);
 
 		doTest(bot, Version.MW1_09);
 		
@@ -86,7 +85,7 @@ public class SiteinfoTest extends LiveTestFather {
 	@Test
 	public final void siteInfoMW1x10() throws Exception {
 		
-		bot = new MediaWikiAdapterBot(getValue("wikiMW1_10_url"));
+		bot = getMediaWikiBot(Version.MW1_10, false);
 		doTest(bot, Version.MW1_10);
 	}
 	
@@ -97,7 +96,7 @@ public class SiteinfoTest extends LiveTestFather {
 	@Test
 	public final void siteInfoMW1x11() throws Exception {
 		
-		bot = new MediaWikiAdapterBot(getValue("wikiMW1_11_url"));
+		bot = getMediaWikiBot(Version.MW1_11, false);
 
 		doTest(bot, Version.MW1_11);
 	}
@@ -109,7 +108,7 @@ public class SiteinfoTest extends LiveTestFather {
 	@Test
 	public final void siteInfoMW1x12() throws Exception {
 		
-		bot = new MediaWikiAdapterBot(getValue("wikiMW1_12_url"));
+		bot = getMediaWikiBot(Version.MW1_12, false);
 
 		doTest(bot, Version.MW1_12);
 	}
@@ -121,8 +120,7 @@ public class SiteinfoTest extends LiveTestFather {
 	@Test
 	public final void siteInfoMW1x13() throws Exception {
 		
-		bot = new MediaWikiAdapterBot(getValue("wikiMW1_13_url"));
-		bot.login(getValue("wikiMW1_13_user"), getValue("wikiMW1_13_pass"));
+		bot = getMediaWikiBot(Version.MW1_13, true);
 		doTest(bot, Version.MW1_13);
 	}
 	
@@ -133,7 +131,7 @@ public class SiteinfoTest extends LiveTestFather {
 	@Test
 	public final void siteInfoMW1x14() throws Exception {
 		
-		bot = new MediaWikiAdapterBot(getValue("wikiMW1_14_url"));
+		bot = getMediaWikiBot(Version.MW1_14, false);
 		doTest(bot, Version.MW1_14);
 	}
 	
@@ -144,7 +142,7 @@ public class SiteinfoTest extends LiveTestFather {
 	@Test
 	public final void siteInfoMW1x15() throws Exception {
 		
-		bot = new MediaWikiAdapterBot(getValue("wikiMW1_15_url"));
+		bot = getMediaWikiBot(Version.MW1_15, false);
 		doTest(bot, Version.MW1_15);
 	}
 	

@@ -57,6 +57,7 @@ public abstract class LiveTestFather {
 
 	private static boolean isVersionTestCase = false;
 	
+	protected static final Map<String, Version > USEDVERSIONS = new HashMap<String, Version >();
 	protected static final Map<String, Version > TESTEDVERSIONS = new HashMap<String, Version >();
 	protected static final Map<String, Version >  DOCUMENTEDVERSIONS = new HashMap<String, Version >();
 	/**
@@ -129,15 +130,30 @@ public abstract class LiveTestFather {
 	}
 	
 
-	
-	
-	protected static void registerTestedVersion(Class < ? > clazz, Version v) {
+	/**
+	 * Use in a invalid testcase.
+	 * @param clazz a
+	 * @param v a
+	 */
+	protected static final void registerUnTestedVersion(Class < ? > clazz, Version v) {
 		if (v != Version.DEVELOPMENT) {
-			TESTEDVERSIONS.put(clazz.getCanonicalName() + v, v);
+			USEDVERSIONS.put(clazz.getCanonicalName() + v, v);
 		}
 	}
 	
-	protected static Map<String, Version > getUntestedButDocumentedVersions() {
+	/**
+	 * Use in a valid testcase.
+	 * @param clazz a
+	 * @param v a
+	 */
+	protected static final void registerTestedVersion(Class < ? > clazz, Version v) {
+		if (v != Version.DEVELOPMENT) {
+			TESTEDVERSIONS.put(clazz.getCanonicalName() + v, v);
+		}
+		registerUnTestedVersion(clazz, v);
+	}
+	
+	private static Map<String, Version > getUntestedButDocumentedVersions() {
 		final Map<String, Version > data = new HashMap<String, Version>();
 		data.putAll(DOCUMENTEDVERSIONS);
 		
@@ -150,7 +166,23 @@ public abstract class LiveTestFather {
 		return data;
 	}
 	
-	protected static Map<String, Version> getTestedButUndocmentedVersions() {
+	private static Collection < Version > getUsedVersions() {
+		final Vector<Version > data = new Vector<Version>();
+		Version [] vas = Version.valuesStable();
+		for (int i = 0; i < vas.length; i++) {
+			data.add(vas[i]);
+		}
+		
+		final Iterable<Version> testedKeys = USEDVERSIONS.values();
+		for (Version key : testedKeys) {
+			data.remove(key);
+		}
+	
+		
+		return data;
+	}
+	
+	private static Map<String, Version> getTestedButUndocmentedVersions() {
 		final Map<String, Version> data = new HashMap<String, Version>();
 		data.putAll(TESTEDVERSIONS);
 
@@ -169,6 +201,9 @@ public abstract class LiveTestFather {
 					+ getUntestedButDocumentedVersions() + " }", getUntestedButDocumentedVersions().isEmpty());
 			assertTrue("there are undocumented tests for versions \n{ " 
 					+ getTestedButUndocmentedVersions() + " }", getTestedButUndocmentedVersions().isEmpty());
+			
+			assertTrue("missing tests for versions \n{ " 
+					+ getUsedVersions() + " }", getUsedVersions().isEmpty());
 		}
 	}
 	

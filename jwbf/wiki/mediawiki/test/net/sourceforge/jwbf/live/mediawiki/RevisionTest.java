@@ -8,7 +8,6 @@ import net.sourceforge.jwbf.actions.mediawiki.editing.GetApiToken;
 import net.sourceforge.jwbf.actions.mediawiki.editing.GetRevision;
 import net.sourceforge.jwbf.actions.mediawiki.editing.PostModifyContent;
 import net.sourceforge.jwbf.actions.mediawiki.util.ApiException;
-import net.sourceforge.jwbf.bots.MediaWikiAdapterBot;
 import net.sourceforge.jwbf.bots.MediaWikiBot;
 import net.sourceforge.jwbf.bots.util.JwbfException;
 import net.sourceforge.jwbf.contentRep.ArticleMeta;
@@ -24,7 +23,7 @@ import org.junit.Test;
  */
 public class RevisionTest extends LiveTestFather {
 
-	private MediaWikiAdapterBot bot;
+	private MediaWikiBot bot;
 	
 	/**
 	 * Setup log4j.
@@ -40,14 +39,16 @@ public class RevisionTest extends LiveTestFather {
 		
 	}
 
+
+
+	
 	/**
 	 * Test write and read.
 	 * @throws Exception a
 	 */
 	@Test
 	public final void getRevisionMW1x09() throws Exception {
-		bot = new MediaWikiAdapterBot(getValue("wikiMW1_09_url"));
-		bot.login(getValue("wikiMW1_09_user"), getValue("wikiMW1_09_pass"));
+		bot = getMediaWikiBot(Version.MW1_09, true);
 		doTest(bot);	
 	}
 	
@@ -57,8 +58,7 @@ public class RevisionTest extends LiveTestFather {
 	 */
 	@Test
 	public final void getRevisionMW1x10() throws Exception {
-		bot = new MediaWikiAdapterBot(getValue("wikiMW1_10_url"));
-		bot.login(getValue("wikiMW1_10_user"), getValue("wikiMW1_10_pass"));
+		bot = getMediaWikiBot(Version.MW1_10, true);
 		doTest(bot);
 	}
 	
@@ -68,8 +68,7 @@ public class RevisionTest extends LiveTestFather {
 	 */
 	@Test
 	public final void getRevisionMW1x11() throws Exception {
-		bot = new MediaWikiAdapterBot(getValue("wikiMW1_11_url"));
-		bot.login(getValue("wikiMW1_11_user"), getValue("wikiMW1_11_pass"));
+		bot = getMediaWikiBot(Version.MW1_11, true);
 		doTest(bot);
 	}
 	
@@ -79,8 +78,7 @@ public class RevisionTest extends LiveTestFather {
 	 */
 	@Test
 	public final void getRevisionMW1x12() throws Exception {
-		bot = new MediaWikiAdapterBot(getValue("wikiMW1_12_url"));
-		bot.login(getValue("wikiMW1_12_user"), getValue("wikiMW1_12_pass"));
+		bot = getMediaWikiBot(Version.MW1_12, true);
 		doTest(bot);
 	}
 	
@@ -90,8 +88,7 @@ public class RevisionTest extends LiveTestFather {
 	 */
 	@Test
 	public final void getRevisionMW1x13() throws Exception {
-		bot = new MediaWikiAdapterBot(getValue("wikiMW1_13_url"));
-		bot.login(getValue("wikiMW1_13_user"), getValue("wikiMW1_13_pass"));
+		bot = getMediaWikiBot(Version.MW1_13, true);
 		doTest(bot);
 	}
 	
@@ -101,8 +98,7 @@ public class RevisionTest extends LiveTestFather {
 	 */
 	@Test
 	public final void getRevisionMW1x14() throws Exception {
-		bot = new MediaWikiAdapterBot(getValue("wikiMW1_14_url"));
-		bot.login(getValue("wikiMW1_14_user"), getValue("wikiMW1_14_pass"));
+		bot = getMediaWikiBot(Version.MW1_14, true);
 		doTest(bot);
 	}
 	
@@ -112,8 +108,7 @@ public class RevisionTest extends LiveTestFather {
 	 */
 	@Test
 	public final void getRevisionMW1x15() throws Exception {
-		bot = new MediaWikiAdapterBot(getValue("wikiMW1_15_url"));
-		bot.login(getValue("wikiMW1_15_user"), getValue("wikiMW1_15_pass"));
+		bot = getMediaWikiBot(Version.MW1_15, true);
 		doTest(bot);
 	}
 	
@@ -121,48 +116,55 @@ public class RevisionTest extends LiveTestFather {
 	
 	private void doTest(MediaWikiBot bot) throws Exception {
 		
-		String label = getValue("wikiMW1_12_user");
+		String title = getValue("wikiMW1_12_user");
 		String user = bot.getUserinfo().getUsername();
 		SimpleArticle sa;
 		// write init content
 		String testText = getRandom(255);
-		sa = new SimpleArticle(testText, label);
+		sa = new SimpleArticle(title);
+		sa.setText(testText);
 		bot.writeContent(sa);	
 		// Test parameters
 		try {
-			bot.readContent(label, GetRevision.COMMENT);
+			bot.readContent(title, GetRevision.COMMENT);
 		} catch (ApiException e) {
 			throw new JwbfException("Problems with COMMENT receiving");
 		}
 		try {
-			bot.readContent(label, GetRevision.CONTENT);
+			bot.readContent(title, GetRevision.CONTENT);
 		} catch (ApiException e) {
 			throw new JwbfException("Problems with CONTENT receiving");
 		}
 		try {
-			bot.readContent(label, GetRevision.FIRST | GetRevision.CONTENT);
+			bot.readContent(title, GetRevision.FIRST | GetRevision.CONTENT);
 		} catch (ApiException e) {
 			throw new JwbfException("Problems with FIRST receiving");
 		}
 		try {
-			bot.readContent(label, GetRevision.IDS | GetRevision.CONTENT);
+			bot.readContent(title, GetRevision.IDS | GetRevision.CONTENT);
 		} catch (ApiException e) {
 			throw new JwbfException("Problems with IDS receiving");
 		}
 		try {
-			bot.readContent(label, GetRevision.LAST | GetRevision.CONTENT);
+			bot.readContent(title, GetRevision.LAST | GetRevision.CONTENT);
 		} catch (ApiException e) {
 			throw new JwbfException("Problems with LAST receiving");
 		}
 		try {
-			bot.readContent(label, GetRevision.TIMESTAMP | GetRevision.CONTENT);
+			bot.readContent(title, GetRevision.TIMESTAMP | GetRevision.CONTENT);
 		} catch (ApiException e) {
 			throw new JwbfException("Problems with TIMESTAMP receiving");
 		}
 		try {
-			bot.readContent(label, GetRevision.USER | GetRevision.CONTENT);
+			bot.readContent(title, GetRevision.USER | GetRevision.CONTENT);
 		} catch (ApiException e) {
 			throw new JwbfException("Problems with USER receiving");
+		}
+		
+		try {
+			bot.readContent(title, GetRevision.FLAGS | GetRevision.CONTENT);
+		} catch (ApiException e) {
+			throw new JwbfException("Problems with FLAGS receiving");
 		}
 		
 		
@@ -170,15 +172,15 @@ public class RevisionTest extends LiveTestFather {
 		
 		
 		// test with content length > 0
-		ArticleMeta a = bot.readContent(label);
+		ArticleMeta a = bot.readContent(title);
 		assertEquals(testText, a.getText());	
 		assertEquals(user, a.getEditor());
 		assertTrue("should be greater then 0", a.getRevisionId().length() > 0);
 		
 		// test with content length <= 0
 		testText = "";
-		label = "767676885340589358058903589035";
-		a = bot.readContent(label);
+		title = "767676885340589358058903589035";
+		a = bot.readContent(title);
 		
 		assertEquals(testText, a.getText());
 		registerTestedVersion(GetRevision.class, bot.getVersion());

@@ -11,7 +11,6 @@ import net.sourceforge.jwbf.LiveTestFather;
 import net.sourceforge.jwbf.actions.mediawiki.MediaWiki;
 import net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version;
 import net.sourceforge.jwbf.actions.mediawiki.queries.TemplateUserTitles;
-import net.sourceforge.jwbf.bots.MediaWikiAdapterBot;
 import net.sourceforge.jwbf.bots.MediaWikiBot;
 import net.sourceforge.jwbf.bots.util.JwbfException;
 import net.sourceforge.jwbf.contentRep.Article;
@@ -47,8 +46,7 @@ public class TemplateUserTitlesTest extends LiveTestFather {
 	@Test
 	public final void templateUserWikiMW1x09() throws Exception {
 		
-		bot = new MediaWikiAdapterBot(getValue("wikiMW1_09_url"));
-		bot.login(getValue("wikiMW1_09_user"), getValue("wikiMW1_09_pass"));
+		bot = getMediaWikiBot(Version.MW1_09, true);
 		doRegularTest(bot);
 
 		assertTrue("Wrong Wiki Version " + bot.getVersion(), Version.MW1_09.equals(bot.getVersion()));
@@ -60,8 +58,7 @@ public class TemplateUserTitlesTest extends LiveTestFather {
 	@Test
 	public final void templateUserWikiMW1x10() throws Exception {
 		
-		bot = new MediaWikiAdapterBot(getValue("wikiMW1_10_url"));
-		bot.login(getValue("wikiMW1_10_user"), getValue("wikiMW1_10_pass"));
+		bot = getMediaWikiBot(Version.MW1_10, true);
 		doRegularTest(bot);
 
 		assertTrue("Wrong Wiki Version " + bot.getVersion(), Version.MW1_10.equals(bot.getVersion()));
@@ -74,8 +71,7 @@ public class TemplateUserTitlesTest extends LiveTestFather {
 	@Test
 	public final void templateUserWikiMW1x11() throws Exception {
 		
-		bot = new MediaWikiAdapterBot(getValue("wikiMW1_11_url"));
-		bot.login(getValue("wikiMW1_11_user"), getValue("wikiMW1_11_pass"));
+		bot = getMediaWikiBot(Version.MW1_11, true);
 		doRegularTest(bot);
 
 		assertTrue("Wrong Wiki Version " + bot.getVersion(), Version.MW1_11.equals(bot.getVersion()));
@@ -88,8 +84,7 @@ public class TemplateUserTitlesTest extends LiveTestFather {
 	@Test
 	public final void templateUserWikiMW1x12() throws Exception {
 		
-		bot = new MediaWikiAdapterBot(getValue("wikiMW1_12_url"));
-		bot.login(getValue("wikiMW1_12_user"), getValue("wikiMW1_12_pass"));
+		bot = getMediaWikiBot(Version.MW1_12, true);
 		doRegularTest(bot);
 
 		assertTrue("Wrong Wiki Version " + bot.getVersion(), Version.MW1_12.equals(bot.getVersion()));
@@ -100,8 +95,7 @@ public class TemplateUserTitlesTest extends LiveTestFather {
 	 */
 	@Test
 	public final void templateUserWikiMW1x13() throws Exception {
-		bot = new MediaWikiAdapterBot(getValue("wikiMW1_13_url"));
-		bot.login(getValue("wikiMW1_13_user"), getValue("wikiMW1_13_pass"));
+		bot = getMediaWikiBot(Version.MW1_13, true);
 		doRegularTest(bot);
 
 		assertTrue("Wrong Wiki Version " + bot.getVersion(), Version.MW1_13.equals(bot.getVersion()));
@@ -113,8 +107,7 @@ public class TemplateUserTitlesTest extends LiveTestFather {
 	 */
 	@Test
 	public final void templateUserWikiMW1x14() throws Exception {
-		bot = new MediaWikiAdapterBot(getValue("wikiMW1_14_url"));
-		bot.login(getValue("wikiMW1_14_user"), getValue("wikiMW1_14_pass"));
+		bot = getMediaWikiBot(Version.MW1_14, true);
 		doRegularTest(bot);
 
 		assertTrue("Wrong Wiki Version " + bot.getVersion(), Version.MW1_14.equals(bot.getVersion()));
@@ -126,8 +119,7 @@ public class TemplateUserTitlesTest extends LiveTestFather {
 	 */
 	@Test
 	public final void templateUserWikiMW1x15() throws Exception {
-		bot = new MediaWikiAdapterBot(getValue("wikiMW1_15_url"));
-		bot.login(getValue("wikiMW1_15_user"), getValue("wikiMW1_15_pass"));
+		bot = getMediaWikiBot(Version.MW1_15, true);
 		doRegularTest(bot);
 
 		assertTrue("Wrong Wiki Version " + bot.getVersion(), Version.MW1_15.equals(bot.getVersion()));

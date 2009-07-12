@@ -173,6 +173,11 @@ public class GetRevision implements ContentProcessable {
 		
 	}
 
-
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean isSelfExecuter() {
+		return false;
+	}
 
 }

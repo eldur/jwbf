@@ -36,8 +36,9 @@ import net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version;
 import net.sourceforge.jwbf.actions.mediawiki.editing.FileUpload;
 import net.sourceforge.jwbf.actions.mediawiki.queries.ImageInfo;
 import net.sourceforge.jwbf.actions.mediawiki.util.VersionException;
+import net.sourceforge.jwbf.actions.util.ActionException;
 import net.sourceforge.jwbf.actions.util.ProcessException;
-import net.sourceforge.jwbf.bots.MediaWikiAdapterBot;
+import net.sourceforge.jwbf.bots.MediaWikiBot;
 import net.sourceforge.jwbf.contentRep.mediawiki.SimpleFile;
 
 import org.apache.log4j.PropertyConfigurator;
@@ -53,7 +54,7 @@ public class UploadAndImageInfoTest extends LiveTestFather {
 
 	
 
-	private MediaWikiAdapterBot bot = null;
+	private MediaWikiBot bot = null;
 	/**
 	 * Setup log4j.
 	 * @throws Exception a
@@ -74,11 +75,10 @@ public class UploadAndImageInfoTest extends LiveTestFather {
 	@Test(expected = VersionException.class)
 	public final void uploadMW1x09Fail() throws Exception {
 		
-		bot = new MediaWikiAdapterBot(getValue("wikiMW1_09_url"));
-		bot.login(getValue("wikiMW1_09_user"),
-				getValue("wikiMW1_09_pass"));
+		bot = getMediaWikiBot(Version.MW1_09, true);
+
 		Assert.assertEquals(bot.getVersion(), Version.MW1_09);
-		bot.uploadFile("README");
+		new FileUpload(bot, "README");
 	}
 	
 	/**
@@ -88,13 +88,11 @@ public class UploadAndImageInfoTest extends LiveTestFather {
 	@Test(expected = VersionException.class)
 	public final void uploadMW1x10Fail() throws Exception {
 		
-		bot = new MediaWikiAdapterBot(getValue("wikiMW1_10_url"));
-		bot.login(getValue("wikiMW1_10_user"),
-				getValue("wikiMW1_10_pass"));
+		bot = getMediaWikiBot(Version.MW1_10, true);
 		Assert.assertEquals(bot.getVersion(), Version.MW1_10);
 		
 		SimpleFile sf = new SimpleFile(getValue("filename"), getValue("validFile"));
-		URL url = new URL(bot.getImageInfo(sf.getFilename()));
+		URL url = new URL(new ImageInfo(bot, sf.getFilename()).getUrlAsString());
 		assertFile(url, sf.getFile());
 
 	}
@@ -106,9 +104,7 @@ public class UploadAndImageInfoTest extends LiveTestFather {
 	@Test
 	public final void uploadMW1x11() throws Exception {
 		
-		bot = new MediaWikiAdapterBot(getValue("wikiMW1_11_url"));
-		bot.login(getValue("wikiMW1_11_user"),
-				getValue("wikiMW1_11_pass"));
+		bot = getMediaWikiBot(Version.MW1_11, true);
 		generalUploadImageInfoTest(bot, Version.MW1_11);
 	}
 	
@@ -119,9 +115,7 @@ public class UploadAndImageInfoTest extends LiveTestFather {
 	@Test
 	public final void uploadMW1x12() throws Exception {
 		
-		bot = new MediaWikiAdapterBot(getValue("wikiMW1_12_url"));
-		bot.login(getValue("wikiMW1_12_user"),
-				getValue("wikiMW1_12_pass"));
+		bot = getMediaWikiBot(Version.MW1_12, true);
 		generalUploadImageInfoTest(bot, Version.MW1_12);
 	}
 	/**
@@ -131,9 +125,7 @@ public class UploadAndImageInfoTest extends LiveTestFather {
 	@Test
 	public final void uploadMW1x13() throws Exception {
 		
-		bot = new MediaWikiAdapterBot(getValue("wikiMW1_13_url"));
-		bot.login(getValue("wikiMW1_13_user"),
-				getValue("wikiMW1_13_pass"));
+		bot = getMediaWikiBot(Version.MW1_13, true);
 		generalUploadImageInfoTest(bot, Version.MW1_13);
 	}
 	
@@ -144,9 +136,7 @@ public class UploadAndImageInfoTest extends LiveTestFather {
 	@Test
 	public final void uploadMW1x14() throws Exception {
 		
-		bot = new MediaWikiAdapterBot(getValue("wikiMW1_14_url"));
-		bot.login(getValue("wikiMW1_14_user"),
-				getValue("wikiMW1_14_pass"));
+		bot = getMediaWikiBot(Version.MW1_14, true);
 		generalUploadImageInfoTest(bot, Version.MW1_14);
 		
 	}
@@ -157,24 +147,33 @@ public class UploadAndImageInfoTest extends LiveTestFather {
 	@Test
 	public final void uploadMW1x15() throws Exception {
 		
-		bot = new MediaWikiAdapterBot(getValue("wikiMW1_15_url"));
-		bot.login(getValue("wikiMW1_15_user"),
-				getValue("wikiMW1_15_pass"));
+		bot = getMediaWikiBot(Version.MW1_15, true);
 		generalUploadImageInfoTest(bot, Version.MW1_15);
 		
 	}
 	/**
-	 * 
+	 * because image does not exists.
 	 * @throws Exception a
 	 */
 	@Test(expected = ProcessException.class)
 	public final void imageInfoFail() throws Exception {
 		
-		bot = new MediaWikiAdapterBot(getValue("wikiMW1_14_url"));
-		bot.login(getValue("wikiMW1_14_user"),
-				getValue("wikiMW1_14_pass"));
+		bot = getMediaWikiBot(Version.getLast(), true);
 		ImageInfo a = new ImageInfo(bot, "UnknownImage.jpg");
 		System.out.println(a.getUrlAsString());
+		
+	}
+	
+	/**
+	 * because image does not exists.
+	 * @throws Exception a
+	 */
+	@Test(expected = ActionException.class)
+	public final void imageInfoPerformManual() throws Exception {
+		
+		bot = getMediaWikiBot(Version.MW1_15, true);
+		ImageInfo a = new ImageInfo(bot, "UnknownImage.jpg");
+		bot.performAction(a);
 		
 	}
 	/**
@@ -183,7 +182,7 @@ public class UploadAndImageInfoTest extends LiveTestFather {
 	 * @param v a
 	 * @throws Exception a
 	 */
-	protected final void generalUploadImageInfoTest(MediaWikiAdapterBot bot, Version v) throws Exception {
+	protected final void generalUploadImageInfoTest(MediaWikiBot bot, Version v) throws Exception {
 		assertEquals(bot.getVersion(), v);
 		assertTrue("File (" + getValue("validFile") 
 				+ ") not readable", new File(getValue("validFile")).canRead());
@@ -193,7 +192,8 @@ public class UploadAndImageInfoTest extends LiveTestFather {
 		bot.performAction(up);
 		URL url = null;
 		try {
-		url = new URL(bot.getImageInfo(sf.getTitle()));
+			
+			url = new URL(new ImageInfo(bot, sf.getTitle()).getUrlAsString());
 		} catch (ProcessException e) {
 			throw new ProcessException(e.getLocalizedMessage() + "; \n is upload enabled ?");
 		}
@@ -278,16 +278,23 @@ public class UploadAndImageInfoTest extends LiveTestFather {
 		try {
 			byte[] lbuffer = new byte[4096];
 			byte[] rbuffer = new byte[lbuffer.length];
-			for (int lcount = 0; (lcount = lin.read(lbuffer)) > 0;) {
+			int lcount = 0;
+			lcount = lin.read(lbuffer);
+			while (lcount > 0) {
 				int bytesRead = 0;
-				for (int rcount = 0; (rcount = rin.read(rbuffer, bytesRead,
-						lcount - bytesRead)) > 0;) {
+
+				int rcount = 0;
+				rcount = rin.read(rbuffer, bytesRead, lcount - bytesRead);
+				while (rcount > 0) {
 					bytesRead += rcount;
+					rcount = rin.read(rbuffer, bytesRead, lcount - bytesRead);
 				}
+
 				for (int byteIndex = 0; byteIndex < lcount; byteIndex++) {
 					if (lbuffer[byteIndex] != rbuffer[byteIndex])
 						return false;
 				}
+				lcount = lin.read(lbuffer);
 			}
 		} finally {
 			lin.close();

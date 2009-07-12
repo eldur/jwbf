@@ -67,7 +67,7 @@ import net.sourceforge.jwbf.contentRep.mediawiki.SimpleFile;
  * @author Thomas Stock
  * @author Tobias Knerr
  * @author Justus Bisser
- * 
+ * @deprecated
  */
 
 public class MediaWikiAdapterBot extends MediaWikiBot {

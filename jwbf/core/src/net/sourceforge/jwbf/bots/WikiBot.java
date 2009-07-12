@@ -2,11 +2,16 @@ package net.sourceforge.jwbf.bots;
 
 import net.sourceforge.jwbf.actions.util.ActionException;
 import net.sourceforge.jwbf.actions.util.ProcessException;
+import net.sourceforge.jwbf.bots.util.CacheHandler;
 import net.sourceforge.jwbf.contentRep.Article;
 import net.sourceforge.jwbf.contentRep.ContentAccessable;
 import net.sourceforge.jwbf.contentRep.SimpleArticle;
 import net.sourceforge.jwbf.contentRep.Userinfo;
-
+/**
+ * Main abstraction interface for all kinds of wikibots.
+ * @author Thomas Stock
+ *
+ */
 public interface WikiBot {
 
 	
@@ -21,4 +26,7 @@ public interface WikiBot {
 	void login(String user, String passwd) throws ActionException;
 	Userinfo getUserinfo() throws ActionException, ProcessException;
 	String getWikiType();
+	
+	boolean hasCacheHandler();
+	void setCacheHandler(CacheHandler ch);
 }

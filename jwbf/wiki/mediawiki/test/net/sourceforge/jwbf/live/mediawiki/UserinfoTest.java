@@ -43,9 +43,10 @@ public class UserinfoTest extends LiveTestFather {
 		default:
 			Assert.assertFalse("User has no groups", u.getGroups().isEmpty());
 			Assert.assertTrue("User has no read rights", u.getRights().contains("read"));
+			registerTestedVersion(GetUserinfo.class, bot.getVersion());
 		}
 		
-		registerTestedVersion(GetUserinfo.class, bot.getVersion());
+		
 		
 	}
 

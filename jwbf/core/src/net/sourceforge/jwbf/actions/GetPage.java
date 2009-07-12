@@ -84,6 +84,12 @@ public class GetPage implements ContentProcessable {
 	public String getText() {
 		return text;
 	}
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean isSelfExecuter() {
+		return false;
+	}
 
 	
 }

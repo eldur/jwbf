@@ -40,19 +40,28 @@ public class GetRendering extends MWAction {
 	private final Get msg;
 	private String html = "";
 	private final MediaWikiBot bot;
+	private boolean isSelfEx = true;
 	
 	/**
 	 * 
-	 * @param wikitext a
 	 * @param bot a
+	 * @param wikitext a
 	 * @throws VersionException if not supported
 	 */
-	public GetRendering(String wikitext, MediaWikiBot bot) throws VersionException {
+	public GetRendering(MediaWikiBot bot, String wikitext) throws VersionException {
 		super(bot.getVersion());
 		this.bot = bot;
 		msg = new Get("/api.php?action=parse&text=" + MediaWiki.encode(wikitext) + "&titles=API&format=xml");
 		
 		
+	}
+	/**
+	 * {@inheritDoc}
+	 * @deprecated see super
+	 */
+	@Override
+	public boolean isSelfExecuter() {
+		return isSelfEx;
 	}
 	/**
 	 * {@inheritDoc}
@@ -120,11 +129,15 @@ public class GetRendering extends MWAction {
 
 	private void update() {
 		try {
+			isSelfEx = false;
 			bot.performAction(this);
+			
 		} catch (ActionException e) {
 			e.printStackTrace();
 		} catch (ProcessException e) {
 			e.printStackTrace();
+		} finally {
+			isSelfEx = true;
 		}
 	}
 	/**

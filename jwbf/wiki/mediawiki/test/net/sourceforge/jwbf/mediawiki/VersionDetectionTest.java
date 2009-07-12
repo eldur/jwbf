@@ -1,21 +1,22 @@
 package net.sourceforge.jwbf.mediawiki;
 
 
+import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.DEVELOPMENT;
 import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_09;
 import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_10;
 import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_11;
 import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.MW1_12;
 import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version.UNKNOWN;
 import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import net.sourceforge.jwbf.actions.mediawiki.MediaWiki.Version;
 import net.sourceforge.jwbf.actions.mediawiki.util.MWAction;
 import net.sourceforge.jwbf.actions.mediawiki.util.SupportedBy;
 import net.sourceforge.jwbf.actions.mediawiki.util.VersionException;
 import net.sourceforge.jwbf.actions.util.HttpAction;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
@@ -24,28 +25,33 @@ import org.junit.Test;
  */
 public class VersionDetectionTest {
 
-	/**
-	 * @throws java.lang.Exception
-	 */
-	@BeforeClass
-	public static void setUpBeforeClass() throws Exception {
-	}
-
-	/**
-	 * @throws java.lang.Exception
-	 */
-	@AfterClass
-	public static void tearDownAfterClass() throws Exception {
-	}
-
+	@Test
+	public void testGetAllVersion() throws Exception {
 	
+		Version [] va = Version.valuesStable();
+		for (int i = 0; i < va.length; i++) {
+			if (va[i].equals(UNKNOWN) || va[i].equals(DEVELOPMENT)) {
+				fail("bad version");
+			}
+		}
+		assertTrue("shuld be greater then", va.length - 2 > 1);
+	}
+		
 	@Test
 	public void testVersionEq() throws Exception {
 	
 		assertTrue(MW1_11.greaterEqThen(MW1_09));
 		assertTrue(MW1_11.greaterEqThen(MW1_10));
 		assertTrue(MW1_11.greaterEqThen(MW1_11));
+		assertFalse(MW1_11.greaterEqThen(MW1_12));
 	}
+	
+//	@Test
+//	public void testGetLastVersion() throws Exception {
+//	
+//		assertTrue(MW1_15 == Version.getLast());
+//
+//	}
 
 	@Test
 	public void testMW109() throws Exception {

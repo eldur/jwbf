@@ -105,21 +105,22 @@ public class SimpleArticle implements ArticleMeta, Serializable {
 	 * 
 	 * @param text
 	 *            of article
-	 * @param label
+	 * @param title
 	 *            of article
+	 * @deprecated use {@link #SimpleArticle(String)} and {@link #setText(String)} instead.
 	 */
-	public SimpleArticle(final String text, final String label) {
+	public SimpleArticle(final String text, final String title) {
 		this.text = text;
-		this.title = label;
+		this.title = title;
 	}
 	
 	/**
 	 * 
-	 * @param label
+	 * @param title
 	 *            of article
 	 */
-	public SimpleArticle(final String label) {
-		this("", label);
+	public SimpleArticle(final String title) {
+		this.title = title;
 	}
 
 	/**
@@ -209,7 +210,7 @@ public class SimpleArticle implements ArticleMeta, Serializable {
 	 *            to add to content of the article
 	 */
 	public void addText(final String text) {
-		this.text += text;
+		setText(getText() + text);
 	}
 
 	/**
@@ -218,7 +219,8 @@ public class SimpleArticle implements ArticleMeta, Serializable {
 	 *            to add to content of the article
 	 */
 	public void addTextnl(final String text) {
-		this.text += "\n" + text;
+		setText(getText() + "\n" + text);
+	
 	}
 
 	/**

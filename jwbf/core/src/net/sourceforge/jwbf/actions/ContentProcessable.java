@@ -20,7 +20,6 @@ package net.sourceforge.jwbf.actions;
 
 
 import net.sourceforge.jwbf.actions.util.HttpAction;
-import net.sourceforge.jwbf.actions.util.ProcessException;
 /**
  * 
  * @author Thomas Stock
@@ -42,5 +41,12 @@ public interface ContentProcessable extends ReturningText {
 	 * @return true if
 	 */
 	boolean hasMoreMessages();
+	
+	/**
+	 * Use this in self maintaining lists for e.g., to prevent user to perform this action manually.
+	 * @deprecated better encapsulate action if no external execution shuld be avalibal. 
+	 * @return true if
+	 */
+	boolean isSelfExecuter();
 
 }
