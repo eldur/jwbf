@@ -31,7 +31,6 @@ import java.util.HashMap;
 import java.util.InvalidPropertiesFormatException;
 import java.util.Map;
 import java.util.Properties;
-import java.util.Random;
 import java.util.Set;
 import java.util.Vector;
 
@@ -45,11 +44,11 @@ import org.junit.Test;
 /**
  * @author Thomas Stock
  */
-public abstract class LiveTestFather {
+public abstract class LiveTestFather extends TestHelper {
 
 	private static Properties data;
 	
-	private Random wheel = new Random();
+	
 	
 	private static String filename;
 	
@@ -278,26 +277,5 @@ public abstract class LiveTestFather {
 	}
 	protected Collection<String> getSpecialChars() {
 		return specialChars;
-	}
-	protected String getRandomAlph(int length) {
-		return getRandom(length, 65, 90);
-	}
-	protected String getRandom(int length) {
-		return getRandom(length, 48, 126);
-	}
-	protected String getRandom(int length, int begin, int end) {
-		String out = "";
-		int charNum = 0;
-		int count = 1;  
-		while (count <= length) {  
-            charNum = (wheel.nextInt(79) + begin);
-            if (charNum >= begin && charNum <= end) {
-            	
-            	char d = (char) charNum;
-                out += d;
-                count++;
-            }
-        }
-		return out;
 	}
 }

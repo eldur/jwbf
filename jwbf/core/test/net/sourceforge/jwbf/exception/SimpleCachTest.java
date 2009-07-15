@@ -1,6 +1,6 @@
 package net.sourceforge.jwbf.exception;
 
-import net.sourceforge.jwbf.LiveTestFather;
+import net.sourceforge.jwbf.TestHelper;
 import net.sourceforge.jwbf.bots.util.JwbfException;
 
 import org.apache.log4j.PropertyConfigurator;
@@ -11,7 +11,7 @@ import org.junit.Test;
  * @author Thomas Stock
  *
  */
-public class SimpleCachTest extends LiveTestFather {
+public class SimpleCachTest extends TestHelper {
 
 	
 	@BeforeClass

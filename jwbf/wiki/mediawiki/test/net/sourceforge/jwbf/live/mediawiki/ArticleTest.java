@@ -1,4 +1,4 @@
-package net.sourceforge.jwbf.live;
+package net.sourceforge.jwbf.live.mediawiki;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotSame;

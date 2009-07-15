@@ -13,7 +13,7 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.util.Date;
 
-import net.sourceforge.jwbf.LiveTestFather;
+import net.sourceforge.jwbf.TestHelper;
 import net.sourceforge.jwbf.contentRep.SimpleArticle;
 
 import org.apache.log4j.PropertyConfigurator;
@@ -26,7 +26,7 @@ import org.junit.Test;
  * @author Thomas Stock
  *
  */
-public class SimpleCachTest extends LiveTestFather {
+public class SimpleCachTest extends TestHelper {
 
 	public static final String CACHFOLDER = "build/data";
 	

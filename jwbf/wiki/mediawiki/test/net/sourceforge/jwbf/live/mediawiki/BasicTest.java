@@ -12,7 +12,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import net.sourceforge.jwbf.bots.WikiBot;
 import net.sourceforge.jwbf.contentRep.Article;
-import net.sourceforge.jwbf.live.ArticleTest;
 
 import org.apache.log4j.PropertyConfigurator;
 import org.junit.Before;

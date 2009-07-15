@@ -3,7 +3,7 @@ package net.sourceforge.jwbf.live.zim;
 import java.io.File;
 
 import net.sourceforge.jwbf.bots.ZimWikiBot;
-import net.sourceforge.jwbf.live.ArticleTest;
+import net.sourceforge.jwbf.live.mediawiki.ArticleTest;
 
 import org.apache.log4j.PropertyConfigurator;
 import org.junit.Before;

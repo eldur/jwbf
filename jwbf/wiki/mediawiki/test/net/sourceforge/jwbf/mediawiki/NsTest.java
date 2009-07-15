@@ -1,4 +1,4 @@
-package net.sourceforge.jwbf.actions.mediawiki.util;
+package net.sourceforge.jwbf.mediawiki;
 
 import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.NS_CATEGORY;
 import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.NS_MAIN;
@@ -6,6 +6,7 @@ import static net.sourceforge.jwbf.actions.mediawiki.MediaWiki.NS_TEMPLATE;
 import static org.junit.Assert.assertEquals;
 import net.sourceforge.jwbf.JWBF;
 import net.sourceforge.jwbf.actions.mediawiki.MediaWiki;
+import net.sourceforge.jwbf.actions.mediawiki.util.MWAction;
 
 import org.junit.Test;
 
