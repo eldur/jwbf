@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <project name="jwbf-mvn" basedir=".">
-	<description>build and deploy jwbf core</description>
+	<description>build and deploy jwbf mediawiki</description>
 
 	<target name="package">
 		<echo>Build Dir: ${target}</echo>
@@ -29,7 +29,7 @@
 			<fileset dir="test" includes="**/*" />
 		</copy>
 		<copy todir="${release}">
-			<fileset dir="../buildAdds" includes="*" />
+			<fileset dir="../../buildAdds" includes="*" />
 		</copy>
 		<copy todir="${release}/lib" flatten="true" >
 			<path >
