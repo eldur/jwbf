@@ -113,6 +113,10 @@ public class SimpleArticleTest {
 			public Date getEditTimestamp() {
 				return null;
 			}
+			
+			public Object clone() throws CloneNotSupportedException {
+				return this;
+			}
 		
 		};
 		
@@ -150,6 +154,9 @@ public class SimpleArticleTest {
 				return null;
 			}
 		
+			public Object clone() throws CloneNotSupportedException {
+				return this;
+			}
 		};
 		
 		SimpleArticle sa = new SimpleArticle(ca);

@@ -24,7 +24,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.regex.Pattern;
 
-
 /**
  * This is a simple content helper class that implements the
  * EditContentAccesable interface, plus setter methods.
@@ -32,7 +31,7 @@ import java.util.regex.Pattern;
  * @author Thomas Stock
  * 
  */
-public class SimpleArticle implements ArticleMeta, Serializable {
+public class SimpleArticle implements ArticleMeta, Serializable, Cloneable {
 
 	/**
 	 * 
@@ -45,7 +44,7 @@ public class SimpleArticle implements ArticleMeta, Serializable {
 	private boolean minorEdit = false;
 	private Date editTimestamp = new Date();
 	private String revId = "";
-	
+
 	/**
 	 * 
 	 * 
@@ -61,24 +60,23 @@ public class SimpleArticle implements ArticleMeta, Serializable {
 	 */
 	public SimpleArticle(ContentAccessable ca) {
 		
-
 		if (ca.getTitle() != null) {
 			title = ca.getTitle();
 		}
 		if (ca.getText() != null) {
 			text = ca.getText();
-		}	
+		}
 		if (ca.getEditSummary() != null) {
 			editSummary = ca.getEditSummary();
-		}	
+		}
 		if (ca.getEditor() != null) {
 			editor = ca.getEditor();
-		}	
-		
+		}
+
 		setMinorEdit(ca.isMinorEdit());
 
 	}
-	
+
 	/**
 	 * 
 	 * @param sa
@@ -86,19 +84,23 @@ public class SimpleArticle implements ArticleMeta, Serializable {
 	 */
 	public SimpleArticle(ArticleMeta sa) {
 		this((ContentAccessable) sa);
-
 		
 		if (sa.getEditTimestamp() != null) {
 			editTimestamp = sa.getEditTimestamp();
 		}
-		
+
 		if (sa.getRevisionId() != null) {
 			revId = sa.getRevisionId();
 		}
-		
-		
-			
+	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+
+		return new SimpleArticle(this);
 	}
 
 	/**
@@ -107,13 +109,14 @@ public class SimpleArticle implements ArticleMeta, Serializable {
 	 *            of article
 	 * @param title
 	 *            of article
-	 * @deprecated use {@link #SimpleArticle(String)} and {@link #setText(String)} instead.
+	 * @deprecated use {@link #SimpleArticle(String)} and
+	 *             {@link #setText(String)} instead.
 	 */
 	public SimpleArticle(final String text, final String title) {
 		this.text = text;
 		this.title = title;
 	}
-	
+
 	/**
 	 * 
 	 * @param title
@@ -162,6 +165,7 @@ public class SimpleArticle implements ArticleMeta, Serializable {
 	public String getLabel() {
 		return getTitle();
 	}
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -178,6 +182,7 @@ public class SimpleArticle implements ArticleMeta, Serializable {
 	public void setLabel(final String label) {
 		setTitle(label);
 	}
+
 	/**
 	 * 
 	 * @param title
@@ -186,8 +191,7 @@ public class SimpleArticle implements ArticleMeta, Serializable {
 	public void setTitle(final String title) {
 		this.title = title;
 	}
-	
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -220,7 +224,7 @@ public class SimpleArticle implements ArticleMeta, Serializable {
 	 */
 	public void addTextnl(final String text) {
 		setText(getText() + "\n" + text);
-	
+
 	}
 
 	/**
@@ -248,7 +252,7 @@ public class SimpleArticle implements ArticleMeta, Serializable {
 		if (pattern.matcher(text).matches()) {
 			return true;
 		}
-			
+
 		return false;
 	}
 
@@ -258,10 +262,13 @@ public class SimpleArticle implements ArticleMeta, Serializable {
 	public Date getEditTimestamp() {
 		return editTimestamp;
 	}
+
 	/**
 	 * 
-	 * @param editTimestamp set
-	 * @throws ParseException if date unparseable
+	 * @param editTimestamp
+	 *            set
+	 * @throws ParseException
+	 *             if date unparseable
 	 */
 	public void setEditTimestamp(String editTimestamp) throws ParseException {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
@@ -272,9 +279,11 @@ public class SimpleArticle implements ArticleMeta, Serializable {
 			setEditTimestamp(sdf.parse(editTimestamp));
 		}
 	}
+
 	/**
 	 * 
-	 * @param d the
+	 * @param d
+	 *            the
 	 */
 	public void setEditTimestamp(Date d) {
 		this.editTimestamp = d;
@@ -286,17 +295,18 @@ public class SimpleArticle implements ArticleMeta, Serializable {
 	@Override
 	public boolean equals(Object obj) {
 		if (obj == this)
-            return true;
-        
-        if (!(obj instanceof SimpleArticle))
-            return false;
+			return true;
 
-        SimpleArticle sa = (SimpleArticle) obj;
-		return sa.getTitle().equals(getTitle()) 
-			&& sa.getText().equals(getText()) 
-			&& sa.getEditTimestamp().equals(getEditTimestamp());
-		
+		if (!(obj instanceof SimpleArticle))
+			return false;
+
+		SimpleArticle sa = (SimpleArticle) obj;
+		return sa.getTitle().equals(getTitle())
+				&& sa.getText().equals(getText())
+				&& sa.getEditTimestamp().equals(getEditTimestamp());
+
 	}
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -311,14 +321,14 @@ public class SimpleArticle implements ArticleMeta, Serializable {
 	public String getRevisionId() {
 		return revId;
 	}
+
 	/**
 	 * 
-	 * @param revId the
+	 * @param revId
+	 *            the
 	 */
 	public void setRevisionId(String revId) {
 		this.revId = revId;
 	}
-	
 
-	
 }

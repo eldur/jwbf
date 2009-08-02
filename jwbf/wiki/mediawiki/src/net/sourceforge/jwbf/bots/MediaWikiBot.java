@@ -255,8 +255,9 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
 	 * {@inheritDoc}
 	 */
 	public boolean hasCacheHandler() {
-		if (store != null)
+		if (store != null) {
 			return true;
+		}
 		return false;
 	}
 	/**
@@ -289,18 +290,24 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
 		if (!isLoggedIn()) {
 			throw new ActionException("Please login first");
 		}
-
+		ContentAccessable ax;
+		try {
+			ax = (ContentAccessable) a.clone();
+		} catch (CloneNotSupportedException e) {
+			e.printStackTrace();
+			ax = a;
+		}
 		for (char invChar : INVALID_LABEL_CHARS) {
-			if (a.getTitle().contains(invChar + "")) {
+			if (ax.getTitle().contains(invChar + "")) {
 				throw new ActionException("Invalid character in label\"" 
-						+ a.getTitle() + "\" : \"" + invChar + "\"");
+						+ ax.getTitle() + "\" : \"" + invChar + "\"");
 			}
 		}
 		
 			
-		performAction(new PostModifyContent(this, a));
+		performAction(new PostModifyContent(this, ax));
 		if (store != null) {
-			String label = a.getTitle();
+			String label = ax.getTitle();
 			SimpleArticle sa;
 			if (store.containsKey(label)) {
 				log.debug("contains article: " + label); // TODO RM
@@ -308,15 +315,15 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
 			} else {
 				sa = new SimpleArticle(label);
 			}
-			sa.setText(a.getText());
+			sa.setText(ax.getText());
 			sa.setEditor(getUserinfo().getUsername());
-			sa.setEditSummary(a.getEditSummary());
-			sa.setMinorEdit(a.isMinorEdit());
+			sa.setEditSummary(ax.getEditSummary());
+			sa.setMinorEdit(ax.isMinorEdit());
 //			sa.setRevisionId((Integer.parseInt(sa.getRevisionId()) + 1) + "");
 			log.debug("update cache (write)");
 			store.put(sa);
 		}
-		if (a.getText().trim().length() < 1) 
+		if (ax.getText().trim().length() < 1) 
 			throw new RuntimeException("Content is empty, still written");
 	}
 	

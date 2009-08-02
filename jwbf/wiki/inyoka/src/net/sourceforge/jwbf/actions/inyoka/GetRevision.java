@@ -92,7 +92,7 @@ public class GetRevision implements ContentProcessable {
 	}
 
 	private void parse(String s) {
-		System.err.println(s); // TODO RM
+//		System.err.println(s); // TODO RM
 		Pattern p = Pattern.compile("class=\"author\">([^\"]*)<",
 				Pattern.DOTALL | Pattern.MULTILINE);
 

@@ -23,13 +23,22 @@ public class Article extends SimpleArticle {
 	private final int minorEditReload = 1 << 3;
 	private final int editorReload = 1 << 4;
 	private final int editSumReload = 1 << 5;
+	
+	private boolean isReload(final int reloadVar) {
+		return (reload & reloadVar) == 0;
+	}
+	
+	private void setReload(final int reloadVar) {
+		reload = reload | reloadVar;
+	}
+	
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public String getText() {
-		if (super.getText().length() < 1 || (reload & textReload) == 0) {
-			reload = reload | textReload;
+		if (isReload(textReload)) {
+			setReload(textReload);
 			try {
 				setText(bot.readData(super.getTitle()).getText());
 			} catch (JwbfException e) {
@@ -43,7 +52,7 @@ public class Article extends SimpleArticle {
 	 */
 	@Override
 	public void setText(String text) {
-		reload = reload | textReload;
+		setReload(textReload);
 		super.setText(text);
 	}
 
@@ -53,10 +62,10 @@ public class Article extends SimpleArticle {
 	@Override
 	public String getRevisionId() {
 		
-		if (super.getRevisionId().length() < 1 || (reload & revisionIdReload) == 0) {
-			reload = reload | revisionIdReload;
+		if (isReload(revisionIdReload)) {
+			setReload(revisionIdReload);
 			try {
-				super.setRevisionId(bot.readData(super.getTitle()).getRevisionId());
+				setRevisionId(bot.readData(super.getTitle()).getRevisionId());
 				System.err.println("RELOAD REV ID " + super.getRevisionId()); // FIXME RM
 			} catch (JwbfException e) {
 				e.printStackTrace();
@@ -64,14 +73,22 @@ public class Article extends SimpleArticle {
 		}
 		return super.getRevisionId();
 	}
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void setRevisionId(String revId) {
+		setReload(revisionIdReload);
+		super.setRevisionId(revId);
+	}
 	
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public String getEditor() {
-		if (super.getEditor().length() < 1 || (reload & editorReload) == 0) {
-			reload = reload | editorReload;
+		if (isReload(editorReload)) {
+			setReload(editorReload);
 			try {
 				setEditor(bot.readData(super.getTitle()).getEditor());
 			} catch (JwbfException e) {
@@ -80,14 +97,23 @@ public class Article extends SimpleArticle {
 		}
 		return super.getEditor();
 	}
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void setEditor(String editor) {
+		setReload(editorReload);
+		super.setEditor(editor);
+	}
+	
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public String getEditSummary() {
-		if (super.getEditSummary().length() < 1 || (reload & editSumReload) == 0) {
-			reload = reload | editSumReload;
+		if (isReload(editSumReload)) {
+			setReload(editSumReload);
 			try {
 				setEditSummary(bot.readData(super.getTitle()).getEditSummary());
 			} catch (JwbfException e) {
@@ -97,14 +123,22 @@ public class Article extends SimpleArticle {
 
 		return super.getEditSummary();
 	}
-
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void setEditSummary(String s) {
+		setReload(editSumReload);
+		super.setEditSummary(s);
+	}
+	
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public boolean isMinorEdit() {
-		if ((reload & minorEditReload) == 0) {
-			reload = reload | minorEditReload;
+		if (isReload(editSumReload)) {
+			setReload(minorEditReload);
 			try {
 				setEditSummary(bot.readData(super.getTitle()).getEditSummary());
 			} catch (JwbfException e) {
@@ -148,7 +182,11 @@ public class Article extends SimpleArticle {
 	 * @throws ProcessException a
 	 */
 	public void save() throws ActionException, ProcessException {
-		bot.writeContent(this);
+		try {
+			bot.writeContent((SimpleArticle) this.clone());
+		} catch (CloneNotSupportedException e) {
+			e.printStackTrace();
+		}
 		reload = 0; //reload ^ revisionIdReload; // TODO Reload only if revId is changed
 	}
 	/**

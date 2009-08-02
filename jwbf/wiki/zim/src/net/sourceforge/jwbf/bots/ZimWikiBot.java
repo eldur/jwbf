@@ -39,6 +39,7 @@ import net.sourceforge.jwbf.contentRep.Userinfo;
  */
 public class ZimWikiBot implements WikiBot {
 	private static final String ZIMEXT = ".txt";
+	private static final int DEFAULT = 0;
 	private final File rootFolder;
 //	private final String mwFolder;
 
@@ -174,8 +175,7 @@ public class ZimWikiBot implements WikiBot {
 
 	public SimpleArticle readData(String name) throws ActionException,
 			ProcessException {
-		// TODO Auto-generated method stub
-		return null;
+		return readData(name, DEFAULT);
 	}
 
 

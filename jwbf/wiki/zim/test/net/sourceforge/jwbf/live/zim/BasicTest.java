@@ -3,12 +3,12 @@ package net.sourceforge.jwbf.live.zim;
 import java.io.File;
 
 import net.sourceforge.jwbf.bots.ZimWikiBot;
-import net.sourceforge.jwbf.live.mediawiki.ArticleTest;
+import net.sourceforge.jwbf.live.GeneralArticleTest;
 
 import org.apache.log4j.PropertyConfigurator;
 import org.junit.Before;
 import org.junit.BeforeClass;
-public class BasicTest extends ArticleTest {
+public class BasicTest extends GeneralArticleTest {
 	
 	@BeforeClass
 	public static void setUp() throws Exception {

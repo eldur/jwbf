@@ -116,7 +116,15 @@ public class GetRevision extends MWAction {
 	public String processReturningText(final String s, HttpAction ha)
 			throws ProcessException {
 		if (msg.getRequest().equals(ha.getRequest()) && q) {
-			log.debug(s);
+			if (log.isDebugEnabled()) { // TODO no very nice debug here
+				if (s.length() < 151) {
+					log.debug(s);
+				} else {
+					log.debug("..." + s.substring(50, 150) + "...");
+				}
+					
+			}
+			
 			parse(s);
 			q = false; // FIXME RM q
 			
@@ -172,7 +180,6 @@ public class GetRevision extends MWAction {
 	}
 
 	private void parse(final String xml) throws ApiException {
-		System.err.println(xml); // FIXME RM
 		SAXBuilder builder = new SAXBuilder();
 		Element root = null;
 		try {

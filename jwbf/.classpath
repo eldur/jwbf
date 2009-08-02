@@ -8,8 +8,8 @@
 	<classpathentry kind="src" output="wiki/zim/bin" path="wiki/zim/test"/>
 	<classpathentry kind="src" output="wiki/inyoka/bin" path="wiki/inyoka/src"/>
 	<classpathentry kind="src" output="wiki/inyoka/bin" path="wiki/inyoka/test"/>
+	<classpathentry kind="con" path="org.maven.ide.eclipse.MAVEN2_CLASSPATH_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/J2SE-1.5"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/tools"/>
-	<classpathentry kind="con" path="org.maven.ide.eclipse.MAVEN2_CLASSPATH_CONTAINER"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
