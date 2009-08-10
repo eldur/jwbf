@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>net.sourceforge</groupId>
   <artifactId>jwbf</artifactId>
-  <packaging>pom</packaging>
+  <packaging>jar</packaging>
   <name>JWBF</name>
   <version>1.3.0</version>
   <description>Java Wiki Bot Framework - A Wiki helper</description>
@@ -28,6 +28,9 @@
   </license>
 </licenses>
   <build>
+  	<sourceDirectory>src</sourceDirectory>
+  	<testSourceDirectory>test</testSourceDirectory>
+  	<outputDirectory>bin</outputDirectory>
   	<resources>
   	</resources>
  
@@ -58,12 +61,6 @@
   </build>
   <profiles>
   </profiles>
-  <modules>
-  	<module>core</module>
-  	<module>wiki/mediawiki</module>
-  	<module>wiki/zim</module>
-  	<module>wiki/inyoka</module>
-  </modules>
   <dependencies>
   </dependencies>
   <reporting>
