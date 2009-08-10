@@ -3,8 +3,8 @@ package net.sourceforge.jwbf.live;
 import java.util.Collection;
 import java.util.Vector;
 
-import net.sourceforge.jwbf.bots.WikiBot;
-import net.sourceforge.jwbf.contentRep.Article;
+import net.sourceforge.jwbf.core.bots.WikiBot;
+import net.sourceforge.jwbf.core.contentRep.Article;
 
 import org.junit.Test;
 

@@ -1,7 +1,7 @@
 package net.sourceforge.jwbf.exception;
 
 import net.sourceforge.jwbf.TestHelper;
-import net.sourceforge.jwbf.bots.util.JwbfException;
+import net.sourceforge.jwbf.core.bots.util.JwbfException;
 
 import org.apache.log4j.PropertyConfigurator;
 import org.junit.BeforeClass;

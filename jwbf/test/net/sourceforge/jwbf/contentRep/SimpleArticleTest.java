@@ -26,6 +26,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import net.sourceforge.jwbf.core.contentRep.ContentAccessable;
+import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
+
 import org.junit.Before;
 import org.junit.Test;
 
