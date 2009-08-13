@@ -1,10 +1,10 @@
-package net.sourceforge.jwbf.live.inyoka;
+package net.sourceforge.jwbf.inyoka.live;
 
 
 	import static org.junit.Assert.assertTrue;
-import net.sourceforge.jwbf.LiveTestFather;
-import net.sourceforge.jwbf.bots.InyokaWikiBot;
-import net.sourceforge.jwbf.contentRep.Article;
+import net.sourceforge.jwbf.core.contentRep.Article;
+import net.sourceforge.jwbf.inyoka.bots.InyokaWikiBot;
+import net.sourceforge.jwbf.mediawiki.LiveTestFather;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;

@@ -1,19 +1,21 @@
 /**
  * 
  */
-package net.sourceforge.jwbf.bots;
+package net.sourceforge.jwbf.inyoka.bots;
 
 import java.net.MalformedURLException;
 import java.util.Collection;
 
-import net.sourceforge.jwbf.actions.inyoka.GetRevision;
-import net.sourceforge.jwbf.actions.util.ActionException;
-import net.sourceforge.jwbf.actions.util.ProcessException;
-import net.sourceforge.jwbf.bots.util.CacheHandler;
-import net.sourceforge.jwbf.contentRep.Article;
-import net.sourceforge.jwbf.contentRep.ContentAccessable;
-import net.sourceforge.jwbf.contentRep.SimpleArticle;
-import net.sourceforge.jwbf.contentRep.Userinfo;
+import net.sourceforge.jwbf.core.actions.util.ActionException;
+import net.sourceforge.jwbf.core.actions.util.ProcessException;
+import net.sourceforge.jwbf.core.bots.HttpBot;
+import net.sourceforge.jwbf.core.bots.WikiBot;
+import net.sourceforge.jwbf.core.bots.util.CacheHandler;
+import net.sourceforge.jwbf.core.contentRep.Article;
+import net.sourceforge.jwbf.core.contentRep.ContentAccessable;
+import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
+import net.sourceforge.jwbf.core.contentRep.Userinfo;
+import net.sourceforge.jwbf.inyoka.actions.GetRevision;
 /**
  * 
  * This class helps you to interact with each wiki as part of

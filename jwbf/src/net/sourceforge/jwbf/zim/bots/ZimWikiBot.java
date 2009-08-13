@@ -17,7 +17,7 @@
  * 
  */
 
-package net.sourceforge.jwbf.bots;
+package net.sourceforge.jwbf.zim.bots;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -25,13 +25,14 @@ import java.io.FileReader;
 import java.util.Collection;
 import java.util.Vector;
 
-import net.sourceforge.jwbf.actions.util.ActionException;
-import net.sourceforge.jwbf.actions.util.ProcessException;
-import net.sourceforge.jwbf.bots.util.CacheHandler;
-import net.sourceforge.jwbf.contentRep.Article;
-import net.sourceforge.jwbf.contentRep.ContentAccessable;
-import net.sourceforge.jwbf.contentRep.SimpleArticle;
-import net.sourceforge.jwbf.contentRep.Userinfo;
+import net.sourceforge.jwbf.core.actions.util.ActionException;
+import net.sourceforge.jwbf.core.actions.util.ProcessException;
+import net.sourceforge.jwbf.core.bots.WikiBot;
+import net.sourceforge.jwbf.core.bots.util.CacheHandler;
+import net.sourceforge.jwbf.core.contentRep.Article;
+import net.sourceforge.jwbf.core.contentRep.ContentAccessable;
+import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
+import net.sourceforge.jwbf.core.contentRep.Userinfo;
 /**
  * 
  * @author Martin Koch

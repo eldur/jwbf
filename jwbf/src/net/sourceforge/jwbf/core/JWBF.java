@@ -155,10 +155,8 @@ public final class JWBF {
 	 */
 	private static String readArtifactId(Class < ? > clazz) throws IOException {
 
-		
 		String classContainer = clazz.getProtectionDomain().getCodeSource().getLocation().toString();
-	
-			return readArtifactId(classContainer);
+		return readArtifactId(classContainer);
 		
 	}
 	/**
@@ -170,7 +168,7 @@ public final class JWBF {
 	private static String readArtifactId(String path) throws IOException {
 
 		String implementationTitle = null; // = clazz.getPackage().getImplementationTitle();
-			implementationTitle = readFromManifest(path, "Implementation-Title");
+		implementationTitle = readFromManifest(path, "Implementation-Title");
 
 		if (implementationTitle == null) {
 			return "jwbf-generic";

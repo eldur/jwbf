@@ -16,17 +16,17 @@
  * Contributors:
  * 
  */
-package net.sourceforge.jwbf.actions.inyoka;
+package net.sourceforge.jwbf.inyoka.actions;
 
 import java.text.ParseException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import net.sourceforge.jwbf.actions.ContentProcessable;
-import net.sourceforge.jwbf.actions.Get;
-import net.sourceforge.jwbf.actions.util.HttpAction;
-import net.sourceforge.jwbf.actions.util.ProcessException;
-import net.sourceforge.jwbf.contentRep.SimpleArticle;
+import net.sourceforge.jwbf.core.actions.ContentProcessable;
+import net.sourceforge.jwbf.core.actions.Get;
+import net.sourceforge.jwbf.core.actions.util.HttpAction;
+import net.sourceforge.jwbf.core.actions.util.ProcessException;
+import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
 
 import org.apache.log4j.Logger;
 

@@ -1,14 +1,11 @@
-package net.sourceforge.jwbf.live.zim;
+package net.sourceforge.jwbf.zim.live;
 
 import java.io.File;
-
-import net.sourceforge.jwbf.bots.ZimWikiBot;
-import net.sourceforge.jwbf.live.GeneralArticleTest;
 
 import org.apache.log4j.PropertyConfigurator;
 import org.junit.Before;
 import org.junit.BeforeClass;
-public class BasicTest extends GeneralArticleTest {
+public class BasicTest {
 	
 	@BeforeClass
 	public static void setUp() throws Exception {
@@ -19,7 +16,7 @@ public class BasicTest extends GeneralArticleTest {
 		if (!(dir.isDirectory() && dir.exists())) {
 			throw new Exception("no testdir");
 		}
-		bots.add(new ZimWikiBot(dir));
+//		bots.add(new ZimWikiBot(dir));
 		dir.delete();
 	}
 	@Before

@@ -18,14 +18,14 @@
  * 
  */
 
-package net.sourceforge.jwbf.actions.zim;
+package net.sourceforge.jwbf.zim.actions;
 
 import java.io.File;
 import java.io.FilenameFilter;
 import java.util.Iterator;
 import java.util.Vector;
 
-import net.sourceforge.jwbf.bots.ZimWikiBot;
+import net.sourceforge.jwbf.zim.bots.ZimWikiBot;
 
 /**
  * 
