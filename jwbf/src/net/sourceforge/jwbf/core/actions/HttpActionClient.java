@@ -27,7 +27,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import net.sourceforge.jwbf.core.JWBF;
+import net.sourceforge.jwbf.JWBF;
 import net.sourceforge.jwbf.core.actions.util.ActionException;
 import net.sourceforge.jwbf.core.actions.util.CookieException;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;

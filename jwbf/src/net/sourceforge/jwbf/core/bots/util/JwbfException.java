@@ -24,7 +24,7 @@ package net.sourceforge.jwbf.core.bots.util;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 
-import net.sourceforge.jwbf.core.JWBF;
+import net.sourceforge.jwbf.JWBF;
 
 /**
  * @author Thomas Stock

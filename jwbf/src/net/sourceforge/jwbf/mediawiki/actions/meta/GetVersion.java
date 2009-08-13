@@ -13,7 +13,7 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.util.Iterator;
 
-import net.sourceforge.jwbf.core.JWBF;
+import net.sourceforge.jwbf.JWBF;
 import net.sourceforge.jwbf.core.actions.Get;
 import net.sourceforge.jwbf.core.actions.util.ActionException;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;

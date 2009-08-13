@@ -1,8 +1,8 @@
 package net.sourceforge.jwbf.core.exception;
 
+import net.sourceforge.jwbf.JWBF;
 import net.sourceforge.jwbf.TestHelper;
-import net.sourceforge.jwbf.core.JWBF;
-import net.sourceforge.jwbf.core.bots.util.JwbfException;
+import net.sourceforge.jwbf.core.contentRep.Article;
 
 import org.apache.log4j.PropertyConfigurator;
 import org.junit.BeforeClass;
@@ -24,14 +24,14 @@ public class SimpleTest extends TestHelper {
 
 	@Test
 	public void basic1() throws Exception {
-
-		System.out.println(JWBF.getArtifactId(SimpleTest.class));
+		JWBF.printVersion();
+		System.out.println(JWBF.getArtifactId(Article.class));
 		
-		try {
-			throw new JwbfException("sdf"); // FIXME doesn't work good
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+//		try {
+//			throw new JwbfException("sdf"); // FIXME doesn't work good
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
 	
 
 	}

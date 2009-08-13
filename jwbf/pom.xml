@@ -75,6 +75,7 @@
 							</classesDirectory>
 							<classifier>core</classifier>
 							<includes>
+								<include>net/sourceforge/jwbf/JWBF*</include>
 								<include>net/sourceforge/jwbf/core/**</include>
 							</includes>
 						</configuration>
@@ -90,7 +91,11 @@
 								${project.build.outputDirectory}
 							</classesDirectory>
 							<classifier>mediawiki</classifier>
+							<archive>
+            					<manifestFile>${project.build.directory}/MANIFEST.MF</manifestFile>
+         	 				</archive>
 							<includes>
+								<include>net/sourceforge/jwbf/JWBF*</include>
 								<include>net/sourceforge/jwbf/core/**</include>
 								<include>net/sourceforge/jwbf/mediawiki/**</include>
 							</includes>
@@ -157,6 +162,7 @@
             </configuration>
 			</execution>
 		</executions>
+		
 		<dependencies>
                 <dependency>
                  <groupId>sun.jdk</groupId>

@@ -1,7 +1,7 @@
 package net.sourceforge.jwbf.mediawiki;
 
 import static org.junit.Assert.assertEquals;
-import net.sourceforge.jwbf.core.JWBF;
+import net.sourceforge.jwbf.JWBF;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 
