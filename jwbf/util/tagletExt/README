@@ -1,7 +1,0 @@
-to create javadoc add following parameters
-
--taglet CustomTaglets -tagletpath <absolute path to>/lib/tagletExt.jar
-
-like:
--taglet CustomTaglets -tagletpath /home/~/jwbf/lib/tagletExt.jar
--taglet CustomTaglets -tagletpath c:\jwbf\lib\tagletExt.jar
