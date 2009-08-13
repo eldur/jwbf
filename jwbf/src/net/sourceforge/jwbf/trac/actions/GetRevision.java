@@ -16,7 +16,7 @@
  * Contributors:
  * 
  */
-package net.sourceforge.jwbf.core.actions.trac;
+package net.sourceforge.jwbf.trac.actions;
 
 import java.text.ParseException;
 import java.util.regex.Matcher;

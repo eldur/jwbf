@@ -1,4 +1,4 @@
-package net.sourceforge.jwbf.core.bots;
+package net.sourceforge.jwbf.trac.bots;
 ///**
 // * 
 // */

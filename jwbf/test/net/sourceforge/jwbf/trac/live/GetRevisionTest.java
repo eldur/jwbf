@@ -1,3 +1,4 @@
+package net.sourceforge.jwbf.trac.live;
 //package net.sourceforge.jwbf.live.trac;
 //
 //import static org.junit.Assert.assertTrue;
