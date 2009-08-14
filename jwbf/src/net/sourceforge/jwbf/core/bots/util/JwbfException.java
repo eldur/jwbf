@@ -86,7 +86,7 @@ public class JwbfException extends Exception {
 		
 		Class < ? > clazz = getStackTraceClass();
 
-		return "( " + JWBF.getArtifactId(clazz) + "-" + JWBF.getVersion(clazz) + " )";
+		return "( " + JWBF.getPartId(clazz) + "-" + JWBF.getVersion(clazz) + " )";
 	}
 	/**
 	 * {@inheritDoc}

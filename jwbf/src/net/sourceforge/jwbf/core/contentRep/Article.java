@@ -66,7 +66,7 @@ public class Article extends SimpleArticle {
 			setReload(revisionIdReload);
 			try {
 				setRevisionId(bot.readData(super.getTitle()).getRevisionId());
-				System.err.println("RELOAD REV ID " + super.getRevisionId()); // FIXME RM
+				// TODO does a revision reload test exists ?
 			} catch (JwbfException e) {
 				e.printStackTrace();
 			}
