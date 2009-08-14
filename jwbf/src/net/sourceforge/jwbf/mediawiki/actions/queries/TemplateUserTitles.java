@@ -144,7 +144,7 @@ public class TemplateUserTitles extends TitleQuery<String> {
 	 * @return empty string
 	 */
 	public String processAllReturningText(final String s) throws ProcessException {
-		System.out.println(s);
+//		System.out.println(s);
 		parseArticleTitles(s);
 		parseHasMore(s);
 		titleIterator = titleCollection.iterator();

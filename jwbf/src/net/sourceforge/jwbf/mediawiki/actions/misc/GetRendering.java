@@ -113,7 +113,7 @@ public class GetRendering extends MWAction {
 			Element element = el.next();
 			
 			if (element.getQualifiedName().equalsIgnoreCase(name)) {
-				System.out.println(element.getQualifiedName());
+//				System.out.println(element.getQualifiedName());
 				return element;
 
 			} else {

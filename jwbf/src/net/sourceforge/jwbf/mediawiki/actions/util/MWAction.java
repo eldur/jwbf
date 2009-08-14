@@ -124,7 +124,6 @@ public abstract class MWAction implements ContentProcessable {
 			return v;
 		} else if (clazz.isAnnotationPresent(SupportedBy.class)) {
 			SupportedBy sb = clazz.getAnnotation(SupportedBy.class);
-			System.err.println();
 			if (log.isDebugEnabled()) {
 				Version [] vtemp = sb.value();
 				String sv = "";

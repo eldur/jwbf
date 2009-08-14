@@ -212,22 +212,17 @@ public class PostModifyContent extends MWAction {
 	private void getWpValues(final String text, Hashtable<String, String> tab) {
 
 		String[] tParts = text.split("\n");
-		// System.out.println(tParts.length);
 		for (int i = 0; i < tParts.length; i++) {
 			if (tParts[i].indexOf("wpEditToken") > 0) {
 				// \<input type='hidden' value=\"(.*?)\" name=\"wpEditToken\"
 				int begin = tParts[i].indexOf("value") + 7;
 				int end = tParts[i].indexOf("name") - 2;
-				// System.out.println(line.substring(begin, end));
-				// System.out.println("read wp token:" + tParts[i]);
 				tab.put("wpEditToken", tParts[i].substring(begin, end));
 
 			} else if (tParts[i].indexOf("wpEdittime") > 0) {
 				// value="(\d+)" name=["\']wpEdittime["\']
 				int begin = tParts[i].indexOf("value") + 7;
 				int end = tParts[i].indexOf("name") - 2;
-				// System.out.println( "read wp edit: " +
-				// tParts[i].substring(begin, end));
 
 				tab.put("wpEdittime", tParts[i].substring(begin, end));
 
@@ -235,7 +230,6 @@ public class PostModifyContent extends MWAction {
 				// value="(\d+)" name=["\']wpStarttime["\']
 				int begin = tParts[i].indexOf("value") + 7;
 				int end = tParts[i].indexOf("name") - 2;
-				// System.out.println("read wp start:" + tParts[i]);
 
 				tab.put("wpStarttime", tParts[i].substring(begin, end));
 

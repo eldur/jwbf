@@ -46,7 +46,7 @@ import org.apache.log4j.Logger;
  * <pre>
  * MediaWikiBot b = new MediaWikiBot(&quot;http://yourwiki.org&quot;);
  * b.login(&quot;Username&quot;, &quot;Password&quot;);
- * System.out.writeln(b.readContentOf(&quot;Main Page&quot;).getText());
+ * System.out.println(b.readContent(&quot;Main Page&quot;).getText());
  * </pre>
  * 
  * @author Thomas Stock
