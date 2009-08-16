@@ -12,7 +12,6 @@ import net.sourceforge.jwbf.core.bots.HttpBot;
 import net.sourceforge.jwbf.core.bots.WikiBot;
 import net.sourceforge.jwbf.core.bots.util.CacheHandler;
 import net.sourceforge.jwbf.core.contentRep.Article;
-import net.sourceforge.jwbf.core.contentRep.ContentAccessable;
 import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
 import net.sourceforge.jwbf.core.contentRep.Userinfo;
 import net.sourceforge.jwbf.inyoka.actions.GetRevision;
@@ -62,7 +61,7 @@ public class InyokaWikiBot extends HttpBot implements WikiBot {
 	}
 
 
-	public void writeContent(ContentAccessable sa) throws ActionException,
+	public void writeContent(SimpleArticle sa) throws ActionException,
 			ProcessException {
 		throw new ActionException("Writing is not supported");
 		

@@ -30,7 +30,6 @@ import net.sourceforge.jwbf.core.actions.util.ProcessException;
 import net.sourceforge.jwbf.core.bots.WikiBot;
 import net.sourceforge.jwbf.core.bots.util.CacheHandler;
 import net.sourceforge.jwbf.core.contentRep.Article;
-import net.sourceforge.jwbf.core.contentRep.ContentAccessable;
 import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
 import net.sourceforge.jwbf.core.contentRep.Userinfo;
 /**
@@ -134,7 +133,7 @@ public class ZimWikiBot implements WikiBot {
 		return sa;
 	}
 
-	public void writeContent(ContentAccessable sa) throws ActionException,
+	public void writeContent(SimpleArticle sa) throws ActionException,
 			ProcessException {
 		// TODO Auto-generated method stub
 

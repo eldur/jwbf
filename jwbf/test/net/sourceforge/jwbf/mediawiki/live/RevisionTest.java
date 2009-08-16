@@ -2,6 +2,7 @@ package net.sourceforge.jwbf.mediawiki.live;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import net.sourceforge.jwbf.TestHelper;
 import net.sourceforge.jwbf.core.bots.util.JwbfException;
 import net.sourceforge.jwbf.core.contentRep.ArticleMeta;
 import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
@@ -13,7 +14,6 @@ import net.sourceforge.jwbf.mediawiki.actions.editing.PostModifyContent;
 import net.sourceforge.jwbf.mediawiki.actions.util.ApiException;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 
-import org.apache.log4j.PropertyConfigurator;
 import org.junit.BeforeClass;
 import org.junit.Test;
 /**
@@ -31,8 +31,7 @@ public class RevisionTest extends LiveTestFather {
 	 */
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		PropertyConfigurator.configureAndWatch("test4log4j.properties",
-				60 * 1000);
+		TestHelper.prepareLogging();
 		addInitSupporterVersions(GetRevision.class);
 		addInitSupporterVersions(PostModifyContent.class);
 		addInitSupporterVersions(GetApiToken.class);

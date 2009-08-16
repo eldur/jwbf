@@ -24,12 +24,12 @@ import static org.junit.Assert.assertTrue;
 
 import java.net.MalformedURLException;
 
+import net.sourceforge.jwbf.TestHelper;
 import net.sourceforge.jwbf.core.actions.util.ActionException;
 import net.sourceforge.jwbf.mediawiki.LiveTestFather;
 import net.sourceforge.jwbf.mediawiki.actions.login.PostLoginOld;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 
-import org.apache.log4j.PropertyConfigurator;
 import org.junit.BeforeClass;
 import org.junit.Test;
 /**
@@ -48,8 +48,7 @@ public class LoginTest extends LiveTestFather {
 	 */
 	@BeforeClass
 	public static void setUp() throws Exception {
-		PropertyConfigurator.configureAndWatch("test4log4j.properties",
-				60 * 1000);
+		TestHelper.prepareLogging();
 	}
 	
 	/**

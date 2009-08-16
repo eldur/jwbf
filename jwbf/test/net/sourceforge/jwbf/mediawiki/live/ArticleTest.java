@@ -1,28 +1,26 @@
 package net.sourceforge.jwbf.mediawiki.live;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotSame;
-import static org.junit.Assert.assertTrue;
 
 import java.util.Collection;
 import java.util.Date;
 import java.util.Vector;
 
+import net.sourceforge.jwbf.TestHelper;
 import net.sourceforge.jwbf.core.contentRep.Article;
 import net.sourceforge.jwbf.mediawiki.LiveTestFather;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.actions.util.VersionException;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 
-import org.apache.log4j.PropertyConfigurator;
+import org.apache.log4j.Logger;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class ArticleTest extends LiveTestFather {
 
-	protected static Collection<MediaWikiBot> bots = new Vector<MediaWikiBot>();
-
+	
 	public ArticleTest() {
 	}
 
@@ -32,9 +30,13 @@ public class ArticleTest extends LiveTestFather {
 	 */
 	@BeforeClass
 	public static void setUp() throws Exception {
-		PropertyConfigurator.configureAndWatch("test4log4j.properties",
-				60 * 1000);
-		
+		TestHelper.prepareLogging();
+	}
+	
+	
+	
+	private Collection<MediaWikiBot> getTestBots() throws Exception {
+		Collection<MediaWikiBot> bots = new Vector<MediaWikiBot>();
 		bots.add(getMediaWikiBot(Version.MW1_09, true));
 		bots.add(getMediaWikiBot(Version.MW1_10, true));
 		bots.add(getMediaWikiBot(Version.MW1_11, true));
@@ -42,6 +44,7 @@ public class ArticleTest extends LiveTestFather {
 		bots.add(getMediaWikiBot(Version.MW1_13, true));
 		bots.add(getMediaWikiBot(Version.MW1_14, true));
 		bots.add(getMediaWikiBot(Version.MW1_15, true));
+		return bots;
 	}
 	
 	/**
@@ -50,6 +53,8 @@ public class ArticleTest extends LiveTestFather {
 	 */
 	@Test
 	public final void readWriteDelete() throws Exception {
+		
+		Collection<MediaWikiBot> bots = getTestBots();
 		
 		for (MediaWikiBot bot : bots) {
 
@@ -91,6 +96,8 @@ public class ArticleTest extends LiveTestFather {
 	 */
 	@Test
 	public final void meta() throws Exception {
+		
+		Collection<MediaWikiBot> bots = getTestBots();
 		
 		for (MediaWikiBot bot : bots) {
 
@@ -140,32 +147,41 @@ public class ArticleTest extends LiveTestFather {
 	}
 	
 	@Test
-	public final void articleTest() throws Exception {
-		System.out.println("-- > Begin articleTest");
+	public final void articleReadFreqTest() throws Exception {
+		Logger log = Logger.getLogger(getClass());
+		log.debug("-- > Begin articleTest");
 		// get a MediaWikiBot
-		MediaWikiBot bot = bots.iterator().next();
+		MediaWikiBot bot = getMediaWikiBot(Version.getLast(), true);
 		// create new article on this wikibot
 		Article a = new Article(bot, "Test");
+		
+		a.getText();
+		a.getText();
+		a.getText();
 		a.setText("a");
+		a.getText();
+		a.getText();
 		final String aText = a.getText();
+		log.debug("pre save");
 		// save content
 		a.save();
-		assertFalse(a.isMinorEdit());
-		final String firstEdit = a.getRevisionId();
-		a.setMinorEdit(true);
-		a.save("comment");
-		final String secondEdit = a.getRevisionId();
-		assertEquals("same rev ID", firstEdit, secondEdit);
-		a.addText(getRandom(16));
-		String aaText = a.getText();
-		a.save();
-		final String thirdEdit = a.getRevisionId();
-		assertTrue(a.isMinorEdit());
-		assertFalse("text should be differ:\n" + aaText + "\n" + aText , aaText.equals(aText));
-		assertTrue("dif rev ID, both: " + thirdEdit
-				, Integer.parseInt(firstEdit) != Integer.parseInt(thirdEdit));
-		
-		System.out.println("-- > End articleTest");
+		log.debug("after save");
+//		assertFalse(a.isMinorEdit());
+//		final String firstEdit = a.getRevisionId();
+//		a.setMinorEdit(true);
+//		a.save("comment");
+//		final String secondEdit = a.getRevisionId();
+//		assertEquals("same rev ID", firstEdit, secondEdit);
+//		a.addText(getRandom(16));
+//		String aaText = a.getText();
+//		a.save();
+//		final String thirdEdit = a.getRevisionId();
+//		assertTrue(a.isMinorEdit());
+//		assertFalse("text should be differ:\n" + aaText + "\n" + aText , aaText.equals(aText));
+//		assertTrue("dif rev ID, both: " + thirdEdit
+//				, Integer.parseInt(firstEdit) != Integer.parseInt(thirdEdit));
+//		
+		log.debug("--> end article test");
 	}
 		
 	

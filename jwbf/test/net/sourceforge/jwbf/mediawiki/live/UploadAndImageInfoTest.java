@@ -31,6 +31,7 @@ import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
 
+import net.sourceforge.jwbf.TestHelper;
 import net.sourceforge.jwbf.core.actions.util.ActionException;
 import net.sourceforge.jwbf.core.actions.util.ProcessException;
 import net.sourceforge.jwbf.mediawiki.LiveTestFather;
@@ -41,7 +42,6 @@ import net.sourceforge.jwbf.mediawiki.actions.util.VersionException;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 import net.sourceforge.jwbf.mediawiki.contentRep.SimpleFile;
 
-import org.apache.log4j.PropertyConfigurator;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -61,8 +61,7 @@ public class UploadAndImageInfoTest extends LiveTestFather {
 	 */
 	@BeforeClass
 	public static void setUp() throws Exception {
-		PropertyConfigurator.configureAndWatch("test4log4j.properties",
-				60 * 1000);
+		TestHelper.prepareLogging();
 		addInitSupporterVersions(FileUpload.class);
 		addInitSupporterVersions(ImageInfo.class);
 	}

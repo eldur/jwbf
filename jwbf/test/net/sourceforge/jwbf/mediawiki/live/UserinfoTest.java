@@ -3,13 +3,13 @@
  */
 package net.sourceforge.jwbf.mediawiki.live;
 
+import net.sourceforge.jwbf.TestHelper;
 import net.sourceforge.jwbf.core.contentRep.Userinfo;
 import net.sourceforge.jwbf.mediawiki.LiveTestFather;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.actions.meta.GetUserinfo;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 
-import org.apache.log4j.PropertyConfigurator;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -27,8 +27,7 @@ public class UserinfoTest extends LiveTestFather {
 	 */
 	@BeforeClass
 	public static void setUp() throws Exception {
-		PropertyConfigurator.configureAndWatch("test4log4j.properties",
-				60 * 1000);
+		TestHelper.prepareLogging();
 		addInitSupporterVersions(GetUserinfo.class);
 	}
 	private void testDetails(MediaWikiBot bot, String userName) throws Exception {
@@ -37,7 +36,7 @@ public class UserinfoTest extends LiveTestFather {
 		
 		switch (bot.getVersion()) {
 		case MW1_09:
-		case MW1_10:	
+		case MW1_10:
 			break;
 
 		default:
@@ -46,12 +45,10 @@ public class UserinfoTest extends LiveTestFather {
 			registerTestedVersion(GetUserinfo.class, bot.getVersion());
 		}
 		
-		
-		
 	}
 
 	/**
-	 * Test category read. Test category must have more then 50 members.
+	 *
 	 * @throws Exception a
 	 */
 	@Test
@@ -62,7 +59,7 @@ public class UserinfoTest extends LiveTestFather {
 		testDetails(bot, getWikiUser(Version.MW1_09));
 	}
 	/**
-	 * Test category read. Test category must have more then 50 members.
+	 * 
 	 * @throws Exception a
 	 */
 	@Test
@@ -75,7 +72,7 @@ public class UserinfoTest extends LiveTestFather {
 	}
 	
 	/**
-	 * Test category read. Test category must have more then 50 members.
+	 * 
 	 * @throws Exception a
 	 */
 	@Test
@@ -88,7 +85,7 @@ public class UserinfoTest extends LiveTestFather {
 	}
 	
 	/**
-	 * Test category read. Test category must have more then 50 members.
+	 * 
 	 * @throws Exception a
 	 */
 	@Test
@@ -100,7 +97,7 @@ public class UserinfoTest extends LiveTestFather {
 		testDetails(bot, getWikiUser(Version.MW1_12));
 	}
 	/**
-	 * Test category read. Test category must have more then 50 members.
+	 * 
 	 * @throws Exception a
 	 */
 	@Test
@@ -111,7 +108,7 @@ public class UserinfoTest extends LiveTestFather {
 		testDetails(bot, getWikiUser(Version.MW1_13));
 	}
 	/**
-	 * Test category read. Test category must have more then 50 members.
+	 * 
 	 * @throws Exception a
 	 */
 	@Test
@@ -122,7 +119,7 @@ public class UserinfoTest extends LiveTestFather {
 		testDetails(bot, getWikiUser(Version.MW1_14));
 	}
 	/**
-	 * Test category read. Test category must have more then 50 members.
+	 * 
 	 * @throws Exception a
 	 */
 	@Test
@@ -134,7 +131,7 @@ public class UserinfoTest extends LiveTestFather {
 	}
 	
 	/**
-	 * Test category read. Test category must have more then 50 members.
+	 * 
 	 * @throws Exception a
 	 */
 	@Test

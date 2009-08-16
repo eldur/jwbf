@@ -35,6 +35,7 @@ import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.core.actions.util.ProcessException;
 import net.sourceforge.jwbf.core.bots.util.JwbfException;
 import net.sourceforge.jwbf.core.contentRep.ContentAccessable;
+import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.actions.util.SupportedBy;
@@ -72,7 +73,7 @@ public class PostModifyContent extends MWAction {
 	 * @throws ProcessException a
 	 * @throws ActionException a
 	 */
-	public PostModifyContent(MediaWikiBot bot, final ContentAccessable a) throws ActionException, ProcessException {
+	public PostModifyContent(MediaWikiBot bot, final SimpleArticle a) throws ActionException, ProcessException {
 		super(bot.getVersion());
 		if (a.getTitle().length() < 1) {
 			throw new ActionException("imposible request, no title");

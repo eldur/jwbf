@@ -1,6 +1,7 @@
 package net.sourceforge.jwbf.mediawiki.live;
 
 import static org.junit.Assert.assertTrue;
+import net.sourceforge.jwbf.TestHelper;
 import net.sourceforge.jwbf.core.actions.util.ActionException;
 import net.sourceforge.jwbf.core.contentRep.Article;
 import net.sourceforge.jwbf.mediawiki.LiveTestFather;
@@ -10,7 +11,6 @@ import net.sourceforge.jwbf.mediawiki.actions.util.VersionException;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 import net.sourceforge.jwbf.mediawiki.contentRep.LogItem;
 
-import org.apache.log4j.PropertyConfigurator;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -30,8 +30,7 @@ public class LogEventsTest extends LiveTestFather {
 	 */
 	@BeforeClass
 	public static void setUp() throws Exception {
-		PropertyConfigurator.configureAndWatch("test4log4j.properties",
-				60 * 1000);
+		TestHelper.prepareLogging();
 		addInitSupporterVersions(LogEvents.class);
 
 	}

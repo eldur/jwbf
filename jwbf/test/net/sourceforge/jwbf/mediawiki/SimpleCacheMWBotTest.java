@@ -8,6 +8,7 @@ import static org.junit.Assert.fail;
 
 import java.io.File;
 
+import net.sourceforge.jwbf.TestHelper;
 import net.sourceforge.jwbf.core.bots.util.CacheHandler;
 import net.sourceforge.jwbf.core.bots.util.SimpleCachTest;
 import net.sourceforge.jwbf.core.bots.util.SimpleCache;
@@ -16,7 +17,6 @@ import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 
-import org.apache.log4j.PropertyConfigurator;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -34,8 +34,7 @@ public class SimpleCacheMWBotTest extends LiveTestFather {
 	
 	@BeforeClass
 	public static void setUp() throws Exception {
-		PropertyConfigurator.configureAndWatch("test4log4j.properties",
-				60 * 1000);
+		TestHelper.prepareLogging();
 	}
 	
 	@Before
@@ -51,8 +50,7 @@ public class SimpleCacheMWBotTest extends LiveTestFather {
 	public final void cacheTestWithBot() throws Exception {
 		
 		MediaWikiBot bot;
-		bot = new MediaWikiBot(getValue("wikiMW1_14_url"));
-		bot.login(getValue("wikiMW1_14_user"), getValue("wikiMW1_14_pass"));
+		bot = getMediaWikiBot(Version.getLast(), true);
 		
 		CacheHandler c = new SimpleCache(f, 10000);
 		bot.setCacheHandler(c);
@@ -76,9 +74,7 @@ public class SimpleCacheMWBotTest extends LiveTestFather {
 	public final void cacheTestSpeedBonus() throws Exception {
 		
 		MediaWikiBot bot;
-		bot = new MediaWikiBot(getValue("wikiMW1_14_url"));
-		bot.login(getValue("wikiMW1_14_user"), getValue("wikiMW1_14_pass"));
-		
+		bot = getMediaWikiBot(Version.getLast(), true);
 		
 		CacheHandler c = new SimpleCache(f, 1000);
 		bot.setCacheHandler(c);
@@ -115,7 +111,7 @@ public class SimpleCacheMWBotTest extends LiveTestFather {
 	public final void cacheModifcationTest() throws Exception {
 		
 		MediaWikiBot bot;
-		bot = getMediaWikiBot(Version.MW1_15, true);
+		bot = getMediaWikiBot(Version.getLast(), true);
 		CacheHandler c = new SimpleCache(f, 10000);
 		bot.setCacheHandler(c);
 		Article a = new Article(bot, label);
@@ -149,8 +145,7 @@ public class SimpleCacheMWBotTest extends LiveTestFather {
 	public final void cacheTestTimeout() throws Exception {
 		
 		MediaWikiBot bot;
-		bot = new MediaWikiBot(getValue("wikiMW1_14_url"));
-		bot.login(getValue("wikiMW1_14_user"), getValue("wikiMW1_14_pass"));
+		bot = getMediaWikiBot(Version.getLast(), true);
 		CacheHandler c = new SimpleCache(f, 1000);
 		bot.setCacheHandler(c);
 		SimpleArticle a = new SimpleArticle(label);

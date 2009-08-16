@@ -2,15 +2,17 @@ package net.sourceforge.jwbf.zim.live;
 
 import java.io.File;
 
-import org.apache.log4j.PropertyConfigurator;
+import net.sourceforge.jwbf.TestHelper;
+
+import org.apache.log4j.Logger;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Test;
 public class BasicTest {
 	
 	@BeforeClass
 	public static void setUp() throws Exception {
-		PropertyConfigurator.configureAndWatch("test4log4j.properties",
-				60 * 1000);
+		TestHelper.prepareLogging();
 		File dir = new File("zimTest");
 		dir.mkdir();
 		if (!(dir.isDirectory() && dir.exists())) {
@@ -23,6 +25,10 @@ public class BasicTest {
 	public void doNothing() {
 		
 	}
-	
+	@Test
+	public void doLog() {
+		Logger log = Logger.getLogger(getClass());
+		log.info("Hello");
+	}
 	
 }

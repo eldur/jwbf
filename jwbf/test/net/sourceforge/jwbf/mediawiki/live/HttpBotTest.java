@@ -4,11 +4,10 @@ import static org.junit.Assert.assertTrue;
 
 import java.net.URL;
 
+import net.sourceforge.jwbf.TestHelper;
 import net.sourceforge.jwbf.core.bots.HttpBot;
 import net.sourceforge.jwbf.mediawiki.LiveTestFather;
 
-import org.apache.log4j.Logger;
-import org.apache.log4j.PropertyConfigurator;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -16,7 +15,6 @@ import org.junit.Test;
 public class HttpBotTest extends LiveTestFather {
 
 
-	private Logger log = Logger.getLogger(getClass());
 	private HttpBot bot;
 	
 	/**
@@ -25,8 +23,7 @@ public class HttpBotTest extends LiveTestFather {
 	 */
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		PropertyConfigurator.configureAndWatch("test4log4j.properties",
-				60 * 1000);
+		TestHelper.prepareLogging();
 		
 	}
 	@Before

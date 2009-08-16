@@ -61,6 +61,8 @@ public class HttpActionClient {
 
 	private Logger log = Logger.getLogger(getClass());
 
+	private int prevHash = 0;
+	
 	/**
 	 * 
 	 * @param client
@@ -203,7 +205,7 @@ public class HttpActionClient {
 	private String post(HttpMethod authpost, ContentProcessable cp, HttpAction ha)
 			throws IOException, ProcessException,
 			CookieException {
-		debug(authpost, ha);
+		debug(authpost, ha, cp);
 		showCookies(client);
 		
 		authpost.getParams().setParameter("http.protocol.content-charset",
@@ -280,7 +282,7 @@ public class HttpActionClient {
 	private String get(HttpMethod authgets, ContentProcessable cp, HttpAction ha)
 			throws IOException, CookieException, ProcessException {
 		showCookies(client);
-		debug(authgets, ha);
+		debug(authgets, ha, cp);
 		String out = "";
 		authgets.getParams().setParameter("http.protocol.content-charset",
 				ha.getCharset());
@@ -373,17 +375,26 @@ public class HttpActionClient {
 	}
 
 	
-	private void debug(HttpMethod e, HttpAction ha) {
+	private void debug(HttpMethod e, HttpAction ha, ContentProcessable cp) {
 		if (log.isDebugEnabled()) {
+			
+			String continueing = "";
+			if (prevHash == cp.hashCode()) {
+				continueing = " [continuing req]";
+			} else {
+				continueing = "";
+			}
+			prevHash = cp.hashCode();
 			String epath = e.getPath();
 			int sl = epath.lastIndexOf("/");
 			epath = epath.substring(0, sl);
 			String type = "";
 			if (ha instanceof Post) {
-				type = "(POST)";
+				type = "(POST ";
 			} else if (ha instanceof Get) {
-				type = "(GET)";
+				type = "(GET ";
 			}
+			type += cp.getClass().getSimpleName() + ")" + continueing;
 			log.debug("message " + type + " is: \n\t own: " 
 					+  client.getHostConfiguration().getHostURL() 
 					+ epath + "\n\t act: " + ha.getRequest());

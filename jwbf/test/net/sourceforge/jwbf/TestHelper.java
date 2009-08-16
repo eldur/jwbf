@@ -1,6 +1,9 @@
 package net.sourceforge.jwbf;
 
+import java.io.File;
 import java.util.Random;
+
+import org.apache.log4j.PropertyConfigurator;
 
 public abstract class TestHelper {
 
@@ -33,5 +36,17 @@ public abstract class TestHelper {
 	    }
 		return out;
 	}
+	
+	public static void prepareLogging() {
+		File f = new File("test4log4j.properties");
+		if (!f.exists()) {
+			System.err.println("No logfile ! exit");
+			System.exit(1);
+		}
+		PropertyConfigurator.configureAndWatch( f.getAbsolutePath(),
+				60 * 1000);
+	}
 
+	
+	
 }

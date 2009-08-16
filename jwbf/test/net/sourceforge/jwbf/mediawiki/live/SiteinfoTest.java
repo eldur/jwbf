@@ -21,6 +21,7 @@ package net.sourceforge.jwbf.mediawiki.live;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import net.sourceforge.jwbf.TestHelper;
 import net.sourceforge.jwbf.core.contentRep.Article;
 import net.sourceforge.jwbf.mediawiki.LiveTestFather;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
@@ -28,7 +29,6 @@ import net.sourceforge.jwbf.mediawiki.actions.meta.GetVersion;
 import net.sourceforge.jwbf.mediawiki.actions.meta.Siteinfo;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 
-import org.apache.log4j.PropertyConfigurator;
 import org.junit.BeforeClass;
 import org.junit.Test;
 /**
@@ -46,8 +46,7 @@ public class SiteinfoTest extends LiveTestFather {
 	 */
 	@BeforeClass
 	public static void setUp() throws Exception {
-		PropertyConfigurator.configureAndWatch("test4log4j.properties",
-				60 * 1000);
+		TestHelper.prepareLogging();
 		addInitSupporterVersions(GetVersion.class);
 		addInitSupporterVersions(Siteinfo.class);
 	}
@@ -122,6 +121,20 @@ public class SiteinfoTest extends LiveTestFather {
 		
 		bot = getMediaWikiBot(Version.MW1_13, true);
 		doTest(bot, Version.MW1_13);
+	}
+	
+	/**
+	 * Test get siteinfo on a MW.
+	 * Prepare a the wiki, that the siteinfopage is only readable if user is logged in.
+	 * @throws Exception a
+	 */
+	@Test
+	public final void siteInfoMW1x13Blocking() throws Exception {
+		
+		bot = getMediaWikiBot(Version.MW1_13, false);
+		assertEquals(Version.UNKNOWN, bot.getVersion());
+		bot.login(getWikiUser(Version.MW1_13), getWikiPass(Version.MW1_13));
+		assertEquals(Version.MW1_13, bot.getVersion());
 	}
 	
 	/**

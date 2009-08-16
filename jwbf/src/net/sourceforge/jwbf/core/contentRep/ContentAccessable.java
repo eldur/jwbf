@@ -52,10 +52,5 @@ public interface ContentAccessable {
 	 * @return the content of the article
 	 */
 	String getText();
-	/**
-	 * Default clone.
-	 * @return a
-	 * @throws CloneNotSupportedException on
-	 */
-	Object clone() throws CloneNotSupportedException;
+	
 }

@@ -254,7 +254,7 @@ public abstract class LiveTestFather extends TestHelper {
 	}
 	
 	protected static MediaWikiBot getMediaWikiBot(Version v, final boolean login) throws Exception {
-		MediaWikiBot bot =new MediaWikiBot(getWikiUrl(v));
+		MediaWikiBot bot = new MediaWikiBot(getWikiUrl(v));
 		if (login) {
 			bot.login(getWikiUser(v), getWikiPass(v));
 		}

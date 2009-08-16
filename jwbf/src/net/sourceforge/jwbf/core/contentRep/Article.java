@@ -1,5 +1,7 @@
 package net.sourceforge.jwbf.core.contentRep;
 
+import java.util.Date;
+
 import net.sourceforge.jwbf.core.actions.util.ActionException;
 import net.sourceforge.jwbf.core.actions.util.ProcessException;
 import net.sourceforge.jwbf.core.bots.WikiBot;
@@ -9,13 +11,15 @@ import net.sourceforge.jwbf.core.bots.util.JwbfException;
  * @author Thomas Stock
  *
  */
-public class Article extends SimpleArticle {
+public class Article implements ArticleMeta, ContentSetable {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 5892823865821665643L;
 	
 	private final WikiBot bot;
+	
+	private final SimpleArticle sa;
 	
 	private int reload = 0;
 	private final int textReload = 1 << 1;
@@ -35,117 +39,97 @@ public class Article extends SimpleArticle {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
 	public String getText() {
 		if (isReload(textReload)) {
+			System.err.println("RELOAD TEXT"); // FIXME RM
 			setReload(textReload);
 			try {
-				setText(bot.readData(super.getTitle()).getText());
+				setText(bot.readData(sa.getTitle()).getText());
 			} catch (JwbfException e) {
 				e.printStackTrace();
 			}
 		}
-		return super.getText();
+		return sa.getText();
 	}
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
 	public void setText(String text) {
 		setReload(textReload);
-		super.setText(text);
+		sa.setText(text);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
 	public String getRevisionId() {
 		
 		if (isReload(revisionIdReload)) {
 			setReload(revisionIdReload);
 			try {
-				setRevisionId(bot.readData(super.getTitle()).getRevisionId());
+				setRevisionId(bot.readData(sa.getTitle()).getRevisionId());
 				// TODO does a revision reload test exists ?
 			} catch (JwbfException e) {
 				e.printStackTrace();
 			}
 		}
-		return super.getRevisionId();
+		return sa.getRevisionId();
 	}
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
+
 	public void setRevisionId(String revId) {
 		setReload(revisionIdReload);
-		super.setRevisionId(revId);
+		sa.setRevisionId(revId);
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
+
 	public String getEditor() {
 		if (isReload(editorReload)) {
 			setReload(editorReload);
 			try {
-				setEditor(bot.readData(super.getTitle()).getEditor());
+				setEditor(bot.readData(sa.getTitle()).getEditor());
 			} catch (JwbfException e) {
 				e.printStackTrace();
 			}
 		}
-		return super.getEditor();
+		return sa.getEditor();
 	}
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
+	
 	public void setEditor(String editor) {
 		setReload(editorReload);
-		super.setEditor(editor);
+		sa.setEditor(editor);
 	}
 	
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
+
 	public String getEditSummary() {
 		if (isReload(editSumReload)) {
 			setReload(editSumReload);
 			try {
-				setEditSummary(bot.readData(super.getTitle()).getEditSummary());
+				setEditSummary(bot.readData(sa.getTitle()).getEditSummary());
 			} catch (JwbfException e) {
 				e.printStackTrace();
 			}
 		}
 
-		return super.getEditSummary();
-	}
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void setEditSummary(String s) {
-		setReload(editSumReload);
-		super.setEditSummary(s);
+		return sa.getEditSummary();
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
+	public void setEditSummary(String s) {
+		setReload(editSumReload);
+		sa.setEditSummary(s);
+	}
+	
+
 	public boolean isMinorEdit() {
 		if (isReload(editSumReload)) {
 			setReload(minorEditReload);
 			try {
-				setEditSummary(bot.readData(super.getTitle()).getEditSummary());
+				setEditSummary(bot.readData(sa.getTitle()).getEditSummary());
 			} catch (JwbfException e) {
 				e.printStackTrace();
 			}
 		}
-		return super.isMinorEdit();
+		return sa.isMinorEdit();
 	}
 	/**
 	 * 
@@ -154,15 +138,15 @@ public class Article extends SimpleArticle {
 	 */
 	public Article(WikiBot bot, String title) {
 		this.bot = bot;
-		setTitle(title);
+		sa = new SimpleArticle(title);
 	}
 	/**
 	 * 
 	 * @param bot the
-	 * @param ca the
+	 * @param sa the
 	 */
-	public Article(WikiBot bot, SimpleArticle ca) {
-		super(ca);
+	public Article(WikiBot bot, SimpleArticle sa) {
+		this.sa = sa;
 		this.bot = bot;
 	}
 	/**
@@ -172,8 +156,8 @@ public class Article extends SimpleArticle {
 	 * @param label the
 	 * @deprecated use {@link #Article(String)} and {@link #setText(String)} instead.
 	 */
-	public Article(WikiBot bot, String text, String label) {
-		super(text, label);
+	public Article(WikiBot bot, String text, String title) {
+		sa = new SimpleArticle(text, title);
 		this.bot = bot;
 	}
 	/**
@@ -182,11 +166,7 @@ public class Article extends SimpleArticle {
 	 * @throws ProcessException a
 	 */
 	public void save() throws ActionException, ProcessException {
-		try {
-			bot.writeContent((SimpleArticle) this.clone());
-		} catch (CloneNotSupportedException e) {
-			e.printStackTrace();
-		}
+		bot.writeContent(sa);
 		reload = 0; //reload ^ revisionIdReload; // TODO Reload only if revId is changed
 	}
 	/**
@@ -214,7 +194,7 @@ public class Article extends SimpleArticle {
 	 * @throws ProcessException a
 	 */
 	public void delete() throws ActionException, ProcessException {
-		bot.postDelete(getTitle());
+		bot.postDelete(sa.getTitle());
 	}
 	/**
 	 * @deprecated do not use this
@@ -229,6 +209,59 @@ public class Article extends SimpleArticle {
 	 */
 	public WikiBot getBot() {
 		return bot;
+	}
+	/**
+	 * {@inheritDoc}
+	 */
+	public String getTitle() {
+		// TODO is here a reload mechanism required ?
+		return sa.getTitle();
+	}
+	/**
+	 * {@inheritDoc}
+	 */
+	public Date getEditTimestamp() {
+		// TODO Auto-generated method stub
+		return sa.getEditTimestamp();
+	}
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean isRedirect() {
+		// TODO Auto-generated method stub
+		return sa.isRedirect();
+	}
+	/**
+	 * {@inheritDoc}
+	 */
+	public void addText(String text) {
+		sa.addText(text);
+		
+	}
+	/**
+	 * {@inheritDoc}
+	 */
+	public void addTextnl(String text) {
+		sa.addTextnl(text);
+		
+	}
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setMinorEdit(boolean minor) {
+		sa.setMinorEdit(minor);
+		
+	}
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setTitle(String title) {
+		sa.setTitle(title);
+		
+	}
+	
+	public SimpleArticle getSimpleArticle() {
+		return sa;
 	}
 	
 

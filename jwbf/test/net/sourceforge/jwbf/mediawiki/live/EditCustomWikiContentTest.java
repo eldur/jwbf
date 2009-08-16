@@ -23,6 +23,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.Random;
 
+import net.sourceforge.jwbf.TestHelper;
 import net.sourceforge.jwbf.core.contentRep.Article;
 import net.sourceforge.jwbf.core.contentRep.ArticleMeta;
 import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
@@ -31,7 +32,6 @@ import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.actions.editing.GetRevision;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 
-import org.apache.log4j.PropertyConfigurator;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -51,8 +51,7 @@ public class EditCustomWikiContentTest extends LiveTestFather {
 	 */
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		PropertyConfigurator.configureAndWatch("test4log4j.properties",
-				60 * 1000);
+		TestHelper.prepareLogging();;
 	}
 
 	/**
@@ -80,7 +79,7 @@ public class EditCustomWikiContentTest extends LiveTestFather {
 		} catch (RuntimeException e) { 
 			e.printStackTrace();
 		}
-		sa = bot.readContent(title);
+		sa = bot.readContent(title).getSimpleArticle();
 		//System.out.println("Content is: " + sa.getText());
 		int x = (Math.abs(new Random(System.currentTimeMillis()).nextInt()));
 		String text = "test " + x;
@@ -107,7 +106,7 @@ public class EditCustomWikiContentTest extends LiveTestFather {
 		} catch (RuntimeException e) {
 			e.printStackTrace();
 		}
-		SimpleArticle sa = bot.readContent(title);
+		SimpleArticle sa = bot.readContent(title).getSimpleArticle();
 		assertEquals(title, sa.getTitle());
 		assertEquals(summary, sa.getEditSummary());
 		assertEquals(bot.getUserinfo().getUsername(), sa.getEditor());
@@ -128,7 +127,7 @@ public class EditCustomWikiContentTest extends LiveTestFather {
 		sa.setText(utf8value);
 		bot.writeContent(sa);
 
-		sa = bot.readContent(title, GetRevision.CONTENT);
+		sa = bot.readContent(title, GetRevision.CONTENT).getSimpleArticle();
 
 		assertEquals(utf8value, sa.getText());
 	}
@@ -147,7 +146,7 @@ public class EditCustomWikiContentTest extends LiveTestFather {
 		sa.setText(utf8value);
 		bot.writeContent(sa);
 		doWait();
-		sa = bot.readContent(title);
+		sa = bot.readContent(title).getSimpleArticle();
 
 		assertEquals(utf8value, sa.getText());
 	}
@@ -167,7 +166,7 @@ public class EditCustomWikiContentTest extends LiveTestFather {
 		sa.setText(utf8value);
 		bot.writeContent(sa);
 		doWait();
-		sa = bot.readContent(title);
+		sa = bot.readContent(title).getSimpleArticle();
 
 		assertEquals(utf8value, sa.getText());
 		assertTrue(sa.getEditTimestamp() != null);

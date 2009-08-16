@@ -2,12 +2,12 @@ package net.sourceforge.jwbf.inyoka.live;
 
 
 	import static org.junit.Assert.assertTrue;
+import net.sourceforge.jwbf.TestHelper;
 import net.sourceforge.jwbf.core.contentRep.Article;
 import net.sourceforge.jwbf.inyoka.bots.InyokaWikiBot;
 import net.sourceforge.jwbf.mediawiki.LiveTestFather;
 
 import org.apache.log4j.Logger;
-import org.apache.log4j.PropertyConfigurator;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -21,8 +21,7 @@ import org.junit.Test;
 		 */
 		@BeforeClass
 		public static void setUpBeforeClass() throws Exception {
-			PropertyConfigurator.configureAndWatch("test4log4j.properties",
-					60 * 1000);
+			TestHelper.prepareLogging();
 		}
 
 		/**

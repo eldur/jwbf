@@ -155,7 +155,9 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
 
 			this.login = login;
 			loginChangeUserInfo = true;
-			loginChangeVersion = true;
+			if (getVersion() == Version.UNKNOWN) {
+			loginChangeVersion = true; 
+			}
 		} catch (ProcessException e) {
 			throw new ActionException(e.getLocalizedMessage());
 		} catch (RuntimeException e) {
@@ -287,19 +289,13 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
 	 * @see PostModifyContent
 	 * 
 	 */
-	public synchronized void writeContent(final ContentAccessable a)
+	public synchronized void writeContent(final SimpleArticle ax)
 			throws ActionException, ProcessException {
 		if (!isLoggedIn()) {
 			throw new ActionException("Please login first");
 		}
-		ContentAccessable ax;
-		try {
-			ax = (ContentAccessable) a.clone();
-		} catch (CloneNotSupportedException e) {
-			e.printStackTrace();
-			ax = a;
-		}
-		for (char invChar : INVALID_LABEL_CHARS) {
+		
+		for (char invChar : INVALID_LABEL_CHARS) { // FIXME Replace with a REGEX
 			if (ax.getTitle().contains(invChar + "")) {
 				throw new ActionException("Invalid character in label\"" 
 						+ ax.getTitle() + "\" : \"" + invChar + "\"");

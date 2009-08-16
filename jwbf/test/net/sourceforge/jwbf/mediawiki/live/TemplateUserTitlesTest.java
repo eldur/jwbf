@@ -7,6 +7,7 @@ import static org.junit.Assert.fail;
 import java.util.Collection;
 import java.util.Vector;
 
+import net.sourceforge.jwbf.TestHelper;
 import net.sourceforge.jwbf.core.bots.util.JwbfException;
 import net.sourceforge.jwbf.core.contentRep.Article;
 import net.sourceforge.jwbf.mediawiki.LiveTestFather;
@@ -15,7 +16,6 @@ import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.actions.queries.TemplateUserTitles;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 
-import org.apache.log4j.PropertyConfigurator;
 import org.junit.BeforeClass;
 import org.junit.Test;
 /**
@@ -34,8 +34,7 @@ public class TemplateUserTitlesTest extends LiveTestFather {
 	 */
 	@BeforeClass
 	public static void setUp() throws Exception {
-		PropertyConfigurator.configureAndWatch("test4log4j.properties",
-				60 * 1000);
+		TestHelper.prepareLogging();
 		addInitSupporterVersions(TemplateUserTitles.class);
 	}
 	

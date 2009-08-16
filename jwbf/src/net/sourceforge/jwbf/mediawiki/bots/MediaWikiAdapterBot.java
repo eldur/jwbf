@@ -31,7 +31,7 @@ import java.util.Iterator;
 
 import net.sourceforge.jwbf.core.actions.util.ActionException;
 import net.sourceforge.jwbf.core.actions.util.ProcessException;
-import net.sourceforge.jwbf.core.contentRep.ContentAccessable;
+import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
 import net.sourceforge.jwbf.mediawiki.actions.editing.FileUpload;
 import net.sourceforge.jwbf.mediawiki.actions.queries.AllPageTitles;
 import net.sourceforge.jwbf.mediawiki.actions.queries.BacklinkTitles;
@@ -416,7 +416,7 @@ public class MediaWikiAdapterBot extends MediaWikiBot {
 	 *             on problems with http, cookies and io
 	 * @throws ProcessException on access problems
 	 */
-	public final void writeMultContent(final Iterator<ContentAccessable> cav)
+	public final void writeMultContent(final Iterator<SimpleArticle> cav)
 			throws ActionException, ProcessException {
 		while (cav.hasNext()) {
 			writeContent(cav.next());

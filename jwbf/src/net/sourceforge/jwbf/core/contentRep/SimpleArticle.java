@@ -31,7 +31,7 @@ import java.util.regex.Pattern;
  * @author Thomas Stock
  * 
  */
-public class SimpleArticle implements ArticleMeta, Serializable, Cloneable {
+public class SimpleArticle implements ArticleMeta, Serializable, Cloneable, ContentSetable {
 
 	/**
 	 * 
@@ -133,10 +133,8 @@ public class SimpleArticle implements ArticleMeta, Serializable, Cloneable {
 		return editSummary;
 	}
 
-	/**
-	 * 
-	 * @param s
-	 *            the
+	/* (non-Javadoc)
+	 * @see net.sourceforge.jwbf.core.contentRep.ContentSetable#setEditSummary(java.lang.String)
 	 */
 	public void setEditSummary(final String s) {
 		this.editSummary = s;
@@ -149,10 +147,8 @@ public class SimpleArticle implements ArticleMeta, Serializable, Cloneable {
 		return minorEdit;
 	}
 
-	/**
-	 * 
-	 * @param minor
-	 *            the
+	/* (non-Javadoc)
+	 * @see net.sourceforge.jwbf.core.contentRep.ContentSetable#setMinorEdit(boolean)
 	 */
 	public void setMinorEdit(final boolean minor) {
 		this.minorEdit = minor;
@@ -183,10 +179,8 @@ public class SimpleArticle implements ArticleMeta, Serializable, Cloneable {
 		setTitle(label);
 	}
 
-	/**
-	 * 
-	 * @param title
-	 *            the label, like "Main Page"
+	/* (non-Javadoc)
+	 * @see net.sourceforge.jwbf.core.contentRep.ContentSetable#setTitle(java.lang.String)
 	 */
 	public void setTitle(final String title) {
 		this.title = title;
@@ -199,28 +193,22 @@ public class SimpleArticle implements ArticleMeta, Serializable, Cloneable {
 		return text;
 	}
 
-	/**
-	 * 
-	 * @param text
-	 *            the content of the article
+	/* (non-Javadoc)
+	 * @see net.sourceforge.jwbf.core.contentRep.ContentSetable#setText(java.lang.String)
 	 */
 	public void setText(final String text) {
 		this.text = text;
 	}
 
-	/**
-	 * 
-	 * @param text
-	 *            to add to content of the article
+	/* (non-Javadoc)
+	 * @see net.sourceforge.jwbf.core.contentRep.ContentSetable#addText(java.lang.String)
 	 */
 	public void addText(final String text) {
 		setText(getText() + text);
 	}
 
-	/**
-	 * 
-	 * @param text
-	 *            to add to content of the article
+	/* (non-Javadoc)
+	 * @see net.sourceforge.jwbf.core.contentRep.ContentSetable#addTextnl(java.lang.String)
 	 */
 	public void addTextnl(final String text) {
 		setText(getText() + "\n" + text);
@@ -234,9 +222,8 @@ public class SimpleArticle implements ArticleMeta, Serializable, Cloneable {
 		return editor;
 	}
 
-	/**
-	 * @param editor
-	 *            the
+	/* (non-Javadoc)
+	 * @see net.sourceforge.jwbf.core.contentRep.ContentSetable#setEditor(java.lang.String)
 	 */
 	public void setEditor(final String editor) {
 		this.editor = editor;
