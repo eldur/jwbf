@@ -185,17 +185,19 @@ public class PostModifyContent extends MWAction {
 	@Override
 	public String processReturningText(String s, HttpAction hm)
 			throws ProcessException {
-		if (s.contains("error")) { // FIXME RM or see FileUpload#processAllReturningText() error handling
-//			if (s.contains("edit") && bot.getVersion() == Version.MW1_13) { // FIXME invalid
-//				throw new ProcessException("please check if $wgEnableWriteAPI = true;");
-//			}
+		if (s.contains("error")) { 
 			throw new ProcessException(s.substring(0, 700));
 		}
 		if (initOldGet != null && hm.getRequest().equals(initOldGet.getRequest())) {
 			getWpValues(s, tab);
-			log.debug(tab);
+			if (log.isDebugEnabled()) {
+				log.debug(tab);
+			}
+			
 		} else if (apiGet != null && hm.getRequest().equals(apiGet.getRequest())) {
-			log.debug("parseapi"); //TODO RM
+			if (log.isDebugEnabled()) {
+				log.debug("parseapi");
+			}
 			apiReq.processReturningText(s, hm);
 		} 
 

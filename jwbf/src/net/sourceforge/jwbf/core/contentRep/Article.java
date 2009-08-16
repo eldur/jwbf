@@ -36,12 +36,15 @@ public class Article implements ArticleMeta, ContentSetable {
 		reload = reload | reloadVar;
 	}
 	
+	private void unSetReload(final int reloadVar) {
+		reload = reload ^ reloadVar;
+	}
+	
 	/**
 	 * {@inheritDoc}
 	 */
 	public String getText() {
 		if (isReload(textReload)) {
-			System.err.println("RELOAD TEXT"); // FIXME RM
 			setReload(textReload);
 			try {
 				setText(bot.readData(sa.getTitle()).getText());
@@ -167,7 +170,10 @@ public class Article implements ArticleMeta, ContentSetable {
 	 */
 	public void save() throws ActionException, ProcessException {
 		bot.writeContent(sa);
-		reload = 0; //reload ^ revisionIdReload; // TODO Reload only if revId is changed
+		if (bot.hasCacheHandler()) {
+			reload = 0;
+		}
+		unSetReload(revisionIdReload);
 	}
 	/**
 	 * Saves with a given comment.
@@ -221,14 +227,12 @@ public class Article implements ArticleMeta, ContentSetable {
 	 * {@inheritDoc}
 	 */
 	public Date getEditTimestamp() {
-		// TODO Auto-generated method stub
 		return sa.getEditTimestamp();
 	}
 	/**
 	 * {@inheritDoc}
 	 */
 	public boolean isRedirect() {
-		// TODO Auto-generated method stub
 		return sa.isRedirect();
 	}
 	/**

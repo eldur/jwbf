@@ -220,7 +220,6 @@ public class EditCustomWikiContentTest extends LiveTestFather {
 			try {
 				wait(milis);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}

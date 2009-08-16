@@ -78,7 +78,7 @@ public class GetRevision extends MWAction {
 	
 	private final Get msg;
 	
-	private boolean q = true;
+	private boolean singleProcess = true;
 	
 	private final Version botVersion;
 
@@ -115,7 +115,7 @@ public class GetRevision extends MWAction {
 	 */
 	public String processReturningText(final String s, HttpAction ha)
 			throws ProcessException {
-		if (msg.getRequest().equals(ha.getRequest()) && q) {
+		if (msg.getRequest().equals(ha.getRequest()) && singleProcess) {
 			if (log.isDebugEnabled()) { // TODO no very nice debug here
 				if (s.length() < 151) {
 					log.debug(s);
@@ -126,7 +126,7 @@ public class GetRevision extends MWAction {
 			}
 			
 			parse(s);
-			q = false; // FIXME RM q
+			singleProcess = false; 
 			
 		}
 		return "";

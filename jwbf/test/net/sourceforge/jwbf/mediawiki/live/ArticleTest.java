@@ -1,7 +1,9 @@
 package net.sourceforge.jwbf.mediawiki.live;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Collection;
 import java.util.Date;
@@ -154,35 +156,29 @@ public class ArticleTest extends LiveTestFather {
 		MediaWikiBot bot = getMediaWikiBot(Version.getLast(), true);
 		// create new article on this wikibot
 		Article a = new Article(bot, "Test");
-		
-		a.getText();
-		a.getText();
-		a.getText();
 		a.setText("a");
-		a.getText();
-		a.getText();
 		final String aText = a.getText();
 		log.debug("pre save");
 		// save content
 		a.save();
 		log.debug("after save");
-//		assertFalse(a.isMinorEdit());
-//		final String firstEdit = a.getRevisionId();
-//		a.setMinorEdit(true);
-//		a.save("comment");
-//		final String secondEdit = a.getRevisionId();
-//		assertEquals("same rev ID", firstEdit, secondEdit);
-//		a.addText(getRandom(16));
-//		String aaText = a.getText();
-//		a.save();
-//		final String thirdEdit = a.getRevisionId();
-//		assertTrue(a.isMinorEdit());
-//		assertFalse("text should be differ:\n" + aaText + "\n" + aText , aaText.equals(aText));
-//		assertTrue("dif rev ID, both: " + thirdEdit
-//				, Integer.parseInt(firstEdit) != Integer.parseInt(thirdEdit));
-//		
+		assertFalse(a.isMinorEdit());
+		final String firstEdit = a.getRevisionId();
+		a.setMinorEdit(true);
+		a.save("comment");
+		final String secondEdit = a.getRevisionId();
+		assertEquals("same rev ID", firstEdit, secondEdit);
+		a.addText(getRandom(16));
+		final String aaText = a.getText();
+		a.save();
+		final String thirdEdit = a.getRevisionId();
+		assertTrue(a.isMinorEdit());
+		assertFalse("text should be differ:\n" + aaText + "\n" + aText , aaText.equals(aText));
+		assertTrue("dif rev ID, both: " + thirdEdit
+				, Integer.parseInt(firstEdit) != Integer.parseInt(thirdEdit));
+		
 		log.debug("--> end article test");
 	}
-		
+
 	
 }
