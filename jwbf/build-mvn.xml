@@ -124,7 +124,7 @@
 						<replaceregex pattern="^([0-9]*:)?" replace="" flags="g" />
 					</tokenfilter>
 					<tokenfilter>
-						<replaceregex pattern="[MS].*$" replace="" flags="g" />
+						<replaceregex pattern="[MSP].*$" replace="" flags="g" />
 					</tokenfilter>
 				</outputfilterchain>
 			</redirector>
