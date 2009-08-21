@@ -229,13 +229,9 @@ public class GetRevision extends MWAction {
 						sa.setMinorEdit(true);
 					} else {
 						sa.setMinorEdit(false);
-					}
-//					log.debug(getAsStringValues(element, "minor"));
-
-					 
+					}					 
 				}
-				
-				
+								
 				sa.setRevisionId(getAsStringValues(element, "revid"));
 				sa.setEditSummary(getAsStringValues(element, "comment"));
 				sa.setEditor(getAsStringValues(element, "user"));

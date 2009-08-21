@@ -224,10 +224,10 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
 				}
 			}
 
-			ac = new GetRevision(this.getVersion(), name, properties);
+			ac = new GetRevision(getVersion(), name, properties);
 
 			performAction(ac);
-			log.debug("update cache (read)");
+			log.debug("update cache (put)");
 			store.put(ac.getArticle());
 
 		} else {
@@ -355,7 +355,6 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
 				ui = a;
 				loginChangeUserInfo = false;
 			} catch (VersionException e) {
-				e.printStackTrace();
 				if (login != null && login.getUserName().length() > 0) {
 					ui = new Userinfo() {
 					

@@ -25,7 +25,14 @@ public interface WikiBot {
 	void login(String user, String passwd) throws ActionException;
 	Userinfo getUserinfo() throws ActionException, ProcessException;
 	String getWikiType();
-	
+	/**
+	 * 
+	 * @return if has
+	 */
 	boolean hasCacheHandler();
+	/**
+	 * 
+	 * @param ch a
+	 */
 	void setCacheHandler(CacheHandler ch);
 }

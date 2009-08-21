@@ -10,7 +10,9 @@ import java.util.Date;
 import java.util.Vector;
 
 import net.sourceforge.jwbf.TestHelper;
+import net.sourceforge.jwbf.core.bots.util.CacheHandler;
 import net.sourceforge.jwbf.core.contentRep.Article;
+import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
 import net.sourceforge.jwbf.mediawiki.LiveTestFather;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.actions.util.VersionException;
@@ -39,13 +41,13 @@ public class ArticleTest extends LiveTestFather {
 	
 	private Collection<MediaWikiBot> getTestBots() throws Exception {
 		Collection<MediaWikiBot> bots = new Vector<MediaWikiBot>();
-		bots.add(getMediaWikiBot(Version.MW1_09, true));
-		bots.add(getMediaWikiBot(Version.MW1_10, true));
-		bots.add(getMediaWikiBot(Version.MW1_11, true));
-		bots.add(getMediaWikiBot(Version.MW1_12, true));
-		bots.add(getMediaWikiBot(Version.MW1_13, true));
-		bots.add(getMediaWikiBot(Version.MW1_14, true));
 		bots.add(getMediaWikiBot(Version.MW1_15, true));
+		bots.add(getMediaWikiBot(Version.MW1_14, true));
+		bots.add(getMediaWikiBot(Version.MW1_13, true));
+		bots.add(getMediaWikiBot(Version.MW1_12, true));
+		bots.add(getMediaWikiBot(Version.MW1_11, true));
+		bots.add(getMediaWikiBot(Version.MW1_10, true));
+		bots.add(getMediaWikiBot(Version.MW1_09, true));
 		return bots;
 	}
 	
@@ -103,7 +105,19 @@ public class ArticleTest extends LiveTestFather {
 		
 		for (MediaWikiBot bot : bots) {
 
-		
+				bot.setCacheHandler(new CacheHandler() {
+					
+					public void put(SimpleArticle sa) {
+					}
+					
+					public SimpleArticle get(String title) {
+						return null;
+					}
+					
+					public boolean containsKey(String title) {
+						return false;
+					}
+				});
 				String title = "z" + getRandomAlph(6);
 				String user = bot.getUserinfo().getUsername();
 				String editSum = getRandomAlph(6);
@@ -114,25 +128,28 @@ public class ArticleTest extends LiveTestFather {
 				Date saveDate = new Date(System.currentTimeMillis());
 				a.save(editSum); // save article a
 				String revIdA = a.getRevisionId();
-				
+				Date dateA = a.getEditTimestamp();
 				Article b = new Article(bot, title);
 				assertEquals(a.getTitle(), b.getTitle());
 				assertEquals(a.getText(), b.getText());
 				assertEquals(a.isMinorEdit(), b.isMinorEdit()); // because false is default value
 				assertEquals(user, b.getEditor());
 				assertEquals(editSum, b.getEditSummary());
-				assertEquals(saveDate.getTime(), b.getEditTimestamp().getTime(), 5000); // max. 5 seconds delta
+				assertEquals(saveDate.toString(), b.getEditTimestamp().toString()); // max. 5 seconds delta 
 				
 				
 				
 				a.setMinorEdit(true);
 				a.save(); // do nothing because no content change
+				
 				String revIdAp = a.getRevisionId();
 				assertEquals("no change " + bot.getWikiType(), revIdA, revIdAp);
 				a.addText(getRandom(48));
 				a.save();
 				String revIdApp = a.getRevisionId();
+				Date dateB = a.getEditTimestamp();
 				assertNotSame("change expected " + bot.getWikiType(), revIdA, revIdApp);
+				assertNotSame("change expected " + bot.getWikiType() + " " + dateA, dateA, dateB);
 				assertEquals("minor edit @ " + bot.getWikiType(), a.isMinorEdit(), b.isMinorEdit());
 				
 				try {
@@ -179,6 +196,8 @@ public class ArticleTest extends LiveTestFather {
 		
 		log.debug("--> end article test");
 	}
+	
+
 
 	
 }

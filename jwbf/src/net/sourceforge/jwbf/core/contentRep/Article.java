@@ -27,8 +27,12 @@ public class Article implements ArticleMeta, ContentSetable {
 	private final int minorEditReload = 1 << 3;
 	private final int editorReload = 1 << 4;
 	private final int editSumReload = 1 << 5;
+	private final int editDateReload = 1 << 6;
 	
 	private boolean isReload(final int reloadVar) {
+		if (bot.hasCacheHandler()) {
+			return true;
+		}
 		return (reload & reloadVar) == 0;
 	}
 	
@@ -37,7 +41,7 @@ public class Article implements ArticleMeta, ContentSetable {
 	}
 	
 	private void unSetReload(final int reloadVar) {
-		reload = reload ^ reloadVar;
+		reload = (reload | reloadVar) ^ reloadVar;
 	}
 	
 	/**
@@ -70,8 +74,7 @@ public class Article implements ArticleMeta, ContentSetable {
 		if (isReload(revisionIdReload)) {
 			setReload(revisionIdReload);
 			try {
-				setRevisionId(bot.readData(sa.getTitle()).getRevisionId());
-				// TODO does a revision reload test exists ?
+				sa.setRevisionId(bot.readData(sa.getTitle()).getRevisionId());
 			} catch (JwbfException e) {
 				e.printStackTrace();
 			}
@@ -79,10 +82,7 @@ public class Article implements ArticleMeta, ContentSetable {
 		return sa.getRevisionId();
 	}
 
-	public void setRevisionId(String revId) {
-		setReload(revisionIdReload);
-		sa.setRevisionId(revId);
-	}
+	
 	
 
 	public String getEditor() {
@@ -124,10 +124,10 @@ public class Article implements ArticleMeta, ContentSetable {
 	
 
 	public boolean isMinorEdit() {
-		if (isReload(editSumReload)) {
+		if (isReload(minorEditReload)) {
 			setReload(minorEditReload);
 			try {
-				setEditSummary(bot.readData(sa.getTitle()).getEditSummary());
+				setMinorEdit(bot.readData(sa.getTitle()).isMinorEdit());
 			} catch (JwbfException e) {
 				e.printStackTrace();
 			}
@@ -227,6 +227,14 @@ public class Article implements ArticleMeta, ContentSetable {
 	 * {@inheritDoc}
 	 */
 	public Date getEditTimestamp() {
+		if (isReload(editDateReload)) {
+			setReload(editDateReload);
+			try {
+				sa.setEditTimestamp(bot.readData(sa.getTitle()).getEditTimestamp());
+			} catch (JwbfException e) {
+				e.printStackTrace();
+			}
+		}
 		return sa.getEditTimestamp();
 	}
 	/**
