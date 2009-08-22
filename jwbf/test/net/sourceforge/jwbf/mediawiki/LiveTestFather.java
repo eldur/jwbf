@@ -26,12 +26,15 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Calendar;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.InvalidPropertiesFormatException;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+import java.util.TimeZone;
 import java.util.Vector;
 
 import net.sourceforge.jwbf.TestHelper;
@@ -128,8 +131,19 @@ public abstract class LiveTestFather extends TestHelper {
 
 		
 	}
-	
+	/**
+	 * 
+	 * @return the current UTC
+	 */
+	public Date getCurrentUTC() {
+		long currentDate = System.currentTimeMillis();
+		TimeZone tz = TimeZone.getDefault();
+		Calendar localCal = Calendar.getInstance(tz);
+		localCal.setTimeInMillis(currentDate - tz.getOffset(currentDate)); 
+		
+		return new Date(localCal.getTimeInMillis());
 
+	}
 	/**
 	 * Use in a invalid testcase.
 	 * @param clazz a
@@ -219,6 +233,8 @@ public abstract class LiveTestFather extends TestHelper {
 		System.out.println(System.getProperties());
 		System.out.println(System.getProperty("user.name"));
 		System.out.println(System.getProperty("user.home"));
+		new LiveTestFather() {
+		}.getCurrentUTC();
 	}
 	
 	private static void addEmptyKey(String key) {

@@ -244,7 +244,7 @@ public class SimpleArticle implements ArticleMeta, Serializable, Cloneable, Cont
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @return the edittimestamp in UTC
 	 */
 	public Date getEditTimestamp() {
 		return editTimestamp;

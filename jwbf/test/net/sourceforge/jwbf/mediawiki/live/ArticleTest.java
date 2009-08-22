@@ -69,7 +69,7 @@ public class ArticleTest extends LiveTestFather {
 				String editSum = getRandomAlph(6); // create random edit sum
 				a = new Article(bot, title); // create new article with given title
 				a.setText(getRandom(42)); // set random text
-				Date saveDate = new Date(System.currentTimeMillis());
+				Date saveDate = getCurrentUTC();
 				a.save(editSum); // save article a with given comment
 
 				Article b = new Article(bot, title); // create new article b
@@ -125,7 +125,7 @@ public class ArticleTest extends LiveTestFather {
 				a.setText(getRandom(42));
 				a.setMinorEdit(false);
 				
-				Date saveDate = new Date(System.currentTimeMillis());
+				Date saveDate = getCurrentUTC();
 				a.save(editSum); // save article a
 				String revIdA = a.getRevisionId();
 				Date dateA = a.getEditTimestamp();
@@ -135,8 +135,7 @@ public class ArticleTest extends LiveTestFather {
 				assertEquals(a.isMinorEdit(), b.isMinorEdit()); // because false is default value
 				assertEquals(user, b.getEditor());
 				assertEquals(editSum, b.getEditSummary());
-				assertEquals(saveDate.toString(), b.getEditTimestamp().toString()); // max. 5 seconds delta 
-				
+				assertEquals(saveDate.getTime(), b.getEditTimestamp().getTime(), 5000); // max. 5 seconds delta
 				
 				
 				a.setMinorEdit(true);

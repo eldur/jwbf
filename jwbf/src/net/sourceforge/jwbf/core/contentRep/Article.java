@@ -224,7 +224,7 @@ public class Article implements ArticleMeta, ContentSetable {
 		return sa.getTitle();
 	}
 	/**
-	 * {@inheritDoc}
+	 * @return the edittimestamp in UTC
 	 */
 	public Date getEditTimestamp() {
 		if (isReload(editDateReload)) {
