@@ -20,11 +20,13 @@ import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 /**
  * Tests cache.
  * @author Thomas Stock
  */
+@Ignore
 public class SimpleCacheMWBotTest extends LiveTestFather {
 
 	
