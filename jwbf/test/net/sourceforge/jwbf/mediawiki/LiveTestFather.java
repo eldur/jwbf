@@ -51,10 +51,8 @@ import org.junit.Test;
 public abstract class LiveTestFather extends TestHelper {
 
 	private static Properties data;
-	
-	
-	
-	private static String filename;
+
+	private static String filename = "";
 	
 	private final Collection<String> specialChars = new Vector<String>();
 
@@ -92,6 +90,9 @@ public abstract class LiveTestFather extends TestHelper {
 				if (new File(fname).canRead()) {
 					filename = fname;
 					System.out.println("use testfile: " + filename);
+					
+					
+					
 					break;
 				}
 			}
