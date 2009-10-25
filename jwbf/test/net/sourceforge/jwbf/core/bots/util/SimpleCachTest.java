@@ -14,20 +14,20 @@ import java.io.OutputStream;
 import java.util.Date;
 
 import net.sourceforge.jwbf.TestHelper;
-import net.sourceforge.jwbf.core.bots.util.CacheHandler;
-import net.sourceforge.jwbf.core.bots.util.SimpleCache;
 import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
 
 import org.apache.log4j.PropertyConfigurator;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 /**
  * 
  * @author Thomas Stock
  *
  */
+@Ignore
 public class SimpleCachTest extends TestHelper {
 
 	public static final String CACHFOLDER = "build/data";
