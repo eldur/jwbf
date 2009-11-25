@@ -10,8 +10,20 @@ import java.net.URLEncoder;
  */
 public final class MediaWiki {
 
+	/**
+	 * @deprecated use {@link #NS_MAIN} instead. Wrong value.
+	 */
+	@Deprecated
 	public static final int ARTICLE = 1 << 1;
+	/**
+	 * @deprecated use {@link #NS_MAIN} instead. Wrong value.
+	 */
+	@Deprecated
 	public static final int MEDIA = 1 << 2;
+	/**
+	 * @deprecated use {@link #NS_CATEGORY} instead.
+	 */
+	@Deprecated
 	public static final int SUBCATEGORY = 1 << 3;
 
 	static final String CHARSET = "utf-8";

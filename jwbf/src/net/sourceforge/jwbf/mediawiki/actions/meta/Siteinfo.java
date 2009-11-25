@@ -10,6 +10,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 import net.sourceforge.jwbf.core.actions.Get;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
@@ -115,6 +116,21 @@ public class Siteinfo extends GetVersion {
 		return Collections.unmodifiableMap(namespaces);
 	}
 
+	
+	/**
+	 * 
+	 * @return of
+	 */
+	public int [] getNamespacesArray() {
+		Set<Integer> ks = getNamespaces().keySet();
+		int [] x = new int [ks.size()];
+		int i = 0;
+		for (int value : ks) {
+			x[i++] = value;
+		}
+		return x;
+	}
+	
 	private void addInterwiki(String prefix, String name) {
 		interwiki.put(prefix, name);
 	}
