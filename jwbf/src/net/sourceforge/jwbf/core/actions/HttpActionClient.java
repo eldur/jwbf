@@ -19,12 +19,9 @@
 
 package net.sourceforge.jwbf.core.actions;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 import net.sourceforge.jwbf.JWBF;
@@ -33,19 +30,14 @@ import net.sourceforge.jwbf.core.actions.util.CookieException;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.core.actions.util.ProcessException;
 
-import org.apache.commons.httpclient.Cookie;
-import org.apache.commons.httpclient.Header;
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.HttpMethod;
-import org.apache.commons.httpclient.HttpStatus;
-import org.apache.commons.httpclient.NameValuePair;
-import org.apache.commons.httpclient.methods.GetMethod;
-import org.apache.commons.httpclient.methods.PostMethod;
-import org.apache.commons.httpclient.methods.multipart.FilePart;
-import org.apache.commons.httpclient.methods.multipart.MultipartRequestEntity;
-import org.apache.commons.httpclient.methods.multipart.Part;
-import org.apache.commons.httpclient.methods.multipart.StringPart;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.cookie.Cookie;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.log4j.Logger;
+
 
 /**
  * The main interaction class.
@@ -63,6 +55,10 @@ public class HttpActionClient {
 
 	private int prevHash = 0;
 	
+	
+	public HttpActionClient(final URL url) {
+		this(new DefaultHttpClient(), url);
+	}
 	/**
 	 * 
 	 * @param client
@@ -86,8 +82,9 @@ public class HttpActionClient {
 
 		client.getParams().setParameter("http.useragent",
 				"JWBF " + JWBF.getVersion(getClass()));
-		client.getHostConfiguration().setHost(url.getHost(), url.getPort(),
-				url.getProtocol());
+	
+//		client.getHostConfiguration().setHost(url.getHost(), url.getPort(),
+//				url.getProtocol());
 		this.client = client;
 	}
 
@@ -106,86 +103,86 @@ public class HttpActionClient {
 			throws ActionException, ProcessException {
 
 		String out = "";
-		while (a.hasMoreMessages()) {
-			
-			HttpMethod e = null;
-			try {
-
-				HttpAction ha = a.getNextMessage();
-				
-				
-				
-				if (ha instanceof Get) {
-					e = new GetMethod(ha.getRequest());
-					if (path.length() > 1) {
-						e.setPath(path + e.getPath());
-					}
-
-					// do get
-					out = get(e, a, ha);
-				} else if (ha instanceof Post) {
-					Post p = (Post) ha;
-					e = new PostMethod(p.getRequest());
-					if (path.length() > 1) {
-
-						e.setPath(path + e.getPath());
-						
-//						log.debug("path is: " + e.getPath());
-
-					}
-					Iterator<String> keys = p.getParams().keySet().iterator();
-					int count = p.getParams().size();
-					NameValuePair[] val = new NameValuePair[count];
-					int i = 0;
-					while (keys.hasNext()) {
-						String key = (String) keys.next();
-						val[i++] = new NameValuePair(key, p.getParams()
-								.get(key));
-					}
-
-					((PostMethod) e).setRequestBody(val);
-					if (ha instanceof FilePost) {
-						log.debug("is filepost");
-						FilePost px = (FilePost) ha;
-
-						// add multipart elements
-
-						Part[] parts;
-
-						Iterator<String> partKeys = px.getParts().keySet()
-								.iterator();
-						int partCount = px.getParts().size();
-						parts = new Part[partCount];
-
-						int j = 0;
-						while (partKeys.hasNext()) {
-							String key = (String) partKeys.next();
-							Object po = px.getParts().get(key);
-							if (po instanceof String) {
-								parts[j++] = new StringPart(key, (String) po);
-							} else if (po instanceof File) {
-								parts[j++] = new FilePart(key, (File) po);
-							}
-
-						}
-
-						((PostMethod) e)
-								.setRequestEntity(new MultipartRequestEntity(
-										parts, e.getParams()));
-
-					}
-					// do post
-					out = post(e, a, ha);
-				}
-				
-
-			} catch (IOException e1) {
-				throw new ActionException(e1);
-			} catch (IllegalArgumentException e2) {
-				throw new ActionException(e2);
-			}
-
-		}
+//		while (a.hasMoreMessages()) {
+//			
+//			HttpRequestBase e = null;
+//			try {
+//
+//				HttpAction ha = a.getNextMessage();
+//				
+//				
+//				
+//				if (ha instanceof Get) {
+//					e = new HttpGet(ha.getRequest());
+//					if (path.length() > 1) {
+//						e.setPath(path + e.getPath());
+//					}
+//
+//					// do get
+//					out = get(e, a, ha);
+//				} else if (ha instanceof Post) {
+//					Post p = (Post) ha;
+//					e = new HttpPost(p.getRequest());
+//					if (path.length() > 1) {
+//
+//						e.setPath(path + e.getPath());
+//						
+////						log.debug("path is: " + e.getPath());
+//
+//					}
+//					Iterator<String> keys = p.getParams().keySet().iterator();
+//					int count = p.getParams().size();
+//					NameValuePair[] val = new NameValuePair[count];
+//					int i = 0;
+//					while (keys.hasNext()) {
+//						String key = (String) keys.next();
+//						val[i++] = new BasicNameValuePair(key, p.getParams()
+//								.get(key));
+//					}
+//
+//					((HttpPost) e).setRequestBody(val);
+//					if (ha instanceof FilePost) {
+//						log.debug("is filepost");
+//						FilePost px = (FilePost) ha;
+//
+//						// add multipart elements
+//
+//						Part[] parts;
+//
+//						Iterator<String> partKeys = px.getParts().keySet()
+//								.iterator();
+//						int partCount = px.getParts().size();
+//						parts = new Part[partCount];
+//
+//						int j = 0;
+//						while (partKeys.hasNext()) {
+//							String key = (String) partKeys.next();
+//							Object po = px.getParts().get(key);
+//							if (po instanceof String) {
+//								parts[j++] = new StringPart(key, (String) po);
+//							} else if (po instanceof File) {
+//								parts[j++] = new FilePart(key, (File) po);
+//							}
+//
+//						}
+//
+//						((HttpPost) e)
+//								.setRequestEntity(new MultipartRequestEntity(
+//										parts, e.getParams()));
+//
+//					}
+//					// do post
+//					out = post(e, a, ha);
+//				}
+//				
+//
+//			} catch (IOException e1) {
+//				throw new ActionException(e1);
+//			} catch (IllegalArgumentException e2) {
+//				throw new ActionException(e2);
+//			}
+//
+//		}
 		return out;
 
 	}
@@ -202,7 +199,7 @@ public class HttpActionClient {
 	 * @throws ProcessException on problems
 	 * @throws CookieException on problems
 	 */
-	private String post(HttpMethod authpost, ContentProcessable cp, HttpAction ha)
+	private String post(HttpUriRequest authpost, ContentProcessable cp, HttpAction ha)
 			throws IOException, ProcessException,
 			CookieException {
 		debug(authpost, ha, cp);
@@ -210,11 +207,12 @@ public class HttpActionClient {
 		
 		authpost.getParams().setParameter("http.protocol.content-charset",
 				ha.getCharset());
-		authpost.getParams().setContentCharset(ha.getCharset());
+//		authpost.getParams().setContentCharset(ha.getCharset());
+		
 		String out = "";
 
-		client.executeMethod(authpost);
-		
+
+		client.execute(authpost);
 
 		// Header locationHeader = authpost.getResponseHeader("location");
 		// if (locationHeader != null) {
@@ -226,42 +224,42 @@ public class HttpActionClient {
 		// Usually a successful form-based login results in a redicrect to
 		// another url
 		
-		int statuscode = authpost.getStatusCode();
-		if ((statuscode == HttpStatus.SC_MOVED_TEMPORARILY)
-				|| (statuscode == HttpStatus.SC_MOVED_PERMANENTLY)
-				|| (statuscode == HttpStatus.SC_SEE_OTHER)
-				|| (statuscode == HttpStatus.SC_TEMPORARY_REDIRECT)) {
-			Header header = authpost.getResponseHeader("location");
-			if (header != null) {
-				String newuri = header.getValue();
-				if ((newuri == null) || (newuri.equals(""))) {
-					newuri = "/";
-				}
-				
-				GetMethod redirect = new GetMethod(newuri);
+//		int statuscode = authpost.getStatusCode();
+//		if ((statuscode == HttpStatus.SC_MOVED_TEMPORARILY)
+//				|| (statuscode == HttpStatus.SC_MOVED_PERMANENTLY)
+//				|| (statuscode == HttpStatus.SC_SEE_OTHER)
+//				|| (statuscode == HttpStatus.SC_TEMPORARY_REDIRECT)) {
+////			Header header = authpost.getResponseHeader("location");
+//			if (header != null) {
+//				String newuri = header.getValue();
+//				if ((newuri == null) || (newuri.equals(""))) {
+//					newuri = "/";
+//				}
+//				
+//				HttpGet redirect = new HttpGet(newuri);
 
-				client.executeMethod(redirect);
-				if (!redirect.getStatusLine().toString().contains("200")
-						&& log.isDebugEnabled()) {
-					log.debug("Redirect target: " + newuri);
-					log.debug("Redirect: "
-							+ redirect.getStatusLine().toString());
-				}
+//				client.executeMethod(redirect);
+//				if (!redirect.getStatusLine().toString().contains("200")
+//						&& log.isDebugEnabled()) {
+//					log.debug("Redirect target: " + newuri);
+//					log.debug("Redirect: "
+//							+ redirect.getStatusLine().toString());
+//				}
 				// release any connection resources used by the method
-				authpost.releaseConnection();
-				authpost = redirect;
-			}
-		}
+//				authpost.releaseConnection();
+//				authpost = redirect;
+//			}
+//		}
 		
-		out = authpost.getResponseBodyAsString();
+//		out = authpost.getResponseBodyAsString();
 		
 		out = cp.processReturningText(out, ha);
-		if (cp instanceof CookieValidateable)
-			((CookieValidateable) cp).validateReturningCookies(cookieTransform(client.getState().getCookies()), ha);
+//		if (cp instanceof CookieValidateable)
+//			((CookieValidateable) cp).validateReturningCookies(cookieTransform(client.getState().getCookies()), ha);
 		
 	
 
-		authpost.releaseConnection();
+//		authpost.releaseConnection();
 //		log.debug(authpost.getURI() + " || " + "POST: "
 //				+ authpost.getStatusLine().toString());
 		return out;
@@ -279,34 +277,34 @@ public class HttpActionClient {
 	 * @throws CookieException on problems
 	 * @throws ProcessException on problems
 	 */
-	private String get(HttpMethod authgets, ContentProcessable cp, HttpAction ha)
+	private String get(HttpRequestBase authgets, ContentProcessable cp, HttpAction ha)
 			throws IOException, CookieException, ProcessException {
-		showCookies(client);
-		debug(authgets, ha, cp);
+//		showCookies(client);
+//		debug(authgets, ha, cp);
 		String out = "";
-		authgets.getParams().setParameter("http.protocol.content-charset",
-				ha.getCharset());
-//		System.err.println(authgets.getParams().getParameter("http.protocol.content-charset"));
-		
-		client.executeMethod(authgets);
-		if (cp instanceof CookieValidateable)
-			((CookieValidateable) cp).validateReturningCookies(cookieTransform(client.getState().getCookies()), ha);
-//		log.debug(authgets.getURI());
-		if (!authgets.getStatusLine().toString().contains("200") && log.isDebugEnabled()) 
-			log.debug("GET: " + authgets.getStatusLine().toString());
-
-		out = authgets.getResponseBodyAsString();
-		
-		out = cp.processReturningText(out, ha);
-		// release any connection resources used by the method
-		authgets.releaseConnection();
-		int statuscode = authgets.getStatusCode();
-
-		if (statuscode == HttpStatus.SC_NOT_FOUND) {
-			log.warn("Not Found: " + authgets.getQueryString());
-
-			throw new FileNotFoundException(authgets.getQueryString());
-		}
+//		authgets.getParams().setParameter("http.protocol.content-charset",
+//				ha.getCharset());
+////		System.err.println(authgets.getParams().getParameter("http.protocol.content-charset"));
+//		
+////		client.executeMethod(authgets);
+//		if (cp instanceof CookieValidateable)
+//			((CookieValidateable) cp).validateReturningCookies(cookieTransform(client.getState().getCookies()), ha);
+////		log.debug(authgets.getURI());
+//		if (!authgets.getStatusLine().toString().contains("200") && log.isDebugEnabled()) 
+//			log.debug("GET: " + authgets.getStatusLine().toString());
+//
+//		out = authgets.getResponseBodyAsString();
+//		
+//		out = cp.processReturningText(out, ha);
+//		// release any connection resources used by the method
+//		authgets.releaseConnection();
+//		int statuscode = authgets.getStatusCode();
+//
+//		if (statuscode == HttpStatus.SC_NOT_FOUND) {
+//			log.warn("Not Found: " + authgets.getQueryString());
+//
+//			throw new FileNotFoundException(authgets.getQueryString());
+//		}
 
 		return out;
 	}
@@ -324,27 +322,27 @@ public class HttpActionClient {
 			throws IOException, CookieException, ProcessException {
 		showCookies(client);
 		
-		GetMethod authgets = new GetMethod(ha.getRequest());
+		HttpGet authgets = new HttpGet(ha.getRequest());
 		byte[] out = null;
-		authgets.getParams().setParameter("http.protocol.content-charset",
-				ha.getCharset());
-//		System.err.println(authgets.getParams().getParameter("http.protocol.content-charset"));
-		
-		client.executeMethod(authgets);
-		log.debug(authgets.getURI());
-		log.debug("GET: " + authgets.getStatusLine().toString());
-
-		out = authgets.getResponseBody();
-		
-		// release any connection resources used by the method
-		authgets.releaseConnection();
-		int statuscode = authgets.getStatusCode();
-
-		if (statuscode == HttpStatus.SC_NOT_FOUND) {
-			log.warn("Not Found: " + authgets.getQueryString());
-
-			throw new FileNotFoundException(authgets.getQueryString());
-		}
+//		authgets.getParams().setParameter("http.protocol.content-charset",
+//				ha.getCharset());
+////		System.err.println(authgets.getParams().getParameter("http.protocol.content-charset"));
+//		
+//		client.executeMethod(authgets);
+//		log.debug(authgets.getURI());
+//		log.debug("GET: " + authgets.getStatusLine().toString());
+//
+//		out = authgets.getResponseBody();
+//		
+//		// release any connection resources used by the method
+//		authgets.releaseConnection();
+//		int statuscode = authgets.getStatusCode();
+//
+//		if (statuscode == HttpStatus.SC_NOT_FOUND) {
+//			log.warn("Not Found: " + authgets.getQueryString());
+//
+//			throw new FileNotFoundException(authgets.getQueryString());
+//		}
 
 		return out;
 	}
@@ -364,40 +362,40 @@ public class HttpActionClient {
 	 *            @deprecated is a bit too chatty
 	 */
 	private void showCookies(HttpClient client) {
-		Cookie[] cookies = client.getState().getCookies();
-		if (cookies.length > 0) {
-			String cStr = "";
-			for (int i = 0; i < cookies.length; i++) {
-				cStr += cookies[i].toString() + ", ";
-			}
-			log.trace("cookie: {" + cStr + "}");
-		}
+//		Cookie[] cookies = client.getState().getCookies();
+//		if (cookies.length > 0) {
+//			String cStr = "";
+//			for (int i = 0; i < cookies.length; i++) {
+//				cStr += cookies[i].toString() + ", ";
+//			}
+//			log.trace("cookie: {" + cStr + "}");
+//		}
 	}
 
 	
-	private void debug(HttpMethod e, HttpAction ha, ContentProcessable cp) {
+	private void debug(HttpUriRequest e, HttpAction ha, ContentProcessable cp) {
 		if (log.isDebugEnabled()) {
 			
-			String continueing = "";
-			if (prevHash == cp.hashCode()) {
-				continueing = " [continuing req]";
-			} else {
-				continueing = "";
-			}
-			prevHash = cp.hashCode();
-			String epath = e.getPath();
-			int sl = epath.lastIndexOf("/");
-			epath = epath.substring(0, sl);
-			String type = "";
-			if (ha instanceof Post) {
-				type = "(POST ";
-			} else if (ha instanceof Get) {
-				type = "(GET ";
-			}
-			type += cp.getClass().getSimpleName() + ")" + continueing;
-			log.debug("message " + type + " is: \n\t own: " 
-					+  client.getHostConfiguration().getHostURL() 
-					+ epath + "\n\t act: " + ha.getRequest());
+//			String continueing = "";
+//			if (prevHash == cp.hashCode()) {
+//				continueing = " [continuing req]";
+//			} else {
+//				continueing = "";
+//			}
+//			prevHash = cp.hashCode();
+//			String epath = e.getPath();
+//			int sl = epath.lastIndexOf("/");
+//			epath = epath.substring(0, sl);
+//			String type = "";
+//			if (ha instanceof Post) {
+//				type = "(POST ";
+//			} else if (ha instanceof Get) {
+//				type = "(GET ";
+//			}
+//			type += cp.getClass().getSimpleName() + ")" + continueing;
+//			log.debug("message " + type + " is: \n\t own: " 
+//					+  getHostUrl() 
+//					+ epath + "\n\t act: " + ha.getRequest());
 		}
 	}
 	/**
@@ -405,7 +403,8 @@ public class HttpActionClient {
 	 * @return the
 	 */
 	public String getHostUrl() {
-		return client.getHostConfiguration().getHostURL();
+		return "";
+//		return client.getHostConfiguration().getHostURL();
 	}
 }
 

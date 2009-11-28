@@ -29,8 +29,6 @@ import net.sourceforge.jwbf.core.actions.HttpActionClient;
 import net.sourceforge.jwbf.core.actions.util.ActionException;
 import net.sourceforge.jwbf.core.actions.util.ProcessException;
 
-import org.apache.commons.httpclient.HttpClient;
-
 /**
  * 
  * @author Thomas Stock
@@ -78,7 +76,7 @@ public class HttpBot {
 		
 		HttpActionClient cc = null;
 			try {
-				cc = new HttpActionClient(new HttpClient(), new URL("http://localhost/"));
+				cc = new HttpActionClient(new URL("http://localhost/"));
 			} catch (MalformedURLException e) {
 				e.printStackTrace();
 			}
@@ -195,7 +193,7 @@ public class HttpBot {
 	 *            like http://www.yourOwnWiki.org/wiki/
 	 */
 	protected final void setConnection(final URL hostUrl) {
-		setConnection(new HttpActionClient(new HttpClient(), hostUrl));
+		setConnection(new HttpActionClient(hostUrl));
 
 	}
 
