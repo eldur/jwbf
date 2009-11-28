@@ -19,9 +19,12 @@
 
 package net.sourceforge.jwbf.core.actions;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import net.sourceforge.jwbf.JWBF;
@@ -30,12 +33,16 @@ import net.sourceforge.jwbf.core.actions.util.CookieException;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.core.actions.util.ProcessException;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.cookie.Cookie;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
 import org.apache.log4j.Logger;
 
 
@@ -103,26 +110,26 @@ public class HttpActionClient {
 			throws ActionException, ProcessException {
 
 		String out = "";
-//		while (a.hasMoreMessages()) {
-//			
-//			HttpRequestBase e = null;
-//			try {
-//
-//				HttpAction ha = a.getNextMessage();
-//				
-//				
-//				
-//				if (ha instanceof Get) {
-//					e = new HttpGet(ha.getRequest());
+		while (a.hasMoreMessages()) {
+			
+			HttpRequestBase e = null;
+			try {
+
+				HttpAction ha = a.getNextMessage();
+				
+				
+				
+				if (ha instanceof Get) {
+					e = new HttpGet(ha.getRequest());
 //					if (path.length() > 1) {
 //						e.setPath(path + e.getPath());
 //					}
-//
-//					// do get
-//					out = get(e, a, ha);
-//				} else if (ha instanceof Post) {
-//					Post p = (Post) ha;
-//					e = new HttpPost(p.getRequest());
+
+					// do get
+					out = get(e, a, ha);
+				} else if (ha instanceof Post) {
+					Post p = (Post) ha;
+					e = new HttpPost(p.getRequest());
 //					if (path.length() > 1) {
 //
 //						e.setPath(path + e.getPath());
@@ -130,16 +137,16 @@ public class HttpActionClient {
 ////						log.debug("path is: " + e.getPath());
 //
 //					}
-//					Iterator<String> keys = p.getParams().keySet().iterator();
-//					int count = p.getParams().size();
-//					NameValuePair[] val = new NameValuePair[count];
-//					int i = 0;
-//					while (keys.hasNext()) {
-//						String key = (String) keys.next();
-//						val[i++] = new BasicNameValuePair(key, p.getParams()
-//								.get(key));
-//					}
-//
+					Iterator<String> keys = p.getParams().keySet().iterator();
+					int count = p.getParams().size();
+					NameValuePair[] val = new NameValuePair[count];
+					int i = 0;
+					while (keys.hasNext()) {
+						String key = (String) keys.next();
+						val[i++] = new BasicNameValuePair(key, p.getParams()
+								.get(key));
+					}
+
 //					((HttpPost) e).setRequestBody(val);
 //					if (ha instanceof FilePost) {
 //						log.debug("is filepost");
@@ -171,18 +178,18 @@ public class HttpActionClient {
 //										parts, e.getParams()));
 //
 //					}
-//					// do post
-//					out = post(e, a, ha);
-//				}
-//				
-//
-//			} catch (IOException e1) {
-//				throw new ActionException(e1);
-//			} catch (IllegalArgumentException e2) {
-//				throw new ActionException(e2);
-//			}
-//
-//		}
+					// do post
+					out = post(e, a, ha);
+				}
+				
+
+			} catch (IOException e1) {
+				throw new ActionException(e1);
+			} catch (IllegalArgumentException e2) {
+				throw new ActionException(e2);
+			}
+
+		}
 		return out;
 
 	}
@@ -279,23 +286,35 @@ public class HttpActionClient {
 	 */
 	private String get(HttpRequestBase authgets, ContentProcessable cp, HttpAction ha)
 			throws IOException, CookieException, ProcessException {
-//		showCookies(client);
-//		debug(authgets, ha, cp);
+		showCookies(client);
+		debug(authgets, ha, cp);
 		String out = "";
-//		authgets.getParams().setParameter("http.protocol.content-charset",
-//				ha.getCharset());
-////		System.err.println(authgets.getParams().getParameter("http.protocol.content-charset"));
-//		
-////		client.executeMethod(authgets);
+		authgets.getParams().setParameter("http.protocol.content-charset",
+				ha.getCharset());
+//		System.err.println(authgets.getParams().getParameter("http.protocol.content-charset"));
+		
+		HttpResponse res = client.execute(authgets);
+		
+		
+		 BufferedReader br = new BufferedReader(new InputStreamReader(res.getEntity().getContent()));  
+		 StringBuffer sb = new StringBuffer();  
+		 String line;  
+		 while ((line = br.readLine()) != null) {  
+		   sb.append(line).append("\n");
+//		   System.out.println("> " + line);
+//		   out += line + "\n";
+		}
+		
+		out = sb.toString(); 
 //		if (cp instanceof CookieValidateable)
 //			((CookieValidateable) cp).validateReturningCookies(cookieTransform(client.getState().getCookies()), ha);
-////		log.debug(authgets.getURI());
+//		log.debug(authgets.getURI());
 //		if (!authgets.getStatusLine().toString().contains("200") && log.isDebugEnabled()) 
 //			log.debug("GET: " + authgets.getStatusLine().toString());
 //
 //		out = authgets.getResponseBodyAsString();
 //		
-//		out = cp.processReturningText(out, ha);
+		out = cp.processReturningText(out, ha);
 //		// release any connection resources used by the method
 //		authgets.releaseConnection();
 //		int statuscode = authgets.getStatusCode();
@@ -324,11 +343,11 @@ public class HttpActionClient {
 		
 		HttpGet authgets = new HttpGet(ha.getRequest());
 		byte[] out = null;
-//		authgets.getParams().setParameter("http.protocol.content-charset",
-//				ha.getCharset());
-////		System.err.println(authgets.getParams().getParameter("http.protocol.content-charset"));
-//		
-//		client.executeMethod(authgets);
+		authgets.getParams().setParameter("http.protocol.content-charset",
+				ha.getCharset());
+//		System.err.println(authgets.getParams().getParameter("http.protocol.content-charset"));
+		
+		client.execute(authgets);
 //		log.debug(authgets.getURI());
 //		log.debug("GET: " + authgets.getStatusLine().toString());
 //
