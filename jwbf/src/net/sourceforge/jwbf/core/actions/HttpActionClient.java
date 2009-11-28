@@ -63,8 +63,6 @@ public class HttpActionClient {
 
 	private Logger log = Logger.getLogger(getClass());
 
-	private int prevHash = 0;
-
 	private HttpHost host;
 
 
@@ -88,15 +86,12 @@ public class HttpActionClient {
 		 */
 
 		
-//		this.client.getParams().setParameter("http.protocol.content-charset",
-//		 "UTF-8");
-		
 		if (url.getPath().length() > 1) {
 			this.path = url.getPath().substring(0, url.getPath().lastIndexOf("/"));
 		}
 
 		client.getParams().setParameter("http.useragent",
-				"JWBF " + JWBF.getVersion(getClass()));
+				"JWBF " + JWBF.getVersion(getClass())); // TODO test
 	
 		host = new HttpHost(url.getHost(), url.getPort(), "http"); // FIXME Https 
 		
@@ -164,6 +159,10 @@ public class HttpActionClient {
 					  res.getEntity().writeTo(byte1);
 					 out = new String(byte1.toByteArray());
 					 out = a.processReturningText(out, ha);
+
+						if (a instanceof CookieValidateable && client instanceof DefaultHttpClient)
+							((CookieValidateable) a).validateReturningCookies(cookieTransform(
+									((DefaultHttpClient)client).getCookieStore().getCookies()), ha);
 				}
 				
 
@@ -179,83 +178,7 @@ public class HttpActionClient {
 
 	}
 
-	/**
-	 * Process a POST Message.
-	 * 
-	 * @param authpost
-	 *            a
-	 * @param cp
-	 *            a
-	 * @return a returning message, not null
-	 * @throws IOException on problems
-	 * @throws ProcessException on problems
-	 * @throws CookieException on problems
-	 */
-	private String post(HttpUriRequest authpost, ContentProcessable cp, HttpAction ha)
-			throws IOException, ProcessException,
-			CookieException {
-		debug(authpost, ha, cp);
-		
-		
-		authpost.getParams().setParameter("http.protocol.content-charset",
-				ha.getCharset());
-//		authpost.getParams().setContentCharset(ha.getCharset());
-		
-		String out = "";
-
-
-		
-		// Header locationHeader = authpost.getResponseHeader("location");
-		// if (locationHeader != null) {
-		// authpost.setRequestHeader(locationHeader) ;
-		// }
-
-		
-
-		// Usually a successful form-based login results in a redicrect to
-		// another url
-		
-//		int statuscode = authpost.getStatusCode();
-//		if ((statuscode == HttpStatus.SC_MOVED_TEMPORARILY)
-//				|| (statuscode == HttpStatus.SC_MOVED_PERMANENTLY)
-//				|| (statuscode == HttpStatus.SC_SEE_OTHER)
-//				|| (statuscode == HttpStatus.SC_TEMPORARY_REDIRECT)) {
-////			Header header = authpost.getResponseHeader("location");
-//			if (header != null) {
-//				String newuri = header.getValue();
-//				if ((newuri == null) || (newuri.equals(""))) {
-//					newuri = "/";
-//				}
-//				
-//				HttpGet redirect = new HttpGet(newuri);
-
-//				client.executeMethod(redirect);
-//				if (!redirect.getStatusLine().toString().contains("200")
-//						&& log.isDebugEnabled()) {
-//					log.debug("Redirect target: " + newuri);
-//					log.debug("Redirect: "
-//							+ redirect.getStatusLine().toString());
-//				}
-				// release any connection resources used by the method
-//				authpost.releaseConnection();
-//				authpost = redirect;
-//			}
-//		}
-		
-//		out = authpost.getResponseBodyAsString();
-		
-		
-		if (cp instanceof CookieValidateable && client instanceof DefaultHttpClient)
-			((CookieValidateable) cp).validateReturningCookies(cookieTransform(
-					((DefaultHttpClient)client).getCookieStore().getCookies()), ha);
-		
 	
-
-//		authpost.releaseConnection();
-//		log.debug(authpost.getURI() + " || " + "POST: "
-//				+ authpost.getStatusLine().toString());
-		return out;
-	}
 
 	/**
 	 * Process a GET Message.
@@ -294,8 +217,6 @@ public class HttpActionClient {
 					((DefaultHttpClient)client).getCookieStore().getCookies()), ha);//		log.debug(authgets.getURI());
 //		if (!authgets.getStatusLine().toString().contains("200") && log.isDebugEnabled()) 
 //			log.debug("GET: " + authgets.getStatusLine().toString());
-//
-//		out = authgets.getResponseBodyAsString();
 //		
 		out = cp.processReturningText(out, ha);
 //		// release any connection resources used by the method
@@ -364,7 +285,7 @@ public class HttpActionClient {
 	 *            @deprecated is a bit too chatty
 	 */
 	private void showCookies() {
-		if (client instanceof DefaultHttpClient) {
+		if (client instanceof DefaultHttpClient  && log.isDebugEnabled()) {
 		List<Cookie> cookies = ((DefaultHttpClient) client).getCookieStore().getCookies();
 		if (cookies.size() > 0) {
 			String cStr = "";
