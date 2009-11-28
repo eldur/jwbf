@@ -27,6 +27,7 @@ import java.net.MalformedURLException;
 import net.sourceforge.jwbf.TestHelper;
 import net.sourceforge.jwbf.core.actions.util.ActionException;
 import net.sourceforge.jwbf.mediawiki.LiveTestFather;
+import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.actions.login.PostLoginOld;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 
@@ -148,7 +149,7 @@ public class LoginTest extends LiveTestFather {
 		assertFalse("shuld not end with .php" , url.endsWith(".php"));
 		bot = new MediaWikiBot(url);
 		bot.login(getValue("wikiMW1_09_user"), getValue("wikiMW1_09_pass"));
-		assertEquals(true, bot.isLoggedIn());
+		assertTrue(bot.isLoggedIn());
 	}
 	
 	
@@ -181,6 +182,19 @@ public class LoginTest extends LiveTestFather {
 	
 		bot.login(getValue("wikiMW1_09_user"), getValue("wikiMW1_09_pass"));
 
+	}
+	
+	/**
+	 * Test login on a Mediawiki. 
+	 * @throws Exception a
+	 */
+	@Test
+	public final void loginWikiMWLast() throws Exception {
+			
+		bot = getMediaWikiBot(Version.getLast(), false);
+		bot.login(getWikiUser(Version.getLast()), getWikiPass(Version.getLast()));
+		assertTrue(bot.isLoggedIn());
+		registerTestedVersion(PostLoginOld.class, bot.getVersion());
 	}
 
 }
