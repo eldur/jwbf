@@ -4,6 +4,11 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * @deprecated use post instead.
+ * @author Thomas Stock
+ *
+ */
 public class FilePost extends Post {
 
 	private Map<String, Object> parts = new HashMap<String, Object>();

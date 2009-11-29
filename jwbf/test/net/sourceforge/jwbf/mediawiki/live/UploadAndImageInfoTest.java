@@ -20,6 +20,7 @@ package net.sourceforge.jwbf.mediawiki.live;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -176,6 +177,24 @@ public class UploadAndImageInfoTest extends LiveTestFather {
 		
 	}
 	/**
+	 * Test to delete an image.
+	 * @throws Exception a
+	 */
+	@Test(expected=ProcessException.class)
+	public final void deleteImage() throws Exception {
+		bot = getMediaWikiBot(Version.MW1_15, true);
+		generalUploadImageInfoTest(bot, Version.MW1_15);
+		bot.postDelete("File:" + getValue("filename"));
+
+		try {
+			
+			 new URL(new ImageInfo(bot, getValue("filename")).getUrlAsString());
+		} catch (ProcessException e) {
+			throw new ProcessException(e.getLocalizedMessage() + "; \n is upload enabled ?");
+		}
+		fail("file was found ");
+	}
+	/**
 	 * 
 	 * @param bot a
 	 * @param v a
@@ -186,6 +205,12 @@ public class UploadAndImageInfoTest extends LiveTestFather {
 		assertTrue("File (" + getValue("validFile") 
 				+ ") not readable", new File(getValue("validFile")).canRead());
 		SimpleFile sf = new SimpleFile(getValue("filename"), getValue("validFile"));
+		if (v.greaterEqThen(Version.MW1_12))
+			try {
+			bot.postDelete("File:" + getValue("filename"));
+			} catch (Exception e) {
+				// do nothing
+			}
 		FileUpload up = new FileUpload(sf, bot);
 	
 		bot.performAction(up);

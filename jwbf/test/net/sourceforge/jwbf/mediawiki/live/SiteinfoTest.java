@@ -18,10 +18,11 @@
  */
 package net.sourceforge.jwbf.mediawiki.live;
 
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import net.sourceforge.jwbf.JWBF;
 import net.sourceforge.jwbf.TestHelper;
+import net.sourceforge.jwbf.core.bots.HttpBot;
 import net.sourceforge.jwbf.core.contentRep.Article;
 import net.sourceforge.jwbf.mediawiki.LiveTestFather;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
@@ -211,7 +212,18 @@ public class SiteinfoTest extends LiveTestFather {
 	}
 	
 	
-
+	/**
+	 * Test if useragent ist jwbf.
+	 * @throws Exception a
+	 */
+	@Test
+	public final void testUserAgent() throws Exception {
+		
+		HttpBot bot = HttpBot.getInstance();
+		String result = bot.getPage(getValue("useragent_url"));
+		assertTrue("useragent should contain \"JWBF\"", result.contains("JWBF"));
+		assertTrue("useragent should contain actual version", result.contains(JWBF.getVersion(getClass())));
+	}
 	
 }
 

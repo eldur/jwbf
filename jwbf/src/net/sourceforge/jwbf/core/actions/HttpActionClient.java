@@ -21,6 +21,7 @@ package net.sourceforge.jwbf.core.actions;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
@@ -44,6 +45,7 @@ import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.params.ClientPNames;
 import org.apache.http.cookie.Cookie;
 import org.apache.http.entity.mime.MultipartEntity;
+import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.log4j.Logger;
@@ -64,6 +66,8 @@ public class HttpActionClient {
 	private Logger log = Logger.getLogger(getClass());
 
 	private HttpHost host;
+
+	private int prevHash;
 
 
 	
@@ -91,7 +95,7 @@ public class HttpActionClient {
 		}
 
 		client.getParams().setParameter("http.useragent",
-				"JWBF " + JWBF.getVersion(getClass())); // TODO test
+				"JWBF " + JWBF.getVersion(getClass()));
 	
 		host = new HttpHost(url.getHost(), url.getPort(), "http"); // FIXME Https 
 		
@@ -146,9 +150,13 @@ public class HttpActionClient {
 
 				    MultipartEntity entity = new MultipartEntity();
 				    for (String key : p.getParams().keySet()) {
-				    	String content = p.getParams().get(key);
-				    	if (content != null)
-				      entity.addPart(key, new StringBody(content));
+				    	Object content = p.getParams().get(key);
+				    	if (content != null) {
+				    		if (content instanceof String)
+				    			entity.addPart(key, new StringBody((String) content));
+				    		else if (content instanceof File)
+				    			entity.addPart(key, new FileBody((File) content));
+				    	}
 				    }
 					((HttpPost) e).setEntity(entity);
 					HttpResponse res = client.execute(e);
@@ -301,26 +309,26 @@ public class HttpActionClient {
 	private void debug(HttpUriRequest e, HttpAction ha, ContentProcessable cp) {
 		if (log.isDebugEnabled()) {
 			
-//			String continueing = "";
-//			if (prevHash == cp.hashCode()) {
-//				continueing = " [continuing req]";
-//			} else {
-//				continueing = "";
-//			}
-//			prevHash = cp.hashCode();
-//			String epath = e.getPath();
-//			int sl = epath.lastIndexOf("/");
-//			epath = epath.substring(0, sl);
-//			String type = "";
-//			if (ha instanceof Post) {
-//				type = "(POST ";
-//			} else if (ha instanceof Get) {
-//				type = "(GET ";
-//			}
-//			type += cp.getClass().getSimpleName() + ")" + continueing;
-//			log.debug("message " + type + " is: \n\t own: " 
-//					+  getHostUrl() 
-//					+ epath + "\n\t act: " + ha.getRequest());
+			String continueing = "";
+			if (prevHash == cp.hashCode()) {
+				continueing = " [continuing req]";
+			} else {
+				continueing = "";
+			}
+			prevHash = cp.hashCode();
+			String epath = e.getParams().getParameter(ClientPNames.DEFAULT_HOST).toString();
+			int sl = epath.lastIndexOf("/");
+			epath = epath.substring(0, sl);
+			String type = "";
+			if (ha instanceof Post) {
+				type = "(POST ";
+			} else if (ha instanceof Get) {
+				type = "(GET ";
+			}
+			type += cp.getClass().getSimpleName() + ")" + continueing;
+			log.debug("message " + type + " is: \n\t own: " 
+					+  getHostUrl() 
+					+ epath + "\n\t act: " + ha.getRequest());
 		}
 	}
 	/**
@@ -328,8 +336,7 @@ public class HttpActionClient {
 	 * @return the
 	 */
 	public String getHostUrl() {
-		return "";
-//		return client.getHostConfiguration().getHostURL();
+		return host.toURI();
 	}
 }
 

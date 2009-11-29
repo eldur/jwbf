@@ -89,7 +89,8 @@ public class ImageInfo extends MWAction {
 			new URL(urlOfImage);
 		} catch (MalformedURLException e) {
 			if (bot.getHostUrl().length() <= 0) {
-				throw new ProcessException("please use the constructor with hostUrl");
+				throw new ProcessException("please use the constructor with hostUrl; "
+						+ urlOfImage);
 			}
 			urlOfImage = bot.getHostUrl() + urlOfImage;
 		}

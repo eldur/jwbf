@@ -30,7 +30,6 @@ import java.io.FileNotFoundException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import net.sourceforge.jwbf.core.actions.FilePost;
 import net.sourceforge.jwbf.core.actions.Get;
 import net.sourceforge.jwbf.core.actions.Post;
 import net.sourceforge.jwbf.core.actions.util.ActionException;
@@ -130,33 +129,33 @@ public class FileUpload extends MWAction {
 		try {
 
 			LOG.info("WRITE: " + a.getTitle());
-			FilePost post = new FilePost(uS);
+			Post post = new Post(uS);
 	
 			if (a.getText().length() == 0) {
-				post.addPart("wpDestFile", a.getTitle());
+				post.addParam("wpDestFile", a.getTitle());
 			
-				post.addPart("wpIgnoreWarning", "true");
-				post.addPart("wpSourceType", "file");
-				post.addPart("wpUpload", "Upload file");
-//				 post.addPart("wpUploadDescription", "false");
-//				 post.addPart("wpWatchthis", "false");
+				post.addParam("wpIgnoreWarning", "true");
+				post.addParam("wpSourceType", "file");
+				post.addParam("wpUpload", "Upload file");
+//				 post.addParam("wpUploadDescription", "false");
+//				 post.addParam("wpWatchthis", "false");
 
-				post.addPart("wpUploadFile", a.getFile());
+				post.addParam("wpUploadFile", a.getFile());
 				// new FilePart( f.getName(), f)
 
 			
 			} else {
-				post.addPart("wpDestFile", a.getTitle());
+				post.addParam("wpDestFile", a.getTitle());
 				
-				post.addPart("wpIgnoreWarning", "true");
-				post.addPart("wpSourceType", "file");
-				post.addPart("wpUpload", "Upload file");
+				post.addParam("wpIgnoreWarning", "true");
+				post.addParam("wpSourceType", "file");
+				post.addParam("wpUpload", "Upload file");
 						// new StringPart("wpUploadDescription", "false"),
 						// new StringPart("wpWatchthis", "false"),
 
-				post.addPart("wpUploadFile", a.getFile());
+				post.addParam("wpUploadFile", a.getFile());
 						// new FilePart( f.getName(), f)
-				post.addPart("wpUploadDescription", a.getText());
+				post.addParam("wpUploadDescription", a.getText());
 				
 
 			}

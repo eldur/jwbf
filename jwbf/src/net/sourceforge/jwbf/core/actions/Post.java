@@ -8,7 +8,7 @@ import net.sourceforge.jwbf.core.actions.util.HttpAction;
 public class Post implements HttpAction {
 
 	private final String req;
-	private Map<String, String> params = new HashMap<String, String>();
+	private Map<String, Object> params = new HashMap<String, Object>();
 	private final String charset;
 	
 	public Post(String req, String charset) {
@@ -24,11 +24,11 @@ public class Post implements HttpAction {
 	}
 	
 
-	public void addParam(String key, String value) {
+	public void addParam(String key, Object value) {
 		params.put(key, value);
 	}
 	
-	public Map<String, String> getParams() {
+	public Map<String, Object> getParams() {
 		return params;
 	}
 	
