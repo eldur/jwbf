@@ -97,7 +97,7 @@ public class HttpActionClient {
 		client.getParams().setParameter("http.useragent",
 				"JWBF " + JWBF.getVersion(getClass()));
 	
-		host = new HttpHost(url.getHost(), url.getPort(), "http"); // FIXME Https 
+		host = new HttpHost(url.getHost(), url.getPort(), url.getProtocol()); 
 		
 		this.client = client;
 	}
@@ -159,6 +159,7 @@ public class HttpActionClient {
 				    	}
 				    }
 					((HttpPost) e).setEntity(entity);
+					debug(e, ha, a);
 					HttpResponse res = client.execute(e);
 
 					
@@ -316,7 +317,7 @@ public class HttpActionClient {
 				continueing = "";
 			}
 			prevHash = cp.hashCode();
-			String epath = e.getParams().getParameter(ClientPNames.DEFAULT_HOST).toString();
+			String epath = e.getURI().toString();
 			int sl = epath.lastIndexOf("/");
 			epath = epath.substring(0, sl);
 			String type = "";
@@ -327,7 +328,7 @@ public class HttpActionClient {
 			}
 			type += cp.getClass().getSimpleName() + ")" + continueing;
 			log.debug("message " + type + " is: \n\t own: " 
-					+  getHostUrl() 
+					+  getHostUrl()
 					+ epath + "\n\t act: " + ha.getRequest());
 		}
 	}

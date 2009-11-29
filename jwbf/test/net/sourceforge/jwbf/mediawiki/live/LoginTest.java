@@ -21,9 +21,9 @@ package net.sourceforge.jwbf.mediawiki.live;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 import java.net.MalformedURLException;
+import java.net.URL;
 
 import net.sourceforge.jwbf.TestHelper;
 import net.sourceforge.jwbf.core.actions.util.ActionException;
@@ -33,6 +33,7 @@ import net.sourceforge.jwbf.mediawiki.actions.login.PostLoginOld;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 /**
  * Test Login.
@@ -198,17 +199,18 @@ public class LoginTest extends LiveTestFather {
 		registerTestedVersion(PostLoginOld.class, bot.getVersion());
 	}
 	/**
-	 * Login on last MW with SSL.
+	 * Login on last MW with SSL. TODO unignore
 	 * @throws Exception a
 	 */
+	@Ignore
 	@Test
 	public final void loginWikiMWLastSSL() throws Exception {
-			
-		bot = getMediaWikiBot(Version.getLast(), false);
+		URL u = new URL(getWikiUrl(Version.getLast()).replace("http", "https"));
+		
+		assertEquals("https", u.getProtocol());
+		bot = new MediaWikiBot(u);
 		bot.login(getWikiUser(Version.getLast()), getWikiPass(Version.getLast()));
 		assertTrue(bot.isLoggedIn());
-		registerTestedVersion(PostLoginOld.class, bot.getVersion());
-		fail();
 	}
 
 }
