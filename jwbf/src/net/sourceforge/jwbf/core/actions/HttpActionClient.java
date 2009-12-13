@@ -96,7 +96,7 @@ public class HttpActionClient {
 
 		client.getParams().setParameter("http.useragent",
 				"JWBF " + JWBF.getVersion(getClass()));
-	
+		client.getParams().setParameter("http.protocol.expect-continue", Boolean.FALSE);
 		host = new HttpHost(url.getHost(), url.getPort(), url.getProtocol()); 
 		
 		this.client = client;
