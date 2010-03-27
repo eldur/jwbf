@@ -195,7 +195,10 @@ public class PostModifyContent extends MWAction {
 	public String processReturningText(String s, HttpAction hm)
 			throws ProcessException {
 		if (s.contains("error")) {
-			throw new ProcessException(s.substring(0, 700));
+		    if (s.length() > 700) {
+		        s = s.substring(0, 700);
+		    }
+			throw new ProcessException(s);
 		}
 		if (initOldGet != null && hm.getRequest().equals(initOldGet.getRequest())) {
 			getWpValues(s, tab);
