@@ -1,20 +1,20 @@
 /*
  * Copyright 2009 Martin Koch.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under
  * the License.
- * 
+ *
  * Contributors:
- * 
+ *
  */
 
 package net.sourceforge.jwbf.zim.bots;
@@ -22,8 +22,8 @@ package net.sourceforge.jwbf.zim.bots;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.util.Collection;
-import java.util.Vector;
+import java.util.HashSet;
+import java.util.Set;
 
 import net.sourceforge.jwbf.core.actions.util.ActionException;
 import net.sourceforge.jwbf.core.actions.util.ProcessException;
@@ -33,7 +33,7 @@ import net.sourceforge.jwbf.core.contentRep.Article;
 import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
 import net.sourceforge.jwbf.core.contentRep.Userinfo;
 /**
- * 
+ *
  * @author Martin Koch
  *
  */
@@ -46,7 +46,7 @@ public class ZimWikiBot implements WikiBot {
 	/**
 	 * Constructor for a ZIM wiki-bot.
 	 * @param zimRootFolder this is the folder on your local machine
-	 * 
+	 *
 	 */
 
 	public ZimWikiBot(String zimRootFolder) {
@@ -54,7 +54,7 @@ public class ZimWikiBot implements WikiBot {
 		this(new File(zimRootFolder));
 	}
 
-	
+
 	public ZimWikiBot(File rootFolder) {
 		// specify the path to all zim files
 		this.rootFolder = rootFolder;
@@ -85,7 +85,7 @@ public class ZimWikiBot implements WikiBot {
 
 	/**
 	 * Set up a simple text paarser
-	 * some simple formating routines are supplied 
+	 * some simple formating routines are supplied
 	 * -> bold letters and images are translated from
 	 * zimWiki to mediaWiki
 	 */
@@ -145,13 +145,13 @@ public class ZimWikiBot implements WikiBot {
 
 	public Userinfo getUserinfo() throws ActionException, ProcessException {
 		return new Userinfo() {
-		
+
 			public String getUsername() {
 				return System.getProperty("user.name");
 			}
-		
-			public Collection<String> getRights() {
-				Vector<String> v = new Vector<String>();
+
+			public Set<String> getRights() {
+			    Set<String> v = new HashSet<String>();
 				if (rootFolder.canRead()) {
 					v.add("read");
 				}
@@ -160,9 +160,9 @@ public class ZimWikiBot implements WikiBot {
 				}
 				return v;
 			}
-		
-			public Collection<String> getGroups() {
-				return new Vector<String>();
+
+			public Set<String> getGroups() {
+				return new HashSet<String>();
 			}
 		};
 	}
@@ -187,9 +187,9 @@ public class ZimWikiBot implements WikiBot {
 
 	public void setCacheHandler(CacheHandler ch) {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
+
 //	public String getMWFolder() {
 //		return mwFolder;
 //	}

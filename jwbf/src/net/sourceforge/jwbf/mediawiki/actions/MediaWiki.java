@@ -2,9 +2,11 @@ package net.sourceforge.jwbf.mediawiki.actions;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
- * 
+ *
  * @author Thomas Stock
  *
  */
@@ -44,11 +46,17 @@ public final class MediaWiki {
 	public static final int NS_HELP_TALK = 13;
 	public static final int NS_CATEGORY = 14;
 	public static final int NS_CATEGORY_TALK = 15;
-	
+
 	public static final int [] NS_ALL = {NS_MAIN, NS_MAIN_TALK, NS_USER, NS_USER_TALK
 		, NS_META, NS_META_TALK, NS_IMAGES, NS_IMAGES_TALK, NS_MEDIAWIKI, NS_MEDIAWIKI_TALK
 		, NS_TEMPLATE, NS_TEMPLATE_TALK, NS_HELP, NS_HELP_TALK, NS_CATEGORY, NS_CATEGORY_TALK};
-	
+
+	public static final Set<String> BOT_GROUPS = new HashSet<String>();
+
+	static {
+	    BOT_GROUPS.add("bot");
+	}
+
 	/**
 	 * Representaion of MediaWiki version.
 	 * @author Thomas Stock
@@ -56,17 +64,17 @@ public final class MediaWiki {
 	 */
 	public enum Version {
 		MW1_09, MW1_10, MW1_11, MW1_12, MW1_13, MW1_14, MW1_15, UNKNOWN, DEVELOPMENT;
-		
-		
+
+
 		private static Version last = UNKNOWN;
 		/**
-		 * 
+		 *
 		 * @return a, like 1.15
 		 */
 		public String getNumber() {
 			return name().replace("MW", "").replace("_0", "_").replace("_", ".");
 		}
-		
+
 		private int getIntValue() {
 			try {
 				return Integer.parseInt(getNumber().replace(".", ""));
@@ -77,7 +85,7 @@ public final class MediaWiki {
 			}
 		}
 		/**
-		 * 
+		 *
 		 * @return the last version
 		 */
 		public static Version getLast() {
@@ -92,7 +100,7 @@ public final class MediaWiki {
 			return last;
 		}
 		/**
-		 * 
+		 *
 		 * @param v a
 		 * @return true if
 		 */
@@ -102,12 +110,12 @@ public final class MediaWiki {
 			return true;
 		}
 		/**
-		 * 
+		 *
 		 * @return all known stable MW Versions
 		 */
 		public static Version [] valuesStable() {
 			Version [] vxN = new Version [Version.values().length - 2];
-			
+
 			Version [] vx = Version.values();
 			int j = 0;
 			for (int i = 0; i < vx.length; i++) {
@@ -117,21 +125,21 @@ public final class MediaWiki {
 			}
 			return vxN;
 		}
-		
+
 	}
-	
+
 	private MediaWiki() {
 //		do nothing
 	}
 	/**
-	 * 
+	 *
 	 * @return the
 	 */
 	public static String getCharset() {
 		return CHARSET;
 	}
 	/**
-	 * 
+	 *
 	 * @param s a
 	 * @return encoded s
 	 */
@@ -144,7 +152,7 @@ public final class MediaWiki {
 		return s;
 	}
 	/**
-	 * 
+	 *
 	 * @param s a
 	 * @return decoded s
 	 */

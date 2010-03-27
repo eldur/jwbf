@@ -1,20 +1,20 @@
 /*
  * Copyright 2007 Thomas Stock.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under
  * the License.
- * 
+ *
  * Contributors:
- * 
+ *
  */
 package net.sourceforge.jwbf.mediawiki.actions.editing;
 
@@ -27,7 +27,9 @@ import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_14;
 import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_15;
 
 import java.util.Hashtable;
+import java.util.Set;
 
+import net.sourceforge.jwbf.core.Misc;
 import net.sourceforge.jwbf.core.actions.Get;
 import net.sourceforge.jwbf.core.actions.Post;
 import net.sourceforge.jwbf.core.actions.util.ActionException;
@@ -45,11 +47,11 @@ import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 import org.apache.log4j.Logger;
 
 /**
- * 
- * 
+ *
+ *
  * Writes an article.
- * 
- * 
+ *
+ *
  * @author Thomas Stock
  */
 @SupportedBy({ MW1_09, MW1_10, MW1_11, MW1_12, MW1_13, MW1_14, MW1_15 })
@@ -57,7 +59,7 @@ public class PostModifyContent extends MWAction {
 
 	private boolean first = true;
 	private boolean second = true;
-	
+
 	private final ContentAccessable a;
 	private final Logger log = Logger.getLogger(PostModifyContent.class);
 	private Hashtable<String, String> tab = new Hashtable<String, String>();
@@ -80,8 +82,6 @@ public class PostModifyContent extends MWAction {
 		}
 		this.a = a;
 		this.bot = bot;
-		
-
 	}
 
 	/**
@@ -91,19 +91,19 @@ public class PostModifyContent extends MWAction {
 
 		if (first) {
 			try {
-				if (!bot.isEditApi()) 
+				if (!bot.isEditApi())
 					throw new VersionException("write api off - user triggerd");
 				switch (bot.getVersion()) {
 				case MW1_09:
 				case MW1_10:
 				case MW1_11:
 				case MW1_12:
-					throw new VersionException("write api not avalibal");
+					throw new VersionException("write api not available");
 				default:
 					break;
 				}
 				first = false;
-				if (!(bot.getUserinfo().getRights().contains("edit") 
+				if (!(bot.getUserinfo().getRights().contains("edit")
 						&& bot.getUserinfo().getRights().contains("writeapi"))) {
 					throw new VersionException("write api not avalibal");
 				}
@@ -129,13 +129,22 @@ public class PostModifyContent extends MWAction {
 			postModify = new Post(uS);
 			postModify.addParam("summary", a.getEditSummary());
 			postModify.addParam("text", a.getText());
-//			postModify.addParam("watch", "unknown") 
+            try {
+                Set<String> groups = bot.getUserinfo().getGroups();
+                if (!Misc.isIntersectionEmpty(groups, MediaWiki.BOT_GROUPS)) {
+                    postModify.addParam("bot", "");
+                }
+            } catch (JwbfException e) {
+                log.warn("{}", e);
+            }
+
+//			postModify.addParam("watch", "unknown")
 			if (a.isMinorEdit())
 				postModify.addParam("minor", "");
-			else 
+			else
 				postModify.addParam("notminor", "");
 			postModify.addParam("token", apiReq.getToken());
-			
+
 		} else {
 			String uS = "/index.php?title=" + MediaWiki.encode(a.getTitle())
 					+ "&action=submit";
@@ -165,7 +174,7 @@ public class PostModifyContent extends MWAction {
 
 			log.info("WRITE: " + a.getTitle());
 
-			
+
 		}
 		second = false;
 
@@ -185,7 +194,7 @@ public class PostModifyContent extends MWAction {
 	@Override
 	public String processReturningText(String s, HttpAction hm)
 			throws ProcessException {
-		if (s.contains("error")) { 
+		if (s.contains("error")) {
 			throw new ProcessException(s.substring(0, 700));
 		}
 		if (initOldGet != null && hm.getRequest().equals(initOldGet.getRequest())) {
@@ -193,20 +202,20 @@ public class PostModifyContent extends MWAction {
 			if (log.isDebugEnabled()) {
 				log.debug(tab);
 			}
-			
+
 		} else if (apiGet != null && hm.getRequest().equals(apiGet.getRequest())) {
 			if (log.isDebugEnabled()) {
 				log.debug("parseapi");
 			}
 			apiReq.processReturningText(s, hm);
-		} 
+		}
 
-		
+
 		return s;
 	}
 
 	/**
-	 * 
+	 *
 	 * @param text
 	 *            where to search
 	 * @param tab

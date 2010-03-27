@@ -9,7 +9,6 @@ import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_15;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -31,21 +30,21 @@ import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
 import org.xml.sax.InputSource;
 /**
- * 
+ *
  * @author Thomas Stock
  *
  */
 @SupportedBy({ MW1_11, MW1_12, MW1_13, MW1_14, MW1_15 })
 public class GetUserinfo extends MWAction implements Userinfo {
 
-	
+
 	private final Logger log = Logger.getLogger(getClass());
 	private String username = "";
 	private final Set<String> rights = new HashSet<String>();
 	private final Set<String> groups = new HashSet<String>();
 	private Get msg;
 	/**
-	 * 
+	 *
 	 * @param v a
 	 * @throws VersionException  a
 	 */
@@ -73,7 +72,7 @@ public class GetUserinfo extends MWAction implements Userinfo {
 		}
 
 	}
-	
+
 	private void parse(final String xml) {
 		log.debug(xml);
 		rights.clear();
@@ -92,11 +91,12 @@ public class GetUserinfo extends MWAction implements Userinfo {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
-	public final String processAllReturningText(final String s)
+	@Override
+    public final String processAllReturningText(final String s)
 			throws ProcessException {
 		parse(s);
 		return "";
@@ -104,13 +104,13 @@ public class GetUserinfo extends MWAction implements Userinfo {
 	/**
 	 * {@inheritDoc}
 	 */
-	public Collection<String> getRights() {
+	public Set<String> getRights() {
 		return rights;
 	}
 	/**
 	 * {@inheritDoc}
 	 */
-	public Collection<String> getGroups() {
+	public Set<String> getGroups() {
 		return groups;
 	}
 	/**
@@ -119,7 +119,7 @@ public class GetUserinfo extends MWAction implements Userinfo {
 	public String getUsername() {
 		return username;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	protected void findContent(final Element root) {
 
@@ -130,8 +130,8 @@ public class GetUserinfo extends MWAction implements Userinfo {
 			// blockinfo|hasmsg|groups|rights   <- MW 11
 			if (element.getQualifiedName().equalsIgnoreCase("userinfo")) {
 				username = element.getAttributeValue("name");
-				
-				
+
+
 			} else if (element.getQualifiedName().equalsIgnoreCase("groups")) {
 				Iterator<Element> git = element.getChildren("g").iterator();
 				while (git.hasNext()) {
@@ -139,19 +139,19 @@ public class GetUserinfo extends MWAction implements Userinfo {
 					groups.add(gel);
 				}
 			} else if (element.getQualifiedName().equalsIgnoreCase("rights")) {
-				
+
 				Iterator<Element> rit = element.getChildren("r").iterator();
 				while (rit.hasNext()) {
 					String rel = rit.next().getTextTrim();
-					
+
 					rights.add(rel);
 				}
 			}
 			findContent(element);
-			
+
 		}
-		
-		
+
+
 	}
 	/**
 	 * {@inheritDoc}

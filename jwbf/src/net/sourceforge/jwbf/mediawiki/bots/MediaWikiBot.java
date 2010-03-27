@@ -4,8 +4,9 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.UnknownHostException;
-import java.util.Collection;
-import java.util.Vector;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 import net.sourceforge.jwbf.core.actions.ContentProcessable;
 import net.sourceforge.jwbf.core.actions.util.ActionException;
@@ -34,12 +35,10 @@ import net.sourceforge.jwbf.mediawiki.contentRep.LoginData;
 import org.apache.log4j.Logger;
 
 /**
- * This class helps you to interact with each 
+ * This class helps you to interact with each
  * <a href="http://www.mediawiki.org" target="_blank">MediaWiki</a>. This class offers
  * a <b>basic set</b> of methods which are defined in the package net.sourceforge.jwbf.actions.mw.*
- * 
- * If you need more options, use these classes directly or you can also use the 
- * class {@link MediaWikiAdapterBot} which provides a bigger set of methods.
+ *
  *
  * How to use:
  *
@@ -48,11 +47,21 @@ import org.apache.log4j.Logger;
  * b.login(&quot;Username&quot;, &quot;Password&quot;);
  * System.out.println(b.readContent(&quot;Main Page&quot;).getText());
  * </pre>
- * 
+ *
+ * <b>How to find the correct wikiurl</b><p>
+ * The correct wikiurl is sometimes not easy to find, because some wikiadmis uses
+ * url rewriting rules. In this cases the correct url is the one, which gives you
+ * access to <code>api.php</code>. E.g. Compare
+ * <pre>
+ * http://www.mediawiki.org/wiki/api.php
+ * http://www.mediawiki.org/w/api.php
+ * </pre>
+ * Thus the correct wikiurl is: <code>http://www.mediawiki.org/w/</code>
+ * </p>
  * @author Thomas Stock
  * @author Tobias Knerr
  * @author Justus Bisser
- * 
+ *
  * @see MediaWikiAdapterBot
  *
  */
@@ -66,34 +75,36 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
 
 	private Version version = null;
 	private Userinfo ui = null;
-	
+
 	private boolean loginChangeUserInfo = false;
 	private boolean loginChangeVersion = false;
 	private boolean useEditApi = true;
-	
+
 	/**
 	 * These chars are not allowed in article names.
 	 */
 	public static final char [] INVALID_LABEL_CHARS = "[]{}<>|".toCharArray();
 	private static final int READVAL = GetRevision.CONTENT
 	| GetRevision.COMMENT | GetRevision.USER | GetRevision.TIMESTAMP | GetRevision.IDS | GetRevision.FLAGS;
-	
+
+    private static final Set<String> emptySet = Collections.unmodifiableSet(new HashSet<String>());
+
 	/**
 	 * @param u
-	 *            wikihosturl like "http://www.mediawiki.org/wiki/"
+	 *            wikihosturl like "http://www.mediawiki.org/w/"
 	 */
 	public MediaWikiBot(final URL u) {
 		super(u);
 
 	}
-	
+
 	/**
 	 * @param url
-	 *            wikihosturl like "http://www.mediawiki.org/wiki/"
+	 *            wikihosturl like "http://www.mediawiki.org/w/"
 	 * @throws MalformedURLException
 	 *            if param url does not represent a well-formed url
 	 */
-	
+
 	public MediaWikiBot(final String url) throws MalformedURLException {
 		super(url);
 		if (!(url.endsWith(".php") || url.endsWith("/"))) {
@@ -104,8 +115,8 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
 	}
 
 	/**
-	 * 
-	 * @param url wikihosturl like "http://www.mediawiki.org/wiki/"
+	 *
+	 * @param url wikihosturl like "http://www.mediawiki.org/w/"
 	 * @param testHostReachable if true, test if host reachable
 	 * @throws IOException a
 	 */
@@ -123,7 +134,7 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
 
 
 	/**
-	 * Performs a Login. 
+	 * Performs a Login.
 	 *
 	 * @param username
 	 *            the username
@@ -156,14 +167,14 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
 			this.login = login;
 			loginChangeUserInfo = true;
 			if (getVersion() == Version.UNKNOWN) {
-			loginChangeVersion = true; 
+			loginChangeVersion = true;
 			}
 		} catch (ProcessException e) {
 			throw new ActionException(e.getLocalizedMessage());
 		} catch (RuntimeException e) {
 			throw new ActionException(e.getMessage());
 		}
-	
+
 	}
 	/**
 	 * Performs a Login. Actual old cookie login works right, because is pending
@@ -209,7 +220,7 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
 			if (store.containsKey(name)) {
 				ac = new GetRevision(this.getVersion(), name, GetRevision.TIMESTAMP);
 				performAction(ac);
-				
+
 				SimpleArticle storeSa = store.get(name);
 				if (log.isDebugEnabled()) {
 					log.debug("stored article (" + storeSa.getTitle() + ") revid: " + storeSa.getRevisionId());
@@ -238,24 +249,24 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
 		return ac.getArticle();
 
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
 	public SimpleArticle readData(String name) throws ActionException,
 			ProcessException {
-		
+
 		return readData(name, READVAL);
 	}
 	/**
-	 * 
+	 *
 	 * {@inheritDoc}
 	 */
 	public void setCacheHandler(CacheHandler ch) {
 		this.store = ch;
 	}
 	/**
-	 * 
+	 *
 	 * {@inheritDoc}
 	 */
 	public boolean hasCacheHandler() {
@@ -279,7 +290,7 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
 		return readContent(name, READVAL);
 
 	}
-	
+
 	/**
 	 *
 	 * @param a a
@@ -287,22 +298,22 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
 	 *             on problems with http, cookies and io
 	 * @throws ProcessException on access problems
 	 * @see PostModifyContent
-	 * 
+	 *
 	 */
 	public synchronized void writeContent(final SimpleArticle ax)
 			throws ActionException, ProcessException {
 		if (!isLoggedIn()) {
 			throw new ActionException("Please login first");
 		}
-		
+
 		for (char invChar : INVALID_LABEL_CHARS) { // FIXME Replace with a REGEX
 			if (ax.getTitle().contains(invChar + "")) {
-				throw new ActionException("Invalid character in label\"" 
+				throw new ActionException("Invalid character in label\""
 						+ ax.getTitle() + "\" : \"" + invChar + "\"");
 			}
 		}
-		
-			
+
+
 		performAction(new PostModifyContent(this, ax));
 		if (store != null) {
 			String label = ax.getTitle();
@@ -321,10 +332,10 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
 			log.debug("update cache (write)");
 			store.put(sa);
 		}
-		if (ax.getText().trim().length() < 1) 
+		if (ax.getText().trim().length() < 1)
 			throw new RuntimeException("Content is empty, still written");
 	}
-	
+
 	/**
 	 *
 	 * @return true if
@@ -338,7 +349,7 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
 
 	}
 	/**
-	 * 
+	 *
 	 * @return a
 	 * @throws ActionException
 	 *             on problems with http, cookies and io
@@ -350,57 +361,57 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
 			GetUserinfo a;
 			try {
 				a = new GetUserinfo(getVersion());
-				
+
 				performAction(a);
 				ui = a;
 				loginChangeUserInfo = false;
 			} catch (VersionException e) {
 				if (login != null && login.getUserName().length() > 0) {
 					ui = new Userinfo() {
-					
+
 						public String getUsername() {
 							return login.getUserName();
 						}
-					
-						public Collection<String> getRights() {
-							return new Vector<String>();
+
+						public Set<String> getRights() {
+							return emptySet;
 						}
-					
-						public Collection<String> getGroups() {
-							return new Vector<String>();
+
+						public Set<String> getGroups() {
+							return emptySet;
 						}
 					};
 				} else {
 					ui = new Userinfo() {
-						
+
 						public String getUsername() {
 							return "unknown";
 						}
-					
-						public Collection<String> getRights() {
-							return new Vector<String>();
+
+						public Set<String> getRights() {
+							return emptySet;
 						}
-					
-						public Collection<String> getGroups() {
-							return new Vector<String>();
+
+						public Set<String> getGroups() {
+							return emptySet;
 						}
 					};
 				}
 			}
-			
-			
+
+
 		}
 		return ui;
 	}
-	
-	
+
+
 	/**
 	 * @param title to delete
 	 * @throws ActionException if
 	 * @throws ProcessException if
 	 */
 	public void postDelete(String title) throws ActionException, ProcessException {
-		
+
 		performAction(new PostDelete(this, title));
 	}
 	/**
@@ -417,14 +428,14 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return the
 	 * @throws RuntimeException if no version was found.
 	 * @see #getSiteinfo()
 	 */
 	public final Version getVersion() throws RuntimeException {
 		if (version == null || loginChangeVersion) {
-			
+
 
 			try {
 				GetVersion gs = new GetVersion();
@@ -441,7 +452,7 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
 		}
 		return version;
 	}
-	
+
 	/**
 	 *
 	 * @return a
@@ -450,7 +461,7 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
 	 * @see Siteinfo
 	 */
 	public Siteinfo getSiteinfo() throws ActionException {
-		
+
 		Siteinfo gs = null;
 		try {
 			gs = new Siteinfo();
@@ -463,7 +474,7 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
 
 	}
 	/**
-	 * 
+	 *
 	 * @return the
 	 */
 	public final boolean isEditApi() {
@@ -473,7 +484,7 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
 	/**
 	 * Set to false, to force editing without the API.
 	 * @param useEditApi if
-	 * 
+	 *
 	 */
 	public final void useEditApi(boolean useEditApi) {
 		this.useEditApi = useEditApi;

@@ -1,27 +1,25 @@
 package net.sourceforge.jwbf.core.contentRep;
 
-import java.util.Collection;
+import java.util.Set;
 /**
  * Information about the current user.
  * @author Thomas Stock
  */
 public interface Userinfo {
 	/**
-	 * 
+	 *
 	 * @return the rights, like "read, write, ..."
 	 */
-	Collection<String> getRights();
+	Set<String> getRights();
 	/**
-	 * 
-	 * @return the groups, like "user, bot, ..." 
+	 *
+	 * @return the groups, like "user, bot, ..."
 	 */
-	Collection<String> getGroups();
+	Set<String> getGroups();
 
 	/**
-	 * 
+	 *
 	 * @return the
 	 */
 	String getUsername();
-	
-	
 }

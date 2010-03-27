@@ -93,10 +93,9 @@ public class HttpActionClient {
 		if (url.getPath().length() > 1) {
 			this.path = url.getPath().substring(0, url.getPath().lastIndexOf("/"));
 		}
-
 		client.getParams().setParameter("http.useragent",
 				"JWBF " + JWBF.getVersion(getClass()));
-		client.getParams().setParameter("http.protocol.expect-continue", Boolean.FALSE);
+		client.getParams().setParameter("http.protocol.expect-continue", Boolean.FALSE); // is good for wikipedia server
 		host = new HttpHost(url.getHost(), url.getPort(), url.getProtocol()); 
 		
 		this.client = client;
@@ -163,15 +162,16 @@ public class HttpActionClient {
 					HttpResponse res = client.execute(e);
 
 					
-					  ByteArrayOutputStream byte1=new ByteArrayOutputStream();  
+					ByteArrayOutputStream byte1=new ByteArrayOutputStream();  
 
-					  res.getEntity().writeTo(byte1);
-					 out = new String(byte1.toByteArray());
-					 out = a.processReturningText(out, ha);
+					res.getEntity().writeTo(byte1);
+					out = new String(byte1.toByteArray());
+					out = a.processReturningText(out, ha);
 
-						if (a instanceof CookieValidateable && client instanceof DefaultHttpClient)
+					if (a instanceof CookieValidateable && client instanceof DefaultHttpClient)
 							((CookieValidateable) a).validateReturningCookies(cookieTransform(
 									((DefaultHttpClient)client).getCookieStore().getCookies()), ha);
+					res.getEntity().consumeContent();
 				}
 				
 
@@ -237,7 +237,7 @@ public class HttpActionClient {
 //
 //			throw new FileNotFoundException(authgets.getQueryString());
 //		}
-
+		res.getEntity().consumeContent();
 		return out;
 	}
 	
