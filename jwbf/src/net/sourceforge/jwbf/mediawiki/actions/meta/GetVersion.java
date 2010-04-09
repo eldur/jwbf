@@ -1,3 +1,22 @@
+/*
+ * Copyright 2007 Thomas Stock.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ *
+ * Contributors:
+ * Carlos Valenzuela
+ */
+
 package net.sourceforge.jwbf.mediawiki.actions.meta;
 
 import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_09;
@@ -32,7 +51,7 @@ import org.xml.sax.InputSource;
 
 /**
  * Basic action to receive {@link Version}.
- * 
+ *
  * @author Thomas Stock
  *
  */
@@ -47,10 +66,10 @@ public class GetVersion extends MWAction {
 	private String base = "";
 	private String theCase = "";
 	private String mainpage = "";
-	
+
 
 	/**
-	 * Create and submit the request to the Wiki. 
+	 * Create and submit the request to the Wiki.
 	 * Do not use {@link MediaWikiBot#performAction(net.sourceforge.jwbf.actions.ContentProcessable)}.
 	 * @param bot a
 	 * @throws ProcessException a
@@ -60,7 +79,7 @@ public class GetVersion extends MWAction {
 		this();
 		bot.performAction(this);
 	}
-	
+
 	/* In this case the superconstructor with no value is allowed, because
 	 * the versionrequest is mandatory */
 	/**
@@ -68,7 +87,7 @@ public class GetVersion extends MWAction {
 	 */
 	@SuppressWarnings("deprecation")
 	public GetVersion()  {
-			
+
 			msg = new Get("/api.php?action=query&meta=siteinfo&format=xml");
 
 	}
@@ -90,11 +109,12 @@ public class GetVersion extends MWAction {
 			throw new ProcessException(e.getLocalizedMessage());
 		}
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
-	public final String processAllReturningText(final String s)
+	@Override
+    public final String processAllReturningText(final String s)
 			throws ProcessException {
 		parse(s);
 		return "";
@@ -102,67 +122,72 @@ public class GetVersion extends MWAction {
 
 
 	/**
-	 * 
+	 *
 	 * @return the, like "Wikipedia"
 	 */
 	public String getSitename() {
 		return sitename;
 	}
 	/**
-	 * 
+	 *
 	 * @return the, like "http://de.wikipedia.org/wiki/Wikipedia:Hauptseite"
 	 */
 	public String getBase() {
 		return base;
 	}
 	/**
-	 * 
+	 *
 	 * @return the, like "first-letter"
 	 */
 	public String getCase() {
 		return theCase;
 	}
 	/**
-	 * 
+	 *
 	 * @return the
 	 * @see Version
 	 */
 	public Version getVersion() {
-		if (getGenerator().contains("alpha")) {
+		if (getGenerator().contains("alpha") || getGenerator().contains("wmf") ) {
 			return Version.DEVELOPMENT;
 		}
 
+
 		Version[] versions = Version.values();
+
+		StringBuilder buffer = new StringBuilder();
 		for (int i = 0; i < versions.length; i++) {
+			buffer.append(versions[i].getNumber()).append(' ');
 			if (getGenerator().contains(versions[i].getNumber())) {
 				return versions[i];
 			}
 
 		}
-
-		log.info("\nVersion is UNKNOWN for JWBF ("
+		if(log.isInfoEnabled())
+		    log.info("\nVersion is UNKNOWN for JWBF ("
 						+ JWBF.getVersion(getClass())
 						+ ") : \n\t"
-						+ getGenerator()
+						+ getGenerator() + "\n\t"
+						+ "supported versions: " + buffer.toString() + "\n\t"
 						+ "\n\tUsing settings for actual Wikipedia development version");
 		return Version.UNKNOWN;
 
 	}
 	/**
-	 * 
+	 *
 	 * @return the MediaWiki Generator, like "MediaWiki 1.16alpha"
 	 */
 	public String getGenerator() {
 		return generator;
 	}
 	/**
-	 * 
+	 *
 	 * @return the, like "Main Page"
 	 */
 	public String getMainpage() {
 		return mainpage;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	protected void findContent(final Element root) {
 
