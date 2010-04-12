@@ -172,7 +172,7 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
 		} catch (ProcessException e) {
 			throw new ActionException(e.getLocalizedMessage());
 		} catch (RuntimeException e) {
-			throw new ActionException(e.getMessage());
+			throw new ActionException(e);
 		}
 
 	}
