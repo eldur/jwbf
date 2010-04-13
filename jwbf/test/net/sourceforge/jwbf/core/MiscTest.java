@@ -6,6 +6,8 @@ import static org.junit.Assert.assertTrue;
 import java.util.HashSet;
 import java.util.Set;
 
+import net.sourceforge.jwbf.JWBF;
+
 import org.junit.Test;
 
 
@@ -31,6 +33,11 @@ public class MiscTest {
         assertTrue(!Misc.isIntersectionEmpty(b, a));
         assertTrue(a.size() > 1);
         assertTrue(b.size() > 1);
+    }
+
+    @Test
+    public void testGetVersion() {
+        System.out.println(JWBF.getVersion(this.getClass()));
     }
 
 }

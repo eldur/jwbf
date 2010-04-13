@@ -1,20 +1,20 @@
 /*
  * Copyright 2007 Thomas Stock.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under
  * the License.
- * 
+ *
  * Contributors:
- * 
+ *
  */
 package net.sourceforge.jwbf;
 
@@ -30,7 +30,7 @@ import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 
 /**
- * 
+ *
  * @author Thomas Stock
  *
  */
@@ -39,27 +39,34 @@ public final class JWBF {
 	private static final Map<String, String> PARTS = new HashMap<String, String>();
 	private static String version = "";
 	private static String title = "";
-	
-	
+
+
 	static {
+	    String systemSeperatorStr = System.getProperties().getProperty("file.separator");
+	    final char seperatorChar;
+	    if (systemSeperatorStr != null)
+	        seperatorChar = File.separatorChar;
+	    else
+	        seperatorChar = '/';
+
 		String packagename = JWBF.class.getPackage().getName().replace('.',
-				File.separatorChar);
+		        seperatorChar);
 		URL url = JWBF.class.getClassLoader().getResource(packagename);
 		final String jarFileIndex = "jar:file:";
 		boolean isJar = url.toExternalForm().toLowerCase().contains(jarFileIndex);
 		if (isJar) {
 			try {
-				int jarEnd = url.toExternalForm().indexOf("!/");
+				int jarEnd = url.toExternalForm().indexOf("!" + seperatorChar);
 				String jarFileName = url.toExternalForm().substring(jarFileIndex.length(), jarEnd);
 				JarFile jar = new JarFile(jarFileName);
 				Enumeration<JarEntry> je =  jar.entries();
 				while (je.hasMoreElements()) {
-					JarEntry jarEntry = (JarEntry) je.nextElement();
+					JarEntry jarEntry = je.nextElement();
 					String slashCount =  jarEntry.getName().replaceAll("[a-zA-Z0-9]", "");
-					if (jarEntry.isDirectory() && jarEntry.getName().contains(packagename) 
+					if (jarEntry.isDirectory() && jarEntry.getName().contains(packagename)
 							&& slashCount.length() == 4 ) {
-						
-						registerModule(readMFProductTitle(jarFileName) + "-" + jarEntry.getName().split("/")[3],
+
+						registerModule(readMFProductTitle(jarFileName) + "-" + jarEntry.getName().split(seperatorChar + "")[3],
 								readMFVersion(jarFileName));
 					}
 				}
@@ -72,7 +79,7 @@ public final class JWBF {
 				File[] dirs = root.listFiles();
 				for (int i = 0; i < dirs.length; i++) {
 					if (dirs[i].isDirectory()) {
-						int lastIndex = dirs[i].toString().lastIndexOf(File.separatorChar) + 1;
+						int lastIndex = dirs[i].toString().lastIndexOf(seperatorChar) + 1;
 						String partTitle = dirs[i].toString().substring(lastIndex, dirs[i].toString().length());
 						registerModule(readMFProductTitle(root + "") + "-" + partTitle,
 								readMFVersion(root + ""));
@@ -108,7 +115,7 @@ public final class JWBF {
 	}
 
 	/**
-	 * 
+	 *
 	 *
 	 */
 	private JWBF() {
@@ -116,7 +123,7 @@ public final class JWBF {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param artifactId
 	 *            a
 	 * @param version
@@ -133,7 +140,7 @@ public final class JWBF {
 	 * @return the version
 	 */
 	public static String getVersion(Class<?> clazz) {
-		try {			
+		try {
 			return getPartInfo(clazz)[1];
 		} catch (Exception e) {
 			return "Version Unknown";
@@ -147,7 +154,7 @@ public final class JWBF {
 	 */
 	public static String getPartId(Class<?> clazz) {
 		try {
-			
+
 			return getPartInfo(clazz)[0];
 		} catch (Exception e) {
 			return "No Module for " + clazz.getName();
@@ -165,7 +172,7 @@ public final class JWBF {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Prints the JWBF Version.
 	 */
@@ -185,7 +192,7 @@ public final class JWBF {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param path
 	 *            a
 	 * @return the version from manifest
@@ -209,10 +216,10 @@ public final class JWBF {
 		return version;
 	}
 
-	
+
 
 	/**
-	 * 
+	 *
 	 * @param path
 	 *            a
 	 * @return the
@@ -235,7 +242,7 @@ public final class JWBF {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param path
 	 *            a
 	 * @param key
@@ -259,7 +266,7 @@ public final class JWBF {
 		Manifest manifest = new Manifest(manifestUrl.openStream());
 		return manifest.getMainAttributes().getValue(key);
 	}
-	
+
 	private static URL searchMF(String f) throws IOException {
 		String foundE = "target" + File.separatorChar + "MANIFEST.MF";
 		File fi = new File(f);
@@ -268,7 +275,7 @@ public final class JWBF {
 		} else {
 			return searchMF(fi.getParent());
 		}
-		
+
 	}
 
 }
