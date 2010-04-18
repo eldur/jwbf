@@ -7,43 +7,43 @@ import net.sourceforge.jwbf.core.actions.util.ProcessException;
 import net.sourceforge.jwbf.core.bots.WikiBot;
 import net.sourceforge.jwbf.core.bots.util.JwbfException;
 /**
- * 
+ *
  * @author Thomas Stock
  *
  */
 public class Article implements ArticleMeta, ContentSetable {
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 5892823865821665643L;
-	
+
 	private final WikiBot bot;
-	
+
 	private final SimpleArticle sa;
-	
+
 	private int reload = 0;
-	private final int textReload = 1 << 1;
-	private final int revisionIdReload = 1 << 2;
-	private final int minorEditReload = 1 << 3;
-	private final int editorReload = 1 << 4;
-	private final int editSumReload = 1 << 5;
-	private final int editDateReload = 1 << 6;
-	
+	private static final int textReload = 1 << 1;
+	private static final int revisionIdReload = 1 << 2;
+	private static final int minorEditReload = 1 << 3;
+	private static final int editorReload = 1 << 4;
+	private static final int editSumReload = 1 << 5;
+	private static final int editDateReload = 1 << 6;
+
 	private boolean isReload(final int reloadVar) {
 		if (bot.hasCacheHandler()) {
 			return true;
 		}
 		return (reload & reloadVar) == 0;
 	}
-	
+
 	private void setReload(final int reloadVar) {
 		reload = reload | reloadVar;
 	}
-	
+
 	private void unSetReload(final int reloadVar) {
 		reload = (reload | reloadVar) ^ reloadVar;
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -70,7 +70,7 @@ public class Article implements ArticleMeta, ContentSetable {
 	 * {@inheritDoc}
 	 */
 	public String getRevisionId() {
-		
+
 		if (isReload(revisionIdReload)) {
 			setReload(revisionIdReload);
 			try {
@@ -82,8 +82,8 @@ public class Article implements ArticleMeta, ContentSetable {
 		return sa.getRevisionId();
 	}
 
-	
-	
+
+
 
 	public String getEditor() {
 		if (isReload(editorReload)) {
@@ -96,12 +96,12 @@ public class Article implements ArticleMeta, ContentSetable {
 		}
 		return sa.getEditor();
 	}
-	
+
 	public void setEditor(String editor) {
 		setReload(editorReload);
 		sa.setEditor(editor);
 	}
-	
+
 
 
 	public String getEditSummary() {
@@ -116,12 +116,12 @@ public class Article implements ArticleMeta, ContentSetable {
 
 		return sa.getEditSummary();
 	}
-	
+
 	public void setEditSummary(String s) {
 		setReload(editSumReload);
 		sa.setEditSummary(s);
 	}
-	
+
 
 	public boolean isMinorEdit() {
 		if (isReload(minorEditReload)) {
@@ -135,7 +135,7 @@ public class Article implements ArticleMeta, ContentSetable {
 		return sa.isMinorEdit();
 	}
 	/**
-	 * 
+	 *
 	 * @param bot the
 	 * @param title of
 	 */
@@ -144,7 +144,7 @@ public class Article implements ArticleMeta, ContentSetable {
 		sa = new SimpleArticle(title);
 	}
 	/**
-	 * 
+	 *
 	 * @param bot the
 	 * @param sa the
 	 */
@@ -153,13 +153,14 @@ public class Article implements ArticleMeta, ContentSetable {
 		this.bot = bot;
 	}
 	/**
-	 * 
+	 *
 	 * @param bot the
 	 * @param text the
 	 * @param label the
 	 * @deprecated use {@link #Article(String)} and {@link #setText(String)} instead.
 	 */
-	public Article(WikiBot bot, String text, String title) {
+	@Deprecated
+  public Article(WikiBot bot, String text, String title) {
 		sa = new SimpleArticle(text, title);
 		this.bot = bot;
 	}
@@ -206,14 +207,16 @@ public class Article implements ArticleMeta, ContentSetable {
 	 * @deprecated do not use this
 	 * @return true if
 	 */
-	public boolean isEmpty() {
+	@Deprecated
+  public boolean isEmpty() {
 		return getText().length() < 1;
 	}
 	/**
 	 * @deprecated do not use this
 	 * @return the
 	 */
-	public WikiBot getBot() {
+	@Deprecated
+  public WikiBot getBot() {
 		return bot;
 	}
 	/**
@@ -248,33 +251,33 @@ public class Article implements ArticleMeta, ContentSetable {
 	 */
 	public void addText(String text) {
 		sa.addText(text);
-		
+
 	}
 	/**
 	 * {@inheritDoc}
 	 */
 	public void addTextnl(String text) {
 		sa.addTextnl(text);
-		
+
 	}
 	/**
 	 * {@inheritDoc}
 	 */
 	public void setMinorEdit(boolean minor) {
 		sa.setMinorEdit(minor);
-		
+
 	}
 	/**
 	 * {@inheritDoc}
 	 */
 	public void setTitle(String title) {
 		sa.setTitle(title);
-		
+
 	}
-	
+
 	public SimpleArticle getSimpleArticle() {
 		return sa;
 	}
-	
+
 
 }

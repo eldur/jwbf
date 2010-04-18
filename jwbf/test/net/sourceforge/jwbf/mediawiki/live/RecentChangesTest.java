@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package net.sourceforge.jwbf.mediawiki.live;
 
@@ -31,7 +31,7 @@ public class RecentChangesTest extends LiveTestFather {
 	private static final int COUNT = 13;
 	private static final int LIMIT = COUNT * 2;
 	/**
-	 * 
+	 *
 	 * @throws Exception a
 	 */
 	@BeforeClass
@@ -39,8 +39,8 @@ public class RecentChangesTest extends LiveTestFather {
 		TestHelper.prepareLogging();
 		addInitSupporterVersions(RecentchangeTitles.class);
 	}
-	
-	
+
+
 	/**
 	 * Test.
 	 * @throws Exception a
@@ -58,13 +58,13 @@ public class RecentChangesTest extends LiveTestFather {
 	 */
 	@Test
 	public final void recentChangesWikiMW1x10() throws Exception {
-		
+
 		bot = getMediaWikiBot(Version.MW1_10, true);
 		doRegularTest(bot);
 		doSpecialCharTest(bot);
 		assertTrue("Wrong Wiki Version " + bot.getVersion(), Version.MW1_10.equals(bot.getVersion()));
 	}
-	
+
 	/**
 	 * Test.
 	 * @throws Exception a
@@ -76,7 +76,7 @@ public class RecentChangesTest extends LiveTestFather {
 		doSpecialCharTest(bot);
 		assertTrue("Wrong Wiki Version " + bot.getVersion(), Version.MW1_11.equals(bot.getVersion()));
 	}
-	
+
 	/**
 	 * Test.
 	 * @throws Exception a
@@ -99,7 +99,7 @@ public class RecentChangesTest extends LiveTestFather {
 		doSpecialCharTest(bot);
 		assertTrue("Wrong Wiki Version " + bot.getVersion(), Version.MW1_13.equals(bot.getVersion()));
 	}
-	
+
 	/**
 	 * Test.
 	 * @throws Exception a
@@ -122,7 +122,7 @@ public class RecentChangesTest extends LiveTestFather {
 		doSpecialCharTest(bot);
 		assertTrue("Wrong Wiki Version " + bot.getVersion(), Version.MW1_15.equals(bot.getVersion()));
 	}
-	
+
 	private void prepareWiki(MediaWikiBot bot) throws ActionException,
 	ProcessException {
 		SimpleArticle a = new SimpleArticle();
@@ -142,7 +142,7 @@ public class RecentChangesTest extends LiveTestFather {
 		Article sa;
 		String testText = getRandom(255);
 
-		
+
 		Collection<String> specialChars = getSpecialChars();
 		try {
 			for (String title : specialChars) {
@@ -162,11 +162,11 @@ public class RecentChangesTest extends LiveTestFather {
 		}
 
 			RecentchangeTitles rc = new RecentchangeTitles(bot);
-			
+
 			Iterator<String> is = rc.iterator();
 			int i = 0;
 			int size = specialChars.size();
-			
+
 			while (is.hasNext() && i < (size * 1.2)) {
 				String nx = is.next();
 				System.err.println("rm " + nx);
@@ -176,21 +176,21 @@ public class RecentChangesTest extends LiveTestFather {
 			for (char c : MediaWikiBot.INVALID_LABEL_CHARS) {
 				specialChars.remove(c + "");
 			}
-			
+
 			assertTrue("tc sould be empty but is: " + specialChars, specialChars.isEmpty());
-		
+
 	}
-	
+
 	private void doRegularTest(MediaWikiBot bot) throws ActionException,
 			ProcessException {
 		prepareWiki(bot);
 		RecentchangeTitles rc = new RecentchangeTitles(bot);
-		
+
 		Iterator<String> is = rc.iterator();
 		int i = 0;
-	
-		
-		
+
+
+
 		Vector<Integer> vi = new Vector<Integer>();
 		try {
 			is = rc.iterator();
@@ -207,7 +207,7 @@ public class RecentChangesTest extends LiveTestFather {
 				String s = is.next();
 				int x = Integer.parseInt(s.split(" ")[1]);
 				// System.out.println(vi);
-				vi.remove(new Integer(x));
+				vi.remove(Integer.valueOf(x));
 				i++;
 				if (i > LIMIT || vi.isEmpty()) {
 					break;
@@ -232,7 +232,7 @@ public class RecentChangesTest extends LiveTestFather {
 				String s = is.next();
 				int x = Integer.parseInt(s.split(" ")[1]);
 //				System.err.println("rm " + s + " ~= " + x);
-				vi.remove(new Integer(x));
+				vi.remove(Integer.valueOf(x));
 				i++;
 				if (i > LIMIT || vi.isEmpty()) {
 					break;

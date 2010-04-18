@@ -1,20 +1,20 @@
 /*
  * Copyright 2007 Thomas Stock.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under
  * the License.
- * 
+ *
  * Contributors:
- * 
+ *
  */
 package net.sourceforge.jwbf.mediawiki.live;
 
@@ -37,14 +37,14 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
- * 
+ *
  * @author Thomas Stock
  *
  */
 public class EditCustomWikiContentTest extends LiveTestFather {
 
 	private MediaWikiBot bot;
-
+	private Random random = new Random(System.currentTimeMillis());
 	/**
 	 * Setup log4j.
 	 * @throws Exception a
@@ -76,13 +76,12 @@ public class EditCustomWikiContentTest extends LiveTestFather {
 		sa.setText(getRandom(64));
 		try {
 			bot.writeContent(sa);
-		} catch (RuntimeException e) { 
+		} catch (RuntimeException e) {
 			e.printStackTrace();
 		}
 		sa = bot.readContent(title).getSimpleArticle();
 		//System.out.println("Content is: " + sa.getText());
-		int x = (Math.abs(new Random(System.currentTimeMillis()).nextInt()));
-		String text = "test " + x;
+		String text = "test " + (random.nextInt(1000));
 		sa.setText(text);
 		bot.writeContent(sa);
 		assertEquals(text, bot.readContent(title).getText());
@@ -110,7 +109,7 @@ public class EditCustomWikiContentTest extends LiveTestFather {
 		assertEquals(title, sa.getTitle());
 		assertEquals(summary, sa.getEditSummary());
 		assertEquals(bot.getUserinfo().getUsername(), sa.getEditor());
-		assertEquals(true, sa.isMinorEdit()); 
+		assertEquals(true, sa.isMinorEdit());
 
 	}
 
@@ -171,7 +170,7 @@ public class EditCustomWikiContentTest extends LiveTestFather {
 		assertEquals(utf8value, sa.getText());
 		assertTrue(sa.getEditTimestamp() != null);
 	}
-	
+
 	/**
 	 * Test getTimestamp.
 	 * @throws Exception a
@@ -188,8 +187,8 @@ public class EditCustomWikiContentTest extends LiveTestFather {
 		assertTrue(sa.getEditTimestamp().getTime() > 1000);
 	}
 
-	
-	
+
+
 	/**
 	 * Test utf-8 read on english Mediawiki.
 	 * @throws Exception a
@@ -201,12 +200,12 @@ public class EditCustomWikiContentTest extends LiveTestFather {
 		bot.login(getValue("demoWiki_user"), getValue("demoWiki_pass"));
 		assertTrue("Version is: " + bot.getVersion() , bot.getVersion() == Version.MW1_13);
 
-		
+
 		Article a = new Article(bot, getValue("demoWiki_article"));
 //		System.out.println(a.getText());
 		a.addText(getRandom(5) + "\nK");
 		a.save();
-		
+
 		Article b = new Article(bot, getValue("demoWiki_article"));
 
 		assertEquals(a.getText(), b.getText());

@@ -1,20 +1,20 @@
 /*
  * Copyright 2007 Thomas Stock.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under
  * the License.
- * 
+ *
  * Contributors:
- * Philipp Kohl 
+ * Philipp Kohl
  */
 package net.sourceforge.jwbf.mediawiki.actions.login;
 
@@ -35,20 +35,20 @@ import net.sourceforge.jwbf.mediawiki.contentRep.LoginData;
 import org.apache.log4j.Logger;
 
 /**
- * 
+ *
  * @author Thomas Stock
  */
 @SupportedBy({ MW1_09 })
 public class PostLoginOld extends MWAction implements CookieValidateable {
 	private String username = "";
 
-	private static final Logger LOG = Logger.getLogger(PostLoginOld.class);
+	private static final Logger LOGGER = Logger.getLogger(PostLoginOld.class);
 
 	private LoginData login;
 	private Post msg;
-	
+
 	/**
-	 * 
+	 *
 	 * @param username
 	 *            the
 	 * @param pw
@@ -69,7 +69,7 @@ public class PostLoginOld extends MWAction implements CookieValidateable {
 		pm.addParam("wpName", username);
 		pm.addParam("wpDomain", domain);
 		pm.addParam("wpPassword", pw);
-	
+
 
 		msg = pm;
 
@@ -81,7 +81,7 @@ public class PostLoginOld extends MWAction implements CookieValidateable {
 	 *            the method object
 	 * @throws CookieException
 	 *             never
-	 * 
+	 *
 	 */
 	public final void validateReturningCookies(final Map<String, String> cs, HttpAction hm)
 			throws CookieException {
@@ -108,18 +108,19 @@ public class PostLoginOld extends MWAction implements CookieValidateable {
 		if (cs.isEmpty()) {
 			throw new CookieException("No cookies found.");
 		} else {
-			
+
 			if (cs.containsValue(compare)) {
-				LOG.info("Logged in as: " + username);
-				login.setup(0, username, "0", true);
+			  if (LOGGER.isInfoEnabled())
+			    LOGGER.info("Logged in as: " + username);
+				login.setup(username, true);
 				return;
 			} else {
 				throw new CookieException(
 						"Login failed: Check Username and Password.");
 			}
-			
-				
-			
+
+
+
 		}
 	}
 	/**

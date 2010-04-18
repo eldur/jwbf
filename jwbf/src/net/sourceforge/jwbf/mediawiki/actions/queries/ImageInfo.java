@@ -34,9 +34,9 @@ import org.jdom.input.SAXBuilder;
 import org.xml.sax.InputSource;
 
 /**
- * Action to receive the full address of an image. 
+ * Action to receive the full address of an image.
  * Like "Img.gif" to "http://wikihost.tld/w/images/x/y/Img.gif".
- * 
+ *
  * @author Thomas Stock
  *
  */
@@ -47,9 +47,9 @@ public class ImageInfo extends MWAction {
 	private Get msg;
 	private final MediaWikiBot bot;
 	private boolean selfEx = true;
-	
+
 	/**
-	 * 
+	 *
 	 * Get an absolute url to an image.
 	 * @param bot a
 	 * @param name of, like "Test.gif"
@@ -58,7 +58,7 @@ public class ImageInfo extends MWAction {
 	public ImageInfo(MediaWikiBot bot, String name) throws VersionException {
 		super(bot.getVersion());
 		this.bot = bot;
-		
+
 		if (bot.getVersion().greaterEqThen(Version.MW1_15)) {
 			msg = new Get("/api.php?action=query&titles=File:"
 					+ MediaWiki.encode(name) + "&prop=imageinfo"
@@ -70,7 +70,7 @@ public class ImageInfo extends MWAction {
 		}
 
 	}
-	
+
 
 	/**
 	 * @return position like "http://server.tld/path/to/Test.gif"
@@ -100,7 +100,8 @@ public class ImageInfo extends MWAction {
 	 * {@inheritDoc}
 	 * @deprecated see super
 	 */
-	@Override
+	@Deprecated
+  @Override
 	public boolean isSelfExecuter() {
 		return selfEx;
 	}
@@ -112,7 +113,7 @@ public class ImageInfo extends MWAction {
 	 * @throws ActionException on
 	 * @throws IOException on
 	 */
-	public BufferedImage getAsImage() throws ProcessException 
+	public BufferedImage getAsImage() throws ProcessException
 		, ActionException, IOException {
 		return ImageIO.read(new URL(getUrlAsString()));
 	}
@@ -125,7 +126,7 @@ public class ImageInfo extends MWAction {
 		findUrlOfImage(s);
 		return "";
 	}
-	
+
 
 	@SuppressWarnings("unchecked")
 	private void findContent(final Element root) throws ProcessException {
@@ -141,7 +142,7 @@ public class ImageInfo extends MWAction {
 				findContent(element);
 			}
 		}
-		
+
 	}
 
 	private void findUrlOfImage(String s) throws ProcessException {
@@ -157,11 +158,12 @@ public class ImageInfo extends MWAction {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		findContent(root);
+		if (root != null)
+		  findContent(root);
 		if (urlOfImage.length() < 1)
 			throw new ProcessException("Could not find this image");
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */

@@ -27,10 +27,10 @@ import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
 import org.xml.sax.InputSource;
 /**
- * 
- * Implements function to render wikitext on remote 
+ *
+ * Implements function to render wikitext on remote
  * <a href="http://www.mediawiki.org/wiki/API:Expanding_templates_and_rendering#parse">parse</a>.
- * 
+ *
  * @author Thomas Stock
  *
  */
@@ -41,9 +41,9 @@ public class GetRendering extends MWAction {
 	private String html = "";
 	private final MediaWikiBot bot;
 	private boolean isSelfEx = true;
-	
+
 	/**
-	 * 
+	 *
 	 * @param bot a
 	 * @param wikitext a
 	 * @throws VersionException if not supported
@@ -52,14 +52,15 @@ public class GetRendering extends MWAction {
 		super(bot.getVersion());
 		this.bot = bot;
 		msg = new Get("/api.php?action=parse&text=" + MediaWiki.encode(wikitext) + "&titles=API&format=xml");
-		
-		
+
+
 	}
 	/**
 	 * {@inheritDoc}
 	 * @deprecated see super
 	 */
-	@Override
+	@Deprecated
+  @Override
 	public boolean isSelfExecuter() {
 		return isSelfEx;
 	}
@@ -85,7 +86,7 @@ public class GetRendering extends MWAction {
 		}
 		return "";
 	}
-	
+
 	protected Element findElement(String elementName, String xml) {
 		SAXBuilder builder = new SAXBuilder();
 		Element root = null;
@@ -100,18 +101,20 @@ public class GetRendering extends MWAction {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		return findContent(root, elementName);
-		
+		if (root != null)
+		  return findContent(root, elementName);
+		else
+		  return null; // XXX okay ?
 	}
-	
-	
+
+
 	private Element findContent(final Element e, final String name) {
 		Element found = null;
 		@SuppressWarnings("unchecked")
 		Iterator<Element> el = e.getChildren().iterator();
 		while (el.hasNext()) {
 			Element element = el.next();
-			
+
 			if (element.getQualifiedName().equalsIgnoreCase(name)) {
 //				System.out.println(element.getQualifiedName());
 				return element;
@@ -120,7 +123,7 @@ public class GetRendering extends MWAction {
 				found = findContent(element, name);
 			}
 
-		} 
+		}
 		if (found == null) {
 			throw new NoSuchElementException();
 		}
@@ -131,7 +134,7 @@ public class GetRendering extends MWAction {
 		try {
 			isSelfEx = false;
 			bot.performAction(this);
-			
+
 		} catch (ActionException e) {
 			e.printStackTrace();
 		} catch (ProcessException e) {
@@ -141,7 +144,7 @@ public class GetRendering extends MWAction {
 		}
 	}
 	/**
-	 * 
+	 *
 	 * @return the
 	 */
 	public String getHtml() {

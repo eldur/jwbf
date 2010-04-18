@@ -29,6 +29,8 @@ import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_15;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
+import java.util.HashMap;
+import java.util.Map;
 
 import net.sourceforge.jwbf.core.actions.Post;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
@@ -38,7 +40,6 @@ import net.sourceforge.jwbf.mediawiki.actions.util.SupportedBy;
 import net.sourceforge.jwbf.mediawiki.contentRep.LoginData;
 
 import org.apache.log4j.Logger;
-import org.jdom.DataConversionException;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -133,14 +134,11 @@ public class PostLogin extends MWAction {
 
 		Element loginEl = startElement.getChild("login");
 		String result = loginEl.getAttributeValue("result");
-		if (result.equalsIgnoreCase(success)) {
-			try {
-				login.setup(loginEl.getAttribute("lguserid").getIntValue()
-						, loginEl.getAttributeValue("lgusername"), "0", true);
-			} catch (DataConversionException e) {
-				e.printStackTrace();
-			}
-		} else if (result.equalsIgnoreCase(needToken) && reTryLimit ) {
+    if (result.equalsIgnoreCase(success)) {
+      Map<String, String> properties = new HashMap<String, String>();
+      properties.put("userId", loginEl.getAttribute("lguserid").toString());
+      login.setup(loginEl.getAttributeValue("lgusername"), true);
+    } else if (result.equalsIgnoreCase(needToken) && reTryLimit ) {
 			msg = getLoginMsg(username, pw, domain, loginEl.getAttributeValue("token"));
 			reTry = true;
 			reTryLimit = false;

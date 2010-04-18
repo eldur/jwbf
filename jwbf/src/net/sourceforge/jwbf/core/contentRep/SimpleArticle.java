@@ -1,20 +1,20 @@
 /*
  * Copyright 2007 Thomas Stock.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under
  * the License.
- * 
+ *
  * Contributors:
- * 
+ *
  */
 package net.sourceforge.jwbf.core.contentRep;
 
@@ -27,14 +27,14 @@ import java.util.regex.Pattern;
 /**
  * This is a simple content helper class that implements the
  * EditContentAccesable interface, plus setter methods.
- * 
+ *
  * @author Thomas Stock
- * 
+ *
  */
 public class SimpleArticle implements ArticleMeta, Serializable, Cloneable, ContentSetable {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = -1368796410854055279L;
 	private String title = "";
@@ -46,20 +46,20 @@ public class SimpleArticle implements ArticleMeta, Serializable, Cloneable, Cont
 	private String revId = "";
 
 	/**
-	 * 
-	 * 
+	 *
+	 *
 	 */
 	public SimpleArticle() {
 		// do nothing
 	}
 
 	/**
-	 * 
+	 *
 	 * @param ca
 	 *            a
 	 */
 	public SimpleArticle(ContentAccessable ca) {
-		
+
 		if (ca.getTitle() != null) {
 			title = ca.getTitle();
 		}
@@ -78,13 +78,13 @@ public class SimpleArticle implements ArticleMeta, Serializable, Cloneable, Cont
 	}
 
 	/**
-	 * 
+	 *
 	 * @param sa
 	 *            a
 	 */
 	public SimpleArticle(ArticleMeta sa) {
 		this((ContentAccessable) sa);
-		
+
 		if (sa.getEditTimestamp() != null) {
 			editTimestamp = sa.getEditTimestamp();
 		}
@@ -98,13 +98,13 @@ public class SimpleArticle implements ArticleMeta, Serializable, Cloneable, Cont
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Object clone() throws CloneNotSupportedException {
-
+	public final Object clone() throws CloneNotSupportedException {
+	    super.clone();
 		return new SimpleArticle(this);
 	}
 
 	/**
-	 * 
+	 *
 	 * @param text
 	 *            of article
 	 * @param title
@@ -112,13 +112,14 @@ public class SimpleArticle implements ArticleMeta, Serializable, Cloneable, Cont
 	 * @deprecated use {@link #SimpleArticle(String)} and
 	 *             {@link #setText(String)} instead.
 	 */
-	public SimpleArticle(final String text, final String title) {
+	@Deprecated
+    public SimpleArticle(final String text, final String title) {
 		this.text = text;
 		this.title = title;
 	}
 
 	/**
-	 * 
+	 *
 	 * @param title
 	 *            of article
 	 */
@@ -158,7 +159,8 @@ public class SimpleArticle implements ArticleMeta, Serializable, Cloneable, Cont
 	 * @return the
 	 * @deprecated use {@link #getTitle()} instead
 	 */
-	public String getLabel() {
+	@Deprecated
+    public String getLabel() {
 		return getTitle();
 	}
 
@@ -170,12 +172,13 @@ public class SimpleArticle implements ArticleMeta, Serializable, Cloneable, Cont
 	}
 
 	/**
-	 * 
+	 *
 	 * @param label
 	 *            the label, like "Main Page"
 	 * @deprecated use {@link #setTitle(String)} instead
 	 */
-	public void setLabel(final String label) {
+	@Deprecated
+    public void setLabel(final String label) {
 		setTitle(label);
 	}
 
@@ -251,7 +254,7 @@ public class SimpleArticle implements ArticleMeta, Serializable, Cloneable, Cont
 	}
 
 	/**
-	 * 
+	 *
 	 * @param editTimestamp
 	 *            set
 	 * @throws ParseException
@@ -268,7 +271,7 @@ public class SimpleArticle implements ArticleMeta, Serializable, Cloneable, Cont
 	}
 
 	/**
-	 * 
+	 *
 	 * @param d
 	 *            the
 	 */
@@ -276,31 +279,55 @@ public class SimpleArticle implements ArticleMeta, Serializable, Cloneable, Cont
 		this.editTimestamp = d;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public boolean equals(Object obj) {
-		if (obj == this)
-			return true;
+	/* (non-Javadoc)
+   * @see java.lang.Object#equals(java.lang.Object)
+   */
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (!(obj instanceof SimpleArticle))
+      return false;
+    SimpleArticle other = (SimpleArticle) obj;
+    if (editTimestamp == null) {
+      if (other.editTimestamp != null)
+        return false;
+    } else if (!editTimestamp.equals(other.editTimestamp))
+      return false;
+    if (revId == null) {
+      if (other.revId != null)
+        return false;
+    } else if (!revId.equals(other.revId))
+      return false;
+    if (text == null) {
+      if (other.text != null)
+        return false;
+    } else if (!text.equals(other.text))
+      return false;
+    if (title == null) {
+      if (other.title != null)
+        return false;
+    } else if (!title.equals(other.title))
+      return false;
+    return true;
+  }
 
-		if (!(obj instanceof SimpleArticle))
-			return false;
-
-		SimpleArticle sa = (SimpleArticle) obj;
-		return sa.getTitle().equals(getTitle())
-				&& sa.getText().equals(getText())
-				&& sa.getEditTimestamp().equals(getEditTimestamp());
-
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public int hashCode() {
-		return super.hashCode();
-	}
+	/* (non-Javadoc)
+   * @see java.lang.Object#hashCode()
+   */
+  @Override
+  public int hashCode() {
+    final int prime = 31;
+    int result = 1;
+    result = prime * result
+        + ((editTimestamp == null) ? 0 : editTimestamp.hashCode());
+    result = prime * result + ((revId == null) ? 0 : revId.hashCode());
+    result = prime * result + ((text == null) ? 0 : text.hashCode());
+    result = prime * result + ((title == null) ? 0 : title.hashCode());
+    return result;
+  }
 
 	/**
 	 * {@inheritDoc}
@@ -310,7 +337,7 @@ public class SimpleArticle implements ArticleMeta, Serializable, Cloneable, Cont
 	}
 
 	/**
-	 * 
+	 *
 	 * @param revId
 	 *            the
 	 */

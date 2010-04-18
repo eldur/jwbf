@@ -1,20 +1,20 @@
 /*
  * Copyright 2007 Thomas Stock.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under
  * the License.
- * 
+ *
  * Contributors:
- * 
+ *
  */
 package net.sourceforge.jwbf.mediawiki.actions.util;
 
@@ -39,7 +39,7 @@ public abstract class MWAction implements ContentProcessable {
 	private static Logger log = Logger.getLogger(MWAction.class);
 	private boolean hasMore = true;
 	/**
-	 * 
+	 *
 	 * @return true if and changes state to false
 	 */
 	public boolean hasMoreMessages() {
@@ -48,7 +48,7 @@ public abstract class MWAction implements ContentProcessable {
 		return b;
 	}
 	/**
-	 * 
+	 *
 	 * @param b if so
 	 */
 	public void setHasMoreMessages(boolean b) {
@@ -57,20 +57,21 @@ public abstract class MWAction implements ContentProcessable {
 
 
 	/**
-	 * 
+	 *
 	 * @deprecated use {@link #MWAction(Version)} instead
 	 */
-	protected MWAction() {
+	@Deprecated
+  protected MWAction() {
 
 	}
 	/**
-	 * 
+	 *
 	 * @param v of the bot
 	 * @throws VersionException if action is incompatible
 	 */
 	protected MWAction(Version v) throws VersionException {
 		checkVersionNewerEquals(v);
-		
+
 	}
 
 
@@ -83,7 +84,7 @@ public abstract class MWAction implements ContentProcessable {
 	 *            the requestor message
 	 * @return the returning text
 	 * @throws ProcessException on processing problems
-	 * 
+	 *
 	 */
 	public String processReturningText(final String s, final HttpAction hm) throws ProcessException {
 		return processAllReturningText(s);
@@ -94,18 +95,18 @@ public abstract class MWAction implements ContentProcessable {
 	 *            the returning text
 	 * @return the returning text
 	 * @throws ProcessException never
-	 * 
+	 *
 	 */
 	public String processAllReturningText(final String s) throws ProcessException {
 		return s;
 	}
 	/**
-	 * 
+	 *
 	 * @return a
 	 */
 	private Version [] getVersionArray() {
-		
-		
+
+
 		if (v != null)
 			return v;
 		v = findSupportedVersions(getClass());
@@ -113,7 +114,7 @@ public abstract class MWAction implements ContentProcessable {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param clazz a
 	 * @return an
 	 */
@@ -126,16 +127,16 @@ public abstract class MWAction implements ContentProcessable {
 			SupportedBy sb = clazz.getAnnotation(SupportedBy.class);
 			if (log.isDebugEnabled()) {
 				Version [] vtemp = sb.value();
-				String sv = "";
+				StringBuffer sv = new StringBuffer();
 				for (int i = 0; i < vtemp.length; i++) {
-					sv += vtemp[i].getNumber() + ", ";
+					sv.append(vtemp[i].getNumber() + ", ");
 				}
-				sv = sv.trim();
-				sv = sv.substring(0, sv.length() - 1);
-				
-					
-				log.debug("found support for: " + sv + " in ↲ \n\t class " + clazz.getCanonicalName());
-				
+				String svr = sv.toString().trim();
+				svr = svr.substring(0, svr.length() - 1);
+
+
+				log.debug("found support for: " + svr + " in ↲ \n\t class " + clazz.getCanonicalName());
+
 			}
 			return sb.value();
 		} else {
@@ -143,7 +144,7 @@ public abstract class MWAction implements ContentProcessable {
 		}
 	}
 	/**
-	 * 
+	 *
 	 * @param v a
 	 * @throws VersionException if version is not supported
 	 */
@@ -162,15 +163,15 @@ public abstract class MWAction implements ContentProcessable {
 	 */
 	public final Collection<Version> getSupportedVersions() {
 		Collection<Version> v = new Vector<Version>();
-		
+
 		Version [] va = getVersionArray();
 		for (int i = 0; i < va.length; i++) {
 			v.add(va[i]);
 		}
-		
+
 		return v;
 	}
-	
+
 	/**
 	 * helper method generating a namespace string as required by the MW-api.
 	 *
@@ -180,25 +181,27 @@ public abstract class MWAction implements ContentProcessable {
 	 */
 	public static String createNsString(int... namespaces) {
 
-		String namespaceString = "";
-
+		StringBuffer namespaceString = new StringBuffer();
+		String result = "";
 		if (namespaces != null && namespaces.length != 0) {
 			for (int nsNumber : namespaces) {
-				namespaceString += nsNumber + "|";
+				namespaceString.append(nsNumber + "|");
 			}
+			result = namespaceString.toString();
 			// remove last '|'
-			if (namespaceString.endsWith("|")) {
-				namespaceString = namespaceString.substring(0, namespaceString
+			if (result.endsWith("|")) {
+			  result = result.substring(0, result
 						.length() - 1);
 			}
 		}
-		return namespaceString;
+		return result;
 	}
 	/**
 	 * {@inheritDoc}
 	 * @deprecated see interface
 	 */
-	public boolean isSelfExecuter() {
+	@Deprecated
+  public boolean isSelfExecuter() {
 		return false;
 	}
 }

@@ -1,20 +1,20 @@
 /*
  * Copyright 2007 Thomas Stock.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under
  * the License.
- * 
+ *
  * Contributors:
- * 
+ *
  */
 package net.sourceforge.jwbf.mediawiki.actions.queries;
 
@@ -51,25 +51,25 @@ import org.jdom.input.SAXBuilder;
 import org.xml.sax.InputSource;
 
 /**
- * 
+ *
  * List log events, filtered by time range, event type, user type, or the page
  * it applies to. Ordered by event timestamp. Parameters: letype (flt), lefrom
  * (paging timestamp), leto (flt), ledirection (dflt=older), leuser (flt),
  * letitle (flt), lelimit (dflt=10, max=500/5000)
- * 
+ *
  * api.php ? action=query & list=logevents      - List last 10 events of any type
- * 
+ *
  * TODO This is a semi-complete extension point
  * @author Thomas Stock
- * 
+ *
  */
 @SupportedBy({ MW1_11, MW1_12, MW1_13, MW1_14, MW1_15 })
 public class LogEvents extends MWAction implements Iterator<LogItem>, Iterable<LogItem> {
 
-	
+
 	/** value for the bllimit-parameter. * */
-	
-	
+
+
 	public static final String BLOCK = "block";
 	public static final String PROTECT = "protect";
 	public static final String RIGHTS = "rights";
@@ -79,7 +79,7 @@ public class LogEvents extends MWAction implements Iterator<LogItem>, Iterable<L
 	public static final String IMPORT = "mport";
 	public static final String PATROL = "patrol";
 	public static final String MERGE = "merge";
-	
+
 	private final int limit;
 
 	private Get msg;
@@ -101,7 +101,7 @@ public class LogEvents extends MWAction implements Iterator<LogItem>, Iterable<L
 	 * information necessary to get the next api page.
 	 */
 
-	
+
 	/**
 	 * @param bot a
 	 * @param type of like {@link #MOVE}
@@ -110,7 +110,7 @@ public class LogEvents extends MWAction implements Iterator<LogItem>, Iterable<L
 	public LogEvents(MediaWikiBot bot, String type) throws VersionException {
 		this(bot, new String [] {type});
 	}
-	
+
 	/**
 	 * @param bot a
 	 * @param type of like {@link #MOVE}
@@ -120,7 +120,7 @@ public class LogEvents extends MWAction implements Iterator<LogItem>, Iterable<L
 		this(bot, 50, type);
 	}
 
-	
+
 	/**
 	 * @param bot a
 	 * @param limit of events
@@ -142,10 +142,10 @@ public class LogEvents extends MWAction implements Iterator<LogItem>, Iterable<L
 		this.type = type;
 		this.limit = limit;
 	}
-	
+
 	/**
 	 * generates the next MediaWiki-request (GetMethod) and adds it to msgs.
-	 * 
+	 *
 	 * @param logtype
 	 *            type of log, like upload
 	 * @return a
@@ -156,22 +156,22 @@ public class LogEvents extends MWAction implements Iterator<LogItem>, Iterable<L
 
 		uS = "/api.php?action=query&list=logevents";
 		if (logtype.length > 0) {
-			String logtemp = "";
+			StringBuffer logtemp = new StringBuffer();
 			for (int i = 0; i < logtype.length; i++) {
-				logtemp += logtype[i] + "|";
+				logtemp.append(logtype[i] + "|");
 			}
 			uS += "&letype=" + logtemp.substring(0, logtemp.length() - 1);
 		}
-			
+
 		uS += "&lelimit=" + limit + "&format=xml";
 
 		return new Get(uS);
 
 	}
-	
+
 	/**
 	 * generates the next MediaWiki-request (GetMethod) and adds it to msgs.
-	 * 
+	 *
 	 * @param logtype
 	 *            type of log, like upload
 	 * @return a
@@ -182,13 +182,13 @@ public class LogEvents extends MWAction implements Iterator<LogItem>, Iterable<L
 
 		uS = "/api.php?action=query&list=logevents";
 		if (logtype.length > 0) {
-			String logtemp = "";
+			StringBuffer logtemp = new StringBuffer();
 			for (int i = 0; i < logtype.length; i++) {
-				logtemp += logtype[i] + "|";
+				logtemp.append(logtype[i] + "|");
 			}
 			uS += "&letype=" + logtemp.substring(0, logtemp.length() - 1);
 		}
-			
+
 		uS += "&lelimit=" + limit + "&format=xml";
 
 		return new Get(uS);
@@ -198,7 +198,8 @@ public class LogEvents extends MWAction implements Iterator<LogItem>, Iterable<L
 	/**
 	 * {@inheritDoc}
 	 */
-	public String processAllReturningText(final String s)
+	@Override
+    public String processAllReturningText(final String s)
 			throws ProcessException {
 		logCollection.clear();
 		parseArticleTitles(s);
@@ -209,7 +210,7 @@ public class LogEvents extends MWAction implements Iterator<LogItem>, Iterable<L
 
 	/**
 	 * picks the article name from a MediaWiki api response.
-	 * 
+	 *
 	 * @param s
 	 *            text for parsing
 	 */
@@ -228,29 +229,30 @@ public class LogEvents extends MWAction implements Iterator<LogItem>, Iterable<L
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		findContent(root);
+		if (root != null)
+	    findContent(root);
 
 	}
-	
+
 	/**
 	 * gets the information about a follow-up page from a provided api response.
 	 * If there is one, a new request is added to msgs by calling generateRequest.
-	 *	
+	 *
 	 * @param s   text for parsing
 	 */
 	private void parseHasMore(final String s) {
-			
+
 		// get the blcontinue-value
-		
+
 		Pattern p = Pattern.compile(
 			"<query-continue>.*?"
 			+ "<logevents *lestart=\"([^\"]*)\" */>"
 			+ ".*?</query-continue>",
 			Pattern.DOTALL | Pattern.MULTILINE);
-			
+
 		Matcher m = p.matcher(s);
 
-		if (m.find()) {			
+		if (m.find()) {
 			nextPageInfo = m.group(1);
 			hasMoreResults = true;
 		} else {
@@ -282,7 +284,7 @@ public class LogEvents extends MWAction implements Iterator<LogItem>, Iterable<L
 		}
 	}
 
-	
+
 	private void prepareCollection() {
 
 		if (init || (!logIterator.hasNext() && hasMoreResults)) {
@@ -339,7 +341,7 @@ public class LogEvents extends MWAction implements Iterator<LogItem>, Iterable<L
 	 */
 	public void remove() {
 		logIterator.remove();
-		
+
 	}
 
 	/**
@@ -369,7 +371,8 @@ public class LogEvents extends MWAction implements Iterator<LogItem>, Iterable<L
 	 * {@inheritDoc}
 	 * @deprecated see super
 	 */
-	@Override
+	@Deprecated
+    @Override
 	public boolean isSelfExecuter() {
 		return selvEx;
 	}

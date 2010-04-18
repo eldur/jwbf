@@ -35,7 +35,7 @@
 			<fileset dir="test" includes="**/*" />
 		</copy>
 		<copy todir="${release}">
-			<fileset dir="../../buildAdds" includes="*" />
+			<fileset dir="buildAdds" includes="*" />
 		</copy>
 		<copy todir="${release}/lib" flatten="true" >
 			<path >

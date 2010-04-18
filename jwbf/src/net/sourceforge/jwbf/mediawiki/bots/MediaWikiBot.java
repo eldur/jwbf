@@ -262,14 +262,14 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
 	 *
 	 * {@inheritDoc}
 	 */
-	public void setCacheHandler(CacheHandler ch) {
+	public synchronized void setCacheHandler(CacheHandler ch) {
 		this.store = ch;
 	}
 	/**
 	 *
 	 * {@inheritDoc}
 	 */
-	public boolean hasCacheHandler() {
+	public synchronized boolean hasCacheHandler() {
 		if (store != null) {
 			return true;
 		}

@@ -94,7 +94,7 @@ public class ZimWikiBot implements WikiBot {
 		File f = new File(getRootFolder(), name + ZIMEXT);
 		SimpleArticle sa = new SimpleArticle();
 		sa.setTitle(name);
-		String text = "";
+		StringBuffer text = new StringBuffer();
 		// create a file reader
 		try {
 			BufferedReader myInput = new BufferedReader(new FileReader(f));
@@ -122,14 +122,14 @@ public class ZimWikiBot implements WikiBot {
 						cont = cont.replace("{{../", "[[Image:");
 						cont = cont.replace("?width=", "|");
 						cont = cont.replace("}}", "|none| " + name + "]]");
-						text += cont + "\n";
+						text.append( cont + "\n");
 					}
 				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace(); // TODO transform to system exception
 		}
-		sa.setText(text);
+		sa.setText(text.toString());
 		return sa;
 	}
 

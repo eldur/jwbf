@@ -19,7 +19,7 @@ import net.sourceforge.jwbf.mediawiki.actions.util.SupportedBy;
 
 import org.jdom.Element;
 /**
- * Gets details from the given MediaWiki installation like installed version. 
+ * Gets details from the given MediaWiki installation like installed version.
  * @author Thomas Stock
  * @see Siteinfo
  *
@@ -27,11 +27,11 @@ import org.jdom.Element;
 @SupportedBy({ MW1_11, MW1_12, MW1_13, MW1_14, MW1_15 })
 public class Siteinfo extends GetVersion {
 
-	
+
 	private Get msg;
 	private Map<Integer, String> namespaces = new HashMap<Integer, String>();
 	private Map<String, String> interwiki = new HashMap<String, String>();
-	
+
 	public static final String GENERAL = "general";
 	public static final String NAMESPACES = "namespaces"; // : A list of all namespaces
 //	# namespacealiases: A list of all namespace aliases
@@ -48,24 +48,24 @@ public class Siteinfo extends GetVersion {
 //	# fileextensions: A list of file extensions allowed to be uploaded
 //	# rightsinfo: Get information about the license governing the wiki's content
 	/**
-	 * 
+	 *
 	 * inits with parameters {@link #GENERAL}, {@link #NAMESPACES}, {@link #INTERWIKIMAP}.
 	 */
 	public Siteinfo() {
 		this(GENERAL, NAMESPACES, INTERWIKIMAP);
 	}
 	/**
-	 * 
+	 *
 	 * @param types the, see {@link #GENERAL}, {@link #INTERWIKIMAP}, ...
 	 */
 	public Siteinfo(String... types) {
-		String x = "";
+		StringBuffer x = new StringBuffer();
 		for (int i = 0; i < types.length; i++) {
-			x += types[i] + "|";
+			x.append(types[i] + "|");
 		}
-		x = x.substring(0, x.length() - 1); 
+		String result = x.substring(0, x.length() - 1);
 		msg = new Get("/api.php?action=query&meta=siteinfo" + "&siprop="
-				+ MediaWiki.encode(x) + "&format=xml");
+				+ MediaWiki.encode(result) + "&format=xml");
 	}
 	/**
 	 * {@inheritDoc}
@@ -75,7 +75,8 @@ public class Siteinfo extends GetVersion {
 		return msg;
 	}
 
-	@SuppressWarnings("unchecked")
+	@Override
+  @SuppressWarnings("unchecked")
 	protected void findContent(final Element root) {
 		super.findContent(root);
 		Iterator<Element> el = root.getChildren().iterator();
@@ -99,26 +100,26 @@ public class Siteinfo extends GetVersion {
 		}
 	}
 
-	
 
-	
+
+
 
 
 	private void addNamespace(Integer id, String name) {
 		namespaces.put(id, name);
-		
+
 	}
 	/**
-	 * 
+	 *
 	 * @return of
 	 */
 	public Map<Integer, String> getNamespaces() {
 		return Collections.unmodifiableMap(namespaces);
 	}
 
-	
+
 	/**
-	 * 
+	 *
 	 * @return of
 	 */
 	public int [] getNamespacesArray() {
@@ -130,17 +131,17 @@ public class Siteinfo extends GetVersion {
 		}
 		return x;
 	}
-	
+
 	private void addInterwiki(String prefix, String name) {
 		interwiki.put(prefix, name);
 	}
 	/**
-	 * 
+	 *
 	 * @return of
 	 */
 	public Map<String, String> getInterwikis() {
 		return Collections.unmodifiableMap(interwiki);
 	}
-	
-	
+
+
 }

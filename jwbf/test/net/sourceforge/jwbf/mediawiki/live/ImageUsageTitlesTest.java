@@ -13,7 +13,7 @@ import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 import org.junit.BeforeClass;
 import org.junit.Test;
 /**
- * 
+ *
  * @author Thomas Stock
  *
  */
@@ -21,8 +21,8 @@ public class ImageUsageTitlesTest extends LiveTestFather {
 
 
 	private MediaWikiBot bot = null;
-	private final int limit = 55;
-	
+	private static final int limit = 55;
+
 	/**
 	 * Setup log4j.
 	 * @throws Exception a
@@ -38,11 +38,11 @@ public class ImageUsageTitlesTest extends LiveTestFather {
 	 */
 	@Test
 	public final void imageUsageMW1x09() throws Exception {
-		
+
 		bot = getMediaWikiBot(Version.MW1_09, true);
 		assertTrue("Wrong Wiki Version " + bot.getVersion(), Version.MW1_09.equals(bot.getVersion()));
 		test(bot);
-		
+
 	}
 	/**
 	 * Test.
@@ -50,11 +50,11 @@ public class ImageUsageTitlesTest extends LiveTestFather {
 	 */
 	@Test
 	public final void imageUsageMW1x10() throws Exception {
-		
+
 		bot = getMediaWikiBot(Version.MW1_10, true);
 		assertTrue("Wrong Wiki Version " + bot.getVersion(), Version.MW1_10.equals(bot.getVersion()));
 		test(bot);
-		
+
 	}
 	/**
 	 * Test.
@@ -62,11 +62,11 @@ public class ImageUsageTitlesTest extends LiveTestFather {
 	 */
 	@Test
 	public final void imageUsageMW1x11() throws Exception {
-		
+
 		bot = getMediaWikiBot(Version.MW1_11, true);
 		assertTrue("Wrong Wiki Version " + bot.getVersion(), Version.MW1_11.equals(bot.getVersion()));
 		test(bot);
-		
+
 	}
 	/**
 	 * Test.
@@ -74,11 +74,11 @@ public class ImageUsageTitlesTest extends LiveTestFather {
 	 */
 	@Test
 	public final void imageUsageMW1x12() throws Exception {
-		
+
 		bot = getMediaWikiBot(Version.MW1_12, true);
 		assertTrue("Wrong Wiki Version " + bot.getVersion(), Version.MW1_12.equals(bot.getVersion()));
 		test(bot);
-		
+
 	}
 	/**
 	 * Test.
@@ -86,24 +86,24 @@ public class ImageUsageTitlesTest extends LiveTestFather {
 	 */
 	@Test
 	public final void imageUsageMW1x13() throws Exception {
-		
+
 		bot = getMediaWikiBot(Version.MW1_13, true);
 		assertTrue("Wrong Wiki Version " + bot.getVersion(), Version.MW1_13.equals(bot.getVersion()));
 		test(bot);
-		
+
 	}
-	
+
 	/**
 	 * Test.
 	 * @throws Exception a
 	 */
 	@Test
 	public final void imageUsageMW1x14() throws Exception {
-		
+
 		bot = getMediaWikiBot(Version.MW1_14, true);
 		assertTrue("Wrong Wiki Version " + bot.getVersion(), Version.MW1_14.equals(bot.getVersion()));
 		test(bot);
-		
+
 	}
 	/**
 	 * Test.
@@ -111,13 +111,13 @@ public class ImageUsageTitlesTest extends LiveTestFather {
 	 */
 	@Test
 	public final void imageUsageMW1x15() throws Exception {
-		
+
 		bot = getMediaWikiBot(Version.MW1_15, true);
 		assertTrue("Wrong Wiki Version " + bot.getVersion(), Version.MW1_15.equals(bot.getVersion()));
 		test(bot);
-		
+
 	}
-	
+
 	private void test(MediaWikiBot bot2) throws Exception {
 		ImageUsageTitles il = new ImageUsageTitles(bot, "Image:" + getValue("filename"), MediaWiki.NS_ALL);
 
@@ -142,15 +142,15 @@ public class ImageUsageTitlesTest extends LiveTestFather {
 				break;
 			}
 		}
-		
+
 		if (x < limit) {
 			fail("limit" + x);
 		}
 		registerTestedVersion(ImageUsageTitles.class, bot.getVersion());
-		
+
 	}
 	private void prepare(MediaWikiBot bot2) throws Exception {
-		
+
 		String name = "";
 		for (int i = 0; i < limit; i++) {
 			name = "TitleWithImg" + i;
@@ -158,6 +158,6 @@ public class ImageUsageTitlesTest extends LiveTestFather {
 			a.setText("Hello [[Image:" + getValue("filename") + "]] a image " + getRandom(10));
 			a.save();
 		}
-		
+
 	}
 }

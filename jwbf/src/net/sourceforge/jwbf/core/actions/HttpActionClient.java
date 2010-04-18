@@ -1,20 +1,20 @@
 /*
  * Copyright 2007 Thomas Stock.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under
  * the License.
- * 
+ *
  * Contributors:
- * 
+ *
  */
 
 package net.sourceforge.jwbf.core.actions;
@@ -53,9 +53,9 @@ import org.apache.log4j.Logger;
 
 /**
  * The main interaction class.
- * 
+ *
  * @author Thomas Stock
- * 
+ *
  */
 public class HttpActionClient {
 
@@ -70,13 +70,13 @@ public class HttpActionClient {
 	private int prevHash;
 
 
-	
-	
+
+
 	public HttpActionClient(final URL url) {
 		this(new DefaultHttpClient(), url);
 	}
 	/**
-	 * 
+	 *
 	 * @param client
 	 *            a
 	 * @param url
@@ -89,22 +89,22 @@ public class HttpActionClient {
 		 * http://jakarta.apache.org/commons/httpclient/preference-api.html
 		 */
 
-		
+
 		if (url.getPath().length() > 1) {
 			this.path = url.getPath().substring(0, url.getPath().lastIndexOf("/"));
 		}
 		client.getParams().setParameter("http.useragent",
 				"JWBF " + JWBF.getVersion(getClass()));
 		client.getParams().setParameter("http.protocol.expect-continue", Boolean.FALSE); // is good for wikipedia server
-		host = new HttpHost(url.getHost(), url.getPort(), url.getProtocol()); 
-		
+		host = new HttpHost(url.getHost(), url.getPort(), url.getProtocol());
+
 		this.client = client;
 	}
 
 
 
 	/**
-	 * 
+	 *
 	 * @param a
 	 *            a
 	 * @return message, never null
@@ -117,23 +117,23 @@ public class HttpActionClient {
 
 		String out = "";
 		while (a.hasMoreMessages()) {
-			
+
 			HttpRequestBase e = null;
 			try {
 
 				HttpAction ha = a.getNextMessage();
-				
+
 				log.debug(path + ha.getRequest());
-				
+
 				if (ha instanceof Get) {
 					if (path.length() > 1) {
 						e = new HttpGet(path + ha.getRequest());
 					} else {
 						e = new HttpGet(ha.getRequest());
 					}
-					
+
 					e.getParams().setParameter(ClientPNames.DEFAULT_HOST, host);
-					
+
 
 					// do get
 					out = get(e, a, ha);
@@ -161,8 +161,8 @@ public class HttpActionClient {
 					debug(e, ha, a);
 					HttpResponse res = client.execute(e);
 
-					
-					ByteArrayOutputStream byte1=new ByteArrayOutputStream();  
+
+					ByteArrayOutputStream byte1=new ByteArrayOutputStream();
 
 					res.getEntity().writeTo(byte1);
 					out = new String(byte1.toByteArray());
@@ -173,7 +173,7 @@ public class HttpActionClient {
 									((DefaultHttpClient)client).getCookieStore().getCookies()), ha);
 					res.getEntity().consumeContent();
 				}
-				
+
 
 			} catch (IOException e1) {
 				throw new ActionException(e1);
@@ -187,11 +187,11 @@ public class HttpActionClient {
 
 	}
 
-	
+
 
 	/**
 	 * Process a GET Message.
-	 * 
+	 *
 	 * @param authgets
 	 *            a
 	 * @param cp
@@ -202,45 +202,54 @@ public class HttpActionClient {
 	 * @throws ProcessException on problems
 	 */
 	private String get(HttpRequestBase authgets, ContentProcessable cp, HttpAction ha)
-			throws IOException, CookieException, ProcessException {
-		showCookies();
-		debug(authgets, ha, cp);
-		String out = "";
-		authgets.getParams().setParameter("http.protocol.content-charset",
-				ha.getCharset());
-//		System.err.println(authgets.getParams().getParameter("http.protocol.content-charset"));
-		
-		HttpResponse res = client.execute(authgets);
-		
-		
-		 BufferedReader br = new BufferedReader(new InputStreamReader(res.getEntity().getContent()));  
-		 StringBuffer sb = new StringBuffer();  
-		 String line;  
-		 while ((line = br.readLine()) != null) {  
-		   sb.append(line).append("\n");
-		}
-		
-		out = sb.toString(); 
-		if (cp instanceof CookieValidateable && client instanceof DefaultHttpClient)
-			((CookieValidateable) cp).validateReturningCookies(cookieTransform(
-					((DefaultHttpClient)client).getCookieStore().getCookies()), ha);//		log.debug(authgets.getURI());
-//		if (!authgets.getStatusLine().toString().contains("200") && log.isDebugEnabled()) 
-//			log.debug("GET: " + authgets.getStatusLine().toString());
-//		
-		out = cp.processReturningText(out, ha);
-//		// release any connection resources used by the method
-//		authgets.releaseConnection();
-//		int statuscode = authgets.getStatusCode();
-//
-//		if (statuscode == HttpStatus.SC_NOT_FOUND) {
-//			log.warn("Not Found: " + authgets.getQueryString());
-//
-//			throw new FileNotFoundException(authgets.getQueryString());
-//		}
-		res.getEntity().consumeContent();
-		return out;
-	}
-	
+	    throws IOException, CookieException, ProcessException {
+        showCookies();
+        debug(authgets, ha, cp);
+        String out = "";
+        authgets.getParams().setParameter("http.protocol.content-charset",
+                ha.getCharset());
+        // System.err.println(authgets.getParams().getParameter("http.protocol.content-charset"));
+
+        HttpResponse res = client.execute(authgets);
+
+        StringBuffer sb = new StringBuffer();
+        BufferedReader br = null;
+        try {
+        br = new BufferedReader(new InputStreamReader(res
+                .getEntity().getContent()));
+        String line;
+        while ((line = br.readLine()) != null) {
+            sb.append(line).append("\n");
+        }
+        } finally {
+            if (br != null)
+                br.close();
+        }
+
+        out = sb.toString();
+        if (cp instanceof CookieValidateable
+                && client instanceof DefaultHttpClient)
+            ((CookieValidateable) cp).validateReturningCookies(
+                    cookieTransform(((DefaultHttpClient) client)
+                            .getCookieStore().getCookies()), ha);// log.debug(authgets.getURI());
+            // if (!authgets.getStatusLine().toString().contains("200") &&
+            // log.isDebugEnabled())
+            // log.debug("GET: " + authgets.getStatusLine().toString());
+            //
+        out = cp.processReturningText(out, ha);
+        // // release any connection resources used by the method
+        // authgets.releaseConnection();
+        // int statuscode = authgets.getStatusCode();
+        //
+        // if (statuscode == HttpStatus.SC_NOT_FOUND) {
+        // log.warn("Not Found: " + authgets.getQueryString());
+        //
+        // throw new FileNotFoundException(authgets.getQueryString());
+        // }
+        res.getEntity().consumeContent();
+        return out;
+    }
+
 	/**
 	 * Process a GET Message.
 	 * @param ha
@@ -253,19 +262,19 @@ public class HttpActionClient {
 	public byte[] get(Get ha)
 			throws IOException, CookieException, ProcessException {
 		showCookies();
-		
+
 		HttpGet authgets = new HttpGet(ha.getRequest());
 		byte[] out = null;
 		authgets.getParams().setParameter("http.protocol.content-charset",
 				ha.getCharset());
 //		System.err.println(authgets.getParams().getParameter("http.protocol.content-charset"));
-		
+
 		client.execute(authgets);
 //		log.debug(authgets.getURI());
 //		log.debug("GET: " + authgets.getStatusLine().toString());
 //
 //		out = authgets.getResponseBody();
-//		
+//
 //		// release any connection resources used by the method
 //		authgets.releaseConnection();
 //		int statuscode = authgets.getStatusCode();
@@ -288,28 +297,29 @@ public class HttpActionClient {
 	}
 	/**
 	 * send the cookies to the logger.
-	 * 
+	 *
 	 * @param client
 	 *            a
 	 *            @deprecated is a bit too chatty
 	 */
-	private void showCookies() {
+	@Deprecated
+    private void showCookies() {
 		if (client instanceof DefaultHttpClient  && log.isDebugEnabled()) {
 		List<Cookie> cookies = ((DefaultHttpClient) client).getCookieStore().getCookies();
 		if (cookies.size() > 0) {
-			String cStr = "";
+			StringBuffer cStr = new StringBuffer();
 			for (Cookie cookie : cookies) {
-				cStr += cookie.toString() + ", ";
+				cStr.append(cookie.toString() + ", ");
 			}
 			log.debug("cookie: {" + cStr + "}");
 		}
 		}
 	}
 
-	
+
 	private void debug(HttpUriRequest e, HttpAction ha, ContentProcessable cp) {
 		if (log.isDebugEnabled()) {
-			
+
 			String continueing = "";
 			if (prevHash == cp.hashCode()) {
 				continueing = " [continuing req]";
@@ -327,13 +337,13 @@ public class HttpActionClient {
 				type = "(GET ";
 			}
 			type += cp.getClass().getSimpleName() + ")" + continueing;
-			log.debug("message " + type + " is: \n\t own: " 
+			log.debug("message " + type + " is: \n\t own: "
 					+  getHostUrl()
 					+ epath + "\n\t act: " + ha.getRequest());
 		}
 	}
 	/**
-	 * 
+	 *
 	 * @return the
 	 */
 	public String getHostUrl() {

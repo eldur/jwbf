@@ -1,21 +1,21 @@
 /*
  * Copyright 2007 Tobias Knerr.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under
  * the License.
- * 
+ *
  * Contributors:
  * Tobias Knerr
- * 
+ *
  */
 package net.sourceforge.jwbf.mediawiki.actions.queries;
 
@@ -68,14 +68,14 @@ public class BacklinkTitles extends TitleQuery<String> {
 
 	/** constant value for the bllimit-parameter. **/
 	private static final int LIMIT = 50;
-	
+
 	/** object creating the requests that are sent to the api. */
 	private RequestBuilder requestBuilder = null;
 
-	private final String articleName; 
+	private final String articleName;
 
-	
-	
+
+
 	private MediaWikiBot bot;
 	private final RedirectFilter redirectFilter;
 	private final int [] namespaces;
@@ -84,18 +84,18 @@ public class BacklinkTitles extends TitleQuery<String> {
 	 * which is then added to msgs. When it is answered,
 	 * the method processAllReturningText will be called
 	 * (from outside this class).
-	 * 
+	 *
 	 * @param articleName    the title of the article, != null
 	 * @param namespaces      the namespace(s) that will be searched for links,
 	 *                       as a string of numbers separated by '|';
-	 *                       if null, this parameter is omitted. 
+	 *                       if null, this parameter is omitted.
 	 *                       See for e.g. {@link MediaWiki#NS_ALL}.
 	 * @param redirectFilter filter that determines how to handle redirects,
 	 *                       must be all for MW versions before 1.11; != null
 	 * @param bot	         a
-	 *                       
-	 * @throws VersionException  if general functionality or parameter values 
-	 *                           are not compatible with apiVersion value 
+	 *
+	 * @throws VersionException  if general functionality or parameter values
+	 *                           are not compatible with apiVersion value
 	 */
 	 public BacklinkTitles(MediaWikiBot bot, String articleName, RedirectFilter redirectFilter,
 			 int... namespaces)
@@ -115,19 +115,19 @@ public class BacklinkTitles extends TitleQuery<String> {
 
 	}
 	/**
-	 * 
+	 *
 	 * @param articleName a
 	 * @param bot a
 	 * @throws VersionException if action is not supported
 	 */
-	 public BacklinkTitles(MediaWikiBot bot, String articleName) 
+	 public BacklinkTitles(MediaWikiBot bot, String articleName)
 			throws VersionException {
 		 this(bot, articleName, RedirectFilter.all, null);
-		 
+
 	 }
-	 
-	
-		
+
+
+
 	@Override
 	protected Object clone() throws CloneNotSupportedException {
 		try {
@@ -136,28 +136,28 @@ public class BacklinkTitles extends TitleQuery<String> {
 			throw new CloneNotSupportedException(e.getLocalizedMessage());
 		}
 	}
-	
+
 
 	/**
 	 * gets the information about a follow-up page from a provided api response.
-	 * If there is one, the information for the next page parameter is 
+	 * If there is one, the information for the next page parameter is
 	 * added to the nextPageInfo field.
-	 *	
+	 *
 	 * @param s   text for parsing
 	 */
 	@Override
 	protected String parseHasMore(final String s) {
-		
+
 		// get the blcontinue-value
 		Pattern p = Pattern.compile(
 			"<query-continue>.*?"
 			+ "<backlinks *blcontinue=\"([^\"]*)\" */>"
 			+ ".*?</query-continue>",
 			Pattern.DOTALL | Pattern.MULTILINE);
-			
+
 		Matcher m = p.matcher(s);
 
-		if (m.find()) {	
+		if (m.find()) {
 			return m.group(1);
 		} else {
 			return "";
@@ -167,26 +167,26 @@ public class BacklinkTitles extends TitleQuery<String> {
 
 	/**
 	 * picks the article name from a MediaWiki api response.
-	 *	
+	 *
 	 * @param s   text for parsing
 	 */
 	@Override
 	protected Collection<String> parseArticleTitles(String s) {
-		
+
 		// get the other backlink titles and add them all to the titleCollection
 		Collection<String> titleCollection = new Vector<String>();
-		
+
 		Pattern p = Pattern.compile(
 			"<bl pageid=\".*?\" ns=\".*?\" title=\"([^\"]*)\" (redirect=\"\" )?/>");
-			
+
 		Matcher m = p.matcher(s);
-		
+
 		while (m.find()) {
 			titleCollection.add(m.group(1));
-			
+
 		}
 		return titleCollection;
-		
+
 	}
 
 	/**
@@ -198,7 +198,7 @@ public class BacklinkTitles extends TitleQuery<String> {
 	 */
 	private RequestBuilder createRequestBuilder(Version apiVersion)
 		throws VersionException {
-		
+
 		switch (apiVersion) {
 
 		case MW1_09:
@@ -209,20 +209,20 @@ public class BacklinkTitles extends TitleQuery<String> {
 			return new RequestBuilder1x11();
 
 		}
-		
+
 	}
-	
-	/** interface for classes that create a request strings. */	
+
+	/** interface for classes that create a request strings. */
 	private interface RequestBuilder {
-		
+
 		/**
 		 * generates an initial MediaWiki-request.
 		 * @param articleName a
 		 * @param redirectFilter a
-		 * @param namespace a  
+		 * @param namespace a
 		 * @return the request in string form
 		 */
-		String buildInitialRequest(String articleName, 
+		String buildInitialRequest(String articleName,
                 RedirectFilter redirectFilter,
                 int [] namespace);
 
@@ -232,60 +232,60 @@ public class BacklinkTitles extends TitleQuery<String> {
 		 * @return the request in string form
 		 */
 		String buildContinueRequest(String blcontinue);
-		
+
 	}
 
 	/** request builder for MW versions 1_11 to (at least) 1_13. */
-	private class RequestBuilder1x11 implements RequestBuilder {
+	private static class RequestBuilder1x11 implements RequestBuilder {
 		/**
 		 * {@inheritDoc}
 		 */
-		public String buildInitialRequest(String articleName, 
+		public String buildInitialRequest(String articleName,
 				RedirectFilter redirectFilter, int [] namespace)  {
-			
+
 			return "/api.php?action=query&list=backlinks"
-			       + "&bltitle=" + MediaWiki.encode(articleName) 
+			       + "&bltitle=" + MediaWiki.encode(articleName)
 			       + ((namespace != null && MWAction.createNsString(namespace).length() != 0) ? ("&blnamespace=" + MediaWiki.encode(MWAction.createNsString(namespace))) : "")
 			       + "&blfilterredir=" + MediaWiki.encode(redirectFilter.toString())
-			       + "&bllimit=" + LIMIT + "&format=xml";			
+			       + "&bllimit=" + LIMIT + "&format=xml";
 		}
 		/**
 		 * {@inheritDoc}
 		 */
 		public String buildContinueRequest(String blcontinue) {
-			
+
 			return "/api.php?action=query&list=backlinks"
 			       + "&blcontinue=" + MediaWiki.encode(blcontinue)
-			       + "&bllimit=" + LIMIT + "&format=xml";			
+			       + "&bllimit=" + LIMIT + "&format=xml";
 		}
-		
+
 	}
-	
+
 	/** request builder for MW versions 1_09 and 1_10. */
-	private class RequestBuilder1x09 implements RequestBuilder {
+	private static class RequestBuilder1x09 implements RequestBuilder {
 		/**
 		 * {@inheritDoc}
 		 */
-		public String buildInitialRequest(String articleName, 
+		public String buildInitialRequest(String articleName,
 				RedirectFilter redirectFilter, int [] namespace)  {
-			
+
 			return "/api.php?action=query&list=backlinks"
-			       + "&titles=" + MediaWiki.encode(articleName) 
-			       + ((namespace != null && MWAction.createNsString(namespace).length() != 0) 
+			       + "&titles=" + MediaWiki.encode(articleName)
+			       + ((namespace != null && MWAction.createNsString(namespace).length() != 0)
 			    		   ? ("&blnamespace=" + MediaWiki.encode(MWAction.createNsString(namespace))) : "")
 			       + "&blfilterredir=" + MediaWiki.encode(redirectFilter.toString())
-			       + "&bllimit=" + LIMIT + "&format=xml";			
+			       + "&bllimit=" + LIMIT + "&format=xml";
 		}
 		/**
 		 * {@inheritDoc}
 		 */
 		public String buildContinueRequest(String blcontinue) {
-			
+
 			return "/api.php?action=query&list=backlinks"
 			       + "&blcontinue=" + MediaWiki.encode(blcontinue)
-			       + "&bllimit=" + LIMIT + "&format=xml";			
+			       + "&bllimit=" + LIMIT + "&format=xml";
 		}
-		
+
 	}
 
 	@Override
@@ -297,5 +297,5 @@ public class BacklinkTitles extends TitleQuery<String> {
 		}
 	}
 
-	
+
 }
