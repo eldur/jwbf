@@ -177,9 +177,10 @@ public class LogEventsTest extends LiveTestFather {
 				break;
 			}
 		}
-		if (MediaWiki.Version.MW1_11.equals(bot.getVersion()))
+		if (MediaWiki.Version.MW1_11.equals(bot.getVersion())) {
+		  registerTestedVersion(LogEvents.class, bot.getVersion());
 		  Assume.assumeTrue(i > LIMIT);
-		else
+		} else
 		  assertTrue("should be greater then 50 but is " + i, i > LIMIT);
 		registerTestedVersion(LogEvents.class, bot.getVersion());
 	}
