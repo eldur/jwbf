@@ -145,7 +145,7 @@ public class PostLogin extends MWAction {
 		} else if (result.equalsIgnoreCase(wrongPass)) {
 			throw new ProcessException("Wrong Password");
 		} else if (result.equalsIgnoreCase(notExists)) {
-			throw new ProcessException("No sutch User");
+			throw new ProcessException("No such User");
 		}
 
 	}
