@@ -5,17 +5,19 @@ import net.sourceforge.jwbf.TestHelper;
 import net.sourceforge.jwbf.core.actions.util.ActionException;
 import net.sourceforge.jwbf.core.contentRep.Article;
 import net.sourceforge.jwbf.mediawiki.LiveTestFather;
+import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.actions.queries.LogEvents;
 import net.sourceforge.jwbf.mediawiki.actions.util.VersionException;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 import net.sourceforge.jwbf.mediawiki.contentRep.LogItem;
 
+import org.junit.Assume;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
- * 
+ *
  * @author Thomas Stock
  *
  */
@@ -40,72 +42,72 @@ public class LogEventsTest extends LiveTestFather {
 	 */
 	@Test(expected = ActionException.class)
 	public final void logEventsPerformManual() throws Exception {
-		
+
 		bot = new MediaWikiBot("http://de.wikipedia.org/w/index.php");
 		LogEvents le = new LogEvents(bot, LogEvents.DELETE);
 		bot.performAction(le);
 	}
 	/**
-	 * 
+	 *
 	 * @throws Exception a
 	 */
 	@Test
 	public final void logEventsWikipediaDe() throws Exception {
-		
+
 		bot = new MediaWikiBot("http://de.wikipedia.org/w/index.php");
 		doTest(bot, false, LogEvents.DELETE);
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws Exception a
 	 */
 	@Test(expected = VersionException.class)
 	public final void logEventsMW1x09Fail() throws Exception {
-		
+
 		bot = getMediaWikiBot(Version.MW1_09, true);
 		registerUnTestedVersion(LogEvents.class, bot.getVersion());
 		doTest(bot, true, LogEvents.DELETE);
 		assertTrue("Wrong Wiki Version " + bot.getVersion(), Version.MW1_09.equals(bot.getVersion()));
 	}
 	/**
-	 * 
+	 *
 	 * @throws Exception a
 	 */
 	@Test(expected = VersionException.class)
 	public final void logEventsMW1x10Fail() throws Exception {
-		
+
 		bot = getMediaWikiBot(Version.MW1_10, true);
 		registerUnTestedVersion(LogEvents.class, bot.getVersion());
 		doTest(bot, true, LogEvents.DELETE);
 		assertTrue("Wrong Wiki Version " + bot.getVersion(), Version.MW1_10.equals(bot.getVersion()));
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @throws Exception a
 	 */
 	@Test
 	public final void logEventsMW1x11() throws Exception {
-		
+
 		bot = getMediaWikiBot(Version.MW1_11, true);
 		doTest(bot, true, LogEvents.UPLOAD);
 		assertTrue("Wrong Wiki Version " + bot.getVersion(), Version.MW1_11.equals(bot.getVersion()));
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @throws Exception a
 	 */
 	@Test
 	public final void logEventsMW1x12() throws Exception {
-		
+
 		bot = getMediaWikiBot(Version.MW1_12, true);
 		doTest(bot, true, LogEvents.DELETE);
 		assertTrue("Wrong Wiki Version " + bot.getVersion(), Version.MW1_12.equals(bot.getVersion()));
 	}
 	/**
-	 * 
+	 *
 	 * @throws Exception a
 	 */
 	@Test
@@ -115,7 +117,7 @@ public class LogEventsTest extends LiveTestFather {
 		assertTrue("Wrong Wiki Version " + bot.getVersion(), Version.MW1_13.equals(bot.getVersion()));
 	}
 	/**
-	 * 
+	 *
 	 * @throws Exception a
 	 */
 	@Test
@@ -124,9 +126,9 @@ public class LogEventsTest extends LiveTestFather {
 		doTest(bot, true, LogEvents.DELETE);
 		assertTrue("Wrong Wiki Version " + bot.getVersion(), Version.MW1_14.equals(bot.getVersion()));
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @throws Exception a
 	 */
 	@Test
@@ -135,7 +137,7 @@ public class LogEventsTest extends LiveTestFather {
 		doTest(bot, true, LogEvents.DELETE);
 		assertTrue("Wrong Wiki Version " + bot.getVersion(), Version.MW1_15.equals(bot.getVersion()));
 	}
-	
+
 	private void doPrepare(MediaWikiBot bot) throws Exception {
 		for (int i = 0; i <= LIMIT; i++) {
 			String title = getRandomAlph(6);
@@ -143,10 +145,15 @@ public class LogEventsTest extends LiveTestFather {
 			a.setText(getRandom(5));
 			a.save();
 			assertTrue("content shoul be", a.getText().length() > 0);
-			a.delete();
+			try {
+			  a.delete();
+			} catch (VersionException e) {
+        if (!MediaWiki.Version.MW1_11.equals(bot.getVersion()))
+            throw e;
+      }
 		}
 	}
-	
+
 	private void doTest(MediaWikiBot bot, boolean isDemo, String type) throws Exception {
 		LogEvents le = new LogEvents(bot, type);
 
@@ -159,10 +166,10 @@ public class LogEventsTest extends LiveTestFather {
 				break;
 			}
 		}
-		if (notEnough && isDemo) {
+		if (notEnough && isDemo && !MediaWiki.Version.MW1_11.equals(bot.getVersion())) {
 			doPrepare(bot);
 		}
-		
+
 		for (LogItem logItem : le) {
 			System.out.print(logItem.getTitle() + " ");
 			i++;
@@ -170,7 +177,10 @@ public class LogEventsTest extends LiveTestFather {
 				break;
 			}
 		}
-		assertTrue("should be greater then 50 but is " + i, i > LIMIT);
+		if (MediaWiki.Version.MW1_11.equals(bot.getVersion()))
+		  Assume.assumeTrue(i > LIMIT);
+		else
+		  assertTrue("should be greater then 50 but is " + i, i > LIMIT);
 		registerTestedVersion(LogEvents.class, bot.getVersion());
 	}
 }
