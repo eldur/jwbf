@@ -94,7 +94,7 @@ public class HttpActionClient {
 			this.path = url.getPath().substring(0, url.getPath().lastIndexOf("/"));
 		}
 		client.getParams().setParameter("http.useragent",
-				"JWBF " + JWBF.getVersion(getClass()));
+				"JWBF " + JWBF.getVersion(getClass())); // some wikis (e.g. Wikipedia) need this line
 		client.getParams().setParameter("http.protocol.expect-continue", Boolean.FALSE); // is good for wikipedia server
 		host = new HttpHost(url.getHost(), url.getPort(), url.getProtocol());
 
