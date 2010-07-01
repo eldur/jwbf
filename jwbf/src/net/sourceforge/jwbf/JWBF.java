@@ -39,24 +39,18 @@ public final class JWBF {
 	private static final Map<String, String> PARTS = new HashMap<String, String>();
 	private static String version = "";
 	private static String title = "";
+	private static final char separatorChar = '/';
 
 
 	static {
-	    String systemSeperatorStr = System.getProperties().getProperty("file.separator");
-	    final char seperatorChar;
-	    if (systemSeperatorStr != null)
-	        seperatorChar = File.separatorChar;
-	    else
-	        seperatorChar = '/';
-
 		String packagename = JWBF.class.getPackage().getName().replace('.',
-		        seperatorChar);
+				separatorChar);
 		URL url = JWBF.class.getClassLoader().getResource(packagename);
 		final String jarFileIndex = "jar:file:";
 		boolean isJar = url.toExternalForm().toLowerCase().contains(jarFileIndex);
 		if (isJar) {
 			try {
-				int jarEnd = url.toExternalForm().indexOf("!" + seperatorChar);
+				int jarEnd = url.toExternalForm().indexOf("!" + separatorChar);
 				String jarFileName = url.toExternalForm().substring(jarFileIndex.length(), jarEnd);
 				JarFile jar = new JarFile(jarFileName);
 				Enumeration<JarEntry> je =  jar.entries();
@@ -66,7 +60,7 @@ public final class JWBF {
 					if (jarEntry.isDirectory() && jarEntry.getName().contains(packagename)
 							&& slashCount.length() == 4 ) {
 
-						registerModule(readMFProductTitle(jarFileName) + "-" + jarEntry.getName().split(seperatorChar + "")[3],
+						registerModule(readMFProductTitle(jarFileName) + "-" + jarEntry.getName().split(separatorChar + "")[3],
 								readMFVersion(jarFileName));
 					}
 				}
@@ -79,7 +73,7 @@ public final class JWBF {
 				File[] dirs = root.listFiles();
 				for (int i = 0; i < dirs.length; i++) {
 					if (dirs[i].isDirectory()) {
-						int lastIndex = dirs[i].toString().lastIndexOf(seperatorChar) + 1;
+						int lastIndex = dirs[i].toString().lastIndexOf(separatorChar) + 1;
 						String partTitle = dirs[i].toString().substring(lastIndex, dirs[i].toString().length());
 						registerModule(readMFProductTitle(root + "") + "-" + partTitle,
 								readMFVersion(root + ""));
@@ -259,8 +253,8 @@ public final class JWBF {
 
 			manifestUrl = new URL("jar:file:" + path + "!/META-INF/MANIFEST.MF");
 		} else {
-			if (!path.endsWith("/"))
-				path += "/";
+			if (!path.endsWith(File.separator))
+				path += File.separatorChar;
 			manifestUrl = searchMF(path);
 		}
 		Manifest manifest = new Manifest(manifestUrl.openStream());
