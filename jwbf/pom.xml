@@ -59,7 +59,8 @@
 				<configuration>
 					<archive>
 						<addMavenDescriptor>false</addMavenDescriptor>
-					</archive>
+            			<manifestFile>${project.build.directory}/MANIFEST.MF</manifestFile>
+         	 		</archive>
 				</configuration>
 
 				<executions>
@@ -75,6 +76,7 @@
 							</classesDirectory>
 							<classifier>core</classifier>
 							<archive>
+								<addMavenDescriptor>false</addMavenDescriptor>
             					<manifestFile>${project.build.directory}/MANIFEST.MF</manifestFile>
          	 				</archive>
 							<includes>
@@ -95,6 +97,7 @@
 							</classesDirectory>
 							<classifier>mediawiki</classifier>
 							<archive>
+								<addMavenDescriptor>false</addMavenDescriptor>
             					<manifestFile>${project.build.directory}/MANIFEST.MF</manifestFile>
          	 				</archive>
 							<includes>
