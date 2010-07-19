@@ -74,6 +74,9 @@
 								${project.build.outputDirectory}
 							</classesDirectory>
 							<classifier>core</classifier>
+							<archive>
+            					<manifestFile>${project.build.directory}/MANIFEST.MF</manifestFile>
+         	 				</archive>
 							<includes>
 								<include>net/sourceforge/jwbf/JWBF*</include>
 								<include>net/sourceforge/jwbf/core/**</include>
