@@ -27,24 +27,33 @@ import net.sourceforge.jwbf.core.bots.util.JwbfException;
  */
 public class ActionException extends JwbfException {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+  /**
+   * 
+   */
+  private static final long serialVersionUID = 1L;
 
-	/**
-	 * 
-	 * @param arg0 a
-	 */
-	public ActionException(String arg0) {
-		super(arg0);
-	}
+  /**
+   * @param message
+   * @param t
+   */
+  public ActionException(String message, Throwable t) {
+    super(message, t);
+  }
 
-	/**
-	 * @param arg0 a
-	 */
-	public ActionException(Throwable arg0) {
-		super(arg0);
-	
-	}
+  /**
+   * @param message
+   */
+  public ActionException(String message) {
+    super(message);
+  }
+
+  /**
+   * @param t
+   */
+  public ActionException(Throwable t) {
+    super(t);
+  }
+
+
+
 }

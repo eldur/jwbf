@@ -32,86 +32,78 @@ import net.sourceforge.jwbf.JWBF;
  */
 public class JwbfException extends Exception {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -2456904376052276104L;
-//	private Class < ? > clazz = Object.class;
+  /**
+   * 
+   */
+  private static final long serialVersionUID = -2456904376052276104L;
 
+  /**
+   * @param message a
+   */
+  public JwbfException(String message) {
+    super(message);
+  }
 
-	
-	/**
-	 * Design for extension, use with {@link #setExceptionPackageClass(Class)}.
-	 * @param arg0 a
-	 * 
-	 */
-	public JwbfException(String arg0) {
-		super(arg0);
-	}
+  /**
+   * @param t a
+   */
+  public JwbfException(Throwable t) {
+    super(t);
+  }
 
+  /**
+   * @param message a
+   * @param t a
+   */
+  public JwbfException(String message, Throwable t) {
+    super(message, t);
+  }
 
-	/**
-	 * Design for extension, use with {@link #setExceptionPackageClass(Class)}.
-	 * @param arg0 a
-	 * 
-	 */
-	protected JwbfException(Throwable arg0) {
-		super(arg0);
-	}
-	
-	/**
-	 * 
-	 * @return the
-	 */
-	public Class < ? > getExceptionSrcClass() {
-		return getStackTraceClass();
-	}
+  /**
+   * @return the
+   */
+  public Class < ? > getExceptionSrcClass() {
+    return getStackTraceClass();
+  }
 
-	private Class < ? > getStackTraceClass() {
-		
-		ClassLoader loader = getClass().getClassLoader();
-		try {
-			return loader.loadClass(getStackTrace()[0].getClassName());
-		} catch (ClassNotFoundException e) {
-			return Object.class;
-		}
-		
-	}
-	
-	/**
-	 * 
-	 * @return the
-	 */
-	private String getModulInfo() {
-		
-		Class < ? > clazz = getStackTraceClass();
+  private Class < ? > getStackTraceClass() {
 
-		return "( " + JWBF.getPartId(clazz) + "-" + JWBF.getVersion(clazz) + " )";
-	}
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void printStackTrace(PrintWriter arg0) {
-		arg0.println(getModulInfo());
-		super.printStackTrace(arg0);
-	}
-//	/**
-//	 * {@inheritDoc}
-//	 */
-//	@Override
-//	public void printStackTrace() {
-////		System.err.println(getModulInfo());
-//		super.printStackTrace();
-//	}
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void printStackTrace(PrintStream s) {
-		s.println(getModulInfo());
-		super.printStackTrace(s);
-	}
+    ClassLoader loader = getClass().getClassLoader();
+    try {
+      return loader.loadClass(getStackTrace()[0].getClassName());
+    } catch (ClassNotFoundException e) {
+      return Object.class;
+    }
 
-	
+  }
+
+  /**
+   * 
+   * @return the
+   */
+  private String getModulInfo() {
+
+    Class < ? > clazz = getStackTraceClass();
+
+    return "( " + JWBF.getPartId(clazz) + "-" + JWBF.getVersion(clazz) + " )";
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void printStackTrace(PrintWriter arg0) {
+    arg0.println(getModulInfo());
+    super.printStackTrace(arg0);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void printStackTrace(PrintStream s) {
+    s.println(getModulInfo());
+    super.printStackTrace(s);
+  }
+
 }
