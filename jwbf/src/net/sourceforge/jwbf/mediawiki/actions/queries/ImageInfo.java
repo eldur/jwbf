@@ -5,6 +5,7 @@ import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_12;
 import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_13;
 import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_14;
 import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_15;
+import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_16;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -41,7 +42,7 @@ import org.xml.sax.InputSource;
  * @author Thomas Stock
  *
  */
-@SupportedBy({ MW1_11, MW1_12, MW1_13, MW1_14, MW1_15 })
+@SupportedBy({ MW1_11, MW1_12, MW1_13, MW1_14, MW1_15, MW1_16 })
 public class ImageInfo extends MWAction {
   private static final Logger LOGGER = Logger.getLogger(ImageInfo.class);
   private String urlOfImage  = "";
