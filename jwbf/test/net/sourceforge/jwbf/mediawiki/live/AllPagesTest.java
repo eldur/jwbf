@@ -44,170 +44,181 @@ import org.junit.Test;
  */
 public class AllPagesTest extends LiveTestFather {
 
-	
-	private MediaWikiBot bot = null;
-	/**
-	 * Setup log4j.
-	 * @throws Exception a
-	 */
-	@BeforeClass
-	public static void setUp() throws Exception {
-		TestHelper.prepareLogging();
-		addInitSupporterVersions(AllPageTitles.class);
-	}
-	
-	
-	
 
-	/**
-	 * Test category read. Test category must have more then 50 members.
-	 * @throws Exception a
-	 */
-	@Test
-	public final void allPagesWikipediaDe() throws Exception {
-		
-		bot = new MediaWikiBot("http://de.wikipedia.org/w/index.php");
-		doTest(bot, false);
-	}
-	
-	
-	/**
-	 * Test category read. Test category must have more then 50 members.
-	 * @throws Exception a
-	 */
-	@Test
-	public final void allPagesWikiMW1x09() throws Exception {
-		
-		bot = getMediaWikiBot(Version.MW1_09, true);
-		doTest(bot, true);
-		Assert.assertTrue("Wrong Wiki Version " + bot.getVersion(), Version.MW1_09.equals(bot.getVersion()));
-	}
-	/**
-	 * Test category read. Test category must have more then 50 members.
-	 * @throws Exception a
-	 */
-	@Test
-	public final void allPagesWikiMW1x10() throws Exception {
-		
-		bot = getMediaWikiBot(Version.MW1_10, true);
-		doTest(bot, true);
-		Assert.assertTrue("Wrong Wiki Version " + bot.getVersion(), Version.MW1_10.equals(bot.getVersion()));
-	}
-	
-	/**
-	 * Test category read. Test category must have more then 50 members.
-	 * @throws Exception a
-	 */
-	@Test
-	public final void allPagesWikiMW1x11() throws Exception {
-		
-		bot = getMediaWikiBot(Version.MW1_11, true);
-		doTest(bot, true);
-		Assert.assertTrue("Wrong Wiki Version " + bot.getVersion(), Version.MW1_11.equals(bot.getVersion()));
-	}
-	
-	/**
-	 * Test category read. Test category must have more then 50 members.
-	 * @throws Exception a
-	 */
-	@Test
-	public final void allPagesWikiMW1x12() throws Exception {
-		
-		bot = getMediaWikiBot(Version.MW1_12, true);
-		doTest(bot, true);
-		Assert.assertTrue("Wrong Wiki Version " + bot.getVersion(), Version.MW1_12.equals(bot.getVersion()));
-	}
-	/**
-	 * Test category read. Test category must have more then 50 members.
-	 * @throws Exception a
-	 */
-	@Test
-	public final void allPagesWikiMW1x13() throws Exception {
-		bot = getMediaWikiBot(Version.MW1_13, true);
-		doTest(bot, true);
-		Assert.assertTrue("Wrong Wiki Version " + bot.getVersion(), Version.MW1_13.equals(bot.getVersion()));
-	}
-	
-	/**
-	 * Test category read. Test category must have more then 50 members.
-	 * @throws Exception a
-	 */
-	@Test
-	public final void allPagesWikiMW1x14() throws Exception {
-		bot = getMediaWikiBot(Version.MW1_14, true);
-		doTest(bot, true);
-		Assert.assertTrue("Wrong Wiki Version " + bot.getVersion(), Version.MW1_14.equals(bot.getVersion()));
-	}
-	
-	/**
-	 * Test category read. Test category must have more then 50 members.
-	 * @throws Exception a
-	 */
-	@Test
-	public final void allPagesWikiMW1x15() throws Exception {
-		bot = getMediaWikiBot(Version.MW1_15, true);
-		doTest(bot, true);
-		Assert.assertTrue("Wrong Wiki Version " + bot.getVersion(), Version.MW1_15.equals(bot.getVersion()));
-	}
-	
-	private void doTest(MediaWikiBot bot, boolean isFullTest) throws Exception {
-		AllPageTitles gat = new AllPageTitles(bot, null, null, RedirectFilter.all, MediaWiki.NS_MAIN);
-	
-		SimpleArticle sa;
-		String testText = getRandom(255);
-	
-		
-		Collection<String> specialChars = getSpecialChars();
-		if (isFullTest) {
-			try {
-			for (String title : specialChars) {
-				sa = new SimpleArticle(title);
-				sa.setText(testText);
-				bot.writeContent(sa);
-			}
-			} catch (ActionException e) {
-				boolean found = false;
-				for (char ch : MediaWikiBot.INVALID_LABEL_CHARS) {
-					if (e.getMessage().contains(ch + "")) {
-						found = true;
-						break;
-					}
-				}
-				assertTrue("should be a know invalid char",  found);
-			}
-		}
+  private MediaWikiBot bot = null;
+  /**
+   * Setup log4j.
+   * @throws Exception a
+   */
+  @BeforeClass
+  public static void setUp() throws Exception {
+    TestHelper.prepareLogging();
+    addInitSupporterVersions(AllPageTitles.class);
+  }
 
-		Iterator<String> is = gat.iterator();
-		int i = 0;
-		while (is.hasNext()) {
-			String nx = is.next();
-			if (isFullTest)
-				specialChars.remove(nx);
-			i++;
-			if (i > 55) {
-				break;
-			}
-		}
-		
-		
-		
-		if (isFullTest) {
-			for (char c : MediaWikiBot.INVALID_LABEL_CHARS) {
-				specialChars.remove(c + "");
-			}
-			if (!specialChars.isEmpty()) {
-				while (is.hasNext() || !specialChars.isEmpty()) {
-						specialChars.remove(is.next());
-				}
-			}
-			
-			Assert.assertTrue("tc sould be empty but is: " + specialChars,
-					specialChars.isEmpty());
-		}
-		Assert.assertTrue("i is: " + i, i > 50);
-		registerTestedVersion(AllPageTitles.class, bot.getVersion());
-	}
-	
-	
+
+
+
+  /**
+   * Test category read. Test category must have more then 50 members.
+   * @throws Exception a
+   */
+  @Test
+  public final void allPagesWikipediaDe() throws Exception {
+
+    bot = new MediaWikiBot("http://de.wikipedia.org/w/index.php");
+    doTest(bot, false);
+  }
+
+
+  /**
+   * Test category read. Test category must have more then 50 members.
+   * @throws Exception a
+   */
+  @Test
+  public final void allPagesWikiMW1x09() throws Exception {
+
+    bot = getMediaWikiBot(Version.MW1_09, true);
+    doTest(bot, true);
+    Assert.assertTrue("Wrong Wiki Version " + bot.getVersion(), Version.MW1_09.equals(bot.getVersion()));
+  }
+  /**
+   * Test category read. Test category must have more then 50 members.
+   * @throws Exception a
+   */
+  @Test
+  public final void allPagesWikiMW1x10() throws Exception {
+
+    bot = getMediaWikiBot(Version.MW1_10, true);
+    doTest(bot, true);
+    Assert.assertTrue("Wrong Wiki Version " + bot.getVersion(), Version.MW1_10.equals(bot.getVersion()));
+  }
+
+  /**
+   * Test category read. Test category must have more then 50 members.
+   * @throws Exception a
+   */
+  @Test
+  public final void allPagesWikiMW1x11() throws Exception {
+
+    bot = getMediaWikiBot(Version.MW1_11, true);
+    doTest(bot, true);
+    Assert.assertTrue("Wrong Wiki Version " + bot.getVersion(), Version.MW1_11.equals(bot.getVersion()));
+  }
+
+  /**
+   * Test category read. Test category must have more then 50 members.
+   * @throws Exception a
+   */
+  @Test
+  public final void allPagesWikiMW1x12() throws Exception {
+
+    bot = getMediaWikiBot(Version.MW1_12, true);
+    doTest(bot, true);
+    Assert.assertTrue("Wrong Wiki Version " + bot.getVersion(), Version.MW1_12.equals(bot.getVersion()));
+  }
+  /**
+   * Test category read. Test category must have more then 50 members.
+   * @throws Exception a
+   */
+  @Test
+  public final void allPagesWikiMW1x13() throws Exception {
+    bot = getMediaWikiBot(Version.MW1_13, true);
+    doTest(bot, true);
+    Assert.assertTrue("Wrong Wiki Version " + bot.getVersion(), Version.MW1_13.equals(bot.getVersion()));
+  }
+
+  /**
+   * Test category read. Test category must have more then 50 members.
+   * @throws Exception a
+   */
+  @Test
+  public final void allPagesWikiMW1x14() throws Exception {
+    bot = getMediaWikiBot(Version.MW1_14, true);
+    doTest(bot, true);
+    Assert.assertTrue("Wrong Wiki Version " + bot.getVersion(), Version.MW1_14.equals(bot.getVersion()));
+  }
+
+  /**
+   * Test category read. Test category must have more then 50 members.
+   * @throws Exception a
+   */
+  @Test
+  public final void allPagesWikiMW1x15() throws Exception {
+    bot = getMediaWikiBot(Version.MW1_15, true);
+    doTest(bot, true);
+    Assert.assertTrue("Wrong Wiki Version " + bot.getVersion(), Version.MW1_15.equals(bot.getVersion()));
+  }
+
+  /**
+   * Test category read. Test category must have more then 50 members.
+   * @throws Exception a
+   */
+  @Test
+  public final void allPagesWikiMW1x16() throws Exception {
+    bot = getMediaWikiBot(Version.MW1_16, true);
+    doTest(bot, true);
+    Assert.assertTrue("Wrong Wiki Version " + bot.getVersion(), Version.MW1_16.equals(bot.getVersion()));
+  }
+
+  private void doTest(MediaWikiBot bot, boolean isFullTest) throws Exception {
+    AllPageTitles gat = new AllPageTitles(bot, null, null, RedirectFilter.all, MediaWiki.NS_MAIN);
+
+    SimpleArticle sa;
+    String testText = getRandom(255);
+
+
+    Collection<String> specialChars = getSpecialChars();
+    if (isFullTest) {
+      try {
+        for (String title : specialChars) {
+          sa = new SimpleArticle(title);
+          sa.setText(testText);
+          bot.writeContent(sa);
+        }
+      } catch (ActionException e) {
+        boolean found = false;
+        for (char ch : MediaWikiBot.INVALID_LABEL_CHARS) {
+          if (e.getMessage().contains(ch + "")) {
+            found = true;
+            break;
+          }
+        }
+        assertTrue("should be a know invalid char",  found);
+      }
+    }
+
+    Iterator<String> is = gat.iterator();
+    int i = 0;
+    while (is.hasNext()) {
+      String nx = is.next();
+      if (isFullTest)
+        specialChars.remove(nx);
+      i++;
+      if (i > 55) {
+        break;
+      }
+    }
+
+
+
+    if (isFullTest) {
+      for (char c : MediaWikiBot.INVALID_LABEL_CHARS) {
+        specialChars.remove(c + "");
+      }
+      if (!specialChars.isEmpty()) {
+        while (is.hasNext() || !specialChars.isEmpty()) {
+          specialChars.remove(is.next());
+        }
+      }
+
+      Assert.assertTrue("tc sould be empty but is: " + specialChars,
+          specialChars.isEmpty());
+    }
+    Assert.assertTrue("i is: " + i, i > 50);
+    registerTestedVersion(AllPageTitles.class, bot.getVersion());
+  }
+
+
 }
 
