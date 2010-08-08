@@ -25,6 +25,7 @@ import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_12;
 import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_13;
 import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_14;
 import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_15;
+import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_16;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -57,225 +58,225 @@ import org.xml.sax.InputSource;
  *
  *
  */
-@SupportedBy({ MW1_09, MW1_10, MW1_11, MW1_12, MW1_13, MW1_14, MW1_15 })
+@SupportedBy({ MW1_09, MW1_10, MW1_11, MW1_12, MW1_13, MW1_14, MW1_15, MW1_16 })
 public class GetRevision extends MWAction {
 
-	private final SimpleArticle sa;
+  private final SimpleArticle sa;
 
-	public static final int CONTENT = 1 << 1;
-	public static final int TIMESTAMP = 1 << 2;
-	public static final int USER = 1 << 3;
-	public static final int COMMENT = 1 << 4;
-	public static final int IDS = 1 << 5;
-	public static final int FLAGS = 1 << 6;
+  public static final int CONTENT = 1 << 1;
+  public static final int TIMESTAMP = 1 << 2;
+  public static final int USER = 1 << 3;
+  public static final int COMMENT = 1 << 4;
+  public static final int IDS = 1 << 5;
+  public static final int FLAGS = 1 << 6;
 
-	public static final int FIRST = 1 << 30;
-	public static final int LAST = 1 << 31;
+  public static final int FIRST = 1 << 30;
+  public static final int LAST = 1 << 31;
 
-	private final Logger log = Logger.getLogger(getClass());
+  private final Logger log = Logger.getLogger(getClass());
 
-	private final int properties;
+  private final int properties;
 
-	private final Get msg;
+  private final Get msg;
 
-	private boolean singleProcess = true;
+  private boolean singleProcess = true;
 
-	private final Version botVersion;
+  private final Version botVersion;
 
-	/**
-	 * TODO follow redirects.
-	 * TODO change constructor fild ordering; bot
-	 * @throws ProcessException a
-	 * @throws ActionException  a
-	 * @param articlename of
-	 * @param properties the
-	 * @param v the
-	 */
-	public GetRevision(Version v, final String articlename, final int properties)
-			throws ActionException, ProcessException {
-		super(v);
-		botVersion = v;
-//		if (!bot.getUserinfo().getRights().contains("read")) {
-//			throw new ActionException("reading is not permited, make sure that this account is able to read");
-//		} FIXME check if
+  /**
+   * TODO follow redirects.
+   * TODO change constructor fild ordering; bot
+   * @throws ProcessException a
+   * @throws ActionException  a
+   * @param articlename of
+   * @param properties the
+   * @param v the
+   */
+  public GetRevision(Version v, final String articlename, final int properties)
+  throws ActionException, ProcessException {
+    super(v);
+    botVersion = v;
+    //		if (!bot.getUserinfo().getRights().contains("read")) {
+    //			throw new ActionException("reading is not permited, make sure that this account is able to read");
+    //		} FIXME check if
 
-		this.properties = properties;
-		sa = new SimpleArticle();
-		sa.setTitle(articlename);
-		String uS = "/api.php?action=query&prop=revisions&titles="
-				+ MediaWiki.encode(articlename) + "&rvprop="
-				+ getDataProperties(properties) + getReversion(properties)
-				+ "&rvlimit=1" + "&format=xml";
-		msg = new Get(uS);
+    this.properties = properties;
+    sa = new SimpleArticle();
+    sa.setTitle(articlename);
+    String uS = "/api.php?action=query&prop=revisions&titles="
+      + MediaWiki.encode(articlename) + "&rvprop="
+      + getDataProperties(properties) + getReversion(properties)
+      + "&rvlimit=1" + "&format=xml";
+    msg = new Get(uS);
 
-	}
+  }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-    public String processReturningText(final String s, HttpAction ha)
-			throws ProcessException {
-		if (msg.getRequest().equals(ha.getRequest()) && singleProcess) {
-			if (log.isDebugEnabled()) { // TODO no very nice debug here
-				if (s.length() < 151) {
-					log.debug(s);
-				} else {
-					log.debug("..." + s.substring(50, 150) + "...");
-				}
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public String processReturningText(final String s, HttpAction ha)
+  throws ProcessException {
+    if (msg.getRequest().equals(ha.getRequest()) && singleProcess) {
+      if (log.isDebugEnabled()) { // TODO no very nice debug here
+        if (s.length() < 151) {
+          log.debug(s);
+        } else {
+          log.debug("..." + s.substring(50, 150) + "...");
+        }
 
-			}
+      }
 
-			parse(s);
-			singleProcess = false;
+      parse(s);
+      singleProcess = false;
 
-		}
-		return "";
-	}
-	/**
-	 * TODO Not very nice implementation.
-	 * @param property the
-	 * @return a
-	 */
-	private String getDataProperties(final int property) {
-		String properties = "";
+    }
+    return "";
+  }
+  /**
+   * TODO Not very nice implementation.
+   * @param property the
+   * @return a
+   */
+  private String getDataProperties(final int property) {
+    String properties = "";
 
-		if ((property & CONTENT) > 0) {
-			properties += "content|";
-		}
-		if ((property & COMMENT) > 0) {
-			properties += "comment|";
-		}
-		if ((property & TIMESTAMP) > 0) {
-			properties += "timestamp|";
-		}
-		if ((property & USER) > 0) {
-			properties += "user|";
-		}
-		if ((property & IDS) > 0 && botVersion.greaterEqThen(MW1_11)) {
-			properties += "ids|";
-		}
-		if ((property & FLAGS) > 0 && botVersion.greaterEqThen(MW1_11)) {
-			properties += "flags|";
-		}
-
-
-		if (properties.length() > 0) {
-			return MediaWiki.encode(properties.substring(0,
-					properties.length() - 1));
-		}
-
-		return "";
-	}
-
-	private String getReversion(final int property) {
-		String properties = "&rvdir=";
-
-		if ((property & FIRST) > 0) {
-			properties += "newer";
-		} else {
-			properties += "older";
-		}
-
-		return properties;
-	}
-
-	private void parse(final String xml) throws ApiException {
-		SAXBuilder builder = new SAXBuilder();
-		Element root = null;
-		try {
-			Reader i = new StringReader(xml);
-			Document doc = builder.build(new InputSource(i));
-
-			root = doc.getRootElement();
-
-		} catch (JDOMException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		if (root != null)
-		    findContent(root);
-	}
-	/**
-	 *
-	 * @return the
-	 */
-	public SimpleArticle getArticle() {
-
-		return sa;
-	}
+    if ((property & CONTENT) > 0) {
+      properties += "content|";
+    }
+    if ((property & COMMENT) > 0) {
+      properties += "comment|";
+    }
+    if ((property & TIMESTAMP) > 0) {
+      properties += "timestamp|";
+    }
+    if ((property & USER) > 0) {
+      properties += "user|";
+    }
+    if ((property & IDS) > 0 && botVersion.greaterEqThen(MW1_11)) {
+      properties += "ids|";
+    }
+    if ((property & FLAGS) > 0 && botVersion.greaterEqThen(MW1_11)) {
+      properties += "flags|";
+    }
 
 
-	private void findContent(final Element root) throws ApiException {
-//		if(log.isDebugEnabled())
-//			log.debug("try to find content in " + root.getQualifiedName());
-		@SuppressWarnings("unchecked")
-		Iterator<Element> el = root.getChildren().iterator();
-		while (el.hasNext()) {
-			Element element = el.next();
-			if (element.getQualifiedName().equalsIgnoreCase("error")) {
-				throw new ApiException(element.getAttributeValue("code"),
-						element.getAttributeValue("info"));
-			} else if (element.getQualifiedName().equalsIgnoreCase("rev")) {
+    if (properties.length() > 0) {
+      return MediaWiki.encode(properties.substring(0,
+          properties.length() - 1));
+    }
 
-				try {
-					sa.setText(element.getText());
-				} catch (NullPointerException e) {
-					if (log.isDebugEnabled()) {
-						log.debug("no text found");
-					}
-				}
-				if ((properties & FLAGS) > 0) {
-					if (element.getAttribute("minor") != null) {
-						sa.setMinorEdit(true);
-					} else {
-						sa.setMinorEdit(false);
-					}
-				}
+    return "";
+  }
 
-				sa.setRevisionId(getAsStringValues(element, "revid"));
-				sa.setEditSummary(getAsStringValues(element, "comment"));
-				sa.setEditor(getAsStringValues(element, "user"));
+  private String getReversion(final int property) {
+    String properties = "&rvdir=";
 
-				if ((properties & TIMESTAMP) > 0) {
+    if ((property & FIRST) > 0) {
+      properties += "newer";
+    } else {
+      properties += "older";
+    }
 
-					try {
-						sa.setEditTimestamp(getAsStringValues(element,
-								"timestamp"));
-					} catch (ParseException e) {
-						log.debug("timestamp could not be parsed");
-					}
-				}
+    return properties;
+  }
 
-			} else {
-				findContent(element);
-			}
+  private void parse(final String xml) throws ApiException {
+    SAXBuilder builder = new SAXBuilder();
+    Element root = null;
+    try {
+      Reader i = new StringReader(xml);
+      Document doc = builder.build(new InputSource(i));
 
-		}
+      root = doc.getRootElement();
 
-	}
+    } catch (JDOMException e) {
+      e.printStackTrace();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    if (root != null)
+      findContent(root);
+  }
+  /**
+   *
+   * @return the
+   */
+  public SimpleArticle getArticle() {
 
-	private String getAsStringValues(Element e, String attrName) {
-		String buff = "";
-		try {
-			buff = e.getAttributeValue(attrName);
-			if (buff == null) {
-				throw new NullPointerException();
-			}
-		} catch (Exception npe) {
-			// LOG.debug("no value for " + attrName );
-			buff = "";
-		}
-		// LOG.debug("value for " + attrName + " = \"" + buff + "\"");
-		return buff;
-	}
-	/**
-	 * {@inheritDoc}
-	 */
-	public HttpAction getNextMessage() {
-		return msg;
-	}
+    return sa;
+  }
+
+
+  private void findContent(final Element root) throws ApiException {
+    //		if(log.isDebugEnabled())
+    //			log.debug("try to find content in " + root.getQualifiedName());
+    @SuppressWarnings("unchecked")
+    Iterator<Element> el = root.getChildren().iterator();
+    while (el.hasNext()) {
+      Element element = el.next();
+      if (element.getQualifiedName().equalsIgnoreCase("error")) {
+        throw new ApiException(element.getAttributeValue("code"),
+            element.getAttributeValue("info"));
+      } else if (element.getQualifiedName().equalsIgnoreCase("rev")) {
+
+        try {
+          sa.setText(element.getText());
+        } catch (NullPointerException e) {
+          if (log.isDebugEnabled()) {
+            log.debug("no text found");
+          }
+        }
+        if ((properties & FLAGS) > 0) {
+          if (element.getAttribute("minor") != null) {
+            sa.setMinorEdit(true);
+          } else {
+            sa.setMinorEdit(false);
+          }
+        }
+
+        sa.setRevisionId(getAsStringValues(element, "revid"));
+        sa.setEditSummary(getAsStringValues(element, "comment"));
+        sa.setEditor(getAsStringValues(element, "user"));
+
+        if ((properties & TIMESTAMP) > 0) {
+
+          try {
+            sa.setEditTimestamp(getAsStringValues(element,
+            "timestamp"));
+          } catch (ParseException e) {
+            log.debug("timestamp could not be parsed");
+          }
+        }
+
+      } else {
+        findContent(element);
+      }
+
+    }
+
+  }
+
+  private String getAsStringValues(Element e, String attrName) {
+    String buff = "";
+    try {
+      buff = e.getAttributeValue(attrName);
+      if (buff == null) {
+        throw new NullPointerException();
+      }
+    } catch (Exception npe) {
+      // LOG.debug("no value for " + attrName );
+      buff = "";
+    }
+    // LOG.debug("value for " + attrName + " = \"" + buff + "\"");
+    return buff;
+  }
+  /**
+   * {@inheritDoc}
+   */
+  public HttpAction getNextMessage() {
+    return msg;
+  }
 
 
 

@@ -25,6 +25,7 @@ import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_12;
 import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_13;
 import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_14;
 import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_15;
+import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_16;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -62,221 +63,221 @@ import org.xml.sax.InputSource;
  *
  * @author Thomas Stock
  */
-@SupportedBy({ MW1_09, MW1_10, MW1_11, MW1_12, MW1_13, MW1_14, MW1_15 })
+@SupportedBy({ MW1_09, MW1_10, MW1_11, MW1_12, MW1_13, MW1_14, MW1_15, MW1_16 })
 public class RecentchangeTitles extends TitleQuery<String> {
 
-	/** value for the bllimit-parameter. **/
-	private static final int limit = 10;
+  /** value for the bllimit-parameter. **/
+  private static final int limit = 10;
 
 
-	private int find = 1;
+  private int find = 1;
 
-	private final MediaWikiBot bot;
+  private final MediaWikiBot bot;
 
-	private final int [] namespaces;
-	private Logger log = Logger.getLogger(getClass());
+  private final int [] namespaces;
+  private Logger log = Logger.getLogger(getClass());
 
-	private class RecentInnerAction extends InnerAction {
+  private class RecentInnerAction extends InnerAction {
 
-		protected RecentInnerAction(Version v) throws VersionException {
-			super(v);
-		}
-		/**
-		 * {@inheritDoc}
-		 */
-		@Override
+    protected RecentInnerAction(Version v) throws VersionException {
+      super(v);
+    }
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public String processAllReturningText(final String s) throws ProcessException {
 
-			titleCollection.clear();
-			parseArticleTitles(s);
+      titleCollection.clear();
+      parseArticleTitles(s);
 
-			if (log.isInfoEnabled())
-				log.info("found: " + titleCollection);
-			if (uniqChanges) {
-				HashSet<String> hs = new HashSet<String>();
-				hs.addAll(titleCollection);
-				titleCollection.clear();
-				titleCollection.addAll(hs);
-			}
-			titleIterator = titleCollection.iterator();
+      if (log.isInfoEnabled())
+        log.info("found: " + titleCollection);
+      if (uniqChanges) {
+        HashSet<String> hs = new HashSet<String>();
+        hs.addAll(titleCollection);
+        titleCollection.clear();
+        titleCollection.addAll(hs);
+      }
+      titleIterator = titleCollection.iterator();
 
-			return "";
-		}
+      return "";
+    }
 
-	}
+  }
 
-	/**
-	 * Collection that will contain the result
-	 * (titles of articles linking to the target)
-	 * after performing the action has finished.
-	 */
-	private Collection<String> titleCollection = new Vector<String>();
-	private final boolean uniqChanges;
+  /**
+   * Collection that will contain the result
+   * (titles of articles linking to the target)
+   * after performing the action has finished.
+   */
+  private Collection<String> titleCollection = new Vector<String>();
+  private final boolean uniqChanges;
 
-	/**
-	 * information necessary to get the next api page.
-	 */
-
-
+  /**
+   * information necessary to get the next api page.
+   */
 
 
-	/**
-	 * generates the next MediaWiki-request (GetMethod) and adds it to msgs.
-	 * @param namespace     the namespace(s) that will be searched for links,
-	 *                      as a string of numbers separated by '|';
-	 *                      if null, this parameter is omitted
-	 * @param rcstart timestamp
-	 */
-	private HttpAction generateRequest(int [] namespace, String rcstart) {
-
-	 	String uS = "";
-	 	if (rcstart.length() > 0) {
-		uS = "/api.php?action=query&list=recentchanges"
-
-				+ ((namespace != null) ? ("&rcnamespace=" + MediaWiki.encode(MWAction.createNsString(namespace))) : "")
-				+ "&rcstart=" + rcstart
-				//+ "&rcusertype=" // (dflt=not|bot)
-				+ "&rclimit=" + limit + "&format=xml";
-	 	} else {
-	 		uS = "/api.php?action=query&list=recentchanges"
-
-				+ ((namespace != null) ? ("&rcnamespace=" + MediaWiki.encode(MWAction.createNsString(namespace))) : "")
-				//+ "&rcminor="
-				//+ "&rcusertype=" // (dflt=not|bot)
-				+ "&rclimit=" + limit + "&format=xml";
-	 	}
 
 
-		return new Get(uS);
+  /**
+   * generates the next MediaWiki-request (GetMethod) and adds it to msgs.
+   * @param namespace     the namespace(s) that will be searched for links,
+   *                      as a string of numbers separated by '|';
+   *                      if null, this parameter is omitted
+   * @param rcstart timestamp
+   */
+  private HttpAction generateRequest(int [] namespace, String rcstart) {
+
+    String uS = "";
+    if (rcstart.length() > 0) {
+      uS = "/api.php?action=query&list=recentchanges"
+
+        + ((namespace != null) ? ("&rcnamespace=" + MediaWiki.encode(MWAction.createNsString(namespace))) : "")
+        + "&rcstart=" + rcstart
+        //+ "&rcusertype=" // (dflt=not|bot)
+        + "&rclimit=" + limit + "&format=xml";
+    } else {
+      uS = "/api.php?action=query&list=recentchanges"
+
+        + ((namespace != null) ? ("&rcnamespace=" + MediaWiki.encode(MWAction.createNsString(namespace))) : "")
+        //+ "&rcminor="
+        //+ "&rcusertype=" // (dflt=not|bot)
+        + "&rclimit=" + limit + "&format=xml";
+    }
 
 
-	}
-
-	private HttpAction generateRequest(int [] namespace) {
-
-		return generateRequest(namespace, "");
+    return new Get(uS);
 
 
-	}
+  }
 
-	/**
-	 *
-	 */
-	public RecentchangeTitles(MediaWikiBot bot, int... ns) throws VersionException {
-		this(bot, false, ns);
+  private HttpAction generateRequest(int [] namespace) {
 
-	}
-	/**
-	 *
-	 */
-	public RecentchangeTitles(MediaWikiBot bot, boolean uniqChanges, int... ns) throws VersionException {
-		super(bot);
-		namespaces = ns;
-		this.bot = bot;
-		this.uniqChanges = uniqChanges;
-
-	}
-	/**
-	 *
-	 */
-	public RecentchangeTitles(MediaWikiBot bot) throws VersionException {
-		this(bot, MediaWiki.NS_ALL);
+    return generateRequest(namespace, "");
 
 
-	}
+  }
+
+  /**
+   *
+   */
+  public RecentchangeTitles(MediaWikiBot bot, int... ns) throws VersionException {
+    this(bot, false, ns);
+
+  }
+  /**
+   *
+   */
+  public RecentchangeTitles(MediaWikiBot bot, boolean uniqChanges, int... ns) throws VersionException {
+    super(bot);
+    namespaces = ns;
+    this.bot = bot;
+    this.uniqChanges = uniqChanges;
+
+  }
+  /**
+   *
+   */
+  public RecentchangeTitles(MediaWikiBot bot) throws VersionException {
+    this(bot, MediaWiki.NS_ALL);
 
 
+  }
 
 
 
 
 
-	/**
-	 * picks the article name from a MediaWiki api response.
-	 *
-	 * @param s   text for parsing
-	 */
-	@Override
+
+
+  /**
+   * picks the article name from a MediaWiki api response.
+   *
+   * @param s   text for parsing
+   */
+  @Override
   protected Collection<String> parseArticleTitles(String s) {
-		SAXBuilder builder = new SAXBuilder();
-		Element root = null;
-		try {
-			Reader i = new StringReader(s);
-			Document doc = builder.build(new InputSource(i));
+    SAXBuilder builder = new SAXBuilder();
+    Element root = null;
+    try {
+      Reader i = new StringReader(s);
+      Document doc = builder.build(new InputSource(i));
 
-			root = doc.getRootElement();
+      root = doc.getRootElement();
 
-		} catch (JDOMException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		if (root != null)
-		  findContent(root);
-		return titleCollection;
-
-
-	}
-	@SuppressWarnings("unchecked")
-	private void findContent(final Element root) {
-
-		Iterator<Element> el = root.getChildren().iterator();
-		while (el.hasNext()) {
-			Element element = el.next();
-			if (element.getQualifiedName().equalsIgnoreCase("rc")) {
-				if (find < limit) {
-					titleCollection.add(MediaWiki.decode(element.getAttributeValue("title")));
-				}
-
-				nextPageInfo = element.getAttribute("timestamp").getValue();
-				find++;
-			} else {
-				findContent(element);
-			}
-
-		}
-	}
+    } catch (JDOMException e) {
+      e.printStackTrace();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    if (root != null)
+      findContent(root);
+    return titleCollection;
 
 
+  }
+  @SuppressWarnings("unchecked")
+  private void findContent(final Element root) {
+
+    Iterator<Element> el = root.getChildren().iterator();
+    while (el.hasNext()) {
+      Element element = el.next();
+      if (element.getQualifiedName().equalsIgnoreCase("rc")) {
+        if (find < limit) {
+          titleCollection.add(MediaWiki.decode(element.getAttributeValue("title")));
+        }
+
+        nextPageInfo = element.getAttribute("timestamp").getValue();
+        find++;
+      } else {
+        findContent(element);
+      }
+
+    }
+  }
 
 
 
-	@Override
+
+
+  @Override
   protected HttpAction prepareCollection() {
-		find = 1;
-		if (getNextPageInfo().length() <= 0) {
-			return generateRequest(namespaces);
-		} else {
-			return generateRequest(namespaces, getNextPageInfo());
-		}
+    find = 1;
+    if (getNextPageInfo().length() <= 0) {
+      return generateRequest(namespaces);
+    } else {
+      return generateRequest(namespaces, getNextPageInfo());
+    }
 
-	}
-
-
+  }
 
 
 
-	@Override
-	protected Object clone() throws CloneNotSupportedException {
 
-		try {
-			return new RecentchangeTitles(bot, uniqChanges, namespaces);
-		} catch (VersionException e) {
-			throw new CloneNotSupportedException(e.getLocalizedMessage());
-		}
-	}
 
-	@Override
-	protected String parseHasMore(String s) {
-		return "";
-	}
+  @Override
+  protected Object clone() throws CloneNotSupportedException {
 
-	@Override
-	protected InnerAction getInnerAction(
-			Version v) throws VersionException {
+    try {
+      return new RecentchangeTitles(bot, uniqChanges, namespaces);
+    } catch (VersionException e) {
+      throw new CloneNotSupportedException(e.getLocalizedMessage());
+    }
+  }
 
-		return new RecentInnerAction(v);
-	}
+  @Override
+  protected String parseHasMore(String s) {
+    return "";
+  }
+
+  @Override
+  protected InnerAction getInnerAction(
+      Version v) throws VersionException {
+
+    return new RecentInnerAction(v);
+  }
 
 
 
