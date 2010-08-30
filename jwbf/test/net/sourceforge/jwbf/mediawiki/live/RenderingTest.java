@@ -57,8 +57,9 @@ public class RenderingTest extends LiveTestFather {
    */
   @Test
   public final void getRenderingWikipediaDe() throws Exception {
-
-    bot = new MediaWikiBot("http://de.wikipedia.org/w/index.php");
+    String url = "http://de.wikipedia.org/w/index.php";
+    assumeReachable(url);
+    bot = new MediaWikiBot(url);
     doTest(bot);
   }
 
@@ -68,8 +69,9 @@ public class RenderingTest extends LiveTestFather {
    */
   @Test(expected = ActionException.class)
   public final void getRenderingPerformManual() throws Exception {
-
-    bot = new MediaWikiBot("http://de.wikipedia.org/w/index.php");
+    String url = "http://de.wikipedia.org/w/index.php";
+    assumeReachable(url);
+    bot = new MediaWikiBot(url);
     GetRendering r = new GetRendering(bot, "bert");
     bot.performAction(r);
   }

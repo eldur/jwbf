@@ -43,7 +43,9 @@ public class LogEventsTest extends LiveTestFather {
   @Test(expected = ActionException.class)
   public final void logEventsPerformManual() throws Exception {
 
-    bot = new MediaWikiBot("http://de.wikipedia.org/w/index.php");
+    String url = "http://de.wikipedia.org/w/index.php";
+    assumeReachable(url);
+    bot = new MediaWikiBot(url);
     LogEvents le = new LogEvents(bot, LogEvents.DELETE);
     bot.performAction(le);
   }
@@ -53,8 +55,9 @@ public class LogEventsTest extends LiveTestFather {
    */
   @Test
   public final void logEventsWikipediaDe() throws Exception {
-
-    bot = new MediaWikiBot("http://de.wikipedia.org/w/index.php");
+    String url = "http://de.wikipedia.org/w/index.php";
+    assumeReachable(url);
+    bot = new MediaWikiBot(url);
     doTest(bot, false, LogEvents.DELETE);
   }
 
