@@ -65,8 +65,9 @@ public class AllPagesTest extends LiveTestFather {
    */
   @Test
   public final void allPagesWikipediaDe() throws Exception {
-
-    bot = new MediaWikiBot("http://de.wikipedia.org/w/index.php");
+    String url = "http://de.wikipedia.org/w/index.php";
+    assumeReachable(url);
+    bot = new MediaWikiBot(url);
     doTest(bot, false);
   }
 
