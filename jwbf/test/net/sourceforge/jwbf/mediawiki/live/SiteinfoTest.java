@@ -176,13 +176,11 @@ public class SiteinfoTest extends LiveTestFather {
    */
   @Test
   public final void siteInfoLastVersion() throws Exception {
-    Version v = Version.MW1_16;
+    Version v = Version.getLast();
     String versionInfoTemplate = "Template:MW stable release number";
     MediaWikiBot bot = new MediaWikiBot("http://www.mediawiki.org/w/api.php");
 
     Article a = new Article(bot, versionInfoTemplate);
-
-
     assertTrue(a.getText() + " should contains " + v.getNumber() , a.getText().contains(v.getNumber()));
   }
 
