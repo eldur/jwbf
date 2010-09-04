@@ -19,15 +19,19 @@
 package net.sourceforge.jwbf;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
+
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -36,17 +40,48 @@ import java.util.jar.Manifest;
  */
 public final class JWBF {
 
+  private static final Logger LOGGER = Logger.getLogger(JWBF.class);
+
   private static final Map<String, String> PARTS = new HashMap<String, String>();
   private static String version = "";
   private static String title = "";
+  private static Manifest manifest = null;
+
   private static final char separatorChar = '/';
-
-
+  private static boolean errorInfo = true;
   static {
-    String packagename = JWBF.class.getPackage().getName().replace('.',
+    init(JWBF.class);
+    /*
+		String[] cp = System.getProperty("java.class.path").split(":");
+		for (int i = 0; i < cp.length; i++) {
+			try {
+
+				if (cp[i].endsWith(".jar") && cp[i].contains("jwbf")) {
+					registerModule(readArtifactId("file:" + cp[i]),
+							readVersion("file:" + cp[i]));
+
+				} else if (cp[i].contains("jwbf")) {
+					registerModule(readArtifactId("file:" + cp[i]),
+							readVersion("file:" + cp[i]));
+				}
+			} catch (Exception e) {
+				System.err.println(cp[i] + " seems to be no regular module");
+			}
+
+		}
+     */
+
+  }
+  private static final String jarFileIndex = "jar:file:";
+
+  private static void init(Class<?> clazz) {
+    PARTS.clear();
+    version = "";
+    title = "";
+    manifest = null;
+    String packagename = clazz.getPackage().getName().replace('.',
         separatorChar);
-    URL url = JWBF.class.getClassLoader().getResource(packagename);
-    final String jarFileIndex = "jar:file:";
+    URL url = clazz.getClassLoader().getResource(packagename);
     boolean isJar = url.toExternalForm().toLowerCase().contains(jarFileIndex);
     if (isJar) {
       try {
@@ -70,14 +105,17 @@ public final class JWBF {
     } else {
       try {
         File root = new File(url.toURI());
-        File[] dirs = root.listFiles();
-        for (int i = 0; i < dirs.length; i++) {
-          if (dirs[i].isDirectory()) {
-            int lastIndex = dirs[i].toString().lastIndexOf(separatorChar) + 1;
-            String partTitle = dirs[i].toString().substring(lastIndex, dirs[i].toString().length());
-            registerModule(readMFProductTitle(root + "") + "-" + partTitle,
-                readMFVersion(root + ""));
+        File[] dirs = root.listFiles(new FileFilter() {
+
+          public boolean accept(File f) {
+            return f.isDirectory();
           }
+        });
+        for (File dir : dirs) {
+          int lastIndex = dir.toString().lastIndexOf(separatorChar) + 1;
+          String partTitle = dir.toString().substring(lastIndex, dir.toString().length());
+          registerModule(readMFProductTitle(root + "") + "-" + partTitle,
+              readMFVersion(root + ""));
 
         }
       } catch (URISyntaxException e1) {
@@ -86,26 +124,6 @@ public final class JWBF {
         e.printStackTrace();
       }
     }
-    /*
-		String[] cp = System.getProperty("java.class.path").split(":");
-		for (int i = 0; i < cp.length; i++) {
-			try {
-
-				if (cp[i].endsWith(".jar") && cp[i].contains("jwbf")) {
-					registerModule(readArtifactId("file:" + cp[i]),
-							readVersion("file:" + cp[i]));
-
-				} else if (cp[i].contains("jwbf")) {
-					registerModule(readArtifactId("file:" + cp[i]),
-							readVersion("file:" + cp[i]));
-				}
-			} catch (Exception e) {
-				System.err.println(cp[i] + " seems to be no regular module");
-			}
-
-		}
-     */
-
   }
 
   /**
@@ -182,7 +200,7 @@ public final class JWBF {
    * @return the JWBF Version.
    */
   public static Map<String, String> getVersion() {
-    return PARTS;
+    return Collections.unmodifiableMap(PARTS);
   }
 
   /**
@@ -195,8 +213,7 @@ public final class JWBF {
    */
   private static String readMFVersion(String path) throws IOException {
     if (version.length() < 1) {
-      String implementationVersion = null; // =
-      // clazz.getPackage().getImplementationVersion();
+      String implementationVersion = null;
 
       implementationVersion = readFromManifest(path,
       "Implementation-Version");
@@ -222,8 +239,7 @@ public final class JWBF {
    */
   private static String readMFProductTitle(String path) throws IOException {
     if (title.length() < 1) {
-      String implementationTitle = null; // =
-      // clazz.getPackage().getImplementationTitle();
+      String implementationTitle = null;
       implementationTitle = readFromManifest(path, "Implementation-Title");
 
       if (implementationTitle == null) {
@@ -247,23 +263,37 @@ public final class JWBF {
    */
   private static String readFromManifest(String path, String key)
   throws IOException {
+    if (manifest == null) {
+      URL manifestUrl;
+      if (path.endsWith(".jar")) {
 
-    URL manifestUrl;
-    if (path.endsWith(".jar")) {
-
-      manifestUrl = new URL("jar:file:" + path + "!/META-INF/MANIFEST.MF");
-    } else {
-      if (!path.endsWith(File.separator))
-        path += File.separatorChar;
-      manifestUrl = searchMF(path);
+        manifestUrl = new URL("jar:file:" + path + "!/META-INF/MANIFEST.MF");
+      } else {
+        if (!path.endsWith(File.separator))
+          path += File.separatorChar;
+        manifestUrl = searchMF(path);
+      }
+      if (manifestUrl != null)
+        manifest = new Manifest(manifestUrl.openStream());
     }
-    Manifest manifest = new Manifest(manifestUrl.openStream());
+
+    if (manifest == null) {
+      if (errorInfo) {
+        errorInfo = false;
+        String msg = "E: no MANIFEST.MF found, please create it.";
+        LOGGER.error(msg);
+        System.err.println(msg);
+      }
+      return null;
+    }
     return manifest.getMainAttributes().getValue(key);
   }
 
   private static URL searchMF(String f) throws IOException {
-    String foundE = "target" + File.separatorChar + "MANIFEST.MF";
+    if (f == null)
+      return null;
     File fi = new File(f);
+    String foundE = "target" + File.separatorChar + "MANIFEST.MF";
     if (new File(fi, foundE).exists()) {
       return new URL("file:" + fi + File.separatorChar + foundE);
     } else {
