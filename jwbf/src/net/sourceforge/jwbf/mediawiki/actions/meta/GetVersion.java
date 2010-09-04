@@ -31,7 +31,9 @@ import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_16;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 
 import net.sourceforge.jwbf.JWBF;
 import net.sourceforge.jwbf.core.actions.Get;
@@ -52,9 +54,9 @@ import org.xml.sax.InputSource;
 
 /**
  * Basic action to receive {@link Version}.
- *
+ * 
  * @author Thomas Stock
- *
+ * 
  */
 
 @SupportedBy({ MW1_09, MW1_10, MW1_11, MW1_12, MW1_13, MW1_14, MW1_15, MW1_16 })
@@ -68,30 +70,43 @@ public class GetVersion extends MWAction {
   private String theCase = "";
   private String mainpage = "";
 
+  public static Set<String> GENERATOR_EXT = new HashSet<String>();
+  static {
+    GENERATOR_EXT.add("alpha");
+    GENERATOR_EXT.add("wmf");
+  }
 
   /**
-   * Create and submit the request to the Wiki.
-   * Do not use {@link MediaWikiBot#performAction(net.sourceforge.jwbf.actions.ContentProcessable)}.
-   * @param bot a
-   * @throws ProcessException a
-   * @throws ActionException a
+   * Create and submit the request to the Wiki. Do not use
+   * {@link MediaWikiBot#performAction(net.sourceforge.jwbf.actions.ContentProcessable)}
+   * .
+   * 
+   * @param bot
+   *          a
+   * @throws ProcessException
+   *           a
+   * @throws ActionException
+   *           a
    */
   public GetVersion(MediaWikiBot bot) throws ActionException, ProcessException {
     this();
     bot.performAction(this);
   }
 
-  /* In this case the superconstructor with no value is allowed, because
-   * the versionrequest is mandatory */
+  /*
+   * In this case the superconstructor with no value is allowed, because the
+   * versionrequest is mandatory
+   */
   /**
    * Create the request.
    */
   @SuppressWarnings("deprecation")
-  public GetVersion()  {
+  public GetVersion() {
 
     msg = new Get("/api.php?action=query&meta=siteinfo&format=xml");
 
   }
+
   private void parse(final String xml) throws ProcessException {
     SAXBuilder builder = new SAXBuilder();
     Element root = null;
@@ -121,68 +136,70 @@ public class GetVersion extends MWAction {
     return "";
   }
 
-
   /**
-   *
+   * 
    * @return the, like "Wikipedia"
    */
   public String getSitename() {
     return sitename;
   }
+
   /**
-   *
+   * 
    * @return the, like "http://de.wikipedia.org/wiki/Wikipedia:Hauptseite"
    */
   public String getBase() {
     return base;
   }
+
   /**
-   *
+   * 
    * @return the, like "first-letter"
    */
   public String getCase() {
     return theCase;
   }
+
   /**
-   *
+   * 
    * @return the
    * @see Version
    */
   public Version getVersion() {
-    if (getGenerator().contains("alpha") || getGenerator().contains("wmf") ) {
-      return Version.DEVELOPMENT;
+    for (String generatorFragment : GENERATOR_EXT) {
+      if (getGenerator().contains(generatorFragment))
+        return Version.DEVELOPMENT;
     }
-
 
     Version[] versions = Version.values();
 
     StringBuilder buffer = new StringBuilder();
-    for (int i = 0; i < versions.length; i++) {
-      buffer.append(versions[i].getNumber()).append(' ');
-      if (getGenerator().contains(versions[i].getNumber())) {
-        return versions[i];
+    for (Version version : versions) {
+      buffer.append(version.getNumber()).append(' ');
+      if (getGenerator().contains(version.getNumber())) {
+        return version;
       }
 
     }
-    if(log.isInfoEnabled())
-      log.info("\nVersion is UNKNOWN for JWBF ("
-          + JWBF.getVersion(getClass())
-          + ") : \n\t"
-          + getGenerator() + "\n\t"
-          + "supported versions: " + buffer.toString() + "\n\t"
+    if (log.isInfoEnabled())
+      log.info("\nVersion is UNKNOWN for JWBF (" + JWBF.getVersion(getClass())
+          + ") : \n\t" + getGenerator() + "\n\t" + "supported versions: "
+          + buffer.toString() + "\n\t"
           + "\n\tUsing settings for actual Wikipedia development version");
     return Version.UNKNOWN;
 
   }
+
   /**
-   *
+   * 
    * @return the MediaWiki Generator, like "MediaWiki 1.16alpha"
    */
   public String getGenerator() {
     return generator;
   }
+
   /**
-   *
+   * 
    * @return the, like "Main Page"
    */
   public String getMainpage() {
@@ -197,19 +214,17 @@ public class GetVersion extends MWAction {
       Element element = el.next();
       if (element.getQualifiedName().equalsIgnoreCase("general")) {
 
-        mainpage = element
-        .getAttributeValue("mainpage");
+        mainpage = element.getAttributeValue("mainpage");
         base = element.getAttributeValue("base");
-        sitename = element
-        .getAttributeValue("sitename");
-        generator = element
-        .getAttributeValue("generator");
+        sitename = element.getAttributeValue("sitename");
+        generator = element.getAttributeValue("generator");
         theCase = element.getAttributeValue("case");
       } else {
         findContent(element);
       }
     }
   }
+
   /**
    * {@inheritDoc}
    */
