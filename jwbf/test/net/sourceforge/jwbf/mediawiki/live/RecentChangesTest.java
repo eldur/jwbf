@@ -260,7 +260,7 @@ public class RecentChangesTest extends LiveTestFather {
   private void change(MediaWikiBot bot) throws ActionException, ProcessException {
     SimpleArticle a = new SimpleArticle();
     for (int i = 0; i < COUNT + 1; i++) {
-      a.setTitle("Change " + i);
+      a.setTitle("%Change " + i);
       a.setText(getRandom(255));
       bot.writeContent(a);
     }
