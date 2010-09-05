@@ -31,16 +31,12 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 
-import org.apache.log4j.Logger;
-
 /**
  *
  * @author Thomas Stock
  *
  */
 public final class JWBF {
-
-  private static final Logger LOGGER = Logger.getLogger(JWBF.class);
 
   private static final Map<String, String> PARTS = new HashMap<String, String>();
   private static String version = "";
@@ -281,7 +277,6 @@ public final class JWBF {
       if (errorInfo) {
         errorInfo = false;
         String msg = "E: no MANIFEST.MF found, please create it.";
-        LOGGER.error(msg);
         System.err.println(msg);
       }
       return null;
