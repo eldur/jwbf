@@ -42,7 +42,7 @@ public final class GetApiToken extends MWAction {
   // TODO this does not feel the elegant way.
   // Probably put complete request URIs into this enum objects
   // to support different URIs for different actions.
-  public enum Intoken { DELETE, EDIT, MOVE, PROTECT, EMAIL, BLOCK, UNBLOCK, IMPORT };
+  public enum Intoken { DELETE, EDIT, MOVE, PROTECT, EMAIL, BLOCK, UNBLOCK, IMPORT }
   private String token = "";
   private Logger log = Logger.getLogger(GetApiToken.class);
 
@@ -153,51 +153,51 @@ public final class GetApiToken extends MWAction {
    * @param doc XML <code>Document</code>
    * @throws JDOMException thrown if the document could not be parsed
    */
-	private void process(Document doc) throws JDOMException {
-		Element elem = null;
-		try {
-			elem = doc.getRootElement().getChild("query").getChild("pages")
-					.getChild("page");
-		} catch (NullPointerException e) {
-			e.printStackTrace();
-		}
-		if (elem != null) {
-			// process reply for token request
-			switch (intoken) {
-			case DELETE:
-				token = elem.getAttributeValue("deletetoken");
-				break;
-			case EDIT:
-				token = elem.getAttributeValue("edittoken");
-				break;
-			case MOVE:
-				token = elem.getAttributeValue("movetoken");
-				break;
-			case PROTECT:
-				token = elem.getAttributeValue("protecttoken");
-				break;
-			case EMAIL:
-				token = elem.getAttributeValue("emailtoken");
-				break;
-			case BLOCK:
-				token = elem.getAttributeValue("blocktoken");
-				break;
-			case UNBLOCK:
-				token = elem.getAttributeValue("unblocktoken");
-				break;
-			case IMPORT:
-				token = elem.getAttributeValue("importtoken");
-				break;
-			default:
-				token = "";
-				break;
-			}
+  private void process(Document doc) throws JDOMException {
+    Element elem = null;
+    try {
+      elem = doc.getRootElement().getChild("query").getChild("pages")
+      .getChild("page");
+    } catch (NullPointerException e) {
+      e.printStackTrace();
+    }
+    if (elem != null) {
+      // process reply for token request
+      switch (intoken) {
+        case DELETE:
+          token = elem.getAttributeValue("deletetoken");
+          break;
+        case EDIT:
+          token = elem.getAttributeValue("edittoken");
+          break;
+        case MOVE:
+          token = elem.getAttributeValue("movetoken");
+          break;
+        case PROTECT:
+          token = elem.getAttributeValue("protecttoken");
+          break;
+        case EMAIL:
+          token = elem.getAttributeValue("emailtoken");
+          break;
+        case BLOCK:
+          token = elem.getAttributeValue("blocktoken");
+          break;
+        case UNBLOCK:
+          token = elem.getAttributeValue("unblocktoken");
+          break;
+        case IMPORT:
+          token = elem.getAttributeValue("importtoken");
+          break;
+        default:
+          token = "";
+          break;
+      }
 
-		} else {
-			log.error("Unknow reply. This is not a token.");
-		}
-		if (log.isDebugEnabled())
-			log.debug("found token =" + token + "\n" + "for: "
-					+ msg.getRequest() + "\n");
-	}
+    } else {
+      log.error("Unknow reply. This is not a token.");
+    }
+    if (log.isDebugEnabled())
+      log.debug("found token =" + token + "\n" + "for: "
+          + msg.getRequest() + "\n");
+  }
 }

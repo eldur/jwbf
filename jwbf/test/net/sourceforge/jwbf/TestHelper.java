@@ -69,8 +69,8 @@ public abstract class TestHelper {
     }
   }
 
-  public static void assumeReachable(String host) throws MalformedURLException {
-    assumeReachable(new URL(host));
+  public static void assumeReachable(String url) throws MalformedURLException {
+    assumeReachable(new URL(url));
   }
 
 }
