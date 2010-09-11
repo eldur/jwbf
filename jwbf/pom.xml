@@ -5,7 +5,7 @@
   <artifactId>jwbf</artifactId>
   <packaging>jar</packaging>
   <name>JWBF</name>
-  <version>1.3.3</version>
+  <version>1.3.4-SNAPSHOT</version>
   <description>Java Wiki Bot Framework - A Wiki helper</description>
   <url>http://jwbf.sourceforge.net/</url>
   <issueManagement>
@@ -15,9 +15,8 @@
   <developers>
   </developers>
   <scm>
-  	<connection>scm:svn:https://jwbf.svn.sourceforge.net/svnroot/jwbf/tags/jwbf-1.3.3</connection>
-  	<tag>HEAD</tag>
-  	<url>http://jwbf.svn.sourceforge.net/viewvc/jwbf/tags/jwbf-1.3.3</url>
+  	<connection>scm:svn:https://jwbf.svn.sourceforge.net/svnroot/jwbf</connection>
+  	<url>http://jwbf.svn.sourceforge.net/viewvc/jwbf/</url>
   </scm>
   <licenses>
   <license>
