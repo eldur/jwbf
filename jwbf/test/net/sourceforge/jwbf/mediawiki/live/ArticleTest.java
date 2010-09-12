@@ -63,7 +63,7 @@ public class ArticleTest extends LiveTestFather {
 
     for (MediaWikiBot bot : bots) {
 
-      String title = "z" + getRandomAlph(6); // create random title
+      String title = "z" + getRandomAlph(3); // create random title
       String user = bot.getUserinfo().getUsername();
       Article a = new Article(bot, title);
       for (int i = 0; i <= 2; i++) {
