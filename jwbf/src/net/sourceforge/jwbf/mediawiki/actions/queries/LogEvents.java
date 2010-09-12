@@ -118,7 +118,7 @@ public class LogEvents extends MWAction implements Iterator<LogItem>, Iterable<L
    * @throws VersionException if incompatible with this version
    */
   public LogEvents(MediaWikiBot bot, String [] type) throws VersionException {
-    this(bot, 50, type);
+    this(bot, 50, type.clone());
   }
 
 
