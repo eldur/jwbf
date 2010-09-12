@@ -140,16 +140,16 @@ public class PostDelete extends MWAction {
           process(doc);
         }
       } catch (JDOMException e) {
+        String msg = e.getMessage();
         if (s.startsWith("unknown_action:")) {
-          log
-          .error(
-              "Adding '$wgEnableWriteAPI = true;' to your MediaWiki's LocalSettings.php might remove this problem.",
-              e);
-        } else {
-          log.error(e.getMessage(), e);
+          msg = "unknown_action; Adding '$wgEnableWriteAPI = true;' to your MediaWiki's "
+            + "LocalSettings.php might remove this problem.";
         }
+        log.error(msg, e);
+        throw new ProcessException(msg, e);
       } catch (IOException e) {
         log.error(e.getMessage(), e);
+        throw new ProcessException(e);
       }
       setHasMoreMessages(false);
     }

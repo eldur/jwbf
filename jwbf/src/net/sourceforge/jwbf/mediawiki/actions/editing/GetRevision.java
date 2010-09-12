@@ -191,9 +191,9 @@ public class GetRevision extends MWAction {
       root = doc.getRootElement();
 
     } catch (JDOMException e) {
-      e.printStackTrace();
+      throw new RuntimeException(e);
     } catch (IOException e) {
-      e.printStackTrace();
+      throw new RuntimeException(e);
     }
     if (root != null)
       findContent(root);

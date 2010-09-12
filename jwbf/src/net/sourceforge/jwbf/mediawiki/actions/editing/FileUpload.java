@@ -168,7 +168,7 @@ public class FileUpload extends MWAction {
       msg = post;
       second = false;
     } catch (FileNotFoundException e) {
-      e.printStackTrace();
+      throw new RuntimeException(e);
     }
     return msg;
   }

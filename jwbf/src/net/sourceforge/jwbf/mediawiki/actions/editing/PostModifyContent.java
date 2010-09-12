@@ -122,7 +122,7 @@ public class PostModifyContent extends MWAction {
         first = false;
         return initOldGet;
       } catch (JwbfException e) {
-        e.printStackTrace();
+        throw new RuntimeException(e);
       }
     }
     if (apiEdit) {

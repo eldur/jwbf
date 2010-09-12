@@ -154,14 +154,10 @@ public final class GetApiToken extends MWAction {
    * @throws JDOMException thrown if the document could not be parsed
    */
   private void process(Document doc) throws JDOMException {
-    Element elem = null;
     try {
-      elem = doc.getRootElement().getChild("query").getChild("pages")
+      Element elem = doc.getRootElement().getChild("query").getChild("pages")
       .getChild("page");
-    } catch (NullPointerException e) {
-      e.printStackTrace();
-    }
-    if (elem != null) {
+
       // process reply for token request
       switch (intoken) {
         case DELETE:
@@ -189,15 +185,14 @@ public final class GetApiToken extends MWAction {
           token = elem.getAttributeValue("importtoken");
           break;
         default:
-          token = "";
-          break;
+          throw new IllegalArgumentException();
       }
-
-    } else {
-      log.error("Unknow reply. This is not a token.");
+    } catch (RuntimeException e) {
+      throw new RuntimeException("Unknow reply. This is not a token.", e);
     }
+
     if (log.isDebugEnabled())
-      log.debug("found token =" + token + "\n" + "for: "
-          + msg.getRequest() + "\n");
+      log.debug("found token =" + token + "\n" + "for: " + msg.getRequest()
+          + "\n");
   }
 }
