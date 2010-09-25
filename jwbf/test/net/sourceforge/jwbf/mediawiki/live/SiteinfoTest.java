@@ -59,10 +59,10 @@ public class SiteinfoTest extends LiveTestFather {
    */
   @Test
   public final void siteInfoWikipediaDe() throws Exception {
-
-    bot = new MediaWikiBot("http://de.wikipedia.org/w/index.php");
+    String url = "http://de.wikipedia.org/w/index.php";
+    assumeReachable(url);
+    bot = new MediaWikiBot(url);
     doTest(bot, Version.DEVELOPMENT);
-
   }
 
   /**
@@ -127,6 +127,9 @@ public class SiteinfoTest extends LiveTestFather {
   /**
    * Test get siteinfo on a MW.
    * Prepare a the wiki, that the siteinfopage is only readable if user is logged in.
+   * <pre>
+   * $wgGroupPermissions['*']['read'] = false;
+   * </pre>
    * @throws Exception a
    */
   @Test
@@ -176,9 +179,11 @@ public class SiteinfoTest extends LiveTestFather {
    */
   @Test
   public final void siteInfoLastVersion() throws Exception {
+    String url = "http://www.mediawiki.org/w/api.php";
+    assumeReachable(url);
     Version v = Version.getLast();
     String versionInfoTemplate = "Template:MW stable release number";
-    MediaWikiBot bot = new MediaWikiBot("http://www.mediawiki.org/w/api.php");
+    MediaWikiBot bot = new MediaWikiBot(url);
 
     Article a = new Article(bot, versionInfoTemplate);
     assertTrue(a.getText() + " should contains " + v.getNumber() , a.getText().contains(v.getNumber()));

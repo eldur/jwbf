@@ -66,8 +66,9 @@ public class BacklinkTest extends LiveTestFather {
    */
   @Test
   public final void backlinksWikipediaDe() throws Exception {
-
-    bot = new MediaWikiBot("http://de.wikipedia.org/w/index.php");
+    String url = "http://de.wikipedia.org/w/index.php";
+    assumeReachable(url);
+    bot = new MediaWikiBot(url);
     BacklinkTitles is = new BacklinkTitles(bot, getValue("backlinks_article"));
 
     int i = 0;
