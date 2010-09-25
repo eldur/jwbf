@@ -254,7 +254,7 @@ public class UploadAndImageInfoTest extends LiveTestFather {
     download(url.toExternalForm(), temp);
     Assert.assertTrue("files are not ident", filesAreIdentical(temp, file));
 
-    temp.delete();
+    if (!temp.delete()) throw new RuntimeException("unable to delete file");
   }
   /**
    * 
