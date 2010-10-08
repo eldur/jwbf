@@ -9,6 +9,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import net.sourceforge.jwbf.core.actions.ContentProcessable;
+import net.sourceforge.jwbf.core.actions.HttpActionClient;
 import net.sourceforge.jwbf.core.actions.util.ActionException;
 import net.sourceforge.jwbf.core.actions.util.ProcessException;
 import net.sourceforge.jwbf.core.bots.HttpBot;
@@ -94,7 +95,14 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
    */
   public MediaWikiBot(final URL u) {
     super(u);
+  }
 
+  /**
+   * 
+   * @param client a
+   */
+  public MediaWikiBot(final HttpActionClient client) {
+    super(client);
   }
 
   /**
@@ -110,7 +118,6 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
       throw new MalformedURLException("(" + url + ") url must end with slash or .php");
     }
     setConnection(url);
-
   }
 
   /**

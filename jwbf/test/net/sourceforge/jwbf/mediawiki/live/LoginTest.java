@@ -22,18 +22,41 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.security.cert.X509Certificate;
+
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLException;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.SSLSocket;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 
 import net.sourceforge.jwbf.TestHelper;
+import net.sourceforge.jwbf.core.actions.HttpActionClient;
 import net.sourceforge.jwbf.core.actions.util.ActionException;
+import net.sourceforge.jwbf.mediawiki.BotFactory;
 import net.sourceforge.jwbf.mediawiki.LiveTestFather;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.actions.login.PostLoginOld;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 
+import org.apache.http.client.HttpClient;
+import org.apache.http.conn.ClientConnectionManager;
+import org.apache.http.conn.scheme.Scheme;
+import org.apache.http.conn.scheme.SchemeRegistry;
+import org.apache.http.conn.ssl.SSLSocketFactory;
+import org.apache.http.conn.ssl.X509HostnameVerifier;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.conn.SingleClientConnManager;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpParams;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 /**
  * Test Login.
@@ -42,6 +65,8 @@ import org.junit.Test;
  *
  */
 public class LoginTest extends LiveTestFather {
+
+
 
   private MediaWikiBot bot = null;
 
@@ -193,18 +218,67 @@ public class LoginTest extends LiveTestFather {
     registerTestedVersion(PostLoginOld.class, bot.getVersion());
   }
   /**
-   * Login on last MW with SSL. TODO unignore
+   * Login on last MW with SSL.
    * @throws Exception a
    */
-  @Ignore
   @Test
   public final void loginWikiMWLastSSL() throws Exception {
-    URL u = new URL(getWikiUrl(Version.getLast()).replace("http", "https"));
 
+    HttpClient httpClient = getSSLFakeHttpClient();
+
+    URL u = new URL(BotFactory.getWikiUrl(Version.getLast()).replace("http", "https"));
+    HttpActionClient aClient = new HttpActionClient(httpClient, u);
     assertEquals("https", u.getProtocol());
-    bot = new MediaWikiBot(u);
-    bot.login(getWikiUser(Version.getLast()), getWikiPass(Version.getLast()));
+    bot = new MediaWikiBot(aClient);
+
+    bot.login(BotFactory.getWikiUser(Version.getLast()), BotFactory.getWikiPass(Version.getLast()));
     assertTrue(bot.isLoggedIn());
+  }
+
+  private HttpClient getSSLFakeHttpClient() throws NoSuchAlgorithmException,
+  KeyManagementException {
+    SSLContext sslContext = SSLContext.getInstance("SSL");
+    sslContext.init(null, new TrustManager[] { new X509TrustManager() {
+      public X509Certificate[] getAcceptedIssuers() {
+        return null;
+      }
+
+      public void checkClientTrusted(X509Certificate[] certs,
+          String authType) {
+      }
+
+      public void checkServerTrusted(X509Certificate[] certs,
+          String authType) {
+      }
+    } }, new SecureRandom());
+
+    SSLSocketFactory sf = new SSLSocketFactory (sslContext);
+    sf.setHostnameVerifier(new X509HostnameVerifier() {
+
+      public boolean verify(String hostname, SSLSession session) {
+        return true;
+      }
+
+      public void verify(String host, String[] cns, String[] subjectAlts)
+      throws SSLException {
+      }
+
+      public void verify(String host, X509Certificate cert) throws SSLException {
+      }
+
+      public void verify(String host, SSLSocket ssl) throws IOException {
+      }
+    });
+    Scheme httpsScheme = new Scheme("https", sf, 443);
+    SchemeRegistry schemeRegistry = new SchemeRegistry();
+    schemeRegistry.register(httpsScheme);
+
+    HttpParams params = new BasicHttpParams();
+
+    ClientConnectionManager cm = new SingleClientConnManager(params, schemeRegistry);
+
+    HttpClient              httpClient = new DefaultHttpClient(cm, params);
+    return httpClient;
   }
 
 }
