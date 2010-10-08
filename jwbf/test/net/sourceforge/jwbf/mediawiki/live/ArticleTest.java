@@ -164,7 +164,6 @@ public class ArticleTest extends LiveTestFather {
     }
 
   }
-
   @Test
   public final void articleReadFreqTest() throws Exception {
     Logger log = Logger.getLogger(getClass());
@@ -173,13 +172,13 @@ public class ArticleTest extends LiveTestFather {
     MediaWikiBot bot = getMediaWikiBot(Version.getLast(), true);
     // create new article on this wikibot
     Article a = new Article(bot, "Test");
-    a.setText("a");
+    a.setText(getRandom(7));
     final String aText = a.getText();
     log.debug("pre save");
     // save content
     a.save();
     log.debug("after save");
-    assertFalse(a.isMinorEdit());
+    assertFalse("shoud be no minor edit", a.isMinorEdit());
     final String firstEdit = a.getRevisionId();
     a.setMinorEdit(true);
     a.save("comment");
