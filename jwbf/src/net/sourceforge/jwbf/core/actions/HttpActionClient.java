@@ -261,7 +261,8 @@ public class HttpActionClient {
   ClientProtocolException, ProcessException {
     HttpResponse res = client.execute(requestBase);
     StatusLine statusLine = res.getStatusLine();
-    if (statusLine.getStatusCode() != HttpStatus.SC_OK) {
+    int code = statusLine.getStatusCode();
+    if (code >= HttpStatus.SC_BAD_REQUEST) {
       throw new ProcessException("invalid status: " + statusLine + "; for " + requestBase.getURI());
     }
     return res;
