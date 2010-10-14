@@ -27,7 +27,7 @@ import org.junit.Test;
  * 
  */
 public class DeleteTest extends LiveTestFather {
-  private static final String DELETE_PREFIX = "Delete ";
+  private static final String DELETE_PREFIX = "Delete";
   private MediaWikiBot bot = null;
   private static final int COUNT = 1;
 
