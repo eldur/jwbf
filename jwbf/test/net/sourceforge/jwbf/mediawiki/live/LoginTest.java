@@ -46,12 +46,17 @@ import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.actions.login.PostLoginOld;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 
-import org.apache.http.client.HttpClient;
+import org.apache.http.HttpHost;
+import org.apache.http.HttpResponse;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
 import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.conn.ssl.X509HostnameVerifier;
+import org.apache.http.impl.client.AbstractHttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.SingleClientConnManager;
 import org.apache.http.params.BasicHttpParams;
@@ -212,30 +217,48 @@ public class LoginTest extends LiveTestFather {
   @Test
   public final void loginWikiMWLast() throws Exception {
 
-    bot = getMediaWikiBot(Version.getLast(), false);
-    bot.login(getWikiUser(Version.getLast()), getWikiPass(Version.getLast()));
+    Version latest = Version.getLatest();
+    bot = BotFactory.getMediaWikiBot(latest, false);
+    bot.login(BotFactory.getWikiUser(latest), BotFactory.getWikiPass(latest));
     assertTrue(bot.isLoggedIn());
     registerTestedVersion(PostLoginOld.class, bot.getVersion());
   }
   /**
-   * Login on last MW with SSL.
+   * Login on last MW with SSL and htaccess.
    * @throws Exception a
    */
   @Test
-  public final void loginWikiMWLastSSL() throws Exception {
+  public final void loginWikiMWLastSSLAndHtaccess() throws Exception {
 
-    HttpClient httpClient = getSSLFakeHttpClient();
+    AbstractHttpClient httpClient = getSSLFakeHttpClient();
+    Version latest = Version.getLatest();
 
-    URL u = new URL(BotFactory.getWikiUrl(Version.getLast()).replace("http", "https"));
-    HttpActionClient aClient = new HttpActionClient(httpClient, u);
+    URL u = new URL(getValue("wiki_url_latest").replace("http", "https"));
+
     assertEquals("https", u.getProtocol());
+    int port = 443;
+    {
+      // test if authentication required
+      HttpHost targetHost = new HttpHost(u.getHost(), port, u.getProtocol());
+      HttpGet httpget = new HttpGet(u.getPath());
+      HttpResponse resp = httpClient.execute(targetHost, httpget);
+
+      assertEquals(401, resp.getStatusLine().getStatusCode());
+      resp.getEntity().consumeContent();
+    }
+
+    httpClient.getCredentialsProvider().setCredentials(
+        new AuthScope(u.getHost(), port),
+        new UsernamePasswordCredentials(BotFactory.getWikiUser(latest), BotFactory.getWikiPass(latest)));
+
+    HttpActionClient aClient = new HttpActionClient(httpClient, u);
     bot = new MediaWikiBot(aClient);
 
-    bot.login(BotFactory.getWikiUser(Version.getLast()), BotFactory.getWikiPass(Version.getLast()));
+    bot.login(BotFactory.getWikiUser(latest), BotFactory.getWikiPass(latest));
     assertTrue(bot.isLoggedIn());
   }
 
-  private HttpClient getSSLFakeHttpClient() throws NoSuchAlgorithmException,
+  private AbstractHttpClient getSSLFakeHttpClient() throws NoSuchAlgorithmException,
   KeyManagementException {
     SSLContext sslContext = SSLContext.getInstance("SSL");
     sslContext.init(null, new TrustManager[] { new X509TrustManager() {
@@ -277,7 +300,7 @@ public class LoginTest extends LiveTestFather {
 
     ClientConnectionManager cm = new SingleClientConnManager(params, schemeRegistry);
 
-    HttpClient              httpClient = new DefaultHttpClient(cm, params);
+    DefaultHttpClient httpClient = new DefaultHttpClient(cm, params);
     return httpClient;
   }
 
