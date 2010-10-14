@@ -38,6 +38,9 @@ import net.sourceforge.jwbf.core.actions.util.ProcessException;
 
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
+import org.apache.http.StatusLine;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
@@ -49,6 +52,7 @@ import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.HttpParams;
 import org.apache.log4j.Logger;
 
 
@@ -106,74 +110,46 @@ public class HttpActionClient {
 
   /**
    *
-   * @param a
+   * @param contentProcessable
    *            a
    * @return message, never null
    * @throws ActionException
    *             on problems with http, cookies and io
    * @throws ProcessException on inner problems
    */
-  public synchronized String performAction(ContentProcessable a)
+  public synchronized String performAction(ContentProcessable contentProcessable)
   throws ActionException, ProcessException {
 
     String out = "";
-    while (a.hasMoreMessages()) {
+    while (contentProcessable.hasMoreMessages()) {
 
-      HttpRequestBase e = null;
+      HttpRequestBase httpRequest = null;
       try {
 
-        HttpAction ha = a.getNextMessage();
+        HttpAction httpAction = contentProcessable.getNextMessage();
 
-        log.debug(path + ha.getRequest());
+        final String request;
+        if (path.length() > 1) {
+          request = path + httpAction.getRequest();
+        } else {
+          request = httpAction.getRequest();
+        }
+        log.debug(request);
+        if (httpAction instanceof Get) {
+          httpRequest = new HttpGet(request);
 
-        if (ha instanceof Get) {
-          if (path.length() > 1) {
-            e = new HttpGet(path + ha.getRequest());
-          } else {
-            e = new HttpGet(ha.getRequest());
-          }
 
-          e.getParams().setParameter(ClientPNames.DEFAULT_HOST, host);
-
+          modifyRequestParams(httpRequest, httpAction);
 
           // do get
-          out = get(e, a, ha);
-        } else if (ha instanceof Post) {
-          Post p = (Post) ha;
+          out = get(httpRequest, contentProcessable, httpAction);
+        } else if (httpAction instanceof Post) {
 
-          if (path.length() > 1) {
-            e = new HttpPost(path + ha.getRequest());
-          } else {
-            e = new HttpPost(ha.getRequest());
-          }
-          e.getParams().setParameter(ClientPNames.DEFAULT_HOST, host);
-          e.getParams().setParameter("http.protocol.content-charset",
-              ha.getCharset());
-          MultipartEntity entity = new MultipartEntity();
-          for (String key : p.getParams().keySet()) {
-            Object content = p.getParams().get(key);
-            if (content != null) {
-              if (content instanceof String)
-                entity.addPart(key, new StringBody((String) content, Charset.forName(p.getCharset())));
-              else if (content instanceof File)
-                entity.addPart(key, new FileBody((File) content));
-            }
-          }
-          ((HttpPost) e).setEntity(entity);
-          debug(e, ha, a);
-          HttpResponse res = client.execute(e);
+          httpRequest = new HttpPost(request);
+          modifyRequestParams(httpRequest, httpAction);
 
-
-          ByteArrayOutputStream byte1 = new ByteArrayOutputStream();
-
-          res.getEntity().writeTo(byte1);
-          out = new String(byte1.toByteArray());
-          out = a.processReturningText(out, ha);
-
-          if (a instanceof CookieValidateable && client instanceof DefaultHttpClient)
-            ((CookieValidateable) a).validateReturningCookies(cookieTransform(
-                ((DefaultHttpClient)client).getCookieStore().getCookies()), ha);
-          res.getEntity().consumeContent();
+          // do post
+          out = post(httpRequest, contentProcessable, httpAction);
         }
 
 
@@ -189,12 +165,49 @@ public class HttpActionClient {
 
   }
 
+  private void modifyRequestParams(HttpRequestBase request, HttpAction httpAction) {
+    HttpParams params = request.getParams();
+    params.setParameter(ClientPNames.DEFAULT_HOST, host);
+    params.setParameter("http.protocol.content-charset",
+        httpAction.getCharset());
+  }
+
+  private String post(HttpRequestBase requestBase, ContentProcessable contentProcessable, HttpAction ha)
+  throws IOException, CookieException, ProcessException {
+    Post p = (Post) ha;
+    MultipartEntity entity = new MultipartEntity();
+    for (String key : p.getParams().keySet()) {
+      Object content = p.getParams().get(key);
+      if (content != null) {
+        if (content instanceof String)
+          entity.addPart(key, new StringBody((String) content, Charset.forName(p.getCharset())));
+        else if (content instanceof File)
+          entity.addPart(key, new FileBody((File) content));
+      }
+    }
+    ((HttpPost) requestBase).setEntity(entity);
+    debug(requestBase, ha, contentProcessable);
+    HttpResponse res = execute(requestBase);
 
 
+    ByteArrayOutputStream byte1 = new ByteArrayOutputStream();
+
+    res.getEntity().writeTo(byte1);
+    String out = new String(byte1.toByteArray());
+    out = contentProcessable.processReturningText(out, ha);
+
+    if (contentProcessable instanceof CookieValidateable && client instanceof DefaultHttpClient)
+      ((CookieValidateable) contentProcessable).validateReturningCookies(cookieTransform(
+          ((DefaultHttpClient)client).getCookieStore().getCookies()), ha);
+    res.getEntity().consumeContent();
+
+    return out;
+
+  }
   /**
    * Process a GET Message.
    *
-   * @param authgets
+   * @param requestBase
    *            a
    * @param cp
    *            a
@@ -203,15 +216,13 @@ public class HttpActionClient {
    * @throws CookieException on problems
    * @throws ProcessException on problems
    */
-  private String get(HttpRequestBase authgets, ContentProcessable cp, HttpAction ha)
+  private String get(HttpRequestBase requestBase, ContentProcessable cp, HttpAction ha)
   throws IOException, CookieException, ProcessException {
     showCookies();
-    debug(authgets, ha, cp);
+    debug(requestBase, ha, cp);
     String out = "";
-    authgets.getParams().setParameter("http.protocol.content-charset",
-        ha.getCharset());
 
-    HttpResponse res = client.execute(authgets);
+    HttpResponse res = execute(requestBase);
 
     StringBuffer sb = new StringBuffer();
     BufferedReader br = null;
@@ -239,23 +250,21 @@ public class HttpActionClient {
         && client instanceof DefaultHttpClient)
       ((CookieValidateable) cp).validateReturningCookies(
           cookieTransform(((DefaultHttpClient) client)
-              .getCookieStore().getCookies()), ha);// log.debug(authgets.getURI());
-    // if (!authgets.getStatusLine().toString().contains("200") &&
-    // log.isDebugEnabled())
-    // log.debug("GET: " + authgets.getStatusLine().toString());
-    //
+              .getCookieStore().getCookies()), ha);
     out = cp.processReturningText(out, ha);
-    // // release any connection resources used by the method
-    // authgets.releaseConnection();
-    // int statuscode = authgets.getStatusCode();
-    //
-    // if (statuscode == HttpStatus.SC_NOT_FOUND) {
-    // log.warn("Not Found: " + authgets.getQueryString());
-    //
-    // throw new FileNotFoundException(authgets.getQueryString());
-    // }
+
     res.getEntity().consumeContent();
     return out;
+  }
+
+  private HttpResponse execute(HttpRequestBase requestBase) throws IOException,
+  ClientProtocolException, ProcessException {
+    HttpResponse res = client.execute(requestBase);
+    StatusLine statusLine = res.getStatusLine();
+    if (statusLine.getStatusCode() != HttpStatus.SC_OK) {
+      throw new ProcessException("invalid status: " + statusLine + "; for " + requestBase.getURI());
+    }
+    return res;
   }
 
   /**
