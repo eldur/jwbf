@@ -104,9 +104,9 @@ public final class MediaWiki {
     }
     /**
      *
-     * @return the last version
+     * @return the latest version
      */
-    public static Version getLast() {
+    public static Version getLatest() {
       if (last == UNKNOWN) {
         Version [] as = valuesStable();
         for (int i = 0; i < as.length; i++) {
@@ -116,6 +116,15 @@ public final class MediaWiki {
         }
       }
       return last;
+    }
+
+    /**
+     * @deprecated use {@link #getLatest()} instead.
+     * @return the latest version
+     */
+    @Deprecated
+    public static Version getLast() {
+      return getLatest();
     }
     /**
      *
