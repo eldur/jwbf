@@ -246,13 +246,14 @@ public class HttpActionClient {
     }
 
     out = sb.toString();
-    if (cp instanceof CookieValidateable
-        && client instanceof DefaultHttpClient)
-      ((CookieValidateable) cp).validateReturningCookies(
-          cookieTransform(((DefaultHttpClient) client)
-              .getCookieStore().getCookies()), ha);
-    out = cp.processReturningText(out, ha);
-
+    if (cp != null) {
+      if (cp instanceof CookieValidateable
+          && client instanceof DefaultHttpClient)
+        ((CookieValidateable) cp).validateReturningCookies(
+            cookieTransform(((DefaultHttpClient) client)
+                .getCookieStore().getCookies()), ha);
+      out = cp.processReturningText(out, ha);
+    }
     res.getEntity().consumeContent();
     return out;
   }
@@ -270,40 +271,18 @@ public class HttpActionClient {
 
   /**
    * Process a GET Message.
-   * @param ha
+   * @param get
    *            a
    * @return a returning message, not null
    * @throws IOException on problems
    * @throws CookieException on problems
    * @throws ProcessException on problems
    */
-  public byte[] get(Get ha)
+  public byte[] get(Get get)
   throws IOException, CookieException, ProcessException {
     showCookies();
-
-    HttpGet authgets = new HttpGet(ha.getRequest());
-    byte[] out = null;
-    authgets.getParams().setParameter("http.protocol.content-charset",
-        ha.getCharset());
-    //		System.err.println(authgets.getParams().getParameter("http.protocol.content-charset"));
-
-    client.execute(authgets);
-    //		log.debug(authgets.getURI());
-    //		log.debug("GET: " + authgets.getStatusLine().toString());
-    //
-    //		out = authgets.getResponseBody();
-    //
-    //		// release any connection resources used by the method
-    //		authgets.releaseConnection();
-    //		int statuscode = authgets.getStatusCode();
-    //
-    //		if (statuscode == HttpStatus.SC_NOT_FOUND) {
-    //			log.warn("Not Found: " + authgets.getQueryString());
-    //
-    //			throw new FileNotFoundException(authgets.getQueryString());
-    //		}
-
-    return out;
+    HttpGet authgets = new HttpGet(get.getRequest());
+    return get(authgets, null, get).getBytes();
   }
 
   private Map<String, String> cookieTransform(List<Cookie> ca) {
@@ -336,7 +315,7 @@ public class HttpActionClient {
 
 
   private void debug(HttpUriRequest e, HttpAction ha, ContentProcessable cp) {
-    if (log.isDebugEnabled()) {
+    if (log.isDebugEnabled() && cp != null) {
 
       String continueing = "";
       if (prevHash == cp.hashCode()) {
