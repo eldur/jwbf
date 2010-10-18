@@ -33,253 +33,255 @@ import java.util.regex.Pattern;
  */
 public class SimpleArticle implements ArticleMeta, Serializable, Cloneable, ContentSetable {
 
-	/**
-	 *
-	 */
-	private static final long serialVersionUID = -1368796410854055279L;
-	private String title = "";
-	private String editSummary = "";
-	private String text = "";
-	private String editor = "";
-	private boolean minorEdit = false;
-	private Date editTimestamp = new Date();
-	private String revId = "";
+  /**
+   *
+   */
+  private static final long serialVersionUID = -1368796410854055279L;
+  private String title = "";
+  private String editSummary = "";
+  private String text = "";
+  private String editor = "";
+  private boolean minorEdit = false;
+  private Date editTimestamp = INIT_DATE;
+  private String revId = "";
 
-	/**
-	 *
-	 *
-	 */
-	public SimpleArticle() {
-		// do nothing
-	}
+  public static final Date INIT_DATE = new Date(0);
 
-	/**
-	 *
-	 * @param ca
-	 *            a
-	 */
-	public SimpleArticle(ContentAccessable ca) {
+  /**
+   *
+   *
+   */
+  public SimpleArticle() {
+    // do nothing
+  }
 
-		if (ca.getTitle() != null) {
-			title = ca.getTitle();
-		}
-		if (ca.getText() != null) {
-			text = ca.getText();
-		}
-		if (ca.getEditSummary() != null) {
-			editSummary = ca.getEditSummary();
-		}
-		if (ca.getEditor() != null) {
-			editor = ca.getEditor();
-		}
+  /**
+   *
+   * @param ca
+   *            a
+   */
+  public SimpleArticle(ContentAccessable ca) {
 
-		setMinorEdit(ca.isMinorEdit());
+    if (ca.getTitle() != null) {
+      title = ca.getTitle();
+    }
+    if (ca.getText() != null) {
+      text = ca.getText();
+    }
+    if (ca.getEditSummary() != null) {
+      editSummary = ca.getEditSummary();
+    }
+    if (ca.getEditor() != null) {
+      editor = ca.getEditor();
+    }
 
-	}
+    setMinorEdit(ca.isMinorEdit());
 
-	/**
-	 *
-	 * @param sa
-	 *            a
-	 */
-	public SimpleArticle(ArticleMeta sa) {
-		this((ContentAccessable) sa);
+  }
 
-		if (sa.getEditTimestamp() != null) {
-			editTimestamp = sa.getEditTimestamp();
-		}
+  /**
+   *
+   * @param sa
+   *            a
+   */
+  public SimpleArticle(ArticleMeta sa) {
+    this((ContentAccessable) sa);
 
-		if (sa.getRevisionId() != null) {
-			revId = sa.getRevisionId();
-		}
-	}
+    if (sa.getEditTimestamp() != null) {
+      editTimestamp = sa.getEditTimestamp();
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public final Object clone() throws CloneNotSupportedException {
-	    super.clone();
-		return new SimpleArticle(this);
-	}
+    if (sa.getRevisionId() != null) {
+      revId = sa.getRevisionId();
+    }
+  }
 
-	/**
-	 *
-	 * @param text
-	 *            of article
-	 * @param title
-	 *            of article
-	 * @deprecated use {@link #SimpleArticle(String)} and
-	 *             {@link #setText(String)} instead.
-	 */
-	@Deprecated
-    public SimpleArticle(final String text, final String title) {
-		this.text = text;
-		this.title = title;
-	}
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public final Object clone() throws CloneNotSupportedException {
+    super.clone();
+    return new SimpleArticle(this);
+  }
 
-	/**
-	 *
-	 * @param title
-	 *            of article
-	 */
-	public SimpleArticle(final String title) {
-		this.title = title;
-	}
+  /**
+   *
+   * @param text
+   *            of article
+   * @param title
+   *            of article
+   * @deprecated use {@link #SimpleArticle(String)} and
+   *             {@link #setText(String)} instead.
+   */
+  @Deprecated
+  public SimpleArticle(final String text, final String title) {
+    this.text = text;
+    this.title = title;
+  }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public String getEditSummary() {
-		return editSummary;
-	}
+  /**
+   *
+   * @param title
+   *            of article
+   */
+  public SimpleArticle(final String title) {
+    this.title = title;
+  }
 
-	/* (non-Javadoc)
-	 * @see net.sourceforge.jwbf.core.contentRep.ContentSetable#setEditSummary(java.lang.String)
-	 */
-	public void setEditSummary(final String s) {
-		this.editSummary = s;
-	}
+  /**
+   * {@inheritDoc}
+   */
+  public String getEditSummary() {
+    return editSummary;
+  }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean isMinorEdit() {
-		return minorEdit;
-	}
+  /* (non-Javadoc)
+   * @see net.sourceforge.jwbf.core.contentRep.ContentSetable#setEditSummary(java.lang.String)
+   */
+  public void setEditSummary(final String s) {
+    editSummary = s;
+  }
 
-	/* (non-Javadoc)
-	 * @see net.sourceforge.jwbf.core.contentRep.ContentSetable#setMinorEdit(boolean)
-	 */
-	public void setMinorEdit(final boolean minor) {
-		this.minorEdit = minor;
-	}
+  /**
+   * {@inheritDoc}
+   */
+  public boolean isMinorEdit() {
+    return minorEdit;
+  }
 
-	/**
-	 * @return the
-	 * @deprecated use {@link #getTitle()} instead
-	 */
-	@Deprecated
-    public String getLabel() {
-		return getTitle();
-	}
+  /* (non-Javadoc)
+   * @see net.sourceforge.jwbf.core.contentRep.ContentSetable#setMinorEdit(boolean)
+   */
+  public void setMinorEdit(final boolean minor) {
+    minorEdit = minor;
+  }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public String getTitle() {
-		return title;
-	}
+  /**
+   * @return the
+   * @deprecated use {@link #getTitle()} instead
+   */
+  @Deprecated
+  public String getLabel() {
+    return getTitle();
+  }
 
-	/**
-	 *
-	 * @param label
-	 *            the label, like "Main Page"
-	 * @deprecated use {@link #setTitle(String)} instead
-	 */
-	@Deprecated
-    public void setLabel(final String label) {
-		setTitle(label);
-	}
+  /**
+   * {@inheritDoc}
+   */
+  public String getTitle() {
+    return title;
+  }
 
-	/* (non-Javadoc)
-	 * @see net.sourceforge.jwbf.core.contentRep.ContentSetable#setTitle(java.lang.String)
-	 */
-	public void setTitle(final String title) {
-		this.title = title;
-	}
+  /**
+   *
+   * @param label
+   *            the label, like "Main Page"
+   * @deprecated use {@link #setTitle(String)} instead
+   */
+  @Deprecated
+  public void setLabel(final String label) {
+    setTitle(label);
+  }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public String getText() {
-		return text;
-	}
+  /* (non-Javadoc)
+   * @see net.sourceforge.jwbf.core.contentRep.ContentSetable#setTitle(java.lang.String)
+   */
+  public void setTitle(final String title) {
+    this.title = title;
+  }
 
-	/* (non-Javadoc)
-	 * @see net.sourceforge.jwbf.core.contentRep.ContentSetable#setText(java.lang.String)
-	 */
-	public void setText(final String text) {
-		this.text = text;
-	}
+  /**
+   * {@inheritDoc}
+   */
+  public String getText() {
+    return text;
+  }
 
-	/* (non-Javadoc)
-	 * @see net.sourceforge.jwbf.core.contentRep.ContentSetable#addText(java.lang.String)
-	 */
-	public void addText(final String text) {
-		setText(getText() + text);
-	}
+  /* (non-Javadoc)
+   * @see net.sourceforge.jwbf.core.contentRep.ContentSetable#setText(java.lang.String)
+   */
+  public void setText(final String text) {
+    this.text = text;
+  }
 
-	/* (non-Javadoc)
-	 * @see net.sourceforge.jwbf.core.contentRep.ContentSetable#addTextnl(java.lang.String)
-	 */
-	public void addTextnl(final String text) {
-		setText(getText() + "\n" + text);
+  /* (non-Javadoc)
+   * @see net.sourceforge.jwbf.core.contentRep.ContentSetable#addText(java.lang.String)
+   */
+  public void addText(final String text) {
+    setText(getText() + text);
+  }
 
-	}
+  /* (non-Javadoc)
+   * @see net.sourceforge.jwbf.core.contentRep.ContentSetable#addTextnl(java.lang.String)
+   */
+  public void addTextnl(final String text) {
+    setText(getText() + "\n" + text);
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public String getEditor() {
-		return editor;
-	}
+  }
 
-	/* (non-Javadoc)
-	 * @see net.sourceforge.jwbf.core.contentRep.ContentSetable#setEditor(java.lang.String)
-	 */
-	public void setEditor(final String editor) {
-		this.editor = editor;
-	}
+  /**
+   * {@inheritDoc}
+   */
+  public String getEditor() {
+    return editor;
+  }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean isRedirect() {
+  /* (non-Javadoc)
+   * @see net.sourceforge.jwbf.core.contentRep.ContentSetable#setEditor(java.lang.String)
+   */
+  public void setEditor(final String editor) {
+    this.editor = editor;
+  }
 
-		Pattern pattern = Pattern.compile("#(.*)redirect(.*)",
-				Pattern.CASE_INSENSITIVE);
-		if (pattern.matcher(text).matches()) {
-			return true;
-		}
+  /**
+   * {@inheritDoc}
+   */
+  public boolean isRedirect() {
 
-		return false;
-	}
+    Pattern pattern = Pattern.compile("#(.*)redirect(.*)",
+        Pattern.CASE_INSENSITIVE);
+    if (pattern.matcher(text).matches()) {
+      return true;
+    }
 
-	/**
-	 * @return the edittimestamp in UTC
-	 */
-	public Date getEditTimestamp() {
-		return editTimestamp;
-	}
+    return false;
+  }
 
-	/**
-	 *
-	 * @param editTimestamp
-	 *            set
-	 * @throws ParseException
-	 *             if date unparseable
-	 */
-	public void setEditTimestamp(String editTimestamp) throws ParseException {
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
-		try {
-			setEditTimestamp(sdf.parse(editTimestamp));
-		} catch (ParseException e) {
-			sdf = new SimpleDateFormat("MM/dd/yy' 'HH:mm:ss");
-			setEditTimestamp(sdf.parse(editTimestamp));
-		}
-	}
+  /**
+   * @return the edittimestamp in UTC
+   */
+  public Date getEditTimestamp() {
+    return editTimestamp;
+  }
 
-	/**
-	 *
-	 * @param d
-	 *            the
-	 */
-	public void setEditTimestamp(Date d) {
-		this.editTimestamp = d;
-	}
+  /**
+   *
+   * @param editTimestamp
+   *            set
+   * @throws ParseException
+   *             if date unparseable
+   */
+  public void setEditTimestamp(String editTimestamp) throws ParseException {
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+    try {
+      setEditTimestamp(sdf.parse(editTimestamp));
+    } catch (ParseException e) {
+      sdf = new SimpleDateFormat("MM/dd/yy' 'HH:mm:ss");
+      setEditTimestamp(sdf.parse(editTimestamp));
+    }
+  }
 
-	/* (non-Javadoc)
+  /**
+   *
+   * @param d
+   *            the
+   */
+  public void setEditTimestamp(Date d) {
+    editTimestamp = d;
+  }
+
+  /* (non-Javadoc)
    * @see java.lang.Object#equals(java.lang.Object)
    */
   @Override
@@ -314,7 +316,7 @@ public class SimpleArticle implements ArticleMeta, Serializable, Cloneable, Cont
     return true;
   }
 
-	/* (non-Javadoc)
+  /* (non-Javadoc)
    * @see java.lang.Object#hashCode()
    */
   @Override
@@ -322,27 +324,27 @@ public class SimpleArticle implements ArticleMeta, Serializable, Cloneable, Cont
     final int prime = 31;
     int result = 1;
     result = prime * result
-        + ((editTimestamp == null) ? 0 : editTimestamp.hashCode());
+    + ((editTimestamp == null) ? 0 : editTimestamp.hashCode());
     result = prime * result + ((revId == null) ? 0 : revId.hashCode());
     result = prime * result + ((text == null) ? 0 : text.hashCode());
     result = prime * result + ((title == null) ? 0 : title.hashCode());
     return result;
   }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public String getRevisionId() {
-		return revId;
-	}
+  /**
+   * {@inheritDoc}
+   */
+  public String getRevisionId() {
+    return revId;
+  }
 
-	/**
-	 *
-	 * @param revId
-	 *            the
-	 */
-	public void setRevisionId(String revId) {
-		this.revId = revId;
-	}
+  /**
+   *
+   * @param revId
+   *            the
+   */
+  public void setRevisionId(String revId) {
+    this.revId = revId;
+  }
 
 }

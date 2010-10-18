@@ -20,6 +20,7 @@ package net.sourceforge.jwbf.core.contentRep;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.text.ParseException;
@@ -125,8 +126,7 @@ public class SimpleArticleTest {
     assertEquals("", sa.getEditSummary());
     assertEquals("", sa.getTitle());
     assertEquals("", sa.getText());
-    Date d = sa.getEditTimestamp();
-    assertTrue(d.getTime() > 0);
+    assertNotNull(sa.getEditTimestamp());
 
   }
 
@@ -175,7 +175,7 @@ public class SimpleArticleTest {
     assertEquals("", sa.getEditSummary());
     assertEquals("", sa.getTitle());
     assertEquals("", sa.getText());
-    assertTrue(sa.getEditTimestamp().getTime() > 0);
+    assertNotNull(sa.getEditTimestamp());
     assertFalse(sa.isRedirect());
     assertFalse(sa.isMinorEdit());
 
@@ -218,7 +218,6 @@ public class SimpleArticleTest {
   }
   @Test
   public void testEquals() {
-
     Date d2 = new Date(System.currentTimeMillis());
     doWait(10);
     Date d3 = new Date(System.currentTimeMillis());
@@ -270,7 +269,6 @@ public class SimpleArticleTest {
     assertFalse("sax rev null", sa.equals(sax));
     sax.setRevisionId("sff");
     assertFalse("sax rev diff", sa.equals(sax));
-
   }
 
   private synchronized void doWait(int ms) {
