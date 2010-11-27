@@ -151,6 +151,18 @@ public class AllPagesTest extends LiveTestFather {
     Assert.assertTrue("Wrong Wiki Version " + bot.getVersion(), Version.MW1_15.equals(bot.getVersion()));
   }
 
+  @Test
+  public final void allPagesTitle0() throws Exception {
+    String url = "http://de.wikipedia.org/w/index.php"; // TODO replace with a local test
+    assumeReachable(url);
+    bot = new MediaWikiBot(url);
+    AllPageTitles all = new AllPageTitles(bot, null, null, RedirectFilter.all, MediaWiki.NS_ALL);
+    for (String title : all) {
+      title.getClass();
+      break;
+    }
+  }
+
   /**
    * Test category read. Test category must have more then 50 members.
    * @throws Exception a

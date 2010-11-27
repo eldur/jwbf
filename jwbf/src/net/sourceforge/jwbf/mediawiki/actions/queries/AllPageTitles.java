@@ -174,12 +174,12 @@ public class AllPageTitles extends TitleQuery<String> {
 
 
     String uS = "/api.php?action=query&list=allpages&"
-      + ((from != null && from.length() > 0) ? ("&apfrom=" + MediaWiki.encode(from)) : "")
-      + ((prefix != null) ? ("&apprefix=" + MediaWiki.encode(prefix))
-          : "")
-          + ((namespace != null && namespace.length() != 0) ? ("&apnamespace=" + namespace)
-              : "") + "&apfilterredir=" + apfilterredir + "&aplimit="
-              + LIMIT + "&format=xml";
+      + ((from != null && from.length() > 0) ? ("&apfrom=" + MediaWiki
+          .encode(from)) : "")
+          + ((prefix != null) ? ("&apprefix=" + MediaWiki.encode(prefix)) : "")
+          + ((namespace != null && namespace.length() != 0) ? ("&apnamespace=" + MediaWiki.encode(namespace))
+              : "") + "&apfilterredir=" + apfilterredir + "&aplimit=" + LIMIT
+              + "&format=xml";
     return new Get(uS);
 
   }
