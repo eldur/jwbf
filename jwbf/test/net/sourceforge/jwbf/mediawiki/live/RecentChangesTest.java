@@ -242,9 +242,8 @@ public class RecentChangesTest extends LiveTestFather {
       while (is.hasNext()) {
         String s = is.next();
         String [] digets = s.split(" ");
-        if (digets != null && digets.length > 0) {
+        if (digets != null && digets.length > 1) {
           int x = Integer.parseInt(digets[1]);
-          //				System.err.println("rm " + s + " ~= " + x);
           vi.remove(Integer.valueOf(x));
         }
         i++;
