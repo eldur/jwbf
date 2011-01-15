@@ -52,7 +52,7 @@ abstract class CategoryMembers extends MWAction {
 
 
   /** constant value for the bllimit-parameter. **/
-  private static final int LIMIT = 50;
+  protected static final int LIMIT = 50;
 
 
 
@@ -70,7 +70,7 @@ abstract class CategoryMembers extends MWAction {
   protected final String categoryName;
 
 
-  private RequestBuilder r = null;
+  protected RequestBuilder requestBuilder = null;
 
   protected final int [] namespace;
   private String namespaceStr = "";
@@ -96,11 +96,11 @@ abstract class CategoryMembers extends MWAction {
 
     switch (bot.getVersion()) {
       case MW1_11:
-        r = new RequestBuilder_1_11();
+        requestBuilder = new RequestBuilder_1_11();
         break;
 
       default:
-        r = new RequestBuilder();
+        requestBuilder = new RequestBuilder();
         break;
     }
 
@@ -112,7 +112,7 @@ abstract class CategoryMembers extends MWAction {
    */
   protected final Get generateFirstRequest() {
 
-    return new Get(r.first(categoryName));
+    return new Get(requestBuilder.first(categoryName));
   }
 
   /**
@@ -127,7 +127,7 @@ abstract class CategoryMembers extends MWAction {
 
     try {
 
-      return new Get(r.continiue(cmcontinue));
+      return new Get(requestBuilder.continiue(cmcontinue));
 
     } catch (NullPointerException e) {
       e.printStackTrace();
@@ -204,7 +204,7 @@ abstract class CategoryMembers extends MWAction {
   protected abstract void addCatItem(String title, int pageid, int ns);
 
 
-  private class RequestBuilder_1_11 extends RequestBuilder {
+  protected class RequestBuilder_1_11 extends RequestBuilder {
 
     RequestBuilder_1_11() {
       super();
@@ -214,7 +214,7 @@ abstract class CategoryMembers extends MWAction {
       String uS = "";
       String nsinj = "";
       if (namespaceStr.length() > 0) {
-        nsinj = "&cmnamespace=" + namespaceStr;
+        nsinj = "&cmnamespace=" + MediaWiki.encode(namespaceStr);
       }
       uS = "/api.php?action=query&list=categorymembers"
         + "&cmcategory=" + MediaWiki.encode(categoryName)
@@ -229,7 +229,7 @@ abstract class CategoryMembers extends MWAction {
       String uS = "";
       String nsinj = "";
       if (namespaceStr.length() > 0) {
-        nsinj = "&cmnamespace=" + namespaceStr;
+        nsinj = "&cmnamespace=" + MediaWiki.encode(namespaceStr);
       }
 
       uS = "/api.php?action=query&list=categorymembers"
@@ -243,7 +243,7 @@ abstract class CategoryMembers extends MWAction {
 
   }
 
-  private class RequestBuilder {
+  protected class RequestBuilder {
 
     RequestBuilder() {
 
@@ -253,7 +253,7 @@ abstract class CategoryMembers extends MWAction {
       String uS = "";
       String nsinj = "";
       if (namespaceStr.length() > 0) {
-        nsinj = "&cmnamespace=" + namespaceStr;
+        nsinj = "&cmnamespace=" + MediaWiki.encode(namespaceStr);
       }
 
       //TODO: do not add Category: - instead, change other methods' descs (e.g. in MediaWikiBot)
@@ -270,7 +270,7 @@ abstract class CategoryMembers extends MWAction {
       String uS = "";
       String nsinj = "";
       if (namespaceStr.length() > 0) {
-        nsinj = "&cmnamespace=" + namespaceStr;
+        nsinj = "&cmnamespace=" + MediaWiki.encode(namespaceStr);
       }
 
       //TODO: do not add Category: - instead, change other methods' descs (e.g. in MediaWikiBot)
