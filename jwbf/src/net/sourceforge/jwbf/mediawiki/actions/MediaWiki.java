@@ -81,7 +81,7 @@ public final class MediaWiki {
    *
    */
   public enum Version {
-    MW1_09, MW1_10, MW1_11, MW1_12, MW1_13, MW1_14, MW1_15, MW1_16, UNKNOWN, DEVELOPMENT;
+    MW1_09, MW1_10, MW1_11, MW1_12, MW1_13, MW1_14, MW1_15, MW1_16, MW1_17, UNKNOWN, DEVELOPMENT;
 
 
     private static Version last = UNKNOWN;
