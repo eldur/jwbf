@@ -26,6 +26,7 @@ import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_13;
 import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_14;
 import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_15;
 import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_16;
+import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_17;
 
 import java.util.Collection;
 import java.util.Vector;
@@ -50,7 +51,7 @@ import org.apache.log4j.Logger;
  * @since MediaWiki 1.9.0
  * 
  */
-@SupportedBy({ MW1_09, MW1_10, MW1_11, MW1_12, MW1_13, MW1_14, MW1_15, MW1_16 })
+@SupportedBy({ MW1_09, MW1_10, MW1_11, MW1_12, MW1_13, MW1_14, MW1_15, MW1_16, MW1_17 })
 public class ImageUsageTitles extends TitleQuery<String> {
 
   /** constant value for the illimit-parameter. **/
@@ -89,10 +90,18 @@ public class ImageUsageTitles extends TitleQuery<String> {
         handler = new Mw1_09Handler();
         break;
 
+      case MW1_11:
+      case MW1_12:
+      case MW1_13:
+      case MW1_14:
+      case MW1_15:
+      case MW1_16:
+        handler = new Mw1_11Handler();  
+        break;
+
+      case MW1_17:
       default:
-
         handler = new DefaultHandler();
-
         break;
     }
   }
@@ -106,8 +115,7 @@ public class ImageUsageTitles extends TitleQuery<String> {
   /**
    * generates the next MediaWiki-request (GetMethod) and adds it to msgs.
    *
-   * @param imageName     the title of the image,
-   *                      may only be null if ilcontinue is not null
+   * @param imageName     the title of the image, not null
    * @param namespace     the namespace(s) that will be searched for links,
    *                      as a string of numbers separated by '|';
    *                      if null, this parameter is omitted
@@ -165,7 +173,7 @@ public class ImageUsageTitles extends TitleQuery<String> {
           .createNsString(namespaces), null);
     } else {
 
-      return generateRequest(null, null, getNextPageInfo());
+      return generateRequest(imageName, null, getNextPageInfo());
     }
 
   }
@@ -197,6 +205,74 @@ public class ImageUsageTitles extends TitleQuery<String> {
   }
 
   private class DefaultHandler extends VersionHandler {
+
+    @Override
+    public Get generateContinueRequest(String imageName, String namespace,
+        String ilcontinue) {
+
+      String uS = "/api.php?action=query&list=imageusage"
+        + "&iucontinue=" + MediaWiki.encode(ilcontinue)
+        + "&iulimit=" + LIMIT + "&format=xml"
+        + "&iutitle=" + MediaWiki.encode(imageName);
+      return new Get(uS);
+    }
+
+    @Override
+    public Get generateRequest(String imageName, String namespace) {
+
+      String uS = "/api.php?action=query&list=imageusage"
+        + "&iutitle="
+        + MediaWiki.encode(imageName)
+        + ((namespace != null && namespace.length() != 0) ? ("&iunamespace=" + MediaWiki
+            .encode(namespace))
+            : "") + "&iulimit=" + LIMIT + "&format=xml";
+      return new Get(uS);
+
+    }
+
+    @Override
+    public Collection<String> parseArticleTitles(String s) {
+      Collection<String> titleCollection = new Vector<String>();
+
+      Pattern p = Pattern.compile(
+          "<iu pageid=\".*?\" ns=\".*?\" title=\"(.*?)\" />");
+
+      Matcher m = p.matcher(s);
+
+      while (m.find()) {
+        titleCollection.add(m.group(1));
+      }
+      return titleCollection;
+    }
+
+    @Override
+    public String parseHasMore(String s) {
+
+      Pattern p = Pattern.compile(
+          "<query-continue>.*?"
+          + "<imageusage *iucontinue=\"([^\"]*)\" */>"
+          + ".*?</query-continue>",
+          Pattern.DOTALL | Pattern.MULTILINE);
+
+      Matcher m = p.matcher(s);
+
+      if (m.find()) {
+        return m.group(1);
+      } else {
+        return "";
+      }
+
+    }
+
+  }
+
+  /**
+   * VersionHandler for MW versions 1.10 .. 1.16.
+   * This one is identical to the one for 1.17 except for
+   * the iutitle parameter in generateContinueRequest.
+   * 
+   */
+  private class Mw1_11Handler extends VersionHandler {
 
     @Override
     public Get generateContinueRequest(String imageName, String namespace,
@@ -256,6 +332,7 @@ public class ImageUsageTitles extends TitleQuery<String> {
     }
 
   }
+  
   private class Mw1_09Handler extends VersionHandler {
 
     @Override

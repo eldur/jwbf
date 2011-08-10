@@ -27,6 +27,7 @@ import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_13;
 import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_14;
 import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_15;
 import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_16;
+import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_17;
 
 import java.util.Collection;
 import java.util.Vector;
@@ -53,7 +54,7 @@ import org.apache.log4j.Logger;
  * @author Tobias Knerr
  * @since JWBF 1.1
  */
-@SupportedBy({ MW1_09, MW1_10, MW1_11, MW1_12, MW1_13, MW1_14, MW1_15, MW1_16 })
+@SupportedBy({ MW1_09, MW1_10, MW1_11, MW1_12, MW1_13, MW1_14, MW1_15, MW1_16, MW1_17 })
 public class BacklinkTitles extends TitleQuery<String> {
 
   /**
@@ -206,8 +207,16 @@ public class BacklinkTitles extends TitleQuery<String> {
       case MW1_10:
         return new RequestBuilder1x09();
 
-      default: //MW1_11 and up
+      case MW1_11:
+      case MW1_12:
+      case MW1_13:
+      case MW1_14:
+      case MW1_15:
+      case MW1_16:
         return new RequestBuilder1x11();
+
+      default: //MW1_17 and up
+        return new RequestBuilder1x17();
 
     }
 
@@ -232,7 +241,34 @@ public class BacklinkTitles extends TitleQuery<String> {
      * @param blcontinue key for continuing
      * @return the request in string form
      */
-    String buildContinueRequest(String blcontinue);
+    String buildContinueRequest(String articleName, String blcontinue);
+
+  }
+
+  /** request builder for MW versions 1_17 onwards. */
+  private static class RequestBuilder1x17 implements RequestBuilder {
+    /**
+     * {@inheritDoc}
+     */
+    public String buildInitialRequest(String articleName,
+        RedirectFilter redirectFilter, int [] namespace)  {
+
+      return "/api.php?action=query&list=backlinks"
+      + "&bltitle=" + MediaWiki.encode(articleName)
+      + ((namespace != null && MWAction.createNsString(namespace).length() != 0) ? ("&blnamespace=" + MediaWiki.encode(MWAction.createNsString(namespace))) : "")
+      + "&blfilterredir=" + MediaWiki.encode(redirectFilter.toString())
+      + "&bllimit=" + LIMIT + "&format=xml";
+    }
+    /**
+     * {@inheritDoc}
+     */
+    public String buildContinueRequest(String articleName, String blcontinue) {
+      return "/api.php?action=query&list=backlinks"
+      + "&blcontinue=" + MediaWiki.encode(blcontinue)
+      + "&bllimit=" + LIMIT
+      + "&bltitle=" + MediaWiki.encode(articleName)
+      + "&format=xml";
+    }
 
   }
 
@@ -253,7 +289,7 @@ public class BacklinkTitles extends TitleQuery<String> {
     /**
      * {@inheritDoc}
      */
-    public String buildContinueRequest(String blcontinue) {
+    public String buildContinueRequest(String articleName, String blcontinue) {
 
       return "/api.php?action=query&list=backlinks"
       + "&blcontinue=" + MediaWiki.encode(blcontinue)
@@ -280,7 +316,7 @@ public class BacklinkTitles extends TitleQuery<String> {
     /**
      * {@inheritDoc}
      */
-    public String buildContinueRequest(String blcontinue) {
+    public String buildContinueRequest(String articleName, String blcontinue) {
 
       return "/api.php?action=query&list=backlinks"
       + "&blcontinue=" + MediaWiki.encode(blcontinue)
@@ -292,7 +328,7 @@ public class BacklinkTitles extends TitleQuery<String> {
   @Override
   protected HttpAction prepareCollection() {
     if (getNextPageInfo().length() > 0) {
-      return new Get(requestBuilder.buildContinueRequest(getNextPageInfo()));
+      return new Get(requestBuilder.buildContinueRequest(articleName, getNextPageInfo()));
     } else {
       return new Get(requestBuilder.buildInitialRequest(articleName, redirectFilter, namespaces));
     }

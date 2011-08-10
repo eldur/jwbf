@@ -27,6 +27,7 @@ import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_13;
 import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_14;
 import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_15;
 import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_16;
+import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_17;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -54,7 +55,7 @@ import org.apache.log4j.Logger;
  * @since MediaWiki 1.9.0
  * 
  */
-@SupportedBy({ MW1_09, MW1_10, MW1_11, MW1_12, MW1_13, MW1_14, MW1_15, MW1_16 })
+@SupportedBy({ MW1_09, MW1_10, MW1_11, MW1_12, MW1_13, MW1_14, MW1_15, MW1_16, MW1_17 })
 public class TemplateUserTitles extends TitleQuery<String> {
 
   /** constant value for the eilimit-parameter. **/
@@ -92,8 +93,7 @@ public class TemplateUserTitles extends TitleQuery<String> {
   /**
    * generates the next MediaWiki-request (GetMethod) and adds it to msgs.
    *
-   * @param templateName   the name of the template,
-   *                      may only be null if eicontinue is not null
+   * @param templateName  the name of the template, not null
    * @param namespace     the namespace(s) that will be searched for links,
    *                      as a string of numbers separated by '|';
    *                      if null, this parameter is omitted
@@ -130,7 +130,25 @@ public class TemplateUserTitles extends TitleQuery<String> {
       + MediaWiki.encode(eicontinue) + "&eilimit=" + LIMIT
       + ((namespace != null && namespace.length() != 0) ? ("&einamespace=" + MediaWiki.encode(namespace)) : "")
       + "&format=xml";
-
+      
+      switch (bot.getVersion()) {
+      	case MW1_09:
+      	case MW1_10:
+      	case MW1_11:
+      	case MW1_12:
+      	case MW1_13:
+      	case MW1_14:
+      	case MW1_15:
+      	case MW1_16:      		
+      		break;
+      		
+      	case MW1_17:
+      	default:      		
+      		uS += "&eititle=" + MediaWiki.encode(templateName);
+      		break;
+      		
+      }
+      
     }
 
     return new Get(uS);
@@ -213,7 +231,7 @@ public class TemplateUserTitles extends TitleQuery<String> {
       return generateRequest(templateName, MWAction
           .createNsString(namespaces), null);
     } else {
-      return generateRequest(null, MWAction.createNsString(namespaces),
+      return generateRequest(templateName, MWAction.createNsString(namespaces),
           getNextPageInfo());
     }
 
