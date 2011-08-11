@@ -100,7 +100,7 @@ public class AllPageTitles extends TitleQuery<String> {
    * @param namespaces
    *            the namespace(s) that will be searched for links, as a string
    *            of numbers separated by '|'; if null, this parameter is
-   *            omitted
+   *            omitted TODO are multible namespaces allowed?
    * @throws VersionException if version is incompatible
    */
   public AllPageTitles(MediaWikiBot bot, String from,
@@ -137,7 +137,7 @@ public class AllPageTitles extends TitleQuery<String> {
     this.prefix = prefix;
     this.namespaces = namespaces;
     this.from = from;
-    generateRequest(from, prefix, rf, namespaces);
+    //    generateRequest(from, prefix, rf, namespaces);
 
   }
 
