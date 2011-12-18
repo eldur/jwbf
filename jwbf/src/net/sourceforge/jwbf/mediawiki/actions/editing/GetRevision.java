@@ -33,6 +33,7 @@ import java.io.StringReader;
 import java.text.ParseException;
 import java.util.Iterator;
 
+import lombok.extern.slf4j.Slf4j;
 import net.sourceforge.jwbf.core.actions.Get;
 import net.sourceforge.jwbf.core.actions.util.ActionException;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
@@ -44,7 +45,6 @@ import net.sourceforge.jwbf.mediawiki.actions.util.ApiException;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.actions.util.SupportedBy;
 
-import org.apache.log4j.Logger;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -58,6 +58,7 @@ import org.xml.sax.InputSource;
  *
  *
  */
+@Slf4j
 @SupportedBy({ MW1_09, MW1_10, MW1_11, MW1_12, MW1_13, MW1_14, MW1_15, MW1_16 })
 public class GetRevision extends MWAction {
 
@@ -72,8 +73,6 @@ public class GetRevision extends MWAction {
 
   public static final int FIRST = 1 << 30;
   public static final int LAST = 1 << 31;
-
-  private final Logger log = Logger.getLogger(getClass());
 
   private final int properties;
 
@@ -93,7 +92,7 @@ public class GetRevision extends MWAction {
    * @param v the
    */
   public GetRevision(Version v, final String articlename, final int properties)
-  throws ActionException, ProcessException {
+      throws ActionException, ProcessException {
     super(v);
     botVersion = v;
     //		if (!bot.getUserinfo().getRights().contains("read")) {
@@ -104,9 +103,9 @@ public class GetRevision extends MWAction {
     sa = new SimpleArticle();
     sa.setTitle(articlename);
     String uS = "/api.php?action=query&prop=revisions&titles="
-      + MediaWiki.encode(articlename) + "&rvprop="
-      + getDataProperties(properties) + getReversion(properties)
-      + "&rvlimit=1" + "&format=xml";
+        + MediaWiki.encode(articlename) + "&rvprop="
+        + getDataProperties(properties) + getReversion(properties)
+        + "&rvlimit=1" + "&format=xml";
     msg = new Get(uS);
 
   }
@@ -116,7 +115,7 @@ public class GetRevision extends MWAction {
    */
   @Override
   public String processReturningText(final String s, HttpAction ha)
-  throws ProcessException {
+      throws ProcessException {
     if (msg.getRequest().equals(ha.getRequest()) && singleProcess) {
       if (log.isDebugEnabled()) { // TODO no very nice debug here
         if (s.length() < 151) {
@@ -243,7 +242,7 @@ public class GetRevision extends MWAction {
 
           try {
             sa.setEditTimestamp(getAsStringValues(element,
-            "timestamp"));
+                "timestamp"));
           } catch (ParseException e) {
             log.debug("timestamp could not be parsed");
           }

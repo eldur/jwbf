@@ -2,18 +2,18 @@ package net.sourceforge.jwbf.inyoka.live;
 
 
 import static org.junit.Assert.assertTrue;
+import lombok.extern.slf4j.Slf4j;
 import net.sourceforge.jwbf.TestHelper;
 import net.sourceforge.jwbf.core.contentRep.Article;
 import net.sourceforge.jwbf.inyoka.bots.InyokaWikiBot;
 import net.sourceforge.jwbf.mediawiki.LiveTestFather;
 
-import org.apache.log4j.Logger;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 
+@Slf4j
 public class GetRevisionTest extends LiveTestFather {
-  private Logger log = Logger.getLogger(getClass());
   private InyokaWikiBot bot;
 
   /**

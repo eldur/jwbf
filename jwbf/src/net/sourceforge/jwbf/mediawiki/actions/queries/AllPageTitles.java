@@ -33,6 +33,7 @@ import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import lombok.extern.slf4j.Slf4j;
 import net.sourceforge.jwbf.core.actions.Get;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
@@ -42,8 +43,6 @@ import net.sourceforge.jwbf.mediawiki.actions.util.SupportedBy;
 import net.sourceforge.jwbf.mediawiki.actions.util.VersionException;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 
-import org.apache.log4j.Logger;
-
 /**
  * Action class using the MediaWiki-api's "list=allpages".
  * 
@@ -51,18 +50,17 @@ import org.apache.log4j.Logger;
  * @author Thomas Stock
  * 
  */
+@Slf4j
 @SupportedBy({ MW1_09, MW1_10, MW1_11, MW1_12, MW1_13, MW1_14, MW1_15, MW1_16 })
 public class AllPageTitles extends TitleQuery<String> {
 
-  private static final Logger LOG = Logger.getLogger(AllPageTitles.class);
-
   /** Pattern to parse returned page, @see {@link #parseHasMore(String)}. */
   private static final Pattern HAS_MORE_PATTERN = Pattern
-  .compile(
-      "<query-continue>.*?<allpages *apfrom=\"([^\"]*)\" */>.*?</query-continue>",
-      Pattern.DOTALL | Pattern.MULTILINE);
+      .compile(
+          "<query-continue>.*?<allpages *apfrom=\"([^\"]*)\" */>.*?</query-continue>",
+          Pattern.DOTALL | Pattern.MULTILINE);
   private static final Pattern ARTICLE_TITLES_PATTERN = Pattern
-  .compile("<p pageid=\".*?\" ns=\".*?\" title=\"(.*?)\" />");
+      .compile("<p pageid=\".*?\" ns=\".*?\" title=\"(.*?)\" />");
   /** Pattern to parse returned page, @see {@link #parseArticleTitles(String)} */
   /** Constant value for the aplimit-parameter. **/
   private static final int LIMIT = 50;
@@ -158,8 +156,8 @@ public class AllPageTitles extends TitleQuery<String> {
    */
   private Get generateRequest(String from, String prefix,
       RedirectFilter rf, String namespace) {
-    if (LOG.isTraceEnabled()) {
-      LOG.trace("enter GetAllPagetitles.generateRequest"
+    if (log.isTraceEnabled()) {
+      log.trace("enter GetAllPagetitles.generateRequest"
           + "(String,String,boolean,boolean,String)");
     }
 
@@ -174,12 +172,12 @@ public class AllPageTitles extends TitleQuery<String> {
 
 
     String uS = "/api.php?action=query&list=allpages&"
-      + ((from != null && from.length() > 0) ? ("&apfrom=" + MediaWiki
-          .encode(from)) : "")
-          + ((prefix != null) ? ("&apprefix=" + MediaWiki.encode(prefix)) : "")
-          + ((namespace != null && namespace.length() != 0) ? ("&apnamespace=" + MediaWiki.encode(namespace))
-              : "") + "&apfilterredir=" + apfilterredir + "&aplimit=" + LIMIT
-              + "&format=xml";
+        + ((from != null && from.length() > 0) ? ("&apfrom=" + MediaWiki
+            .encode(from)) : "")
+            + ((prefix != null) ? ("&apprefix=" + MediaWiki.encode(prefix)) : "")
+            + ((namespace != null && namespace.length() != 0) ? ("&apnamespace=" + MediaWiki.encode(namespace))
+                : "") + "&apfilterredir=" + apfilterredir + "&aplimit=" + LIMIT
+                + "&format=xml";
     return new Get(uS);
 
   }
@@ -195,15 +193,15 @@ public class AllPageTitles extends TitleQuery<String> {
    */
   @Override
   protected Collection<String> parseArticleTitles(String s) {
-    if (LOG.isTraceEnabled()) {
-      LOG.trace("enter GetAllPagetitles.parseArticleTitles(String)");
+    if (log.isTraceEnabled()) {
+      log.trace("enter GetAllPagetitles.parseArticleTitles(String)");
     }
     Collection<String> c = new Vector<String>();
     Matcher m = ARTICLE_TITLES_PATTERN.matcher(s);
     while (m.find()) {
       String title = MediaWiki.decode(m.group(1));
-      if (LOG.isDebugEnabled()) {
-        LOG.debug("Found article title: \"" + title + "\"");
+      if (log.isDebugEnabled()) {
+        log.debug("Found article title: \"" + title + "\"");
       }
       c.add(title);
     }
@@ -220,8 +218,8 @@ public class AllPageTitles extends TitleQuery<String> {
    */
   @Override
   protected String parseHasMore(final String s) {
-    if (LOG.isTraceEnabled()) {
-      LOG.trace("enter GetAllPagetitles.parseHasMore(String)");
+    if (log.isTraceEnabled()) {
+      log.trace("enter GetAllPagetitles.parseHasMore(String)");
     }
     Matcher m = HAS_MORE_PATTERN.matcher(s);
     if (m.find()) {

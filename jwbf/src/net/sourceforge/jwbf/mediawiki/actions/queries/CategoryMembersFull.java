@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
+import lombok.extern.slf4j.Slf4j;
 import net.sourceforge.jwbf.core.actions.Get;
 import net.sourceforge.jwbf.core.actions.util.ActionException;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
@@ -20,13 +21,12 @@ import net.sourceforge.jwbf.mediawiki.actions.util.SupportedBy;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 import net.sourceforge.jwbf.mediawiki.contentRep.CategoryItem;
 
-import org.apache.log4j.Logger;
-
 /**
  * A specialization of {@link CategoryMembers} with contains {@link CategoryItem}s.
  * 
  * @author Thomas Stock
  */
+@Slf4j
 @SupportedBy({ MW1_11, MW1_12, MW1_13, MW1_14, MW1_15, MW1_16})
 public class CategoryMembersFull extends CategoryMembers implements Iterable<CategoryItem>, Iterator<CategoryItem> {
 
@@ -39,8 +39,6 @@ public class CategoryMembersFull extends CategoryMembers implements Iterable<Cat
    */
   private Collection<CategoryItem> titleCollection = new ArrayList<CategoryItem>();
   private Iterator<CategoryItem> titleIterator;
-
-  private Logger log = Logger.getLogger(getClass());
 
   /**
    *
@@ -104,8 +102,7 @@ public class CategoryMembersFull extends CategoryMembers implements Iterable<Cat
 
         bot.performAction(this);
         setHasMoreMessages(true);
-        if (log.isDebugEnabled())
-          log.debug("preparing success");
+        log.debug("preparing success");
       } catch (ActionException e) {
         e.printStackTrace();
         setHasMoreMessages(false);
@@ -126,7 +123,7 @@ public class CategoryMembersFull extends CategoryMembers implements Iterable<Cat
 
 
     if (log.isDebugEnabled())
-      log.debug(titleCollection);
+      log.debug(titleCollection.toString());
     return buff;
   }
   /**

@@ -9,6 +9,7 @@ import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_16;
 import java.io.IOException;
 import java.io.StringReader;
 
+import lombok.extern.slf4j.Slf4j;
 import net.sourceforge.jwbf.core.actions.Get;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.core.actions.util.ProcessException;
@@ -19,7 +20,6 @@ import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.actions.util.SupportedBy;
 import net.sourceforge.jwbf.mediawiki.actions.util.VersionException;
 
-import org.apache.log4j.Logger;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -36,6 +36,7 @@ import org.xml.sax.InputSource;
  * @author Max Gensthaler
  * @author Thomas Stock
  */
+@Slf4j
 @SupportedBy({ MW1_12, MW1_13, MW1_14, MW1_15, MW1_16 })
 public final class GetApiToken extends MWAction {
   /** Types that need a token. See API field intoken. */
@@ -44,7 +45,6 @@ public final class GetApiToken extends MWAction {
   // to support different URIs for different actions.
   public enum Intoken { DELETE, EDIT, MOVE, PROTECT, EMAIL, BLOCK, UNBLOCK, IMPORT }
   private String token = "";
-  private Logger log = Logger.getLogger(GetApiToken.class);
 
   private boolean first = true;
 
@@ -76,11 +76,11 @@ public final class GetApiToken extends MWAction {
       log.trace("enter GetToken.generateTokenRequest()");
     }
     String uS = "/api.php"
-      + "?action=query"
-      + "&prop=info"
-      + "&intoken=" + intoken.toString().toLowerCase()
-      + "&titles=" + MediaWiki.encode(title)
-      + "&format=xml";
+        + "?action=query"
+        + "&prop=info"
+        + "&intoken=" + intoken.toString().toLowerCase()
+        + "&titles=" + MediaWiki.encode(title)
+        + "&format=xml";
     msg = new Get(uS);
 
   }
@@ -98,7 +98,7 @@ public final class GetApiToken extends MWAction {
    */
   @Override
   public String processReturningText(String s, HttpAction hm)
-  throws ProcessException {
+      throws ProcessException {
     if (hm.getRequest().equals(msg.getRequest())) {
       if (log.isTraceEnabled()) {
         log.trace("enter GetToken.processAllReturningText(String)");
@@ -156,7 +156,7 @@ public final class GetApiToken extends MWAction {
   private void process(Document doc) throws JDOMException {
     try {
       Element elem = doc.getRootElement().getChild("query").getChild("pages")
-      .getChild("page");
+          .getChild("page");
 
       // process reply for token request
       switch (intoken) {

@@ -33,6 +33,7 @@ import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import lombok.extern.slf4j.Slf4j;
 import net.sourceforge.jwbf.core.actions.Get;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
@@ -40,8 +41,6 @@ import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.actions.util.SupportedBy;
 import net.sourceforge.jwbf.mediawiki.actions.util.VersionException;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
-
-import org.apache.log4j.Logger;
 
 /**
  * action class using the MediaWiki-api's "list=imagelinks" and later imageUsage.
@@ -51,22 +50,16 @@ import org.apache.log4j.Logger;
  * @since MediaWiki 1.9.0
  * 
  */
+@Slf4j
 @SupportedBy({ MW1_09, MW1_10, MW1_11, MW1_12, MW1_13, MW1_14, MW1_15, MW1_16, MW1_17 })
 public class ImageUsageTitles extends TitleQuery<String> {
 
   /** constant value for the illimit-parameter. **/
   private static final int LIMIT = 50;
 
-
-
-
-
-
   private boolean init = true;
 
   private final MediaWikiBot bot;
-
-  private final Logger log = Logger.getLogger(getClass());
 
   private final String imageName;
   private final int [] namespaces;
@@ -96,7 +89,7 @@ public class ImageUsageTitles extends TitleQuery<String> {
       case MW1_14:
       case MW1_15:
       case MW1_16:
-        handler = new Mw1_11Handler();  
+        handler = new Mw1_11Handler();
         break;
 
       case MW1_17:
@@ -211,9 +204,9 @@ public class ImageUsageTitles extends TitleQuery<String> {
         String ilcontinue) {
 
       String uS = "/api.php?action=query&list=imageusage"
-        + "&iucontinue=" + MediaWiki.encode(ilcontinue)
-        + "&iulimit=" + LIMIT + "&format=xml"
-        + "&iutitle=" + MediaWiki.encode(imageName);
+          + "&iucontinue=" + MediaWiki.encode(ilcontinue)
+          + "&iulimit=" + LIMIT + "&format=xml"
+          + "&iutitle=" + MediaWiki.encode(imageName);
       return new Get(uS);
     }
 
@@ -221,11 +214,11 @@ public class ImageUsageTitles extends TitleQuery<String> {
     public Get generateRequest(String imageName, String namespace) {
 
       String uS = "/api.php?action=query&list=imageusage"
-        + "&iutitle="
-        + MediaWiki.encode(imageName)
-        + ((namespace != null && namespace.length() != 0) ? ("&iunamespace=" + MediaWiki
-            .encode(namespace))
-            : "") + "&iulimit=" + LIMIT + "&format=xml";
+          + "&iutitle="
+          + MediaWiki.encode(imageName)
+          + ((namespace != null && namespace.length() != 0) ? ("&iunamespace=" + MediaWiki
+              .encode(namespace))
+              : "") + "&iulimit=" + LIMIT + "&format=xml";
       return new Get(uS);
 
     }
@@ -250,9 +243,9 @@ public class ImageUsageTitles extends TitleQuery<String> {
 
       Pattern p = Pattern.compile(
           "<query-continue>.*?"
-          + "<imageusage *iucontinue=\"([^\"]*)\" */>"
-          + ".*?</query-continue>",
-          Pattern.DOTALL | Pattern.MULTILINE);
+              + "<imageusage *iucontinue=\"([^\"]*)\" */>"
+              + ".*?</query-continue>",
+              Pattern.DOTALL | Pattern.MULTILINE);
 
       Matcher m = p.matcher(s);
 
@@ -279,8 +272,8 @@ public class ImageUsageTitles extends TitleQuery<String> {
         String ilcontinue) {
 
       String uS = "/api.php?action=query&list=imageusage"
-        + "&iucontinue=" + MediaWiki.encode(ilcontinue)
-        + "&iulimit=" + LIMIT + "&format=xml";
+          + "&iucontinue=" + MediaWiki.encode(ilcontinue)
+          + "&iulimit=" + LIMIT + "&format=xml";
       return new Get(uS);
     }
 
@@ -288,11 +281,11 @@ public class ImageUsageTitles extends TitleQuery<String> {
     public Get generateRequest(String imageName, String namespace) {
 
       String uS = "/api.php?action=query&list=imageusage"
-        + "&iutitle="
-        + MediaWiki.encode(imageName)
-        + ((namespace != null && namespace.length() != 0) ? ("&iunamespace=" + MediaWiki
-            .encode(namespace))
-            : "") + "&iulimit=" + LIMIT + "&format=xml";
+          + "&iutitle="
+          + MediaWiki.encode(imageName)
+          + ((namespace != null && namespace.length() != 0) ? ("&iunamespace=" + MediaWiki
+              .encode(namespace))
+              : "") + "&iulimit=" + LIMIT + "&format=xml";
       return new Get(uS);
 
     }
@@ -317,9 +310,9 @@ public class ImageUsageTitles extends TitleQuery<String> {
 
       Pattern p = Pattern.compile(
           "<query-continue>.*?"
-          + "<imageusage *iucontinue=\"([^\"]*)\" */>"
-          + ".*?</query-continue>",
-          Pattern.DOTALL | Pattern.MULTILINE);
+              + "<imageusage *iucontinue=\"([^\"]*)\" */>"
+              + ".*?</query-continue>",
+              Pattern.DOTALL | Pattern.MULTILINE);
 
       Matcher m = p.matcher(s);
 
@@ -332,7 +325,7 @@ public class ImageUsageTitles extends TitleQuery<String> {
     }
 
   }
-  
+
   private class Mw1_09Handler extends VersionHandler {
 
     @Override
@@ -340,8 +333,8 @@ public class ImageUsageTitles extends TitleQuery<String> {
         String ilcontinue) {
 
       String uS = "/api.php?action=query&list=imagelinks"
-        + "&ilcontinue=" + MediaWiki.encode(ilcontinue)
-        + "&illimit=" + LIMIT + "&format=xml";
+          + "&ilcontinue=" + MediaWiki.encode(ilcontinue)
+          + "&illimit=" + LIMIT + "&format=xml";
       return new Get(uS);
     }
 
@@ -349,10 +342,10 @@ public class ImageUsageTitles extends TitleQuery<String> {
     public Get generateRequest(String imageName, String namespace) {
 
       String uS = "/api.php?action=query&list=imagelinks"
-        + "&titles="
-        + MediaWiki.encode(imageName)
-        + ((namespace != null && namespace.length() != 0) ? ("&ilnamespace=" + MediaWiki.encode(namespace))
-            : "") + "&illimit=" + LIMIT + "&format=xml";
+          + "&titles="
+          + MediaWiki.encode(imageName)
+          + ((namespace != null && namespace.length() != 0) ? ("&ilnamespace=" + MediaWiki.encode(namespace))
+              : "") + "&illimit=" + LIMIT + "&format=xml";
       return new Get(uS);
 
     }
@@ -361,7 +354,7 @@ public class ImageUsageTitles extends TitleQuery<String> {
     public Collection<String> parseArticleTitles(String s) {
       Collection<String> titleCollection = new Vector<String>();
       Pattern p = Pattern.compile(
-      "<il pageid=\".*?\" ns=\".*?\" title=\"(.*?)\" />");
+          "<il pageid=\".*?\" ns=\".*?\" title=\"(.*?)\" />");
 
       Matcher m = p.matcher(s);
 

@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import lombok.extern.slf4j.Slf4j;
 import net.sourceforge.jwbf.core.actions.ContentProcessable;
 import net.sourceforge.jwbf.core.actions.HttpActionClient;
 import net.sourceforge.jwbf.core.actions.util.ActionException;
@@ -33,7 +34,6 @@ import net.sourceforge.jwbf.mediawiki.actions.meta.Siteinfo;
 import net.sourceforge.jwbf.mediawiki.actions.util.VersionException;
 import net.sourceforge.jwbf.mediawiki.contentRep.LoginData;
 
-import org.apache.log4j.Logger;
 
 /**
  * This class helps you to interact with each
@@ -66,9 +66,9 @@ import org.apache.log4j.Logger;
  * @see MediaWikiAdapterBot
  *
  */
+@Slf4j
 public class MediaWikiBot extends HttpBot implements WikiBot {
 
-  private static Logger LOGGER = Logger.getLogger(MediaWikiBot.class);
   private LoginData login = null;
 
   private CacheHandler store = null;
@@ -85,7 +85,7 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
    */
   public static final char [] INVALID_LABEL_CHARS = "[]{}<>|".toCharArray();
   private static final int READVAL = GetRevision.CONTENT
-  | GetRevision.COMMENT | GetRevision.USER | GetRevision.TIMESTAMP | GetRevision.IDS | GetRevision.FLAGS;
+      | GetRevision.COMMENT | GetRevision.USER | GetRevision.TIMESTAMP | GetRevision.IDS | GetRevision.FLAGS;
 
   private static final Set<String> emptySet = Collections.unmodifiableSet(new HashSet<String>());
 
@@ -154,7 +154,7 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
    * @see PostLoginOld
    */
   public void login(final String username, final String passwd, final String domain)
-  throws ActionException {
+      throws ActionException {
     try {
       LoginData login = new LoginData();
       switch (getVersion()) {
@@ -196,7 +196,7 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
    * @see PostLoginOld
    */
   public void login(final String username, final String passwd)
-  throws ActionException {
+      throws ActionException {
 
     login(username, passwd, null);
   }
@@ -212,14 +212,14 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
    * @see GetRevision
    */
   public synchronized Article readContent(final String name, final int properties)
-  throws ActionException, ProcessException {
+      throws ActionException, ProcessException {
     return new Article(this, readData(name, properties));
   }
   /**
    * {@inheritDoc}
    */
   public synchronized SimpleArticle readData(final String name, final int properties)
-  throws ActionException, ProcessException {
+      throws ActionException, ProcessException {
 
     GetRevision ac;
     if (store != null) {
@@ -228,12 +228,12 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
         performAction(ac);
 
         SimpleArticle storeSa = store.get(name);
-        if (LOGGER.isDebugEnabled()) {
-          LOGGER.debug("stored article (" + storeSa.getTitle() + ") revid: " + storeSa.getRevisionId());
+        if (log.isDebugEnabled()) {
+          log.debug("stored article (" + storeSa.getTitle() + ") revid: " + storeSa.getRevisionId());
         }
         SimpleArticle liveSa = ac.getArticle();
-        if (LOGGER.isDebugEnabled()) {
-          LOGGER.debug("live article revid: " + liveSa.getRevisionId());
+        if (log.isDebugEnabled()) {
+          log.debug("live article revid: " + liveSa.getRevisionId());
         }
         if (liveSa.getRevisionId().equals(storeSa.getRevisionId())) {
 
@@ -244,7 +244,7 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
       ac = new GetRevision(getVersion(), name, properties);
 
       performAction(ac);
-      LOGGER.debug("update cache (put)");
+      log.debug("update cache (put)");
       store.put(ac.getArticle());
 
     } else {
@@ -292,7 +292,7 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
    * @see GetRevision
    */
   public synchronized Article readContent(final String name)
-  throws ActionException, ProcessException {
+      throws ActionException, ProcessException {
     return readContent(name, READVAL);
 
   }
@@ -307,7 +307,7 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
    *
    */
   public synchronized void writeContent(final SimpleArticle simpleArticle)
-  throws ActionException, ProcessException {
+      throws ActionException, ProcessException {
     if (!isLoggedIn()) {
       throw new ActionException("Please login first");
     }
@@ -325,8 +325,8 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
       String label = simpleArticle.getTitle();
       SimpleArticle sa;
       if (store.containsKey(label)) {
-        if (LOGGER.isDebugEnabled())
-          LOGGER.debug("contains article: " + label); // TODO RM
+        if (log.isDebugEnabled())
+          log.debug("contains article: " + label); // TODO RM
         sa = store.get(label);
       } else {
         sa = new SimpleArticle(label);
@@ -336,8 +336,8 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
       sa.setEditSummary(simpleArticle.getEditSummary());
       sa.setMinorEdit(simpleArticle.isMinorEdit());
       //			sa.setRevisionId((Integer.parseInt(sa.getRevisionId()) + 1) + "");
-      if (LOGGER.isDebugEnabled())
-        LOGGER.debug("update cache (write)");
+      if (log.isDebugEnabled())
+        log.debug("update cache (write)");
       store.put(sa);
     }
     if (simpleArticle.getText().trim().length() < 1)
@@ -364,7 +364,7 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
    * @throws ProcessException on access problems
    */
   public Userinfo getUserinfo() throws ActionException, ProcessException {
-    LOGGER.debug("get userinfo");
+    log.debug("get userinfo");
     if (ui == null || loginChangeUserInfo) {
       GetUserinfo a;
       try {
@@ -427,7 +427,7 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
    */
   @Override
   public synchronized String performAction(ContentProcessable a)
-  throws ActionException, ProcessException {
+      throws ActionException, ProcessException {
     if (a.isSelfExecuter()) {
       throw new ActionException("this is a selfexcecuting action, "
           + "please do not perform this action manually");
@@ -443,7 +443,6 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
    */
   public final Version getVersion() throws RuntimeException {
     if (version == null || loginChangeVersion) {
-
       try {
         GetVersion gs = new GetVersion();
         performAction(gs);
@@ -451,10 +450,10 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
         version = gs.getVersion();
         loginChangeVersion = false;
       } catch (JwbfException e) {
-        LOGGER.error(e.getClass().getName() + e.getLocalizedMessage());
+        log.error(e.getClass().getName() + e.getLocalizedMessage());
         throw new RuntimeException(e.getLocalizedMessage());
       }
-      LOGGER.debug("Version is: " + version.name());
+      log.debug("Version is: " + version.name());
 
     }
     return version;

@@ -22,13 +22,12 @@ import java.text.ParseException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import lombok.extern.slf4j.Slf4j;
 import net.sourceforge.jwbf.core.actions.ContentProcessable;
 import net.sourceforge.jwbf.core.actions.Get;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.core.actions.util.ProcessException;
 import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
-
-import org.apache.log4j.Logger;
 
 /**
  * Reads the content of a given article.
@@ -38,140 +37,137 @@ import org.apache.log4j.Logger;
  * @supportedBy Inyoka ??? TODO find out version
  * 
  */
+@Slf4j
 public class GetRevision implements ContentProcessable {
 
-	private final SimpleArticle sa;
+  private final SimpleArticle sa;
+
+  private boolean first = true;
+  private boolean second = true;
+  private boolean third = true;
+  private final Get contentGet;
+  private Get metaGet;
+  private Get versionGet;
+  private int version = 0;
+
+  /**
+   * TODO follow redirects.
+   * @param articlename a
+   * @throws ProcessException if arcticlename is empty
+   */
+  public GetRevision(final String articlename) throws ProcessException {
+    if (articlename.length() <= 0) {
+      throw new ProcessException("articlename is empty");
+    }
+    sa = new SimpleArticle();
+    sa.setTitle(articlename);
 
 
-	private static final Logger LOG = Logger.getLogger(GetRevision.class);
-
-
-	private boolean first = true;
-	private boolean second = true;
-	private boolean third = true;
-	private final Get contentGet;
-	private Get metaGet;
-	private Get versionGet;
-	private int version = 0;
-
-	/**
-	 * TODO follow redirects.
-	 * @param articlename a
-	 * @throws ProcessException if arcticlename is empty
-	 */
-	public GetRevision(final String articlename) throws ProcessException {
-		if (articlename.length() <= 0) {
-			throw new ProcessException("articlename is empty");
-		}
-		sa = new SimpleArticle();
-		sa.setTitle(articlename);
-
-		
-		contentGet = new Get("/" + articlename + "?action=export&format=raw&");
-		versionGet = new Get("/" + articlename);
-		if (LOG.isDebugEnabled()) {
-			LOG.debug(contentGet.getRequest());
-			LOG.debug(versionGet.getRequest());
+    contentGet = new Get("/" + articlename + "?action=export&format=raw&");
+    versionGet = new Get("/" + articlename);
+		if (log.isDebugEnabled()) {
+			log.debug(contentGet.getRequest());
+			log.debug(versionGet.getRequest());
 		}
 
-	}
+  }
 
-	
-	public String processReturningText(String s, HttpAction hm)
-			throws ProcessException {
-		if (hm == contentGet) {
-			sa.setText(s);
-		} else if (hm == versionGet) {
-			parseVersion(s);
-			metaGet = new Get("/" + sa.getTitle() + "?action=diff&version=" + version);
-			
-		} else if (hm == metaGet) {
-			parse(s);
-		}
-		return "";
-	}
 
-	private void parse(String s) {
-//		System.err.println(s); // TODO RM
-		Pattern p = Pattern.compile("class=\"author\">([^\"]*)<",
-				Pattern.DOTALL | Pattern.MULTILINE);
+  public String processReturningText(String s, HttpAction hm)
+      throws ProcessException {
+    if (hm == contentGet) {
+      sa.setText(s);
+    } else if (hm == versionGet) {
+      parseVersion(s);
+      metaGet = new Get("/" + sa.getTitle() + "?action=diff&version=" + version);
 
-		Matcher m = p.matcher(s);
+    } else if (hm == metaGet) {
+      parse(s);
+    }
+    return "";
+  }
 
-		if (m.find()) {
-			sa.setEditor(m.group(1).trim());
-		}
-		// find edittimestamp
-		p = Pattern.compile("class=\"time\">([^\"]*)<", Pattern.DOTALL
-				| Pattern.MULTILINE);
-		m = p.matcher(s);
+  private static final Pattern authorPattern = Pattern.compile("class=\"author\">([^\"]*)<",
+      Pattern.DOTALL | Pattern.MULTILINE);
+  private static final Pattern editTimestampPattern = Pattern.compile("class=\"time\">([^\"]*)<", Pattern.DOTALL
+      | Pattern.MULTILINE);
+  private static final Pattern editMessagePattern = Pattern.compile("class=\"message\"><p>([^\"]*)</p>", Pattern.DOTALL
+      | Pattern.MULTILINE);
+  private static final Pattern versionPattern = Pattern.compile("action=diff&amp;version=([0-9]*)"
+      , Pattern.DOTALL | Pattern.MULTILINE);
+  private void parse(String s) {
+    //		System.err.println(s); // TODO RM
 
-		if (m.find()) {
+    Matcher m = authorPattern.matcher(s);
 
-			try {
-				sa.setEditTimestamp(m.group(1).trim());
+    if (m.find()) {
+      sa.setEditor(m.group(1).trim());
+    }
+    // find edittimestamp
+    m = editTimestampPattern.matcher(s);
 
-			} catch (ParseException e) {
-				e.printStackTrace();
-			}
-		} else {
-			System.err.println("no date found"); // TODO RM
-		}
-		// find edit summ
-		p = Pattern.compile("class=\"message\"><p>([^\"]*)</p>", Pattern.DOTALL
-				| Pattern.MULTILINE);
-		m = p.matcher(s);
+    if (m.find()) {
 
-		if (m.find()) {
+      try {
+        sa.setEditTimestamp(m.group(1).trim());
 
-			sa.setEditSummary(m.group(1).trim());
+      } catch (ParseException e) {
+        throw new RuntimeException(e);
+      }
+    } else {
+      throw new RuntimeException("no date found"); // TODO RM
+    }
+    // find edit summ
+    m = editMessagePattern.matcher(s);
 
-		} else {
-			System.err.println("no edit sum found found"); // TODO RM
-		}
-	}
-	
-	private void parseVersion(String s) {
-		Pattern p = Pattern.compile("action=diff&amp;version=([0-9]*)"
-				, Pattern.DOTALL | Pattern.MULTILINE);
+    if (m.find()) {
 
-		Matcher m = p.matcher(s);
+      sa.setEditSummary(m.group(1).trim());
 
-		if (m.find()) {
-			version = Integer.parseInt(m.group(1));
-		}
-	}
+    } else {
+      throw new RuntimeException("no edit sum found found"); // TODO RM
+    }
+  }
 
-	public SimpleArticle getArticle() {
-		return sa;
-	}
+  private void parseVersion(String s) {
 
-	
-	public boolean hasMoreMessages() {
-		if (first || second || third )
-			return true;
-		return false;
-	}
+    Matcher m = versionPattern.matcher(s);
 
-	public HttpAction getNextMessage() {
-		if (first) {
-			first = false;
-			return contentGet;
-		} else if (second) {
-			second = false;
-			return versionGet;
-		} else  {
-			third = false;
-			return metaGet;
-		}
-		
-	}
+    if (m.find()) {
+      version = Integer.parseInt(m.group(1));
+    }
+  }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean isSelfExecuter() {
-		return false;
-	}
+  public SimpleArticle getArticle() {
+    return sa;
+  }
+
+
+  public boolean hasMoreMessages() {
+    if (first || second || third )
+      return true;
+    return false;
+  }
+
+  public HttpAction getNextMessage() {
+    if (first) {
+      first = false;
+      return contentGet;
+    } else if (second) {
+      second = false;
+      return versionGet;
+    } else  {
+      third = false;
+      return metaGet;
+    }
+
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public boolean isSelfExecuter() {
+    return false;
+  }
 
 }

@@ -6,6 +6,7 @@ import net.sourceforge.jwbf.TestHelper;
 import net.sourceforge.jwbf.core.bots.util.JwbfException;
 import net.sourceforge.jwbf.core.contentRep.ArticleMeta;
 import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
+import net.sourceforge.jwbf.mediawiki.BotFactory;
 import net.sourceforge.jwbf.mediawiki.LiveTestFather;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.actions.editing.GetApiToken;
@@ -38,16 +39,13 @@ public class RevisionTest extends LiveTestFather {
 
   }
 
-
-
-
   /**
    * Test write and read.
    * @throws Exception a
    */
   @Test
   public final void getRevisionMW1x09() throws Exception {
-    bot = getMediaWikiBot(Version.MW1_09, true);
+    bot = BotFactory.getMediaWikiBot(Version.MW1_09, true);
     doTest(bot);
   }
 
@@ -57,7 +55,7 @@ public class RevisionTest extends LiveTestFather {
    */
   @Test
   public final void getRevisionMW1x10() throws Exception {
-    bot = getMediaWikiBot(Version.MW1_10, true);
+    bot = BotFactory.getMediaWikiBot(Version.MW1_10, true);
     doTest(bot);
   }
 
@@ -67,7 +65,7 @@ public class RevisionTest extends LiveTestFather {
    */
   @Test
   public final void getRevisionMW1x11() throws Exception {
-    bot = getMediaWikiBot(Version.MW1_11, true);
+    bot = BotFactory.getMediaWikiBot(Version.MW1_11, true);
     doTest(bot);
   }
 
@@ -77,7 +75,7 @@ public class RevisionTest extends LiveTestFather {
    */
   @Test
   public final void getRevisionMW1x12() throws Exception {
-    bot = getMediaWikiBot(Version.MW1_12, true);
+    bot = BotFactory.getMediaWikiBot(Version.MW1_12, true);
     doTest(bot);
   }
 
@@ -87,7 +85,7 @@ public class RevisionTest extends LiveTestFather {
    */
   @Test
   public final void getRevisionMW1x13() throws Exception {
-    bot = getMediaWikiBot(Version.MW1_13, true);
+    bot = BotFactory.getMediaWikiBot(Version.MW1_13, true);
     doTest(bot);
   }
 
@@ -97,7 +95,7 @@ public class RevisionTest extends LiveTestFather {
    */
   @Test
   public final void getRevisionMW1x14() throws Exception {
-    bot = getMediaWikiBot(Version.MW1_14, true);
+    bot = BotFactory.getMediaWikiBot(Version.MW1_14, true);
     doTest(bot);
   }
 
@@ -107,7 +105,7 @@ public class RevisionTest extends LiveTestFather {
    */
   @Test
   public final void getRevisionMW1x15() throws Exception {
-    bot = getMediaWikiBot(Version.MW1_15, true);
+    bot = BotFactory.getMediaWikiBot(Version.MW1_15, true);
     doTest(bot);
   }
 
@@ -117,7 +115,7 @@ public class RevisionTest extends LiveTestFather {
    */
   @Test
   public final void getRevisionMW1x16() throws Exception {
-    bot = getMediaWikiBot(Version.MW1_16, true);
+    bot = BotFactory.getMediaWikiBot(Version.MW1_16, true);
     doTest(bot);
   }
 

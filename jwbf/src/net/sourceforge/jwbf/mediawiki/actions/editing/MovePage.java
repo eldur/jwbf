@@ -9,6 +9,7 @@ import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_16;
 import java.io.IOException;
 import java.io.StringReader;
 
+import lombok.extern.slf4j.Slf4j;
 import net.sourceforge.jwbf.core.actions.Post;
 import net.sourceforge.jwbf.core.actions.util.ActionException;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
@@ -18,7 +19,6 @@ import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.actions.util.SupportedBy;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 
-import org.apache.log4j.Logger;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -56,10 +56,10 @@ import org.xml.sax.InputSource;
  *
  * @author Christoph Giesel
  */
+@Slf4j
 @SupportedBy({MW1_12, MW1_13, MW1_14, MW1_15, MW1_16})
 public class MovePage extends MWAction {
 
-  private final Logger log = Logger.getLogger(MovePage.class);
   private final String oldtitle;
   private final String newtitle;
   private final String reason;
@@ -95,15 +95,15 @@ public class MovePage extends MWAction {
     if (!bot.getUserinfo().getRights().contains("move")) {
       throw new ProcessException(
           "The given user doesn't have the rights to move. "
-          + "Add '$wgGroupPermissions['bot']['move'] = true;' "
-          + "to your MediaWiki's LocalSettings.php might solve this problem.");
+              + "Add '$wgGroupPermissions['bot']['move'] = true;' "
+              + "to your MediaWiki's LocalSettings.php might solve this problem.");
     }
 
     if (withsubpages && !bot.getUserinfo().getRights().contains("move-subpages")) {
       throw new ProcessException(
           "The given user doesn't have the rights to move subpages. "
-          + "Add '$wgGroupPermissions['bot']['move-subpages'] = true;' "
-          + "to your MediaWiki's LocalSettings.php might solve this problem.");
+              + "Add '$wgGroupPermissions['bot']['move-subpages'] = true;' "
+              + "to your MediaWiki's LocalSettings.php might solve this problem.");
     }
   }
 
@@ -115,20 +115,20 @@ public class MovePage extends MWAction {
     if (token.getToken() == null || token.getToken().length() == 0) {
       throw new IllegalArgumentException(
           "The argument 'token' must not be \""
-          + String.valueOf(token.getToken()) + "\"");
+              + String.valueOf(token.getToken()) + "\"");
     }
     if (log.isTraceEnabled()) {
       log.trace("enter MovePage.generateMoveRequest(String)");
     }
 
     String uS = "/api.php" + "?action=move"
-    + "&from=" + MediaWiki.encode(oldtitle)
-    + "&to=" + MediaWiki.encode(newtitle)
-    + "&token=" + MediaWiki.encode(token.getToken())
-    + (withsubpages ? "&movesubpages" : "")
-    + (noredirect ? "&noredirect" : "")
-    + ((reason != null && reason.length() != 0) ? "&reason=" + MediaWiki.encode(reason) : "")
-    + "&movetalk&format=xml";
+        + "&from=" + MediaWiki.encode(oldtitle)
+        + "&to=" + MediaWiki.encode(newtitle)
+        + "&token=" + MediaWiki.encode(token.getToken())
+        + (withsubpages ? "&movesubpages" : "")
+        + (noredirect ? "&noredirect" : "")
+        + ((reason != null && reason.length() != 0) ? "&reason=" + MediaWiki.encode(reason) : "")
+        + "&movetalk&format=xml";
 
     if (log.isDebugEnabled()) {
       log.debug("move url: \"" + uS + "\"");
@@ -145,7 +145,7 @@ public class MovePage extends MWAction {
    */
   @Override
   public String processReturningText(String s, HttpAction hm)
-  throws ProcessException {
+      throws ProcessException {
     super.processReturningText(s, hm);
 
     if (moveToken) {
@@ -170,7 +170,7 @@ public class MovePage extends MWAction {
         String msg = e.getMessage();
         if (s.startsWith("unknown_action:")) {
           msg = "unknown_action; Adding '$wgEnableWriteAPI = true;' to your MediaWiki's "
-            + "LocalSettings.php might remove this problem.";
+              + "LocalSettings.php might remove this problem.";
         }
         log.error(msg, e);
         throw new ProcessException(msg, e);

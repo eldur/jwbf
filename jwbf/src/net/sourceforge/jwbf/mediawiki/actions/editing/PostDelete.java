@@ -9,6 +9,7 @@ import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_16;
 import java.io.IOException;
 import java.io.StringReader;
 
+import lombok.extern.slf4j.Slf4j;
 import net.sourceforge.jwbf.core.actions.Post;
 import net.sourceforge.jwbf.core.actions.util.ActionException;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
@@ -18,7 +19,6 @@ import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.actions.util.SupportedBy;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 
-import org.apache.log4j.Logger;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -50,10 +50,9 @@ import org.xml.sax.InputSource;
  *
  * @author Max Gensthaler
  */
+@Slf4j
 @SupportedBy({ MW1_12, MW1_13, MW1_14, MW1_15, MW1_16 })
 public class PostDelete extends MWAction {
-  private final Logger log = Logger.getLogger(PostDelete.class);
-
 
   private final String title;
 
@@ -78,8 +77,8 @@ public class PostDelete extends MWAction {
     if (!bot.getUserinfo().getRights().contains("delete")) {
       throw new ProcessException(
           "The given user doesn't have the rights to delete. "
-          + "Add '$wgGroupPermissions['bot']['delete'] = true;' "
-          + "to your MediaWiki's LocalSettings.php might solve this problem.");
+              + "Add '$wgGroupPermissions['bot']['delete'] = true;' "
+              + "to your MediaWiki's LocalSettings.php might solve this problem.");
     }
 
   }
@@ -92,15 +91,15 @@ public class PostDelete extends MWAction {
     if (token.getToken() == null || token.getToken().length() == 0) {
       throw new IllegalArgumentException(
           "The argument 'token' must not be \""
-          + String.valueOf(token.getToken()) + "\"");
+              + String.valueOf(token.getToken()) + "\"");
     }
     if (log.isTraceEnabled()) {
       log.trace("enter PostDelete.generateDeleteRequest(String)");
     }
 
     String uS = "/api.php" + "?action=delete" + "&title="
-    + MediaWiki.encode(title) + "&token="
-    + MediaWiki.encode(token.getToken()) + "&format=xml";
+        + MediaWiki.encode(title) + "&token="
+        + MediaWiki.encode(token.getToken()) + "&format=xml";
     if (log.isDebugEnabled()) {
       log.debug("delete url: \"" + uS + "\"");
     }
@@ -118,7 +117,7 @@ public class PostDelete extends MWAction {
    */
   @Override
   public String processReturningText(String s, HttpAction hm)
-  throws ProcessException {
+      throws ProcessException {
     super.processReturningText(s, hm);
 
     if (delToken) {
@@ -143,7 +142,7 @@ public class PostDelete extends MWAction {
         String msg = e.getMessage();
         if (s.startsWith("unknown_action:")) {
           msg = "unknown_action; Adding '$wgEnableWriteAPI = true;' to your MediaWiki's "
-            + "LocalSettings.php might remove this problem.";
+              + "LocalSettings.php might remove this problem.";
         }
         log.error(msg, e);
         throw new ProcessException(msg, e);

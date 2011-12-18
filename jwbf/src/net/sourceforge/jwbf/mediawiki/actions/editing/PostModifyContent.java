@@ -30,6 +30,7 @@ import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_16;
 import java.util.Hashtable;
 import java.util.Set;
 
+import lombok.extern.slf4j.Slf4j;
 import net.sourceforge.jwbf.core.Misc;
 import net.sourceforge.jwbf.core.actions.Get;
 import net.sourceforge.jwbf.core.actions.Post;
@@ -45,8 +46,6 @@ import net.sourceforge.jwbf.mediawiki.actions.util.SupportedBy;
 import net.sourceforge.jwbf.mediawiki.actions.util.VersionException;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 
-import org.apache.log4j.Logger;
-
 /**
  *
  *
@@ -55,6 +54,7 @@ import org.apache.log4j.Logger;
  *
  * @author Thomas Stock
  */
+@Slf4j
 @SupportedBy({ MW1_09, MW1_10, MW1_11, MW1_12, MW1_13, MW1_14, MW1_15, MW1_16})
 public class PostModifyContent extends MWAction {
 
@@ -62,7 +62,6 @@ public class PostModifyContent extends MWAction {
   private boolean second = true;
 
   private final ContentAccessable a;
-  private final Logger log = Logger.getLogger(PostModifyContent.class);
   private Hashtable<String, String> tab = new Hashtable<String, String>();
   private MediaWikiBot bot;
   private GetApiToken apiReq = null;
@@ -116,8 +115,8 @@ public class PostModifyContent extends MWAction {
 
       } catch (VersionException e) {
         String uS = "/index.php?title="
-          + MediaWiki.encode(a.getTitle())
-          + "&action=edit&dontcountme=s";
+            + MediaWiki.encode(a.getTitle()) // TODO check encoding here
+            + "&action=edit&dontcountme=s";
         initOldGet = new Get(uS);
         first = false;
         return initOldGet;
@@ -148,7 +147,7 @@ public class PostModifyContent extends MWAction {
 
     } else {
       String uS = "/index.php?title=" + MediaWiki.encode(a.getTitle())
-      + "&action=submit";
+          + "&action=submit";
 
       postModify = new Post(uS);
       postModify.addParam("wpSave", "Save");
@@ -194,7 +193,7 @@ public class PostModifyContent extends MWAction {
    */
   @Override
   public String processReturningText(String s, HttpAction hm)
-  throws ProcessException {
+      throws ProcessException {
     if (s.contains("error")) {
       if (s.length() > 700) {
         s = s.substring(0, 700);
@@ -204,13 +203,11 @@ public class PostModifyContent extends MWAction {
     if (initOldGet != null && hm.getRequest().equals(initOldGet.getRequest())) {
       getWpValues(s, tab);
       if (log.isDebugEnabled()) {
-        log.debug(tab);
+        log.debug(tab.toString());
       }
 
     } else if (apiGet != null && hm.getRequest().equals(apiGet.getRequest())) {
-      if (log.isDebugEnabled()) {
-        log.debug("parseapi");
-      }
+      log.debug("parseapi");
       apiReq.processReturningText(s, hm);
     }
 

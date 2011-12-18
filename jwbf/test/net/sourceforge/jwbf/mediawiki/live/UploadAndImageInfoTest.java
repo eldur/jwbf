@@ -22,6 +22,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.awt.image.BufferedImage;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -31,6 +32,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
+
+import javax.imageio.ImageIO;
 
 import net.sourceforge.jwbf.TestHelper;
 import net.sourceforge.jwbf.core.actions.util.ActionException;
@@ -226,20 +229,29 @@ public class UploadAndImageInfoTest extends LiveTestFather {
       } catch (Exception e) {
         // do nothing
       }
+      BufferedImage img = ImageIO.read(sf.getFile());
+      int upWidth = img.getWidth();
+      int upHeight = img.getHeight();
       FileUpload up = new FileUpload(sf, bot);
 
       bot.performAction(up);
       URL url = null;
+      URL urlSizeVar = null;
+      int newWidth = 0;
+      int newHeight = 123;
       try {
 
-        url = new URL(new ImageInfo(bot, sf.getTitle()).getUrlAsString());
+        url = new ImageInfo(bot, sf.getTitle()).getUrl();
       } catch (ProcessException e) {
         throw new ProcessException(e.getLocalizedMessage() + "; \n is upload enabled? $wgEnableUploads = true;");
       }
+      urlSizeVar = new ImageInfo(bot, sf.getTitle(), new String [][]{{ImageInfo.HEIGHT, newHeight + ""}}).getUrl();
       Assert.assertTrue("file not found "
           + url , url.toExternalForm().length() - bot.getHostUrl().length() > 2);
       File file = new File(getValue("validFile"));
       assertFile(url, file);
+      assertImageDimension(url, upWidth, upHeight);
+      assertImageDimension(urlSizeVar, newWidth, newHeight);
       registerTestedVersion(FileUpload.class, bot.getVersion());
       registerTestedVersion(ImageInfo.class, bot.getVersion());
   }
@@ -251,10 +263,17 @@ public class UploadAndImageInfoTest extends LiveTestFather {
    */
   protected final void assertFile(URL url, File file) throws Exception {
     File temp = new File("temp.file");
+
     download(url.toExternalForm(), temp);
     Assert.assertTrue("files are not ident", filesAreIdentical(temp, file));
 
     if (!temp.delete()) throw new RuntimeException("unable to delete file");
+  }
+
+  protected void assertImageDimension(URL url, int width, int height) throws IOException {
+    BufferedImage img = ImageIO.read(url);
+    assertEquals(height, img.getHeight());
+    assertEquals(width, img.getWidth());
   }
   /**
    * 

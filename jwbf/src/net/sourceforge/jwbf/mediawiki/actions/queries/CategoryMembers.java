@@ -26,6 +26,7 @@ import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_15;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import lombok.extern.slf4j.Slf4j;
 import net.sourceforge.jwbf.core.actions.Get;
 import net.sourceforge.jwbf.core.actions.util.ProcessException;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
@@ -33,8 +34,6 @@ import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.actions.util.SupportedBy;
 import net.sourceforge.jwbf.mediawiki.actions.util.VersionException;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
-
-import org.apache.log4j.Logger;
 
 
 /**
@@ -45,7 +44,7 @@ import org.apache.log4j.Logger;
  * TODO change visibilty to package, refactor test
  * @author Thomas Stock
  */
-
+@Slf4j
 @SupportedBy({ MW1_11, MW1_12, MW1_13, MW1_14, MW1_15 })
 abstract class CategoryMembers extends MWAction {
 
@@ -74,9 +73,6 @@ abstract class CategoryMembers extends MWAction {
 
   protected final int [] namespace;
   private String namespaceStr = "";
-
-  private Logger log = Logger.getLogger(getClass());
-
 
   /**
    * The private constructor, which is used to create follow-up actions.
@@ -161,9 +157,9 @@ abstract class CategoryMembers extends MWAction {
 
     Pattern p = Pattern.compile(
         "<query-continue>.*?"
-        + "<categorymembers *cmcontinue=\"([^\"]*)\" */>"
-        + ".*?</query-continue>",
-        Pattern.DOTALL | Pattern.MULTILINE);
+            + "<categorymembers *cmcontinue=\"([^\"]*)\" */>"
+            + ".*?</query-continue>",
+            Pattern.DOTALL | Pattern.MULTILINE);
 
     Matcher m = p.matcher(s);
 
@@ -188,7 +184,7 @@ abstract class CategoryMembers extends MWAction {
     // get the backlink titles and add them all to the titleCollection
 
     Pattern p = Pattern.compile(
-    "<cm pageid=\"(.*?)\" ns=\"(.*?)\" title=\"(.*?)\" />");
+        "<cm pageid=\"(.*?)\" ns=\"(.*?)\" title=\"(.*?)\" />");
 
     Matcher m = p.matcher(s);
 
@@ -217,10 +213,10 @@ abstract class CategoryMembers extends MWAction {
         nsinj = "&cmnamespace=" + MediaWiki.encode(namespaceStr);
       }
       uS = "/api.php?action=query&list=categorymembers"
-        + "&cmcategory=" + MediaWiki.encode(categoryName)
-        + nsinj
-        + "&cmcontinue=" + MediaWiki.encode(cmcontinue)
-        + "&cmlimit=" + LIMIT + "&format=xml";
+          + "&cmcategory=" + MediaWiki.encode(categoryName)
+          + nsinj
+          + "&cmcontinue=" + MediaWiki.encode(cmcontinue)
+          + "&cmlimit=" + LIMIT + "&format=xml";
       return uS;
     }
 
@@ -233,9 +229,9 @@ abstract class CategoryMembers extends MWAction {
       }
 
       uS = "/api.php?action=query&list=categorymembers"
-        + "&cmcategory=" + MediaWiki.encode(categoryName)
-        + nsinj
-        + "&cmlimit=" + LIMIT + "&format=xml";
+          + "&cmcategory=" + MediaWiki.encode(categoryName)
+          + nsinj
+          + "&cmlimit=" + LIMIT + "&format=xml";
       return uS;
     }
 
@@ -259,10 +255,10 @@ abstract class CategoryMembers extends MWAction {
       //TODO: do not add Category: - instead, change other methods' descs (e.g. in MediaWikiBot)
 
       uS = "/api.php?action=query&list=categorymembers"
-        + "&cmtitle=Category:" + MediaWiki.encode(categoryName)
-        + nsinj
-        + "&cmcontinue=" + MediaWiki.encode(cmcontinue)
-        + "&cmlimit=" + LIMIT + "&format=xml";
+          + "&cmtitle=Category:" + MediaWiki.encode(categoryName)
+          + nsinj
+          + "&cmcontinue=" + MediaWiki.encode(cmcontinue)
+          + "&cmlimit=" + LIMIT + "&format=xml";
       return uS;
     }
 
@@ -276,9 +272,9 @@ abstract class CategoryMembers extends MWAction {
       //TODO: do not add Category: - instead, change other methods' descs (e.g. in MediaWikiBot)
 
       uS = "/api.php?action=query&list=categorymembers"
-        + "&cmtitle=Category:" + MediaWiki.encode(categoryName)
-        + nsinj
-        + "&cmlimit=" + LIMIT + "&format=xml";
+          + "&cmtitle=Category:" + MediaWiki.encode(categoryName)
+          + nsinj
+          + "&cmlimit=" + LIMIT + "&format=xml";
       return uS;
     }
 

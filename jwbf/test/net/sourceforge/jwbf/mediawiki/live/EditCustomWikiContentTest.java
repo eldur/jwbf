@@ -87,7 +87,20 @@ public class EditCustomWikiContentTest extends LiveTestFather {
     sa.setText(text);
     bot.writeContent(sa);
     assertEquals(text, bot.readContent(title).getText());
+  }
 
+  @Test
+  public final void contentModifyWithSpacetitle() throws Exception {
+    String title = "Delete 1";
+    SimpleArticle sa;
+    sa = new SimpleArticle(title);
+    sa.setText(getRandom(64));
+    bot.writeContent(sa);
+    sa = bot.readContent(title).getSimpleArticle();
+    String text = "test " + (random.nextInt(1000));
+    sa.setText(text);
+    bot.writeContent(sa);
+    assertEquals(text, bot.readContent(title).getText());
   }
 
   /**

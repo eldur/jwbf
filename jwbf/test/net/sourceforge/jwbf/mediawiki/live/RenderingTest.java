@@ -19,6 +19,7 @@
 package net.sourceforge.jwbf.mediawiki.live;
 
 
+import static org.junit.Assert.fail;
 import net.sourceforge.jwbf.TestHelper;
 import net.sourceforge.jwbf.core.actions.util.ActionException;
 import net.sourceforge.jwbf.mediawiki.LiveTestFather;
@@ -86,6 +87,7 @@ public class RenderingTest extends LiveTestFather {
     bot = getMediaWikiBot(Version.MW1_09, true);
     doTest(bot);
     Assert.assertTrue("Wrong Wiki Version " + bot.getVersion(), Version.MW1_09.equals(bot.getVersion()));
+    fail();
   }
   /**
    * 
@@ -97,6 +99,7 @@ public class RenderingTest extends LiveTestFather {
     bot = getMediaWikiBot(Version.MW1_10, true);
     doTest(bot);
     Assert.assertTrue("Wrong Wiki Version " + bot.getVersion(), Version.MW1_10.equals(bot.getVersion()));
+    fail();
   }
 
   /**
@@ -109,6 +112,7 @@ public class RenderingTest extends LiveTestFather {
     bot = getMediaWikiBot(Version.MW1_11, true);
     doTest(bot);
     Assert.assertTrue("Wrong Wiki Version " + bot.getVersion(), Version.MW1_11.equals(bot.getVersion()));
+    fail();
   }
 
   /**

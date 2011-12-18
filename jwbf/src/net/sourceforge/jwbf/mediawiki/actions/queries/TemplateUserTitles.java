@@ -34,6 +34,7 @@ import java.util.Collection;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import lombok.extern.slf4j.Slf4j;
 import net.sourceforge.jwbf.core.actions.Get;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.core.actions.util.ProcessException;
@@ -42,8 +43,6 @@ import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.actions.util.SupportedBy;
 import net.sourceforge.jwbf.mediawiki.actions.util.VersionException;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
-
-import org.apache.log4j.Logger;
 
 
 /**
@@ -55,6 +54,7 @@ import org.apache.log4j.Logger;
  * @since MediaWiki 1.9.0
  * 
  */
+@Slf4j
 @SupportedBy({ MW1_09, MW1_10, MW1_11, MW1_12, MW1_13, MW1_14, MW1_15, MW1_16, MW1_17 })
 public class TemplateUserTitles extends TitleQuery<String> {
 
@@ -73,7 +73,6 @@ public class TemplateUserTitles extends TitleQuery<String> {
   private final int [] namespaces;
 
 
-  private Logger log = Logger.getLogger(getClass());
   /**
    * The public constructor. It will have an MediaWiki-request generated,
    * which is then added to msgs. When it is answered,
@@ -127,28 +126,28 @@ public class TemplateUserTitles extends TitleQuery<String> {
     } else {
 
       uS = "/api.php?action=query&list=embeddedin" + "&eicontinue="
-      + MediaWiki.encode(eicontinue) + "&eilimit=" + LIMIT
-      + ((namespace != null && namespace.length() != 0) ? ("&einamespace=" + MediaWiki.encode(namespace)) : "")
-      + "&format=xml";
-      
+          + MediaWiki.encode(eicontinue) + "&eilimit=" + LIMIT
+          + ((namespace != null && namespace.length() != 0) ? ("&einamespace=" + MediaWiki.encode(namespace)) : "")
+          + "&format=xml";
+
       switch (bot.getVersion()) {
-      	case MW1_09:
-      	case MW1_10:
-      	case MW1_11:
-      	case MW1_12:
-      	case MW1_13:
-      	case MW1_14:
-      	case MW1_15:
-      	case MW1_16:      		
-      		break;
-      		
-      	case MW1_17:
-      	default:      		
-      		uS += "&eititle=" + MediaWiki.encode(templateName);
-      		break;
-      		
+        case MW1_09:
+        case MW1_10:
+        case MW1_11:
+        case MW1_12:
+        case MW1_13:
+        case MW1_14:
+        case MW1_15:
+        case MW1_16:
+          break;
+
+        case MW1_17:
+        default:
+          uS += "&eititle=" + MediaWiki.encode(templateName);
+          break;
+
       }
-      
+
     }
 
     return new Get(uS);
@@ -183,9 +182,9 @@ public class TemplateUserTitles extends TitleQuery<String> {
 
     Pattern p = Pattern.compile(
         "<query-continue>.*?"
-        + "<embeddedin *eicontinue=\"([^\"]*)\" */>"
-        + ".*?</query-continue>",
-        Pattern.DOTALL | Pattern.MULTILINE);
+            + "<embeddedin *eicontinue=\"([^\"]*)\" */>"
+            + ".*?</query-continue>",
+            Pattern.DOTALL | Pattern.MULTILINE);
 
     Matcher m = p.matcher(s);
 
@@ -210,7 +209,7 @@ public class TemplateUserTitles extends TitleQuery<String> {
     // get the backlink titles and add them all to the titleCollection
 
     Pattern p = Pattern.compile(
-    "<ei pageid=\".*?\" ns=\".*?\" title=\"(.*?)\" />");
+        "<ei pageid=\".*?\" ns=\".*?\" title=\"(.*?)\" />");
 
     Matcher m = p.matcher(s);
 

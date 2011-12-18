@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
+import lombok.extern.slf4j.Slf4j;
 import net.sourceforge.jwbf.core.actions.Get;
 import net.sourceforge.jwbf.core.actions.util.ActionException;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
@@ -37,12 +38,11 @@ import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.util.SupportedBy;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 
-import org.apache.log4j.Logger;
-
 /**
  * A specialization of {@link CategoryMembers} with contains {@link String}s.
  * @author Thomas Stock
  */
+@Slf4j
 @SupportedBy({ MW1_11, MW1_12, MW1_13, MW1_14, MW1_15, MW1_16 })
 public class CategoryMembersSimple  implements Iterable<String>, Iterator<String> {
 
@@ -55,9 +55,6 @@ public class CategoryMembersSimple  implements Iterable<String>, Iterator<String
    */
   private Collection<String> titleCollection = new ArrayList<String>();
   private Iterator<String> titleIterator;
-  private Logger log = Logger.getLogger(getClass());
-
-
 
   /**
    * @param categoryName like "Buildings" or "Chemical elements"

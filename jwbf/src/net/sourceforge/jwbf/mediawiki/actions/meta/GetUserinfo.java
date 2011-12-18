@@ -14,6 +14,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import lombok.extern.slf4j.Slf4j;
 import net.sourceforge.jwbf.core.actions.Get;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.core.actions.util.ProcessException;
@@ -24,7 +25,6 @@ import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.actions.util.SupportedBy;
 import net.sourceforge.jwbf.mediawiki.actions.util.VersionException;
 
-import org.apache.log4j.Logger;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -35,11 +35,10 @@ import org.xml.sax.InputSource;
  * @author Thomas Stock
  *
  */
+@Slf4j
 @SupportedBy({ MW1_11, MW1_12, MW1_13, MW1_14, MW1_15, MW1_16 })
 public class GetUserinfo extends MWAction implements Userinfo {
 
-
-  private final Logger log = Logger.getLogger(getClass());
   private String username = "";
   private final Set<String> rights = new HashSet<String>();
   private final Set<String> groups = new HashSet<String>();
@@ -62,12 +61,12 @@ public class GetUserinfo extends MWAction implements Userinfo {
       default:
         msg = new Get(
             "/api.php?"
-            + "action=query&"
-            + "meta=userinfo&"
-            + "uiprop="
-            + MediaWiki
-            .encode("blockinfo|hasmsg|groups|rights|options|editcount|ratelimits")
-            + "&" + "format=xml");
+                + "action=query&"
+                + "meta=userinfo&"
+                + "uiprop="
+                + MediaWiki
+                .encode("blockinfo|hasmsg|groups|rights|options|editcount|ratelimits")
+                + "&" + "format=xml");
 
         break;
     }
@@ -98,7 +97,7 @@ public class GetUserinfo extends MWAction implements Userinfo {
    */
   @Override
   public final String processAllReturningText(final String s)
-  throws ProcessException {
+      throws ProcessException {
     parse(s);
     return "";
   }

@@ -16,6 +16,15 @@ import net.sourceforge.jwbf.core.contentRep.Userinfo;
 public interface WikiBot {
 
 
+  /**
+   *
+   * @param name
+   *            of article in a mediawiki like "Main Page"
+   * @return a content representation of requested article, never null
+   * @throws ActionException
+   *             on problems with http, cookies and io
+   * @throws ProcessException on access problems
+   */
   Article readContent(String title) throws ActionException, ProcessException ;
   Article readContent(String title, int properties) throws ActionException, ProcessException;
 

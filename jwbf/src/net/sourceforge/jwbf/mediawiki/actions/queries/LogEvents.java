@@ -34,6 +34,7 @@ import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import lombok.extern.slf4j.Slf4j;
 import net.sourceforge.jwbf.core.actions.Get;
 import net.sourceforge.jwbf.core.actions.util.ActionException;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
@@ -44,7 +45,6 @@ import net.sourceforge.jwbf.mediawiki.actions.util.VersionException;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 import net.sourceforge.jwbf.mediawiki.contentRep.LogItem;
 
-import org.apache.log4j.Logger;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -64,6 +64,7 @@ import org.xml.sax.InputSource;
  * @author Thomas Stock
  *
  */
+@Slf4j
 @SupportedBy({ MW1_11, MW1_12, MW1_13, MW1_14, MW1_15, MW1_16 })
 public class LogEvents extends MWAction implements Iterator<LogItem>, Iterable<LogItem> {
 
@@ -85,7 +86,6 @@ public class LogEvents extends MWAction implements Iterator<LogItem>, Iterable<L
 
   private Get msg;
   private final MediaWikiBot bot;
-  private final Logger log = Logger.getLogger(getClass());
   /* first run variable */
   private boolean init = true;
   private boolean selvEx = true;
@@ -201,7 +201,7 @@ public class LogEvents extends MWAction implements Iterator<LogItem>, Iterable<L
    */
   @Override
   public String processAllReturningText(final String s)
-  throws ProcessException {
+      throws ProcessException {
     logCollection.clear();
     parseArticleTitles(s);
     parseHasMore(s);
@@ -247,9 +247,9 @@ public class LogEvents extends MWAction implements Iterator<LogItem>, Iterable<L
 
     Pattern p = Pattern.compile(
         "<query-continue>.*?"
-        + "<logevents *lestart=\"([^\"]*)\" */>"
-        + ".*?</query-continue>",
-        Pattern.DOTALL | Pattern.MULTILINE);
+            + "<logevents *lestart=\"([^\"]*)\" */>"
+            + ".*?</query-continue>",
+            Pattern.DOTALL | Pattern.MULTILINE);
 
     Matcher m = p.matcher(s);
 

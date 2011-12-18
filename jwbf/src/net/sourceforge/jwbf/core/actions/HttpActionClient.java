@@ -30,6 +30,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import lombok.extern.slf4j.Slf4j;
 import net.sourceforge.jwbf.JWBF;
 import net.sourceforge.jwbf.core.actions.util.ActionException;
 import net.sourceforge.jwbf.core.actions.util.CookieException;
@@ -53,7 +54,6 @@ import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.HttpParams;
-import org.apache.log4j.Logger;
 
 
 /**
@@ -62,13 +62,12 @@ import org.apache.log4j.Logger;
  * @author Thomas Stock
  *
  */
+@Slf4j
 public class HttpActionClient {
 
   private HttpClient client;
 
   private String path = "";
-
-  private Logger log = Logger.getLogger(getClass());
 
   private HttpHost host;
 
@@ -118,7 +117,7 @@ public class HttpActionClient {
    * @throws ProcessException on inner problems
    */
   public synchronized String performAction(ContentProcessable contentProcessable)
-  throws ActionException, ProcessException {
+      throws ActionException, ProcessException {
 
     String out = "";
     while (contentProcessable.hasMoreMessages()) {
@@ -173,7 +172,7 @@ public class HttpActionClient {
   }
 
   private String post(HttpRequestBase requestBase, ContentProcessable contentProcessable, HttpAction ha)
-  throws IOException, CookieException, ProcessException {
+      throws IOException, CookieException, ProcessException {
     Post p = (Post) ha;
     MultipartEntity entity = new MultipartEntity();
     for (String key : p.getParams().keySet()) {
@@ -217,7 +216,7 @@ public class HttpActionClient {
    * @throws ProcessException on problems
    */
   private String get(HttpRequestBase requestBase, ContentProcessable cp, HttpAction ha)
-  throws IOException, CookieException, ProcessException {
+      throws IOException, CookieException, ProcessException {
     showCookies();
     debug(requestBase, ha, cp);
     String out = "";
@@ -279,7 +278,7 @@ public class HttpActionClient {
    * @throws ProcessException on problems
    */
   public byte[] get(Get get)
-  throws IOException, CookieException, ProcessException {
+      throws IOException, CookieException, ProcessException {
     showCookies();
     HttpGet authgets = new HttpGet(get.getRequest());
     return get(authgets, null, get).getBytes();

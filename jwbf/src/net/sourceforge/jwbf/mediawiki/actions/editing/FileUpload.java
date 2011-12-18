@@ -31,6 +31,7 @@ import java.io.FileNotFoundException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import lombok.extern.slf4j.Slf4j;
 import net.sourceforge.jwbf.core.actions.Get;
 import net.sourceforge.jwbf.core.actions.Post;
 import net.sourceforge.jwbf.core.actions.util.ActionException;
@@ -42,8 +43,6 @@ import net.sourceforge.jwbf.mediawiki.actions.util.SupportedBy;
 import net.sourceforge.jwbf.mediawiki.actions.util.VersionException;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 import net.sourceforge.jwbf.mediawiki.contentRep.SimpleFile;
-
-import org.apache.log4j.Logger;
 
 /**
  * <p>
@@ -61,11 +60,10 @@ import org.apache.log4j.Logger;
  * @author Thomas Stock
  * 
  */
+@Slf4j
 @SupportedBy({ MW1_11, MW1_12, MW1_13, MW1_14, MW1_15, MW1_16 })
 public class FileUpload extends MWAction {
 
-
-  private static final Logger LOG = Logger.getLogger(FileUpload.class);
   private final Get g;
   private boolean first = true;
   private boolean second = true;
@@ -91,8 +89,8 @@ public class FileUpload extends MWAction {
 
     this.a = a;
     String uS = "/index.php?title="
-      + MediaWiki.encode(a.getTitle())
-      + "&action=edit&dontcountme=s";
+        + MediaWiki.encode(a.getTitle())
+        + "&action=edit&dontcountme=s";
 
     g = new Get(uS);
 
@@ -129,7 +127,7 @@ public class FileUpload extends MWAction {
 
     try {
 
-      LOG.info("WRITE: " + a.getTitle());
+      log.info("WRITE: " + a.getTitle());
       Post post = new Post(uS);
 
       if (a.getText().length() == 0) {
@@ -188,13 +186,13 @@ public class FileUpload extends MWAction {
 
     if (s.contains("error")) {
       Pattern errFinder = Pattern
-      .compile("<p>(.*?)</p>",
-          Pattern.DOTALL | Pattern.MULTILINE);
+          .compile("<p>(.*?)</p>",
+              Pattern.DOTALL | Pattern.MULTILINE);
       Matcher m = errFinder.matcher(s);
       String lastP = "";
       while (m.find()) {
         lastP = MediaWiki.decode(m.group(1));
-        LOG.error("Upload failed: " + lastP);
+        log.error("Upload failed: " + lastP);
       }
 
       throw new ProcessException("Upload failed - " + lastP);
