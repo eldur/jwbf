@@ -1,4 +1,4 @@
-package net.sourceforge.jwbf.mediawiki.live;
+package net.sourceforge.jwbf.mediawiki.live.auto;
 
 import java.util.Arrays;
 import java.util.Collection;

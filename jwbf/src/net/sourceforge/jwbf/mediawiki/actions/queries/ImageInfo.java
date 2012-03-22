@@ -13,10 +13,14 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 import javax.imageio.ImageIO;
 
+import lombok.extern.slf4j.Slf4j;
 import net.sourceforge.jwbf.core.actions.Get;
 import net.sourceforge.jwbf.core.actions.util.ActionException;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
@@ -28,7 +32,7 @@ import net.sourceforge.jwbf.mediawiki.actions.util.SupportedBy;
 import net.sourceforge.jwbf.mediawiki.actions.util.VersionException;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 
-import org.apache.log4j.Logger;
+import org.apache.commons.lang.math.NumberUtils;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -42,13 +46,19 @@ import org.xml.sax.InputSource;
  * @author Thomas Stock
  *
  */
+@Slf4j
 @SupportedBy({ MW1_11, MW1_12, MW1_13, MW1_14, MW1_15, MW1_16 })
 public class ImageInfo extends MWAction {
-  private static final Logger LOGGER = Logger.getLogger(ImageInfo.class);
+  private static final Map<String,String> EMPTY_STRING_MAP = Collections.emptyMap();
+
+  public static final String WIDTH = "iiurlwidth";
+  public static final String HEIGHT = "iiurlheight";
+
   private String urlOfImage  = "";
   private Get msg;
   private final MediaWikiBot bot;
   private boolean selfEx = true;
+  private Map<String, String> map = new HashMap<String, String>();
 
   /**
    *
@@ -58,21 +68,53 @@ public class ImageInfo extends MWAction {
    * @throws VersionException if not supported
    */
   public ImageInfo(MediaWikiBot bot, String name) throws VersionException {
+    this(bot, name, EMPTY_STRING_MAP);
+  }
+
+
+  public ImageInfo(MediaWikiBot bot, String name, Map<String,String> params) throws VersionException {
     super(bot.getVersion());
     this.bot = bot;
+    map.putAll(params);
+    prepareMsg(name);
+  }
+
+  public ImageInfo(MediaWikiBot bot, String name, String[][] params) throws VersionException {
+    super(bot.getVersion());
+    this.bot = bot;
+    if (params != null) {
+      for (String[] param : params) {
+        if (param.length == 2) {
+          String key = param[0];
+          String value = param[1];
+          if (key != null && value != null)
+            map.put(key, value);
+        }
+      }
+    }
+    prepareMsg(name);
+  }
+
+
+  private void prepareMsg(String name) {
+    int width = NumberUtils.toInt(map.get(WIDTH));
+    int height = NumberUtils.toInt(map.get(HEIGHT));
+    String addProps = "";
+    if (width > 0)
+      addProps += "&" + WIDTH + "=" + width;
+    if (height > 0)
+      addProps += "&" + HEIGHT + "=" + height;
 
     if (bot.getVersion().greaterEqThen(Version.MW1_15)) {
       msg = new Get("/api.php?action=query&titles=File:"
-          + MediaWiki.encode(name) + "&prop=imageinfo"
+          + MediaWiki.encode(name) + "&prop=imageinfo" + addProps
           + "&iiprop=url&format=xml");
     } else {
       msg = new Get("/api.php?action=query&titles=Image:"
-          + MediaWiki.encode(name) + "&prop=imageinfo"
+          + MediaWiki.encode(name) + "&prop=imageinfo" + addProps
           + "&iiprop=url&format=xml");
     }
-
   }
-
 
   /**
    * @return position like "http://server.tld/path/to/Test.gif"
@@ -97,6 +139,10 @@ public class ImageInfo extends MWAction {
       urlOfImage = bot.getHostUrl() + urlOfImage;
     }
     return urlOfImage;
+  }
+
+  public URL getUrl() throws MalformedURLException, ProcessException {
+    return new URL(getUrlAsString());
   }
   /**
    * {@inheritDoc}
@@ -156,9 +202,9 @@ public class ImageInfo extends MWAction {
       root = doc.getRootElement();
 
     } catch (JDOMException e) {
-      LOGGER.warn("", e);
+      log.warn("", e);
     } catch (IOException e) {
-      LOGGER.warn("", e);
+      log.warn("", e);
     }
     if (root != null)
       findContent(root);

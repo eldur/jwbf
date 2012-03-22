@@ -6,7 +6,6 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.Random;
 
-import org.apache.log4j.PropertyConfigurator;
 import org.junit.Assume;
 
 public abstract class TestHelper {
@@ -54,8 +53,6 @@ public abstract class TestHelper {
       System.err.println("No logfile ! exit");
       System.exit(1);
     }
-    PropertyConfigurator.configureAndWatch( f.getAbsolutePath(),
-        60 * 1000);
   }
 
   public static void assumeReachable(URL host) {

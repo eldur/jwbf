@@ -10,8 +10,6 @@ import net.sourceforge.jwbf.JWBF;
 import net.sourceforge.jwbf.TestHelper;
 import net.sourceforge.jwbf.core.actions.util.ActionException;
 
-import org.apache.log4j.PropertyConfigurator;
-import org.junit.BeforeClass;
 import org.junit.Test;
 /**
  * 
@@ -19,12 +17,6 @@ import org.junit.Test;
  *
  */
 public class SimpleTest extends TestHelper {
-
-  @BeforeClass
-  public static void setUp() throws Exception {
-    PropertyConfigurator.configureAndWatch("test4log4j.properties",
-        60 * 1000);
-  }
 
 
   @Test

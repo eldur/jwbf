@@ -84,15 +84,18 @@ public class MiscTest {
     if (manifestFile != null && newManifestFile != null) {
       newManifestFile.renameTo(manifestFile);
       assertTrue(!newManifestFile.exists() && manifestFile.exists());
-    }
-    for (Field f : clazz.getDeclaredFields()) {
-      if (!f.isAccessible()) f.setAccessible(true);
-      String name = f.getName();
-      if ("title".equals(name)) {
-        assertEquals("jwbf-generic", f.get(clazz));
-      } else if ("version".equals(name)) {
-        assertEquals("DEVEL", f.get(clazz));
+      for (Field f : clazz.getDeclaredFields()) {
+        if (!f.isAccessible())
+          f.setAccessible(true);
+        String name = f.getName();
+        if ("title".equals(name)) {
+          assertEquals("jwbf-generic", f.get(clazz));
+        } else if ("version".equals(name)) {
+          assertEquals("DEVEL", f.get(clazz));
+        }
       }
+    } else {
+      // TODO test load from inner MF
     }
 
 
