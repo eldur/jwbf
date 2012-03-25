@@ -11,16 +11,16 @@ import net.sourceforge.jwbf.TestHelper;
 import net.sourceforge.jwbf.core.actions.util.ActionException;
 
 import org.junit.Test;
+
 /**
  * 
  * @author Thomas Stock
- *
+ * 
  */
 public class SimpleTest extends TestHelper {
 
-
   @Test
-  public void basic1() throws Exception {
+  public void basic1() {
     try {
       NullPointerException npe = new NullPointerException("oh it's null");
 
@@ -36,6 +36,5 @@ public class SimpleTest extends TestHelper {
     }
 
   }
-
 
 }

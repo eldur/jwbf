@@ -53,10 +53,10 @@ import org.xml.sax.InputSource;
 
 /**
  * Reads the content of a given article.
- *
+ * 
  * @author Thomas Stock
- *
- *
+ * 
+ * 
  */
 @Slf4j
 @SupportedBy({ MW1_09, MW1_10, MW1_11, MW1_12, MW1_13, MW1_14, MW1_15, MW1_16 })
@@ -83,21 +83,27 @@ public class GetRevision extends MWAction {
   private final Version botVersion;
 
   /**
-   * TODO follow redirects.
-   * TODO change constructor fild ordering; bot
-   * @throws ProcessException a
-   * @throws ActionException  a
-   * @param articlename of
-   * @param properties the
-   * @param v the
+   * TODO follow redirects. TODO change constructor fild ordering; bot
+   * 
+   * @throws ProcessException
+   *           a
+   * @throws ActionException
+   *           a
+   * @param articlename
+   *          of
+   * @param properties
+   *          the
+   * @param v
+   *          the
    */
   public GetRevision(Version v, final String articlename, final int properties)
-      throws ActionException, ProcessException {
+      throws ProcessException {
     super(v);
     botVersion = v;
-    //		if (!bot.getUserinfo().getRights().contains("read")) {
-    //			throw new ActionException("reading is not permited, make sure that this account is able to read");
-    //		} FIXME check if
+    // if (!bot.getUserinfo().getRights().contains("read")) {
+    // throw new
+    // ActionException("reading is not permited, make sure that this account is able to read");
+    // } FIXME check if
 
     this.properties = properties;
     sa = new SimpleArticle();
@@ -132,9 +138,12 @@ public class GetRevision extends MWAction {
     }
     return "";
   }
+
   /**
    * TODO Not very nice implementation.
-   * @param property the
+   * 
+   * @param property
+   *          the
    * @return a
    */
   private String getDataProperties(final int property) {
@@ -159,10 +168,8 @@ public class GetRevision extends MWAction {
       properties += "flags|";
     }
 
-
     if (properties.length() > 0) {
-      return MediaWiki.encode(properties.substring(0,
-          properties.length() - 1));
+      return MediaWiki.encode(properties.substring(0, properties.length() - 1));
     }
 
     return "";
@@ -197,8 +204,9 @@ public class GetRevision extends MWAction {
     if (root != null)
       findContent(root);
   }
+
   /**
-   *
+   * 
    * @return the
    */
   public SimpleArticle getArticle() {
@@ -206,10 +214,9 @@ public class GetRevision extends MWAction {
     return sa;
   }
 
-
   private void findContent(final Element root) throws ApiException {
-    //		if(log.isDebugEnabled())
-    //			log.debug("try to find content in " + root.getQualifiedName());
+    // if(log.isDebugEnabled())
+    // log.debug("try to find content in " + root.getQualifiedName());
     @SuppressWarnings("unchecked")
     Iterator<Element> el = root.getChildren().iterator();
     while (el.hasNext()) {
@@ -241,8 +248,7 @@ public class GetRevision extends MWAction {
         if ((properties & TIMESTAMP) > 0) {
 
           try {
-            sa.setEditTimestamp(getAsStringValues(element,
-                "timestamp"));
+            sa.setEditTimestamp(getAsStringValues(element, "timestamp"));
           } catch (ParseException e) {
             log.debug("timestamp could not be parsed");
           }
@@ -270,13 +276,12 @@ public class GetRevision extends MWAction {
     // LOG.debug("value for " + attrName + " = \"" + buff + "\"");
     return buff;
   }
+
   /**
    * {@inheritDoc}
    */
   public HttpAction getNextMessage() {
     return msg;
   }
-
-
 
 }

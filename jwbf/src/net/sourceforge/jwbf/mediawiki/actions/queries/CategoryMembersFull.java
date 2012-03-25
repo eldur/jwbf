@@ -22,34 +22,35 @@ import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 import net.sourceforge.jwbf.mediawiki.contentRep.CategoryItem;
 
 /**
- * A specialization of {@link CategoryMembers} with contains {@link CategoryItem}s.
+ * A specialization of {@link CategoryMembers} with contains
+ * {@link CategoryItem}s.
  * 
  * @author Thomas Stock
  */
 @Slf4j
-@SupportedBy({ MW1_11, MW1_12, MW1_13, MW1_14, MW1_15, MW1_16})
-public class CategoryMembersFull extends CategoryMembers implements Iterable<CategoryItem>, Iterator<CategoryItem> {
-
+@SupportedBy({ MW1_11, MW1_12, MW1_13, MW1_14, MW1_15, MW1_16 })
+public class CategoryMembersFull extends CategoryMembers implements
+    Iterable<CategoryItem>, Iterator<CategoryItem> {
 
   private Get msg;
   /**
-   * Collection that will contain the result
-   * (titles of articles linking to the target)
-   * after performing the action has finished.
+   * Collection that will contain the result (titles of articles linking to the
+   * target) after performing the action has finished.
    */
   private Collection<CategoryItem> titleCollection = new ArrayList<CategoryItem>();
   private Iterator<CategoryItem> titleIterator;
 
   /**
-   *
-   * @throws ActionException on any kind of http or version problems
-   * @throws ProcessException on inner problems like a version mismatch
+   * 
+   * @throws ActionException
+   *           on any kind of http or version problems
+   * @throws ProcessException
+   *           on inner problems like a version mismatch
    */
-  public CategoryMembersFull(MediaWikiBot bot,
-      String categoryName , int... namespaces) throws ActionException, ProcessException {
+  public CategoryMembersFull(MediaWikiBot bot, String categoryName,
+      int... namespaces) throws ProcessException {
     super(bot, categoryName, namespaces);
   }
-
 
   /**
    * {@inheritDoc}
@@ -63,18 +64,21 @@ public class CategoryMembersFull extends CategoryMembers implements Iterable<Cat
     titleCollection.add(ci);
 
   }
+
   /**
    * {@inheritDoc}
    */
   public HttpAction getNextMessage() {
     return msg;
   }
+
   /**
    * {@inheritDoc}
    */
   public Iterator<CategoryItem> iterator() {
     return this;
   }
+
   /**
    * {@inheritDoc}
    */
@@ -86,8 +90,6 @@ public class CategoryMembersFull extends CategoryMembers implements Iterable<Cat
       throw new CloneNotSupportedException(e.getLocalizedMessage());
     }
   }
-
-
 
   private void prepareCollection() {
 
@@ -113,6 +115,7 @@ public class CategoryMembersFull extends CategoryMembers implements Iterable<Cat
 
     }
   }
+
   /**
    * {@inheritDoc}
    */
@@ -121,11 +124,11 @@ public class CategoryMembersFull extends CategoryMembers implements Iterable<Cat
     titleCollection.clear();
     String buff = super.processAllReturningText(s);
 
-
     if (log.isDebugEnabled())
       log.debug(titleCollection.toString());
     return buff;
   }
+
   /**
    * {@inheritDoc}
    */
@@ -133,6 +136,7 @@ public class CategoryMembersFull extends CategoryMembers implements Iterable<Cat
     prepareCollection();
     return titleIterator.hasNext();
   }
+
   /**
    * {@inheritDoc}
    */
@@ -140,6 +144,7 @@ public class CategoryMembersFull extends CategoryMembers implements Iterable<Cat
     prepareCollection();
     return titleIterator.next();
   }
+
   /**
    * {@inheritDoc}
    */

@@ -24,7 +24,6 @@ import static org.junit.Assert.assertTrue;
 import java.nio.charset.Charset;
 import java.util.Random;
 
-import net.sourceforge.jwbf.TestHelper;
 import net.sourceforge.jwbf.core.contentRep.Article;
 import net.sourceforge.jwbf.core.contentRep.ArticleMeta;
 import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
@@ -35,7 +34,6 @@ import net.sourceforge.jwbf.mediawiki.actions.editing.GetRevision;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
@@ -47,14 +45,7 @@ public class EditCustomWikiContentTest extends LiveTestFather {
 
   private MediaWikiBot bot;
   private Random random = new Random(System.currentTimeMillis());
-  /**
-   * Setup log4j.
-   * @throws Exception a
-   */
-  @BeforeClass
-  public static void setUpBeforeClass() throws Exception {
-    TestHelper.prepareLogging();
-  }
+
 
   /**
    * Setup custom wiki.
@@ -183,7 +174,7 @@ public class EditCustomWikiContentTest extends LiveTestFather {
   @Test
   public final void contentModifyComplexUtf8Get() throws Exception {
     String utf8value = "öä 品 üÖÄÜß り新しく作成したりできます Л"
-      + "ин 瓦茲القواميس والمراجع";
+        + "ин 瓦茲القواميس والمراجع";
 
     String title = getValue("test_live_article");
     SimpleArticle sa;

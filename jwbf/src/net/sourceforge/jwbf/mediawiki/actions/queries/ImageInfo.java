@@ -40,46 +40,52 @@ import org.jdom.input.SAXBuilder;
 import org.xml.sax.InputSource;
 
 /**
- * Action to receive the full address of an image.
- * Like "Img.gif" to "http://wikihost.tld/w/images/x/y/Img.gif".
- *
+ * Action to receive the full address of an image. Like "Img.gif" to
+ * "http://wikihost.tld/w/images/x/y/Img.gif".
+ * 
  * @author Thomas Stock
- *
+ * 
  */
 @Slf4j
 @SupportedBy({ MW1_11, MW1_12, MW1_13, MW1_14, MW1_15, MW1_16 })
 public class ImageInfo extends MWAction {
-  private static final Map<String,String> EMPTY_STRING_MAP = Collections.emptyMap();
+  private static final Map<String, String> EMPTY_STRING_MAP = Collections
+      .emptyMap();
 
   public static final String WIDTH = "iiurlwidth";
   public static final String HEIGHT = "iiurlheight";
 
-  private String urlOfImage  = "";
+  private String urlOfImage = "";
   private Get msg;
   private final MediaWikiBot bot;
   private boolean selfEx = true;
   private Map<String, String> map = new HashMap<String, String>();
 
   /**
-   *
+   * 
    * Get an absolute url to an image.
-   * @param bot a
-   * @param name of, like "Test.gif"
-   * @throws VersionException if not supported
+   * 
+   * @param bot
+   *          a
+   * @param name
+   *          of, like "Test.gif"
+   * @throws VersionException
+   *           if not supported
    */
   public ImageInfo(MediaWikiBot bot, String name) throws VersionException {
     this(bot, name, EMPTY_STRING_MAP);
   }
 
-
-  public ImageInfo(MediaWikiBot bot, String name, Map<String,String> params) throws VersionException {
+  public ImageInfo(MediaWikiBot bot, String name, Map<String, String> params)
+      throws VersionException {
     super(bot.getVersion());
     this.bot = bot;
     map.putAll(params);
     prepareMsg(name);
   }
 
-  public ImageInfo(MediaWikiBot bot, String name, String[][] params) throws VersionException {
+  public ImageInfo(MediaWikiBot bot, String name, String[][] params)
+      throws VersionException {
     super(bot.getVersion());
     this.bot = bot;
     if (params != null) {
@@ -94,7 +100,6 @@ public class ImageInfo extends MWAction {
     }
     prepareMsg(name);
   }
-
 
   private void prepareMsg(String name) {
     int width = NumberUtils.toInt(map.get(WIDTH));
@@ -118,7 +123,8 @@ public class ImageInfo extends MWAction {
 
   /**
    * @return position like "http://server.tld/path/to/Test.gif"
-   * @throws ProcessException on
+   * @throws ProcessException
+   *           on
    */
   public String getUrlAsString() throws ProcessException {
     try {
@@ -144,8 +150,10 @@ public class ImageInfo extends MWAction {
   public URL getUrl() throws MalformedURLException, ProcessException {
     return new URL(getUrlAsString());
   }
+
   /**
    * {@inheritDoc}
+   * 
    * @deprecated see super
    */
   @Deprecated
@@ -154,15 +162,16 @@ public class ImageInfo extends MWAction {
     return selfEx;
   }
 
-
   /**
    * @return a
-   * @throws ProcessException on
-   * @throws ActionException on
-   * @throws IOException on
+   * @throws ProcessException
+   *           on
+   * @throws ActionException
+   *           on
+   * @throws IOException
+   *           on
    */
-  public BufferedImage getAsImage() throws ProcessException
-  , ActionException, IOException {
+  public BufferedImage getAsImage() throws ProcessException, IOException {
     return ImageIO.read(new URL(getUrlAsString()));
   }
 
@@ -174,7 +183,6 @@ public class ImageInfo extends MWAction {
     findUrlOfImage(s);
     return "";
   }
-
 
   @SuppressWarnings("unchecked")
   private void findContent(final Element root) throws ProcessException {

@@ -43,6 +43,7 @@ import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 
 import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -58,9 +59,10 @@ public abstract class LiveTestFather extends TestHelper {
 
   private static boolean isVersionTestCase = false;
 
-  protected static final Map<String, Version > USEDVERSIONS = new HashMap<String, Version >();
-  protected static final Map<String, Version > TESTEDVERSIONS = new HashMap<String, Version >();
-  protected static final Map<String, Version >  DOCUMENTEDVERSIONS = new HashMap<String, Version >();
+  protected static final Map<String, Version> USEDVERSIONS = new HashMap<String, Version>();
+  protected static final Map<String, Version> TESTEDVERSIONS = new HashMap<String, Version>();
+  protected static final Map<String, Version> DOCUMENTEDVERSIONS = new HashMap<String, Version>();
+
   /**
    * Inits.
    */
@@ -74,7 +76,6 @@ public abstract class LiveTestFather extends TestHelper {
     specialChars.add("]");
   }
 
-
   static {
 
     // find jwftestfile
@@ -87,13 +88,12 @@ public abstract class LiveTestFather extends TestHelper {
         filename = fname;
         System.out.println("use testfile: " + filename);
 
-
-
         break;
       }
     }
     if (filename.length() < 1) {
-      System.err.println("no testfile found. Use: " + System.getProperty("user.home") + "/.jwbf/test.xml");
+      System.err.println("no testfile found. Use: "
+          + System.getProperty("user.home") + "/.jwbf/test.xml");
       filename = System.getProperty("user.home") + "/.jwbf/test.xml";
     }
 
@@ -118,17 +118,24 @@ public abstract class LiveTestFather extends TestHelper {
     }
 
   }
-  protected static void addInitSupporterVersions(Class < ? > mwc) {
+
+  @Before
+  public void before() {
+    TestHelper.assumeLiveTestEnvoirnmentReachable();
+
+  }
+
+  protected static void addInitSupporterVersions(Class<?> mwc) {
     isVersionTestCase = true;
-    Version [] vs = MWAction.findSupportedVersions(mwc);
+    Version[] vs = MWAction.findSupportedVersions(mwc);
     for (int j = 0; j < vs.length; j++) {
       DOCUMENTEDVERSIONS.put(mwc.getCanonicalName() + vs[j], vs[j]);
     }
 
-
   }
+
   /**
-   *
+   * 
    * @return the current UTC
    */
   public Date getCurrentUTC() {
@@ -140,12 +147,16 @@ public abstract class LiveTestFather extends TestHelper {
     return new Date(localCal.getTimeInMillis());
 
   }
+
   /**
    * Use in a invalid testcase.
-   * @param clazz a
-   * @param v a
+   * 
+   * @param clazz
+   *          a
+   * @param v
+   *          a
    */
-  protected static final void registerUnTestedVersion(Class < ? > clazz, Version v) {
+  protected static final void registerUnTestedVersion(Class<?> clazz, Version v) {
     if (v != Version.DEVELOPMENT) {
       USEDVERSIONS.put(clazz.getCanonicalName() + v, v);
     }
@@ -153,18 +164,21 @@ public abstract class LiveTestFather extends TestHelper {
 
   /**
    * Use in a valid testcase.
-   * @param clazz a
-   * @param v a
+   * 
+   * @param clazz
+   *          a
+   * @param v
+   *          a
    */
-  protected static final void registerTestedVersion(Class < ? > clazz, Version v) {
+  protected static final void registerTestedVersion(Class<?> clazz, Version v) {
     if (v != Version.DEVELOPMENT) {
       TESTEDVERSIONS.put(clazz.getCanonicalName() + v, v);
     }
     registerUnTestedVersion(clazz, v);
   }
 
-  private static Map<String, Version > getUntestedButDocumentedVersions() {
-    final Map<String, Version > data = new HashMap<String, Version>();
+  private static Map<String, Version> getUntestedButDocumentedVersions() {
+    final Map<String, Version> data = new HashMap<String, Version>();
     data.putAll(DOCUMENTEDVERSIONS);
 
     final Set<String> testedKeys = TESTEDVERSIONS.keySet();
@@ -172,13 +186,12 @@ public abstract class LiveTestFather extends TestHelper {
       data.remove(key);
     }
 
-
     return data;
   }
 
-  private static Collection < Version > getUsedVersions() {
-    final Vector<Version > data = new Vector<Version>();
-    Version [] vas = Version.valuesStable();
+  private static Collection<Version> getUsedVersions() {
+    final Vector<Version> data = new Vector<Version>();
+    Version[] vas = Version.valuesStable();
     for (int i = 0; i < vas.length; i++) {
       data.add(vas[i]);
     }
@@ -187,7 +200,6 @@ public abstract class LiveTestFather extends TestHelper {
     for (Version key : testedKeys) {
       data.remove(key);
     }
-
 
     return data;
   }
@@ -204,25 +216,28 @@ public abstract class LiveTestFather extends TestHelper {
   }
 
   @Test
-  public void yTestVersionDocumentation() throws Exception {
+  public void yTestVersionDocumentation() {
     if (isVersionTestCase) {
       assertTrue("no versions are supported", !DOCUMENTEDVERSIONS.isEmpty());
       assertTrue("not all documented versions are tested \n{ "
-          + getUntestedButDocumentedVersions() + " }", getUntestedButDocumentedVersions().isEmpty());
+          + getUntestedButDocumentedVersions() + " }",
+          getUntestedButDocumentedVersions().isEmpty());
       assertTrue("there are undocumented tests for versions \n{ "
-          + getTestedButUndocmentedVersions() + " }", getTestedButUndocmentedVersions().isEmpty());
+          + getTestedButUndocmentedVersions() + " }",
+          getTestedButUndocmentedVersions().isEmpty());
 
-      assertTrue("missing tests for versions \n{ "
-          + getUsedVersions() + " }", getUsedVersions().isEmpty());
+      assertTrue("missing tests for versions \n{ " + getUsedVersions() + " }",
+          getUsedVersions().isEmpty());
     }
   }
 
   @AfterClass
-  public static void restData() throws Exception {
+  public static void restData() {
     DOCUMENTEDVERSIONS.clear();
     TESTEDVERSIONS.clear();
     isVersionTestCase = false;
   }
+
   public static void main(String[] args) {
 
     System.out.println(System.getenv());
@@ -244,12 +259,11 @@ public abstract class LiveTestFather extends TestHelper {
     }
   }
 
-
-
   protected static String getValue(final String key) throws Exception {
     if (!data.containsKey(key) || data.getProperty(key).trim().length() <= 0) {
       addEmptyKey(key);
-      throw new Exception("No or empty value for key: \"" + key + "\" in " + filename);
+      throw new Exception("No or empty value for key: \"" + key + "\" in "
+          + filename);
     }
     return data.getProperty(key);
   }
@@ -282,12 +296,9 @@ public abstract class LiveTestFather extends TestHelper {
    * @deprecated use method in {@link BotFactory}
    */
   @Deprecated
-  protected static MediaWikiBot getMediaWikiBot(Version v, final boolean login) throws Exception {
-    MediaWikiBot bot = new MediaWikiBot(getWikiUrl(v));
-    if (login) {
-      bot.login(getWikiUser(v), getWikiPass(v));
-    }
-    return bot;
+  protected static MediaWikiBot getMediaWikiBot(Version v, final boolean login)
+      throws Exception {
+    return BotFactory.getMediaWikiBot(v, login);
   }
 
   protected static URL getURL(final String key) throws Exception {
@@ -302,10 +313,12 @@ public abstract class LiveTestFather extends TestHelper {
     return new URL(protocol, host, port, file);
   }
 
-  protected static int getIntValue(final String key)  throws Exception {
+  protected static int getIntValue(final String key) throws Exception {
     return Integer.parseInt(getValue(key));
   }
+
   protected Collection<String> getSpecialChars() {
     return specialChars;
   }
+
 }

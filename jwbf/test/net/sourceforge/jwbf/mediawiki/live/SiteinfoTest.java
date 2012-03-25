@@ -21,7 +21,6 @@ package net.sourceforge.jwbf.mediawiki.live;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import net.sourceforge.jwbf.JWBF;
-import net.sourceforge.jwbf.TestHelper;
 import net.sourceforge.jwbf.core.bots.HttpBot;
 import net.sourceforge.jwbf.core.contentRep.Article;
 import net.sourceforge.jwbf.mediawiki.LiveTestFather;
@@ -32,30 +31,33 @@ import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
+
 /**
  * 
  * @author Thomas Stock
- *
+ * 
  */
 public class SiteinfoTest extends LiveTestFather {
 
-
   private MediaWikiBot bot = null;
+
   /**
    * Setup log4j.
-   * @throws Exception a
+   * 
+   * @throws Exception
+   *           a
    */
   @BeforeClass
-  public static void setUp() throws Exception {
-    TestHelper.prepareLogging();
+  public static void setUp() {
     addInitSupporterVersions(GetVersion.class);
     addInitSupporterVersions(Siteinfo.class);
   }
 
-
   /**
    * Test get siteinfo on Wikipedia DE.
-   * @throws Exception a
+   * 
+   * @throws Exception
+   *           a
    */
   @Test
   public final void siteInfoWikipediaDe() throws Exception {
@@ -67,7 +69,9 @@ public class SiteinfoTest extends LiveTestFather {
 
   /**
    * Test get siteinfo on a MW.
-   * @throws Exception a
+   * 
+   * @throws Exception
+   *           a
    */
   @Test
   public final void siteInfoMW1x09() throws Exception {
@@ -80,7 +84,9 @@ public class SiteinfoTest extends LiveTestFather {
 
   /**
    * Test get siteinfo on a MW.
-   * @throws Exception a
+   * 
+   * @throws Exception
+   *           a
    */
   @Test
   public final void siteInfoMW1x10() throws Exception {
@@ -91,7 +97,9 @@ public class SiteinfoTest extends LiveTestFather {
 
   /**
    * Test get siteinfo on a MW.
-   * @throws Exception a
+   * 
+   * @throws Exception
+   *           a
    */
   @Test
   public final void siteInfoMW1x11() throws Exception {
@@ -103,7 +111,9 @@ public class SiteinfoTest extends LiveTestFather {
 
   /**
    * Test get siteinfo on a MW.
-   * @throws Exception a
+   * 
+   * @throws Exception
+   *           a
    */
   @Test
   public final void siteInfoMW1x12() throws Exception {
@@ -115,7 +125,9 @@ public class SiteinfoTest extends LiveTestFather {
 
   /**
    * Test get siteinfo on a MW.
-   * @throws Exception a
+   * 
+   * @throws Exception
+   *           a
    */
   @Test
   public final void siteInfoMW1x13() throws Exception {
@@ -125,12 +137,15 @@ public class SiteinfoTest extends LiveTestFather {
   }
 
   /**
-   * Test get siteinfo on a MW.
-   * Prepare a the wiki, that the siteinfopage is only readable if user is logged in.
+   * Test get siteinfo on a MW. Prepare a the wiki, that the siteinfopage is
+   * only readable if user is logged in.
+   * 
    * <pre>
    * $wgGroupPermissions['*']['read'] = false;
    * </pre>
-   * @throws Exception a
+   * 
+   * @throws Exception
+   *           a
    */
   @Test
   public final void siteInfoMW1x13Blocking() throws Exception {
@@ -143,7 +158,9 @@ public class SiteinfoTest extends LiveTestFather {
 
   /**
    * Test get siteinfo on a MW.
-   * @throws Exception a
+   * 
+   * @throws Exception
+   *           a
    */
   @Test
   public final void siteInfoMW1x14() throws Exception {
@@ -154,7 +171,9 @@ public class SiteinfoTest extends LiveTestFather {
 
   /**
    * Test get siteinfo on a MW.
-   * @throws Exception a
+   * 
+   * @throws Exception
+   *           a
    */
   @Test
   public final void siteInfoMW1x15() throws Exception {
@@ -165,7 +184,9 @@ public class SiteinfoTest extends LiveTestFather {
 
   /**
    * Test get siteinfo on a MW.
-   * @throws Exception a
+   * 
+   * @throws Exception
+   *           a
    */
   @Test
   public final void siteInfoMW1x16() throws Exception {
@@ -173,9 +194,12 @@ public class SiteinfoTest extends LiveTestFather {
     bot = getMediaWikiBot(Version.MW1_16, false);
     doTest(bot, Version.MW1_16);
   }
+
   /**
    * Test last Version.
-   * @throws Exception a
+   * 
+   * @throws Exception
+   *           a
    */
   @Test
   public final void siteInfoLastVersion() throws Exception {
@@ -186,7 +210,8 @@ public class SiteinfoTest extends LiveTestFather {
     MediaWikiBot bot = new MediaWikiBot(url);
 
     Article a = new Article(bot, versionInfoTemplate);
-    assertTrue(a.getText() + " should contains " + v.getNumber() , a.getText().contains(v.getNumber()));
+    assertTrue(a.getText() + " should contains " + v.getNumber(), a.getText()
+        .contains(v.getNumber()));
   }
 
   private void doTest(MediaWikiBot bot, Version v) throws Exception {
@@ -210,7 +235,6 @@ public class SiteinfoTest extends LiveTestFather {
     System.out.println(gv.getSitename());
     assertTrue(gv.getSitename().length() > 0);
 
-
     Siteinfo si = new Siteinfo();
     bot.performAction(si);
     if (v.greaterEqThen(Version.MW1_11)) {
@@ -224,10 +248,11 @@ public class SiteinfoTest extends LiveTestFather {
     registerTestedVersion(GetVersion.class, v);
   }
 
-
   /**
    * Test if useragent ist jwbf.
-   * @throws Exception a
+   * 
+   * @throws Exception
+   *           a
    */
   @Test
   public final void testUserAgent() throws Exception {
@@ -235,8 +260,8 @@ public class SiteinfoTest extends LiveTestFather {
     HttpBot bot = HttpBot.getInstance();
     String result = bot.getPage(getValue("useragent_url"));
     assertTrue("useragent should contain \"JWBF\"", result.contains("JWBF"));
-    assertTrue("useragent should contain actual version", result.contains(JWBF.getVersion(getClass())));
+    assertTrue("useragent should contain actual version",
+        result.contains(JWBF.getVersion(getClass())));
   }
 
 }
-

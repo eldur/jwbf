@@ -27,11 +27,11 @@ import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_14;
 import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_15;
 import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_16;
 
+import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Set;
 
 import lombok.extern.slf4j.Slf4j;
-import net.sourceforge.jwbf.core.Misc;
 import net.sourceforge.jwbf.core.actions.Get;
 import net.sourceforge.jwbf.core.actions.Post;
 import net.sourceforge.jwbf.core.actions.util.ActionException;
@@ -131,7 +131,7 @@ public class PostModifyContent extends MWAction {
       postModify.addParam("text", a.getText());
       try {
         Set<String> groups = bot.getUserinfo().getGroups();
-        if (!Misc.isIntersectionEmpty(groups, MediaWiki.BOT_GROUPS)) {
+        if (!isIntersectionEmpty(groups, MediaWiki.BOT_GROUPS)) {
           postModify.addParam("bot", "");
         }
       } catch (JwbfException e) {
@@ -249,6 +249,23 @@ public class PostModifyContent extends MWAction {
       }
     }
 
+  }
+
+  /**
+   * @param a a
+   * @param b a
+   * @return true if one or both sets are <code>null</code> or the intersection of sets is empty.
+   */
+  @SuppressWarnings("unchecked")
+  public static boolean isIntersectionEmpty(Set<?> a, Set<?> b) {
+    if (a != null && b != null) {
+      Set<?> aTemp = new HashSet(a);
+      Set<?> bTemp = new HashSet(b);
+      aTemp.retainAll(bTemp);
+      bTemp.retainAll(aTemp);
+      return !(aTemp.size() > 0 && bTemp.size() > 0);
+    }
+    return true;
   }
 
 

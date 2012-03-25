@@ -47,6 +47,10 @@ public abstract class TestHelper {
     return out.toString();
   }
 
+  /**
+   * @deprecated do not use log4j
+   */
+  @Deprecated
   public static void prepareLogging() {
     File f = new File("test4log4j.properties");
     if (!f.exists()) {
@@ -55,9 +59,9 @@ public abstract class TestHelper {
     }
   }
 
-  public static void assumeReachable(URL host) {
+  public static void assumeReachable(URL url) {
     try {
-      URLConnection c = host.openConnection();
+      URLConnection c = url.openConnection();
       c.setConnectTimeout(2000);
       c.connect();
 
@@ -68,6 +72,11 @@ public abstract class TestHelper {
 
   public static void assumeReachable(String url) throws MalformedURLException {
     assumeReachable(new URL(url));
+  }
+
+  public static void assumeLiveTestEnvoirnmentReachable() {
+    // TODO test
+    Assume.assumeNoException(new RuntimeException("envoirnment not reachable"));
   }
 
 }

@@ -22,29 +22,29 @@ import net.sourceforge.jwbf.core.bots.util.JwbfException;
 
 /**
  * 
- * This exception can be used in children of a wikiaction to handle
- * exceptions in these actions, like access to content or mismatching patterns e.g.
+ * This exception can be used in children of a wikiaction to handle exceptions
+ * in these actions, like access to content or mismatching patterns e.g.
  * 
  * @author Thomas Stock
- *
+ * @deprecated do not use this exception. Use common java runtime exceptions
+ * 
  */
+@Deprecated
 public class ProcessException extends JwbfException {
-
 
   /**
    * 
    */
   private static final long serialVersionUID = -3830701798846228121L;
 
-
   /**
    * 
-   * @param msg exception text
+   * @param msg
+   *          exception text
    */
   public ProcessException(final String msg) {
     super(msg);
   }
-
 
   /**
    * @param message
@@ -53,7 +53,6 @@ public class ProcessException extends JwbfException {
   public ProcessException(String message, Throwable t) {
     super(message, t);
   }
-
 
   /**
    * @param t

@@ -5,7 +5,6 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Vector;
 
-import net.sourceforge.jwbf.TestHelper;
 import net.sourceforge.jwbf.core.actions.util.ActionException;
 import net.sourceforge.jwbf.core.actions.util.ProcessException;
 import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
@@ -20,7 +19,6 @@ import net.sourceforge.jwbf.test.SimpleNameFinder;
 import net.sourceforge.jwbf.test.TestNamer;
 
 import org.junit.Assert;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized.Parameters;
@@ -68,16 +66,6 @@ public class BacklinkExpTest extends LiveTestFather {
       }
       bot.writeContent(a);
     }
-  }
-  /**
-   * Setup log4j.
-   *
-   * @throws Exception
-   *             a
-   */
-  @BeforeClass
-  public static void setUp() throws Exception {
-    TestHelper.prepareLogging();
   }
 
   /**

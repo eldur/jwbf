@@ -3,7 +3,6 @@ package net.sourceforge.jwbf.mediawiki.live;
 import java.util.Iterator;
 import java.util.Vector;
 
-import net.sourceforge.jwbf.TestHelper;
 import net.sourceforge.jwbf.core.actions.util.ActionException;
 import net.sourceforge.jwbf.core.actions.util.ProcessException;
 import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
@@ -46,15 +45,8 @@ public class BacklinkTest extends LiveTestFather {
       bot.writeContent(a);
     }
   }
-  /**
-   * Setup log4j.
-   *
-   * @throws Exception
-   *             a
-   */
   @BeforeClass
-  public static void setUp() throws Exception {
-    TestHelper.prepareLogging();
+  public static void setUp() {
     addInitSupporterVersions(BacklinkTitles.class);
   }
 

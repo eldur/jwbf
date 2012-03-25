@@ -4,7 +4,6 @@
 package net.sourceforge.jwbf.mediawiki.live;
 
 import static org.junit.Assert.assertTrue;
-import net.sourceforge.jwbf.TestHelper;
 import net.sourceforge.jwbf.core.actions.util.ActionException;
 import net.sourceforge.jwbf.core.actions.util.ProcessException;
 import net.sourceforge.jwbf.core.contentRep.ContentAccessable;
@@ -31,14 +30,8 @@ public class DeleteTest extends LiveTestFather {
   private MediaWikiBot bot = null;
   private static final int COUNT = 1;
 
-  /***
-   * 
-   * @throws Exception
-   *           a
-   */
   @BeforeClass
-  public static void setUp() throws Exception {
-    TestHelper.prepareLogging();
+  public static void setUp() {
     addInitSupporterVersions(PostDelete.class);
 
   }
@@ -54,7 +47,7 @@ public class DeleteTest extends LiveTestFather {
   }
 
   private void delete(MediaWikiBot bot) throws ActionException,
-  ProcessException {
+      ProcessException {
 
     for (int i = 0; i < COUNT; i++) {
       bot.postDelete(DELETE_PREFIX + i);

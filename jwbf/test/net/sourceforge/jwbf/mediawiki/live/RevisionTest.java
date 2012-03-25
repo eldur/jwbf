@@ -2,7 +2,6 @@ package net.sourceforge.jwbf.mediawiki.live;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import net.sourceforge.jwbf.TestHelper;
 import net.sourceforge.jwbf.core.bots.util.JwbfException;
 import net.sourceforge.jwbf.core.contentRep.ArticleMeta;
 import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
@@ -17,22 +16,18 @@ import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
+
 /**
  * 
  * @author Thomas Stock
- *
+ * 
  */
 public class RevisionTest extends LiveTestFather {
 
   private MediaWikiBot bot;
 
-  /**
-   * Setup log4j.
-   * @throws Exception a
-   */
   @BeforeClass
-  public static void setUpBeforeClass() throws Exception {
-    TestHelper.prepareLogging();
+  public static void setUpBeforeClass() {
     addInitSupporterVersions(GetRevision.class);
     addInitSupporterVersions(PostModifyContent.class);
     addInitSupporterVersions(GetApiToken.class);
@@ -41,7 +36,9 @@ public class RevisionTest extends LiveTestFather {
 
   /**
    * Test write and read.
-   * @throws Exception a
+   * 
+   * @throws Exception
+   *           a
    */
   @Test
   public final void getRevisionMW1x09() throws Exception {
@@ -51,7 +48,9 @@ public class RevisionTest extends LiveTestFather {
 
   /**
    * Test write and read.
-   * @throws Exception a
+   * 
+   * @throws Exception
+   *           a
    */
   @Test
   public final void getRevisionMW1x10() throws Exception {
@@ -61,7 +60,9 @@ public class RevisionTest extends LiveTestFather {
 
   /**
    * Test write and read.
-   * @throws Exception a
+   * 
+   * @throws Exception
+   *           a
    */
   @Test
   public final void getRevisionMW1x11() throws Exception {
@@ -71,7 +72,9 @@ public class RevisionTest extends LiveTestFather {
 
   /**
    * Test write and read.
-   * @throws Exception a
+   * 
+   * @throws Exception
+   *           a
    */
   @Test
   public final void getRevisionMW1x12() throws Exception {
@@ -81,7 +84,9 @@ public class RevisionTest extends LiveTestFather {
 
   /**
    * Test write and read.
-   * @throws Exception a
+   * 
+   * @throws Exception
+   *           a
    */
   @Test
   public final void getRevisionMW1x13() throws Exception {
@@ -91,7 +96,9 @@ public class RevisionTest extends LiveTestFather {
 
   /**
    * Test write and read.
-   * @throws Exception a
+   * 
+   * @throws Exception
+   *           a
    */
   @Test
   public final void getRevisionMW1x14() throws Exception {
@@ -101,7 +108,9 @@ public class RevisionTest extends LiveTestFather {
 
   /**
    * Test write and read.
-   * @throws Exception a
+   * 
+   * @throws Exception
+   *           a
    */
   @Test
   public final void getRevisionMW1x15() throws Exception {
@@ -111,7 +120,9 @@ public class RevisionTest extends LiveTestFather {
 
   /**
    * Test write and read.
-   * @throws Exception a
+   * 
+   * @throws Exception
+   *           a
    */
   @Test
   public final void getRevisionMW1x16() throws Exception {
@@ -171,10 +182,6 @@ public class RevisionTest extends LiveTestFather {
     } catch (ApiException e) {
       throw new JwbfException("Problems with FLAGS receiving");
     }
-
-
-
-
 
     // test with content length > 0
     ArticleMeta a = bot.readContent(title);

@@ -10,7 +10,6 @@ import java.util.Date;
 import java.util.Vector;
 
 import lombok.extern.slf4j.Slf4j;
-import net.sourceforge.jwbf.TestHelper;
 import net.sourceforge.jwbf.core.bots.util.CacheHandler;
 import net.sourceforge.jwbf.core.contentRep.Article;
 import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
@@ -20,7 +19,6 @@ import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.actions.util.VersionException;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 @Slf4j
@@ -29,16 +27,6 @@ public class ArticleTest extends LiveTestFather {
 
   public ArticleTest() {
   }
-
-  /**
-   * Do.
-   * @throws Exception a
-   */
-  @BeforeClass
-  public static void setUp() throws Exception {
-    TestHelper.prepareLogging();
-  }
-
 
 
   private Collection<MediaWikiBot> getTestBots() throws Exception {

@@ -35,7 +35,6 @@ import java.net.URLConnection;
 
 import javax.imageio.ImageIO;
 
-import net.sourceforge.jwbf.TestHelper;
 import net.sourceforge.jwbf.core.actions.util.ActionException;
 import net.sourceforge.jwbf.core.actions.util.ProcessException;
 import net.sourceforge.jwbf.mediawiki.LiveTestFather;
@@ -49,31 +48,33 @@ import net.sourceforge.jwbf.mediawiki.contentRep.SimpleFile;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
 /**
  * 
  * @author Thomas Stock
- *
+ * 
  */
 public class UploadAndImageInfoTest extends LiveTestFather {
 
-
-
   private MediaWikiBot bot = null;
+
   /**
    * Setup log4j.
-   * @throws Exception a
+   * 
+   * @throws Exception
+   *           a
    */
   @BeforeClass
-  public static void setUp() throws Exception {
-    TestHelper.prepareLogging();
+  public static void setUp() {
     addInitSupporterVersions(FileUpload.class);
     addInitSupporterVersions(ImageInfo.class);
   }
 
-
   /**
    * Test upload.
-   * @throws Exception a
+   * 
+   * @throws Exception
+   *           a
    */
   @Test(expected = VersionException.class)
   public final void uploadMW1x09Fail() throws Exception {
@@ -86,7 +87,9 @@ public class UploadAndImageInfoTest extends LiveTestFather {
 
   /**
    * Test category read. Test category must have more then 50 members.
-   * @throws Exception a
+   * 
+   * @throws Exception
+   *           a
    */
   @Test(expected = VersionException.class)
   public final void uploadMW1x10Fail() throws Exception {
@@ -102,7 +105,9 @@ public class UploadAndImageInfoTest extends LiveTestFather {
 
   /**
    * Test category read. Test category must have more then 50 members.
-   * @throws Exception a
+   * 
+   * @throws Exception
+   *           a
    */
   @Test
   public final void uploadMW1x11() throws Exception {
@@ -113,7 +118,9 @@ public class UploadAndImageInfoTest extends LiveTestFather {
 
   /**
    * Test category read. Test category must have more then 50 members.
-   * @throws Exception a
+   * 
+   * @throws Exception
+   *           a
    */
   @Test
   public final void uploadMW1x12() throws Exception {
@@ -121,9 +128,12 @@ public class UploadAndImageInfoTest extends LiveTestFather {
     bot = getMediaWikiBot(Version.MW1_12, true);
     generalUploadImageInfoTest(bot, Version.MW1_12);
   }
+
   /**
    * Test category read. Test category must have more then 50 members.
-   * @throws Exception a
+   * 
+   * @throws Exception
+   *           a
    */
   @Test
   public final void uploadMW1x13() throws Exception {
@@ -134,7 +144,9 @@ public class UploadAndImageInfoTest extends LiveTestFather {
 
   /**
    * Test category read. Test category must have more then 50 members.
-   * @throws Exception a
+   * 
+   * @throws Exception
+   *           a
    */
   @Test
   public final void uploadMW1x14() throws Exception {
@@ -143,9 +155,12 @@ public class UploadAndImageInfoTest extends LiveTestFather {
     generalUploadImageInfoTest(bot, Version.MW1_14);
 
   }
+
   /**
    * Test category read. Test category must have more then 50 members.
-   * @throws Exception a
+   * 
+   * @throws Exception
+   *           a
    */
   @Test
   public final void uploadMW1x15() throws Exception {
@@ -157,7 +172,9 @@ public class UploadAndImageInfoTest extends LiveTestFather {
 
   /**
    * Test category read. Test category must have more then 50 members.
-   * @throws Exception a
+   * 
+   * @throws Exception
+   *           a
    */
   @Test
   public final void uploadMW1x16() throws Exception {
@@ -167,11 +184,11 @@ public class UploadAndImageInfoTest extends LiveTestFather {
 
   }
 
-
-
   /**
    * because image does not exists.
-   * @throws Exception a
+   * 
+   * @throws Exception
+   *           a
    */
   @Test(expected = ProcessException.class)
   public final void imageInfoFail() throws Exception {
@@ -184,7 +201,9 @@ public class UploadAndImageInfoTest extends LiveTestFather {
 
   /**
    * because image does not exists.
-   * @throws Exception a
+   * 
+   * @throws Exception
+   *           a
    */
   @Test(expected = ActionException.class)
   public final void imageInfoPerformManual() throws Exception {
@@ -194,11 +213,14 @@ public class UploadAndImageInfoTest extends LiveTestFather {
     bot.performAction(a);
 
   }
+
   /**
    * Test to delete an image.
-   * @throws Exception a
+   * 
+   * @throws Exception
+   *           a
    */
-  @Test(expected=ProcessException.class)
+  @Test(expected = ProcessException.class)
   public final void deleteImage() throws Exception {
     bot = getMediaWikiBot(Version.MW1_15, true);
     generalUploadImageInfoTest(bot, Version.MW1_15);
@@ -208,20 +230,26 @@ public class UploadAndImageInfoTest extends LiveTestFather {
 
       new URL(new ImageInfo(bot, getValue("filename")).getUrlAsString());
     } catch (ProcessException e) {
-      throw new ProcessException(e.getLocalizedMessage() + "; \n is upload enabled ?");
+      throw new ProcessException(e.getLocalizedMessage()
+          + "; \n is upload enabled ?");
     }
     fail("file was found ");
   }
+
   /**
    * 
-   * @param bot a
-   * @param v a
-   * @throws Exception a
+   * @param bot
+   *          a
+   * @param v
+   *          a
+   * @throws Exception
+   *           a
    */
-  protected final void generalUploadImageInfoTest(MediaWikiBot bot, Version v) throws Exception {
+  protected final void generalUploadImageInfoTest(MediaWikiBot bot, Version v)
+      throws Exception {
     assertEquals(bot.getVersion(), v);
-    assertTrue("File (" + getValue("validFile")
-        + ") not readable", new File(getValue("validFile")).canRead());
+    assertTrue("File (" + getValue("validFile") + ") not readable", new File(
+        getValue("validFile")).canRead());
     SimpleFile sf = new SimpleFile(getValue("filename"), getValue("validFile"));
     if (v.greaterEqThen(Version.MW1_12))
       try {
@@ -229,37 +257,43 @@ public class UploadAndImageInfoTest extends LiveTestFather {
       } catch (Exception e) {
         // do nothing
       }
-      BufferedImage img = ImageIO.read(sf.getFile());
-      int upWidth = img.getWidth();
-      int upHeight = img.getHeight();
-      FileUpload up = new FileUpload(sf, bot);
+    BufferedImage img = ImageIO.read(sf.getFile());
+    int upWidth = img.getWidth();
+    int upHeight = img.getHeight();
+    FileUpload up = new FileUpload(sf, bot);
 
-      bot.performAction(up);
-      URL url = null;
-      URL urlSizeVar = null;
-      int newWidth = 0;
-      int newHeight = 123;
-      try {
+    bot.performAction(up);
+    URL url = null;
+    URL urlSizeVar = null;
+    int newWidth = 0;
+    int newHeight = 123;
+    try {
 
-        url = new ImageInfo(bot, sf.getTitle()).getUrl();
-      } catch (ProcessException e) {
-        throw new ProcessException(e.getLocalizedMessage() + "; \n is upload enabled? $wgEnableUploads = true;");
-      }
-      urlSizeVar = new ImageInfo(bot, sf.getTitle(), new String [][]{{ImageInfo.HEIGHT, newHeight + ""}}).getUrl();
-      Assert.assertTrue("file not found "
-          + url , url.toExternalForm().length() - bot.getHostUrl().length() > 2);
-      File file = new File(getValue("validFile"));
-      assertFile(url, file);
-      assertImageDimension(url, upWidth, upHeight);
-      assertImageDimension(urlSizeVar, newWidth, newHeight);
-      registerTestedVersion(FileUpload.class, bot.getVersion());
-      registerTestedVersion(ImageInfo.class, bot.getVersion());
+      url = new ImageInfo(bot, sf.getTitle()).getUrl();
+    } catch (ProcessException e) {
+      throw new ProcessException(e.getLocalizedMessage()
+          + "; \n is upload enabled? $wgEnableUploads = true;");
+    }
+    urlSizeVar = new ImageInfo(bot, sf.getTitle(), new String[][] { {
+        ImageInfo.HEIGHT, newHeight + "" } }).getUrl();
+    Assert.assertTrue("file not found " + url, url.toExternalForm().length()
+        - bot.getHostUrl().length() > 2);
+    File file = new File(getValue("validFile"));
+    assertFile(url, file);
+    assertImageDimension(url, upWidth, upHeight);
+    assertImageDimension(urlSizeVar, newWidth, newHeight);
+    registerTestedVersion(FileUpload.class, bot.getVersion());
+    registerTestedVersion(ImageInfo.class, bot.getVersion());
   }
+
   /**
    * 
-   * @param url a
-   * @param file a
-   * @throws Exception a
+   * @param url
+   *          a
+   * @param file
+   *          a
+   * @throws Exception
+   *           a
    */
   protected final void assertFile(URL url, File file) throws Exception {
     File temp = new File("temp.file");
@@ -267,27 +301,31 @@ public class UploadAndImageInfoTest extends LiveTestFather {
     download(url.toExternalForm(), temp);
     Assert.assertTrue("files are not ident", filesAreIdentical(temp, file));
 
-    if (!temp.delete()) throw new RuntimeException("unable to delete file");
+    if (!temp.delete())
+      throw new RuntimeException("unable to delete file");
   }
 
-  protected void assertImageDimension(URL url, int width, int height) throws IOException {
+  protected void assertImageDimension(URL url, int width, int height)
+      throws IOException {
     BufferedImage img = ImageIO.read(url);
     assertEquals(height, img.getHeight());
     assertEquals(width, img.getWidth());
   }
+
   /**
    * 
-   * @param address a
-   * @param localFileName a
+   * @param address
+   *          a
+   * @param localFileName
+   *          a
    */
   protected static final void download(String address, File localFileName) {
     OutputStream out = null;
     URLConnection conn = null;
-    InputStream  in = null;
+    InputStream in = null;
     try {
       URL url = new URL(address);
-      out = new BufferedOutputStream(
-          new FileOutputStream(localFileName));
+      out = new BufferedOutputStream(new FileOutputStream(localFileName));
       conn = url.openConnection();
       in = conn.getInputStream();
       byte[] buffer = new byte[1024];
@@ -316,13 +354,16 @@ public class UploadAndImageInfoTest extends LiveTestFather {
 
   /**
    * 
-   * @param left a
-   * @param right a
+   * @param left
+   *          a
+   * @param right
+   *          a
    * @return true if
-   * @throws IOException a
+   * @throws IOException
+   *           a
    */
   protected static final boolean filesAreIdentical(File left, File right)
-  throws IOException {
+      throws IOException {
     assert left != null;
     assert right != null;
     assert left.exists();

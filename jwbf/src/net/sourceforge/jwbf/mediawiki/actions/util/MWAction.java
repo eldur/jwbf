@@ -30,15 +30,16 @@ import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
 
 /**
  * @author Thomas Stock
- *
+ * 
  */
 @Slf4j
 public abstract class MWAction implements ContentProcessable {
 
-  private Version [] v;
+  private Version[] v;
   private boolean hasMore = true;
+
   /**
-   *
+   * 
    * @return true if and changes state to false
    */
   public boolean hasMoreMessages() {
@@ -46,65 +47,71 @@ public abstract class MWAction implements ContentProcessable {
     hasMore = false;
     return b;
   }
+
   /**
-   *
-   * @param b if so
+   * 
+   * @param b
+   *          if so
    */
   public void setHasMoreMessages(boolean b) {
     hasMore = b;
   }
 
-
   /**
-   *
+   * 
    * @deprecated use {@link #MWAction(Version)} instead
    */
   @Deprecated
   protected MWAction() {
 
   }
+
   /**
-   *
-   * @param v of the bot
-   * @throws VersionException if action is incompatible
+   * 
+   * @param v
+   *          of the bot
+   * @throws VersionException
+   *           if action is incompatible
    */
   protected MWAction(Version v) throws VersionException {
     checkVersionNewerEquals(v);
 
   }
 
-
-
   /**
    * Deals with the MediaWiki API's response by parsing the provided text.
+   * 
    * @param s
-   *            the answer to the most recently generated MediaWiki API request
+   *          the answer to the most recently generated MediaWiki API request
    * @param hm
-   *            the requestor message
+   *          the requestor message
    * @return the returning text
-   * @throws ProcessException on processing problems
-   *
+   * @throws ProcessException
+   *           on processing problems
+   * 
    */
-  public String processReturningText(final String s, final HttpAction hm) throws ProcessException {
+  public String processReturningText(final String s, final HttpAction hm)
+      throws ProcessException {
     return processAllReturningText(s);
   }
 
   /**
    * @param s
-   *            the returning text
+   *          the returning text
    * @return the returning text
-   * @throws ProcessException never
-   *
+   * @throws ProcessException
+   *           never
+   * 
    */
   public String processAllReturningText(final String s) throws ProcessException {
     return s;
   }
+
   /**
-   *
+   * 
    * @return a
    */
-  private Version [] getVersionArray() {
-
+  private Version[] getVersionArray() {
 
     if (v != null)
       return v;
@@ -113,19 +120,20 @@ public abstract class MWAction implements ContentProcessable {
   }
 
   /**
-   *
-   * @param clazz a
+   * 
+   * @param clazz
+   *          a
    * @return an
    */
-  public static final Version [] findSupportedVersions(Class< ? > clazz) {
+  public static final Version[] findSupportedVersions(Class<?> clazz) {
     if (clazz.getName().contains(Object.class.getName())) {
-      Version [] v = new MediaWiki.Version[1];
+      Version[] v = new MediaWiki.Version[1];
       v[0] = Version.UNKNOWN;
       return v;
     } else if (clazz.isAnnotationPresent(SupportedBy.class)) {
       SupportedBy sb = clazz.getAnnotation(SupportedBy.class);
       if (log.isDebugEnabled()) {
-        Version [] vtemp = sb.value();
+        Version[] vtemp = sb.value();
         StringBuffer sv = new StringBuffer();
         for (int i = 0; i < vtemp.length; i++) {
           sv.append(vtemp[i].getNumber() + ", ");
@@ -133,8 +141,8 @@ public abstract class MWAction implements ContentProcessable {
         String svr = sv.toString().trim();
         svr = svr.substring(0, svr.length() - 1);
 
-
-        log.debug("found support for: " + svr + " in ↲ \n\t class " + clazz.getCanonicalName());
+        log.debug("found support for: " + svr + " in ↲ \n\t class "
+            + clazz.getCanonicalName());
 
       }
       return sb.value();
@@ -142,10 +150,13 @@ public abstract class MWAction implements ContentProcessable {
       return findSupportedVersions(clazz.getSuperclass());
     }
   }
+
   /**
-   *
-   * @param v a
-   * @throws VersionException if version is not supported
+   * 
+   * @param v
+   *          a
+   * @throws VersionException
+   *           if version is not supported
    */
   protected void checkVersionNewerEquals(Version v) throws VersionException {
     if (getSupportedVersions().contains(v))
@@ -163,7 +174,7 @@ public abstract class MWAction implements ContentProcessable {
   public final Collection<Version> getSupportedVersions() {
     Collection<Version> v = new ArrayList<Version>();
 
-    Version [] va = getVersionArray();
+    Version[] va = getVersionArray();
     for (int i = 0; i < va.length; i++) {
       v.add(va[i]);
     }
@@ -173,9 +184,9 @@ public abstract class MWAction implements ContentProcessable {
 
   /**
    * helper method generating a namespace string as required by the MW-api.
-   *
+   * 
    * @param namespaces
-   *            namespace as
+   *          namespace as
    * @return with numbers seperated by |
    */
   public static String createNsString(int... namespaces) {
@@ -189,14 +200,15 @@ public abstract class MWAction implements ContentProcessable {
       result = namespaceString.toString();
       // remove last '|'
       if (result.endsWith("|")) {
-        result = result.substring(0, result
-            .length() - 1);
+        result = result.substring(0, result.length() - 1);
       }
     }
     return result;
   }
+
   /**
    * {@inheritDoc}
+   * 
    * @deprecated see interface
    */
   @Deprecated

@@ -40,44 +40,56 @@ import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 
 /**
  * A specialization of {@link CategoryMembers} with contains {@link String}s.
+ * 
  * @author Thomas Stock
  */
 @Slf4j
 @SupportedBy({ MW1_11, MW1_12, MW1_13, MW1_14, MW1_15, MW1_16 })
-public class CategoryMembersSimple  implements Iterable<String>, Iterator<String> {
+public class CategoryMembersSimple implements Iterable<String>,
+    Iterator<String> {
 
   private Get msg;
   private final CategoryMembers cm;
   /**
-   * Collection that will contain the result
-   * (titles of articles linking to the target)
-   * after performing the action has finished.
+   * Collection that will contain the result (titles of articles linking to the
+   * target) after performing the action has finished.
    */
   private Collection<String> titleCollection = new ArrayList<String>();
   private Iterator<String> titleIterator;
 
   /**
-   * @param categoryName like "Buildings" or "Chemical elements"
-   * 		without prefix "Category:" in {@link MediaWiki#NS_MAIN}
-   * @param bot a
-   * @throws ActionException on any kind of http or version problems
-   * @throws ProcessException on inner problems like mw version
+   * @param categoryName
+   *          like "Buildings" or "Chemical elements" without prefix "Category:"
+   *          in {@link MediaWiki#NS_MAIN}
+   * @param bot
+   *          a
+   * @throws ActionException
+   *           on any kind of http or version problems
+   * @throws ProcessException
+   *           on inner problems like mw version
    * 
    */
-  public CategoryMembersSimple(MediaWikiBot bot, String categoryName) throws ActionException, ProcessException {
+  public CategoryMembersSimple(MediaWikiBot bot, String categoryName)
+      throws ProcessException {
     this(bot, categoryName, MediaWiki.NS_MAIN);
 
   }
+
   /**
-   * @param categoryName like "Buildings" or "Chemical elements" without prefix "Category:"
-   * @param bot a
-   * @param namespaces for search
-   * @throws ActionException on any kind of http or version problems
-   * @throws ProcessException on inner problems like mw version
+   * @param categoryName
+   *          like "Buildings" or "Chemical elements" without prefix "Category:"
+   * @param bot
+   *          a
+   * @param namespaces
+   *          for search
+   * @throws ActionException
+   *           on any kind of http or version problems
+   * @throws ProcessException
+   *           on inner problems like mw version
    * 
    */
   public CategoryMembersSimple(MediaWikiBot bot, String categoryName,
-      int... namespaces) throws ActionException, ProcessException {
+      int... namespaces) throws ProcessException {
     cm = new CategoryMembers(bot, categoryName, namespaces) {
 
       public HttpAction getNextMessage() {
@@ -111,13 +123,12 @@ public class CategoryMembersSimple  implements Iterable<String>, Iterator<String
 
   }
 
-
-
   private synchronized void prepareCollection() {
 
     if (cm.init || (!titleIterator.hasNext() && cm.hasMoreResults)) {
       if (cm.init) {
-        cm.setHasMoreMessages(true); // FIXME check if other action should have this too
+        cm.setHasMoreMessages(true); // FIXME check if other action should have
+                                     // this too
         msg = cm.generateFirstRequest();
       } else {
         msg = cm.generateContinueRequest(cm.nextPageInfo);
@@ -140,7 +151,6 @@ public class CategoryMembersSimple  implements Iterable<String>, Iterator<String
     }
   }
 
-
   public Iterator<String> iterator() {
     return this;
   }
@@ -159,6 +169,5 @@ public class CategoryMembersSimple  implements Iterable<String>, Iterator<String
     titleIterator.remove();
 
   }
-
 
 }

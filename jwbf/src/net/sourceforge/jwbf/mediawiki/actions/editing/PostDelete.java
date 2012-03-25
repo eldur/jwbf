@@ -28,18 +28,19 @@ import org.xml.sax.InputSource;
 /**
  * Action class using the MediaWiki-API's <a
  * href="http://www.mediawiki.org/wiki/API:Edit_-_Delete">"action=delete"</a>.
- *
+ * 
  * <p>
  * To allow your bot to delete articles in your MediaWiki add the following line
  * to your MediaWiki's LocalSettings.php:<br>
- *
+ * 
  * <pre>
  * $wgEnableWriteAPI = true;
  * $wgGroupPermissions['bot']['delete'] = true;
  * </pre>
- *
+ * 
  * <p>
  * Delete an article with
+ * 
  * <pre>
  * String name = ...
  * MediaWikiBot bot = ...
@@ -47,7 +48,7 @@ import org.xml.sax.InputSource;
  * Userinfo ui = bot.getUserinfo();
  * bot.performAction(new PostDelete(name, si, ui));
  * </pre>
- *
+ * 
  * @author Max Gensthaler
  */
 @Slf4j
@@ -61,17 +62,25 @@ public class PostDelete extends MWAction {
 
   /**
    * Constructs a new <code>PostDelete</code> action.
-   * @param bot a
-   * @param title a
-   * @throws ProcessException a
-   * @throws ActionException a
+   * 
+   * @param bot
+   *          a
+   * @param title
+   *          a
+   * @throws ProcessException
+   *           a
+   * @throws ActionException
+   *           a
    */
-  public PostDelete(MediaWikiBot bot, String title) throws ProcessException, ActionException {
+  public PostDelete(MediaWikiBot bot, String title) throws ProcessException,
+      ActionException {
     super(bot.getVersion());
-    token = new GetApiToken(GetApiToken.Intoken.DELETE, title, bot.getVersion(), bot.getUserinfo());
+    token = new GetApiToken(GetApiToken.Intoken.DELETE, title,
+        bot.getVersion(), bot.getUserinfo());
     this.title = title;
     if (title == null || title.length() == 0) {
-      throw new IllegalArgumentException("The argument 'title' must not be null or empty");
+      throw new IllegalArgumentException(
+          "The argument 'title' must not be null or empty");
     }
 
     if (!bot.getUserinfo().getRights().contains("delete")) {
@@ -89,9 +98,8 @@ public class PostDelete extends MWAction {
   private HttpAction getSecondRequest() {
     HttpAction msg = null;
     if (token.getToken() == null || token.getToken().length() == 0) {
-      throw new IllegalArgumentException(
-          "The argument 'token' must not be \""
-              + String.valueOf(token.getToken()) + "\"");
+      throw new IllegalArgumentException("The argument 'token' must not be \""
+          + String.valueOf(token.getToken()) + "\"");
     }
     if (log.isTraceEnabled()) {
       log.trace("enter PostDelete.generateDeleteRequest(String)");
@@ -105,11 +113,8 @@ public class PostDelete extends MWAction {
     }
     msg = new Post(uS);
 
-
     return msg;
   }
-
-
 
   /**
    * 
@@ -133,8 +138,7 @@ public class PostDelete extends MWAction {
       }
       SAXBuilder builder = new SAXBuilder();
       try {
-        Document doc = builder.build(new InputSource(
-            new StringReader(s)));
+        Document doc = builder.build(new InputSource(new StringReader(s)));
         if (!containsError(doc)) {
           process(doc);
         }
@@ -156,16 +160,17 @@ public class PostDelete extends MWAction {
     return "";
   }
 
-
-
   /**
    * Determines if the given XML {@link Document} contains an error message
    * which then would printed by the logger.
-   * @param doc XML <code>Document</code>
-   * @throws JDOMException thrown if the document could not be parsed
+   * 
+   * @param doc
+   *          XML <code>Document</code>
+   * @throws JDOMException
+   *           thrown if the document could not be parsed
    * @return if
    */
-  private boolean containsError(Document doc) throws JDOMException {
+  private boolean containsError(Document doc) {
     Element elem = doc.getRootElement().getChild("error");
     if (elem != null) {
       log.error(elem.getAttributeValue("info"));
@@ -179,22 +184,25 @@ public class PostDelete extends MWAction {
 
   /**
    * Processing the XML {@link Document} returned from the MediaWiki API.
-   * @param doc XML <code>Document</code>
-   * @throws JDOMException thrown if the document could not be parsed
+   * 
+   * @param doc
+   *          XML <code>Document</code>
+   * @throws JDOMException
+   *           thrown if the document could not be parsed
    */
-  private void process(Document doc) throws JDOMException {
+  private void process(Document doc) {
     Element elem = doc.getRootElement().getChild("delete");
     if (elem != null) {
       // process reply for delete request
       if (log.isInfoEnabled()) {
-        log.info("Deleted article '" + elem.getAttributeValue("title")
-            + "'" + " with reason '"
-            + elem.getAttributeValue("reason") + "'");
+        log.info("Deleted article '" + elem.getAttributeValue("title") + "'"
+            + " with reason '" + elem.getAttributeValue("reason") + "'");
       }
     } else {
       log.error("Unknow reply. This is not a reply for a delete action.");
     }
   }
+
   /**
    * {@inheritDoc}
    */

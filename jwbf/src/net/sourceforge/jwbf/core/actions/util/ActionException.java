@@ -23,8 +23,9 @@ import net.sourceforge.jwbf.core.bots.util.JwbfException;
 /**
  * 
  * @author Thomas Stock
- *
+ * @deprecated do not use this exception. Use common java runtime exceptions
  */
+@Deprecated
 public class ActionException extends JwbfException {
 
   /**
@@ -53,7 +54,5 @@ public class ActionException extends JwbfException {
   public ActionException(Throwable t) {
     super(t);
   }
-
-
 
 }

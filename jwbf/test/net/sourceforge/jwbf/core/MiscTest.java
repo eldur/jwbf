@@ -14,30 +14,30 @@ import java.util.HashSet;
 import java.util.Set;
 
 import net.sourceforge.jwbf.JWBF;
+import net.sourceforge.jwbf.mediawiki.actions.editing.PostModifyContent;
 
 import org.junit.Test;
 
-
 public class MiscTest {
+
   @Test
   public void subsetTest() {
-
-    assertFalse(!Misc.isIntersectionEmpty(null, null));
+    assertFalse(!PostModifyContent.isIntersectionEmpty(null, null));
     Set<String> a = new HashSet<String>();
     Set<String> b = new HashSet<String>();
     assertTrue(a.containsAll(b));
-    assertTrue(Misc.isIntersectionEmpty(a, b));
-    assertTrue(Misc.isIntersectionEmpty(b, a));
+    assertTrue(PostModifyContent.isIntersectionEmpty(a, b));
+    assertTrue(PostModifyContent.isIntersectionEmpty(b, a));
 
     b.add("a");
     b.add("c");
-    assertFalse(!Misc.isIntersectionEmpty(a, b));
-    assertFalse(!Misc.isIntersectionEmpty(b, a));
+    assertFalse(!PostModifyContent.isIntersectionEmpty(a, b));
+    assertFalse(!PostModifyContent.isIntersectionEmpty(b, a));
     a.add("a");
     a.add("b");
 
-    assertTrue(!Misc.isIntersectionEmpty(a, b));
-    assertTrue(!Misc.isIntersectionEmpty(b, a));
+    assertTrue(!PostModifyContent.isIntersectionEmpty(a, b));
+    assertTrue(!PostModifyContent.isIntersectionEmpty(b, a));
     assertTrue(a.size() > 1);
     assertTrue(b.size() > 1);
   }

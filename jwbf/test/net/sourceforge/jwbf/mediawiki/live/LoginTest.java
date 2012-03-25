@@ -37,7 +37,6 @@ import javax.net.ssl.SSLSocket;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
-import net.sourceforge.jwbf.TestHelper;
 import net.sourceforge.jwbf.core.actions.HttpActionClient;
 import net.sourceforge.jwbf.core.actions.util.ActionException;
 import net.sourceforge.jwbf.mediawiki.BotFactory;
@@ -61,45 +60,38 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.SingleClientConnManager;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpParams;
-import org.junit.BeforeClass;
 import org.junit.Test;
+
 /**
  * Test Login.
+ * 
  * @author Thomas Stock
- *
- *
  */
 public class LoginTest extends LiveTestFather {
-
-
 
   private MediaWikiBot bot = null;
 
   /**
-   * Setup log4j.
-   * @throws Exception a
-   */
-  @BeforeClass
-  public static void setUp() throws Exception {
-    TestHelper.prepareLogging();
-  }
-
-  /**
    * Test login on Wikipedia.
-   * @throws Exception a
+   * 
+   * @throws Exception
+   *           a
    */
   @Test
   public final void loginWikipedia1() throws Exception {
     String url = getValue("login_wikipedia1_url");
     assumeReachable(url);
     bot = new MediaWikiBot(url);
-    bot.login(getValue("login_wikipedia1_user_valid"), getValue("login_wikipedia1_pass_valid"));
+    bot.login(getValue("login_wikipedia1_user_valid"),
+        getValue("login_wikipedia1_pass_valid"));
     assertTrue(bot.isLoggedIn());
   }
 
   /**
    * Test login on Wikipedia.
-   * @throws Exception a
+   * 
+   * @throws Exception
+   *           a
    */
   @Test
   public final void loginWikipedia1Urlformats() throws Exception {
@@ -109,12 +101,16 @@ public class LoginTest extends LiveTestFather {
     url = url.substring(0, lastSlash + 1);
     assumeReachable(url);
     bot = new MediaWikiBot(url);
-    bot.login(getValue("login_wikipedia1_user_valid"), getValue("login_wikipedia1_pass_valid"));
+    bot.login(getValue("login_wikipedia1_user_valid"),
+        getValue("login_wikipedia1_pass_valid"));
     assertTrue(bot.isLoggedIn());
   }
+
   /**
    * Test FAIL login on Wikipedia.
-   * @throws Exception a
+   * 
+   * @throws Exception
+   *           a
    */
   @Test(expected = ActionException.class)
   public final void loginWikipedia1Fail() throws Exception {
@@ -129,12 +125,14 @@ public class LoginTest extends LiveTestFather {
 
   /**
    * Test login on a Mediawiki.
-   * @throws Exception a
+   * 
+   * @throws Exception
+   *           a
    */
   @Test
   public final void loginWikiMW1x09() throws Exception {
     String url = getValue("wikiMW1_09_url");
-    assertTrue("shuld end with .php" , url.endsWith(".php"));
+    assertTrue("shuld end with .php", url.endsWith(".php"));
     bot = new MediaWikiBot(url);
     bot.login(getValue("wikiMW1_09_user"), getValue("wikiMW1_09_pass"));
     assertTrue(bot.isLoggedIn());
@@ -142,9 +140,11 @@ public class LoginTest extends LiveTestFather {
   }
 
   /**
-   * Test FAIL login on Mediawiki.
-   * TODO change exception test, should fail if no route to test host
-   * @throws Exception a
+   * Test FAIL login on Mediawiki. TODO change exception test, should fail if no
+   * route to test host
+   * 
+   * @throws Exception
+   *           a
    */
   @Test(expected = ActionException.class)
   public final void loginWikiMW1x09Fail() throws Exception {
@@ -152,9 +152,12 @@ public class LoginTest extends LiveTestFather {
     bot.login("Klhjfd", "4sdf");
 
   }
+
   /**
    * Test login where the wiki is in a subfolder, like www.abc.com/wiki .
-   * @throws Exception a
+   * 
+   * @throws Exception
+   *           a
    */
   @Test(expected = MalformedURLException.class)
   public final void loginWikiMW1x09UrlformatsFail() throws Exception {
@@ -162,31 +165,34 @@ public class LoginTest extends LiveTestFather {
     String url = getValue("wikiMW1_09_url");
     int lastSlash = url.lastIndexOf("/");
     url = url.substring(0, lastSlash);
-    assertFalse("shuld not end with .php" , url.endsWith(".php"));
+    assertFalse("shuld not end with .php", url.endsWith(".php"));
     bot = new MediaWikiBot(url);
     bot.login(getValue("wikiMW1_09_user"), getValue("wikiMW1_09_pass"));
   }
 
   /**
    * Test login on a Mediawiki.
-   * @throws Exception a
+   * 
+   * @throws Exception
+   *           a
    */
   @Test
   public final void loginWikiMW1x09Urlformats() throws Exception {
     String url = getValue("wikiMW1_09_url");
     int lastSlash = url.lastIndexOf("/");
     url = url.substring(0, lastSlash + 1);
-    assertFalse("shuld not end with .php" , url.endsWith(".php"));
+    assertFalse("shuld not end with .php", url.endsWith(".php"));
     bot = new MediaWikiBot(url);
     bot.login(getValue("wikiMW1_09_user"), getValue("wikiMW1_09_pass"));
     assertTrue(bot.isLoggedIn());
   }
 
-
   /**
-   * Test invalid installation of MW.
-   * TODO change exception test, should fail if no route to test host
-   * @throws Exception a
+   * Test invalid installation of MW. TODO change exception test, should fail if
+   * no route to test host
+   * 
+   * @throws Exception
+   *           a
    */
   @Test(expected = ActionException.class)
   public final void installationDefunct() throws Exception {
@@ -197,9 +203,11 @@ public class LoginTest extends LiveTestFather {
   }
 
   /**
-   * Test invalid installation of MW.
-   * TODO change exception test, should fail if no route to test host
-   * @throws Exception a
+   * Test invalid installation of MW. TODO change exception test, should fail if
+   * no route to test host
+   * 
+   * @throws Exception
+   *           a
    */
   @Test(expected = ActionException.class)
   public final void conncetionProblem() throws Exception {
@@ -212,7 +220,9 @@ public class LoginTest extends LiveTestFather {
 
   /**
    * Test login on a Mediawiki.
-   * @throws Exception a
+   * 
+   * @throws Exception
+   *           a
    */
   @Test
   public final void loginWikiMWLast() throws Exception {
@@ -223,9 +233,12 @@ public class LoginTest extends LiveTestFather {
     assertTrue(bot.isLoggedIn());
     registerTestedVersion(PostLoginOld.class, bot.getVersion());
   }
+
   /**
    * Login on last MW with SSL and htaccess.
-   * @throws Exception a
+   * 
+   * @throws Exception
+   *           a
    */
   @Test
   public final void loginWikiMWLastSSLAndHtaccess() throws Exception {
@@ -249,7 +262,8 @@ public class LoginTest extends LiveTestFather {
 
     httpClient.getCredentialsProvider().setCredentials(
         new AuthScope(u.getHost(), port),
-        new UsernamePasswordCredentials(BotFactory.getWikiUser(latest), BotFactory.getWikiPass(latest)));
+        new UsernamePasswordCredentials(BotFactory.getWikiUser(latest),
+            BotFactory.getWikiPass(latest)));
 
     HttpActionClient aClient = new HttpActionClient(httpClient, u);
     bot = new MediaWikiBot(aClient);
@@ -258,24 +272,22 @@ public class LoginTest extends LiveTestFather {
     assertTrue(bot.isLoggedIn());
   }
 
-  private AbstractHttpClient getSSLFakeHttpClient() throws NoSuchAlgorithmException,
-  KeyManagementException {
+  private AbstractHttpClient getSSLFakeHttpClient()
+      throws NoSuchAlgorithmException, KeyManagementException {
     SSLContext sslContext = SSLContext.getInstance("SSL");
     sslContext.init(null, new TrustManager[] { new X509TrustManager() {
       public X509Certificate[] getAcceptedIssuers() {
         return null;
       }
 
-      public void checkClientTrusted(X509Certificate[] certs,
-          String authType) {
+      public void checkClientTrusted(X509Certificate[] certs, String authType) {
       }
 
-      public void checkServerTrusted(X509Certificate[] certs,
-          String authType) {
+      public void checkServerTrusted(X509Certificate[] certs, String authType) {
       }
     } }, new SecureRandom());
 
-    SSLSocketFactory sf = new SSLSocketFactory (sslContext);
+    SSLSocketFactory sf = new SSLSocketFactory(sslContext);
     sf.setHostnameVerifier(new X509HostnameVerifier() {
 
       public boolean verify(String hostname, SSLSession session) {
@@ -283,7 +295,7 @@ public class LoginTest extends LiveTestFather {
       }
 
       public void verify(String host, String[] cns, String[] subjectAlts)
-      throws SSLException {
+          throws SSLException {
       }
 
       public void verify(String host, X509Certificate cert) throws SSLException {
@@ -298,7 +310,8 @@ public class LoginTest extends LiveTestFather {
 
     HttpParams params = new BasicHttpParams();
 
-    ClientConnectionManager cm = new SingleClientConnManager(params, schemeRegistry);
+    ClientConnectionManager cm = new SingleClientConnManager(params,
+        schemeRegistry);
 
     DefaultHttpClient httpClient = new DefaultHttpClient(cm, params);
     return httpClient;

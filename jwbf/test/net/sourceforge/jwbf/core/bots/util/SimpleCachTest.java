@@ -20,10 +20,11 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+
 /**
- *
+ * 
  * @author Thomas Stock
- *
+ * 
  */
 @Ignore
 public class SimpleCachTest extends TestHelper {
@@ -34,7 +35,7 @@ public class SimpleCachTest extends TestHelper {
   private static final String label = "CachTest";
 
   @Before
-  public final void prepare()  throws Exception {
+  public final void prepare() {
 
     f.mkdirs();
   }
@@ -42,17 +43,16 @@ public class SimpleCachTest extends TestHelper {
   @After
   public final void afterTest() {
 
-    File [] fs = f.listFiles();
+    File[] fs = f.listFiles();
     for (int i = 0; i < fs.length; i++) {
       fs[i].delete(); // TODO comment in
     }
-    f.deleteOnExit();  // TODO comment in
+    f.deleteOnExit(); // TODO comment in
 
   }
 
   @Test
-  public void innerWriteRead() throws Exception {
-
+  public void innerWriteRead() {
 
     SimpleCache db = new SimpleCache(f, 10000);
     SimpleArticle sa = new SimpleArticle(label);
@@ -60,13 +60,11 @@ public class SimpleCachTest extends TestHelper {
 
     db.write2File(ca);
 
-
     // reinit the cach
     db = new SimpleCache(f, 10000);
     // check if contains
     CachArticle rx = db.readFromFile(label);
     assertEquals(sa.getTitle(), rx.getTitle());
-
 
   }
 
@@ -99,34 +97,38 @@ public class SimpleCachTest extends TestHelper {
 
     InputStream fis = null;
 
-    try
-    {
-      fis = new FileInputStream( new File(f, "bert") );
-      ObjectInputStream o = new ObjectInputStream( fis );
+    try {
+      fis = new FileInputStream(new File(f, "bert"));
+      ObjectInputStream o = new ObjectInputStream(fis);
       CachArticle string = (CachArticle) o.readObject();
 
+      System.out.println(string.getSaveDate());
+      System.out.println(string.getTitle());
 
-      System.out.println( string.getSaveDate() );
-      System.out.println( string.getTitle() );
-
+    } catch (IOException e) {
+      System.err.println(e);
+    } catch (ClassNotFoundException e) {
+      System.err.println(e);
+    } finally {
+      try {
+        fis.close();
+      } catch (Exception e) {
+      }
     }
-    catch ( IOException e ) { System.err.println( e ); }
-    catch ( ClassNotFoundException e ) { System.err.println( e ); }
-    finally { try { fis.close(); } catch ( Exception e ) { } }
 
   }
 
-
   @Test
-  public void checksumTest() throws Exception {
+  public void checksumTest() {
     SimpleCache x = new SimpleCache(f, 21);
     String bert = getRandomAlph(8);
     String v1 = x.getChecksum(bert);
     String v2 = x.getChecksum(bert);
     assertEquals(v1, v2);
   }
+
   @Test
-  public void basic1() throws Exception {
+  public void basic1() {
 
     String title = getRandomAlph(8);
     CacheHandler db = new SimpleCache(f, 10000);
@@ -138,19 +140,17 @@ public class SimpleCachTest extends TestHelper {
     // write in DB
     db.put(sai);
 
-
     // reinit the cach
-    //		db = new SimpleCache(f, 10000);
+    // db = new SimpleCache(f, 10000);
     // check if contains
     assertTrue("should contains", db.containsKey(title));
     System.out.println("text: " + db.get(title).getText());
     assertTrue("should have a", db.get(title).getTitle().length() > 1);
 
-
   }
 
   @Test
-  public void basic2() throws Exception {
+  public void basic2() {
 
     String title = getRandom(8);
     CacheHandler db = new SimpleCache(f, 10000);
@@ -176,7 +176,9 @@ public class SimpleCachTest extends TestHelper {
 
   /**
    * Test.
-   * @throws Exception a
+   * 
+   * @throws Exception
+   *           a
    */
   @Test
   public final void cacheTestAttributes() throws Exception {
@@ -189,7 +191,6 @@ public class SimpleCachTest extends TestHelper {
     a.setMinorEdit(true);
     a.setEditTimestamp(new Date());
     a.setEditor("Editor");
-
 
     cache.put(a);
     assertTrue("should contains the article", cache.containsKey(label));
