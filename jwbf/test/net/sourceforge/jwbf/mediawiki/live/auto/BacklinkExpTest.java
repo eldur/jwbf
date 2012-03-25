@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Vector;
 
+import net.sourceforge.jwbf.TestHelper;
 import net.sourceforge.jwbf.core.actions.util.ActionException;
 import net.sourceforge.jwbf.core.actions.util.ProcessException;
 import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
@@ -24,9 +25,9 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized.Parameters;
 
 /**
- *
+ * 
  * @author Thomas Stock
- *
+ * 
  */
 @RunWith(ParameterizedLabel.class)
 @TestNamer(SimpleNameFinder.class)
@@ -38,24 +39,20 @@ public class BacklinkExpTest extends LiveTestFather {
 
   @Parameters
   public static Collection<?> regExValues() {
-    return Arrays.asList(new Object[][] {
-        {Version.MW1_09},
-        {Version.MW1_10},
-        {Version.MW1_11},
-        {Version.MW1_12},
-        {Version.MW1_13},
-        {Version.MW1_14},
-        {Version.MW1_15},
-        {Version.MW1_16},
-    });
+    return Arrays.asList(new Object[][] { { Version.MW1_09 },
+        { Version.MW1_10 }, { Version.MW1_11 }, { Version.MW1_12 },
+        { Version.MW1_13 }, { Version.MW1_14 }, { Version.MW1_15 },
+        { Version.MW1_16 }, });
   }
 
   public BacklinkExpTest(Version v) throws Exception {
+    TestHelper.assumeLiveTestEnvoirnmentReachable();
     bot = getMediaWikiBot(v, true);
     Assert.assertEquals(v, bot.getVersion());
   }
 
-  protected static final void doPreapare(MediaWikiBot bot) throws ActionException, ProcessException {
+  protected static final void doPreapare(MediaWikiBot bot)
+      throws ActionException, ProcessException {
     SimpleArticle a = new SimpleArticle();
     for (int i = 0; i <= COUNT; i++) {
       a.setTitle("Back" + i);
@@ -70,15 +67,14 @@ public class BacklinkExpTest extends LiveTestFather {
 
   /**
    * Test backlinks.
-   *
+   * 
    * @throws Exception
-   *             a
+   *           a
    */
   @Test
   public final void test() throws Exception {
     doTest(bot);
   }
-
 
   private void doTest(MediaWikiBot bot) throws Exception {
     doTest(bot, RedirectFilter.all);
@@ -86,7 +82,8 @@ public class BacklinkExpTest extends LiveTestFather {
 
   private void doTest(MediaWikiBot bot, RedirectFilter rf) throws Exception {
 
-    BacklinkTitles gbt = new BacklinkTitles(bot, BACKLINKS, rf, MediaWiki.NS_MAIN , MediaWiki.NS_CATEGORY);
+    BacklinkTitles gbt = new BacklinkTitles(bot, BACKLINKS, rf,
+        MediaWiki.NS_MAIN, MediaWiki.NS_CATEGORY);
 
     Vector<String> vx = new Vector<String>();
     Iterator<String> is = gbt.iterator();
@@ -101,7 +98,7 @@ public class BacklinkExpTest extends LiveTestFather {
       }
     }
     if (notEnougth) {
-      System.err.println(i  + " is to less (" + COUNT + ")");
+      System.err.println(i + " is to less (" + COUNT + ")");
       doPreapare(bot);
     }
     is = gbt.iterator();
