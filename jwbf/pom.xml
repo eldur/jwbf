@@ -1,65 +1,66 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
- <!-- -Dmaven.test.skip=true -->
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>net.sourceforge</groupId>
-  <artifactId>jwbf</artifactId>
-  <packaging>jar</packaging>
-  <name>JWBF</name>
-  <version>1.4-SNAPSHOT</version>
-  <description>Java Wiki Bot Framework - A Wiki helper</description>
-  <url>http://jwbf.sourceforge.net/</url>
-  <issueManagement>
-  	<system>Sourceforge</system>
-  	<url>http://sourceforge.net/tracker/?group_id=192186</url>
-  </issueManagement>
-  <developers>
-  </developers>
-  <scm>
-  	<connection>scm:svn:https://jwbf.svn.sourceforge.net/svnroot/jwbf</connection>
-  	<url>http://jwbf.svn.sourceforge.net/viewvc/jwbf/</url>
-  </scm>
-  <licenses>
-  <license>
-    <name>Apache 2</name>
-    <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-    <distribution>repo</distribution>
-    <comments>A business-friendly OSS license</comments>
-  </license>
-</licenses>
-  <build>
-  	<sourceDirectory>src</sourceDirectory>
-  	<testSourceDirectory>test</testSourceDirectory>
-  	<outputDirectory>bin</outputDirectory>
-  	<resources>
-  	</resources>
- 
-  	<plugins>
-	<plugin>
-		<groupId>org.apache.maven.plugins</groupId>
-		<artifactId>maven-site-plugin</artifactId>
-		<version>2.0-beta-7</version>
-		<configuration>
-          <templateFile>${basedir}/util/resources/default-site.vm</templateFile>
-        </configuration>
-	</plugin>
-	<plugin>
-		<groupId>org.apache.maven.plugins</groupId>
-		<artifactId>maven-compiler-plugin</artifactId>
-		<version>2.0.2</version>
-		<configuration>
-			<source>1.5</source>
-			<target>1.5</target>
-		</configuration>
-	</plugin>
-  		<plugin>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<!-- -Dmaven.test.skip=true -->
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>net.sourceforge</groupId>
+	<artifactId>jwbf</artifactId>
+	<packaging>jar</packaging>
+	<name>JWBF</name>
+	<version>1.4-SNAPSHOT</version>
+	<description>Java Wiki Bot Framework - A Wiki helper</description>
+	<url>http://jwbf.sourceforge.net/</url>
+	<issueManagement>
+		<system>Sourceforge</system>
+		<url>http://sourceforge.net/tracker/?group_id=192186</url>
+	</issueManagement>
+	<developers>
+	</developers>
+	<scm>
+		<connection>scm:svn:https://jwbf.svn.sourceforge.net/svnroot/jwbf</connection>
+		<url>http://jwbf.svn.sourceforge.net/viewvc/jwbf/</url>
+	</scm>
+	<licenses>
+		<license>
+			<name>Apache 2</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<distribution>repo</distribution>
+			<comments>A business-friendly OSS license</comments>
+		</license>
+	</licenses>
+	<build>
+		<sourceDirectory>src</sourceDirectory>
+		<testSourceDirectory>test</testSourceDirectory>
+		<outputDirectory>bin</outputDirectory>
+		<resources>
+		</resources>
+
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-site-plugin</artifactId>
+				<version>2.0-beta-7</version>
+				<configuration>
+					<templateFile>${basedir}/util/resources/default-site.vm</templateFile>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.0.2</version>
+				<configuration>
+					<source>1.5</source>
+					<target>1.5</target>
+				</configuration>
+			</plugin>
+			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
 
 				<configuration>
 					<archive>
 						<addMavenDescriptor>false</addMavenDescriptor>
-            			<manifestFile>${project.build.directory}/MANIFEST.MF</manifestFile>
-         	 		</archive>
+						<manifestFile>${project.build.directory}/MANIFEST.MF</manifestFile>
+					</archive>
 				</configuration>
 
 				<executions>
@@ -76,8 +77,8 @@
 							<classifier>core</classifier>
 							<archive>
 								<addMavenDescriptor>false</addMavenDescriptor>
-            					<manifestFile>${project.build.directory}/MANIFEST.MF</manifestFile>
-         	 				</archive>
+								<manifestFile>${project.build.directory}/MANIFEST.MF</manifestFile>
+							</archive>
 							<includes>
 								<include>net/sourceforge/jwbf/JWBF*</include>
 								<include>net/sourceforge/jwbf/core/**</include>
@@ -97,8 +98,8 @@
 							<classifier>mediawiki</classifier>
 							<archive>
 								<addMavenDescriptor>false</addMavenDescriptor>
-            					<manifestFile>${project.build.directory}/MANIFEST.MF</manifestFile>
-         	 				</archive>
+								<manifestFile>${project.build.directory}/MANIFEST.MF</manifestFile>
+							</archive>
 							<includes>
 								<include>net/sourceforge/jwbf/JWBF*</include>
 								<include>net/sourceforge/jwbf/core/**</include>
@@ -130,238 +131,259 @@
 				</configuration>
 			</plugin>
 			<plugin>
-			  <inherited>true</inherited>
-			  <groupId>org.apache.maven.plugins</groupId>
-			  <artifactId>maven-javadoc-plugin</artifactId>
-			  <executions>
-			    <execution>
-			      <id>attach-javadocs</id>
-			      <goals>
-			        <goal>jar</goal>
-			      </goals>
-			    </execution>
-			  </executions>
+				<inherited>true</inherited>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>attach-javadocs</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
-  		<plugin>
-  		
-		<groupId>org.apache.maven.plugins</groupId>
-		<artifactId>maven-antrun-plugin</artifactId>
-		<version>1.7</version>
-		<executions>
-			<execution>
-				<id>antexternal</id>
-				<phase>package</phase>
-				<goals>
-					<goal>run</goal>
-				</goals>
-            <configuration>
-              <tasks>
-                <echo>Build Dir: ${project.build.directory}</echo>
-                <echo>${java.home}</echo>
+			<plugin>
 
-                <property name="classpath.compile" refid="maven.compile.classpath" />
-                <property name="runtime_classpath" refid="maven.runtime.classpath" />
-                <property name="classpath.test" refid="maven.test.classpath" />
-                <property name="plugin_classpath" refid="maven.plugin.classpath" />
-				<property name="target" value="${project.build.directory}" />
-				<property name="version" value="${project.version}" />
-				<property name="artifactId" value="${project.artifactId}" />
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>1.7</version>
+				<executions>
+					<execution>
+						<id>antexternal</id>
+						<phase>package</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<configuration>
+							<tasks>
+								<echo>Build Dir: ${project.build.directory}</echo>
+								<echo>${java.home}</echo>
 
-              <ant antfile="${basedir}/build-mvn.xml" inheritRefs="true">
-                  <target name="package" />
-                </ant>
-              
-              </tasks>
-            </configuration>
-				
-			</execution>
-			
-			<execution>
-				<id>antmanifest</id>
-				<phase>compile</phase>
-				<goals>
-					<goal>run</goal>
-				</goals>
+								<property name="classpath.compile" refid="maven.compile.classpath" />
+								<property name="runtime_classpath" refid="maven.runtime.classpath" />
+								<property name="classpath.test" refid="maven.test.classpath" />
+								<property name="plugin_classpath" refid="maven.plugin.classpath" />
+								<property name="target" value="${project.build.directory}" />
+								<property name="version" value="${project.version}" />
+								<property name="artifactId" value="${project.artifactId}" />
+
+								<ant antfile="${basedir}/build-mvn.xml" inheritRefs="true">
+									<target name="package" />
+								</ant>
+
+							</tasks>
+						</configuration>
+
+					</execution>
+
+					<execution>
+						<id>antmanifest</id>
+						<phase>compile</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<configuration>
+							<tasks>
+								<echo>Build Dir: ${project.build.directory}</echo>
+								<echo>${java.home}</echo>
+
+								<property name="classpath.compile" refid="maven.compile.classpath" />
+								<property name="runtime_classpath" refid="maven.runtime.classpath" />
+								<property name="classpath.test" refid="maven.test.classpath" />
+								<property name="plugin_classpath" refid="maven.plugin.classpath" />
+								<property name="target" value="${project.build.directory}" />
+								<property name="version" value="${project.version}" />
+								<property name="artifactId" value="${project.artifactId}" />
+
+								<ant antfile="${basedir}/build-mvn.xml" inheritRefs="true">
+									<target name="manifest" />
+								</ant>
+
+							</tasks>
+						</configuration>
+					</execution>
+				</executions>
+
+				<dependencies>
+					<dependency>
+						<groupId>sun.jdk</groupId>
+						<artifactId>tools</artifactId>
+						<version>1.5</version>
+						<scope>system</scope>
+						<systemPath>${java.home}/../lib/tools.jar</systemPath>
+					</dependency>
+
+					<dependency>
+						<groupId>org.apache.ant</groupId>
+						<artifactId>ant-apache-oro</artifactId>
+						<version>1.7.1</version>
+						<scope>compile</scope>
+					</dependency>
+				</dependencies>
+			</plugin>
+		</plugins>
+		<extensions>
+		</extensions>
+
+
+		<pluginManagement>
+			<plugins>
+				<!--This plugin's configuration is used to store Eclipse m2e settings 
+					only. It has no influence on the Maven build itself. -->
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>
+											org.apache.maven.plugins
+										</groupId>
+										<artifactId>
+											maven-antrun-plugin
+										</artifactId>
+										<versionRange>
+											[1.7,)
+										</versionRange>
+										<goals>
+											<goal>run</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore></ignore>
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
+	<profiles>
+	</profiles>
+	<dependencies>
+
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>0.10.4</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.jdom</groupId>
+			<artifactId>jdom</artifactId>
+			<version>1.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<version>4.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpmime</artifactId>
+			<version>4.0</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-lang</groupId>
+			<artifactId>commons-lang</artifactId>
+			<version>2.5</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>1.6.4</version>
+		</dependency>
+		<dependency>
+			<groupId>javax.inject</groupId>
+			<artifactId>javax.inject</artifactId>
+			<version>1</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>12.0-rc1</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.10</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.google.inject</groupId>
+			<artifactId>guice</artifactId>
+			<version>3.0</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-all</artifactId>
+			<version>1.9.0</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+	<reporting>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-report-plugin</artifactId>
+
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>taglist-maven-plugin</artifactId>
 				<configuration>
-              <tasks>
-                <echo>Build Dir: ${project.build.directory}</echo>
-                <echo>${java.home}</echo>
+					<tags>
+						<tag>TODO</tag>
+						<tag>FIXME</tag>
+						<tag>REFACTOR</tag>
+						<tag>@deprecated</tag>
+					</tags>
+				</configuration>
 
-                <property name="classpath.compile" refid="maven.compile.classpath" />
-                <property name="runtime_classpath" refid="maven.runtime.classpath" />
-                <property name="classpath.test" refid="maven.test.classpath" />
-                <property name="plugin_classpath" refid="maven.plugin.classpath" />
-				<property name="target" value="${project.build.directory}" />
-				<property name="version" value="${project.version}" />
-				<property name="artifactId" value="${project.artifactId}" />
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>cobertura-maven-plugin</artifactId>
+				<version>2.4</version>
+				<configuration>
+					<formats>
+						<format>html</format>
+						<format>xml</format>
+					</formats>
+					<instrumentation>
+						<excludes>
+							<exclude>**/*Test.class</exclude>
+						</excludes>
+					</instrumentation>
+				</configuration>
+			</plugin>
+		</plugins>
+	</reporting>
+	<distributionManagement>
+		<repository>
+			<id>sourceforge.net</id>
+			<url>sftp://web.sourceforge.net/home/groups/j/jw/jwbf/m2repo-release</url>
 
-              <ant antfile="${basedir}/build-mvn.xml" inheritRefs="true">
-                  <target name="manifest" />
-                </ant>
-              
-              </tasks>
-            </configuration>
-			</execution>
-		</executions>
-		
-		<dependencies>
-                <dependency>
-                 <groupId>sun.jdk</groupId>
-                 <artifactId>tools</artifactId>
-                 <version>1.5</version>
-                 <scope>system</scope>
-                 <systemPath>${java.home}/../lib/tools.jar</systemPath>
-         </dependency>
-
-                <dependency>
-                 <groupId>org.apache.ant</groupId>
-                 <artifactId>ant-apache-oro</artifactId>
-                 <version>1.7.1</version>
-                 <scope>compile</scope>
-         </dependency>
-         </dependencies>
-	</plugin>
-  	</plugins>
-  	<extensions>
-  	</extensions>
-
-
-  	<pluginManagement>
-  		<plugins>
-  			<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
-  			<plugin>
-  				<groupId>org.eclipse.m2e</groupId>
-  				<artifactId>lifecycle-mapping</artifactId>
-  				<version>1.0.0</version>
-  				<configuration>
-  					<lifecycleMappingMetadata>
-  						<pluginExecutions>
-  							<pluginExecution>
-  								<pluginExecutionFilter>
-  									<groupId>
-  										org.apache.maven.plugins
-  									</groupId>
-  									<artifactId>
-  										maven-antrun-plugin
-  									</artifactId>
-  									<versionRange>
-  										[1.7,)
-  									</versionRange>
-  									<goals>
-  										<goal>run</goal>
-  									</goals>
-  								</pluginExecutionFilter>
-  								<action>
-  									<ignore></ignore>
-  								</action>
-  							</pluginExecution>
-  						</pluginExecutions>
-  					</lifecycleMappingMetadata>
-  				</configuration>
-  			</plugin>
-  		</plugins>
-  	</pluginManagement>
-  </build>
-  <profiles>
-  </profiles>
-  <dependencies>
-  	 	<dependency>
-  		<groupId>junit</groupId>
-  		<artifactId>junit</artifactId>
-  		<version>4.7</version>
-  		<scope>test</scope>
-  	</dependency>
-	<dependency>
-		<groupId>org.projectlombok</groupId>
-		<artifactId>lombok</artifactId>
-		<version>0.10.4</version>
-		<scope>provided</scope>
-	</dependency>
-  	 	<dependency>
-  		<groupId>org.jdom</groupId>
-  		<artifactId>jdom</artifactId>
-  		<version>1.1</version>
-  		<scope>compile</scope>
-  	</dependency>
-  	 	<dependency>
-  	 		<groupId>org.apache.httpcomponents</groupId>
-  	 		<artifactId>httpclient</artifactId>
-  	 		<version>4.0</version>
-  	 		<scope>compile</scope>
-  	 	</dependency>
-  	 	<dependency>
-  	 		<groupId>org.apache.httpcomponents</groupId>
-  	 		<artifactId>httpmime</artifactId>
-  	 		<version>4.0</version>
-  	 		<scope>compile</scope>
-  	 	</dependency>
-  	 	<dependency>
-  	 		<groupId>commons-lang</groupId>
-  	 		<artifactId>commons-lang</artifactId>
-  	 		<version>2.5</version>
-  	 		<scope>compile</scope>
-  	 	</dependency>
-  	 	<dependency>
-  	 		<groupId>org.slf4j</groupId>
-  	 		<artifactId>slf4j-api</artifactId>
-  	 		<version>1.6.4</version>
-  	 	</dependency>
-  </dependencies>
-  <reporting>
-  	<plugins>
-  		<plugin>
-  			<groupId>org.apache.maven.plugins</groupId>
-  			<artifactId>maven-javadoc-plugin</artifactId>
-  		</plugin>
-  		<plugin>
-  			<groupId>org.apache.maven.plugins</groupId>
-  			<artifactId>maven-surefire-report-plugin</artifactId>
-
-  		</plugin>
-  		<plugin>
-  			<groupId>org.codehaus.mojo</groupId>
-  			<artifactId>taglist-maven-plugin</artifactId>
-  			<configuration>
-                       <tags>
-                           <tag>TODO</tag>
-                           <tag>FIXME</tag>
-                           <tag>REFACTOR</tag>
-                           <tag>@deprecated</tag>
-                       </tags>
-                  </configuration>
-
-  		</plugin>
-  		<plugin>
-  			<groupId>org.codehaus.mojo</groupId>
-  			<artifactId>cobertura-maven-plugin</artifactId>
-  			<version>2.4</version>
-  			<configuration>
-  			<formats>
-            <format>html</format>
-            <format>xml</format>
-          </formats>
-          <instrumentation>
-            <excludes>
-              <exclude>**/*Test.class</exclude>
-            </excludes>
-          </instrumentation>
-        </configuration>
-  		</plugin>
-  	</plugins>
-  </reporting>
-  <distributionManagement>
-  	<repository>
-  	 <id>sourceforge.net</id>
-      <url>sftp://web.sourceforge.net/home/groups/j/jw/jwbf/m2repo-release</url>
-  	
-  	</repository>
-  	<snapshotRepository>
-  		<id>sourceforge.net</id>
-  		<url>sftp://web.sourceforge.net/home/groups/j/jw/jwbf/m2repo-snapshot</url>
-  		<uniqueVersion>true</uniqueVersion>
-  	</snapshotRepository>
-  </distributionManagement>
-  <properties>
-  	<maven.test.jvmargs>-Dfile.encoding=US-ASCII</maven.test.jvmargs>
-  </properties>
+		</repository>
+		<snapshotRepository>
+			<id>sourceforge.net</id>
+			<url>sftp://web.sourceforge.net/home/groups/j/jw/jwbf/m2repo-snapshot</url>
+			<uniqueVersion>true</uniqueVersion>
+		</snapshotRepository>
+	</distributionManagement>
+	<properties>
+		<maven.test.jvmargs>-Dfile.encoding=US-ASCII</maven.test.jvmargs>
+	</properties>
 </project>

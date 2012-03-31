@@ -28,9 +28,9 @@ import net.sourceforge.jwbf.JWBF;
 
 /**
  * @author Thomas Stock
- *
+ * 
  */
-public class JwbfException extends Exception {
+public class JwbfException extends RuntimeException {
 
   /**
    * 
@@ -38,22 +38,26 @@ public class JwbfException extends Exception {
   private static final long serialVersionUID = -2456904376052276104L;
 
   /**
-   * @param message a
+   * @param message
+   *          a
    */
   public JwbfException(String message) {
     super(message);
   }
 
   /**
-   * @param t a
+   * @param t
+   *          a
    */
   public JwbfException(Throwable t) {
     super(t);
   }
 
   /**
-   * @param message a
-   * @param t a
+   * @param message
+   *          a
+   * @param t
+   *          a
    */
   public JwbfException(String message, Throwable t) {
     super(message, t);
@@ -62,11 +66,11 @@ public class JwbfException extends Exception {
   /**
    * @return the
    */
-  public Class < ? > getExceptionSrcClass() {
+  public Class<?> getExceptionSrcClass() {
     return getStackTraceClass();
   }
 
-  private Class < ? > getStackTraceClass() {
+  private Class<?> getStackTraceClass() {
 
     ClassLoader loader = getClass().getClassLoader();
     try {
@@ -83,7 +87,7 @@ public class JwbfException extends Exception {
    */
   private String getModulInfo() {
 
-    Class < ? > clazz = getStackTraceClass();
+    Class<?> clazz = getStackTraceClass();
 
     return "( " + JWBF.getPartId(clazz) + "-" + JWBF.getVersion(clazz) + " )";
   }

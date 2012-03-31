@@ -26,16 +26,14 @@ import net.sourceforge.jwbf.core.bots.util.JwbfException;
  * in these actions, like access to content or mismatching patterns e.g.
  * 
  * @author Thomas Stock
- * @deprecated do not use this exception. Use common java runtime exceptions
  * 
  */
-@Deprecated
 public class ProcessException extends JwbfException {
 
   /**
    * 
    */
-  private static final long serialVersionUID = -3830701798846228121L;
+  private static final long serialVersionUID = 1L;
 
   /**
    * 
