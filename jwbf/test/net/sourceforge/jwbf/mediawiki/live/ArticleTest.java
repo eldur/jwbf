@@ -10,7 +10,6 @@ import java.util.Date;
 import java.util.Vector;
 
 import lombok.extern.slf4j.Slf4j;
-import net.sourceforge.jwbf.core.bots.util.CacheHandler;
 import net.sourceforge.jwbf.core.contentRep.Article;
 import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
 import net.sourceforge.jwbf.mediawiki.BotFactory;
@@ -24,10 +23,8 @@ import org.junit.Test;
 @Slf4j
 public class ArticleTest extends LiveTestFather {
 
-
   public ArticleTest() {
   }
-
 
   private Collection<MediaWikiBot> getTestBots() throws Exception {
     Collection<MediaWikiBot> bots = new Vector<MediaWikiBot>();
@@ -44,7 +41,8 @@ public class ArticleTest extends LiveTestFather {
 
   /**
    * 
-   * @throws Exception a
+   * @throws Exception
+   *           a
    */
   @Test
   public final void readWriteDelete() throws Exception {
@@ -64,15 +62,22 @@ public class ArticleTest extends LiveTestFather {
         a.save(editSum); // save article a with given comment
 
         Article b = new Article(bot, title); // create new article b
-        assertEquals(a.getTitle(), b.getTitle()); // compare title, must work -- see constructor
-        assertEquals("text compair fails ", a.getText(), b.getText()); // force bot to load this from wiki
+        assertEquals(a.getTitle(), b.getTitle()); // compare title, must work --
+                                                  // see constructor
+        assertEquals("text compair fails ", a.getText(), b.getText()); // force
+                                                                       // bot to
+                                                                       // load
+                                                                       // this
+                                                                       // from
+                                                                       // wiki
         assertEquals(user, b.getEditor());
         if (i > 1) {
           assertEquals(editSum, b.getEditSummary());
         }
-        assertEquals(saveDate.getTime(), b.getEditTimestamp().getTime(), 5000); // max. 5 seconds delta
-
-
+        assertEquals(saveDate.getTime(), b.getEditTimestamp().getTime(), 5000); // max.
+                                                                                // 5
+                                                                                // seconds
+                                                                                // delta
 
       }
       try {
@@ -87,7 +92,8 @@ public class ArticleTest extends LiveTestFather {
 
   /**
    * 
-   * @throws Exception a
+   * @throws Exception
+   *           a
    */
   @Test
   public final void meta() throws Exception {
@@ -96,19 +102,6 @@ public class ArticleTest extends LiveTestFather {
 
     for (MediaWikiBot bot : bots) {
 
-      bot.setCacheHandler(new CacheHandler() {
-
-        public void put(SimpleArticle sa) {
-        }
-
-        public SimpleArticle get(String title) {
-          return null;
-        }
-
-        public boolean containsKey(String title) {
-          return false;
-        }
-      });
       String title = "z" + getRandomAlph(6);
       String user = bot.getUserinfo().getUsername();
       String editSum = getRandomAlph(6);
@@ -123,11 +116,14 @@ public class ArticleTest extends LiveTestFather {
       Article b = new Article(bot, title);
       assertEquals(a.getTitle(), b.getTitle());
       assertEquals(a.getText(), b.getText());
-      assertEquals(a.isMinorEdit(), b.isMinorEdit()); // because false is default value
+      assertEquals(a.isMinorEdit(), b.isMinorEdit()); // because false is
+                                                      // default value
       assertEquals(user, b.getEditor());
       assertEquals(editSum, b.getEditSummary());
-      assertEquals(saveDate.getTime(), b.getEditTimestamp().getTime(), 5000); // max. 5 seconds delta
-
+      assertEquals(saveDate.getTime(), b.getEditTimestamp().getTime(), 5000); // max.
+                                                                              // 5
+                                                                              // seconds
+                                                                              // delta
 
       a.setMinorEdit(true);
       a.save(); // do nothing because no content change
@@ -139,8 +135,10 @@ public class ArticleTest extends LiveTestFather {
       String revIdApp = a.getRevisionId();
       Date dateB = a.getEditTimestamp();
       assertNotSame("change expected " + bot.getWikiType(), revIdA, revIdApp);
-      assertNotSame("change expected " + bot.getWikiType() + " " + dateA, dateA, dateB);
-      assertEquals("minor edit @ " + bot.getWikiType(), a.isMinorEdit(), b.isMinorEdit());
+      assertNotSame("change expected " + bot.getWikiType() + " " + dateA,
+          dateA, dateB);
+      assertEquals("minor edit @ " + bot.getWikiType(), a.isMinorEdit(),
+          b.isMinorEdit());
 
       try {
         a.delete(); // clean up
@@ -181,14 +179,12 @@ public class ArticleTest extends LiveTestFather {
     a.save();
     final String thirdEdit = a.getRevisionId();
     assertTrue(a.isMinorEdit());
-    assertFalse("text should be differ:\n" + aaText + "\n" + aText , aaText.equals(aText));
-    assertTrue("dif rev ID, both: " + thirdEdit
-        , Integer.parseInt(firstEdit) != Integer.parseInt(thirdEdit));
+    assertFalse("text should be differ:\n" + aaText + "\n" + aText,
+        aaText.equals(aText));
+    assertTrue("dif rev ID, both: " + thirdEdit,
+        Integer.parseInt(firstEdit) != Integer.parseInt(thirdEdit));
 
     log.debug("--> end article test");
   }
-
-
-
 
 }

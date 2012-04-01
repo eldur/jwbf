@@ -380,7 +380,7 @@
 		<snapshotRepository>
 			<id>sourceforge.net</id>
 			<url>sftp://web.sourceforge.net/home/groups/j/jw/jwbf/m2repo-snapshot</url>
-			<uniqueVersion>true</uniqueVersion>
+			<uniqueVersion>false</uniqueVersion>
 		</snapshotRepository>
 	</distributionManagement>
 	<properties>

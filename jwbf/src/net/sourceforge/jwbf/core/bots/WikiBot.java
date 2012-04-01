@@ -2,7 +2,6 @@ package net.sourceforge.jwbf.core.bots;
 
 import net.sourceforge.jwbf.core.actions.util.ActionException;
 import net.sourceforge.jwbf.core.actions.util.ProcessException;
-import net.sourceforge.jwbf.core.bots.util.CacheHandler;
 import net.sourceforge.jwbf.core.contentRep.Article;
 import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
 import net.sourceforge.jwbf.core.contentRep.Userinfo;
@@ -45,16 +44,4 @@ public interface WikiBot {
 
   String getWikiType();
 
-  /**
-   * 
-   * @return if has
-   */
-  boolean hasCacheHandler();
-
-  /**
-   * 
-   * @param ch
-   *          a
-   */
-  void setCacheHandler(CacheHandler ch);
 }

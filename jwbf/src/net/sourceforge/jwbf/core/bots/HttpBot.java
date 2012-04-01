@@ -39,32 +39,40 @@ public class HttpBot {
 
   private HttpActionClient cc;
 
-
   /**
    * Design for extension.
-   * @param url of the host
+   * 
+   * @param url
+   *          of the host
    */
   protected HttpBot(final String url) throws MalformedURLException {
     setConnection(new URL(url));
   }
+
   /**
    * Design for extension.
-   * @param cc a
+   * 
+   * @param cc
+   *          a
    */
   protected HttpBot(HttpActionClient cc) {
     this.cc = cc;
   }
+
   /**
    * Design for extension.
-   * @param url of the host
+   * 
+   * @param url
+   *          of the host
    */
   protected HttpBot(final URL url) {
     setConnection(url);
   }
 
   /**
-   * Returns a {@link HttpBot} which supports only its basic methods.
-   * Use {@link #getPage(String)} for an basic read of content.
+   * Returns a {@link HttpBot} which supports only its basic methods. Use
+   * {@link #getPage(String)} for an basic read of content.
+   * 
    * @deprecated do not use this
    * @return a
    */
@@ -78,44 +86,41 @@ public class HttpBot {
     }
 
   }
+
   /**
    * 
    * @param client
-   *            if you whant to add some specials
+   *          if you whant to add some specials
    * 
    */
   public final void setConnection(final HttpActionClient client) {
     cc = client;
   }
 
-
   public final String getHostUrl() {
     return cc.getHostUrl();
   }
+
   /**
    * 
    * @param a
-   *            a
-   * @throws ActionException
-   *             on problems with http, cookies and io
+   *          a
    * @return text
-   * @throws ProcessException on problems in the subst of ContentProcessable
    */
-  public synchronized String performAction(final ContentProcessable a)
-  throws ActionException, ProcessException {
+  public synchronized String performAction(final ContentProcessable a) {
     return cc.performAction(a);
   }
 
   /**
    * 
    * @param hostUrl
-   *            base url of a wiki site to connect with; example:
-   *            http://www.yourOwnWiki.org/wiki/
+   *          base url of a wiki site to connect with; example:
+   *          http://www.yourOwnWiki.org/wiki/
    * @throws MalformedURLException
-   *             if hostUrl does not represent a well-formed url
+   *           if hostUrl does not represent a well-formed url
    */
   protected final void setConnection(final String hostUrl)
-  throws MalformedURLException {
+      throws MalformedURLException {
     setConnection(new URL(hostUrl));
   }
 
@@ -124,12 +129,10 @@ public class HttpBot {
    * or xml newsfeeds.
    * 
    * @param u
-   *            url like index.php?title=Main_Page
+   *          url like index.php?title=Main_Page
    * @return HTML content
-   * @throws ActionException
-   *             on any requesing problems
    */
-  public final String getPage(String u) throws ActionException {
+  public final String getPage(String u) {
 
     try {
       URL url = new URL(u);
@@ -140,7 +143,6 @@ public class HttpBot {
     }
 
     GetPage gp = new GetPage(u);
-
 
     try {
       performAction(gp);
@@ -156,12 +158,10 @@ public class HttpBot {
    * or xml newsfeeds.
    * 
    * @param u
-   *            url like index.php?title=Main_Page
+   *          url like index.php?title=Main_Page
    * @return HTML content
-   * @throws ActionException
-   *             on any requesing problems
    */
-  public final byte[] getBytes(String u) throws ActionException {
+  public final byte[] getBytes(String u) {
 
     try {
       return cc.get(new Get(u));
@@ -183,12 +183,11 @@ public class HttpBot {
   /**
    * 
    * @param hostUrl
-   *            like http://www.yourOwnWiki.org/wiki/
+   *          like http://www.yourOwnWiki.org/wiki/
    */
   protected final void setConnection(final URL hostUrl) {
     setConnection(new HttpActionClient(hostUrl));
 
   }
-
 
 }

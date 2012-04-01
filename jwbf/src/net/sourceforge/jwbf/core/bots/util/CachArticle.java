@@ -5,47 +5,47 @@ import java.util.Date;
 
 import net.sourceforge.jwbf.core.contentRep.ArticleMeta;
 import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
-/**
- *
- * @author Thomas Stock
- *
- */
-class CachArticle extends SimpleArticle implements Serializable {
 
+/**
+ * 
+ * @author Thomas Stock
+ * @deprecated
+ */
+@Deprecated
+class CachArticle extends SimpleArticle implements Serializable {
 
   /**
 	 *
 	 */
-	private static final long serialVersionUID = -8061809995421543211L;
-	private Date d;
+  private static final long serialVersionUID = -8061809995421543211L;
+  private Date d;
 
+  CachArticle() {
+    super();
+    setSaveDate(1L);
+  }
 
+  CachArticle(ArticleMeta ca) {
+    super(ca);
 
-	CachArticle() {
-		super();
-		setSaveDate(1L);
-	}
+    setSaveDate(System.currentTimeMillis());
+  }
 
+  Date getSaveDate() {
+    return d;
+  }
 
-	CachArticle(ArticleMeta ca) {
-		super(ca);
+  Date getInnerDate() {
+    return d;
+  }
 
-		setSaveDate(System.currentTimeMillis());
-	}
+  void setSaveDate(long milis) {
+    d = new Date(milis);
+  }
 
-	Date getSaveDate() {
-		return d;
-	}
-
-	Date getInnerDate() {
-		return d;
-	}
-
-	void setSaveDate(long milis) {
-		d = new Date(milis);
-	}
-
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   * 
    * @see java.lang.Object#hashCode()
    */
   @Override
@@ -56,8 +56,9 @@ class CachArticle extends SimpleArticle implements Serializable {
     return result;
   }
 
-
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   * 
    * @see java.lang.Object#equals(java.lang.Object)
    */
   @Override
@@ -76,6 +77,5 @@ class CachArticle extends SimpleArticle implements Serializable {
       return false;
     return true;
   }
-
 
 }
