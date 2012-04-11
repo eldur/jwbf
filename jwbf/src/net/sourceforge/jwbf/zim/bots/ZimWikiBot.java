@@ -66,19 +66,19 @@ public class ZimWikiBot implements WikiBot {
 
   }
 
-  public void postDelete(String title) throws ActionException,
+  public void delete(String title) throws ActionException,
   ProcessException {
     // TODO Auto-generated method stub
 
   }
 
-  public Article readContent(String title) throws ActionException,
+  public Article getArticle(String title) throws ActionException,
   ProcessException {
 
-    return readContent(title, 0); // FIXME add regular constants
+    return getArticle(title, 0); // FIXME add regular constants
   }
 
-  public Article readContent(String title, int properties)
+  public Article getArticle(String title, int properties)
   throws ActionException, ProcessException {
     return new Article(this, readData(title, properties));
   }

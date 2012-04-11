@@ -45,7 +45,7 @@ public class GetRevisionTest extends LiveTestFather {
     // TODO not a really good test
     String label;
     label = "Startseite";
-    Article sa =  bot.readContent(label);
+    Article sa =  bot.getArticle(label);
 
     assertTrue(sa.getText().length() > 10);
     log.info("text: " + sa.getText().substring(0, 10) + "...");

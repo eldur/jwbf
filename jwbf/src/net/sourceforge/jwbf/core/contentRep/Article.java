@@ -13,10 +13,6 @@ import net.sourceforge.jwbf.core.bots.util.JwbfException;
  * 
  */
 public class Article implements ArticleMeta, ContentSetable {
-  /**
-   *
-   */
-  private static final long serialVersionUID = 5892823865821665643L;
 
   private final WikiBot bot;
 
@@ -220,7 +216,7 @@ public class Article implements ArticleMeta, ContentSetable {
    *           a
    */
   public void delete() throws ActionException, ProcessException {
-    bot.postDelete(sa.getTitle());
+    bot.delete(sa.getTitle());
   }
 
   /**

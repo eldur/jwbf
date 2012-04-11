@@ -50,14 +50,14 @@ public class DeleteTest extends LiveTestFather {
       ProcessException {
 
     for (int i = 0; i < COUNT; i++) {
-      bot.postDelete(DELETE_PREFIX + i);
+      bot.delete(DELETE_PREFIX + i);
     }
   }
 
   private void test(MediaWikiBot bot) throws ActionException, ProcessException {
 
     for (int i = 0; i < COUNT; i++) {
-      ContentAccessable ca = bot.readContent(DELETE_PREFIX + i);
+      ContentAccessable ca = bot.getArticle(DELETE_PREFIX + i);
 
       assertTrue("textlength of Delete " + i + " is greater then 0 ("
           + ca.getText().length() + ")", ca.getText().length() == 0);

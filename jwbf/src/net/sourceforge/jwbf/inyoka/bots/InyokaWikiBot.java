@@ -52,9 +52,9 @@ public class InyokaWikiBot extends HttpBot implements WikiBot {
    *           on access problems
    * @see GetRevision
    */
-  public synchronized Article readContent(final String name)
+  public synchronized Article getArticle(final String name)
       throws ActionException, ProcessException {
-    return readContent(name, 0);
+    return getArticle(name, 0);
 
   }
 
@@ -69,12 +69,12 @@ public class InyokaWikiBot extends HttpBot implements WikiBot {
 
   }
 
-  public void postDelete(String title) throws ActionException, ProcessException {
+  public void delete(String title) throws ActionException, ProcessException {
     throw new ActionException("Deleting is not supported");
 
   }
 
-  public synchronized Article readContent(String name, int properties)
+  public synchronized Article getArticle(String name, int properties)
       throws ActionException, ProcessException {
     return new Article(this, readData(name, properties));
   }

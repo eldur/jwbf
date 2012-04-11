@@ -222,7 +222,7 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
    *           on access problems
    * @see GetRevision
    */
-  public synchronized Article readContent(final String name,
+  public synchronized Article getArticle(final String name,
       final int properties) throws ActionException, ProcessException {
     return new Article(this, readData(name, properties));
   }
@@ -261,9 +261,9 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
    *           on access problems
    * @see GetRevision
    */
-  public synchronized Article readContent(final String name)
+  public synchronized Article getArticle(final String name)
       throws ActionException, ProcessException {
-    return readContent(name, READVAL);
+    return getArticle(name, READVAL);
 
   }
 
@@ -373,7 +373,7 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
    * @throws ProcessException
    *           if
    */
-  public void postDelete(String title) throws ActionException, ProcessException {
+  public void delete(String title) throws ActionException, ProcessException {
 
     performAction(new PostDelete(this, title));
   }

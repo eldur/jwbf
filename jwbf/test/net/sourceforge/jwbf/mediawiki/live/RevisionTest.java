@@ -142,49 +142,49 @@ public class RevisionTest extends LiveTestFather {
     bot.writeContent(sa);
     // Test parameters
     try {
-      bot.readContent(title, GetRevision.COMMENT);
+      bot.getArticle(title, GetRevision.COMMENT);
     } catch (ApiException e) {
       throw new JwbfException("Problems with COMMENT receiving");
     }
     try {
-      bot.readContent(title, GetRevision.CONTENT);
+      bot.getArticle(title, GetRevision.CONTENT);
     } catch (ApiException e) {
       throw new JwbfException("Problems with CONTENT receiving");
     }
     try {
-      bot.readContent(title, GetRevision.FIRST | GetRevision.CONTENT);
+      bot.getArticle(title, GetRevision.FIRST | GetRevision.CONTENT);
     } catch (ApiException e) {
       throw new JwbfException("Problems with FIRST receiving");
     }
     try {
-      bot.readContent(title, GetRevision.IDS | GetRevision.CONTENT);
+      bot.getArticle(title, GetRevision.IDS | GetRevision.CONTENT);
     } catch (ApiException e) {
       throw new JwbfException("Problems with IDS receiving");
     }
     try {
-      bot.readContent(title, GetRevision.LAST | GetRevision.CONTENT);
+      bot.getArticle(title, GetRevision.LAST | GetRevision.CONTENT);
     } catch (ApiException e) {
       throw new JwbfException("Problems with LAST receiving");
     }
     try {
-      bot.readContent(title, GetRevision.TIMESTAMP | GetRevision.CONTENT);
+      bot.getArticle(title, GetRevision.TIMESTAMP | GetRevision.CONTENT);
     } catch (ApiException e) {
       throw new JwbfException("Problems with TIMESTAMP receiving");
     }
     try {
-      bot.readContent(title, GetRevision.USER | GetRevision.CONTENT);
+      bot.getArticle(title, GetRevision.USER | GetRevision.CONTENT);
     } catch (ApiException e) {
       throw new JwbfException("Problems with USER receiving");
     }
 
     try {
-      bot.readContent(title, GetRevision.FLAGS | GetRevision.CONTENT);
+      bot.getArticle(title, GetRevision.FLAGS | GetRevision.CONTENT);
     } catch (ApiException e) {
       throw new JwbfException("Problems with FLAGS receiving");
     }
 
     // test with content length > 0
-    ArticleMeta a = bot.readContent(title);
+    ArticleMeta a = bot.getArticle(title);
     assertEquals(testText, a.getText());
     assertEquals(user, a.getEditor());
     assertTrue("should be greater then 0", a.getRevisionId().length() > 0);
@@ -192,7 +192,7 @@ public class RevisionTest extends LiveTestFather {
     // test with content length <= 0
     testText = "";
     title = "767676885340589358058903589035";
-    a = bot.readContent(title);
+    a = bot.getArticle(title);
 
     assertEquals(testText, a.getText());
     registerTestedVersion(GetRevision.class, bot.getVersion());

@@ -224,7 +224,7 @@ public class UploadAndImageInfoTest extends LiveTestFather {
   public final void deleteImage() throws Exception {
     bot = getMediaWikiBot(Version.MW1_15, true);
     generalUploadImageInfoTest(bot, Version.MW1_15);
-    bot.postDelete("File:" + getValue("filename"));
+    bot.delete("File:" + getValue("filename"));
 
     try {
 
@@ -253,7 +253,7 @@ public class UploadAndImageInfoTest extends LiveTestFather {
     SimpleFile sf = new SimpleFile(getValue("filename"), getValue("validFile"));
     if (v.greaterEqThen(Version.MW1_12))
       try {
-        bot.postDelete("File:" + getValue("filename"));
+        bot.delete("File:" + getValue("filename"));
       } catch (Exception e) {
         // do nothing
       }
