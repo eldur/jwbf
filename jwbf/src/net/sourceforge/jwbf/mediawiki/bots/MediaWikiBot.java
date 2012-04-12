@@ -1,7 +1,5 @@
 package net.sourceforge.jwbf.mediawiki.bots;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collections;
 import java.util.HashSet;
@@ -116,7 +114,7 @@ public class MediaWikiBot implements WikiBot {
   /**
    * @param url
    *          wikihosturl like "http://www.mediawiki.org/w/"
-   * @throws MalformedURLException
+   * @throws IllegalArgumentException
    *           if param url does not represent a well-formed url
    */
 
@@ -135,10 +133,8 @@ public class MediaWikiBot implements WikiBot {
    *          wikihosturl like "http://www.mediawiki.org/w/"
    * @param testHostReachable
    *          if true, test if host reachable
-   * @throws IOException
-   *           a
    */
-  public MediaWikiBot(URL url, boolean testHostReachable) throws IOException {
+  public MediaWikiBot(URL url, boolean testHostReachable) {
     bot = new HttpBot(url);
     if (testHostReachable) {
       bot.getPage(url.toExternalForm());
@@ -156,42 +152,36 @@ public class MediaWikiBot implements WikiBot {
    * @param domain
    *          login domain (Special for LDAPAuth extention to authenticate
    *          against LDAP users)
-   * @throws ActionException
-   *           on problems with http, cookies and io
    * @see PostLogin
    * @see PostLoginOld
    */
   public void login(final String username, final String passwd,
-      final String domain) throws ActionException {
-    try {
-      LoginData login = new LoginData();
-      switch (getVersion()) {
-        case MW1_09:
-        case MW1_10:
-        case MW1_11:
-        case MW1_12:
-          performAction(new PostLoginOld(username, passwd, domain, login));
-          break;
+      final String domain) {
+    LoginData login = new LoginData();
+    switch (getVersion()) {
+      case MW1_09:
+      case MW1_10:
+      case MW1_11:
+      case MW1_12:
+        performAction(new PostLoginOld(username, passwd, domain, login));
+        break;
 
-        default:
-          performAction(new PostLogin(username, passwd, domain, login));
-          break;
-      }
+      default:
+        performAction(new PostLogin(username, passwd, domain, login));
+        break;
+    }
 
-      this.login = login;
-      loginChangeUserInfo = true;
-      if (getVersion() == Version.UNKNOWN) {
-        loginChangeVersion = true;
-      }
-    } catch (ProcessException e) {
-      throw new ActionException(e.getLocalizedMessage());
-    } catch (RuntimeException e) {
-      throw new ActionException(e);
+    this.login = login;
+    loginChangeUserInfo = true;
+    if (getVersion() == Version.UNKNOWN) {
+      loginChangeVersion = true;
     }
 
   }
 
   /**
+   * TODO mv doc
+   * 
    * Performs a Login. Actual old cookie login works right, because is pending
    * on {@link #writeContent(ContentAccessable)}
    * 
@@ -199,13 +189,10 @@ public class MediaWikiBot implements WikiBot {
    *          the username
    * @param passwd
    *          the password
-   * @throws ActionException
-   *           on problems with http, cookies and io
    * @see PostLogin
    * @see PostLoginOld
    */
-  public void login(final String username, final String passwd)
-      throws ActionException {
+  public void login(final String username, final String passwd) {
 
     login(username, passwd, null);
   }
@@ -217,14 +204,9 @@ public class MediaWikiBot implements WikiBot {
    * @param properties
    *          {@link GetRevision}
    * @return a content representation of requested article, never null
-   * @throws ActionException
-   *           on problems with http, cookies and io
-   * @throws ProcessException
-   *           on access problems
    * @see GetRevision
    */
-  public synchronized Article getArticle(final String name, final int properties)
-      throws ActionException, ProcessException {
+  public synchronized Article getArticle(final String name, final int properties) {
     return new Article(this, readData(name, properties));
   }
 
@@ -232,7 +214,7 @@ public class MediaWikiBot implements WikiBot {
    * {@inheritDoc}
    */
   public synchronized SimpleArticle readData(final String name,
-      final int properties) throws ActionException, ProcessException {
+      final int properties) {
 
     GetRevision ac = new GetRevision(getVersion(), name, properties);
 
@@ -245,8 +227,7 @@ public class MediaWikiBot implements WikiBot {
   /**
    * {@inheritDoc}
    */
-  public SimpleArticle readData(String name) throws ActionException,
-      ProcessException {
+  public SimpleArticle readData(String name) {
 
     return readData(name, DEFAULT_READ_PROPERTIES);
   }
@@ -256,31 +237,17 @@ public class MediaWikiBot implements WikiBot {
    * @param name
    *          of article in a mediawiki like "Main Page"
    * @return a content representation of requested article, never null
-   * @throws ActionException
-   *           on problems with http, cookies and io
-   * @throws ProcessException
-   *           on access problems
    * @see GetRevision
    */
-  public synchronized Article getArticle(final String name)
-      throws ActionException, ProcessException {
+  public synchronized Article getArticle(final String name) {
     return getArticle(name, DEFAULT_READ_PROPERTIES);
 
   }
 
   /**
-   * 
-   * @param a
-   *          a
-   * @throws ActionException
-   *           on problems with http, cookies and io
-   * @throws ProcessException
-   *           on access problems
-   * @see PostModifyContent
-   * 
+   * {@inheritDoc}
    */
-  public synchronized void writeContent(final SimpleArticle simpleArticle)
-      throws ActionException, ProcessException {
+  public synchronized void writeContent(final SimpleArticle simpleArticle) {
     if (!isLoggedIn()) {
       throw new ActionException("Please login first");
     }
@@ -311,14 +278,9 @@ public class MediaWikiBot implements WikiBot {
   }
 
   /**
-   * 
-   * @return a
-   * @throws ActionException
-   *           on problems with http, cookies and io
-   * @throws ProcessException
-   *           on access problems
+   * {@inheritDoc}
    */
-  public Userinfo getUserinfo() throws ActionException, ProcessException {
+  public Userinfo getUserinfo() {
     log.debug("get userinfo");
     if (ui == null || loginChangeUserInfo) {
       GetUserinfo a;
@@ -367,14 +329,9 @@ public class MediaWikiBot implements WikiBot {
   }
 
   /**
-   * @param title
-   *          to delete
-   * @throws ActionException
-   *           if
-   * @throws ProcessException
-   *           if
+   * {@inheritDoc}
    */
-  public void delete(String title) throws ActionException, ProcessException {
+  public void delete(String title) {
 
     performAction(new PostDelete(this, title));
   }
@@ -395,7 +352,7 @@ public class MediaWikiBot implements WikiBot {
    * @see #getSiteinfo()
    */
   @Nonnull
-  public final Version getVersion() throws RuntimeException {
+  public final Version getVersion() throws IllegalStateException {
     if (version == null || loginChangeVersion) {
       try {
         GetVersion gs = new GetVersion();
@@ -420,14 +377,15 @@ public class MediaWikiBot implements WikiBot {
    *           on problems with http, cookies and io
    * @see Siteinfo
    */
-  public Siteinfo getSiteinfo() throws ActionException {
+  @Nonnull
+  public Siteinfo getSiteinfo() {
 
     Siteinfo gs = null;
     try {
       gs = new Siteinfo();
       performAction(gs);
     } catch (ProcessException e) {
-      e.printStackTrace();
+      log.error("{}", e);
     }
 
     return gs;
@@ -443,11 +401,8 @@ public class MediaWikiBot implements WikiBot {
   }
 
   /**
-   * Set to false, to force editing without the API.
-   * 
    * @param useEditApi
-   *          if
-   * 
+   *          Set to false, to force editing without the API.
    */
   public final void useEditApi(boolean useEditApi) {
     this.useEditApi = useEditApi;

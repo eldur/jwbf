@@ -37,19 +37,20 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- *
+ * 
  * @author Thomas Stock
- *
+ * 
  */
 public class EditCustomWikiContentTest extends LiveTestFather {
 
   private MediaWikiBot bot;
   private Random random = new Random(System.currentTimeMillis());
 
-
   /**
    * Setup custom wiki.
-   * @throws Exception a
+   * 
+   * @throws Exception
+   *           a
    */
   @Before
   public void setUp() throws Exception {
@@ -59,7 +60,9 @@ public class EditCustomWikiContentTest extends LiveTestFather {
 
   /**
    * Test content modification.
-   * @throws Exception a
+   * 
+   * @throws Exception
+   *           a
    */
   @Test
   public final void contentModify() throws Exception {
@@ -73,7 +76,7 @@ public class EditCustomWikiContentTest extends LiveTestFather {
       e.printStackTrace();
     }
     sa = bot.getArticle(title).getSimpleArticle();
-    //System.out.println("Content is: " + sa.getText());
+    // System.out.println("Content is: " + sa.getText());
     String text = "test " + (random.nextInt(1000));
     sa.setText(text);
     bot.writeContent(sa);
@@ -81,7 +84,7 @@ public class EditCustomWikiContentTest extends LiveTestFather {
   }
 
   @Test
-  public final void contentModifyWithSpacetitle() throws Exception {
+  public final void contentModifyWithSpacetitle() {
     String title = "Delete 1";
     SimpleArticle sa;
     sa = new SimpleArticle(title);
@@ -96,7 +99,9 @@ public class EditCustomWikiContentTest extends LiveTestFather {
 
   /**
    * Test the read of metadata on english Mediawiki.
-   * @throws Exception a
+   * 
+   * @throws Exception
+   *           a
    */
   @Test
   public final void contentModifyDetails() throws Exception {
@@ -121,7 +126,9 @@ public class EditCustomWikiContentTest extends LiveTestFather {
 
   /**
    * Test utf-8 read on english Mediawiki.
-   * @throws Exception a
+   * 
+   * @throws Exception
+   *           a
    */
   @Test
   public final void contentModifySimpleUtf8Get() throws Exception {
@@ -138,9 +145,10 @@ public class EditCustomWikiContentTest extends LiveTestFather {
   }
 
   /**
-   * Test utf-8 read on english Mediawiki.
-   * -Dfile.encoding=ASCII
-   * @throws Exception a
+   * Test utf-8 read on english Mediawiki. -Dfile.encoding=ASCII
+   * 
+   * @throws Exception
+   *           a
    */
   @Test
   public final void contentModifyIPAUtf8Get() throws Exception {
@@ -169,12 +177,13 @@ public class EditCustomWikiContentTest extends LiveTestFather {
 
   /**
    * Test utf-8 read on english Mediawiki.
-   * @throws Exception a
+   * 
+   * @throws Exception
+   *           a
    */
   @Test
   public final void contentModifyComplexUtf8Get() throws Exception {
-    String utf8value = "öä 品 üÖÄÜß り新しく作成したりできます Л"
-        + "ин 瓦茲القواميس والمراجع";
+    String utf8value = "öä 品 üÖÄÜß り新しく作成したりできます Л" + "ин 瓦茲القواميس والمراجع";
 
     String title = getValue("test_live_article");
     SimpleArticle sa;
@@ -190,7 +199,9 @@ public class EditCustomWikiContentTest extends LiveTestFather {
 
   /**
    * Test getTimestamp.
-   * @throws Exception a
+   * 
+   * @throws Exception
+   *           a
    */
   @Test
   public final void getTimestamp() throws Exception {
@@ -198,28 +209,27 @@ public class EditCustomWikiContentTest extends LiveTestFather {
     String label = getValue("test_live_article");
     ArticleMeta sa;
 
-
     sa = bot.getArticle(label);
 
     assertTrue(sa.getEditTimestamp().getTime() > 1000);
   }
 
-
-
   /**
    * Test utf-8 read on english Mediawiki.
-   * @throws Exception a
+   * 
+   * @throws Exception
+   *           a
    */
   @Test
   public final void contentModifyOnOtherWiki() throws Exception {
     MediaWikiBot bot = new MediaWikiBot(getValue("demoWiki_url"));
     bot.useEditApi(false);
     bot.login(getValue("demoWiki_user"), getValue("demoWiki_pass"));
-    assertTrue("Version is: " + bot.getVersion() , bot.getVersion() == Version.MW1_13);
-
+    assertTrue("Version is: " + bot.getVersion(),
+        bot.getVersion() == Version.MW1_13);
 
     Article a = new Article(bot, getValue("demoWiki_article"));
-    //		System.out.println(a.getText());
+    // System.out.println(a.getText());
     a.addText(getRandom(5) + "\nK");
     a.save();
 
@@ -227,9 +237,11 @@ public class EditCustomWikiContentTest extends LiveTestFather {
 
     assertEquals(a.getText(), b.getText());
   }
+
   private void doWait() {
     doWait(1500);
   }
+
   private void doWait(int milis) {
     synchronized (this) {
 

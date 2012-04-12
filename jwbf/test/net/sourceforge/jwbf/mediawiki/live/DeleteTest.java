@@ -36,7 +36,7 @@ public class DeleteTest extends LiveTestFather {
 
   }
 
-  private void prepare(MediaWikiBot bot) throws Exception {
+  private void prepare(MediaWikiBot bot) {
     SimpleArticle a = new SimpleArticle();
 
     for (int i = 0; i < COUNT; i++) {
