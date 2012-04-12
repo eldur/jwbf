@@ -55,7 +55,7 @@ public class EditCustomWikiContentTest extends LiveTestFather {
   @Before
   public void setUp() throws Exception {
 
-    bot = BotFactory.getMediaWikiBot(Version.getLast(), true);
+    bot = BotFactory.getMediaWikiBot(Version.getLatest(), true);
   }
 
   /**
@@ -76,7 +76,6 @@ public class EditCustomWikiContentTest extends LiveTestFather {
       e.printStackTrace();
     }
     sa = bot.getArticle(title).getSimpleArticle();
-    // System.out.println("Content is: " + sa.getText());
     String text = "test " + (random.nextInt(1000));
     sa.setText(text);
     bot.writeContent(sa);

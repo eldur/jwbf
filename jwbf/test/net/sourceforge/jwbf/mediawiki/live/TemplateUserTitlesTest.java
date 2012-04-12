@@ -175,7 +175,8 @@ public class TemplateUserTitlesTest extends LiveTestFather {
       titles.add("Patx" + j);
     }
 
-    for (String pageTitle : a) {
+    for (@SuppressWarnings("unused")
+    String pageTitle : a) {
       pageTitle += "";
       i++;
     }

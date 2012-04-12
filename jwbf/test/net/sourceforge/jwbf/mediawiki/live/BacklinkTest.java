@@ -253,4 +253,8 @@ public class BacklinkTest extends LiveTestFather {
     Assert.assertTrue("Fail: " + i + " < " + COUNT, i > COUNT - 1);
     registerTestedVersion(BacklinkTitles.class, bot.getVersion());
   }
+
+  private static int getIntValue(final String key) throws Exception {
+    return Integer.parseInt(getValue(key));
+  }
 }

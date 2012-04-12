@@ -25,7 +25,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.URL;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
@@ -265,46 +264,6 @@ public abstract class LiveTestFather extends TestHelper {
           + filename);
     }
     return data.getProperty(key);
-  }
-
-  /**
-   * @deprecated use method in {@link BotFactory}
-   */
-  @Deprecated
-  protected static String getWikiUrl(Version v) throws Exception {
-    return getValue("wiki" + v.name() + "_url");
-  }
-
-  /**
-   * @deprecated use method in {@link BotFactory}
-   */
-  @Deprecated
-  protected static String getWikiUser(Version v) throws Exception {
-    return getValue("wiki" + v.name() + "_user");
-  }
-
-  /**
-   * @deprecated use method in {@link BotFactory}
-   */
-  @Deprecated
-  protected static String getWikiPass(Version v) throws Exception {
-    return getValue("wiki" + v.name() + "_pass");
-  }
-
-  protected static URL getURL(final String key) throws Exception {
-    URL u = new URL(getValue(key));
-    String host = u.getHost();
-    int port = u.getPort();
-    if (port < 1) {
-      port = 80;
-    }
-    String protocol = u.getProtocol();
-    String file = u.getFile();
-    return new URL(protocol, host, port, file);
-  }
-
-  protected static int getIntValue(final String key) throws Exception {
-    return Integer.parseInt(getValue(key));
   }
 
   protected Collection<String> getSpecialChars() {

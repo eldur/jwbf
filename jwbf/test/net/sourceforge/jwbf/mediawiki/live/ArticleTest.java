@@ -13,7 +13,6 @@ import java.util.Vector;
 import lombok.extern.slf4j.Slf4j;
 import net.sourceforge.jwbf.core.contentRep.Article;
 import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
-import net.sourceforge.jwbf.mediawiki.BotFactory;
 import net.sourceforge.jwbf.mediawiki.LiveTestFather;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.actions.util.VersionException;
@@ -151,7 +150,7 @@ public class ArticleTest extends LiveTestFather {
 
   @Test
   public final void simpleArticleTest() throws Exception {
-    MediaWikiBot b = BotFactory.getMediaWikiBot(Version.getLatest(), true);
+    MediaWikiBot b = getMediaWikiBot(Version.getLatest(), true);
     SimpleArticle sa = b.readData("Main Page");
     System.out.println(sa.getText());
   }
@@ -160,7 +159,7 @@ public class ArticleTest extends LiveTestFather {
   public final void articleReadFreqTest() throws Exception {
     log.debug("-- > Begin articleTest");
     // get a MediaWikiBot
-    MediaWikiBot bot = getMediaWikiBot(Version.getLast(), true);
+    MediaWikiBot bot = getMediaWikiBot(Version.getLatest(), true);
     // create new article on this wikibot
     Article a = new Article(bot, "Test");
     a.setText(getRandom(7));

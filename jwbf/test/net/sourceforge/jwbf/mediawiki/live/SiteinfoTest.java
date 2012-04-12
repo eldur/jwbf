@@ -19,6 +19,8 @@
 package net.sourceforge.jwbf.mediawiki.live;
 
 import static net.sourceforge.jwbf.mediawiki.BotFactory.getMediaWikiBot;
+import static net.sourceforge.jwbf.mediawiki.BotFactory.getWikiPass;
+import static net.sourceforge.jwbf.mediawiki.BotFactory.getWikiUser;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import net.sourceforge.jwbf.JWBF;
@@ -206,7 +208,7 @@ public class SiteinfoTest extends LiveTestFather {
   public final void siteInfoLastVersion() throws Exception {
     String url = "http://www.mediawiki.org/w/api.php";
     assumeReachable(url);
-    Version v = Version.getLast();
+    Version v = Version.getLatest();
     String versionInfoTemplate = "Template:MW stable release number";
     MediaWikiBot bot = new MediaWikiBot(url);
 
@@ -258,7 +260,7 @@ public class SiteinfoTest extends LiveTestFather {
   @Test
   public final void testUserAgent() throws Exception {
 
-    HttpBot bot = HttpBot.getInstance();
+    HttpBot bot = new HttpBot(""); // XXX does this work?
     String result = bot.getPage(getValue("useragent_url"));
     assertTrue("useragent should contain \"JWBF\"", result.contains("JWBF"));
     assertTrue("useragent should contain actual version",
