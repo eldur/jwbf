@@ -2,8 +2,6 @@ package net.sourceforge.jwbf.core.contentRep;
 
 import java.util.Date;
 
-import net.sourceforge.jwbf.core.actions.util.ActionException;
-import net.sourceforge.jwbf.core.actions.util.ProcessException;
 import net.sourceforge.jwbf.core.bots.WikiBot;
 import net.sourceforge.jwbf.core.bots.util.JwbfException;
 
@@ -167,13 +165,8 @@ public class Article implements ArticleMeta, ContentSetable {
 
   /**
    * Save this article.
-   * 
-   * @throws ActionException
-   *           a
-   * @throws ProcessException
-   *           a
    */
-  public void save() throws ActionException, ProcessException {
+  public void save() {
     bot.writeContent(sa);
     unSetReload(REVISION_ID_RELOAD);
     setReload(TEXT_RELOAD);
@@ -184,12 +177,8 @@ public class Article implements ArticleMeta, ContentSetable {
    * 
    * @param summary
    *          the
-   * @throws ActionException
-   *           a
-   * @throws ProcessException
-   *           a
    */
-  public void save(String summary) throws ActionException, ProcessException {
+  public void save(String summary) {
     setEditSummary(summary);
     save();
   }
@@ -197,12 +186,8 @@ public class Article implements ArticleMeta, ContentSetable {
   /**
    * clear content.
    * 
-   * @throws ActionException
-   *           a
-   * @throws ProcessException
-   *           a
    */
-  public void clear() throws ActionException, ProcessException {
+  public void clear() {
     setText("");
     save();
   }
@@ -210,12 +195,8 @@ public class Article implements ArticleMeta, ContentSetable {
   /**
    * Deletes this article, if the user has the required rights.
    * 
-   * @throws ActionException
-   *           a
-   * @throws ProcessException
-   *           a
    */
-  public void delete() throws ActionException, ProcessException {
+  public void delete() {
     bot.delete(sa.getTitle());
   }
 

@@ -42,6 +42,7 @@ import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 
 import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.ComparisonFailure;
 import org.junit.Test;
 
 /**
@@ -257,11 +258,12 @@ public abstract class LiveTestFather extends TestHelper {
     }
   }
 
-  protected static String getValue(final String key) throws Exception {
+  protected static String getValue(final String key) {
     if (!data.containsKey(key) || data.getProperty(key).trim().length() <= 0) {
       addEmptyKey(key);
-      throw new Exception("No or empty value for key: \"" + key + "\" in "
-          + filename);
+
+      throw new ComparisonFailure("No or empty value for key: \"" + key
+          + "\" in " + filename, key, filename);
     }
     return data.getProperty(key);
   }

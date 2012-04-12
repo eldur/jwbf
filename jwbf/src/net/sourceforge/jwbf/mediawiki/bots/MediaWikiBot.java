@@ -95,6 +95,14 @@ public class MediaWikiBot implements WikiBot {
       .unmodifiableSet(new HashSet<String>());
 
   /**
+   * use this constructor, if you want to work with IoC.
+   * 
+   */
+  public MediaWikiBot() {
+
+  }
+
+  /**
    * @param u
    *          wikihosturl like "http://www.mediawiki.org/w/"
    */
@@ -124,7 +132,7 @@ public class MediaWikiBot implements WikiBot {
       throw new IllegalArgumentException("(" + url
           + ") url must end with slash or .php");
     }
-    bot.setConnection(url);
+    getBot().setConnection(url);
   }
 
   /**
@@ -137,9 +145,9 @@ public class MediaWikiBot implements WikiBot {
   public MediaWikiBot(URL url, boolean testHostReachable) {
     bot = new HttpBot(url);
     if (testHostReachable) {
-      bot.getPage(url.toExternalForm());
+      getBot().getPage(url.toExternalForm());
     }
-    bot.setConnection(url);
+    getBot().setConnection(url);
   }
 
   /**
@@ -341,7 +349,16 @@ public class MediaWikiBot implements WikiBot {
       throw new ActionException("this is a selfexcecuting action, "
           + "please do not perform this action manually");
     }
-    return bot.performAction(a);
+    return getBot().performAction(a);
+  }
+
+  private HttpBot getBot() {
+    if (bot == null) {
+      throw new IllegalStateException(
+          "please use another constructor or inject "
+              + HttpBot.class.getCanonicalName());
+    }
+    return bot;
   }
 
   /**
@@ -416,7 +433,7 @@ public class MediaWikiBot implements WikiBot {
   }
 
   public String getHostUrl() {
-    return bot.getHostUrl();
+    return getBot().getHostUrl();
   }
 
 }

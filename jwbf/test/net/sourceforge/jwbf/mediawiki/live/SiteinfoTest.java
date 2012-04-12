@@ -64,9 +64,9 @@ public class SiteinfoTest extends LiveTestFather {
    */
   @Test
   public final void siteInfoWikipediaDe() throws Exception {
-    String url = "http://de.wikipedia.org/w/index.php";
-    assumeReachable(url);
-    bot = new MediaWikiBot(url);
+    String liveUrl = "http://de.wikipedia.org/w/index.php";
+    assumeReachable(liveUrl);
+    bot = new MediaWikiBot(liveUrl);
     doTest(bot, Version.DEVELOPMENT);
   }
 
@@ -206,11 +206,11 @@ public class SiteinfoTest extends LiveTestFather {
    */
   @Test
   public final void siteInfoLastVersion() throws Exception {
-    String url = "http://www.mediawiki.org/w/api.php";
-    assumeReachable(url);
+    String liveUrl = "http://www.mediawiki.org/w/api.php";
+    assumeReachable(liveUrl);
     Version v = Version.getLatest();
     String versionInfoTemplate = "Template:MW stable release number";
-    MediaWikiBot bot = new MediaWikiBot(url);
+    MediaWikiBot bot = new MediaWikiBot(liveUrl);
 
     Article a = new Article(bot, versionInfoTemplate);
     assertTrue(a.getText() + " should contains " + v.getNumber(), a.getText()

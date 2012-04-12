@@ -183,7 +183,7 @@ public class ImageUsageTitlesTest extends LiveTestFather {
 
   }
 
-  private void prepare(MediaWikiBot bot2) throws Exception {
+  private void prepare(MediaWikiBot bot2) {
 
     String name = "";
     for (int i = 0; i < limit; i++) {

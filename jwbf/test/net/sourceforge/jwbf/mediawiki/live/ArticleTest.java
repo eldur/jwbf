@@ -26,7 +26,7 @@ public class ArticleTest extends LiveTestFather {
   public ArticleTest() {
   }
 
-  private Collection<MediaWikiBot> getTestBots() throws Exception {
+  private Collection<MediaWikiBot> getTestBots() {
     Collection<MediaWikiBot> bots = new Vector<MediaWikiBot>();
     bots.add(getMediaWikiBot(Version.MW1_16, true));
     bots.add(getMediaWikiBot(Version.MW1_15, true));
@@ -149,7 +149,7 @@ public class ArticleTest extends LiveTestFather {
   }
 
   @Test
-  public final void simpleArticleTest() throws Exception {
+  public final void simpleArticleTest() {
     MediaWikiBot b = getMediaWikiBot(Version.getLatest(), true);
     SimpleArticle sa = b.readData("Main Page");
     System.out.println(sa.getText());
