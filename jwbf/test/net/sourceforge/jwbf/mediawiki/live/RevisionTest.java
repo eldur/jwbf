@@ -1,12 +1,15 @@
 package net.sourceforge.jwbf.mediawiki.live;
 
+import static net.sourceforge.jwbf.TestHelper.getRandom;
+import static net.sourceforge.jwbf.mediawiki.LiveTestFather.addInitSupporterVersions;
+import static net.sourceforge.jwbf.mediawiki.LiveTestFather.getValue;
+import static net.sourceforge.jwbf.mediawiki.LiveTestFather.registerTestedVersion;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import net.sourceforge.jwbf.core.bots.util.JwbfException;
 import net.sourceforge.jwbf.core.contentRep.ArticleMeta;
 import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
 import net.sourceforge.jwbf.mediawiki.BotFactory;
-import net.sourceforge.jwbf.mediawiki.LiveTestFather;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.actions.editing.GetApiToken;
 import net.sourceforge.jwbf.mediawiki.actions.editing.GetRevision;
@@ -22,7 +25,7 @@ import org.junit.Test;
  * @author Thomas Stock
  * 
  */
-public class RevisionTest extends LiveTestFather {
+public class RevisionTest {
 
   private MediaWikiBot bot;
 

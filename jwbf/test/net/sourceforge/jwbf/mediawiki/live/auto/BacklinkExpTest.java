@@ -7,11 +7,9 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Vector;
 
-import net.sourceforge.jwbf.TestHelper;
 import net.sourceforge.jwbf.core.actions.util.ActionException;
 import net.sourceforge.jwbf.core.actions.util.ProcessException;
 import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
-import net.sourceforge.jwbf.mediawiki.LiveTestFather;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.actions.queries.BacklinkTitles;
@@ -33,7 +31,7 @@ import org.junit.runners.Parameterized.Parameters;
  */
 @RunWith(ParameterizedLabel.class)
 @TestNamer(SimpleNameFinder.class)
-public class BacklinkExpTest extends LiveTestFather {
+public class BacklinkExpTest {
 
   private static final String BACKLINKS = "Backlinks";
   private static final int COUNT = 60;
@@ -47,8 +45,7 @@ public class BacklinkExpTest extends LiveTestFather {
         { Version.MW1_16 }, });
   }
 
-  public BacklinkExpTest(Version v) throws Exception {
-    TestHelper.assumeLiveTestEnvoirnmentReachable();
+  public BacklinkExpTest(Version v) {
     bot = getMediaWikiBot(v, true);
     Assert.assertEquals(v, bot.getVersion());
   }

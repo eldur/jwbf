@@ -1,10 +1,15 @@
 package net.sourceforge.jwbf.mediawiki.live;
 
+import static net.sourceforge.jwbf.TestHelper.assumeReachable;
+import static net.sourceforge.jwbf.TestHelper.getRandom;
+import static net.sourceforge.jwbf.TestHelper.getRandomAlph;
 import static net.sourceforge.jwbf.mediawiki.BotFactory.getMediaWikiBot;
+import static net.sourceforge.jwbf.mediawiki.LiveTestFather.addInitSupporterVersions;
+import static net.sourceforge.jwbf.mediawiki.LiveTestFather.registerTestedVersion;
+import static net.sourceforge.jwbf.mediawiki.LiveTestFather.registerUnTestedVersion;
 import static org.junit.Assert.assertTrue;
 import net.sourceforge.jwbf.core.actions.util.ActionException;
 import net.sourceforge.jwbf.core.contentRep.Article;
-import net.sourceforge.jwbf.mediawiki.LiveTestFather;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.actions.queries.LogEvents;
@@ -21,7 +26,7 @@ import org.junit.Test;
  * @author Thomas Stock
  * 
  */
-public class LogEventsTest extends LiveTestFather {
+public class LogEventsTest {
 
   private MediaWikiBot bot = null;
   private static final int LIMIT = 55;

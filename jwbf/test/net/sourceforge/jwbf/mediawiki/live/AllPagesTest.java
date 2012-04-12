@@ -18,12 +18,16 @@
  */
 package net.sourceforge.jwbf.mediawiki.live;
 
+import static net.sourceforge.jwbf.TestHelper.assumeReachable;
 import static net.sourceforge.jwbf.mediawiki.BotFactory.getMediaWikiBot;
+import static net.sourceforge.jwbf.mediawiki.LiveTestFather.addInitSupporterVersions;
+import static net.sourceforge.jwbf.mediawiki.LiveTestFather.registerTestedVersion;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Collection;
 import java.util.Iterator;
 
+import net.sourceforge.jwbf.TestHelper;
 import net.sourceforge.jwbf.core.actions.util.ActionException;
 import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
 import net.sourceforge.jwbf.mediawiki.LiveTestFather;
@@ -42,7 +46,7 @@ import org.junit.Test;
  * @author Thomas Stock
  * 
  */
-public class AllPagesTest extends LiveTestFather {
+public class AllPagesTest {
 
   private MediaWikiBot bot = null;
 
@@ -68,11 +72,9 @@ public class AllPagesTest extends LiveTestFather {
   /**
    * Test category read. Test category must have more then 50 members.
    * 
-   * @throws Exception
-   *           a
    */
   @Test
-  public final void allPagesWikiMW1x09() throws Exception {
+  public final void allPagesWikiMW1x09() {
 
     bot = getMediaWikiBot(Version.MW1_09, true);
     doTest(bot, true);
@@ -195,14 +197,14 @@ public class AllPagesTest extends LiveTestFather {
         Version.MW1_16.equals(bot.getVersion()));
   }
 
-  private void doTest(MediaWikiBot bot, boolean isFullTest) throws Exception {
+  private void doTest(MediaWikiBot bot, boolean isFullTest) {
     AllPageTitles gat = new AllPageTitles(bot, null, null, RedirectFilter.all,
         MediaWiki.NS_MAIN);
 
     SimpleArticle sa;
-    String testText = getRandom(255);
+    String testText = TestHelper.getRandom(255);
 
-    Collection<String> specialChars = getSpecialChars();
+    Collection<String> specialChars = LiveTestFather.getSpecialChars();
     if (isFullTest) {
       try {
         for (String title : specialChars) {

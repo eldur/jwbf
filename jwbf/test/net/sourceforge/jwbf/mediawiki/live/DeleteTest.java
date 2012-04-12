@@ -3,13 +3,16 @@
  */
 package net.sourceforge.jwbf.mediawiki.live;
 
+import static net.sourceforge.jwbf.TestHelper.getRandom;
+import static net.sourceforge.jwbf.mediawiki.LiveTestFather.addInitSupporterVersions;
+import static net.sourceforge.jwbf.mediawiki.LiveTestFather.registerTestedVersion;
+import static net.sourceforge.jwbf.mediawiki.LiveTestFather.registerUnTestedVersion;
 import static org.junit.Assert.assertTrue;
 import net.sourceforge.jwbf.core.actions.util.ActionException;
 import net.sourceforge.jwbf.core.actions.util.ProcessException;
 import net.sourceforge.jwbf.core.contentRep.ContentAccessable;
 import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
 import net.sourceforge.jwbf.mediawiki.BotFactory;
-import net.sourceforge.jwbf.mediawiki.LiveTestFather;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.actions.editing.PostDelete;
@@ -25,7 +28,7 @@ import org.junit.Test;
  * @author Thomas
  * 
  */
-public class DeleteTest extends LiveTestFather {
+public class DeleteTest {
   private static final String DELETE_PREFIX = "Delete";
   private MediaWikiBot bot = null;
   private static final int COUNT = 1;

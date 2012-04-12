@@ -6,8 +6,9 @@ package net.sourceforge.jwbf.mediawiki.live;
 import static net.sourceforge.jwbf.mediawiki.BotFactory.getMediaWikiBot;
 import static net.sourceforge.jwbf.mediawiki.BotFactory.getWikiPass;
 import static net.sourceforge.jwbf.mediawiki.BotFactory.getWikiUser;
+import static net.sourceforge.jwbf.mediawiki.LiveTestFather.addInitSupporterVersions;
+import static net.sourceforge.jwbf.mediawiki.LiveTestFather.registerTestedVersion;
 import net.sourceforge.jwbf.core.contentRep.Userinfo;
-import net.sourceforge.jwbf.mediawiki.LiveTestFather;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.actions.meta.GetUserinfo;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
@@ -20,7 +21,7 @@ import org.junit.Test;
  * @author Thomas
  * 
  */
-public class UserinfoTest extends LiveTestFather {
+public class UserinfoTest {
   private MediaWikiBot bot = null;
 
   /**

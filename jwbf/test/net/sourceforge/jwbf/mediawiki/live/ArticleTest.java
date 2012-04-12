@@ -1,5 +1,7 @@
 package net.sourceforge.jwbf.mediawiki.live;
 
+import static net.sourceforge.jwbf.TestHelper.getRandom;
+import static net.sourceforge.jwbf.TestHelper.getRandomAlph;
 import static net.sourceforge.jwbf.mediawiki.BotFactory.getMediaWikiBot;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -21,10 +23,7 @@ import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 import org.junit.Test;
 
 @Slf4j
-public class ArticleTest extends LiveTestFather {
-
-  public ArticleTest() {
-  }
+public class ArticleTest {
 
   private Collection<MediaWikiBot> getTestBots() {
     Collection<MediaWikiBot> bots = new Vector<MediaWikiBot>();
@@ -58,7 +57,7 @@ public class ArticleTest extends LiveTestFather {
         String editSum = getRandomAlph(6); // create random edit sum
         a = new Article(bot, title); // create new article with given title
         a.setText(getRandom(42)); // set random text
-        Date saveDate = getCurrentUTC();
+        Date saveDate = LiveTestFather.getCurrentUTC();
         a.save(editSum); // save article a with given comment
 
         Article b = new Article(bot, title); // create new article b
@@ -109,7 +108,7 @@ public class ArticleTest extends LiveTestFather {
       a.setText(getRandom(42));
       a.setMinorEdit(false);
 
-      Date saveDate = getCurrentUTC();
+      Date saveDate = LiveTestFather.getCurrentUTC();
       a.save(editSum); // save article a
       String revIdA = a.getRevisionId();
       Date dateA = a.getEditTimestamp();

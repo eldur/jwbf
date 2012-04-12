@@ -18,15 +18,18 @@
  */
 package net.sourceforge.jwbf.mediawiki.live;
 
+import static net.sourceforge.jwbf.TestHelper.assumeReachable;
 import static net.sourceforge.jwbf.mediawiki.BotFactory.getMediaWikiBot;
 import static net.sourceforge.jwbf.mediawiki.BotFactory.getWikiPass;
 import static net.sourceforge.jwbf.mediawiki.BotFactory.getWikiUser;
+import static net.sourceforge.jwbf.mediawiki.LiveTestFather.addInitSupporterVersions;
+import static net.sourceforge.jwbf.mediawiki.LiveTestFather.getValue;
+import static net.sourceforge.jwbf.mediawiki.LiveTestFather.registerTestedVersion;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import net.sourceforge.jwbf.JWBF;
 import net.sourceforge.jwbf.core.bots.HttpBot;
 import net.sourceforge.jwbf.core.contentRep.Article;
-import net.sourceforge.jwbf.mediawiki.LiveTestFather;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.actions.meta.GetVersion;
 import net.sourceforge.jwbf.mediawiki.actions.meta.Siteinfo;
@@ -40,7 +43,7 @@ import org.junit.Test;
  * @author Thomas Stock
  * 
  */
-public class SiteinfoTest extends LiveTestFather {
+public class SiteinfoTest {
 
   private MediaWikiBot bot = null;
 

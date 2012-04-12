@@ -25,7 +25,7 @@ import org.junit.Test;
  * @author Thomas Stock
  * 
  */
-public class BacklinkTest extends LiveTestFather {
+public class BacklinkTest {
 
   private static final String BACKLINKS = "Backlinks";
   private static final int COUNT = 60;
@@ -47,7 +47,7 @@ public class BacklinkTest extends LiveTestFather {
 
   @BeforeClass
   public static void setUp() {
-    addInitSupporterVersions(BacklinkTitles.class);
+    LiveTestFather.addInitSupporterVersions(BacklinkTitles.class);
   }
 
   /**
@@ -59,9 +59,10 @@ public class BacklinkTest extends LiveTestFather {
   @Test
   public final void backlinksWikipediaDe() throws Exception {
     String url = "http://de.wikipedia.org/w/index.php";
-    assumeReachable(url);
+    LiveTestFather.assumeReachable(url);
     bot = new MediaWikiBot(url);
-    BacklinkTitles is = new BacklinkTitles(bot, getValue("backlinks_article"));
+    BacklinkTitles is = new BacklinkTitles(bot,
+        LiveTestFather.getValue("backlinks_article"));
 
     int i = 0;
     while (is.hasNext()) {
@@ -251,10 +252,11 @@ public class BacklinkTest extends LiveTestFather {
     }
     Assert.assertTrue("Iterator should contain: " + vx, vx.isEmpty());
     Assert.assertTrue("Fail: " + i + " < " + COUNT, i > COUNT - 1);
-    registerTestedVersion(BacklinkTitles.class, bot.getVersion());
+    LiveTestFather
+        .registerTestedVersion(BacklinkTitles.class, bot.getVersion());
   }
 
   private static int getIntValue(final String key) throws Exception {
-    return Integer.parseInt(getValue(key));
+    return Integer.parseInt(LiveTestFather.getValue(key));
   }
 }

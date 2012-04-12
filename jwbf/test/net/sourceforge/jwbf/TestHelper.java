@@ -10,7 +10,7 @@ import org.junit.Assume;
 
 public abstract class TestHelper {
 
-  private Random wheel = new Random();
+  private static Random wheel = new Random();
 
   private static final TestHelper helper = new TestHelper() {
   };
@@ -23,15 +23,15 @@ public abstract class TestHelper {
     return helper.getRandomAlph(length);
   }
 
-  protected String getRandomAlph(int length) {
+  public static String getRandomAlph(int length) {
     return getRandom(length, 65, 90);
   }
 
-  protected String getRandom(int length) {
+  public static String getRandom(int length) {
     return getRandom(length, 48, 126);
   }
 
-  protected String getRandom(int length, int begin, int end) {
+  public static String getRandom(int length, int begin, int end) {
     StringBuffer out = new StringBuffer();
     int charNum = 0;
     int count = 1;
@@ -70,8 +70,12 @@ public abstract class TestHelper {
     }
   }
 
-  public static void assumeReachable(String url) throws MalformedURLException {
-    assumeReachable(new URL(url));
+  public static void assumeReachable(String url) {
+    try {
+      assumeReachable(new URL(url));
+    } catch (MalformedURLException e) {
+      throw new IllegalArgumentException(e);
+    }
   }
 
   public static void assumeLiveTestEnvoirnmentReachable() {

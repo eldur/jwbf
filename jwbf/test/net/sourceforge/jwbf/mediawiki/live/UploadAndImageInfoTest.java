@@ -19,6 +19,9 @@
 package net.sourceforge.jwbf.mediawiki.live;
 
 import static net.sourceforge.jwbf.mediawiki.BotFactory.getMediaWikiBot;
+import static net.sourceforge.jwbf.mediawiki.LiveTestFather.addInitSupporterVersions;
+import static net.sourceforge.jwbf.mediawiki.LiveTestFather.getValue;
+import static net.sourceforge.jwbf.mediawiki.LiveTestFather.registerTestedVersion;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -38,7 +41,6 @@ import javax.imageio.ImageIO;
 
 import net.sourceforge.jwbf.core.actions.util.ActionException;
 import net.sourceforge.jwbf.core.actions.util.ProcessException;
-import net.sourceforge.jwbf.mediawiki.LiveTestFather;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.actions.editing.FileUpload;
 import net.sourceforge.jwbf.mediawiki.actions.queries.ImageInfo;
@@ -55,7 +57,7 @@ import org.junit.Test;
  * @author Thomas Stock
  * 
  */
-public class UploadAndImageInfoTest extends LiveTestFather {
+public class UploadAndImageInfoTest {
 
   private MediaWikiBot bot = null;
 

@@ -18,10 +18,12 @@
  */
 package net.sourceforge.jwbf.mediawiki.live;
 
+import static net.sourceforge.jwbf.TestHelper.assumeReachable;
 import static net.sourceforge.jwbf.mediawiki.BotFactory.getMediaWikiBot;
+import static net.sourceforge.jwbf.mediawiki.LiveTestFather.addInitSupporterVersions;
+import static net.sourceforge.jwbf.mediawiki.LiveTestFather.registerTestedVersion;
 import static org.junit.Assert.fail;
 import net.sourceforge.jwbf.core.actions.util.ActionException;
-import net.sourceforge.jwbf.mediawiki.LiveTestFather;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.actions.misc.GetRendering;
 import net.sourceforge.jwbf.mediawiki.actions.util.VersionException;
@@ -36,7 +38,7 @@ import org.junit.Test;
  * @author Thomas Stock
  * 
  */
-public class RenderingTest extends LiveTestFather {
+public class RenderingTest {
 
   private MediaWikiBot bot = null;
 

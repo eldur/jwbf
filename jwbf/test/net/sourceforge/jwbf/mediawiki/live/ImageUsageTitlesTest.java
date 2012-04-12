@@ -1,10 +1,13 @@
 package net.sourceforge.jwbf.mediawiki.live;
 
+import static net.sourceforge.jwbf.TestHelper.getRandom;
 import static net.sourceforge.jwbf.mediawiki.BotFactory.getMediaWikiBot;
+import static net.sourceforge.jwbf.mediawiki.LiveTestFather.addInitSupporterVersions;
+import static net.sourceforge.jwbf.mediawiki.LiveTestFather.getValue;
+import static net.sourceforge.jwbf.mediawiki.LiveTestFather.registerTestedVersion;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import net.sourceforge.jwbf.core.contentRep.Article;
-import net.sourceforge.jwbf.mediawiki.LiveTestFather;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.actions.queries.ImageUsageTitles;
@@ -18,7 +21,7 @@ import org.junit.Test;
  * @author Thomas Stock
  * 
  */
-public class ImageUsageTitlesTest extends LiveTestFather {
+public class ImageUsageTitlesTest {
 
   private MediaWikiBot bot = null;
   private static final int limit = 55;

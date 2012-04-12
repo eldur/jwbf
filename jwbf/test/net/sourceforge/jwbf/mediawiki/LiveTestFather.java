@@ -41,9 +41,10 @@ import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 
 import org.junit.AfterClass;
-import org.junit.Before;
 import org.junit.ComparisonFailure;
 import org.junit.Test;
+
+import com.google.common.collect.Lists;
 
 /**
  * @author Thomas Stock
@@ -54,18 +55,18 @@ public abstract class LiveTestFather extends TestHelper {
 
   private static String filename = "";
 
-  private final Collection<String> specialChars = new Vector<String>();
+  private static final Collection<String> specialChars = Lists.newArrayList();
 
   private static boolean isVersionTestCase = false;
 
-  protected static final Map<String, Version> USEDVERSIONS = new HashMap<String, Version>();
-  protected static final Map<String, Version> TESTEDVERSIONS = new HashMap<String, Version>();
-  protected static final Map<String, Version> DOCUMENTEDVERSIONS = new HashMap<String, Version>();
+  private static final Map<String, Version> USEDVERSIONS = new HashMap<String, Version>();
+  private static final Map<String, Version> TESTEDVERSIONS = new HashMap<String, Version>();
+  private static final Map<String, Version> DOCUMENTEDVERSIONS = new HashMap<String, Version>();
 
-  /**
-   * Inits.
-   */
-  protected LiveTestFather() {
+  private LiveTestFather() {
+  }
+
+  static {
     specialChars.add("\"");
     specialChars.add("\'");
     specialChars.add("?");
@@ -73,9 +74,6 @@ public abstract class LiveTestFather extends TestHelper {
     specialChars.add("&");
     specialChars.add("[");
     specialChars.add("]");
-  }
-
-  static {
 
     // find jwftestfile
     Collection<String> filepos = new Vector<String>();
@@ -118,13 +116,7 @@ public abstract class LiveTestFather extends TestHelper {
 
   }
 
-  @Before
-  public void before() {
-    TestHelper.assumeLiveTestEnvoirnmentReachable();
-
-  }
-
-  protected static void addInitSupporterVersions(Class<?> mwc) {
+  public static void addInitSupporterVersions(Class<?> mwc) {
     isVersionTestCase = true;
     Version[] vs = MWAction.findSupportedVersions(mwc);
     for (int j = 0; j < vs.length; j++) {
@@ -137,7 +129,7 @@ public abstract class LiveTestFather extends TestHelper {
    * 
    * @return the current UTC
    */
-  public Date getCurrentUTC() {
+  public static Date getCurrentUTC() {
     long currentDate = System.currentTimeMillis();
     TimeZone tz = TimeZone.getDefault();
     Calendar localCal = Calendar.getInstance(tz);
@@ -155,7 +147,7 @@ public abstract class LiveTestFather extends TestHelper {
    * @param v
    *          a
    */
-  protected static final void registerUnTestedVersion(Class<?> clazz, Version v) {
+  public static final void registerUnTestedVersion(Class<?> clazz, Version v) {
     if (v != Version.DEVELOPMENT) {
       USEDVERSIONS.put(clazz.getCanonicalName() + v, v);
     }
@@ -169,7 +161,7 @@ public abstract class LiveTestFather extends TestHelper {
    * @param v
    *          a
    */
-  protected static final void registerTestedVersion(Class<?> clazz, Version v) {
+  public static final void registerTestedVersion(Class<?> clazz, Version v) {
     if (v != Version.DEVELOPMENT) {
       TESTEDVERSIONS.put(clazz.getCanonicalName() + v, v);
     }
@@ -258,7 +250,7 @@ public abstract class LiveTestFather extends TestHelper {
     }
   }
 
-  protected static String getValue(final String key) {
+  public static String getValue(final String key) {
     if (!data.containsKey(key) || data.getProperty(key).trim().length() <= 0) {
       addEmptyKey(key);
 
@@ -268,7 +260,7 @@ public abstract class LiveTestFather extends TestHelper {
     return data.getProperty(key);
   }
 
-  protected Collection<String> getSpecialChars() {
+  public static Collection<String> getSpecialChars() {
     return specialChars;
   }
 

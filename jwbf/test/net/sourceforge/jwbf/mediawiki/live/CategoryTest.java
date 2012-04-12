@@ -19,6 +19,9 @@
 package net.sourceforge.jwbf.mediawiki.live;
 
 import static net.sourceforge.jwbf.mediawiki.BotFactory.getMediaWikiBot;
+import static net.sourceforge.jwbf.mediawiki.LiveTestFather.addInitSupporterVersions;
+import static net.sourceforge.jwbf.mediawiki.LiveTestFather.registerTestedVersion;
+import static net.sourceforge.jwbf.mediawiki.LiveTestFather.registerUnTestedVersion;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -28,7 +31,6 @@ import java.util.Vector;
 
 import net.sourceforge.jwbf.core.actions.util.ProcessException;
 import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
-import net.sourceforge.jwbf.mediawiki.LiveTestFather;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.actions.queries.CategoryMembersFull;
 import net.sourceforge.jwbf.mediawiki.actions.queries.CategoryMembersSimple;
@@ -45,7 +47,7 @@ import org.junit.Test;
  * @author Thomas Stock
  * 
  */
-public class CategoryTest extends LiveTestFather {
+public class CategoryTest {
 
   private MediaWikiBot bot = null;
   private static final int COUNT = 60;

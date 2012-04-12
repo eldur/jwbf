@@ -39,6 +39,8 @@ public class HttpBot {
 
   private HttpActionClient cc;
 
+  private String url;
+
   /**
    * Design for extension.
    * 
@@ -46,6 +48,7 @@ public class HttpBot {
    *          of the host
    */
   public HttpBot(final String url) {
+    this.url = url;
     try {
       setConnection(new URL(url));
     } catch (MalformedURLException e) {
@@ -193,6 +196,17 @@ public class HttpBot {
   public final void setConnection(final URL hostUrl) {
     setConnection(new HttpActionClient(hostUrl));
 
+  }
+
+  /**
+   * 
+   * TODO check usage of hosturl
+   * 
+   * @deprecated
+   */
+  @Deprecated
+  public String getUrl() {
+    return url;
   }
 
 }

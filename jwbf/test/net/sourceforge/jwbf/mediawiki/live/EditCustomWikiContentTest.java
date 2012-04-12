@@ -18,6 +18,8 @@
  */
 package net.sourceforge.jwbf.mediawiki.live;
 
+import static net.sourceforge.jwbf.TestHelper.getRandom;
+import static net.sourceforge.jwbf.mediawiki.LiveTestFather.getValue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -28,7 +30,6 @@ import net.sourceforge.jwbf.core.contentRep.Article;
 import net.sourceforge.jwbf.core.contentRep.ArticleMeta;
 import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
 import net.sourceforge.jwbf.mediawiki.BotFactory;
-import net.sourceforge.jwbf.mediawiki.LiveTestFather;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.actions.editing.GetRevision;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
@@ -41,7 +42,7 @@ import org.junit.Test;
  * @author Thomas Stock
  * 
  */
-public class EditCustomWikiContentTest extends LiveTestFather {
+public class EditCustomWikiContentTest {
 
   private MediaWikiBot bot;
   private Random random = new Random(System.currentTimeMillis());
