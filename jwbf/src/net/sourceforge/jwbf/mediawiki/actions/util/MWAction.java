@@ -18,7 +18,6 @@
  */
 package net.sourceforge.jwbf.mediawiki.actions.util;
 
-import java.util.ArrayList;
 import java.util.Collection;
 
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +26,8 @@ import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.core.actions.util.ProcessException;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
+
+import com.google.common.collect.Lists;
 
 /**
  * @author Thomas Stock
@@ -172,7 +173,7 @@ public abstract class MWAction implements ContentProcessable {
    * {@inheritDoc}
    */
   public final Collection<Version> getSupportedVersions() {
-    Collection<Version> v = new ArrayList<Version>();
+    Collection<Version> v = Lists.newArrayList();
 
     Version[] va = getVersionArray();
     for (int i = 0; i < va.length; i++) {

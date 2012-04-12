@@ -1,6 +1,5 @@
 package net.sourceforge.jwbf.mediawiki.bots;
 
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Iterator;
 import java.util.Vector;
@@ -20,7 +19,7 @@ public class MediaWikiThreadBot extends MediaWikiBot {
     prepare();
   }
 
-  public MediaWikiThreadBot(String url) throws MalformedURLException {
+  public MediaWikiThreadBot(String url) {
     super(url);
     prepare();
   }

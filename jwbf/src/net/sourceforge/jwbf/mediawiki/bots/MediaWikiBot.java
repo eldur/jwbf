@@ -3,10 +3,12 @@ package net.sourceforge.jwbf.mediawiki.bots;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.UnknownHostException;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
 
 import lombok.extern.slf4j.Slf4j;
 import net.sourceforge.jwbf.core.actions.ContentProcessable;
@@ -69,7 +71,7 @@ import net.sourceforge.jwbf.mediawiki.contentRep.LoginData;
  * 
  */
 @Slf4j
-public class MediaWikiBot extends HttpBot implements WikiBot {
+public class MediaWikiBot implements WikiBot {
 
   private LoginData login = null;
 
@@ -80,13 +82,16 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
   private boolean loginChangeVersion = false;
   private boolean useEditApi = true;
 
+  @Inject
+  private HttpBot bot;
+
   /**
    * These chars are not allowed in article names.
    */
   public static final char[] INVALID_LABEL_CHARS = "[]{}<>|".toCharArray();
-  private static final int READVAL = GetRevision.CONTENT | GetRevision.COMMENT
-      | GetRevision.USER | GetRevision.TIMESTAMP | GetRevision.IDS
-      | GetRevision.FLAGS;
+  private static final int DEFAULT_READ_PROPERTIES = GetRevision.CONTENT
+      | GetRevision.COMMENT | GetRevision.USER | GetRevision.TIMESTAMP
+      | GetRevision.IDS | GetRevision.FLAGS;
 
   private static final Set<String> emptySet = Collections
       .unmodifiableSet(new HashSet<String>());
@@ -96,7 +101,7 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
    *          wikihosturl like "http://www.mediawiki.org/w/"
    */
   public MediaWikiBot(final URL u) {
-    super(u);
+    bot = new HttpBot(u);
   }
 
   /**
@@ -105,7 +110,7 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
    *          a
    */
   public MediaWikiBot(final HttpActionClient client) {
-    super(client);
+    bot = new HttpBot(client);
   }
 
   /**
@@ -115,13 +120,13 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
    *           if param url does not represent a well-formed url
    */
 
-  public MediaWikiBot(final String url) throws MalformedURLException {
-    super(url);
+  public MediaWikiBot(final String url) {
+    bot = new HttpBot(url);
     if (!(url.endsWith(".php") || url.endsWith("/"))) {
-      throw new MalformedURLException("(" + url
+      throw new IllegalArgumentException("(" + url
           + ") url must end with slash or .php");
     }
-    setConnection(url);
+    bot.setConnection(url);
   }
 
   /**
@@ -134,15 +139,11 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
    *           a
    */
   public MediaWikiBot(URL url, boolean testHostReachable) throws IOException {
-    super(url);
+    bot = new HttpBot(url);
     if (testHostReachable) {
-      try {
-        getPage(url.toExternalForm());
-      } catch (ActionException e) {
-        throw new UnknownHostException(url.toExternalForm());
-      }
+      bot.getPage(url.toExternalForm());
     }
-    setConnection(url);
+    bot.setConnection(url);
   }
 
   /**
@@ -222,8 +223,8 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
    *           on access problems
    * @see GetRevision
    */
-  public synchronized Article getArticle(final String name,
-      final int properties) throws ActionException, ProcessException {
+  public synchronized Article getArticle(final String name, final int properties)
+      throws ActionException, ProcessException {
     return new Article(this, readData(name, properties));
   }
 
@@ -247,7 +248,7 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
   public SimpleArticle readData(String name) throws ActionException,
       ProcessException {
 
-    return readData(name, READVAL);
+    return readData(name, DEFAULT_READ_PROPERTIES);
   }
 
   /**
@@ -263,7 +264,7 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
    */
   public synchronized Article getArticle(final String name)
       throws ActionException, ProcessException {
-    return getArticle(name, READVAL);
+    return getArticle(name, DEFAULT_READ_PROPERTIES);
 
   }
 
@@ -378,26 +379,22 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
     performAction(new PostDelete(this, title));
   }
 
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public synchronized String performAction(ContentProcessable a)
-      throws ActionException, ProcessException {
+  public synchronized String performAction(ContentProcessable a) {
     if (a.isSelfExecuter()) {
       throw new ActionException("this is a selfexcecuting action, "
           + "please do not perform this action manually");
     }
-    return super.performAction(a);
+    return bot.performAction(a);
   }
 
   /**
    * 
    * @return the
-   * @throws RuntimeException
+   * @throws IllegalStateException
    *           if no version was found.
    * @see #getSiteinfo()
    */
+  @Nonnull
   public final Version getVersion() throws RuntimeException {
     if (version == null || loginChangeVersion) {
       try {
@@ -408,7 +405,7 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
         loginChangeVersion = false;
       } catch (JwbfException e) {
         log.error(e.getClass().getName() + e.getLocalizedMessage());
-        throw new RuntimeException(e.getLocalizedMessage());
+        throw new IllegalStateException(e.getLocalizedMessage());
       }
       log.debug("Version is: " + version.name());
 
@@ -461,6 +458,10 @@ public class MediaWikiBot extends HttpBot implements WikiBot {
    */
   public final String getWikiType() {
     return MediaWiki.class.getName() + " " + getVersion();
+  }
+
+  public String getHostUrl() {
+    return bot.getHostUrl();
   }
 
 }

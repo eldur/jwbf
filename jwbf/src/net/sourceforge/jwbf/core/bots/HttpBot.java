@@ -45,8 +45,12 @@ public class HttpBot {
    * @param url
    *          of the host
    */
-  protected HttpBot(final String url) throws MalformedURLException {
-    setConnection(new URL(url));
+  public HttpBot(final String url) {
+    try {
+      setConnection(new URL(url));
+    } catch (MalformedURLException e) {
+      throw new IllegalArgumentException(e);
+    }
   }
 
   /**
@@ -55,7 +59,7 @@ public class HttpBot {
    * @param cc
    *          a
    */
-  protected HttpBot(HttpActionClient cc) {
+  public HttpBot(HttpActionClient cc) {
     this.cc = cc;
   }
 
@@ -65,7 +69,7 @@ public class HttpBot {
    * @param url
    *          of the host
    */
-  protected HttpBot(final URL url) {
+  public HttpBot(final URL url) {
     setConnection(url);
   }
 
@@ -116,12 +120,13 @@ public class HttpBot {
    * @param hostUrl
    *          base url of a wiki site to connect with; example:
    *          http://www.yourOwnWiki.org/wiki/
-   * @throws MalformedURLException
-   *           if hostUrl does not represent a well-formed url
    */
-  protected final void setConnection(final String hostUrl)
-      throws MalformedURLException {
-    setConnection(new URL(hostUrl));
+  public final void setConnection(final String hostUrl) {
+    try {
+      setConnection(new URL(hostUrl));
+    } catch (MalformedURLException e) {
+      throw new IllegalArgumentException(e);
+    }
   }
 
   /**
@@ -185,7 +190,7 @@ public class HttpBot {
    * @param hostUrl
    *          like http://www.yourOwnWiki.org/wiki/
    */
-  protected final void setConnection(final URL hostUrl) {
+  public final void setConnection(final URL hostUrl) {
     setConnection(new HttpActionClient(hostUrl));
 
   }
