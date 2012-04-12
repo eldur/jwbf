@@ -369,7 +369,7 @@ public class MediaWikiBot implements WikiBot {
    * @see #getSiteinfo()
    */
   @Nonnull
-  public final Version getVersion() throws IllegalStateException {
+  public Version getVersion() throws IllegalStateException {
     if (version == null || loginChangeVersion) {
       try {
         GetVersion gs = new GetVersion();

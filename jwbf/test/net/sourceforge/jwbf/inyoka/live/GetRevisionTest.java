@@ -3,28 +3,15 @@ package net.sourceforge.jwbf.inyoka.live;
 import static net.sourceforge.jwbf.TestHelper.assumeReachable;
 import static org.junit.Assert.assertTrue;
 import lombok.extern.slf4j.Slf4j;
-import net.sourceforge.jwbf.TestHelper;
 import net.sourceforge.jwbf.core.contentRep.Article;
 import net.sourceforge.jwbf.inyoka.bots.InyokaWikiBot;
 
-import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 
 @Slf4j
 public class GetRevisionTest {
   private InyokaWikiBot bot;
-
-  /**
-   * Setup log4j.
-   * 
-   * @throws Exception
-   *           a
-   */
-  @BeforeClass
-  public static void setUpBeforeClass() throws Exception {
-    TestHelper.prepareLogging();
-  }
 
   /**
    * Test write and read

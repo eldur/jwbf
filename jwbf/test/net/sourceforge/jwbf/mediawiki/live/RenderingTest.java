@@ -20,33 +20,33 @@ package net.sourceforge.jwbf.mediawiki.live;
 
 import static net.sourceforge.jwbf.TestHelper.assumeReachable;
 import static net.sourceforge.jwbf.mediawiki.BotFactory.getMediaWikiBot;
-import static net.sourceforge.jwbf.mediawiki.LiveTestFather.addInitSupporterVersions;
-import static net.sourceforge.jwbf.mediawiki.LiveTestFather.registerTestedVersion;
 import static org.junit.Assert.fail;
 import net.sourceforge.jwbf.core.actions.util.ActionException;
+import net.sourceforge.jwbf.mediawiki.VersionTestClassVerifier;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.actions.misc.GetRendering;
 import net.sourceforge.jwbf.mediawiki.actions.util.VersionException;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 
 import org.junit.Assert;
-import org.junit.BeforeClass;
+import org.junit.ClassRule;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.Verifier;
 
 /**
  * 
  * @author Thomas Stock
  * 
  */
-public class RenderingTest {
+public class RenderingTest extends AbstractMediaWikiBotTest {
 
-  private MediaWikiBot bot = null;
+  @ClassRule
+  public static VersionTestClassVerifier classVerifier = new VersionTestClassVerifier(
+      GetRendering.class);
 
-  @BeforeClass
-  public static void setUp() {
-    addInitSupporterVersions(GetRendering.class);
-
-  }
+  @Rule
+  public Verifier successRegister = classVerifier.getSuccessRegister(this);
 
   /**
    * 
@@ -191,7 +191,6 @@ public class RenderingTest {
     GetRendering r = new GetRendering(bot, "bert");
     Assert.assertEquals("<p>bert</p>", r.getHtml());
 
-    registerTestedVersion(GetRendering.class, bot.getVersion());
     // TODO more tests
     // FIXME looks strange, because we have 3 faild actions
   }

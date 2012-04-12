@@ -20,7 +20,6 @@ package net.sourceforge.jwbf.mediawiki.live;
 
 import static net.sourceforge.jwbf.TestHelper.assumeReachable;
 import static net.sourceforge.jwbf.mediawiki.LiveTestFather.getValue;
-import static net.sourceforge.jwbf.mediawiki.LiveTestFather.registerTestedVersion;
 import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_09;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -44,6 +43,7 @@ import javax.net.ssl.X509TrustManager;
 import net.sourceforge.jwbf.core.actions.HttpActionClient;
 import net.sourceforge.jwbf.core.actions.util.ActionException;
 import net.sourceforge.jwbf.mediawiki.BotFactory;
+import net.sourceforge.jwbf.mediawiki.VersionTestClassVerifier;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.actions.login.PostLoginOld;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
@@ -63,16 +63,25 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.SingleClientConnManager;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpParams;
+import org.junit.ClassRule;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.Verifier;
 
 /**
  * Test Login.
  * 
  * @author Thomas Stock
  */
-public class LoginTest {
+public class LoginTest extends AbstractMediaWikiBotTest {
 
-  private MediaWikiBot bot = null;
+  // TODO what about PostLogin.class
+  @ClassRule
+  public static VersionTestClassVerifier classVerifier = new VersionTestClassVerifier(
+      PostLoginOld.class);
+
+  @Rule
+  public Verifier successRegister = classVerifier.getSuccessRegister(this);
 
   /**
    * Test login on Wikipedia.
@@ -136,7 +145,6 @@ public class LoginTest {
   public final void loginWikiMW1x09() throws Exception {
     bot = BotFactory.getMediaWikiBot(MW1_09, true);
     assertTrue(bot.isLoggedIn());
-    registerTestedVersion(PostLoginOld.class, bot.getVersion());
   }
 
   /**
@@ -231,7 +239,6 @@ public class LoginTest {
     bot = BotFactory.getMediaWikiBot(latest, false);
     bot.login(BotFactory.getWikiUser(latest), BotFactory.getWikiPass(latest));
     assertTrue(bot.isLoggedIn());
-    registerTestedVersion(PostLoginOld.class, bot.getVersion());
   }
 
   /**

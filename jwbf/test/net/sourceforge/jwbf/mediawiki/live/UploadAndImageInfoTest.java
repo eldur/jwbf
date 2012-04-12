@@ -19,9 +19,7 @@
 package net.sourceforge.jwbf.mediawiki.live;
 
 import static net.sourceforge.jwbf.mediawiki.BotFactory.getMediaWikiBot;
-import static net.sourceforge.jwbf.mediawiki.LiveTestFather.addInitSupporterVersions;
 import static net.sourceforge.jwbf.mediawiki.LiveTestFather.getValue;
-import static net.sourceforge.jwbf.mediawiki.LiveTestFather.registerTestedVersion;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -41,6 +39,7 @@ import javax.imageio.ImageIO;
 
 import net.sourceforge.jwbf.core.actions.util.ActionException;
 import net.sourceforge.jwbf.core.actions.util.ProcessException;
+import net.sourceforge.jwbf.mediawiki.VersionTestClassVerifier;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.actions.editing.FileUpload;
 import net.sourceforge.jwbf.mediawiki.actions.queries.ImageInfo;
@@ -49,29 +48,24 @@ import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 import net.sourceforge.jwbf.mediawiki.contentRep.SimpleFile;
 
 import org.junit.Assert;
-import org.junit.BeforeClass;
+import org.junit.ClassRule;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.Verifier;
 
 /**
  * 
  * @author Thomas Stock
  * 
  */
-public class UploadAndImageInfoTest {
+public class UploadAndImageInfoTest extends AbstractMediaWikiBotTest {
 
-  private MediaWikiBot bot = null;
+  @ClassRule
+  public static VersionTestClassVerifier classVerifier = new VersionTestClassVerifier(
+      FileUpload.class, ImageInfo.class);
 
-  /**
-   * Setup log4j.
-   * 
-   * @throws Exception
-   *           a
-   */
-  @BeforeClass
-  public static void setUp() {
-    addInitSupporterVersions(FileUpload.class);
-    addInitSupporterVersions(ImageInfo.class);
-  }
+  @Rule
+  public Verifier successRegister = classVerifier.getSuccessRegister(this);
 
   /**
    * Test upload.
@@ -285,8 +279,6 @@ public class UploadAndImageInfoTest {
     assertFile(url, file);
     assertImageDimension(url, upWidth, upHeight);
     assertImageDimension(urlSizeVar, newWidth, newHeight);
-    registerTestedVersion(FileUpload.class, bot.getVersion());
-    registerTestedVersion(ImageInfo.class, bot.getVersion());
   }
 
   /**

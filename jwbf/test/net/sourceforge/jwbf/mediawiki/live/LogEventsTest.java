@@ -4,12 +4,10 @@ import static net.sourceforge.jwbf.TestHelper.assumeReachable;
 import static net.sourceforge.jwbf.TestHelper.getRandom;
 import static net.sourceforge.jwbf.TestHelper.getRandomAlph;
 import static net.sourceforge.jwbf.mediawiki.BotFactory.getMediaWikiBot;
-import static net.sourceforge.jwbf.mediawiki.LiveTestFather.addInitSupporterVersions;
-import static net.sourceforge.jwbf.mediawiki.LiveTestFather.registerTestedVersion;
-import static net.sourceforge.jwbf.mediawiki.LiveTestFather.registerUnTestedVersion;
 import static org.junit.Assert.assertTrue;
 import net.sourceforge.jwbf.core.actions.util.ActionException;
 import net.sourceforge.jwbf.core.contentRep.Article;
+import net.sourceforge.jwbf.mediawiki.VersionTestClassVerifier;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.actions.queries.LogEvents;
@@ -18,24 +16,26 @@ import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 import net.sourceforge.jwbf.mediawiki.contentRep.LogItem;
 
 import org.junit.Assume;
-import org.junit.BeforeClass;
+import org.junit.ClassRule;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.Verifier;
 
 /**
  * 
  * @author Thomas Stock
  * 
  */
-public class LogEventsTest {
+public class LogEventsTest extends AbstractMediaWikiBotTest {
 
-  private MediaWikiBot bot = null;
+  @ClassRule
+  public static VersionTestClassVerifier classVerifier = new VersionTestClassVerifier(
+      LogEvents.class);
+
+  @Rule
+  public Verifier successRegister = classVerifier.getSuccessRegister(this);
+
   private static final int LIMIT = 55;
-
-  @BeforeClass
-  public static void setUp() {
-    addInitSupporterVersions(LogEvents.class);
-
-  }
 
   /**
    * Test category read. Test category must have more then 50 members.
@@ -75,7 +75,6 @@ public class LogEventsTest {
   public final void logEventsMW1x09Fail() throws Exception {
 
     bot = getMediaWikiBot(Version.MW1_09, true);
-    registerUnTestedVersion(LogEvents.class, bot.getVersion());
     doTest(bot, true, LogEvents.DELETE);
     assertTrue("Wrong Wiki Version " + bot.getVersion(),
         Version.MW1_09.equals(bot.getVersion()));
@@ -90,7 +89,6 @@ public class LogEventsTest {
   public final void logEventsMW1x10Fail() throws Exception {
 
     bot = getMediaWikiBot(Version.MW1_10, true);
-    registerUnTestedVersion(LogEvents.class, bot.getVersion());
     doTest(bot, true, LogEvents.DELETE);
     assertTrue("Wrong Wiki Version " + bot.getVersion(),
         Version.MW1_10.equals(bot.getVersion()));
@@ -218,11 +216,10 @@ public class LogEventsTest {
         break;
       }
     }
+    // TODO wtf
     if (MediaWiki.Version.MW1_11.equals(bot.getVersion())) {
-      registerTestedVersion(LogEvents.class, bot.getVersion());
       Assume.assumeTrue(i > LIMIT);
     } else
       assertTrue("should be greater then 50 but is " + i, i > LIMIT);
-    registerTestedVersion(LogEvents.class, bot.getVersion());
   }
 }

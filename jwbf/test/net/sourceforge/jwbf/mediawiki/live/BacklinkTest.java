@@ -1,6 +1,7 @@
 package net.sourceforge.jwbf.mediawiki.live;
 
 import static net.sourceforge.jwbf.mediawiki.BotFactory.getMediaWikiBot;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Iterator;
 import java.util.Vector;
@@ -9,6 +10,7 @@ import net.sourceforge.jwbf.core.actions.util.ActionException;
 import net.sourceforge.jwbf.core.actions.util.ProcessException;
 import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
 import net.sourceforge.jwbf.mediawiki.LiveTestFather;
+import net.sourceforge.jwbf.mediawiki.VersionTestClassVerifier;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.actions.queries.BacklinkTitles;
@@ -17,22 +19,29 @@ import net.sourceforge.jwbf.mediawiki.actions.util.VersionException;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 
 import org.junit.Assert;
-import org.junit.BeforeClass;
+import org.junit.ClassRule;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.Verifier;
 
 /**
  * 
  * @author Thomas Stock
  * 
  */
-public class BacklinkTest {
+public class BacklinkTest extends AbstractMediaWikiBotTest {
+
+  @ClassRule
+  public static VersionTestClassVerifier classVerifier = new VersionTestClassVerifier(
+      BacklinkTitles.class);
+
+  @Rule
+  public Verifier successRegister = classVerifier.getSuccessRegister(this);
 
   private static final String BACKLINKS = "Backlinks";
   private static final int COUNT = 60;
-  private MediaWikiBot bot = null;
 
-  protected static final void doPreapare(MediaWikiBot bot)
-      throws ActionException, ProcessException {
+  protected final void doPreapare() throws ActionException, ProcessException {
     SimpleArticle a = new SimpleArticle();
     for (int i = 0; i <= COUNT; i++) {
       a.setTitle("Back" + i);
@@ -43,11 +52,6 @@ public class BacklinkTest {
       }
       bot.writeContent(a);
     }
-  }
-
-  @BeforeClass
-  public static void setUp() {
-    LiveTestFather.addInitSupporterVersions(BacklinkTitles.class);
   }
 
   /**
@@ -90,7 +94,7 @@ public class BacklinkTest {
     bot = getMediaWikiBot(Version.MW1_09, true);
     Assert.assertEquals(Version.MW1_09, bot.getVersion());
 
-    doTest(bot);
+    doTest();
   }
 
   /**
@@ -103,7 +107,7 @@ public class BacklinkTest {
 
     bot = getMediaWikiBot(Version.MW1_09, true);
     Assert.assertEquals(Version.MW1_09, bot.getVersion());
-    doTest(bot, RedirectFilter.redirects);
+    doTest(RedirectFilter.redirects);
   }
 
   /**
@@ -118,7 +122,7 @@ public class BacklinkTest {
     bot = getMediaWikiBot(Version.MW1_10, true);
     Assert.assertEquals(Version.MW1_10, bot.getVersion());
 
-    doTest(bot);
+    doTest();
   }
 
   /**
@@ -133,7 +137,7 @@ public class BacklinkTest {
     bot = getMediaWikiBot(Version.MW1_11, true);
     Assert.assertEquals(Version.MW1_11, bot.getVersion());
 
-    doTest(bot);
+    doTest();
   }
 
   /**
@@ -148,7 +152,7 @@ public class BacklinkTest {
     bot = getMediaWikiBot(Version.MW1_12, true);
     Assert.assertEquals(Version.MW1_12, bot.getVersion());
 
-    doTest(bot);
+    doTest();
   }
 
   /**
@@ -162,7 +166,7 @@ public class BacklinkTest {
 
     bot = getMediaWikiBot(Version.MW1_13, true);
     Assert.assertEquals(Version.MW1_13, bot.getVersion());
-    doTest(bot);
+    doTest();
 
   }
 
@@ -177,7 +181,7 @@ public class BacklinkTest {
 
     bot = getMediaWikiBot(Version.MW1_14, true);
     Assert.assertEquals(Version.MW1_14, bot.getVersion());
-    doTest(bot);
+    doTest();
 
   }
 
@@ -192,7 +196,7 @@ public class BacklinkTest {
 
     bot = getMediaWikiBot(Version.MW1_15, true);
     Assert.assertEquals(Version.MW1_15, bot.getVersion());
-    doTest(bot);
+    doTest();
 
   }
 
@@ -207,15 +211,15 @@ public class BacklinkTest {
 
     bot = getMediaWikiBot(Version.MW1_16, true);
     Assert.assertEquals(Version.MW1_16, bot.getVersion());
-    doTest(bot);
+    doTest();
 
   }
 
-  private void doTest(MediaWikiBot bot) throws Exception {
-    doTest(bot, RedirectFilter.all);
+  private void doTest() throws Exception {
+    doTest(RedirectFilter.all);
   }
 
-  private void doTest(MediaWikiBot bot, RedirectFilter rf) throws Exception {
+  private void doTest(RedirectFilter rf) throws Exception {
 
     BacklinkTitles gbt = new BacklinkTitles(bot, BACKLINKS, rf,
         MediaWiki.NS_MAIN, MediaWiki.NS_CATEGORY);
@@ -234,7 +238,7 @@ public class BacklinkTest {
     }
     if (notEnougth) {
       System.err.println(i + " is to less (" + COUNT + ")");
-      doPreapare(bot);
+      doPreapare();
     }
     is = gbt.iterator();
     vx.add(is.next());
@@ -250,10 +254,9 @@ public class BacklinkTest {
         break;
       }
     }
-    Assert.assertTrue("Iterator should contain: " + vx, vx.isEmpty());
-    Assert.assertTrue("Fail: " + i + " < " + COUNT, i > COUNT - 1);
-    LiveTestFather
-        .registerTestedVersion(BacklinkTitles.class, bot.getVersion());
+    assertTrue("Iterator should contain: " + vx, vx.isEmpty());
+    assertTrue("Fail: " + i + " < " + COUNT, i > COUNT - 1);
+
   }
 
   private static int getIntValue(final String key) throws Exception {

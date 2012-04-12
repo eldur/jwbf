@@ -4,15 +4,13 @@
 package net.sourceforge.jwbf.mediawiki.live;
 
 import static net.sourceforge.jwbf.TestHelper.getRandom;
-import static net.sourceforge.jwbf.mediawiki.LiveTestFather.addInitSupporterVersions;
-import static net.sourceforge.jwbf.mediawiki.LiveTestFather.registerTestedVersion;
-import static net.sourceforge.jwbf.mediawiki.LiveTestFather.registerUnTestedVersion;
 import static org.junit.Assert.assertTrue;
 import net.sourceforge.jwbf.core.actions.util.ActionException;
 import net.sourceforge.jwbf.core.actions.util.ProcessException;
 import net.sourceforge.jwbf.core.contentRep.ContentAccessable;
 import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
 import net.sourceforge.jwbf.mediawiki.BotFactory;
+import net.sourceforge.jwbf.mediawiki.VersionTestClassVerifier;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.actions.editing.PostDelete;
@@ -20,24 +18,26 @@ import net.sourceforge.jwbf.mediawiki.actions.queries.AllPageTitles;
 import net.sourceforge.jwbf.mediawiki.actions.util.VersionException;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 
-import org.junit.BeforeClass;
+import org.junit.ClassRule;
 import org.junit.Ignore;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.Verifier;
 
 /**
  * @author Thomas
  * 
  */
-public class DeleteTest {
+public class DeleteTest extends AbstractMediaWikiBotTest {
   private static final String DELETE_PREFIX = "Delete";
-  private MediaWikiBot bot = null;
   private static final int COUNT = 1;
 
-  @BeforeClass
-  public static void setUp() {
-    addInitSupporterVersions(PostDelete.class);
+  @ClassRule
+  public static VersionTestClassVerifier classVerifier = new VersionTestClassVerifier(
+      PostDelete.class);
 
-  }
+  @Rule
+  public Verifier successRegister = classVerifier.getSuccessRegister(this);
 
   private void prepare(MediaWikiBot bot) {
     SimpleArticle a = new SimpleArticle();
@@ -64,7 +64,6 @@ public class DeleteTest {
 
       assertTrue("textlength of Delete " + i + " is greater then 0 ("
           + ca.getText().length() + ")", ca.getText().length() == 0);
-      registerTestedVersion(PostDelete.class, bot.getVersion());
 
     }
   }
@@ -81,7 +80,6 @@ public class DeleteTest {
     bot = BotFactory.getMediaWikiBot(Version.MW1_09, true);
     assertTrue("Wrong Wiki Version " + bot.getVersion(),
         Version.MW1_09.equals(bot.getVersion()));
-    registerUnTestedVersion(PostDelete.class, bot.getVersion());
     prepare(bot);
     delete(bot);
     test(bot);
@@ -100,7 +98,6 @@ public class DeleteTest {
     bot = BotFactory.getMediaWikiBot(Version.MW1_10, true);
     assertTrue("Wrong Wiki Version " + bot.getVersion(),
         Version.MW1_10.equals(bot.getVersion()));
-    registerUnTestedVersion(PostDelete.class, bot.getVersion());
 
     prepare(bot);
     delete(bot);
@@ -119,7 +116,6 @@ public class DeleteTest {
     bot = BotFactory.getMediaWikiBot(Version.MW1_11, true);
     assertTrue("Wrong Wiki Version " + bot.getVersion(),
         Version.MW1_11.equals(bot.getVersion()));
-    registerUnTestedVersion(PostDelete.class, bot.getVersion());
 
     prepare(bot);
     delete(bot);

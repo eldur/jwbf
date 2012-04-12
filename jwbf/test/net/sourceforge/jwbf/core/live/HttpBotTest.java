@@ -7,28 +7,14 @@ import static org.junit.Assert.assertTrue;
 
 import java.net.URL;
 
-import net.sourceforge.jwbf.TestHelper;
 import net.sourceforge.jwbf.core.bots.HttpBot;
 
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class HttpBotTest {
 
   private HttpBot bot;
-
-  /**
-   * Setup log4j.
-   * 
-   * @throws Exception
-   *           a
-   */
-  @BeforeClass
-  public static void setUpBeforeClass() throws Exception {
-    TestHelper.prepareLogging();
-
-  }
 
   @Before
   public void prepare() {

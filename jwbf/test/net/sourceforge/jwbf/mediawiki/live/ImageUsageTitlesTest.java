@@ -2,34 +2,35 @@ package net.sourceforge.jwbf.mediawiki.live;
 
 import static net.sourceforge.jwbf.TestHelper.getRandom;
 import static net.sourceforge.jwbf.mediawiki.BotFactory.getMediaWikiBot;
-import static net.sourceforge.jwbf.mediawiki.LiveTestFather.addInitSupporterVersions;
 import static net.sourceforge.jwbf.mediawiki.LiveTestFather.getValue;
-import static net.sourceforge.jwbf.mediawiki.LiveTestFather.registerTestedVersion;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import net.sourceforge.jwbf.core.contentRep.Article;
+import net.sourceforge.jwbf.mediawiki.VersionTestClassVerifier;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.actions.queries.ImageUsageTitles;
-import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 
-import org.junit.BeforeClass;
+import org.junit.ClassRule;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.Verifier;
 
 /**
  * 
  * @author Thomas Stock
  * 
  */
-public class ImageUsageTitlesTest {
+public class ImageUsageTitlesTest extends AbstractMediaWikiBotTest {
 
-  private MediaWikiBot bot = null;
+  @ClassRule
+  public static VersionTestClassVerifier classVerifier = new VersionTestClassVerifier(
+      ImageUsageTitles.class);
+
+  @Rule
+  public Verifier successRegister = classVerifier.getSuccessRegister(this);
+
   private static final int limit = 55;
-
-  @BeforeClass
-  public static void setUp() {
-    addInitSupporterVersions(ImageUsageTitles.class);
-  }
 
   @Test
   public final void imageUsageMW1x09() throws Exception {
@@ -37,7 +38,7 @@ public class ImageUsageTitlesTest {
     bot = getMediaWikiBot(Version.MW1_09, true);
     assertTrue("Wrong Wiki Version " + bot.getVersion(),
         Version.MW1_09.equals(bot.getVersion()));
-    test(bot);
+    test();
 
   }
 
@@ -53,7 +54,7 @@ public class ImageUsageTitlesTest {
     bot = getMediaWikiBot(Version.MW1_10, true);
     assertTrue("Wrong Wiki Version " + bot.getVersion(),
         Version.MW1_10.equals(bot.getVersion()));
-    test(bot);
+    test();
 
   }
 
@@ -69,7 +70,7 @@ public class ImageUsageTitlesTest {
     bot = getMediaWikiBot(Version.MW1_11, true);
     assertTrue("Wrong Wiki Version " + bot.getVersion(),
         Version.MW1_11.equals(bot.getVersion()));
-    test(bot);
+    test();
 
   }
 
@@ -85,7 +86,7 @@ public class ImageUsageTitlesTest {
     bot = getMediaWikiBot(Version.MW1_12, true);
     assertTrue("Wrong Wiki Version " + bot.getVersion(),
         Version.MW1_12.equals(bot.getVersion()));
-    test(bot);
+    test();
 
   }
 
@@ -101,7 +102,7 @@ public class ImageUsageTitlesTest {
     bot = getMediaWikiBot(Version.MW1_13, true);
     assertTrue("Wrong Wiki Version " + bot.getVersion(),
         Version.MW1_13.equals(bot.getVersion()));
-    test(bot);
+    test();
 
   }
 
@@ -117,7 +118,7 @@ public class ImageUsageTitlesTest {
     bot = getMediaWikiBot(Version.MW1_14, true);
     assertTrue("Wrong Wiki Version " + bot.getVersion(),
         Version.MW1_14.equals(bot.getVersion()));
-    test(bot);
+    test();
 
   }
 
@@ -133,7 +134,7 @@ public class ImageUsageTitlesTest {
     bot = getMediaWikiBot(Version.MW1_15, true);
     assertTrue("Wrong Wiki Version " + bot.getVersion(),
         Version.MW1_15.equals(bot.getVersion()));
-    test(bot);
+    test();
 
   }
 
@@ -149,11 +150,11 @@ public class ImageUsageTitlesTest {
     bot = getMediaWikiBot(Version.MW1_16, true);
     assertTrue("Wrong Wiki Version " + bot.getVersion(),
         Version.MW1_16.equals(bot.getVersion()));
-    test(bot);
+    test();
 
   }
 
-  private void test(MediaWikiBot bot2) throws Exception {
+  private void test() throws Exception {
     ImageUsageTitles il = new ImageUsageTitles(bot, "Image:"
         + getValue("filename"), MediaWiki.NS_ALL);
 
@@ -168,7 +169,7 @@ public class ImageUsageTitlesTest {
       }
     }
     if (notFound) {
-      prepare(bot2);
+      prepare();
     }
     x = 0;
     for (String string : il) {
@@ -182,16 +183,15 @@ public class ImageUsageTitlesTest {
     if (x < limit) {
       fail("limit" + x);
     }
-    registerTestedVersion(ImageUsageTitles.class, bot.getVersion());
 
   }
 
-  private void prepare(MediaWikiBot bot2) {
+  private void prepare() {
 
     String name = "";
     for (int i = 0; i < limit; i++) {
       name = "TitleWithImg" + i;
-      Article a = new Article(bot2, name);
+      Article a = new Article(bot, name);
       a.setText("Hello [[Image:" + getValue("filename") + "]] a image "
           + getRandom(10));
       a.save();

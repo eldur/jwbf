@@ -6,33 +6,30 @@ package net.sourceforge.jwbf.mediawiki.live;
 import static net.sourceforge.jwbf.mediawiki.BotFactory.getMediaWikiBot;
 import static net.sourceforge.jwbf.mediawiki.BotFactory.getWikiPass;
 import static net.sourceforge.jwbf.mediawiki.BotFactory.getWikiUser;
-import static net.sourceforge.jwbf.mediawiki.LiveTestFather.addInitSupporterVersions;
-import static net.sourceforge.jwbf.mediawiki.LiveTestFather.registerTestedVersion;
 import net.sourceforge.jwbf.core.contentRep.Userinfo;
+import net.sourceforge.jwbf.mediawiki.VersionTestClassVerifier;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.actions.meta.GetUserinfo;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 
 import org.junit.Assert;
-import org.junit.BeforeClass;
+import org.junit.ClassRule;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.Verifier;
 
 /**
  * @author Thomas
  * 
  */
-public class UserinfoTest {
-  private MediaWikiBot bot = null;
+public class UserinfoTest extends AbstractMediaWikiBotTest {
 
-  /**
-   * 
-   * @throws Exception
-   *           a
-   */
-  @BeforeClass
-  public static void setUp() {
-    addInitSupporterVersions(GetUserinfo.class);
-  }
+  @ClassRule
+  public static VersionTestClassVerifier classVerifier = new VersionTestClassVerifier(
+      GetUserinfo.class);
+
+  @Rule
+  public Verifier successRegister = classVerifier.getSuccessRegister(this);
 
   private void testDetails(MediaWikiBot bot, String userName) throws Exception {
     Userinfo u = bot.getUserinfo();
@@ -47,7 +44,6 @@ public class UserinfoTest {
         Assert.assertFalse("User has no groups", u.getGroups().isEmpty());
         Assert.assertTrue("User has no read rights",
             u.getRights().contains("read"));
-        registerTestedVersion(GetUserinfo.class, bot.getVersion());
     }
 
   }

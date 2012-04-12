@@ -1,41 +1,38 @@
 package net.sourceforge.jwbf.mediawiki.live;
 
 import static net.sourceforge.jwbf.TestHelper.getRandom;
-import static net.sourceforge.jwbf.mediawiki.LiveTestFather.addInitSupporterVersions;
 import static net.sourceforge.jwbf.mediawiki.LiveTestFather.getValue;
-import static net.sourceforge.jwbf.mediawiki.LiveTestFather.registerTestedVersion;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import net.sourceforge.jwbf.core.bots.util.JwbfException;
 import net.sourceforge.jwbf.core.contentRep.ArticleMeta;
 import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
 import net.sourceforge.jwbf.mediawiki.BotFactory;
+import net.sourceforge.jwbf.mediawiki.VersionTestClassVerifier;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.actions.editing.GetApiToken;
 import net.sourceforge.jwbf.mediawiki.actions.editing.GetRevision;
 import net.sourceforge.jwbf.mediawiki.actions.editing.PostModifyContent;
 import net.sourceforge.jwbf.mediawiki.actions.util.ApiException;
-import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 
-import org.junit.BeforeClass;
+import org.junit.ClassRule;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.Verifier;
 
 /**
  * 
  * @author Thomas Stock
  * 
  */
-public class RevisionTest {
+public class RevisionTest extends AbstractMediaWikiBotTest {
 
-  private MediaWikiBot bot;
+  @ClassRule
+  public static VersionTestClassVerifier classVerifier = new VersionTestClassVerifier(
+      GetRevision.class, PostModifyContent.class, GetApiToken.class);
 
-  @BeforeClass
-  public static void setUpBeforeClass() {
-    addInitSupporterVersions(GetRevision.class);
-    addInitSupporterVersions(PostModifyContent.class);
-    addInitSupporterVersions(GetApiToken.class);
-
-  }
+  @Rule
+  public Verifier successRegister = classVerifier.getSuccessRegister(this);
 
   /**
    * Test write and read.
@@ -46,7 +43,7 @@ public class RevisionTest {
   @Test
   public final void getRevisionMW1x09() throws Exception {
     bot = BotFactory.getMediaWikiBot(Version.MW1_09, true);
-    doTest(bot);
+    doTest();
   }
 
   /**
@@ -58,7 +55,7 @@ public class RevisionTest {
   @Test
   public final void getRevisionMW1x10() throws Exception {
     bot = BotFactory.getMediaWikiBot(Version.MW1_10, true);
-    doTest(bot);
+    doTest();
   }
 
   /**
@@ -70,7 +67,7 @@ public class RevisionTest {
   @Test
   public final void getRevisionMW1x11() throws Exception {
     bot = BotFactory.getMediaWikiBot(Version.MW1_11, true);
-    doTest(bot);
+    doTest();
   }
 
   /**
@@ -82,7 +79,7 @@ public class RevisionTest {
   @Test
   public final void getRevisionMW1x12() throws Exception {
     bot = BotFactory.getMediaWikiBot(Version.MW1_12, true);
-    doTest(bot);
+    doTest();
   }
 
   /**
@@ -94,7 +91,7 @@ public class RevisionTest {
   @Test
   public final void getRevisionMW1x13() throws Exception {
     bot = BotFactory.getMediaWikiBot(Version.MW1_13, true);
-    doTest(bot);
+    doTest();
   }
 
   /**
@@ -106,7 +103,7 @@ public class RevisionTest {
   @Test
   public final void getRevisionMW1x14() throws Exception {
     bot = BotFactory.getMediaWikiBot(Version.MW1_14, true);
-    doTest(bot);
+    doTest();
   }
 
   /**
@@ -118,7 +115,7 @@ public class RevisionTest {
   @Test
   public final void getRevisionMW1x15() throws Exception {
     bot = BotFactory.getMediaWikiBot(Version.MW1_15, true);
-    doTest(bot);
+    doTest();
   }
 
   /**
@@ -130,10 +127,10 @@ public class RevisionTest {
   @Test
   public final void getRevisionMW1x16() throws Exception {
     bot = BotFactory.getMediaWikiBot(Version.MW1_16, true);
-    doTest(bot);
+    doTest();
   }
 
-  private void doTest(MediaWikiBot bot) throws Exception {
+  private void doTest() throws Exception {
 
     String title = getValue("wikiMW1_12_user");
     String user = bot.getUserinfo().getUsername();
@@ -198,10 +195,10 @@ public class RevisionTest {
     a = bot.getArticle(title);
 
     assertEquals(testText, a.getText());
-    registerTestedVersion(GetRevision.class, bot.getVersion());
-    registerTestedVersion(PostModifyContent.class, bot.getVersion());
-    if (bot.getVersion().greaterEqThen(Version.MW1_12)) {
-      registerTestedVersion(GetApiToken.class, bot.getVersion());
+    if (false) {
+      if (bot.getVersion().greaterEqThen(Version.MW1_12)) {
+        System.out.println(GetApiToken.class.toString() + bot.getVersion());
+      }
     }
 
   }
