@@ -31,8 +31,11 @@
 		<sourceDirectory>src</sourceDirectory>
 		<testSourceDirectory>test</testSourceDirectory>
 		<outputDirectory>bin</outputDirectory>
-		<resources>
-		</resources>
+		<testResources>
+      <testResource>
+        <directory>testResources</directory>
+      </testResource>
+    </testResources>
 
 		<plugins>
 			<plugin>

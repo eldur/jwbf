@@ -1,5 +1,7 @@
 package net.sourceforge.jwbf.mediawiki.live.auto;
 
+import static net.sourceforge.jwbf.mediawiki.BotFactory.getMediaWikiBot;
+
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;

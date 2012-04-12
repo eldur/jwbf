@@ -1,5 +1,7 @@
 package net.sourceforge.jwbf.mediawiki.live;
 
+import static net.sourceforge.jwbf.mediawiki.BotFactory.getMediaWikiBot;
+
 import java.util.Iterator;
 import java.util.Vector;
 
@@ -19,9 +21,9 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
- *
+ * 
  * @author Thomas Stock
- *
+ * 
  */
 public class BacklinkTest extends LiveTestFather {
 
@@ -29,11 +31,8 @@ public class BacklinkTest extends LiveTestFather {
   private static final int COUNT = 60;
   private MediaWikiBot bot = null;
 
-
-
-
-
-  protected static final void doPreapare(MediaWikiBot bot) throws ActionException, ProcessException {
+  protected static final void doPreapare(MediaWikiBot bot)
+      throws ActionException, ProcessException {
     SimpleArticle a = new SimpleArticle();
     for (int i = 0; i <= COUNT; i++) {
       a.setTitle("Back" + i);
@@ -45,6 +44,7 @@ public class BacklinkTest extends LiveTestFather {
       bot.writeContent(a);
     }
   }
+
   @BeforeClass
   public static void setUp() {
     addInitSupporterVersions(BacklinkTitles.class);
@@ -52,9 +52,9 @@ public class BacklinkTest extends LiveTestFather {
 
   /**
    * Test backlinks.
-   *
+   * 
    * @throws Exception
-   *             a
+   *           a
    */
   @Test
   public final void backlinksWikipediaDe() throws Exception {
@@ -77,12 +77,11 @@ public class BacklinkTest extends LiveTestFather {
         i > getIntValue("backlinks_article_count"));
   }
 
-
   /**
    * Test backlinks.
-   *
+   * 
    * @throws Exception
-   *             a
+   *           a
    */
   @Test
   public final void backlinksMW1x09() throws Exception {
@@ -92,9 +91,11 @@ public class BacklinkTest extends LiveTestFather {
 
     doTest(bot);
   }
+
   /**
-   *
-   * @throws Exception a
+   * 
+   * @throws Exception
+   *           a
    */
   @Test(expected = VersionException.class)
   public final void backlinksMW1x09xredirectVar() throws Exception {
@@ -106,9 +107,9 @@ public class BacklinkTest extends LiveTestFather {
 
   /**
    * Test backlinks.
-   *
+   * 
    * @throws Exception
-   *             a
+   *           a
    */
   @Test
   public final void backlinksMW1x10() throws Exception {
@@ -119,12 +120,11 @@ public class BacklinkTest extends LiveTestFather {
     doTest(bot);
   }
 
-
   /**
    * Test backlinks.
-   *
+   * 
    * @throws Exception
-   *             a
+   *           a
    */
   @Test
   public final void backlinksMW1x11() throws Exception {
@@ -135,12 +135,11 @@ public class BacklinkTest extends LiveTestFather {
     doTest(bot);
   }
 
-
   /**
    * Test backlinks.
-   *
+   * 
    * @throws Exception
-   *             a
+   *           a
    */
   @Test
   public final void backlinksMW1x12() throws Exception {
@@ -151,12 +150,11 @@ public class BacklinkTest extends LiveTestFather {
     doTest(bot);
   }
 
-
   /**
    * Test backlinks.
-   *
+   * 
    * @throws Exception
-   *             a
+   *           a
    */
   @Test
   public final void backlinksMW1x13() throws Exception {
@@ -169,9 +167,9 @@ public class BacklinkTest extends LiveTestFather {
 
   /**
    * Test backlinks.
-   *
+   * 
    * @throws Exception
-   *             a
+   *           a
    */
   @Test
   public final void backlinksMW1x14() throws Exception {
@@ -184,9 +182,9 @@ public class BacklinkTest extends LiveTestFather {
 
   /**
    * Test backlinks.
-   *
+   * 
    * @throws Exception
-   *             a
+   *           a
    */
   @Test
   public final void backlinksMW1x15() throws Exception {
@@ -199,9 +197,9 @@ public class BacklinkTest extends LiveTestFather {
 
   /**
    * Test backlinks.
-   *
+   * 
    * @throws Exception
-   *             a
+   *           a
    */
   @Test
   public final void backlinksMW1x16() throws Exception {
@@ -218,7 +216,8 @@ public class BacklinkTest extends LiveTestFather {
 
   private void doTest(MediaWikiBot bot, RedirectFilter rf) throws Exception {
 
-    BacklinkTitles gbt = new BacklinkTitles(bot, BACKLINKS, rf, MediaWiki.NS_MAIN , MediaWiki.NS_CATEGORY);
+    BacklinkTitles gbt = new BacklinkTitles(bot, BACKLINKS, rf,
+        MediaWiki.NS_MAIN, MediaWiki.NS_CATEGORY);
 
     Vector<String> vx = new Vector<String>();
     Iterator<String> is = gbt.iterator();
@@ -233,7 +232,7 @@ public class BacklinkTest extends LiveTestFather {
       }
     }
     if (notEnougth) {
-      System.err.println(i  + " is to less (" + COUNT + ")");
+      System.err.println(i + " is to less (" + COUNT + ")");
       doPreapare(bot);
     }
     is = gbt.iterator();

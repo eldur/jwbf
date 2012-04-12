@@ -1,5 +1,6 @@
 package net.sourceforge.jwbf.mediawiki.live;
 
+import static net.sourceforge.jwbf.mediawiki.BotFactory.getMediaWikiBot;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import net.sourceforge.jwbf.core.contentRep.Article;

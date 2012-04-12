@@ -18,6 +18,7 @@
  */
 package net.sourceforge.jwbf.mediawiki.live;
 
+import static net.sourceforge.jwbf.mediawiki.BotFactory.getMediaWikiBot;
 import static org.junit.Assert.fail;
 import net.sourceforge.jwbf.core.actions.util.ActionException;
 import net.sourceforge.jwbf.mediawiki.LiveTestFather;

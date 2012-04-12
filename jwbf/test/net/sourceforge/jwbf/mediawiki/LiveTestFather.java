@@ -40,7 +40,6 @@ import java.util.Vector;
 import net.sourceforge.jwbf.TestHelper;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
-import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -290,15 +289,6 @@ public abstract class LiveTestFather extends TestHelper {
   @Deprecated
   protected static String getWikiPass(Version v) throws Exception {
     return getValue("wiki" + v.name() + "_pass");
-  }
-
-  /**
-   * @deprecated use method in {@link BotFactory}
-   */
-  @Deprecated
-  protected static MediaWikiBot getMediaWikiBot(Version v, final boolean login)
-      throws Exception {
-    return BotFactory.getMediaWikiBot(v, login);
   }
 
   protected static URL getURL(final String key) throws Exception {
