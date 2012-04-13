@@ -99,8 +99,35 @@ public final class MediaWiki {
      * @deprecated requires PHP 5.2 expired 2011-01-06
      */
     MW1_12,
-
-    MW1_13, MW1_14, MW1_15, MW1_16, MW1_17, MW1_18, UNKNOWN, DEVELOPMENT;
+    /**
+     * Released 2008-08
+     * 
+     * @deprecated requires PHP 5.2 expired 2011-01-06; is installable but
+     *             doesn't work
+     */
+    MW1_13,
+    /**
+     * Released 2009-02
+     * 
+     * @deprecated database installer doesn't work anymore
+     */
+    MW1_14,
+    /**
+     * Released 2009-06
+     */
+    MW1_15,
+    /**
+     * Released 2010-07
+     */
+    MW1_16,
+    /**
+     * Released 2011-06
+     */
+    MW1_17,
+    /**
+     * Released 2011-11
+     */
+    MW1_18, UNKNOWN, DEVELOPMENT;
 
     private static Version last = UNKNOWN;
 
