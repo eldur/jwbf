@@ -17,13 +17,13 @@ public class BotFactory {
       final boolean login) {
 
     final String wikiUrl = getWikiUrl(v);
-    TestHelper.assumeReachable(wikiUrl);
+
     Injector injector = Guice.createInjector(new AbstractModule() {
 
       @Override
       protected void configure() {
         bind(HttpBot.class).toInstance(
-            new RecordingHttpBot(new HttpBot(wikiUrl)));
+            new CacheHttpBot(new HttpBot(wikiUrl), new WireRegister()));
       }
     });
     MediaWikiBot bot = injector.getInstance(MediaWikiBot.class);
@@ -35,28 +35,41 @@ public class BotFactory {
   }
 
   @Slf4j
-  private static class RecordingHttpBot extends HttpBot {
+  private static class CacheHttpBot extends HttpBot {
 
-    public RecordingHttpBot(HttpBot bot) {
+    private final WireRegister wireRegister;
+
+    public CacheHttpBot(HttpBot bot, WireRegister wireRegister) {
       super(bot.getUrl());
+      this.wireRegister = wireRegister;
+      if (wireRegister.hasContentFor(bot.getUrl())) {
+        TestHelper.assumeReachable(bot.getUrl()); // TODO this is an error
+      }
     }
 
     @Override
     public synchronized String performAction(ContentProcessable a) {
       log.debug("{}", a);
-      return super.performAction(a);
+      String response = wireRegister.getResponse(a);
+      if (response != null) {
+        return response;
+      } else {
+        return wireRegister.putResponse(super.performAction(a));
+      }
     }
   }
 
   public static String getWikiUser(Version v) {
-    return LiveTestFather.getValue("wiki" + v.name() + "_user");
+    return "Admin";
   }
 
   public static String getWikiPass(Version v) {
-    return LiveTestFather.getValue("wiki" + v.name() + "_pass");
+    return "nimdA";
   }
 
   public static String getWikiUrl(Version v) {
-    return LiveTestFather.getValue("wiki" + v.name() + "_url");
+    String local = LiveTestFather.getValue("localwikihost");
+    String version = "mw-" + v.getNumber().replace(".", "-");
+    return "http://" + local + "/" + version + "/index.php";
   }
 }

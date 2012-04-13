@@ -19,7 +19,6 @@
  */
 package net.sourceforge.jwbf.mediawiki.actions.login;
 
-
 import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_11;
 import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_12;
 import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_13;
@@ -34,6 +33,7 @@ import java.util.Map;
 
 import lombok.extern.slf4j.Slf4j;
 import net.sourceforge.jwbf.core.actions.Post;
+import net.sourceforge.jwbf.core.actions.util.ActionException;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.core.actions.util.ProcessException;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
@@ -45,8 +45,9 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
 import org.xml.sax.InputSource;
+
 /**
- *
+ * 
  * @author Thomas Stock
  */
 @Slf4j
@@ -54,7 +55,6 @@ import org.xml.sax.InputSource;
 public class PostLogin extends MWAction {
 
   private Post msg;
-
 
   private final String success = "Success";
   private final String wrongPass = "WrongPass";
@@ -68,13 +68,18 @@ public class PostLogin extends MWAction {
   private final String domain;
 
   /**
-   *
-   * @param username the
-   * @param pw password
-   * @param domain a
-   * @param login a
+   * 
+   * @param username
+   *          the
+   * @param pw
+   *          password
+   * @param domain
+   *          a
+   * @param login
+   *          a
    */
-  public PostLogin(final String username, final String pw, final String domain, LoginData login) {
+  public PostLogin(final String username, final String pw, final String domain,
+      LoginData login) {
     super();
     this.login = login;
     this.username = username;
@@ -116,19 +121,22 @@ public class PostLogin extends MWAction {
       log.error(e.getClass().getName() + e.getLocalizedMessage());
     } catch (NullPointerException e) {
       log.error(e.getClass().getName() + e.getLocalizedMessage());
-      throw new ProcessException("No regular content was found, check your api\n::" + s);
+      throw new ProcessException(
+          "No regular content was found, check your api\n::" + s);
     } catch (Exception e) {
       log.error(e.getClass().getName() + e.getLocalizedMessage());
       throw new ProcessException(e.getLocalizedMessage());
     }
 
-
     return s;
   }
+
   /**
-   *
-   * @param startElement the, where the search begins
-   * @throws ProcessException if problems with login
+   * 
+   * @param startElement
+   *          the, where the search begins
+   * @throws ProcessException
+   *           if problems with login
    */
   private void findContent(final Element startElement) throws ProcessException {
 
@@ -138,17 +146,19 @@ public class PostLogin extends MWAction {
       Map<String, String> properties = new HashMap<String, String>();
       properties.put("userId", loginEl.getAttribute("lguserid").toString());
       login.setup(loginEl.getAttributeValue("lgusername"), true);
-    } else if (result.equalsIgnoreCase(needToken) && reTryLimit ) {
-      msg = getLoginMsg(username, pw, domain, loginEl.getAttributeValue("token"));
+    } else if (result.equalsIgnoreCase(needToken) && reTryLimit) {
+      msg = getLoginMsg(username, pw, domain,
+          loginEl.getAttributeValue("token"));
       reTry = true;
       reTryLimit = false;
     } else if (result.equalsIgnoreCase(wrongPass)) {
       throw new ProcessException("Wrong Password");
     } else if (result.equalsIgnoreCase(notExists)) {
-      throw new ProcessException("No such User");
+      throw new ActionException("No such User");
     }
 
   }
+
   /**
    * {@inheritDoc}
    */
@@ -156,13 +166,15 @@ public class PostLogin extends MWAction {
     return msg;
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   * 
    * @see net.sourceforge.jwbf.mediawiki.actions.util.MWAction#hasMoreMessages()
    */
   @Override
   public boolean hasMoreMessages() {
     boolean temp = super.hasMoreMessages() || reTry;
-    reTry  = false;
+    reTry = false;
     return temp;
   }
 

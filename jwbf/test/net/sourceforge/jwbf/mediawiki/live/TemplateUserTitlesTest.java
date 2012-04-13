@@ -39,64 +39,6 @@ public class TemplateUserTitlesTest extends AbstractMediaWikiBotTest {
   public Verifier successRegister = classVerifier.getSuccessRegister(this);
 
   @Test
-  public final void templateUserWikiMW1x09() throws Exception {
-
-    bot = getMediaWikiBot(Version.MW1_09, true);
-    doRegularTest();
-
-    assertTrue("Wrong Wiki Version " + bot.getVersion(),
-        Version.MW1_09.equals(bot.getVersion()));
-  }
-
-  @Test
-  public final void templateUserWikiMW1x10() throws Exception {
-
-    bot = getMediaWikiBot(Version.MW1_10, true);
-    doRegularTest();
-
-    assertTrue("Wrong Wiki Version " + bot.getVersion(),
-        Version.MW1_10.equals(bot.getVersion()));
-  }
-
-  @Test
-  public final void templateUserWikiMW1x11() throws Exception {
-
-    bot = getMediaWikiBot(Version.MW1_11, true);
-    doRegularTest();
-
-    assertTrue("Wrong Wiki Version " + bot.getVersion(),
-        Version.MW1_11.equals(bot.getVersion()));
-  }
-
-  @Test
-  public final void templateUserWikiMW1x12() throws Exception {
-
-    bot = getMediaWikiBot(Version.MW1_12, true);
-    doRegularTest();
-
-    assertTrue("Wrong Wiki Version " + bot.getVersion(),
-        Version.MW1_12.equals(bot.getVersion()));
-  }
-
-  @Test
-  public final void templateUserWikiMW1x13() throws Exception {
-    bot = getMediaWikiBot(Version.MW1_13, true);
-    doRegularTest();
-
-    assertTrue("Wrong Wiki Version " + bot.getVersion(),
-        Version.MW1_13.equals(bot.getVersion()));
-  }
-
-  @Test
-  public final void templateUserWikiMW1x14() throws Exception {
-    bot = getMediaWikiBot(Version.MW1_14, true);
-    doRegularTest();
-
-    assertTrue("Wrong Wiki Version " + bot.getVersion(),
-        Version.MW1_14.equals(bot.getVersion()));
-  }
-
-  @Test
   public final void templateUserWikiMW1x15() throws Exception {
     bot = getMediaWikiBot(Version.MW1_15, true);
     doRegularTest();

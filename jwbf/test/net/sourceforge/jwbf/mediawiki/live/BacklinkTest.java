@@ -6,6 +6,7 @@ import static org.junit.Assert.assertTrue;
 import java.util.Iterator;
 import java.util.Vector;
 
+import lombok.extern.slf4j.Slf4j;
 import net.sourceforge.jwbf.core.actions.util.ActionException;
 import net.sourceforge.jwbf.core.actions.util.ProcessException;
 import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
@@ -15,7 +16,6 @@ import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.actions.queries.BacklinkTitles;
 import net.sourceforge.jwbf.mediawiki.actions.util.RedirectFilter;
-import net.sourceforge.jwbf.mediawiki.actions.util.VersionException;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 
 import org.junit.Assert;
@@ -29,6 +29,7 @@ import org.junit.rules.Verifier;
  * @author Thomas Stock
  * 
  */
+@Slf4j
 public class BacklinkTest extends AbstractMediaWikiBotTest {
 
   @ClassRule
@@ -42,6 +43,7 @@ public class BacklinkTest extends AbstractMediaWikiBotTest {
   private static final int COUNT = 60;
 
   protected final void doPreapare() throws ActionException, ProcessException {
+    log.info("prepareing backlinks...");
     SimpleArticle a = new SimpleArticle();
     for (int i = 0; i <= COUNT; i++) {
       a.setTitle("Back" + i);
@@ -52,6 +54,7 @@ public class BacklinkTest extends AbstractMediaWikiBotTest {
       }
       bot.writeContent(a);
     }
+    log.info("... done");
   }
 
   /**
@@ -82,115 +85,6 @@ public class BacklinkTest extends AbstractMediaWikiBotTest {
         i > getIntValue("backlinks_article_count"));
   }
 
-  /**
-   * Test backlinks.
-   * 
-   * @throws Exception
-   *           a
-   */
-  @Test
-  public final void backlinksMW1x09() throws Exception {
-
-    bot = getMediaWikiBot(Version.MW1_09, true);
-    Assert.assertEquals(Version.MW1_09, bot.getVersion());
-
-    doTest();
-  }
-
-  /**
-   * 
-   * @throws Exception
-   *           a
-   */
-  @Test(expected = VersionException.class)
-  public final void backlinksMW1x09xredirectVar() throws Exception {
-
-    bot = getMediaWikiBot(Version.MW1_09, true);
-    Assert.assertEquals(Version.MW1_09, bot.getVersion());
-    doTest(RedirectFilter.redirects);
-  }
-
-  /**
-   * Test backlinks.
-   * 
-   * @throws Exception
-   *           a
-   */
-  @Test
-  public final void backlinksMW1x10() throws Exception {
-
-    bot = getMediaWikiBot(Version.MW1_10, true);
-    Assert.assertEquals(Version.MW1_10, bot.getVersion());
-
-    doTest();
-  }
-
-  /**
-   * Test backlinks.
-   * 
-   * @throws Exception
-   *           a
-   */
-  @Test
-  public final void backlinksMW1x11() throws Exception {
-
-    bot = getMediaWikiBot(Version.MW1_11, true);
-    Assert.assertEquals(Version.MW1_11, bot.getVersion());
-
-    doTest();
-  }
-
-  /**
-   * Test backlinks.
-   * 
-   * @throws Exception
-   *           a
-   */
-  @Test
-  public final void backlinksMW1x12() throws Exception {
-
-    bot = getMediaWikiBot(Version.MW1_12, true);
-    Assert.assertEquals(Version.MW1_12, bot.getVersion());
-
-    doTest();
-  }
-
-  /**
-   * Test backlinks.
-   * 
-   * @throws Exception
-   *           a
-   */
-  @Test
-  public final void backlinksMW1x13() throws Exception {
-
-    bot = getMediaWikiBot(Version.MW1_13, true);
-    Assert.assertEquals(Version.MW1_13, bot.getVersion());
-    doTest();
-
-  }
-
-  /**
-   * Test backlinks.
-   * 
-   * @throws Exception
-   *           a
-   */
-  @Test
-  public final void backlinksMW1x14() throws Exception {
-
-    bot = getMediaWikiBot(Version.MW1_14, true);
-    Assert.assertEquals(Version.MW1_14, bot.getVersion());
-    doTest();
-
-  }
-
-  /**
-   * Test backlinks.
-   * 
-   * @throws Exception
-   *           a
-   */
   @Test
   public final void backlinksMW1x15() throws Exception {
 
@@ -200,17 +94,20 @@ public class BacklinkTest extends AbstractMediaWikiBotTest {
 
   }
 
-  /**
-   * Test backlinks.
-   * 
-   * @throws Exception
-   *           a
-   */
   @Test
   public final void backlinksMW1x16() throws Exception {
 
     bot = getMediaWikiBot(Version.MW1_16, true);
     Assert.assertEquals(Version.MW1_16, bot.getVersion());
+    doTest();
+
+  }
+
+  @Test
+  public final void backlinksMW1x18() throws Exception {
+
+    bot = getMediaWikiBot(Version.MW1_18, true);
+    Assert.assertEquals(Version.MW1_18, bot.getVersion());
     doTest();
 
   }
@@ -237,7 +134,7 @@ public class BacklinkTest extends AbstractMediaWikiBotTest {
       }
     }
     if (notEnougth) {
-      System.err.println(i + " is to less (" + COUNT + ")");
+      log.warn(i + " backlinks are to less ( requred for test: " + COUNT + ")");
       doPreapare();
     }
     is = gbt.iterator();

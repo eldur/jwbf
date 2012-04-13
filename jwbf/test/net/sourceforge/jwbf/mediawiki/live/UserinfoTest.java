@@ -31,108 +31,14 @@ public class UserinfoTest extends AbstractMediaWikiBotTest {
   @Rule
   public Verifier successRegister = classVerifier.getSuccessRegister(this);
 
-  private void testDetails(MediaWikiBot bot, String userName) throws Exception {
+  private void testDetails(MediaWikiBot bot, String userName) {
     Userinfo u = bot.getUserinfo();
     Assert.assertEquals(userName, u.getUsername());
 
-    switch (bot.getVersion()) {
-      case MW1_09:
-      case MW1_10:
-        break;
+    Assert.assertFalse("User has no groups", u.getGroups().isEmpty());
+    Assert
+        .assertTrue("User has no read rights", u.getRights().contains("read"));
 
-      default:
-        Assert.assertFalse("User has no groups", u.getGroups().isEmpty());
-        Assert.assertTrue("User has no read rights",
-            u.getRights().contains("read"));
-    }
-
-  }
-
-  /**
-   * 
-   * @throws Exception
-   *           a
-   */
-  @Test
-  public final void userInfoWikiMW1x09() throws Exception {
-
-    bot = getMediaWikiBot(Version.MW1_09, true);
-    Assert.assertTrue("Wrong Wiki Version " + bot.getVersion(),
-        Version.MW1_09.equals(bot.getVersion()));
-    testDetails(bot, getWikiUser(Version.MW1_09));
-  }
-
-  /**
-   * 
-   * @throws Exception
-   *           a
-   */
-  @Test
-  public final void userInfoWikiMW1x10() throws Exception {
-
-    bot = getMediaWikiBot(Version.MW1_10, true);
-
-    Assert.assertTrue("Wrong Wiki Version " + bot.getVersion(),
-        Version.MW1_10.equals(bot.getVersion()));
-    testDetails(bot, getWikiUser(Version.MW1_10));
-  }
-
-  /**
-   * 
-   * @throws Exception
-   *           a
-   */
-  @Test
-  public final void userInfoWikiMW1x11() throws Exception {
-
-    bot = getMediaWikiBot(Version.MW1_11, true);
-
-    Assert.assertTrue("Wrong Wiki Version " + bot.getVersion(),
-        Version.MW1_11.equals(bot.getVersion()));
-    testDetails(bot, getWikiUser(Version.MW1_11));
-  }
-
-  /**
-   * 
-   * @throws Exception
-   *           a
-   */
-  @Test
-  public final void userInfoWikiMW1x12() throws Exception {
-
-    bot = getMediaWikiBot(Version.MW1_12, true);
-
-    Assert.assertTrue("Wrong Wiki Version " + bot.getVersion(),
-        Version.MW1_12.equals(bot.getVersion()));
-    testDetails(bot, getWikiUser(Version.MW1_12));
-  }
-
-  /**
-   * 
-   * @throws Exception
-   *           a
-   */
-  @Test
-  public final void userInfoWikiMW1x13() throws Exception {
-    bot = getMediaWikiBot(Version.MW1_13, true);
-
-    Assert.assertTrue("Wrong Wiki Version " + bot.getVersion(),
-        Version.MW1_13.equals(bot.getVersion()));
-    testDetails(bot, getWikiUser(Version.MW1_13));
-  }
-
-  /**
-   * 
-   * @throws Exception
-   *           a
-   */
-  @Test
-  public final void userInfoWikiMW1x14() throws Exception {
-    bot = getMediaWikiBot(Version.MW1_14, true);
-
-    Assert.assertTrue("Wrong Wiki Version " + bot.getVersion(),
-        Version.MW1_14.equals(bot.getVersion()));
-    testDetails(bot, getWikiUser(Version.MW1_14));
   }
 
   /**
@@ -169,21 +75,21 @@ public class UserinfoTest extends AbstractMediaWikiBotTest {
    *           a
    */
   @Test
-  public final void userInfoWikiMW1x14Rights() throws Exception {
-    bot = getMediaWikiBot(Version.MW1_14, false);
+  public final void userInfoWikiMW1x17Rights() throws Exception {
+    bot = getMediaWikiBot(Version.MW1_17, false);
 
     Assert.assertTrue("Wrong Wiki Version " + bot.getVersion(),
-        Version.MW1_14.equals(bot.getVersion()));
+        Version.MW1_17.equals(bot.getVersion()));
 
     Userinfo u = bot.getUserinfo();
     Assert.assertNotSame("unknown", u.getUsername());
-    Assert.assertNotSame(getWikiUser(Version.MW1_14), u.getUsername());
+    Assert.assertNotSame(getWikiUser(Version.MW1_17), u.getUsername());
     u = bot.getUserinfo();
     Assert.assertNotSame("unknown", u.getUsername());
-    Assert.assertNotSame(getWikiUser(Version.MW1_14), u.getUsername());
-    bot.login(getWikiUser(Version.MW1_14), getWikiPass(Version.MW1_14));
+    Assert.assertNotSame(getWikiUser(Version.MW1_17), u.getUsername());
+    bot.login(getWikiUser(Version.MW1_17), getWikiPass(Version.MW1_17));
     u = bot.getUserinfo();
-    Assert.assertEquals(getWikiUser(Version.MW1_14), u.getUsername());
+    Assert.assertEquals(getWikiUser(Version.MW1_17), u.getUsername());
     Assert.assertFalse("User has no groups", u.getGroups().isEmpty());
     Assert
         .assertTrue("User has no read rights", u.getRights().contains("read"));

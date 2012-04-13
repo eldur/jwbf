@@ -32,7 +32,6 @@ import net.sourceforge.jwbf.mediawiki.VersionTestClassVerifier;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.actions.queries.CategoryMembersFull;
 import net.sourceforge.jwbf.mediawiki.actions.queries.CategoryMembersSimple;
-import net.sourceforge.jwbf.mediawiki.actions.util.VersionException;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 import net.sourceforge.jwbf.mediawiki.contentRep.CategoryItem;
 
@@ -88,102 +87,6 @@ public class CategoryTest extends AbstractMediaWikiBotTest {
         Version.DEVELOPMENT.equals(bot.getVersion()));
 
     doTest("Moose");
-  }
-
-  /**
-   * Test category read. Test category must have more then 50 members.
-   * 
-   * @throws Exception
-   *           a
-   */
-  @Test(expected = VersionException.class)
-  public final void categoryWikiMW1x09Fail() throws Exception {
-
-    bot = getMediaWikiBot(Version.MW1_09, true);
-    assertTrue("Wrong Wiki Version " + bot.getVersion(),
-        Version.MW1_09.equals(bot.getVersion()));
-    doTest();
-
-  }
-
-  /**
-   * Test category read. Test category must have more then 50 members.
-   * 
-   * @throws Exception
-   *           a
-   */
-  @Test(expected = VersionException.class)
-  public final void categoryWikiMW1x10Fail() throws Exception {
-
-    bot = getMediaWikiBot(Version.MW1_10, true);
-    assertTrue("Wrong Wiki Version " + bot.getVersion(),
-        Version.MW1_10.equals(bot.getVersion()));
-    doTest();
-
-  }
-
-  /**
-   * Test category read. Test category must have more then 50 members.
-   * 
-   * @throws Exception
-   *           a
-   */
-  @Test
-  public final void categoryWikiMW1x11() throws Exception {
-
-    bot = getMediaWikiBot(Version.MW1_11, true);
-    assertTrue("Wrong Wiki Version " + bot.getVersion(),
-        Version.MW1_11.equals(bot.getVersion()));
-
-    doTest();
-
-  }
-
-  /**
-   * Test category read. Test category must have more then 50 members.
-   * 
-   * @throws Exception
-   *           a
-   */
-  @Test
-  public final void categoryWikiMW1x12() throws Exception {
-
-    bot = getMediaWikiBot(Version.MW1_12, true);
-    assertTrue("Wrong Wiki Version " + bot.getVersion(),
-        Version.MW1_12.equals(bot.getVersion()));
-    doTest();
-
-  }
-
-  /**
-   * Test category read. Test category must have more then 50 members.
-   * 
-   * @throws Exception
-   *           a
-   */
-  @Test
-  public final void categoryWikiMW1x13() throws Exception {
-
-    bot = getMediaWikiBot(Version.MW1_13, true);
-    assertTrue("Wrong Wiki Version " + bot.getVersion(),
-        Version.MW1_13.equals(bot.getVersion()));
-    doTest();
-
-  }
-
-  /**
-   * Test category read. Test category must have more then 50 members.
-   * 
-   * @throws Exception
-   *           a
-   */
-  @Test
-  public final void categoryWikiMW1x14() throws Exception {
-
-    bot = getMediaWikiBot(Version.MW1_14, true);
-    assertTrue("Wrong Wiki Version " + bot.getVersion(),
-        Version.MW1_14.equals(bot.getVersion()));
-    doTest();
   }
 
   /**

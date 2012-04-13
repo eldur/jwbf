@@ -33,102 +33,6 @@ public class ImageUsageTitlesTest extends AbstractMediaWikiBotTest {
   private static final int limit = 55;
 
   @Test
-  public final void imageUsageMW1x09() throws Exception {
-
-    bot = getMediaWikiBot(Version.MW1_09, true);
-    assertTrue("Wrong Wiki Version " + bot.getVersion(),
-        Version.MW1_09.equals(bot.getVersion()));
-    test();
-
-  }
-
-  /**
-   * Test.
-   * 
-   * @throws Exception
-   *           a
-   */
-  @Test
-  public final void imageUsageMW1x10() throws Exception {
-
-    bot = getMediaWikiBot(Version.MW1_10, true);
-    assertTrue("Wrong Wiki Version " + bot.getVersion(),
-        Version.MW1_10.equals(bot.getVersion()));
-    test();
-
-  }
-
-  /**
-   * Test.
-   * 
-   * @throws Exception
-   *           a
-   */
-  @Test
-  public final void imageUsageMW1x11() throws Exception {
-
-    bot = getMediaWikiBot(Version.MW1_11, true);
-    assertTrue("Wrong Wiki Version " + bot.getVersion(),
-        Version.MW1_11.equals(bot.getVersion()));
-    test();
-
-  }
-
-  /**
-   * Test.
-   * 
-   * @throws Exception
-   *           a
-   */
-  @Test
-  public final void imageUsageMW1x12() throws Exception {
-
-    bot = getMediaWikiBot(Version.MW1_12, true);
-    assertTrue("Wrong Wiki Version " + bot.getVersion(),
-        Version.MW1_12.equals(bot.getVersion()));
-    test();
-
-  }
-
-  /**
-   * Test.
-   * 
-   * @throws Exception
-   *           a
-   */
-  @Test
-  public final void imageUsageMW1x13() throws Exception {
-
-    bot = getMediaWikiBot(Version.MW1_13, true);
-    assertTrue("Wrong Wiki Version " + bot.getVersion(),
-        Version.MW1_13.equals(bot.getVersion()));
-    test();
-
-  }
-
-  /**
-   * Test.
-   * 
-   * @throws Exception
-   *           a
-   */
-  @Test
-  public final void imageUsageMW1x14() throws Exception {
-
-    bot = getMediaWikiBot(Version.MW1_14, true);
-    assertTrue("Wrong Wiki Version " + bot.getVersion(),
-        Version.MW1_14.equals(bot.getVersion()));
-    test();
-
-  }
-
-  /**
-   * Test.
-   * 
-   * @throws Exception
-   *           a
-   */
-  @Test
   public final void imageUsageMW1x15() throws Exception {
 
     bot = getMediaWikiBot(Version.MW1_15, true);
@@ -138,12 +42,6 @@ public class ImageUsageTitlesTest extends AbstractMediaWikiBotTest {
 
   }
 
-  /**
-   * Test.
-   * 
-   * @throws Exception
-   *           a
-   */
   @Test
   public final void imageUsageMW1x16() throws Exception {
 

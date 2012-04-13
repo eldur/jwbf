@@ -125,7 +125,7 @@ public class LoginTest extends AbstractMediaWikiBotTest {
    *           a
    */
   @Test(expected = ActionException.class)
-  public final void loginWikipedia1Fail() throws Exception {
+  public final void loginWikipedia1Fail() {
 
     String liveUrl = getValue("login_wikipedia1_url");
     assumeReachable(liveUrl);

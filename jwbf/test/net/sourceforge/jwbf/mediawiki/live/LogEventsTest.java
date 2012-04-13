@@ -8,14 +8,11 @@ import static org.junit.Assert.assertTrue;
 import net.sourceforge.jwbf.core.actions.util.ActionException;
 import net.sourceforge.jwbf.core.contentRep.Article;
 import net.sourceforge.jwbf.mediawiki.VersionTestClassVerifier;
-import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.actions.queries.LogEvents;
-import net.sourceforge.jwbf.mediawiki.actions.util.VersionException;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 import net.sourceforge.jwbf.mediawiki.contentRep.LogItem;
 
-import org.junit.Assume;
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
@@ -71,88 +68,6 @@ public class LogEventsTest extends AbstractMediaWikiBotTest {
    * @throws Exception
    *           a
    */
-  @Test(expected = VersionException.class)
-  public final void logEventsMW1x09Fail() throws Exception {
-
-    bot = getMediaWikiBot(Version.MW1_09, true);
-    doTest(bot, true, LogEvents.DELETE);
-    assertTrue("Wrong Wiki Version " + bot.getVersion(),
-        Version.MW1_09.equals(bot.getVersion()));
-  }
-
-  /**
-   * 
-   * @throws Exception
-   *           a
-   */
-  @Test(expected = VersionException.class)
-  public final void logEventsMW1x10Fail() throws Exception {
-
-    bot = getMediaWikiBot(Version.MW1_10, true);
-    doTest(bot, true, LogEvents.DELETE);
-    assertTrue("Wrong Wiki Version " + bot.getVersion(),
-        Version.MW1_10.equals(bot.getVersion()));
-  }
-
-  /**
-   * 
-   * @throws Exception
-   *           a
-   */
-  @Test
-  public final void logEventsMW1x11() throws Exception {
-
-    bot = getMediaWikiBot(Version.MW1_11, true);
-    doTest(bot, true, LogEvents.UPLOAD);
-    assertTrue("Wrong Wiki Version " + bot.getVersion(),
-        Version.MW1_11.equals(bot.getVersion()));
-  }
-
-  /**
-   * 
-   * @throws Exception
-   *           a
-   */
-  @Test
-  public final void logEventsMW1x12() throws Exception {
-
-    bot = getMediaWikiBot(Version.MW1_12, true);
-    doTest(bot, true, LogEvents.DELETE);
-    assertTrue("Wrong Wiki Version " + bot.getVersion(),
-        Version.MW1_12.equals(bot.getVersion()));
-  }
-
-  /**
-   * 
-   * @throws Exception
-   *           a
-   */
-  @Test
-  public final void logEventsMW1x13() throws Exception {
-    bot = getMediaWikiBot(Version.MW1_13, true);
-    doTest(bot, true, LogEvents.DELETE);
-    assertTrue("Wrong Wiki Version " + bot.getVersion(),
-        Version.MW1_13.equals(bot.getVersion()));
-  }
-
-  /**
-   * 
-   * @throws Exception
-   *           a
-   */
-  @Test
-  public final void logEventsMW1x14() throws Exception {
-    bot = getMediaWikiBot(Version.MW1_14, true);
-    doTest(bot, true, LogEvents.DELETE);
-    assertTrue("Wrong Wiki Version " + bot.getVersion(),
-        Version.MW1_14.equals(bot.getVersion()));
-  }
-
-  /**
-   * 
-   * @throws Exception
-   *           a
-   */
   @Test
   public final void logEventsMW1x15() throws Exception {
     bot = getMediaWikiBot(Version.MW1_15, true);
@@ -174,19 +89,14 @@ public class LogEventsTest extends AbstractMediaWikiBotTest {
         Version.MW1_16.equals(bot.getVersion()));
   }
 
-  private void doPrepare(MediaWikiBot bot) throws Exception {
+  private void doPrepare(MediaWikiBot bot) {
     for (int i = 0; i <= LIMIT; i++) {
       String title = getRandomAlph(6);
       Article a = new Article(bot, title);
       a.setText(getRandom(5));
       a.save();
       assertTrue("content shoul be", a.getText().length() > 0);
-      try {
-        a.delete();
-      } catch (VersionException e) {
-        if (!MediaWiki.Version.MW1_11.equals(bot.getVersion()))
-          throw e;
-      }
+      a.delete();
     }
   }
 
@@ -204,8 +114,7 @@ public class LogEventsTest extends AbstractMediaWikiBotTest {
         break;
       }
     }
-    if (notEnough && isDemo
-        && !MediaWiki.Version.MW1_11.equals(bot.getVersion())) {
+    if (notEnough && isDemo) {
       doPrepare(bot);
     }
 
@@ -216,10 +125,6 @@ public class LogEventsTest extends AbstractMediaWikiBotTest {
         break;
       }
     }
-    // TODO wtf
-    if (MediaWiki.Version.MW1_11.equals(bot.getVersion())) {
-      Assume.assumeTrue(i > LIMIT);
-    } else
-      assertTrue("should be greater then 50 but is " + i, i > LIMIT);
+    assertTrue("should be greater then 50 but is " + i, i > LIMIT);
   }
 }

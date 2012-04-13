@@ -226,7 +226,7 @@ public class EditCustomWikiContentTest {
     bot.useEditApi(false);
     bot.login(getValue("demoWiki_user"), getValue("demoWiki_pass"));
     assertTrue("Version is: " + bot.getVersion(),
-        bot.getVersion() == Version.MW1_13);
+        bot.getVersion() == Version.MW1_13); // TODO
 
     Article a = new Article(bot, getValue("demoWiki_article"));
     // System.out.println(a.getText());

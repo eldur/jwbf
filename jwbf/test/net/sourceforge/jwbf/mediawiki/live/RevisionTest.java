@@ -41,78 +41,6 @@ public class RevisionTest extends AbstractMediaWikiBotTest {
    *           a
    */
   @Test
-  public final void getRevisionMW1x09() throws Exception {
-    bot = BotFactory.getMediaWikiBot(Version.MW1_09, true);
-    doTest();
-  }
-
-  /**
-   * Test write and read.
-   * 
-   * @throws Exception
-   *           a
-   */
-  @Test
-  public final void getRevisionMW1x10() throws Exception {
-    bot = BotFactory.getMediaWikiBot(Version.MW1_10, true);
-    doTest();
-  }
-
-  /**
-   * Test write and read.
-   * 
-   * @throws Exception
-   *           a
-   */
-  @Test
-  public final void getRevisionMW1x11() throws Exception {
-    bot = BotFactory.getMediaWikiBot(Version.MW1_11, true);
-    doTest();
-  }
-
-  /**
-   * Test write and read.
-   * 
-   * @throws Exception
-   *           a
-   */
-  @Test
-  public final void getRevisionMW1x12() throws Exception {
-    bot = BotFactory.getMediaWikiBot(Version.MW1_12, true);
-    doTest();
-  }
-
-  /**
-   * Test write and read.
-   * 
-   * @throws Exception
-   *           a
-   */
-  @Test
-  public final void getRevisionMW1x13() throws Exception {
-    bot = BotFactory.getMediaWikiBot(Version.MW1_13, true);
-    doTest();
-  }
-
-  /**
-   * Test write and read.
-   * 
-   * @throws Exception
-   *           a
-   */
-  @Test
-  public final void getRevisionMW1x14() throws Exception {
-    bot = BotFactory.getMediaWikiBot(Version.MW1_14, true);
-    doTest();
-  }
-
-  /**
-   * Test write and read.
-   * 
-   * @throws Exception
-   *           a
-   */
-  @Test
   public final void getRevisionMW1x15() throws Exception {
     bot = BotFactory.getMediaWikiBot(Version.MW1_15, true);
     doTest();
@@ -195,11 +123,6 @@ public class RevisionTest extends AbstractMediaWikiBotTest {
     a = bot.getArticle(title);
 
     assertEquals(testText, a.getText());
-    if (false) {
-      if (bot.getVersion().greaterEqThen(Version.MW1_12)) {
-        System.out.println(GetApiToken.class.toString() + bot.getVersion());
-      }
-    }
 
   }
 

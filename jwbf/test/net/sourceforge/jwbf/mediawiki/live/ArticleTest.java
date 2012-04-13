@@ -29,12 +29,6 @@ public class ArticleTest {
     Collection<MediaWikiBot> bots = new Vector<MediaWikiBot>();
     bots.add(getMediaWikiBot(Version.MW1_16, true));
     bots.add(getMediaWikiBot(Version.MW1_15, true));
-    bots.add(getMediaWikiBot(Version.MW1_14, true));
-    bots.add(getMediaWikiBot(Version.MW1_13, true));
-    bots.add(getMediaWikiBot(Version.MW1_12, true));
-    bots.add(getMediaWikiBot(Version.MW1_11, true));
-    bots.add(getMediaWikiBot(Version.MW1_10, true));
-    bots.add(getMediaWikiBot(Version.MW1_09, true));
     return bots;
   }
 

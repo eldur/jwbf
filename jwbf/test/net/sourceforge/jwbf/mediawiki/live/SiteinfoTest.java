@@ -68,75 +68,6 @@ public class SiteinfoTest extends AbstractMediaWikiBotTest {
   }
 
   /**
-   * Test get siteinfo on a MW.
-   * 
-   * @throws Exception
-   *           a
-   */
-  @Test
-  public final void siteInfoMW1x09() throws Exception {
-
-    bot = getMediaWikiBot(Version.MW1_09, false);
-
-    doTest(bot, Version.MW1_09);
-
-  }
-
-  /**
-   * Test get siteinfo on a MW.
-   * 
-   * @throws Exception
-   *           a
-   */
-  @Test
-  public final void siteInfoMW1x10() throws Exception {
-
-    bot = getMediaWikiBot(Version.MW1_10, false);
-    doTest(bot, Version.MW1_10);
-  }
-
-  /**
-   * Test get siteinfo on a MW.
-   * 
-   * @throws Exception
-   *           a
-   */
-  @Test
-  public final void siteInfoMW1x11() throws Exception {
-
-    bot = getMediaWikiBot(Version.MW1_11, false);
-
-    doTest(bot, Version.MW1_11);
-  }
-
-  /**
-   * Test get siteinfo on a MW.
-   * 
-   * @throws Exception
-   *           a
-   */
-  @Test
-  public final void siteInfoMW1x12() throws Exception {
-
-    bot = getMediaWikiBot(Version.MW1_12, false);
-
-    doTest(bot, Version.MW1_12);
-  }
-
-  /**
-   * Test get siteinfo on a MW.
-   * 
-   * @throws Exception
-   *           a
-   */
-  @Test
-  public final void siteInfoMW1x13() throws Exception {
-
-    bot = getMediaWikiBot(Version.MW1_13, true);
-    doTest(bot, Version.MW1_13);
-  }
-
-  /**
    * Test get siteinfo on a MW. Prepare a the wiki, that the siteinfopage is
    * only readable if user is logged in.
    * 
@@ -148,25 +79,12 @@ public class SiteinfoTest extends AbstractMediaWikiBotTest {
    *           a
    */
   @Test
-  public final void siteInfoMW1x13Blocking() throws Exception {
+  public final void siteInfoMW1x15Blocking() throws Exception {
 
-    bot = getMediaWikiBot(Version.MW1_13, false);
+    bot = getMediaWikiBot(Version.MW1_15, false);
     assertEquals(Version.UNKNOWN, bot.getVersion());
-    bot.login(getWikiUser(Version.MW1_13), getWikiPass(Version.MW1_13));
-    assertEquals(Version.MW1_13, bot.getVersion());
-  }
-
-  /**
-   * Test get siteinfo on a MW.
-   * 
-   * @throws Exception
-   *           a
-   */
-  @Test
-  public final void siteInfoMW1x14() throws Exception {
-
-    bot = getMediaWikiBot(Version.MW1_14, false);
-    doTest(bot, Version.MW1_14);
+    bot.login(getWikiUser(Version.MW1_15), getWikiPass(Version.MW1_15));
+    assertEquals(Version.MW1_15, bot.getVersion());
   }
 
   /**
@@ -237,15 +155,13 @@ public class SiteinfoTest extends AbstractMediaWikiBotTest {
 
     Siteinfo si = new Siteinfo();
     bot.performAction(si);
-    if (v.greaterEqThen(Version.MW1_11)) {
-      System.out.println(si.getInterwikis());
-      assertTrue("shuld have interwikis", si.getInterwikis().size() > 5);
+    System.out.println(si.getInterwikis());
+    assertTrue("shuld have interwikis", si.getInterwikis().size() > 5);
 
-      System.out.println(si.getNamespaces());
-      assertTrue("shuld have namespaces", si.getNamespaces().size() > 15);
-      // registerTestedVersion(Siteinfo.class, v); // TODO
+    System.out.println(si.getNamespaces());
+    assertTrue("shuld have namespaces", si.getNamespaces().size() > 15);
+    // registerTestedVersion(Siteinfo.class, v); // TODO
 
-    }
   }
 
   /**
