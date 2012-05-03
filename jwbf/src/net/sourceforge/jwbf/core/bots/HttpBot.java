@@ -42,6 +42,13 @@ public class HttpBot {
   private String url;
 
   /**
+   * do nothing, but keep in mind, that you have to setup the connection
+   */
+  public HttpBot() {
+
+  }
+
+  /**
    * Design for extension.
    * 
    * @param url
@@ -101,6 +108,7 @@ public class HttpBot {
    * 
    */
   public final void setConnection(final HttpActionClient client) {
+    client.getClass();
     cc = client;
   }
 
