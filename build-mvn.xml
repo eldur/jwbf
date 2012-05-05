@@ -29,10 +29,10 @@
 		</copy>
 
 		<copy todir="${release}/src">
-			<fileset dir="src" includes="**/*" />
+			<fileset dir="src/main/java" includes="**/*" />
 		</copy>
 		<copy todir="${release}/test">
-			<fileset dir="test" includes="**/*" />
+			<fileset dir="src/test/java" includes="**/*" />
 		</copy>
 		<copy todir="${release}">
 			<fileset dir="buildAdds" includes="*" />
