@@ -87,12 +87,10 @@ public class MediaWikiBot implements WikiBot {
    * These chars are not allowed in article names.
    */
   public static final char[] INVALID_LABEL_CHARS = "[]{}<>|".toCharArray();
-  private static final int DEFAULT_READ_PROPERTIES = GetRevision.CONTENT
-      | GetRevision.COMMENT | GetRevision.USER | GetRevision.TIMESTAMP
-      | GetRevision.IDS | GetRevision.FLAGS;
+  private static final int DEFAULT_READ_PROPERTIES = GetRevision.CONTENT | GetRevision.COMMENT | GetRevision.USER
+      | GetRevision.TIMESTAMP | GetRevision.IDS | GetRevision.FLAGS;
 
-  private static final Set<String> emptySet = Collections
-      .unmodifiableSet(new HashSet<String>());
+  private static final Set<String> emptySet = Collections.unmodifiableSet(new HashSet<String>());
 
   /**
    * use this constructor, if you want to work with IoC.
@@ -129,8 +127,7 @@ public class MediaWikiBot implements WikiBot {
   public MediaWikiBot(final String url) {
     bot = new HttpBot(url);
     if (!(url.endsWith(".php") || url.endsWith("/"))) {
-      throw new IllegalArgumentException("(" + url
-          + ") url must end with slash or .php");
+      throw new IllegalArgumentException("(" + url + ") url must end with slash or .php");
     }
     getBot().setConnection(url);
   }
@@ -163,8 +160,7 @@ public class MediaWikiBot implements WikiBot {
    * @see PostLogin
    * @see PostLoginOld
    */
-  public void login(final String username, final String passwd,
-      final String domain) {
+  public void login(final String username, final String passwd, final String domain) {
     LoginData login = new LoginData();
     switch (getVersion()) {
       case MW1_09:
@@ -221,8 +217,7 @@ public class MediaWikiBot implements WikiBot {
   /**
    * {@inheritDoc}
    */
-  public synchronized SimpleArticle readData(final String name,
-      final int properties) {
+  public synchronized SimpleArticle readData(final String name, final int properties) {
 
     GetRevision ac = new GetRevision(getVersion(), name, properties);
 
@@ -262,8 +257,8 @@ public class MediaWikiBot implements WikiBot {
 
     for (char invChar : INVALID_LABEL_CHARS) { // FIXME Replace with a REGEX
       if (simpleArticle.getTitle().contains(invChar + "")) {
-        throw new ActionException("Invalid character in label\""
-            + simpleArticle.getTitle() + "\" : \"" + invChar + "\"");
+        throw new ActionException("Invalid character in label\"" + simpleArticle.getTitle() + "\" : \"" + invChar
+            + "\"");
       }
     }
 
@@ -340,23 +335,26 @@ public class MediaWikiBot implements WikiBot {
    * {@inheritDoc}
    */
   public void delete(String title) {
-
     performAction(new PostDelete(this, title));
+  }
+
+  /**
+   * deletes an article with a reason
+   */
+  public void delete(String title, String reason) {
+    performAction(new PostDelete(this, title, reason));
   }
 
   public synchronized String performAction(ContentProcessable a) {
     if (a.isSelfExecuter()) {
-      throw new ActionException("this is a selfexcecuting action, "
-          + "please do not perform this action manually");
+      throw new ActionException("this is a selfexcecuting action, " + "please do not perform this action manually");
     }
     return getBot().performAction(a);
   }
 
   private HttpBot getBot() {
     if (bot == null) {
-      throw new IllegalStateException(
-          "please use another constructor or inject "
-              + HttpBot.class.getCanonicalName());
+      throw new IllegalStateException("please use another constructor or inject " + HttpBot.class.getCanonicalName());
     }
     return bot;
   }

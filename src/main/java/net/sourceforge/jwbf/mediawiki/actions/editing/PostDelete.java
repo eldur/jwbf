@@ -56,6 +56,7 @@ import org.xml.sax.InputSource;
 public class PostDelete extends MWAction {
 
   private final String title;
+  private String reason;
 
   private final GetApiToken token;
   private boolean delToken = true;
@@ -72,24 +73,39 @@ public class PostDelete extends MWAction {
    * @throws ActionException
    *           a
    */
-  public PostDelete(MediaWikiBot bot, String title) throws ProcessException,
-      ActionException {
+  public PostDelete(MediaWikiBot bot, String title) throws ProcessException, ActionException {
     super(bot.getVersion());
-    token = new GetApiToken(GetApiToken.Intoken.DELETE, title,
-        bot.getVersion(), bot.getUserinfo());
+    token = new GetApiToken(GetApiToken.Intoken.DELETE, title, bot.getVersion(), bot.getUserinfo());
     this.title = title;
     if (title == null || title.length() == 0) {
-      throw new IllegalArgumentException(
-          "The argument 'title' must not be null or empty");
+      throw new IllegalArgumentException("The argument 'title' must not be null or empty");
     }
 
     if (!bot.getUserinfo().getRights().contains("delete")) {
-      throw new ProcessException(
-          "The given user doesn't have the rights to delete. "
-              + "Add '$wgGroupPermissions['bot']['delete'] = true;' "
-              + "to your MediaWiki's LocalSettings.php might solve this problem.");
+      throw new ProcessException("The given user doesn't have the rights to delete. "
+          + "Add '$wgGroupPermissions['bot']['delete'] = true;' "
+          + "to your MediaWiki's LocalSettings.php might solve this problem.");
     }
 
+  }
+
+  /**
+   * Constructs a new <code>PostDelete</code> action.
+   * 
+   * @param bot
+   *          MediaWikiBot
+   * @param title
+   *          the title of the page to delete
+   * @param reason
+   *          reason for the deletion (may be null)
+   * @throws ProcessException
+   *           in case of a precessing exception
+   * @throws ActionException
+   *           in case of an action exception
+   */
+  public PostDelete(MediaWikiBot bot, String title, String reason) throws ProcessException, ActionException {
+    this(bot, title);
+    this.reason = reason;
   }
 
   /**
@@ -98,16 +114,18 @@ public class PostDelete extends MWAction {
   private HttpAction getSecondRequest() {
     HttpAction msg = null;
     if (token.getToken() == null || token.getToken().length() == 0) {
-      throw new IllegalArgumentException("The argument 'token' must not be \""
-          + String.valueOf(token.getToken()) + "\"");
+      throw new IllegalArgumentException("The argument 'token' must not be \"" + String.valueOf(token.getToken())
+          + "\"");
     }
     if (log.isTraceEnabled()) {
       log.trace("enter PostDelete.generateDeleteRequest(String)");
     }
 
-    String uS = "/api.php" + "?action=delete" + "&title="
-        + MediaWiki.encode(title) + "&token="
+    String uS = "/api.php" + "?action=delete" + "&title=" + MediaWiki.encode(title) + "&token="
         + MediaWiki.encode(token.getToken()) + "&format=xml";
+    if (reason != null) {
+      uS = uS + "&reason=" + MediaWiki.encode(reason);
+    }
     if (log.isDebugEnabled()) {
       log.debug("delete url: \"" + uS + "\"");
     }
@@ -121,8 +139,7 @@ public class PostDelete extends MWAction {
    * {@inheritDoc}
    */
   @Override
-  public String processReturningText(String s, HttpAction hm)
-      throws ProcessException {
+  public String processReturningText(String s, HttpAction hm) throws ProcessException {
     super.processReturningText(s, hm);
 
     if (delToken) {
@@ -195,8 +212,8 @@ public class PostDelete extends MWAction {
     if (elem != null) {
       // process reply for delete request
       if (log.isInfoEnabled()) {
-        log.info("Deleted article '" + elem.getAttributeValue("title") + "'"
-            + " with reason '" + elem.getAttributeValue("reason") + "'");
+        log.info("Deleted article '" + elem.getAttributeValue("title") + "'" + " with reason '"
+            + elem.getAttributeValue("reason") + "'");
       }
     } else {
       log.error("Unknow reply. This is not a reply for a delete action.");
