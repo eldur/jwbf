@@ -16,8 +16,7 @@ import org.mockito.Mockito;
 public class VersionTestClassVerifierTest implements Provider<MediaWikiBot> {
 
   @ClassRule
-  public static VersionTestClassVerifier veri = new VersionTestClassVerifier(
-      Fake.class);
+  public static VersionTestClassVerifier veri = new VersionTestClassVerifier(Fake.class);
 
   private MediaWikiBot bot;
 
@@ -76,9 +75,8 @@ public class VersionTestClassVerifierTest implements Provider<MediaWikiBot> {
     Mockito.when(bot.getVersion()).thenReturn(Version.MW1_17);
   }
 
-  @SupportedBy({ Version.MW1_09, Version.MW1_16, Version.MW1_10,
-      Version.MW1_11, Version.MW1_12, Version.MW1_13, Version.MW1_14,
-      Version.MW1_15, Version.MW1_16, Version.MW1_17 })
+  @SupportedBy({ Version.MW1_09, Version.MW1_16, Version.MW1_10, Version.MW1_11, Version.MW1_12, Version.MW1_13,
+      Version.MW1_14, Version.MW1_15, Version.MW1_16, Version.MW1_17 })
   private static class Fake {
 
   }

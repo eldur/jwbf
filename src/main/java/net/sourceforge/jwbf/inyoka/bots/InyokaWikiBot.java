@@ -52,8 +52,7 @@ public class InyokaWikiBot extends HttpBot implements WikiBot {
    *           on access problems
    * @see GetRevision
    */
-  public synchronized Article getArticle(final String name)
-      throws ActionException, ProcessException {
+  public synchronized Article getArticle(final String name) throws ActionException, ProcessException {
     return getArticle(name, 0);
 
   }
@@ -63,8 +62,7 @@ public class InyokaWikiBot extends HttpBot implements WikiBot {
 
   }
 
-  public void writeContent(SimpleArticle sa) throws ActionException,
-      ProcessException {
+  public void writeContent(SimpleArticle sa) throws ActionException, ProcessException {
     throw new ActionException("Writing is not supported");
 
   }
@@ -74,13 +72,11 @@ public class InyokaWikiBot extends HttpBot implements WikiBot {
 
   }
 
-  public synchronized Article getArticle(String name, int properties)
-      throws ActionException, ProcessException {
+  public synchronized Article getArticle(String name, int properties) throws ActionException, ProcessException {
     return new Article(this, readData(name, properties));
   }
 
-  public SimpleArticle readData(String name, int properties)
-      throws ActionException, ProcessException {
+  public SimpleArticle readData(String name, int properties) throws ActionException, ProcessException {
     GetRevision ac = new GetRevision(name);
     performAction(ac);
     return ac.getArticle();
@@ -116,8 +112,7 @@ public class InyokaWikiBot extends HttpBot implements WikiBot {
     return false;
   }
 
-  public SimpleArticle readData(String name) throws ActionException,
-      ProcessException {
+  public SimpleArticle readData(String name) throws ActionException, ProcessException {
     return readData(name, DEFAULT);
   }
 

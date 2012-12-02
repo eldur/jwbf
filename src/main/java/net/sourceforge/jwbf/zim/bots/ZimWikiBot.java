@@ -33,21 +33,25 @@ import net.sourceforge.jwbf.core.bots.util.CacheHandler;
 import net.sourceforge.jwbf.core.contentRep.Article;
 import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
 import net.sourceforge.jwbf.core.contentRep.Userinfo;
+
 /**
- *
+ * 
  * @author Martin Koch
- *
+ * 
  */
 public class ZimWikiBot implements WikiBot {
   private static final String ZIMEXT = ".txt";
   private static final int DEFAULT = 0;
   private final File rootFolder;
-  //	private final String mwFolder;
+
+  // private final String mwFolder;
 
   /**
    * Constructor for a ZIM wiki-bot.
-   * @param zimRootFolder this is the folder on your local machine
-   *
+   * 
+   * @param zimRootFolder
+   *          this is the folder on your local machine
+   * 
    */
 
   public ZimWikiBot(String zimRootFolder) {
@@ -55,43 +59,35 @@ public class ZimWikiBot implements WikiBot {
     this(new File(zimRootFolder));
   }
 
-
   public ZimWikiBot(File rootFolder) {
     // specify the path to all zim files
     this.rootFolder = rootFolder;
   }
+
   public void login(String user, String passwd) throws ActionException {
-    throw new ActionException(
-    "login is not supported because this is a desktopwiki");
+    throw new ActionException("login is not supported because this is a desktopwiki");
 
   }
 
-  public void delete(String title) throws ActionException,
-  ProcessException {
+  public void delete(String title) throws ActionException, ProcessException {
     // TODO Auto-generated method stub
 
   }
 
-  public Article getArticle(String title) throws ActionException,
-  ProcessException {
+  public Article getArticle(String title) throws ActionException, ProcessException {
 
     return getArticle(title, 0); // FIXME add regular constants
   }
 
-  public Article getArticle(String title, int properties)
-  throws ActionException, ProcessException {
+  public Article getArticle(String title, int properties) throws ActionException, ProcessException {
     return new Article(this, readData(title, properties));
   }
 
-
   /**
-   * Set up a simple text paarser
-   * some simple formating routines are supplied
-   * -> bold letters and images are translated from
-   * zimWiki to mediaWiki
+   * Set up a simple text paarser some simple formating routines are supplied ->
+   * bold letters and images are translated from zimWiki to mediaWiki
    */
-  public SimpleArticle readData(String name, int properties)
-  throws ActionException, ProcessException {
+  public SimpleArticle readData(String name, int properties) throws ActionException, ProcessException {
     File f = new File(getRootFolder(), name + ZIMEXT);
     SimpleArticle sa = new SimpleArticle();
     sa.setTitle(name);
@@ -124,7 +120,7 @@ public class ZimWikiBot implements WikiBot {
             cont = cont.replace("{{../", "[[Image:");
             cont = cont.replace("?width=", "|");
             cont = cont.replace("}}", "|none| " + name + "]]");
-            text.append( cont + "\n");
+            text.append(cont + "\n");
           }
         }
       }
@@ -142,8 +138,7 @@ public class ZimWikiBot implements WikiBot {
     return sa;
   }
 
-  public void writeContent(SimpleArticle sa) throws ActionException,
-  ProcessException {
+  public void writeContent(SimpleArticle sa) throws ActionException, ProcessException {
     // TODO Auto-generated method stub
 
   }
@@ -176,32 +171,26 @@ public class ZimWikiBot implements WikiBot {
     };
   }
 
-
   public String getWikiType() {
     return "Zim";
   }
 
-
-  public SimpleArticle readData(String name) throws ActionException,
-  ProcessException {
+  public SimpleArticle readData(String name) throws ActionException, ProcessException {
     return readData(name, DEFAULT);
   }
-
 
   public boolean hasCacheHandler() {
     // TODO Auto-generated method stub
     return false;
   }
 
-
   public void setCacheHandler(CacheHandler ch) {
     // TODO Auto-generated method stub
 
   }
 
-  //	public String getMWFolder() {
-  //		return mwFolder;
-  //	}
-
+  // public String getMWFolder() {
+  // return mwFolder;
+  // }
 
 }

@@ -18,7 +18,6 @@
  */
 package net.sourceforge.jwbf.mediawiki.actions.login;
 
-
 import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_09;
 
 import java.util.Map;
@@ -34,7 +33,7 @@ import net.sourceforge.jwbf.mediawiki.actions.util.SupportedBy;
 import net.sourceforge.jwbf.mediawiki.contentRep.LoginData;
 
 /**
- *
+ * 
  * @author Thomas Stock
  */
 @Slf4j
@@ -46,55 +45,53 @@ public class PostLoginOld extends MWAction implements CookieValidateable {
   private Post msg;
 
   /**
-   *
+   * 
    * @param username
-   *            the
+   *          the
    * @param pw
-   *            password
-   * @param domain a
-   * @param login a
+   *          password
+   * @param domain
+   *          a
+   * @param login
+   *          a
    */
-  public PostLoginOld(final String username, final String pw,
-      final String domain, LoginData login) {
+  public PostLoginOld(final String username, final String pw, final String domain, LoginData login) {
     super();
     this.username = username;
     this.login = login;
 
-    Post pm = new Post(
-        "/index.php?title=Special:Userlogin&action=submitlogin&type=login");
+    Post pm = new Post("/index.php?title=Special:Userlogin&action=submitlogin&type=login");
     pm.addParam("wpLoginattempt", "Log in");
     pm.addParam("wpRemember", "1");
     pm.addParam("wpName", username);
     pm.addParam("wpDomain", domain);
     pm.addParam("wpPassword", pw);
 
-
     msg = pm;
 
   }
+
   /**
    * @param cs
-   *            a
+   *          a
    * @param hm
-   *            the method object
+   *          the method object
    * @throws CookieException
-   *             never
-   *
+   *           never
+   * 
    */
-  public final void validateReturningCookies(final Map<String, String> cs, HttpAction hm)
-      throws CookieException {
+  public final void validateReturningCookies(final Map<String, String> cs, HttpAction hm) throws CookieException {
     validateAllReturningCookies(cs);
 
   }
 
   /**
    * @param cs
-   *            the
+   *          the
    * @throws CookieException
-   *             when no cookies returning
+   *           when no cookies returning
    */
-  public void validateAllReturningCookies(final Map<String, String> cs)
-      throws CookieException {
+  public void validateAllReturningCookies(final Map<String, String> cs) throws CookieException {
     String compare = username;
 
     compare = MediaWiki.encode(username);
@@ -112,11 +109,11 @@ public class PostLoginOld extends MWAction implements CookieValidateable {
         login.setup(username, true);
         return;
       } else {
-        throw new CookieException(
-            "Login failed: Check Username and Password.");
+        throw new CookieException("Login failed: Check Username and Password.");
       }
     }
   }
+
   /**
    * {@inheritDoc}
    */

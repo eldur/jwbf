@@ -52,8 +52,11 @@ public class GetRevision implements ContentProcessable {
 
   /**
    * TODO follow redirects.
-   * @param articlename a
-   * @throws ProcessException if arcticlename is empty
+   * 
+   * @param articlename
+   *          a
+   * @throws ProcessException
+   *           if arcticlename is empty
    */
   public GetRevision(final String articlename) throws ProcessException {
     if (articlename.length() <= 0) {
@@ -61,7 +64,6 @@ public class GetRevision implements ContentProcessable {
     }
     sa = new SimpleArticle();
     sa.setTitle(articlename);
-
 
     contentGet = new Get("/" + articlename + "?format=txt");
     versionGet = new Get("/" + articlename);
@@ -72,9 +74,7 @@ public class GetRevision implements ContentProcessable {
 
   }
 
-
-  public String processReturningText(String s, HttpAction hm)
-      throws ProcessException {
+  public String processReturningText(String s, HttpAction hm) throws ProcessException {
     if (hm == contentGet) {
       sa.setText(s);
     } else if (hm == versionGet) {
@@ -88,14 +88,14 @@ public class GetRevision implements ContentProcessable {
   }
 
   private void parse(String s) {
-    //		 <dt class="property author">Author:</dt>
-    //		   <dd class="author">anonymous <span class="ipnr">(IP: 219.232.117.132)</span></dd>
-    //		   <dt class="property time">Timestamp:</dt>
-    //		   <dd class="time">02/04/09 01:49:20 (12 hours ago)</dd>
-    //		   <dt class="property message">Comment:</dt>
-    //		   <dd class="message"><p>
-    Pattern p = Pattern.compile("class=\"author\">([^\"]*)<",
-        Pattern.DOTALL | Pattern.MULTILINE);
+    // <dt class="property author">Author:</dt>
+    // <dd class="author">anonymous <span class="ipnr">(IP:
+    // 219.232.117.132)</span></dd>
+    // <dt class="property time">Timestamp:</dt>
+    // <dd class="time">02/04/09 01:49:20 (12 hours ago)</dd>
+    // <dt class="property message">Comment:</dt>
+    // <dd class="message"><p>
+    Pattern p = Pattern.compile("class=\"author\">([^\"]*)<", Pattern.DOTALL | Pattern.MULTILINE);
 
     Matcher m = p.matcher(s);
 
@@ -103,8 +103,7 @@ public class GetRevision implements ContentProcessable {
       sa.setEditor(m.group(1).trim());
     }
     // find edittimestamp
-    p = Pattern.compile("class=\"time\">([^\"]*)<", Pattern.DOTALL
-        | Pattern.MULTILINE);
+    p = Pattern.compile("class=\"time\">([^\"]*)<", Pattern.DOTALL | Pattern.MULTILINE);
     m = p.matcher(s);
 
     if (m.find()) {
@@ -119,8 +118,7 @@ public class GetRevision implements ContentProcessable {
       System.err.println("no date found");
     }
     // find edit summ
-    p = Pattern.compile("class=\"message\"><p>([^\"]*)</p>", Pattern.DOTALL
-        | Pattern.MULTILINE);
+    p = Pattern.compile("class=\"message\"><p>([^\"]*)</p>", Pattern.DOTALL | Pattern.MULTILINE);
     m = p.matcher(s);
 
     if (m.find()) {
@@ -133,8 +131,7 @@ public class GetRevision implements ContentProcessable {
   }
 
   private void parseVersion(String s) {
-    Pattern p = Pattern.compile("action=diff&amp;version=([0-9]*)"
-        , Pattern.DOTALL | Pattern.MULTILINE);
+    Pattern p = Pattern.compile("action=diff&amp;version=([0-9]*)", Pattern.DOTALL | Pattern.MULTILINE);
 
     Matcher m = p.matcher(s);
 
@@ -147,9 +144,8 @@ public class GetRevision implements ContentProcessable {
     return sa;
   }
 
-
   public boolean hasMoreMessages() {
-    if (first || second || third )
+    if (first || second || third)
       return true;
     return false;
   }
@@ -161,13 +157,12 @@ public class GetRevision implements ContentProcessable {
     } else if (second) {
       second = false;
       return versionGet;
-    } else  {
+    } else {
       third = false;
       return metaGet;
     }
 
   }
-
 
   /**
    * {@inheritDoc}
@@ -175,6 +170,5 @@ public class GetRevision implements ContentProcessable {
   public boolean isSelfExecuter() {
     return false;
   }
-
 
 }

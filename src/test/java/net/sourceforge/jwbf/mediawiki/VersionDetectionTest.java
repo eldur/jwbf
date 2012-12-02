@@ -61,8 +61,7 @@ public class VersionDetectionTest {
 
   @Test
   public void testMW109110() {
-    Version[] vt = MWAction
-        .findSupportedVersions(VersionSupportTest109110.class);
+    Version[] vt = MWAction.findSupportedVersions(VersionSupportTest109110.class);
     Version[] vx = { MW1_09, MW1_10 };
     assertArrayEquals(vx, vt);
 
@@ -70,8 +69,7 @@ public class VersionDetectionTest {
 
   @Test
   public void testMW109110ext() {
-    Version[] vt = MWAction
-        .findSupportedVersions(VersionSupportTest109110ext.class);
+    Version[] vt = MWAction.findSupportedVersions(VersionSupportTest109110ext.class);
     Version[] vx = { MW1_09, MW1_10 };
     assertArrayEquals(vx, vt);
 
@@ -87,8 +85,7 @@ public class VersionDetectionTest {
 
   @Test
   public void testInterface111112() {
-    Version[] vt = MWAction
-        .findSupportedVersions(VersionSupportInDectable.class);
+    Version[] vt = MWAction.findSupportedVersions(VersionSupportInDectable.class);
     Version[] vx = { MW1_11, MW1_12 };
     assertArrayEquals(vx, vt);
 

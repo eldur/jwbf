@@ -34,74 +34,70 @@ import net.sourceforge.jwbf.zim.bots.ZimWikiBot;
  */
 public class AllPageTitles implements Iterable<String>, Iterator<String> {
 
-	
-	private Vector<String> all = new Vector<String>();
-	private Iterator<String> allIt = null;
+  private Vector<String> all = new Vector<String>();
+  private Iterator<String> allIt = null;
 
+  /**
+   * Constructor for an Iterator
+   * 
+   * @param zim
+   *          this is our zimBot on the local machine it will distinguish
+   *          between test and image files and transform the local root dir of
+   *          zim to the remote dir on the mediWiki server HINT: currently only
+   *          P_ortable N_etwork G_raphics (.png)-files are supported!
+   */
 
-	/**
-	 * Constructor for an Iterator
-	 * @param zim this is our zimBot on the local machine
-	 * it will distinguish between test and image files
-	 * and transform the local root dir of zim to the remote
-	 * dir on the mediWiki server
-	 * HINT: currently only P_ortable N_etwork G_raphics (.png)-files
-	 * are supported! 
-	 */
+  public AllPageTitles(ZimWikiBot zim) {
 
-	public AllPageTitles(ZimWikiBot zim) {
+    // specify the path to all zim files
+    File dir = zim.getRootFolder();
+    File[] fileList = dir.listFiles(new FilenameFilter() {
 
-		// specify the path to all zim files
-		File dir = zim.getRootFolder();
-		File[] fileList = dir.listFiles(new FilenameFilter() {
-		
-			public boolean accept(File dir, String name) {
-				if (name.endsWith(".txt"))
-					return true;
-				return false;
-			}
-		});
+      public boolean accept(File dir, String name) {
+        if (name.endsWith(".txt"))
+          return true;
+        return false;
+      }
+    });
 
-		// every file is going to be loaded
-		for (File f : fileList) {
-				
-//			// get all png image files // TODO not good ;-) rm
-//			if (f.getName().endsWith(".png")) {
-//				all.add(f.getName());
-//			} 
-				// get all text files
-//				else if (f.getName().endsWith(".txt")) {
+    // every file is going to be loaded
+    for (File f : fileList) {
 
-				// cropping the ".txt" extension
-				String fileName = f.getName().substring(0,
-						f.getName().length() - 4);
+      // // get all png image files // TODO not good ;-) rm
+      // if (f.getName().endsWith(".png")) {
+      // all.add(f.getName());
+      // }
+      // get all text files
+      // else if (f.getName().endsWith(".txt")) {
 
-//				// changing the root directory of zim to the page in wiki
-//				if (fileName.equals("Home"))
-//					fileName = zim.getMWFolder();
-				
-				all.add(fileName);
-//			}
-		}
-		allIt = all.iterator();
-	}
+      // cropping the ".txt" extension
+      String fileName = f.getName().substring(0, f.getName().length() - 4);
 
-	public Iterator<String> iterator() {
-		return this;
-	}
+      // // changing the root directory of zim to the page in wiki
+      // if (fileName.equals("Home"))
+      // fileName = zim.getMWFolder();
 
-	public boolean hasNext() {
-		return allIt.hasNext();
-	}
+      all.add(fileName);
+      // }
+    }
+    allIt = all.iterator();
+  }
 
-	public String next() {
-		return allIt.next();
-	}
+  public Iterator<String> iterator() {
+    return this;
+  }
 
-	public void remove() {
-		allIt.remove();
+  public boolean hasNext() {
+    return allIt.hasNext();
+  }
 
-	}
+  public String next() {
+    return allIt.next();
+  }
 
+  public void remove() {
+    allIt.remove();
+
+  }
 
 }

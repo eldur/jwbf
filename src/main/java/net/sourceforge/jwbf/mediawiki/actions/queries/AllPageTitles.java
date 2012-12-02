@@ -55,16 +55,13 @@ import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 public class AllPageTitles extends TitleQuery<String> {
 
   /** Pattern to parse returned page, @see {@link #parseHasMore(String)}. */
-  private static final Pattern HAS_MORE_PATTERN = Pattern
-      .compile(
-          "<query-continue>.*?<allpages *apfrom=\"([^\"]*)\" */>.*?</query-continue>",
-          Pattern.DOTALL | Pattern.MULTILINE);
+  private static final Pattern HAS_MORE_PATTERN = Pattern.compile(
+      "<query-continue>.*?<allpages *apfrom=\"([^\"]*)\" */>.*?</query-continue>", Pattern.DOTALL | Pattern.MULTILINE);
   private static final Pattern ARTICLE_TITLES_PATTERN = Pattern
       .compile("<p pageid=\".*?\" ns=\".*?\" title=\"(.*?)\" />");
   /** Pattern to parse returned page, @see {@link #parseArticleTitles(String)} */
   /** Constant value for the aplimit-parameter. **/
   private static final int LIMIT = 50;
-
 
   /**
    * Information given in the constructor, necessary for creating next action.
@@ -78,64 +75,72 @@ public class AllPageTitles extends TitleQuery<String> {
 
   private RedirectFilter rf;
 
-
-
   /**
-   * The public constructor. It will have an MediaWiki-request generated,
-   * which is then added to msgs. When it is answered, the method
+   * The public constructor. It will have an MediaWiki-request generated, which
+   * is then added to msgs. When it is answered, the method
    * processAllReturningText will be called (from outside this class). For the
    * parameters, see
    * {@link AllPageTitles#generateRequest(String, String, boolean, boolean, String)}
    * 
    * @param from
-   *            page title to start from, may be null
+   *          page title to start from, may be null
    * @param prefix
-   *            restricts search to titles that begin with this value, may be
-   *            null
+   *          restricts search to titles that begin with this value, may be null
    * @param rf
-   *            include redirects in the list
-   * @param bot a
+   *          include redirects in the list
+   * @param bot
+   *          a
    * @param namespaces
-   *            the namespace(s) that will be searched for links, as a string
-   *            of numbers separated by '|'; if null, this parameter is
-   *            omitted TODO are multible namespaces allowed?
-   * @throws VersionException if version is incompatible
+   *          the namespace(s) that will be searched for links, as a string of
+   *          numbers separated by '|'; if null, this parameter is omitted TODO
+   *          are multible namespaces allowed?
+   * @throws VersionException
+   *           if version is incompatible
    */
-  public AllPageTitles(MediaWikiBot bot, String from,
-      String prefix, RedirectFilter rf, int ... namespaces) throws VersionException {
+  public AllPageTitles(MediaWikiBot bot, String from, String prefix, RedirectFilter rf, int... namespaces)
+      throws VersionException {
     this(bot, from, prefix, rf, MWAction.createNsString(namespaces));
 
   }
+
   /**
    * 
-   * @param bot a
-   * @param namespaces the
-   * @throws VersionException if version is incompatible
+   * @param bot
+   *          a
+   * @param namespaces
+   *          the
+   * @throws VersionException
+   *           if version is incompatible
    */
-  public AllPageTitles(MediaWikiBot bot, int ... namespaces) throws VersionException {
+  public AllPageTitles(MediaWikiBot bot, int... namespaces) throws VersionException {
     this(bot, null, null, RedirectFilter.nonredirects, namespaces);
 
   }
 
   /**
-   * @param from a
-   * @param prefix a
-   * @param rf the
-   * @param namespaces the
-   * @param bot the
-   * @throws VersionException if not supported
+   * @param from
+   *          a
+   * @param prefix
+   *          a
+   * @param rf
+   *          the
+   * @param namespaces
+   *          the
+   * @param bot
+   *          the
+   * @throws VersionException
+   *           if not supported
    */
-  protected AllPageTitles(MediaWikiBot bot, String from
-      , String prefix, RedirectFilter rf, String namespaces) throws VersionException {
+  protected AllPageTitles(MediaWikiBot bot, String from, String prefix, RedirectFilter rf, String namespaces)
+      throws VersionException {
     super(bot);
-
 
     this.bot = bot;
     this.rf = rf;
     this.prefix = prefix;
     this.namespaces = namespaces;
     this.from = from;
-    //    generateRequest(from, prefix, rf, namespaces);
+    // generateRequest(from, prefix, rf, namespaces);
 
   }
 
@@ -143,22 +148,19 @@ public class AllPageTitles extends TitleQuery<String> {
    * Generates the next MediaWiki-request (GetMethod) and adds it to msgs.
    * 
    * @param from
-   *            page title to start from, may be null
+   *          page title to start from, may be null
    * @param prefix
-   *            restricts search to titles that begin with this value, may be
-   *            null
-   * @param rf include redirects in the list
+   *          restricts search to titles that begin with this value, may be null
+   * @param rf
+   *          include redirects in the list
    * @param namespace
-   *            the namespace(s) that will be searched for links, as a string
-   *            of numbers separated by '|'; if null, this parameter is
-   *            omitted
+   *          the namespace(s) that will be searched for links, as a string of
+   *          numbers separated by '|'; if null, this parameter is omitted
    * @return a
    */
-  private Get generateRequest(String from, String prefix,
-      RedirectFilter rf, String namespace) {
+  private Get generateRequest(String from, String prefix, RedirectFilter rf, String namespace) {
     if (log.isTraceEnabled()) {
-      log.trace("enter GetAllPagetitles.generateRequest"
-          + "(String,String,boolean,boolean,String)");
+      log.trace("enter GetAllPagetitles.generateRequest" + "(String,String,boolean,boolean,String)");
     }
 
     String apfilterredir;
@@ -170,25 +172,20 @@ public class AllPageTitles extends TitleQuery<String> {
       apfilterredir = "nonredirects";
     }
 
-
     String uS = "/api.php?action=query&list=allpages&"
-        + ((from != null && from.length() > 0) ? ("&apfrom=" + MediaWiki
-            .encode(from)) : "")
-            + ((prefix != null) ? ("&apprefix=" + MediaWiki.encode(prefix)) : "")
-            + ((namespace != null && namespace.length() != 0) ? ("&apnamespace=" + MediaWiki.encode(namespace))
-                : "") + "&apfilterredir=" + apfilterredir + "&aplimit=" + LIMIT
-                + "&format=xml";
+        + ((from != null && from.length() > 0) ? ("&apfrom=" + MediaWiki.encode(from)) : "")
+        + ((prefix != null) ? ("&apprefix=" + MediaWiki.encode(prefix)) : "")
+        + ((namespace != null && namespace.length() != 0) ? ("&apnamespace=" + MediaWiki.encode(namespace)) : "")
+        + "&apfilterredir=" + apfilterredir + "&aplimit=" + LIMIT + "&format=xml";
     return new Get(uS);
 
   }
-
-
 
   /**
    * Picks the article name from a MediaWiki api response.
    * 
    * @param s
-   *            text for parsing
+   *          text for parsing
    * @return a
    */
   @Override
@@ -207,13 +204,14 @@ public class AllPageTitles extends TitleQuery<String> {
     }
     return c;
   }
+
   /**
    * Gets the information about a follow-up page from a provided api response.
-   * If there is one, a new request is added to msgs by calling
-   * generateRequest. If no exists, the string is empty.
+   * If there is one, a new request is added to msgs by calling generateRequest.
+   * If no exists, the string is empty.
    * 
    * @param s
-   *            text for parsing
+   *          text for parsing
    * @return the
    */
   @Override
@@ -223,7 +221,7 @@ public class AllPageTitles extends TitleQuery<String> {
     }
     Matcher m = HAS_MORE_PATTERN.matcher(s);
     if (m.find()) {
-      return  m.group(1);
+      return m.group(1);
     } else {
       return "";
     }
@@ -238,6 +236,7 @@ public class AllPageTitles extends TitleQuery<String> {
     return generateRequest(getNextPageInfo(), prefix, rf, namespaces);
 
   }
+
   /**
    * {@inheritDoc}
    */
@@ -249,6 +248,5 @@ public class AllPageTitles extends TitleQuery<String> {
       throw new CloneNotSupportedException(e.getLocalizedMessage());
     }
   }
-
 
 }

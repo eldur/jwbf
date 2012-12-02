@@ -19,7 +19,6 @@ import com.google.common.cache.CacheBuilder;
  */
 public class SimpleCachTest {
 
-  
   @Test
   public void workWithCache() {
     WikiBot cache = new CacheBot();
@@ -27,32 +26,31 @@ public class SimpleCachTest {
     // TODO read without cache should be slower; try a timeout rule
   }
 
-  
   private static class CacheBot implements WikiBot {
     private Cache<String, SimpleArticle> mapCache = CacheBuilder.newBuilder().build();
-  
+
     private interface A {
       SimpleArticle readData(final String name, final int properties);
     }
-    
+
     @Delegate(excludes = A.class)
     private WikiBot bot = Mockito.mock(WikiBot.class);
-    
+
     public CacheBot() {
 
       Answer<SimpleArticle> answer = new Answer<SimpleArticle>() {
         public SimpleArticle answer(InvocationOnMock iom) {
-        
+
           return new SimpleArticle();
-        }  
-        
-      };   
-     Mockito.when(bot.readData(Mockito.anyString(), Mockito.anyInt())).thenAnswer(answer);
+        }
+
+      };
+      Mockito.when(bot.readData(Mockito.anyString(), Mockito.anyInt())).thenAnswer(answer);
     }
- 
+
     public SimpleArticle readData(final String name, final int properties) {
       SimpleArticle cache = mapCache.getIfPresent(name + properties);
-      if ( cache != null) {
+      if (cache != null) {
         return cache;
       }
       SimpleArticle sa = bot.readData(name, properties);
@@ -60,6 +58,5 @@ public class SimpleCachTest {
       return sa;
     }
 
-    
   }
 }

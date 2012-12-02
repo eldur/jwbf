@@ -18,35 +18,35 @@
  */
 package net.sourceforge.jwbf.core.actions;
 
-
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
+
 /**
  * 
  * @author Thomas Stock
- *
+ * 
  */
 public interface ContentProcessable extends ReturningText {
 
+  /**
+   * @return the of messages in this action
+   * 
+   */
+  HttpAction getNextMessage();
 
+  /**
+   * 
+   * @return true if
+   */
+  boolean hasMoreMessages();
 
-	
-	/**
-	 * @return the of messages in this action
-	 * 
-	 */
-	HttpAction getNextMessage();
-
-	/**
-	 * 
-	 * @return true if
-	 */
-	boolean hasMoreMessages();
-	
-	/**
-	 * Use this in self maintaining lists for e.g., to prevent user to perform this action manually.
-	 * @deprecated better encapsulate action if no external execution shuld be avalibal. 
-	 * @return true if
-	 */
-	boolean isSelfExecuter();
+  /**
+   * Use this in self maintaining lists for e.g., to prevent user to perform
+   * this action manually.
+   * 
+   * @deprecated better encapsulate action if no external execution shuld be
+   *             avalibal.
+   * @return true if
+   */
+  boolean isSelfExecuter();
 
 }

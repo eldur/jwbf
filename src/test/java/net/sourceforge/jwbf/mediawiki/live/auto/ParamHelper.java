@@ -24,8 +24,8 @@ class ParamHelper extends AbstractMediaWikiBotTest {
 
   static Collection<?> prepare(Version... versions) {
 
-    Version[] documentedVersions = MWAction
-        .findSupportedVersions(AllPageTitles.class); // TODO maybe
+    Version[] documentedVersions = MWAction.findSupportedVersions(AllPageTitles.class); // TODO
+                                                                                        // maybe
 
     Object[][] objects = new Object[versions.length][1];
     for (int i = 0; i < versions.length; i++) {

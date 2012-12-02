@@ -47,15 +47,15 @@ import net.sourceforge.jwbf.mediawiki.actions.util.VersionException;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 
 /**
- *
- *
+ * 
+ * 
  * Writes an article.
- *
- *
+ * 
+ * 
  * @author Thomas Stock
  */
 @Slf4j
-@SupportedBy({ MW1_09, MW1_10, MW1_11, MW1_12, MW1_13, MW1_14, MW1_15, MW1_16})
+@SupportedBy({ MW1_09, MW1_10, MW1_11, MW1_12, MW1_13, MW1_14, MW1_15, MW1_16 })
 public class PostModifyContent extends MWAction {
 
   private boolean first = true;
@@ -69,11 +69,16 @@ public class PostModifyContent extends MWAction {
   private HttpAction initOldGet = null;
   private Post postModify = null;
   private boolean apiEdit = false;
+
   /**
-   * @param bot a
-   * @param a the
-   * @throws ProcessException a
-   * @throws ActionException a
+   * @param bot
+   *          a
+   * @param a
+   *          the
+   * @throws ProcessException
+   *           a
+   * @throws ActionException
+   *           a
    */
   public PostModifyContent(MediaWikiBot bot, final SimpleArticle a) throws ActionException, ProcessException {
     super(bot.getVersion());
@@ -103,19 +108,19 @@ public class PostModifyContent extends MWAction {
             break;
         }
         first = false;
-        if (!(bot.getUserinfo().getRights().contains("edit")
-            && bot.getUserinfo().getRights().contains("writeapi"))) {
+        if (!(bot.getUserinfo().getRights().contains("edit") && bot.getUserinfo().getRights().contains("writeapi"))) {
           throw new VersionException("write api not avalibal");
         }
-        apiReq = new GetApiToken(GetApiToken.Intoken.EDIT,
-            a.getTitle(), bot.getVersion(), bot.getUserinfo());
+        apiReq = new GetApiToken(GetApiToken.Intoken.EDIT, a.getTitle(), bot.getVersion(), bot.getUserinfo());
         apiGet = apiReq.getNextMessage();
         apiEdit = true;
         return apiGet;
 
       } catch (VersionException e) {
-        String uS = "/index.php?title="
-            + MediaWiki.encode(a.getTitle()) // TODO check encoding here
+        String uS = "/index.php?title=" + MediaWiki.encode(a.getTitle()) // TODO
+                                                                         // check
+                                                                         // encoding
+                                                                         // here
             + "&action=edit&dontcountme=s";
         initOldGet = new Get(uS);
         first = false;
@@ -138,7 +143,7 @@ public class PostModifyContent extends MWAction {
         log.warn("{}", e);
       }
 
-      //			postModify.addParam("watch", "unknown")
+      // postModify.addParam("watch", "unknown")
       if (a.isMinorEdit())
         postModify.addParam("minor", "");
       else
@@ -146,8 +151,7 @@ public class PostModifyContent extends MWAction {
       postModify.addParam("token", apiReq.getToken());
 
     } else {
-      String uS = "/index.php?title=" + MediaWiki.encode(a.getTitle())
-          + "&action=submit";
+      String uS = "/index.php?title=" + MediaWiki.encode(a.getTitle()) + "&action=submit";
 
       postModify = new Post(uS);
       postModify.addParam("wpSave", "Save");
@@ -174,7 +178,6 @@ public class PostModifyContent extends MWAction {
 
       log.info("WRITE: " + a.getTitle());
 
-
     }
     second = false;
 
@@ -188,12 +191,12 @@ public class PostModifyContent extends MWAction {
   public boolean hasMoreMessages() {
     return first || second;
   }
+
   /**
    * {@inheritDoc}
    */
   @Override
-  public String processReturningText(String s, HttpAction hm)
-      throws ProcessException {
+  public String processReturningText(String s, HttpAction hm) throws ProcessException {
     if (s.contains("error")) {
       if (s.length() > 700) {
         s = s.substring(0, 700);
@@ -211,16 +214,15 @@ public class PostModifyContent extends MWAction {
       apiReq.processReturningText(s, hm);
     }
 
-
     return s;
   }
 
   /**
-   *
+   * 
    * @param text
-   *            where to search
+   *          where to search
    * @param tab
-   *            tabel with required values
+   *          tabel with required values
    */
   private void getWpValues(final String text, Hashtable<String, String> tab) {
 
@@ -252,9 +254,12 @@ public class PostModifyContent extends MWAction {
   }
 
   /**
-   * @param a a
-   * @param b a
-   * @return true if one or both sets are <code>null</code> or the intersection of sets is empty.
+   * @param a
+   *          a
+   * @param b
+   *          a
+   * @return true if one or both sets are <code>null</code> or the intersection
+   *         of sets is empty.
    */
   @SuppressWarnings("unchecked")
   public static boolean isIntersectionEmpty(Set<?> a, Set<?> b) {
@@ -267,6 +272,5 @@ public class PostModifyContent extends MWAction {
     }
     return true;
   }
-
 
 }

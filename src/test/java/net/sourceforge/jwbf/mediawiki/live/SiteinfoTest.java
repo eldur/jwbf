@@ -47,8 +47,7 @@ import org.junit.rules.Verifier;
 public class SiteinfoTest extends AbstractMediaWikiBotTest {
 
   @ClassRule
-  public static VersionTestClassVerifier classVerifier = new VersionTestClassVerifier(
-      GetVersion.class, Siteinfo.class);
+  public static VersionTestClassVerifier classVerifier = new VersionTestClassVerifier(GetVersion.class, Siteinfo.class);
 
   @Rule
   public Verifier successRegister = classVerifier.getSuccessRegister(this);
@@ -128,8 +127,7 @@ public class SiteinfoTest extends AbstractMediaWikiBotTest {
     MediaWikiBot bot = new MediaWikiBot(liveUrl);
 
     Article a = new Article(bot, versionInfoTemplate);
-    assertTrue(a.getText() + " should contains " + v.getNumber(), a.getText()
-        .contains(v.getNumber()));
+    assertTrue(a.getText() + " should contains " + v.getNumber(), a.getText().contains(v.getNumber()));
   }
 
   private void doTest(MediaWikiBot bot, Version v) throws Exception {
@@ -176,8 +174,7 @@ public class SiteinfoTest extends AbstractMediaWikiBotTest {
     HttpBot bot = new HttpBot(""); // XXX does this work?
     String result = bot.getPage(getValue("useragent_url"));
     assertTrue("useragent should contain \"JWBF\"", result.contains("JWBF"));
-    assertTrue("useragent should contain actual version",
-        result.contains(JWBF.getVersion(getClass())));
+    assertTrue("useragent should contain actual version", result.contains(JWBF.getVersion(getClass())));
   }
 
 }

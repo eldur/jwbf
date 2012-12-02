@@ -49,8 +49,7 @@ import org.xml.sax.InputSource;
 @Slf4j
 @SupportedBy({ MW1_11, MW1_12, MW1_13, MW1_14, MW1_15, MW1_16 })
 public class ImageInfo extends MWAction {
-  private static final Map<String, String> EMPTY_STRING_MAP = Collections
-      .emptyMap();
+  private static final Map<String, String> EMPTY_STRING_MAP = Collections.emptyMap();
 
   public static final String WIDTH = "iiurlwidth";
   public static final String HEIGHT = "iiurlheight";
@@ -76,16 +75,14 @@ public class ImageInfo extends MWAction {
     this(bot, name, EMPTY_STRING_MAP);
   }
 
-  public ImageInfo(MediaWikiBot bot, String name, Map<String, String> params)
-      throws VersionException {
+  public ImageInfo(MediaWikiBot bot, String name, Map<String, String> params) throws VersionException {
     super(bot.getVersion());
     this.bot = bot;
     map.putAll(params);
     prepareMsg(name);
   }
 
-  public ImageInfo(MediaWikiBot bot, String name, String[][] params)
-      throws VersionException {
+  public ImageInfo(MediaWikiBot bot, String name, String[][] params) throws VersionException {
     super(bot.getVersion());
     this.bot = bot;
     if (params != null) {
@@ -111,12 +108,10 @@ public class ImageInfo extends MWAction {
       addProps += "&" + HEIGHT + "=" + height;
 
     if (bot.getVersion().greaterEqThen(Version.MW1_15)) {
-      msg = new Get("/api.php?action=query&titles=File:"
-          + MediaWiki.encode(name) + "&prop=imageinfo" + addProps
+      msg = new Get("/api.php?action=query&titles=File:" + MediaWiki.encode(name) + "&prop=imageinfo" + addProps
           + "&iiprop=url&format=xml");
     } else {
-      msg = new Get("/api.php?action=query&titles=Image:"
-          + MediaWiki.encode(name) + "&prop=imageinfo" + addProps
+      msg = new Get("/api.php?action=query&titles=Image:" + MediaWiki.encode(name) + "&prop=imageinfo" + addProps
           + "&iiprop=url&format=xml");
     }
   }
@@ -139,8 +134,7 @@ public class ImageInfo extends MWAction {
       new URL(urlOfImage);
     } catch (MalformedURLException e) {
       if (bot.getHostUrl().length() <= 0) {
-        throw new ProcessException("please use the constructor with hostUrl; "
-            + urlOfImage);
+        throw new ProcessException("please use the constructor with hostUrl; " + urlOfImage);
       }
       urlOfImage = bot.getHostUrl() + urlOfImage;
     }

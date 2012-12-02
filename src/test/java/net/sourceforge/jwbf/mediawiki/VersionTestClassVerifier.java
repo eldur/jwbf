@@ -105,15 +105,13 @@ public class VersionTestClassVerifier extends Verifier {
   private void assertAll() {
     if (isVersionTestCase) {
 
-      Assert.assertFalse("no versions are supported; check annotations "
-          + documentedVersions.toString(), documentedVersions.values()
-          .contains(Version.UNKNOWN) && documentedVersions.size() == 1);
+      Assert.assertFalse("no versions are supported; check annotations " + documentedVersions.toString(),
+          documentedVersions.values().contains(Version.UNKNOWN) && documentedVersions.size() == 1);
       assertDocumentedTests();
       assertAllTestedVersionsAreDocumented();
 
       if (checkAll) {
-        assertEquals("missing tests for versions.", "[]",
-            fmt(getUsedVersions()));
+        assertEquals("missing tests for versions.", "[]", fmt(getUsedVersions()));
       }
     }
   }
@@ -123,8 +121,7 @@ public class VersionTestClassVerifier extends Verifier {
   }
 
   private void assertAllTestedVersionsAreDocumented() {
-    assertEquals("There are undocumented tests for versions. ", "",
-        fmt(getTestedButUndocmentedVersions()));
+    assertEquals("There are undocumented tests for versions. ", "", fmt(getTestedButUndocmentedVersions()));
   }
 
   private void assertDocumentedTests() {
@@ -136,14 +133,12 @@ public class VersionTestClassVerifier extends Verifier {
         testedAndDocumentedVersions.put(key, version);
       }
     }
-    assertEquals("not all documented versions are tested ",
-        fmt(documentedVersions), fmt(testedAndDocumentedVersions));
+    assertEquals("not all documented versions are tested ", fmt(documentedVersions), fmt(testedAndDocumentedVersions));
   }
 
   private String fmt(Map<String, Version> versionMap) {
     StringBuilder sb = new StringBuilder();
-    List<Entry<String, Version>> entrySet = Lists.newArrayList(versionMap
-        .entrySet());
+    List<Entry<String, Version>> entrySet = Lists.newArrayList(versionMap.entrySet());
     Collections.sort(entrySet, new Comparator<Entry<String, Version>>() {
 
       public int compare(Entry<String, Version> o1, Entry<String, Version> o2) {

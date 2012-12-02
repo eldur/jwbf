@@ -32,8 +32,7 @@ public class DeleteTest extends AbstractMediaWikiBotTest {
   private static final int COUNT = 1;
 
   @ClassRule
-  public static VersionTestClassVerifier classVerifier = new VersionTestClassVerifier(
-      PostDelete.class);
+  public static VersionTestClassVerifier classVerifier = new VersionTestClassVerifier(PostDelete.class);
 
   @Rule
   public Verifier successRegister = classVerifier.getSuccessRegister(this);
@@ -48,8 +47,7 @@ public class DeleteTest extends AbstractMediaWikiBotTest {
     }
   }
 
-  private void delete(MediaWikiBot bot) throws ActionException,
-      ProcessException {
+  private void delete(MediaWikiBot bot) throws ActionException, ProcessException {
 
     for (int i = 0; i < COUNT; i++) {
       bot.delete(DELETE_PREFIX + i);
@@ -61,8 +59,8 @@ public class DeleteTest extends AbstractMediaWikiBotTest {
     for (int i = 0; i < COUNT; i++) {
       ContentAccessable ca = bot.getArticle(DELETE_PREFIX + i);
 
-      assertTrue("textlength of Delete " + i + " is greater then 0 ("
-          + ca.getText().length() + ")", ca.getText().length() == 0);
+      assertTrue("textlength of Delete " + i + " is greater then 0 (" + ca.getText().length() + ")", ca.getText()
+          .length() == 0);
 
     }
   }
@@ -77,8 +75,7 @@ public class DeleteTest extends AbstractMediaWikiBotTest {
   public final void deleteWikiMW1x15() throws Exception {
 
     bot = BotFactory.getMediaWikiBot(Version.MW1_15, true);
-    assertTrue("Wrong Wiki Version " + bot.getVersion(),
-        Version.MW1_15.equals(bot.getVersion()));
+    assertTrue("Wrong Wiki Version " + bot.getVersion(), Version.MW1_15.equals(bot.getVersion()));
 
     prepare(bot);
     delete(bot);
@@ -95,8 +92,7 @@ public class DeleteTest extends AbstractMediaWikiBotTest {
   public final void deleteWikiMW1x16() throws Exception {
 
     bot = BotFactory.getMediaWikiBot(Version.MW1_16, true);
-    assertTrue("Wrong Wiki Version " + bot.getVersion(),
-        Version.MW1_16.equals(bot.getVersion()));
+    assertTrue("Wrong Wiki Version " + bot.getVersion(), Version.MW1_16.equals(bot.getVersion()));
 
     prepare(bot);
     delete(bot);

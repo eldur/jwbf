@@ -57,8 +57,7 @@ public class AllPagesTest extends AbstractMediaWikiBotTest {
                                                         // local test
     assumeReachable(url);
     bot = new MediaWikiBot(url);
-    AllPageTitles all = new AllPageTitles(bot, null, null, RedirectFilter.all,
-        MediaWiki.NS_ALL);
+    AllPageTitles all = new AllPageTitles(bot, null, null, RedirectFilter.all, MediaWiki.NS_ALL);
     for (String title : all) {
       title.getClass();
       break;
@@ -66,8 +65,7 @@ public class AllPagesTest extends AbstractMediaWikiBotTest {
   }
 
   private void doTest() {
-    AllPageTitles gat = new AllPageTitles(bot, null, null, RedirectFilter.all,
-        MediaWiki.NS_MAIN);
+    AllPageTitles gat = new AllPageTitles(bot, null, null, RedirectFilter.all, MediaWiki.NS_MAIN);
 
     Iterator<String> is = gat.iterator();
     int i = 0;

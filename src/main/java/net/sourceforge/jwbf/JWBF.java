@@ -32,9 +32,9 @@ import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 
 /**
- *
+ * 
  * @author Thomas Stock
- *
+ * 
  */
 public final class JWBF {
 
@@ -48,23 +48,19 @@ public final class JWBF {
   static {
     init(JWBF.class);
     /*
-		String[] cp = System.getProperty("java.class.path").split(":");
-		for (int i = 0; i < cp.length; i++) {
-			try {
-
-				if (cp[i].endsWith(".jar") && cp[i].contains("jwbf")) {
-					registerModule(readArtifactId("file:" + cp[i]),
-							readVersion("file:" + cp[i]));
-
-				} else if (cp[i].contains("jwbf")) {
-					registerModule(readArtifactId("file:" + cp[i]),
-							readVersion("file:" + cp[i]));
-				}
-			} catch (Exception e) {
-				System.err.println(cp[i] + " seems to be no regular module");
-			}
-
-		}
+     * String[] cp = System.getProperty("java.class.path").split(":"); for (int
+     * i = 0; i < cp.length; i++) { try {
+     * 
+     * if (cp[i].endsWith(".jar") && cp[i].contains("jwbf")) {
+     * registerModule(readArtifactId("file:" + cp[i]), readVersion("file:" +
+     * cp[i]));
+     * 
+     * } else if (cp[i].contains("jwbf")) {
+     * registerModule(readArtifactId("file:" + cp[i]), readVersion("file:" +
+     * cp[i])); } } catch (Exception e) { System.err.println(cp[i] +
+     * " seems to be no regular module"); }
+     * 
+     * }
      */
 
   }
@@ -75,8 +71,7 @@ public final class JWBF {
     version = "";
     title = "";
     manifest = null;
-    String packagename = clazz.getPackage().getName().replace('.',
-        separatorChar);
+    String packagename = clazz.getPackage().getName().replace('.', separatorChar);
     URL url = clazz.getClassLoader().getResource(packagename);
     boolean isJar = url.toExternalForm().toLowerCase().contains(jarFileIndex);
     if (isJar) {
@@ -84,12 +79,11 @@ public final class JWBF {
         int jarEnd = url.toExternalForm().indexOf("!" + separatorChar);
         String jarFileName = url.toExternalForm().substring(jarFileIndex.length(), jarEnd);
         JarFile jar = new JarFile(jarFileName);
-        Enumeration<JarEntry> je =  jar.entries();
+        Enumeration<JarEntry> je = jar.entries();
         while (je.hasMoreElements()) {
           JarEntry jarEntry = je.nextElement();
-          String slashCount =  jarEntry.getName().replaceAll("[a-zA-Z0-9]", "");
-          if (jarEntry.isDirectory() && jarEntry.getName().contains(packagename)
-              && slashCount.length() == 4 ) {
+          String slashCount = jarEntry.getName().replaceAll("[a-zA-Z0-9]", "");
+          if (jarEntry.isDirectory() && jarEntry.getName().contains(packagename) && slashCount.length() == 4) {
 
             registerModule(readMFProductTitle(jarFileName) + "-" + jarEntry.getName().split(separatorChar + "")[3],
                 readMFVersion(jarFileName));
@@ -110,8 +104,7 @@ public final class JWBF {
         for (File dir : dirs) {
           int lastIndex = dir.toString().lastIndexOf(separatorChar) + 1;
           String partTitle = dir.toString().substring(lastIndex, dir.toString().length());
-          registerModule(readMFProductTitle(root + "") + "-" + partTitle,
-              readMFVersion(root + ""));
+          registerModule(readMFProductTitle(root + "") + "-" + partTitle, readMFVersion(root + ""));
 
         }
       } catch (URISyntaxException e1) {
@@ -131,11 +124,11 @@ public final class JWBF {
   }
 
   /**
-   *
+   * 
    * @param artifactId
-   *            a
+   *          a
    * @param version
-   *            a
+   *          a
    */
   private static void registerModule(String artifactId, String version) {
     PARTS.put(artifactId, version);
@@ -144,7 +137,7 @@ public final class JWBF {
 
   /**
    * @param clazz
-   *            a class of the module
+   *          a class of the module
    * @return the version
    */
   public static String getVersion(Class<?> clazz) {
@@ -157,7 +150,7 @@ public final class JWBF {
 
   /**
    * @param clazz
-   *            a class of the module
+   *          a class of the module
    * @return the version
    */
   public static String getPartId(Class<?> clazz) {
@@ -169,12 +162,12 @@ public final class JWBF {
     }
   }
 
-  private static String [] getPartInfo(Class <?> clazz) {
+  private static String[] getPartInfo(Class<?> clazz) {
     String classContainer = clazz.getPackage().getName().split("\\.")[3];
     Iterable<String> keys = PARTS.keySet();
     for (String key : keys) {
       if (key.contains(classContainer)) {
-        String [] result = {key, PARTS.get(key)};
+        String[] result = { key, PARTS.get(key) };
         return result;
       }
     }
@@ -200,19 +193,18 @@ public final class JWBF {
   }
 
   /**
-   *
+   * 
    * @param path
-   *            a
+   *          a
    * @return the version from manifest
    * @throws IOException
-   *             if path invalid
+   *           if path invalid
    */
   private static String readMFVersion(String path) throws IOException {
     if (version.length() < 1) {
       String implementationVersion = null;
 
-      implementationVersion = readFromManifest(path,
-      "Implementation-Version");
+      implementationVersion = readFromManifest(path, "Implementation-Version");
 
       if (implementationVersion == null) {
         version = "DEVEL";
@@ -223,15 +215,13 @@ public final class JWBF {
     return version;
   }
 
-
-
   /**
-   *
+   * 
    * @param path
-   *            a
+   *          a
    * @return the
    * @throws IOException
-   *             if path invalid
+   *           if path invalid
    */
   private static String readMFProductTitle(String path) throws IOException {
     if (title.length() < 1) {
@@ -248,17 +238,16 @@ public final class JWBF {
   }
 
   /**
-   *
+   * 
    * @param path
-   *            a
+   *          a
    * @param key
-   *            a
+   *          a
    * @return value
    * @throws IOException
-   *             if path invalid
+   *           if path invalid
    */
-  private static String readFromManifest(String path, String key)
-  throws IOException {
+  private static String readFromManifest(String path, String key) throws IOException {
     if (manifest == null) {
       URL manifestUrl;
       if (path.endsWith(".jar")) {

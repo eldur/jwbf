@@ -19,8 +19,8 @@ public class MediaWikiTest {
     assertEquals(rawEncUft8, mvEnc);
     String rawEncAscii = URLEncoder.encode(testStr, "US-ASCII");
     assertEquals(rawEncUft8, rawEncAscii);
-    //    String rawEncUtf16 = URLEncoder.encode(testStr, "UTF-16");
-    //    assertEquals(rawEncUft8, rawEncUtf16);
+    // String rawEncUtf16 = URLEncoder.encode(testStr, "UTF-16");
+    // assertEquals(rawEncUft8, rawEncUtf16);
   }
 
 }

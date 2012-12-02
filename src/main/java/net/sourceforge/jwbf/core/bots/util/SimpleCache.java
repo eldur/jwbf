@@ -25,7 +25,6 @@ public class SimpleCache implements CacheHandler {
   private final int objectLiveTimeMilis = 100;
   private final Map<String, CachArticle> dynStore = new HashMap<String, CachArticle>();
 
-
   public SimpleCache(File folder, int maxSaveTimeMils) {
     this.folder = folder;
     this.maxSaveTimeMils = maxSaveTimeMils;
@@ -47,8 +46,7 @@ public class SimpleCache implements CacheHandler {
     if (fx.exists()) {
       CachArticle it = read(title);
 
-      long dif = it.getSaveDate().getTime() - System.currentTimeMillis()
-          + maxSaveTimeMils;
+      long dif = it.getSaveDate().getTime() - System.currentTimeMillis() + maxSaveTimeMils;
       System.out.println("maintain: timedif file " + dif); // TODO RM
       if (dif < 0) {
 
@@ -60,8 +58,7 @@ public class SimpleCache implements CacheHandler {
     }
     if (dynStore.containsKey(title)) {
       CachArticle it = dynStore.get(title);
-      long dif = it.getSaveDate().getTime() - System.currentTimeMillis()
-          + objectLiveTimeMilis;
+      long dif = it.getSaveDate().getTime() - System.currentTimeMillis() + objectLiveTimeMilis;
       System.out.println("maintain: timedif dyn  " + dif); // TODO RM
       if (dif < 0) {
 
@@ -72,6 +69,7 @@ public class SimpleCache implements CacheHandler {
     }
 
   }
+
   /**
    * {@inheritDoc}
    */
@@ -80,13 +78,13 @@ public class SimpleCache implements CacheHandler {
       return read(title);
     return new SimpleArticle(title);
   }
+
   /**
    * {@inheritDoc}
    */
   public void put(SimpleArticle sa) {
 
     write2File(new CachArticle(sa));
-
 
   }
 
@@ -156,7 +154,5 @@ public class SimpleCache implements CacheHandler {
     }
     return new CachArticle();
   }
-
-
 
 }

@@ -29,7 +29,7 @@ import org.xml.sax.InputSource;
  * Action to receive the title of a random page
  * 
  * TODO write a test that shows compatibility with all these versions
- *
+ * 
  * @author Juan Ignacio Cidre
  */
 @Slf4j
@@ -40,12 +40,16 @@ public class RandomPageTitle extends MWAction {
   private final MediaWikiBot bot;
 
   /**
-   *
-   * Creates the class.
-   * Defines the invocation to MediaWiki that is needed in order to get a random page
-   * @param bot a
-   * @param name of, like "Test.gif"
-   * @throws VersionException if not supported
+   * 
+   * Creates the class. Defines the invocation to MediaWiki that is needed in
+   * order to get a random page
+   * 
+   * @param bot
+   *          a
+   * @param name
+   *          of, like "Test.gif"
+   * @throws VersionException
+   *           if not supported
    */
   public RandomPageTitle(MediaWikiBot bot) throws VersionException {
     super(bot.getVersion());
@@ -57,6 +61,7 @@ public class RandomPageTitle extends MWAction {
 
   /**
    * Returns the Title of a random page
+   * 
    * @return
    * @throws ProcessException
    */
@@ -67,7 +72,6 @@ public class RandomPageTitle extends MWAction {
       throw new ProcessException("Error finding the Random Page " + e.toString());
     }
   }
-
 
   /**
    * {@inheritDoc}
@@ -87,7 +91,6 @@ public class RandomPageTitle extends MWAction {
     log.debug("Title: " + title);
     return title;
   }
-
 
   /**
    * {@inheritDoc}

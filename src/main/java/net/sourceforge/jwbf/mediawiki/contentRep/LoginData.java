@@ -23,40 +23,40 @@ import java.util.Map;
 
 /**
  * TODO API related, use only if posting data works.
- * http://www.mediawiki.org/wiki/API#Posting_Data_.2F_needs_major_editPage.php_rewrite
- *
- * @author Thomas Stock
- * FIXME check usage
- *
+ * http://www.mediawiki.org/wiki
+ * /API#Posting_Data_.2F_needs_major_editPage.php_rewrite
+ * 
+ * @author Thomas Stock FIXME check usage
+ * 
  */
 public class LoginData {
 
-	private String userName;
+  private String userName;
   private final Map<String, String> properties = new HashMap<String, String>();
-	private boolean isLoggedIn;
+  private boolean isLoggedIn;
 
-	public LoginData() {
-		this.userName = "";
-		this.isLoggedIn = false;
-	}
+  public LoginData() {
+    this.userName = "";
+    this.isLoggedIn = false;
+  }
 
-	public void setup(String userName, boolean isLoggedIn) {
-	  setup(userName, isLoggedIn, null);
-	}
+  public void setup(String userName, boolean isLoggedIn) {
+    setup(userName, isLoggedIn, null);
+  }
 
-	public void setup(String userName, boolean isLoggedIn, Map<String, String> properties) {
-		this.userName = userName;
-		this.isLoggedIn = isLoggedIn;
-		if (properties != null)
-		  this.properties.putAll(properties);
-	}
+  public void setup(String userName, boolean isLoggedIn, Map<String, String> properties) {
+    this.userName = userName;
+    this.isLoggedIn = isLoggedIn;
+    if (properties != null)
+      this.properties.putAll(properties);
+  }
 
-	public boolean isLoggedIn() {
-		return isLoggedIn;
-	}
+  public boolean isLoggedIn() {
+    return isLoggedIn;
+  }
 
-	public String getUserName() {
-		return userName;
-	}
+  public String getUserName() {
+    return userName;
+  }
 
 }

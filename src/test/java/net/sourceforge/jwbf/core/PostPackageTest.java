@@ -13,7 +13,6 @@ import org.junit.Test;
 
 public class PostPackageTest {
 
-
   @Test
   public void testJarManifest() throws Exception {
     File mvnTargetDir = new File("target");
@@ -21,8 +20,7 @@ public class PostPackageTest {
     File[] files = mvnTargetDir.listFiles(new FilenameFilter() {
 
       public boolean accept(File dir, String name) {
-        return name.contains(".jar")
-        && !name.contains("javadoc") && !name.contains("sources");
+        return name.contains(".jar") && !name.contains("javadoc") && !name.contains("sources");
       }
     });
 
@@ -30,7 +28,7 @@ public class PostPackageTest {
 
       BufferedReader in = null;
       try {
-        String text ="";
+        String text = "";
         StringWriter strOut = new StringWriter();
         Process p = Runtime.getRuntime().exec("java -jar " + jar.getAbsolutePath() + " JWBF.");
         in = new BufferedReader(new InputStreamReader(p.getInputStream()));

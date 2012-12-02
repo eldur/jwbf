@@ -35,8 +35,7 @@ public class RecentChangesTest extends AbstractMediaWikiBotTest {
   private static final int LIMIT = COUNT * 2;
 
   @ClassRule
-  public static VersionTestClassVerifier classVerifier = new VersionTestClassVerifier(
-      RecentchangeTitles.class);
+  public static VersionTestClassVerifier classVerifier = new VersionTestClassVerifier(RecentchangeTitles.class);
 
   @Rule
   public Verifier successRegister = classVerifier.getSuccessRegister(this);
@@ -52,8 +51,7 @@ public class RecentChangesTest extends AbstractMediaWikiBotTest {
     bot = getMediaWikiBot(Version.MW1_15, true);
     doRegularTest(bot);
     doSpecialCharTest(bot);
-    assertTrue("Wrong Wiki Version " + bot.getVersion(),
-        Version.MW1_15.equals(bot.getVersion()));
+    assertTrue("Wrong Wiki Version " + bot.getVersion(), Version.MW1_15.equals(bot.getVersion()));
   }
 
   /**
@@ -67,12 +65,10 @@ public class RecentChangesTest extends AbstractMediaWikiBotTest {
     bot = getMediaWikiBot(Version.MW1_16, true);
     doRegularTest(bot);
     doSpecialCharTest(bot);
-    assertTrue("Wrong Wiki Version " + bot.getVersion(),
-        Version.MW1_16.equals(bot.getVersion()));
+    assertTrue("Wrong Wiki Version " + bot.getVersion(), Version.MW1_16.equals(bot.getVersion()));
   }
 
-  private void prepareWiki(MediaWikiBot bot) throws ActionException,
-      ProcessException {
+  private void prepareWiki(MediaWikiBot bot) throws ActionException, ProcessException {
     SimpleArticle a = new SimpleArticle();
     for (int i = 0; i < 5 + 1; i++) {
       String label = getRandom(10);
@@ -124,13 +120,11 @@ public class RecentChangesTest extends AbstractMediaWikiBotTest {
       specialChars.remove(c + "");
     }
 
-    assertTrue("tc sould be empty but is: " + specialChars,
-        specialChars.isEmpty());
+    assertTrue("tc sould be empty but is: " + specialChars, specialChars.isEmpty());
 
   }
 
-  private void doRegularTest(MediaWikiBot bot) throws ActionException,
-      ProcessException {
+  private void doRegularTest(MediaWikiBot bot) throws ActionException, ProcessException {
     prepareWiki(bot);
     RecentchangeTitles rc = new RecentchangeTitles(bot);
 
@@ -191,8 +185,7 @@ public class RecentChangesTest extends AbstractMediaWikiBotTest {
     assertTrue("i is: " + i, i > COUNT - 1);
   }
 
-  private void change(MediaWikiBot bot) throws ActionException,
-      ProcessException {
+  private void change(MediaWikiBot bot) throws ActionException, ProcessException {
     SimpleArticle a = new SimpleArticle();
     for (int i = 0; i < COUNT + 1; i++) {
       a.setTitle("%Change " + i);

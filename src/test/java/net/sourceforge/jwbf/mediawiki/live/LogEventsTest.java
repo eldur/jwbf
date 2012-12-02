@@ -26,8 +26,7 @@ import org.junit.rules.Verifier;
 public class LogEventsTest extends AbstractMediaWikiBotTest {
 
   @ClassRule
-  public static VersionTestClassVerifier classVerifier = new VersionTestClassVerifier(
-      LogEvents.class);
+  public static VersionTestClassVerifier classVerifier = new VersionTestClassVerifier(LogEvents.class);
 
   @Rule
   public Verifier successRegister = classVerifier.getSuccessRegister(this);
@@ -72,8 +71,7 @@ public class LogEventsTest extends AbstractMediaWikiBotTest {
   public final void logEventsMW1x15() throws Exception {
     bot = getMediaWikiBot(Version.MW1_15, true);
     doTest(bot, true, LogEvents.DELETE);
-    assertTrue("Wrong Wiki Version " + bot.getVersion(),
-        Version.MW1_15.equals(bot.getVersion()));
+    assertTrue("Wrong Wiki Version " + bot.getVersion(), Version.MW1_15.equals(bot.getVersion()));
   }
 
   /**
@@ -85,8 +83,7 @@ public class LogEventsTest extends AbstractMediaWikiBotTest {
   public final void logEventsMW1x16() throws Exception {
     bot = getMediaWikiBot(Version.MW1_16, true);
     doTest(bot, true, LogEvents.DELETE);
-    assertTrue("Wrong Wiki Version " + bot.getVersion(),
-        Version.MW1_16.equals(bot.getVersion()));
+    assertTrue("Wrong Wiki Version " + bot.getVersion(), Version.MW1_16.equals(bot.getVersion()));
   }
 
   private void doPrepare(MediaWikiBot bot) {
@@ -100,8 +97,7 @@ public class LogEventsTest extends AbstractMediaWikiBotTest {
     }
   }
 
-  private void doTest(MediaWikiBot bot, boolean isDemo, String type)
-      throws Exception {
+  private void doTest(MediaWikiBot bot, boolean isDemo, String type) throws Exception {
     LogEvents le = new LogEvents(bot, type);
 
     int i = 0;

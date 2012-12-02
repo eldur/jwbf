@@ -18,30 +18,26 @@
  */
 package net.sourceforge.jwbf.core.actions.util;
 
-
-
 /**
  * 
  * @author Thomas Stock
- *
+ * 
  */
 public class CookieException extends ActionException {
 
-	/**
+  /**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-	/**
-	 * 
-	 * @param arg0 exception text
-	 */
-	
-	public CookieException(String arg0) {
-		super(arg0);
-	}
+  /**
+   * 
+   * @param arg0
+   *          exception text
+   */
 
-
-
+  public CookieException(String arg0) {
+    super(arg0);
+  }
 
 }

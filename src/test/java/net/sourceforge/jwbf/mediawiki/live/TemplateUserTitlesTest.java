@@ -32,8 +32,7 @@ public class TemplateUserTitlesTest extends AbstractMediaWikiBotTest {
   private static final String TESTPATTERNNAME = "Template:ATesT";
 
   @ClassRule
-  public static VersionTestClassVerifier classVerifier = new VersionTestClassVerifier(
-      TemplateUserTitles.class);
+  public static VersionTestClassVerifier classVerifier = new VersionTestClassVerifier(TemplateUserTitles.class);
 
   @Rule
   public Verifier successRegister = classVerifier.getSuccessRegister(this);
@@ -43,8 +42,7 @@ public class TemplateUserTitlesTest extends AbstractMediaWikiBotTest {
     bot = getMediaWikiBot(Version.MW1_15, true);
     doRegularTest();
 
-    assertTrue("Wrong Wiki Version " + bot.getVersion(),
-        Version.MW1_15.equals(bot.getVersion()));
+    assertTrue("Wrong Wiki Version " + bot.getVersion(), Version.MW1_15.equals(bot.getVersion()));
   }
 
   /**
@@ -58,13 +56,11 @@ public class TemplateUserTitlesTest extends AbstractMediaWikiBotTest {
     bot = getMediaWikiBot(Version.MW1_16, true);
     doRegularTest();
 
-    assertTrue("Wrong Wiki Version " + bot.getVersion(),
-        Version.MW1_16.equals(bot.getVersion()));
+    assertTrue("Wrong Wiki Version " + bot.getVersion(), Version.MW1_16.equals(bot.getVersion()));
   }
 
   private void doRegularTest() throws JwbfException {
-    TemplateUserTitles a = new TemplateUserTitles(bot, TESTPATTERNNAME,
-        MediaWiki.NS_ALL);
+    TemplateUserTitles a = new TemplateUserTitles(bot, TESTPATTERNNAME, MediaWiki.NS_ALL);
 
     int i = 0;
     Collection<String> titles = new Vector<String>();
@@ -96,8 +92,7 @@ public class TemplateUserTitlesTest extends AbstractMediaWikiBotTest {
     assertEquals(TESTPATTERNNAME + " content ", "a test", template.getText());
   }
 
-  private void prepare(MediaWikiBot bot, Collection<String> titles)
-      throws JwbfException {
+  private void prepare(MediaWikiBot bot, Collection<String> titles) throws JwbfException {
     Article template = new Article(bot, TESTPATTERNNAME);
     template.setText("a test");
     template.save();

@@ -18,39 +18,38 @@
  */
 package net.sourceforge.jwbf.core.contentRep;
 
-
-
 /**
  * 
  * @author Thomas Stock
- *
+ * 
  */
 public interface ContentAccessable {
-	
-	/**
-	 * 
-	 * @return the
-	 */
-	String getEditSummary();
-	
-	/**
-	 * 
-	 * @return the
-	 */
-	String getEditor();
-	/**
-	 * @return true if it is a minjor edit on the article
-	 */
-	boolean isMinorEdit(); 
-	
 
-	/**
-	 * @return the title, like "Main Page"
-	 */
-	String getTitle();
-	/**
-	 * @return the content of the article
-	 */
-	String getText();
-	
+  /**
+   * 
+   * @return the
+   */
+  String getEditSummary();
+
+  /**
+   * 
+   * @return the
+   */
+  String getEditor();
+
+  /**
+   * @return true if it is a minjor edit on the article
+   */
+  boolean isMinorEdit();
+
+  /**
+   * @return the title, like "Main Page"
+   */
+  String getTitle();
+
+  /**
+   * @return the content of the article
+   */
+  String getText();
+
 }

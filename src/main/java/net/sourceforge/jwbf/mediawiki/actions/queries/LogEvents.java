@@ -52,25 +52,24 @@ import org.jdom.input.SAXBuilder;
 import org.xml.sax.InputSource;
 
 /**
- *
+ * 
  * List log events, filtered by time range, event type, user type, or the page
  * it applies to. Ordered by event timestamp. Parameters: letype (flt), lefrom
  * (paging timestamp), leto (flt), ledirection (dflt=older), leuser (flt),
  * letitle (flt), lelimit (dflt=10, max=500/5000)
- *
- * api.php ? action=query & list=logevents      - List last 10 events of any type
- *
+ * 
+ * api.php ? action=query & list=logevents - List last 10 events of any type
+ * 
  * TODO This is a semi-complete extension point
+ * 
  * @author Thomas Stock
- *
+ * 
  */
 @Slf4j
 @SupportedBy({ MW1_11, MW1_12, MW1_13, MW1_14, MW1_15, MW1_16 })
 public class LogEvents extends MWAction implements Iterator<LogItem>, Iterable<LogItem> {
 
-
   /** value for the bllimit-parameter. * */
-
 
   public static final String BLOCK = "block";
   public static final String PROTECT = "protect";
@@ -90,54 +89,68 @@ public class LogEvents extends MWAction implements Iterator<LogItem>, Iterable<L
   private boolean init = true;
   private boolean selvEx = true;
   /**
-   * Collection that will contain the result (titles of articles linking to
-   * the target) after performing the action has finished.
+   * Collection that will contain the result (titles of articles linking to the
+   * target) after performing the action has finished.
    */
   private Collection<LogItem> logCollection = new Vector<LogItem>();
   private Iterator<LogItem> logIterator = null;
-  private final String [] type;
-  private String nextPageInfo =  "";
+  private final String[] type;
+  private String nextPageInfo = "";
   private boolean hasMoreResults = true;
+
   /**
    * information necessary to get the next api page.
    */
 
-
   /**
-   * @param bot a
-   * @param type of like {@link #MOVE}
-   * @throws VersionException if incompatible with this version
+   * @param bot
+   *          a
+   * @param type
+   *          of like {@link #MOVE}
+   * @throws VersionException
+   *           if incompatible with this version
    */
   public LogEvents(MediaWikiBot bot, String type) throws VersionException {
-    this(bot, new String [] {type});
+    this(bot, new String[] { type });
   }
 
   /**
-   * @param bot a
-   * @param type of like {@link #MOVE}
-   * @throws VersionException if incompatible with this version
+   * @param bot
+   *          a
+   * @param type
+   *          of like {@link #MOVE}
+   * @throws VersionException
+   *           if incompatible with this version
    */
-  public LogEvents(MediaWikiBot bot, String [] type) throws VersionException {
+  public LogEvents(MediaWikiBot bot, String[] type) throws VersionException {
     this(bot, 50, type.clone());
   }
 
-
   /**
-   * @param bot a
-   * @param limit of events
-   * @param type of like {@link #MOVE}
-   * @throws VersionException if incompatible with this version
+   * @param bot
+   *          a
+   * @param limit
+   *          of events
+   * @param type
+   *          of like {@link #MOVE}
+   * @throws VersionException
+   *           if incompatible with this version
    */
   public LogEvents(MediaWikiBot bot, int limit, String type) throws VersionException {
-    this(bot, limit, new String [] {type});
+    this(bot, limit, new String[] { type });
   }
+
   /**
-   * @param bot a
-   * @param limit of events
-   * @param type of like {@link #MOVE}
-   * @throws VersionException if incompatible with this version
+   * @param bot
+   *          a
+   * @param limit
+   *          of events
+   * @param type
+   *          of like {@link #MOVE}
+   * @throws VersionException
+   *           if incompatible with this version
    */
-  public LogEvents(MediaWikiBot bot, int limit, String [] type) throws VersionException {
+  public LogEvents(MediaWikiBot bot, int limit, String[] type) throws VersionException {
     super(bot.getVersion());
     this.bot = bot;
     this.type = type;
@@ -146,12 +159,12 @@ public class LogEvents extends MWAction implements Iterator<LogItem>, Iterable<L
 
   /**
    * generates the next MediaWiki-request (GetMethod) and adds it to msgs.
-   *
+   * 
    * @param logtype
-   *            type of log, like upload
+   *          type of log, like upload
    * @return a
    */
-  private Get generateRequest(String ... logtype) {
+  private Get generateRequest(String... logtype) {
 
     String uS = "";
 
@@ -172,12 +185,12 @@ public class LogEvents extends MWAction implements Iterator<LogItem>, Iterable<L
 
   /**
    * generates the next MediaWiki-request (GetMethod) and adds it to msgs.
-   *
+   * 
    * @param logtype
-   *            type of log, like upload
+   *          type of log, like upload
    * @return a
    */
-  private Get generateContinueRequest(String [] logtype, String continueing) {
+  private Get generateContinueRequest(String[] logtype, String continueing) {
 
     String uS = "";
 
@@ -200,8 +213,7 @@ public class LogEvents extends MWAction implements Iterator<LogItem>, Iterable<L
    * {@inheritDoc}
    */
   @Override
-  public String processAllReturningText(final String s)
-      throws ProcessException {
+  public String processAllReturningText(final String s) throws ProcessException {
     logCollection.clear();
     parseArticleTitles(s);
     parseHasMore(s);
@@ -211,9 +223,9 @@ public class LogEvents extends MWAction implements Iterator<LogItem>, Iterable<L
 
   /**
    * picks the article name from a MediaWiki api response.
-   *
+   * 
    * @param s
-   *            text for parsing
+   *          text for parsing
    */
   private void parseArticleTitles(String s) {
 
@@ -238,18 +250,17 @@ public class LogEvents extends MWAction implements Iterator<LogItem>, Iterable<L
   /**
    * gets the information about a follow-up page from a provided api response.
    * If there is one, a new request is added to msgs by calling generateRequest.
-   *
-   * @param s   text for parsing
+   * 
+   * @param s
+   *          text for parsing
    */
   private void parseHasMore(final String s) {
 
     // get the blcontinue-value
 
     Pattern p = Pattern.compile(
-        "<query-continue>.*?"
-            + "<logevents *lestart=\"([^\"]*)\" */>"
-            + ".*?</query-continue>",
-            Pattern.DOTALL | Pattern.MULTILINE);
+        "<query-continue>.*?" + "<logevents *lestart=\"([^\"]*)\" */>" + ".*?</query-continue>", Pattern.DOTALL
+            | Pattern.MULTILINE);
 
     Matcher m = p.matcher(s);
 
@@ -285,7 +296,6 @@ public class LogEvents extends MWAction implements Iterator<LogItem>, Iterable<L
     }
   }
 
-
   private void prepareCollection() {
 
     if (init || (!logIterator.hasNext() && hasMoreResults)) {
@@ -312,7 +322,6 @@ public class LogEvents extends MWAction implements Iterator<LogItem>, Iterable<L
 
     }
   }
-
 
   /**
    * {@inheritDoc}
@@ -357,6 +366,7 @@ public class LogEvents extends MWAction implements Iterator<LogItem>, Iterable<L
       return null;
     }
   }
+
   /**
    * {@inheritDoc}
    */
@@ -368,8 +378,10 @@ public class LogEvents extends MWAction implements Iterator<LogItem>, Iterable<L
       throw new CloneNotSupportedException(e.getLocalizedMessage());
     }
   }
+
   /**
    * {@inheritDoc}
+   * 
    * @deprecated see super
    */
   @Deprecated
@@ -377,6 +389,5 @@ public class LogEvents extends MWAction implements Iterator<LogItem>, Iterable<L
   public boolean isSelfExecuter() {
     return selvEx;
   }
-
 
 }

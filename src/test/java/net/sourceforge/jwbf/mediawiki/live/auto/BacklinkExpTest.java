@@ -33,8 +33,7 @@ import org.junit.runners.Parameterized.Parameters;
 public class BacklinkExpTest extends ParamHelper {
 
   @ClassRule
-  public static VersionTestClassVerifier classVerifier = new VersionTestClassVerifier(
-      BacklinkTitles.class);
+  public static VersionTestClassVerifier classVerifier = new VersionTestClassVerifier(BacklinkTitles.class);
 
   @Rule
   public Verifier successRegister = classVerifier.getSuccessRegister(this);
@@ -79,8 +78,7 @@ public class BacklinkExpTest extends ParamHelper {
 
   private void doTest(RedirectFilter rf) {
 
-    BacklinkTitles gbt = new BacklinkTitles(bot, BACKLINKS, rf,
-        MediaWiki.NS_MAIN, MediaWiki.NS_CATEGORY);
+    BacklinkTitles gbt = new BacklinkTitles(bot, BACKLINKS, rf, MediaWiki.NS_MAIN, MediaWiki.NS_CATEGORY);
 
     Vector<String> vx = new Vector<String>();
     Iterator<String> is = gbt.iterator();

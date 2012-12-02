@@ -55,12 +55,11 @@ import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.HttpParams;
 
-
 /**
  * The main interaction class.
- *
+ * 
  * @author Thomas Stock
- *
+ * 
  */
 @Slf4j
 public class HttpActionClient {
@@ -73,18 +72,16 @@ public class HttpActionClient {
 
   private int prevHash;
 
-
-
-
   public HttpActionClient(final URL url) {
     this(new DefaultHttpClient(), url);
   }
+
   /**
-   *
+   * 
    * @param client
-   *            a
+   *          a
    * @param url
-   *            like "http://host/of/wiki/"
+   *          like "http://host/of/wiki/"
    */
   public HttpActionClient(final HttpClient client, final URL url) {
 
@@ -93,31 +90,38 @@ public class HttpActionClient {
      * http://jakarta.apache.org/commons/httpclient/preference-api.html
      */
 
-
     if (url.getPath().length() > 1) {
       path = url.getPath().substring(0, url.getPath().lastIndexOf("/"));
     }
-    client.getParams().setParameter("http.useragent",
-        "JWBF " + JWBF.getVersion(getClass())); // some wikis (e.g. Wikipedia) need this line
-    client.getParams().setParameter("http.protocol.expect-continue", Boolean.FALSE); // is good for wikipedia server
+    client.getParams().setParameter("http.useragent", "JWBF " + JWBF.getVersion(getClass())); // some
+                                                                                              // wikis
+                                                                                              // (e.g.
+                                                                                              // Wikipedia)
+                                                                                              // need
+                                                                                              // this
+                                                                                              // line
+    client.getParams().setParameter("http.protocol.expect-continue", Boolean.FALSE); // is
+                                                                                     // good
+                                                                                     // for
+                                                                                     // wikipedia
+                                                                                     // server
     host = new HttpHost(url.getHost(), url.getPort(), url.getProtocol());
 
     this.client = client;
   }
 
-
-
   /**
-   *
+   * 
    * @param contentProcessable
-   *            a
+   *          a
    * @return message, never null
    * @throws ActionException
-   *             on problems with http, cookies and io
-   * @throws ProcessException on inner problems
+   *           on problems with http, cookies and io
+   * @throws ProcessException
+   *           on inner problems
    */
-  public synchronized String performAction(ContentProcessable contentProcessable)
-      throws ActionException, ProcessException {
+  public synchronized String performAction(ContentProcessable contentProcessable) throws ActionException,
+      ProcessException {
 
     String out = "";
     while (contentProcessable.hasMoreMessages()) {
@@ -137,7 +141,6 @@ public class HttpActionClient {
         if (httpAction instanceof Get) {
           httpRequest = new HttpGet(request);
 
-
           modifyRequestParams(httpRequest, httpAction);
 
           // do get
@@ -150,7 +153,6 @@ public class HttpActionClient {
           // do post
           out = post(httpRequest, contentProcessable, httpAction);
         }
-
 
       } catch (IOException e1) {
         throw new ActionException(e1);
@@ -167,8 +169,7 @@ public class HttpActionClient {
   private void modifyRequestParams(HttpRequestBase request, HttpAction httpAction) {
     HttpParams params = request.getParams();
     params.setParameter(ClientPNames.DEFAULT_HOST, host);
-    params.setParameter("http.protocol.content-charset",
-        httpAction.getCharset());
+    params.setParameter("http.protocol.content-charset", httpAction.getCharset());
   }
 
   private String post(HttpRequestBase requestBase, ContentProcessable contentProcessable, HttpAction ha)
@@ -188,7 +189,6 @@ public class HttpActionClient {
     debug(requestBase, ha, contentProcessable);
     HttpResponse res = execute(requestBase);
 
-
     ByteArrayOutputStream byte1 = new ByteArrayOutputStream();
 
     res.getEntity().writeTo(byte1);
@@ -196,27 +196,31 @@ public class HttpActionClient {
     out = contentProcessable.processReturningText(out, ha);
 
     if (contentProcessable instanceof CookieValidateable && client instanceof DefaultHttpClient)
-      ((CookieValidateable) contentProcessable).validateReturningCookies(cookieTransform(
-          ((DefaultHttpClient)client).getCookieStore().getCookies()), ha);
+      ((CookieValidateable) contentProcessable).validateReturningCookies(cookieTransform(((DefaultHttpClient) client)
+          .getCookieStore().getCookies()), ha);
     res.getEntity().consumeContent();
 
     return out;
 
   }
+
   /**
    * Process a GET Message.
-   *
+   * 
    * @param requestBase
-   *            a
+   *          a
    * @param cp
-   *            a
+   *          a
    * @return a returning message, not null
-   * @throws IOException on problems
-   * @throws CookieException on problems
-   * @throws ProcessException on problems
+   * @throws IOException
+   *           on problems
+   * @throws CookieException
+   *           on problems
+   * @throws ProcessException
+   *           on problems
    */
-  private String get(HttpRequestBase requestBase, ContentProcessable cp, HttpAction ha)
-      throws IOException, CookieException, ProcessException {
+  private String get(HttpRequestBase requestBase, ContentProcessable cp, HttpAction ha) throws IOException,
+      CookieException, ProcessException {
     showCookies();
     debug(requestBase, ha, cp);
     String out = "";
@@ -227,14 +231,13 @@ public class HttpActionClient {
     BufferedReader br = null;
     try {
       Charset charSet = Charset.forName(ha.getCharset());
-      //      Header header = res.getEntity().getContentType();
-      //      if (header != null) {
-      //        System.out.println(res.getLastHeader("Content-Encoding"));
+      // Header header = res.getEntity().getContentType();
+      // if (header != null) {
+      // System.out.println(res.getLastHeader("Content-Encoding"));
       //
-      //      }
+      // }
 
-      br = new BufferedReader(new InputStreamReader(res
-          .getEntity().getContent(), charSet));
+      br = new BufferedReader(new InputStreamReader(res.getEntity().getContent(), charSet));
       String line;
       while ((line = br.readLine()) != null) {
         sb.append(line).append("\n");
@@ -246,19 +249,17 @@ public class HttpActionClient {
 
     out = sb.toString();
     if (cp != null) {
-      if (cp instanceof CookieValidateable
-          && client instanceof DefaultHttpClient)
-        ((CookieValidateable) cp).validateReturningCookies(
-            cookieTransform(((DefaultHttpClient) client)
-                .getCookieStore().getCookies()), ha);
+      if (cp instanceof CookieValidateable && client instanceof DefaultHttpClient)
+        ((CookieValidateable) cp).validateReturningCookies(cookieTransform(((DefaultHttpClient) client)
+            .getCookieStore().getCookies()), ha);
       out = cp.processReturningText(out, ha);
     }
     res.getEntity().consumeContent();
     return out;
   }
 
-  private HttpResponse execute(HttpRequestBase requestBase) throws IOException,
-  ClientProtocolException, ProcessException {
+  private HttpResponse execute(HttpRequestBase requestBase) throws IOException, ClientProtocolException,
+      ProcessException {
     HttpResponse res = client.execute(requestBase);
     StatusLine statusLine = res.getStatusLine();
     int code = statusLine.getStatusCode();
@@ -270,15 +271,18 @@ public class HttpActionClient {
 
   /**
    * Process a GET Message.
+   * 
    * @param get
-   *            a
+   *          a
    * @return a returning message, not null
-   * @throws IOException on problems
-   * @throws CookieException on problems
-   * @throws ProcessException on problems
+   * @throws IOException
+   *           on problems
+   * @throws CookieException
+   *           on problems
+   * @throws ProcessException
+   *           on problems
    */
-  public byte[] get(Get get)
-      throws IOException, CookieException, ProcessException {
+  public byte[] get(Get get) throws IOException, CookieException, ProcessException {
     showCookies();
     HttpGet authgets = new HttpGet(get.getRequest());
     return get(authgets, null, get).getBytes();
@@ -291,16 +295,17 @@ public class HttpActionClient {
     }
     return m;
   }
+
   /**
    * send the cookies to the logger.
-   *
+   * 
    * @param client
-   *            a
-   *            @deprecated is a bit too chatty
+   *          a
+   * @deprecated is a bit too chatty
    */
   @Deprecated
   private void showCookies() {
-    if (client instanceof DefaultHttpClient  && log.isDebugEnabled()) {
+    if (client instanceof DefaultHttpClient && log.isDebugEnabled()) {
       List<Cookie> cookies = ((DefaultHttpClient) client).getCookieStore().getCookies();
       if (cookies.size() > 0) {
         StringBuffer cStr = new StringBuffer();
@@ -311,7 +316,6 @@ public class HttpActionClient {
       }
     }
   }
-
 
   private void debug(HttpUriRequest e, HttpAction ha, ContentProcessable cp) {
     if (log.isDebugEnabled() && cp != null) {
@@ -333,17 +337,15 @@ public class HttpActionClient {
         type = "(GET ";
       }
       type += cp.getClass().getSimpleName() + ")" + continueing;
-      log.debug("message " + type + " is: \n\t own: "
-          +  getHostUrl()
-          + epath + "\n\t act: " + ha.getRequest());
+      log.debug("message " + type + " is: \n\t own: " + getHostUrl() + epath + "\n\t act: " + ha.getRequest());
     }
   }
+
   /**
-   *
+   * 
    * @return the
    */
   public String getHostUrl() {
     return host.toURI();
   }
 }
-

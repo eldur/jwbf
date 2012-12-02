@@ -29,8 +29,7 @@ import net.sourceforge.jwbf.mediawiki.contentRep.CategoryItem;
  */
 @Slf4j
 @SupportedBy({ MW1_11, MW1_12, MW1_13, MW1_14, MW1_15, MW1_16 })
-public class CategoryMembersFull extends CategoryMembers implements
-    Iterable<CategoryItem>, Iterator<CategoryItem> {
+public class CategoryMembersFull extends CategoryMembers implements Iterable<CategoryItem>, Iterator<CategoryItem> {
 
   private Get msg;
   /**
@@ -47,8 +46,7 @@ public class CategoryMembersFull extends CategoryMembers implements
    * @throws ProcessException
    *           on inner problems like a version mismatch
    */
-  public CategoryMembersFull(MediaWikiBot bot, String categoryName,
-      int... namespaces) throws ProcessException {
+  public CategoryMembersFull(MediaWikiBot bot, String categoryName, int... namespaces) throws ProcessException {
     super(bot, categoryName, namespaces);
   }
 

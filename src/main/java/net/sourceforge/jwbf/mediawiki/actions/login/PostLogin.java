@@ -78,8 +78,7 @@ public class PostLogin extends MWAction {
    * @param login
    *          a
    */
-  public PostLogin(final String username, final String pw, final String domain,
-      LoginData login) {
+  public PostLogin(final String username, final String pw, final String domain, LoginData login) {
     super();
     this.login = login;
     this.username = username;
@@ -89,8 +88,7 @@ public class PostLogin extends MWAction {
 
   }
 
-  private Post getLoginMsg(final String username, final String pw,
-      final String domain, final String token) {
+  private Post getLoginMsg(final String username, final String pw, final String domain, final String token) {
     Post pm = new Post("/api.php?action=login&format=xml");
     pm.addParam("lgname", username);
     pm.addParam("lgpassword", pw);
@@ -121,8 +119,7 @@ public class PostLogin extends MWAction {
       log.error(e.getClass().getName() + e.getLocalizedMessage());
     } catch (NullPointerException e) {
       log.error(e.getClass().getName() + e.getLocalizedMessage());
-      throw new ProcessException(
-          "No regular content was found, check your api\n::" + s);
+      throw new ProcessException("No regular content was found, check your api\n::" + s);
     } catch (Exception e) {
       log.error(e.getClass().getName() + e.getLocalizedMessage());
       throw new ProcessException(e.getLocalizedMessage());
@@ -147,8 +144,7 @@ public class PostLogin extends MWAction {
       properties.put("userId", loginEl.getAttribute("lguserid").toString());
       login.setup(loginEl.getAttributeValue("lgusername"), true);
     } else if (result.equalsIgnoreCase(needToken) && reTryLimit) {
-      msg = getLoginMsg(username, pw, domain,
-          loginEl.getAttributeValue("token"));
+      msg = getLoginMsg(username, pw, domain, loginEl.getAttributeValue("token"));
       reTry = true;
       reTryLimit = false;
     } else if (result.equalsIgnoreCase(wrongPass)) {

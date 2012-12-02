@@ -49,8 +49,8 @@ import org.junit.rules.Verifier;
 public class CategoryTest extends AbstractMediaWikiBotTest {
 
   @ClassRule
-  public static VersionTestClassVerifier classVerifier = new VersionTestClassVerifier(
-      CategoryMembersFull.class, CategoryMembersSimple.class);
+  public static VersionTestClassVerifier classVerifier = new VersionTestClassVerifier(CategoryMembersFull.class,
+      CategoryMembersSimple.class);
 
   @Rule
   public Verifier successRegister = classVerifier.getSuccessRegister(this);
@@ -83,8 +83,7 @@ public class CategoryTest extends AbstractMediaWikiBotTest {
   public final void categoryWikipediaDe() throws Exception {
 
     bot = new MediaWikiBot("http://de.wikipedia.org/w/index.php");
-    assertTrue("Wrong Wiki Version " + bot.getVersion(),
-        Version.DEVELOPMENT.equals(bot.getVersion()));
+    assertTrue("Wrong Wiki Version " + bot.getVersion(), Version.DEVELOPMENT.equals(bot.getVersion()));
 
     doTest("Moose");
   }
@@ -99,8 +98,7 @@ public class CategoryTest extends AbstractMediaWikiBotTest {
   public final void categoryWikiMW1x15() throws Exception {
 
     bot = getMediaWikiBot(Version.MW1_15, true);
-    assertTrue("Wrong Wiki Version " + bot.getVersion(),
-        Version.MW1_15.equals(bot.getVersion()));
+    assertTrue("Wrong Wiki Version " + bot.getVersion(), Version.MW1_15.equals(bot.getVersion()));
     doTest();
   }
 
@@ -114,8 +112,7 @@ public class CategoryTest extends AbstractMediaWikiBotTest {
   public final void categoryWikiMW1x16() throws Exception {
 
     bot = getMediaWikiBot(Version.MW1_16, true);
-    assertTrue("Wrong Wiki Version " + bot.getVersion(),
-        Version.MW1_16.equals(bot.getVersion()));
+    assertTrue("Wrong Wiki Version " + bot.getVersion(), Version.MW1_16.equals(bot.getVersion()));
     doTest();
   }
 
@@ -160,8 +157,7 @@ public class CategoryTest extends AbstractMediaWikiBotTest {
     }
     assertTrue("i is: " + i, i > 50);
 
-    Iterator<CategoryItem> cit = new CategoryMembersFull(bot, catname)
-        .iterator();
+    Iterator<CategoryItem> cit = new CategoryMembersFull(bot, catname).iterator();
     i = 0;
     while (cit.hasNext()) {
       CategoryItem x = cit.next();

@@ -77,8 +77,7 @@ public class LoginTest extends AbstractMediaWikiBotTest {
 
   // TODO what about PostLogin.class
   @ClassRule
-  public static VersionTestClassVerifier classVerifier = new VersionTestClassVerifier(
-      PostLoginOld.class);
+  public static VersionTestClassVerifier classVerifier = new VersionTestClassVerifier(PostLoginOld.class);
 
   @Rule
   public Verifier successRegister = classVerifier.getSuccessRegister(this);
@@ -94,8 +93,7 @@ public class LoginTest extends AbstractMediaWikiBotTest {
     String liveUrl = getValue("login_wikipedia1_url");
     assumeReachable(liveUrl);
     bot = new MediaWikiBot(liveUrl);
-    bot.login(getValue("login_wikipedia1_user_valid"),
-        getValue("login_wikipedia1_pass_valid"));
+    bot.login(getValue("login_wikipedia1_user_valid"), getValue("login_wikipedia1_pass_valid"));
     assertTrue(bot.isLoggedIn());
   }
 
@@ -113,8 +111,7 @@ public class LoginTest extends AbstractMediaWikiBotTest {
     liveUrl = liveUrl.substring(0, lastSlash + 1);
     assumeReachable(liveUrl);
     bot = new MediaWikiBot(liveUrl);
-    bot.login(getValue("login_wikipedia1_user_valid"),
-        getValue("login_wikipedia1_pass_valid"));
+    bot.login(getValue("login_wikipedia1_user_valid"), getValue("login_wikipedia1_pass_valid"));
     assertTrue(bot.isLoggedIn());
   }
 
@@ -267,10 +264,8 @@ public class LoginTest extends AbstractMediaWikiBotTest {
       resp.getEntity().consumeContent();
     }
 
-    httpClient.getCredentialsProvider().setCredentials(
-        new AuthScope(u.getHost(), port),
-        new UsernamePasswordCredentials(BotFactory.getWikiUser(latest),
-            BotFactory.getWikiPass(latest)));
+    httpClient.getCredentialsProvider().setCredentials(new AuthScope(u.getHost(), port),
+        new UsernamePasswordCredentials(BotFactory.getWikiUser(latest), BotFactory.getWikiPass(latest)));
 
     HttpActionClient sslFakeClient = new HttpActionClient(httpClient, u);
     bot = new MediaWikiBot(sslFakeClient);
@@ -279,8 +274,7 @@ public class LoginTest extends AbstractMediaWikiBotTest {
     assertTrue(bot.isLoggedIn());
   }
 
-  private AbstractHttpClient getSSLFakeHttpClient()
-      throws NoSuchAlgorithmException, KeyManagementException {
+  private AbstractHttpClient getSSLFakeHttpClient() throws NoSuchAlgorithmException, KeyManagementException {
     SSLContext sslContext = SSLContext.getInstance("SSL");
     sslContext.init(null, new TrustManager[] { new X509TrustManager() {
       public X509Certificate[] getAcceptedIssuers() {
@@ -301,8 +295,7 @@ public class LoginTest extends AbstractMediaWikiBotTest {
         return true;
       }
 
-      public void verify(String host, String[] cns, String[] subjectAlts)
-          throws SSLException {
+      public void verify(String host, String[] cns, String[] subjectAlts) throws SSLException {
       }
 
       public void verify(String host, X509Certificate cert) throws SSLException {
@@ -317,8 +310,7 @@ public class LoginTest extends AbstractMediaWikiBotTest {
 
     HttpParams params = new BasicHttpParams();
 
-    ClientConnectionManager cm = new SingleClientConnManager(params,
-        schemeRegistry);
+    ClientConnectionManager cm = new SingleClientConnManager(params, schemeRegistry);
 
     DefaultHttpClient httpClient = new DefaultHttpClient(cm, params);
     return httpClient;

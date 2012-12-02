@@ -13,10 +13,8 @@ public class NsTest {
   @Test
   public final void testNsCreate() {
 
-    String s = MWAction.createNsString(MediaWiki.NS_MAIN,
-        MediaWiki.NS_TEMPLATE, MediaWiki.NS_CATEGORY);
-    assertEquals(MediaWiki.NS_MAIN + "|" + MediaWiki.NS_TEMPLATE + "|"
-        + MediaWiki.NS_CATEGORY, s);
+    String s = MWAction.createNsString(MediaWiki.NS_MAIN, MediaWiki.NS_TEMPLATE, MediaWiki.NS_CATEGORY);
+    assertEquals(MediaWiki.NS_MAIN + "|" + MediaWiki.NS_TEMPLATE + "|" + MediaWiki.NS_CATEGORY, s);
   }
 
   @Test

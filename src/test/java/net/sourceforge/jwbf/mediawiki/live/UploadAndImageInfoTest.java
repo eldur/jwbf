@@ -60,8 +60,7 @@ import org.junit.rules.Verifier;
 public class UploadAndImageInfoTest extends AbstractMediaWikiBotTest {
 
   @ClassRule
-  public static VersionTestClassVerifier classVerifier = new VersionTestClassVerifier(
-      FileUpload.class, ImageInfo.class);
+  public static VersionTestClassVerifier classVerifier = new VersionTestClassVerifier(FileUpload.class, ImageInfo.class);
 
   @Rule
   public Verifier successRegister = classVerifier.getSuccessRegister(this);
@@ -140,8 +139,7 @@ public class UploadAndImageInfoTest extends AbstractMediaWikiBotTest {
 
       new URL(new ImageInfo(bot, getValue("filename")).getUrlAsString());
     } catch (ProcessException e) {
-      throw new ProcessException(e.getLocalizedMessage()
-          + "; \n is upload enabled ?");
+      throw new ProcessException(e.getLocalizedMessage() + "; \n is upload enabled ?");
     }
     fail("file was found ");
   }
@@ -155,11 +153,9 @@ public class UploadAndImageInfoTest extends AbstractMediaWikiBotTest {
    * @throws Exception
    *           a
    */
-  protected final void generalUploadImageInfoTest(MediaWikiBot bot, Version v)
-      throws Exception {
+  protected final void generalUploadImageInfoTest(MediaWikiBot bot, Version v) throws Exception {
     assertEquals(bot.getVersion(), v);
-    assertTrue("File (" + getValue("validFile") + ") not readable", new File(
-        getValue("validFile")).canRead());
+    assertTrue("File (" + getValue("validFile") + ") not readable", new File(getValue("validFile")).canRead());
     SimpleFile sf = new SimpleFile(getValue("filename"), getValue("validFile"));
     bot.delete("File:" + getValue("filename"));
     BufferedImage img = ImageIO.read(sf.getFile());
@@ -176,13 +172,10 @@ public class UploadAndImageInfoTest extends AbstractMediaWikiBotTest {
 
       url = new ImageInfo(bot, sf.getTitle()).getUrl();
     } catch (ProcessException e) {
-      throw new ProcessException(e.getLocalizedMessage()
-          + "; \n is upload enabled? $wgEnableUploads = true;");
+      throw new ProcessException(e.getLocalizedMessage() + "; \n is upload enabled? $wgEnableUploads = true;");
     }
-    urlSizeVar = new ImageInfo(bot, sf.getTitle(), new String[][] { {
-        ImageInfo.HEIGHT, newHeight + "" } }).getUrl();
-    Assert.assertTrue("file not found " + url, url.toExternalForm().length()
-        - bot.getHostUrl().length() > 2);
+    urlSizeVar = new ImageInfo(bot, sf.getTitle(), new String[][] { { ImageInfo.HEIGHT, newHeight + "" } }).getUrl();
+    Assert.assertTrue("file not found " + url, url.toExternalForm().length() - bot.getHostUrl().length() > 2);
     File file = new File(getValue("validFile"));
     assertFile(url, file);
     assertImageDimension(url, upWidth, upHeight);
@@ -208,8 +201,7 @@ public class UploadAndImageInfoTest extends AbstractMediaWikiBotTest {
       throw new RuntimeException("unable to delete file");
   }
 
-  protected void assertImageDimension(URL url, int width, int height)
-      throws IOException {
+  protected void assertImageDimension(URL url, int width, int height) throws IOException {
     BufferedImage img = ImageIO.read(url);
     assertEquals(height, img.getHeight());
     assertEquals(width, img.getWidth());
@@ -265,8 +257,7 @@ public class UploadAndImageInfoTest extends AbstractMediaWikiBotTest {
    * @throws IOException
    *           a
    */
-  protected static final boolean filesAreIdentical(File left, File right)
-      throws IOException {
+  protected static final boolean filesAreIdentical(File left, File right) throws IOException {
     assert left != null;
     assert right != null;
     assert left.exists();

@@ -28,8 +28,8 @@ import org.junit.rules.Verifier;
 public class RevisionTest extends AbstractMediaWikiBotTest {
 
   @ClassRule
-  public static VersionTestClassVerifier classVerifier = new VersionTestClassVerifier(
-      GetRevision.class, PostModifyContent.class, GetApiToken.class);
+  public static VersionTestClassVerifier classVerifier = new VersionTestClassVerifier(GetRevision.class,
+      PostModifyContent.class, GetApiToken.class);
 
   @Rule
   public Verifier successRegister = classVerifier.getSuccessRegister(this);

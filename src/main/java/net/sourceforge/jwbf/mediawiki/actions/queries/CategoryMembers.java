@@ -77,8 +77,7 @@ abstract class CategoryMembers extends MWAction {
    * @throws VersionException
    *           on version problems
    */
-  protected CategoryMembers(MediaWikiBot bot, String categoryName,
-      int[] namespace) throws VersionException {
+  protected CategoryMembers(MediaWikiBot bot, String categoryName, int[] namespace) throws VersionException {
     super(bot.getVersion());
     this.namespace = namespace.clone();
     namespaceStr = createNsString(namespace);
@@ -160,8 +159,7 @@ abstract class CategoryMembers extends MWAction {
 
     // get the blcontinue-value
 
-    Pattern p = Pattern.compile("<query-continue>.*?"
-        + "<categorymembers *cmcontinue=\"([^\"]*)\" */>"
+    Pattern p = Pattern.compile("<query-continue>.*?" + "<categorymembers *cmcontinue=\"([^\"]*)\" */>"
         + ".*?</query-continue>", Pattern.DOTALL | Pattern.MULTILINE);
 
     Matcher m = p.matcher(s);
@@ -187,15 +185,13 @@ abstract class CategoryMembers extends MWAction {
 
     // get the backlink titles and add them all to the titleCollection
 
-    Pattern p = Pattern
-        .compile("<cm pageid=\"(.*?)\" ns=\"(.*?)\" title=\"(.*?)\" />");
+    Pattern p = Pattern.compile("<cm pageid=\"(.*?)\" ns=\"(.*?)\" title=\"(.*?)\" />");
 
     Matcher m = p.matcher(s);
 
     while (m.find()) {
 
-      addCatItem(m.group(3), Integer.parseInt(m.group(1)),
-          Integer.parseInt(m.group(2)));
+      addCatItem(m.group(3), Integer.parseInt(m.group(1)), Integer.parseInt(m.group(2)));
 
     }
     finalizeParse();
@@ -218,9 +214,8 @@ abstract class CategoryMembers extends MWAction {
       if (namespaceStr.length() > 0) {
         nsinj = "&cmnamespace=" + MediaWiki.encode(namespaceStr);
       }
-      uS = "/api.php?action=query&list=categorymembers" + "&cmcategory="
-          + MediaWiki.encode(categoryName) + nsinj + "&cmcontinue="
-          + MediaWiki.encode(cmcontinue) + "&cmlimit=" + LIMIT + "&format=xml";
+      uS = "/api.php?action=query&list=categorymembers" + "&cmcategory=" + MediaWiki.encode(categoryName) + nsinj
+          + "&cmcontinue=" + MediaWiki.encode(cmcontinue) + "&cmlimit=" + LIMIT + "&format=xml";
       return uS;
     }
 
@@ -232,9 +227,8 @@ abstract class CategoryMembers extends MWAction {
         nsinj = "&cmnamespace=" + MediaWiki.encode(namespaceStr);
       }
 
-      uS = "/api.php?action=query&list=categorymembers" + "&cmcategory="
-          + MediaWiki.encode(categoryName) + nsinj + "&cmlimit=" + LIMIT
-          + "&format=xml";
+      uS = "/api.php?action=query&list=categorymembers" + "&cmcategory=" + MediaWiki.encode(categoryName) + nsinj
+          + "&cmlimit=" + LIMIT + "&format=xml";
       return uS;
     }
 
@@ -256,9 +250,8 @@ abstract class CategoryMembers extends MWAction {
       // TODO: do not add Category: - instead, change other methods' descs (e.g.
       // in MediaWikiBot)
 
-      uS = "/api.php?action=query&list=categorymembers" + "&cmtitle=Category:"
-          + MediaWiki.encode(categoryName) + nsinj + "&cmcontinue="
-          + MediaWiki.encode(cmcontinue) + "&cmlimit=" + LIMIT + "&format=xml";
+      uS = "/api.php?action=query&list=categorymembers" + "&cmtitle=Category:" + MediaWiki.encode(categoryName) + nsinj
+          + "&cmcontinue=" + MediaWiki.encode(cmcontinue) + "&cmlimit=" + LIMIT + "&format=xml";
       return uS;
     }
 
@@ -272,9 +265,8 @@ abstract class CategoryMembers extends MWAction {
       // TODO: do not add Category: - instead, change other methods' descs (e.g.
       // in MediaWikiBot)
 
-      uS = "/api.php?action=query&list=categorymembers" + "&cmtitle=Category:"
-          + MediaWiki.encode(categoryName) + nsinj + "&cmlimit=" + LIMIT
-          + "&format=xml";
+      uS = "/api.php?action=query&list=categorymembers" + "&cmtitle=Category:" + MediaWiki.encode(categoryName) + nsinj
+          + "&cmlimit=" + LIMIT + "&format=xml";
       return uS;
     }
 

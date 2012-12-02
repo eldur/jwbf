@@ -14,10 +14,12 @@ import net.sourceforge.jwbf.mediawiki.actions.util.VersionException;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 
 /**
- * Abstract class which is superclass of all titleiterations, represented by the sufix "Titles".
+ * Abstract class which is superclass of all titleiterations, represented by the
+ * sufix "Titles".
  * 
  * @author Thomas Stock
- * @param <T> of
+ * @param <T>
+ *          of
  */
 @Slf4j
 public abstract class TitleQuery<T> implements Iterable<T>, Iterator<T> {
@@ -41,6 +43,7 @@ public abstract class TitleQuery<T> implements Iterable<T>, Iterator<T> {
   protected InnerAction getInnerAction(Version v) throws VersionException {
     return new InnerAction(v);
   }
+
   /**
    * {@inheritDoc}
    */
@@ -54,6 +57,7 @@ public abstract class TitleQuery<T> implements Iterable<T>, Iterator<T> {
       return null;
     }
   }
+
   /**
    * {@inheritDoc}
    */
@@ -61,6 +65,7 @@ public abstract class TitleQuery<T> implements Iterable<T>, Iterator<T> {
     doCollection();
     return titleIterator.hasNext();
   }
+
   /**
    * {@inheritDoc}
    */
@@ -68,6 +73,7 @@ public abstract class TitleQuery<T> implements Iterable<T>, Iterator<T> {
     doCollection();
     return titleIterator.next();
   }
+
   /**
    * {@inheritDoc}
    */
@@ -77,15 +83,11 @@ public abstract class TitleQuery<T> implements Iterable<T>, Iterator<T> {
 
   protected abstract HttpAction prepareCollection();
 
-
   private boolean hasNextPage() {
     return nextPageInfo != null && nextPageInfo.length() > 0;
   }
 
-
-
   private void doCollection() {
-
 
     if (inner.init || (!titleIterator.hasNext() && hasNextPage())) {
       inner.init = false;
@@ -94,8 +96,6 @@ public abstract class TitleQuery<T> implements Iterable<T>, Iterator<T> {
         inner.msg = prepareCollection();
 
         bot.performAction(inner);
-
-
 
       } catch (ActionException ae) {
         ae.printStackTrace();
@@ -108,11 +108,14 @@ public abstract class TitleQuery<T> implements Iterable<T>, Iterator<T> {
   }
 
   protected abstract Collection<T> parseArticleTitles(String s);
+
   protected abstract String parseHasMore(final String s);
+
   /**
    * Inner helper class for this type.
+   * 
    * @author Thomas Stock
-   *
+   * 
    */
   public class InnerAction extends MWAction {
 
@@ -126,6 +129,7 @@ public abstract class TitleQuery<T> implements Iterable<T>, Iterator<T> {
     protected void setMessage(HttpAction msg) {
       this.msg = msg;
     }
+
     /**
      * {@inheritDoc}
      */
@@ -133,13 +137,11 @@ public abstract class TitleQuery<T> implements Iterable<T>, Iterator<T> {
       return msg;
     }
 
-
     /**
      * {@inheritDoc}
      */
     @Override
-    public String processAllReturningText(final String s)
-        throws ProcessException {
+    public String processAllReturningText(final String s) throws ProcessException {
       Collection<T> knownResults = new Vector<T>();
 
       knownResults.addAll(parseArticleTitles(s));

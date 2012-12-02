@@ -27,8 +27,7 @@ public class BacklinkTest extends AbstractMediaWikiBotTest {
     String url = "http://de.wikipedia.org/w/index.php";
     LiveTestFather.assumeReachable(url);
     bot = new MediaWikiBot(url);
-    BacklinkTitles is = new BacklinkTitles(bot,
-        LiveTestFather.getValue("backlinks_article"));
+    BacklinkTitles is = new BacklinkTitles(bot, LiveTestFather.getValue("backlinks_article"));
 
     int i = 0;
     while (is.hasNext()) {
@@ -39,8 +38,7 @@ public class BacklinkTest extends AbstractMediaWikiBotTest {
       }
     }
 
-    Assert.assertTrue("Fail: " + i + " < "
-        + getIntValue("backlinks_article_count"),
+    Assert.assertTrue("Fail: " + i + " < " + getIntValue("backlinks_article_count"),
         i > getIntValue("backlinks_article_count"));
   }
 

@@ -53,14 +53,14 @@ import org.jdom.input.SAXBuilder;
 import org.xml.sax.InputSource;
 
 /**
- *
+ * 
  * Gets a list of pages recently changed, ordered by modification timestamp.
  * Parameters: rcfrom (paging timestamp), rcto (flt), rcnamespace (flt), rcminor
  * (flt), rcusertype (dflt=not|bot), rcdirection (dflt=older), rclimit (dflt=10,
  * max=500/5000) F
- *
+ * 
  * api.php ? action=query & list=recentchanges - List last 10 changes
- *
+ * 
  * @author Thomas Stock
  */
 @Slf4j
@@ -70,18 +70,18 @@ public class RecentchangeTitles extends TitleQuery<String> {
   /** value for the bllimit-parameter. **/
   private static final int limit = 10;
 
-
   private int find = 1;
 
   private final MediaWikiBot bot;
 
-  private final int [] namespaces;
+  private final int[] namespaces;
 
   private class RecentInnerAction extends InnerAction {
 
     protected RecentInnerAction(Version v) throws VersionException {
       super(v);
     }
+
     /**
      * {@inheritDoc}
      */
@@ -107,9 +107,8 @@ public class RecentchangeTitles extends TitleQuery<String> {
   }
 
   /**
-   * Collection that will contain the result
-   * (titles of articles linking to the target)
-   * after performing the action has finished.
+   * Collection that will contain the result (titles of articles linking to the
+   * target) after performing the action has finished.
    */
   private Collection<String> titleCollection = new Vector<String>();
   private final boolean uniqChanges;
@@ -118,45 +117,41 @@ public class RecentchangeTitles extends TitleQuery<String> {
    * information necessary to get the next api page.
    */
 
-
-
-
   /**
    * generates the next MediaWiki-request (GetMethod) and adds it to msgs.
-   * @param namespace     the namespace(s) that will be searched for links,
-   *                      as a string of numbers separated by '|';
-   *                      if null, this parameter is omitted
-   * @param rcstart timestamp
+   * 
+   * @param namespace
+   *          the namespace(s) that will be searched for links, as a string of
+   *          numbers separated by '|'; if null, this parameter is omitted
+   * @param rcstart
+   *          timestamp
    */
-  private HttpAction generateRequest(int [] namespace, String rcstart) {
+  private HttpAction generateRequest(int[] namespace, String rcstart) {
 
     String uS = "";
     if (rcstart.length() > 0) {
       uS = "/api.php?action=query&list=recentchanges"
 
-        + ((namespace != null) ? ("&rcnamespace=" + MediaWiki.encode(MWAction.createNsString(namespace))) : "")
-        + "&rcstart=" + rcstart
-        //+ "&rcusertype=" // (dflt=not|bot)
-        + "&rclimit=" + limit + "&format=xml";
+      + ((namespace != null) ? ("&rcnamespace=" + MediaWiki.encode(MWAction.createNsString(namespace))) : "")
+          + "&rcstart=" + rcstart
+          // + "&rcusertype=" // (dflt=not|bot)
+          + "&rclimit=" + limit + "&format=xml";
     } else {
       uS = "/api.php?action=query&list=recentchanges"
 
-        + ((namespace != null) ? ("&rcnamespace=" + MediaWiki.encode(MWAction.createNsString(namespace))) : "")
-        //+ "&rcminor="
-        //+ "&rcusertype=" // (dflt=not|bot)
-        + "&rclimit=" + limit + "&format=xml";
+      + ((namespace != null) ? ("&rcnamespace=" + MediaWiki.encode(MWAction.createNsString(namespace))) : "")
+      // + "&rcminor="
+      // + "&rcusertype=" // (dflt=not|bot)
+          + "&rclimit=" + limit + "&format=xml";
     }
-
 
     return new Get(uS);
 
-
   }
 
-  private HttpAction generateRequest(int [] namespace) {
+  private HttpAction generateRequest(int[] namespace) {
 
     return generateRequest(namespace, "");
-
 
   }
 
@@ -167,6 +162,7 @@ public class RecentchangeTitles extends TitleQuery<String> {
     this(bot, false, ns);
 
   }
+
   /**
    *
    */
@@ -177,25 +173,20 @@ public class RecentchangeTitles extends TitleQuery<String> {
     this.uniqChanges = uniqChanges;
 
   }
+
   /**
    *
    */
   public RecentchangeTitles(MediaWikiBot bot) throws VersionException {
     this(bot, MediaWiki.NS_ALL);
 
-
   }
-
-
-
-
-
-
 
   /**
    * picks the article name from a MediaWiki api response.
-   *
-   * @param s   text for parsing
+   * 
+   * @param s
+   *          text for parsing
    */
   @Override
   protected Collection<String> parseArticleTitles(String s) {
@@ -216,8 +207,8 @@ public class RecentchangeTitles extends TitleQuery<String> {
       findContent(root);
     return titleCollection;
 
-
   }
+
   @SuppressWarnings("unchecked")
   private void findContent(final Element root) {
 
@@ -238,10 +229,6 @@ public class RecentchangeTitles extends TitleQuery<String> {
     }
   }
 
-
-
-
-
   @Override
   protected HttpAction prepareCollection() {
     find = 1;
@@ -252,10 +239,6 @@ public class RecentchangeTitles extends TitleQuery<String> {
     }
 
   }
-
-
-
-
 
   @Override
   protected Object clone() throws CloneNotSupportedException {
@@ -273,12 +256,9 @@ public class RecentchangeTitles extends TitleQuery<String> {
   }
 
   @Override
-  protected InnerAction getInnerAction(
-      Version v) throws VersionException {
+  protected InnerAction getInnerAction(Version v) throws VersionException {
 
     return new RecentInnerAction(v);
   }
-
-
 
 }

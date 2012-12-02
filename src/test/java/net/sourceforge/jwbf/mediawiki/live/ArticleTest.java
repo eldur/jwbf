@@ -128,10 +128,8 @@ public class ArticleTest {
       String revIdApp = a.getRevisionId();
       Date dateB = a.getEditTimestamp();
       assertNotSame("change expected " + bot.getWikiType(), revIdA, revIdApp);
-      assertNotSame("change expected " + bot.getWikiType() + " " + dateA,
-          dateA, dateB);
-      assertEquals("minor edit @ " + bot.getWikiType(), a.isMinorEdit(),
-          b.isMinorEdit());
+      assertNotSame("change expected " + bot.getWikiType() + " " + dateA, dateA, dateB);
+      assertEquals("minor edit @ " + bot.getWikiType(), a.isMinorEdit(), b.isMinorEdit());
 
       try {
         a.delete(); // clean up
@@ -172,10 +170,8 @@ public class ArticleTest {
     a.save();
     final String thirdEdit = a.getRevisionId();
     assertTrue(a.isMinorEdit());
-    assertFalse("text should be differ:\n" + aaText + "\n" + aText,
-        aaText.equals(aText));
-    assertTrue("dif rev ID, both: " + thirdEdit,
-        Integer.parseInt(firstEdit) != Integer.parseInt(thirdEdit));
+    assertFalse("text should be differ:\n" + aaText + "\n" + aText, aaText.equals(aText));
+    assertTrue("dif rev ID, both: " + thirdEdit, Integer.parseInt(firstEdit) != Integer.parseInt(thirdEdit));
 
     log.debug("--> end article test");
   }

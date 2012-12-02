@@ -21,27 +21,27 @@ package net.sourceforge.jwbf.mediawiki.actions.util;
 import net.sourceforge.jwbf.core.actions.util.ProcessException;
 
 /**
- * exception indicating that a feature is not
- * supported by the wiki's software version.
+ * exception indicating that a feature is not supported by the wiki's software
+ * version.
  * 
  * @author Thomas Stock
  */
 public class VersionException extends ProcessException {
 
-
-	/**
+  /**
 	 * 
 	 */
-	private static final long serialVersionUID = -156908450310809588L;
+  private static final long serialVersionUID = -156908450310809588L;
 
-	/**
-	 * 
-	 * @param s exeption text
-	 * @param clazz where the exception was thrown
-	 */
-	public VersionException(String s) {
-		super(s);
-	}
-
+  /**
+   * 
+   * @param s
+   *          exeption text
+   * @param clazz
+   *          where the exception was thrown
+   */
+  public VersionException(String s) {
+    super(s);
+  }
 
 }

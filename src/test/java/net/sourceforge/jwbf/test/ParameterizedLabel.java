@@ -41,13 +41,11 @@ public class ParameterizedLabel extends Parameterized {
         Description mod = child.getDescription();
         if (namer != null) {
           try {
-            Field paramList = child.getClass().getDeclaredField(
-                "fParameterList");
+            Field paramList = child.getClass().getDeclaredField("fParameterList");
             paramList.setAccessible(true);
             List<?> lis = (List<?>) paramList.get(child);
 
-            Field firstNameField = mod.getClass().getDeclaredField(
-                "fDisplayName");
+            Field firstNameField = mod.getClass().getDeclaredField("fDisplayName");
             firstNameField.setAccessible(true);
             String posStr = (String) firstNameField.get(mod);
             posStr = posStr.replaceAll("[\\[\\]]", "");

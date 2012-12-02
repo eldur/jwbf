@@ -52,7 +52,7 @@ public class MiscTest {
   @Test
   public void testInit() throws IllegalArgumentException, IllegalAccessException, InvocationTargetException {
     Class<JWBF> clazz = JWBF.class;
-    Method [] methods = clazz.getDeclaredMethods();
+    Method[] methods = clazz.getDeclaredMethods();
     Method initMethod = null;
     for (Method method : methods) {
       if (method.getName().equals("init")) {
@@ -61,7 +61,8 @@ public class MiscTest {
       }
     }
     assertNotNull("no init method found", initMethod);
-    if (initMethod == null) return; // XXX for eclipse
+    if (initMethod == null)
+      return; // XXX for eclipse
     if (!initMethod.isAccessible()) {
       initMethod.setAccessible(true);
     }
@@ -97,7 +98,6 @@ public class MiscTest {
     } else {
       // TODO test load from inner MF
     }
-
 
   }
 

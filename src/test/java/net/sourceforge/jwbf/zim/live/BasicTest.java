@@ -20,13 +20,15 @@ public class BasicTest {
     if (!(dir.isDirectory() && dir.exists())) {
       throw new Exception("no testdir");
     }
-    //		bots.add(new ZimWikiBot(dir));
+    // bots.add(new ZimWikiBot(dir));
     dir.delete();
   }
+
   @Before
   public void doNothing() {
 
   }
+
   @Test
   public void doLog() {
     log.info("Hello");

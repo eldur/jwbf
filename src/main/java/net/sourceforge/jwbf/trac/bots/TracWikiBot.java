@@ -48,8 +48,7 @@ public class TracWikiBot extends HttpBot implements WikiBot {
    *           on access problems
    * @see GetRevision
    */
-  public synchronized Article readContent(final String name)
-      throws ActionException, ProcessException {
+  public synchronized Article readContent(final String name) throws ActionException, ProcessException {
     return readContent(name, 0);
 
   }
@@ -59,8 +58,7 @@ public class TracWikiBot extends HttpBot implements WikiBot {
 
   }
 
-  public void writeContent(ContentAccessable sa) throws ActionException,
-      ProcessException {
+  public void writeContent(ContentAccessable sa) throws ActionException, ProcessException {
     throw new IllegalStateException("Writing is not supported");
 
   }
@@ -70,8 +68,7 @@ public class TracWikiBot extends HttpBot implements WikiBot {
 
   }
 
-  public Article readContent(String label, int properties)
-      throws ActionException, ProcessException {
+  public Article readContent(String label, int properties) throws ActionException, ProcessException {
     GetRevision ac = new GetRevision(label);
     performAction(ac);
     return new Article(this, ac.getArticle());

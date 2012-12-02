@@ -27,9 +27,9 @@ import java.util.regex.Pattern;
 /**
  * This is a simple content helper class that implements the
  * EditContentAccesable interface, plus setter methods.
- *
+ * 
  * @author Thomas Stock
- *
+ * 
  */
 public class SimpleArticle implements ArticleMeta, Serializable, Cloneable, ContentSetable {
 
@@ -56,9 +56,9 @@ public class SimpleArticle implements ArticleMeta, Serializable, Cloneable, Cont
   }
 
   /**
-   *
+   * 
    * @param ca
-   *            a
+   *          a
    */
   public SimpleArticle(ContentAccessable ca) {
 
@@ -80,9 +80,9 @@ public class SimpleArticle implements ArticleMeta, Serializable, Cloneable, Cont
   }
 
   /**
-   *
+   * 
    * @param sa
-   *            a
+   *          a
    */
   public SimpleArticle(ArticleMeta sa) {
     this((ContentAccessable) sa);
@@ -106,13 +106,13 @@ public class SimpleArticle implements ArticleMeta, Serializable, Cloneable, Cont
   }
 
   /**
-   *
+   * 
    * @param text
-   *            of article
+   *          of article
    * @param title
-   *            of article
-   * @deprecated use {@link #SimpleArticle(String)} and
-   *             {@link #setText(String)} instead.
+   *          of article
+   * @deprecated use {@link #SimpleArticle(String)} and {@link #setText(String)}
+   *             instead.
    */
   @Deprecated
   public SimpleArticle(final String text, final String title) {
@@ -121,9 +121,9 @@ public class SimpleArticle implements ArticleMeta, Serializable, Cloneable, Cont
   }
 
   /**
-   *
+   * 
    * @param title
-   *            of article
+   *          of article
    */
   public SimpleArticle(final String title) {
     this.title = title;
@@ -136,8 +136,12 @@ public class SimpleArticle implements ArticleMeta, Serializable, Cloneable, Cont
     return editSummary;
   }
 
-  /* (non-Javadoc)
-   * @see net.sourceforge.jwbf.core.contentRep.ContentSetable#setEditSummary(java.lang.String)
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * net.sourceforge.jwbf.core.contentRep.ContentSetable#setEditSummary(java
+   * .lang.String)
    */
   public void setEditSummary(final String s) {
     editSummary = s;
@@ -150,8 +154,11 @@ public class SimpleArticle implements ArticleMeta, Serializable, Cloneable, Cont
     return minorEdit;
   }
 
-  /* (non-Javadoc)
-   * @see net.sourceforge.jwbf.core.contentRep.ContentSetable#setMinorEdit(boolean)
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * net.sourceforge.jwbf.core.contentRep.ContentSetable#setMinorEdit(boolean)
    */
   public void setMinorEdit(final boolean minor) {
     minorEdit = minor;
@@ -174,9 +181,9 @@ public class SimpleArticle implements ArticleMeta, Serializable, Cloneable, Cont
   }
 
   /**
-   *
+   * 
    * @param label
-   *            the label, like "Main Page"
+   *          the label, like "Main Page"
    * @deprecated use {@link #setTitle(String)} instead
    */
   @Deprecated
@@ -184,8 +191,12 @@ public class SimpleArticle implements ArticleMeta, Serializable, Cloneable, Cont
     setTitle(label);
   }
 
-  /* (non-Javadoc)
-   * @see net.sourceforge.jwbf.core.contentRep.ContentSetable#setTitle(java.lang.String)
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * net.sourceforge.jwbf.core.contentRep.ContentSetable#setTitle(java.lang.
+   * String)
    */
   public void setTitle(final String title) {
     this.title = title;
@@ -198,22 +209,34 @@ public class SimpleArticle implements ArticleMeta, Serializable, Cloneable, Cont
     return text;
   }
 
-  /* (non-Javadoc)
-   * @see net.sourceforge.jwbf.core.contentRep.ContentSetable#setText(java.lang.String)
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * net.sourceforge.jwbf.core.contentRep.ContentSetable#setText(java.lang.String
+   * )
    */
   public void setText(final String text) {
     this.text = text;
   }
 
-  /* (non-Javadoc)
-   * @see net.sourceforge.jwbf.core.contentRep.ContentSetable#addText(java.lang.String)
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * net.sourceforge.jwbf.core.contentRep.ContentSetable#addText(java.lang.String
+   * )
    */
   public void addText(final String text) {
     setText(getText() + text);
   }
 
-  /* (non-Javadoc)
-   * @see net.sourceforge.jwbf.core.contentRep.ContentSetable#addTextnl(java.lang.String)
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * net.sourceforge.jwbf.core.contentRep.ContentSetable#addTextnl(java.lang
+   * .String)
    */
   public void addTextnl(final String text) {
     setText(getText() + "\n" + text);
@@ -227,8 +250,12 @@ public class SimpleArticle implements ArticleMeta, Serializable, Cloneable, Cont
     return editor;
   }
 
-  /* (non-Javadoc)
-   * @see net.sourceforge.jwbf.core.contentRep.ContentSetable#setEditor(java.lang.String)
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * net.sourceforge.jwbf.core.contentRep.ContentSetable#setEditor(java.lang
+   * .String)
    */
   public void setEditor(final String editor) {
     this.editor = editor;
@@ -239,8 +266,7 @@ public class SimpleArticle implements ArticleMeta, Serializable, Cloneable, Cont
    */
   public boolean isRedirect() {
 
-    Pattern pattern = Pattern.compile("#(.*)redirect(.*)",
-        Pattern.CASE_INSENSITIVE);
+    Pattern pattern = Pattern.compile("#(.*)redirect(.*)", Pattern.CASE_INSENSITIVE);
     if (pattern.matcher(text).matches()) {
       return true;
     }
@@ -256,11 +282,11 @@ public class SimpleArticle implements ArticleMeta, Serializable, Cloneable, Cont
   }
 
   /**
-   *
+   * 
    * @param editTimestamp
-   *            set
+   *          set
    * @throws ParseException
-   *             if date unparseable
+   *           if date unparseable
    */
   public void setEditTimestamp(String editTimestamp) throws ParseException {
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
@@ -273,15 +299,17 @@ public class SimpleArticle implements ArticleMeta, Serializable, Cloneable, Cont
   }
 
   /**
-   *
+   * 
    * @param d
-   *            the
+   *          the
    */
   public void setEditTimestamp(Date d) {
     editTimestamp = d;
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   * 
    * @see java.lang.Object#equals(java.lang.Object)
    */
   @Override
@@ -316,15 +344,16 @@ public class SimpleArticle implements ArticleMeta, Serializable, Cloneable, Cont
     return true;
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   * 
    * @see java.lang.Object#hashCode()
    */
   @Override
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime * result
-    + ((editTimestamp == null) ? 0 : editTimestamp.hashCode());
+    result = prime * result + ((editTimestamp == null) ? 0 : editTimestamp.hashCode());
     result = prime * result + ((revId == null) ? 0 : revId.hashCode());
     result = prime * result + ((text == null) ? 0 : text.hashCode());
     result = prime * result + ((title == null) ? 0 : title.hashCode());
@@ -339,9 +368,9 @@ public class SimpleArticle implements ArticleMeta, Serializable, Cloneable, Cont
   }
 
   /**
-   *
+   * 
    * @param revId
-   *            the
+   *          the
    */
   public void setRevisionId(String revId) {
     this.revId = revId;

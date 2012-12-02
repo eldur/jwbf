@@ -45,8 +45,7 @@ import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
  */
 @Slf4j
 @SupportedBy({ MW1_11, MW1_12, MW1_13, MW1_14, MW1_15, MW1_16 })
-public class CategoryMembersSimple implements Iterable<String>,
-    Iterator<String> {
+public class CategoryMembersSimple implements Iterable<String>, Iterator<String> {
 
   private Get msg;
   private final CategoryMembers cm;
@@ -69,8 +68,7 @@ public class CategoryMembersSimple implements Iterable<String>,
    *           on inner problems like mw version
    * 
    */
-  public CategoryMembersSimple(MediaWikiBot bot, String categoryName)
-      throws ProcessException {
+  public CategoryMembersSimple(MediaWikiBot bot, String categoryName) throws ProcessException {
     this(bot, categoryName, MediaWiki.NS_MAIN);
 
   }
@@ -88,8 +86,7 @@ public class CategoryMembersSimple implements Iterable<String>,
    *           on inner problems like mw version
    * 
    */
-  public CategoryMembersSimple(MediaWikiBot bot, String categoryName,
-      int... namespaces) throws ProcessException {
+  public CategoryMembersSimple(MediaWikiBot bot, String categoryName, int... namespaces) throws ProcessException {
     cm = new CategoryMembers(bot, categoryName, namespaces) {
 
       public HttpAction getNextMessage() {

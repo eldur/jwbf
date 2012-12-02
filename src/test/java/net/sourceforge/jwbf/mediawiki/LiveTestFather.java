@@ -74,8 +74,7 @@ public class LiveTestFather extends TestHelper {
       }
     }
     if (filename.length() < 1) {
-      System.err.println("no testfile found. Use: "
-          + System.getProperty("user.home") + "/.jwbf/test.xml");
+      System.err.println("no testfile found. Use: " + System.getProperty("user.home") + "/.jwbf/test.xml");
       filename = System.getProperty("user.home") + "/.jwbf/test.xml";
     }
 
@@ -130,8 +129,7 @@ public class LiveTestFather extends TestHelper {
     if (!data.containsKey(key) || data.getProperty(key).trim().length() <= 0) {
       addEmptyKey(key);
 
-      throw new ComparisonFailure("No or empty value for key: \"" + key
-          + "\" in " + filename, key, filename);
+      throw new ComparisonFailure("No or empty value for key: \"" + key + "\" in " + filename, key, filename);
     }
     return data.getProperty(key);
   }

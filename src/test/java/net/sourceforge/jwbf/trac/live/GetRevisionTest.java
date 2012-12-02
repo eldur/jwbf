@@ -1,4 +1,5 @@
 package net.sourceforge.jwbf.trac.live;
+
 //package net.sourceforge.jwbf.live.trac;
 //
 //import static org.junit.Assert.assertTrue;
@@ -69,4 +70,4 @@ package net.sourceforge.jwbf.trac.live;
 //		log.info("editsumm: " + sa.getEditSummary());
 //	}
 //
-//}
+// }

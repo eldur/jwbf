@@ -27,13 +27,15 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
 import org.xml.sax.InputSource;
+
 /**
- *
- * Implements function to render wikitext on remote
- * <a href="http://www.mediawiki.org/wiki/API:Expanding_templates_and_rendering#parse">parse</a>.
- *
+ * 
+ * Implements function to render wikitext on remote <a href=
+ * "http://www.mediawiki.org/wiki/API:Expanding_templates_and_rendering#parse"
+ * >parse</a>.
+ * 
  * @author Thomas Stock
- *
+ * 
  */
 @SupportedBy({ MW1_12, MW1_13, MW1_14, MW1_15, MW1_16 })
 public class GetRendering extends MWAction {
@@ -44,20 +46,24 @@ public class GetRendering extends MWAction {
   private boolean isSelfEx = true;
 
   /**
-   *
-   * @param bot a
-   * @param wikitext a
-   * @throws VersionException if not supported
+   * 
+   * @param bot
+   *          a
+   * @param wikitext
+   *          a
+   * @throws VersionException
+   *           if not supported
    */
   public GetRendering(MediaWikiBot bot, String wikitext) throws VersionException {
     super(bot.getVersion());
     this.bot = bot;
     msg = new Get("/api.php?action=parse&text=" + MediaWiki.encode(wikitext) + "&titles=API&format=xml");
 
-
   }
+
   /**
    * {@inheritDoc}
+   * 
    * @deprecated see super
    */
   @Deprecated
@@ -65,12 +71,14 @@ public class GetRendering extends MWAction {
   public boolean isSelfExecuter() {
     return isSelfEx;
   }
+
   /**
    * {@inheritDoc}
    */
   public HttpAction getNextMessage() {
     return msg;
   }
+
   /**
    * {@inheritDoc}
    */
@@ -108,7 +116,6 @@ public class GetRendering extends MWAction {
       return null; // XXX okay ?
   }
 
-
   private Element findContent(final Element e, final String name) {
     Element found = null;
     @SuppressWarnings("unchecked")
@@ -117,7 +124,7 @@ public class GetRendering extends MWAction {
       Element element = el.next();
 
       if (element.getQualifiedName().equalsIgnoreCase(name)) {
-        //				System.out.println(element.getQualifiedName());
+        // System.out.println(element.getQualifiedName());
         return element;
 
       } else {
@@ -144,8 +151,9 @@ public class GetRendering extends MWAction {
       isSelfEx = true;
     }
   }
+
   /**
-   *
+   * 
    * @return the
    */
   public String getHtml() {

@@ -24,8 +24,7 @@ import org.junit.rules.Verifier;
 public class ImageUsageTitlesTest extends AbstractMediaWikiBotTest {
 
   @ClassRule
-  public static VersionTestClassVerifier classVerifier = new VersionTestClassVerifier(
-      ImageUsageTitles.class);
+  public static VersionTestClassVerifier classVerifier = new VersionTestClassVerifier(ImageUsageTitles.class);
 
   @Rule
   public Verifier successRegister = classVerifier.getSuccessRegister(this);
@@ -36,8 +35,7 @@ public class ImageUsageTitlesTest extends AbstractMediaWikiBotTest {
   public final void imageUsageMW1x15() throws Exception {
 
     bot = getMediaWikiBot(Version.MW1_15, true);
-    assertTrue("Wrong Wiki Version " + bot.getVersion(),
-        Version.MW1_15.equals(bot.getVersion()));
+    assertTrue("Wrong Wiki Version " + bot.getVersion(), Version.MW1_15.equals(bot.getVersion()));
     test();
 
   }
@@ -46,15 +44,13 @@ public class ImageUsageTitlesTest extends AbstractMediaWikiBotTest {
   public final void imageUsageMW1x16() throws Exception {
 
     bot = getMediaWikiBot(Version.MW1_16, true);
-    assertTrue("Wrong Wiki Version " + bot.getVersion(),
-        Version.MW1_16.equals(bot.getVersion()));
+    assertTrue("Wrong Wiki Version " + bot.getVersion(), Version.MW1_16.equals(bot.getVersion()));
     test();
 
   }
 
   private void test() throws Exception {
-    ImageUsageTitles il = new ImageUsageTitles(bot, "Image:"
-        + getValue("filename"), MediaWiki.NS_ALL);
+    ImageUsageTitles il = new ImageUsageTitles(bot, "Image:" + getValue("filename"), MediaWiki.NS_ALL);
 
     boolean notFound = true;
     int x = 0;
@@ -90,8 +86,7 @@ public class ImageUsageTitlesTest extends AbstractMediaWikiBotTest {
     for (int i = 0; i < limit; i++) {
       name = "TitleWithImg" + i;
       Article a = new Article(bot, name);
-      a.setText("Hello [[Image:" + getValue("filename") + "]] a image "
-          + getRandom(10));
+      a.setText("Hello [[Image:" + getValue("filename") + "]] a image " + getRandom(10));
       a.save();
     }
 

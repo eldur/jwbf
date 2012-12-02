@@ -69,8 +69,7 @@ public final class GetApiToken extends MWAction {
    *           if this action is not supported of the MediaWiki version
    *           connected to
    */
-  public GetApiToken(Intoken intoken, String title, Version v, Userinfo ui)
-      throws VersionException {
+  public GetApiToken(Intoken intoken, String title, Version v, Userinfo ui) throws VersionException {
     super(v);
     this.intoken = intoken;
     generateTokenRequest(intoken, title);
@@ -89,9 +88,8 @@ public final class GetApiToken extends MWAction {
     if (log.isTraceEnabled()) {
       log.trace("enter GetToken.generateTokenRequest()");
     }
-    String uS = "/api.php" + "?action=query" + "&prop=info" + "&intoken="
-        + intoken.toString().toLowerCase() + "&titles="
-        + MediaWiki.encode(title) + "&format=xml";
+    String uS = "/api.php" + "?action=query" + "&prop=info" + "&intoken=" + intoken.toString().toLowerCase()
+        + "&titles=" + MediaWiki.encode(title) + "&format=xml";
     msg = new Get(uS);
 
   }
@@ -109,8 +107,7 @@ public final class GetApiToken extends MWAction {
    * {@inheritDoc}
    */
   @Override
-  public String processReturningText(String s, HttpAction hm)
-      throws ProcessException {
+  public String processReturningText(String s, HttpAction hm) throws ProcessException {
     if (hm.getRequest().equals(msg.getRequest())) {
       if (log.isTraceEnabled()) {
         log.trace("enter GetToken.processAllReturningText(String)");
@@ -126,8 +123,7 @@ public final class GetApiToken extends MWAction {
       } catch (JDOMException e) {
         if (s.startsWith("unknown_action:")) {
           log.error(
-              "Adding '$wgEnableWriteAPI = true;' to your MediaWiki's LocalSettings.php might remove this problem.",
-              e);
+              "Adding '$wgEnableWriteAPI = true;' to your MediaWiki's LocalSettings.php might remove this problem.", e);
         } else {
           log.error(e.getMessage(), e);
         }
@@ -171,8 +167,7 @@ public final class GetApiToken extends MWAction {
    */
   private void process(Document doc) {
     try {
-      Element elem = doc.getRootElement().getChild("query").getChild("pages")
-          .getChild("page");
+      Element elem = doc.getRootElement().getChild("query").getChild("pages").getChild("page");
 
       // process reply for token request
       switch (intoken) {
@@ -208,7 +203,6 @@ public final class GetApiToken extends MWAction {
     }
 
     if (log.isDebugEnabled())
-      log.debug("found token =" + token + "\n" + "for: " + msg.getRequest()
-          + "\n");
+      log.debug("found token =" + token + "\n" + "for: " + msg.getRequest() + "\n");
   }
 }

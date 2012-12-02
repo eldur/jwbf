@@ -32,11 +32,9 @@ import org.junit.Test;
 
 /**
  * @author Philipp Kohl
- * @author Thomas Stock
- * Simple Test-Case to get Unit-Testing started
+ * @author Thomas Stock Simple Test-Case to get Unit-Testing started
  */
 public class SimpleArticleTest {
-
 
   private SimpleArticle article;
 
@@ -48,9 +46,10 @@ public class SimpleArticleTest {
 
     article = new SimpleArticle();
   }
+
   /**
    * Tests edit summary.
-   *
+   * 
    */
   @Test
   public void testEditSummary() {
@@ -66,7 +65,6 @@ public class SimpleArticleTest {
       String dateString = "2007-01-08T15:12:55Z";
       article.setEditTimestamp(dateString);
 
-
       assertEquals(dateString, sdf.format(article.getEditTimestamp()));
     } catch (ParseException e) {
       e.printStackTrace();
@@ -77,11 +75,9 @@ public class SimpleArticleTest {
   public void testDateFormatTrac() throws ParseException {
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
 
-
     String dateString = "02/04/09 14:04:36 (35 minutes ago)</dd>\n\n      \n";
     String dateStringTarget = "2009-02-04T14:04:36Z";
     article.setEditTimestamp(dateString);
-
 
     assertEquals(dateStringTarget, sdf.format(article.getEditTimestamp()));
   }
@@ -167,6 +163,7 @@ public class SimpleArticleTest {
     assertEquals("MyTest", sa.getTitle());
     assertEquals("test", sa.getText());
   }
+
   @Test
   public void testNoNullpointer2() {
     SimpleArticle sa = new SimpleArticle();
@@ -178,7 +175,6 @@ public class SimpleArticleTest {
     assertNotNull(sa.getEditTimestamp());
     assertFalse(sa.isRedirect());
     assertFalse(sa.isMinorEdit());
-
 
   }
 
@@ -193,6 +189,7 @@ public class SimpleArticleTest {
     article.setText("# redirect [[A]] [[Category:B]]");
     assertTrue(article.isRedirect());
   }
+
   @Test
   public void testIsNoRedirect() {
     article.setText("Text\n#redirect [[A]]");
@@ -216,6 +213,7 @@ public class SimpleArticleTest {
     sa2.setText("a");
     assertEquals(sa1.hashCode(), sa2.hashCode());
   }
+
   @Test
   public void testEquals() {
     Date d2 = new Date(System.currentTimeMillis());

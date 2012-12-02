@@ -30,10 +30,11 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
 import org.xml.sax.InputSource;
+
 /**
- *
+ * 
  * @author Thomas Stock
- *
+ * 
  */
 @Slf4j
 @SupportedBy({ MW1_11, MW1_12, MW1_13, MW1_14, MW1_15, MW1_16 })
@@ -43,30 +44,25 @@ public class GetUserinfo extends MWAction implements Userinfo {
   private final Set<String> rights = new HashSet<String>();
   private final Set<String> groups = new HashSet<String>();
   private Get msg;
+
   /**
-   *
-   * @param v a
-   * @throws VersionException  a
+   * 
+   * @param v
+   *          a
+   * @throws VersionException
+   *           a
    */
   public GetUserinfo(Version v) throws VersionException {
     super(v);
     switch (v) {
       case MW1_11:
-        msg = new Get("/api.php?" + "action=query&" + "meta=userinfo&"
-            + "uiprop="
-            + MediaWiki.encode("blockinfo|hasmsg|groups|rights") + "&"
-            + "format=xml");
+        msg = new Get("/api.php?" + "action=query&" + "meta=userinfo&" + "uiprop="
+            + MediaWiki.encode("blockinfo|hasmsg|groups|rights") + "&" + "format=xml");
 
         break;
       default:
-        msg = new Get(
-            "/api.php?"
-                + "action=query&"
-                + "meta=userinfo&"
-                + "uiprop="
-                + MediaWiki
-                .encode("blockinfo|hasmsg|groups|rights|options|editcount|ratelimits")
-                + "&" + "format=xml");
+        msg = new Get("/api.php?" + "action=query&" + "meta=userinfo&" + "uiprop="
+            + MediaWiki.encode("blockinfo|hasmsg|groups|rights|options|editcount|ratelimits") + "&" + "format=xml");
 
         break;
     }
@@ -96,23 +92,25 @@ public class GetUserinfo extends MWAction implements Userinfo {
    * {@inheritDoc}
    */
   @Override
-  public final String processAllReturningText(final String s)
-      throws ProcessException {
+  public final String processAllReturningText(final String s) throws ProcessException {
     parse(s);
     return "";
   }
+
   /**
    * {@inheritDoc}
    */
   public Set<String> getRights() {
     return rights;
   }
+
   /**
    * {@inheritDoc}
    */
   public Set<String> getGroups() {
     return groups;
   }
+
   /**
    * {@inheritDoc}
    */
@@ -127,10 +125,9 @@ public class GetUserinfo extends MWAction implements Userinfo {
 
     while (el.hasNext()) {
       Element element = el.next();
-      // blockinfo|hasmsg|groups|rights   <- MW 11
+      // blockinfo|hasmsg|groups|rights <- MW 11
       if (element.getQualifiedName().equalsIgnoreCase("userinfo")) {
         username = element.getAttributeValue("name");
-
 
       } else if (element.getQualifiedName().equalsIgnoreCase("groups")) {
         Iterator<Element> git = element.getChildren("g").iterator();
@@ -151,8 +148,8 @@ public class GetUserinfo extends MWAction implements Userinfo {
 
     }
 
-
   }
+
   /**
    * {@inheritDoc}
    */

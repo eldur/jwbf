@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2007 Justus Bisser.
  * 
@@ -18,7 +17,6 @@
  * Thomas Stock
  */
 package net.sourceforge.jwbf.mediawiki.actions.editing;
-
 
 import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_11;
 import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_12;
@@ -46,15 +44,16 @@ import net.sourceforge.jwbf.mediawiki.contentRep.SimpleFile;
 
 /**
  * <p>
- * To allow your bot to upload media in your MediaWiki. Add at least the following line
- * to your MediaWiki's LocalSettings.php:<br>
- *
+ * To allow your bot to upload media in your MediaWiki. Add at least the
+ * following line to your MediaWiki's LocalSettings.php:<br>
+ * 
  * <pre>
  * $wgEnableUploads = true;
  * </pre>
  * 
- * For more details see also
- * <a href="http://www.mediawiki.org/wiki/Help:Configuration_settings#Uploads">Upload Config</a>
+ * For more details see also <a
+ * href="http://www.mediawiki.org/wiki/Help:Configuration_settings#Uploads"
+ * >Upload Config</a>
  * 
  * @author Justus Bisser
  * @author Thomas Stock
@@ -69,12 +68,17 @@ public class FileUpload extends MWAction {
   private boolean second = true;
   private final SimpleFile a;
   private Post msg;
+
   /**
    * 
-   * @param a the
-   * @param bot a
-   * @throws ActionException on problems with file
-   * @throws VersionException on wrong MediaWiki version
+   * @param a
+   *          the
+   * @param bot
+   *          a
+   * @throws ActionException
+   *           on problems with file
+   * @throws VersionException
+   *           on wrong MediaWiki version
    */
   public FileUpload(final SimpleFile a, MediaWikiBot bot) throws ActionException, VersionException {
     super(bot.getVersion());
@@ -86,11 +90,8 @@ public class FileUpload extends MWAction {
       throw new ActionException("Please login first");
     }
 
-
     this.a = a;
-    String uS = "/index.php?title="
-        + MediaWiki.encode(a.getTitle())
-        + "&action=edit&dontcountme=s";
+    String uS = "/index.php?title=" + MediaWiki.encode(a.getTitle()) + "&action=edit&dontcountme=s";
 
     g = new Get(uS);
 
@@ -98,14 +99,19 @@ public class FileUpload extends MWAction {
 
   /**
    * 
-   * @param filename to uplad
-   * @param bot a
-   * @throws ActionException on problems with file
-   * @throws VersionException on wrong MediaWiki version
+   * @param filename
+   *          to uplad
+   * @param bot
+   *          a
+   * @throws ActionException
+   *           on problems with file
+   * @throws VersionException
+   *           on wrong MediaWiki version
    */
   public FileUpload(MediaWikiBot bot, String filename) throws ActionException, VersionException {
     this(new SimpleFile(filename), bot);
   }
+
   /**
    * {@inheritDoc}
    */
@@ -136,12 +142,11 @@ public class FileUpload extends MWAction {
         post.addParam("wpIgnoreWarning", "true");
         post.addParam("wpSourceType", "file");
         post.addParam("wpUpload", "Upload file");
-        //				 post.addParam("wpUploadDescription", "false");
-        //				 post.addParam("wpWatchthis", "false");
+        // post.addParam("wpUploadDescription", "false");
+        // post.addParam("wpWatchthis", "false");
 
         post.addParam("wpUploadFile", a.getFile());
         // new FilePart( f.getName(), f)
-
 
       } else {
         post.addParam("wpDestFile", a.getTitle());
@@ -156,12 +161,10 @@ public class FileUpload extends MWAction {
         // new FilePart( f.getName(), f)
         post.addParam("wpUploadDescription", a.getText());
 
-
       }
       if (!a.getFile().exists()) {
         throw new FileNotFoundException();
       }
-
 
       msg = post;
       second = false;
@@ -170,6 +173,7 @@ public class FileUpload extends MWAction {
     }
     return msg;
   }
+
   /**
    * {@inheritDoc}
    */
@@ -185,9 +189,7 @@ public class FileUpload extends MWAction {
   public String processAllReturningText(String s) throws ProcessException {
 
     if (s.contains("error")) {
-      Pattern errFinder = Pattern
-          .compile("<p>(.*?)</p>",
-              Pattern.DOTALL | Pattern.MULTILINE);
+      Pattern errFinder = Pattern.compile("<p>(.*?)</p>", Pattern.DOTALL | Pattern.MULTILINE);
       Matcher m = errFinder.matcher(s);
       String lastP = "";
       while (m.find()) {
@@ -199,6 +201,5 @@ public class FileUpload extends MWAction {
     }
     return "";
   }
-
 
 }

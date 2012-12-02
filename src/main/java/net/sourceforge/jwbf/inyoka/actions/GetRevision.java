@@ -52,8 +52,11 @@ public class GetRevision implements ContentProcessable {
 
   /**
    * TODO follow redirects.
-   * @param articlename a
-   * @throws ProcessException if arcticlename is empty
+   * 
+   * @param articlename
+   *          a
+   * @throws ProcessException
+   *           if arcticlename is empty
    */
   public GetRevision(final String articlename) throws ProcessException {
     if (articlename.length() <= 0) {
@@ -62,19 +65,16 @@ public class GetRevision implements ContentProcessable {
     sa = new SimpleArticle();
     sa.setTitle(articlename);
 
-
     contentGet = new Get("/" + articlename + "?action=export&format=raw&");
     versionGet = new Get("/" + articlename);
-		if (log.isDebugEnabled()) {
-			log.debug(contentGet.getRequest());
-			log.debug(versionGet.getRequest());
-		}
+    if (log.isDebugEnabled()) {
+      log.debug(contentGet.getRequest());
+      log.debug(versionGet.getRequest());
+    }
 
   }
 
-
-  public String processReturningText(String s, HttpAction hm)
-      throws ProcessException {
+  public String processReturningText(String s, HttpAction hm) throws ProcessException {
     if (hm == contentGet) {
       sa.setText(s);
     } else if (hm == versionGet) {
@@ -87,16 +87,17 @@ public class GetRevision implements ContentProcessable {
     return "";
   }
 
-  private static final Pattern authorPattern = Pattern.compile("class=\"author\">([^\"]*)<",
-      Pattern.DOTALL | Pattern.MULTILINE);
+  private static final Pattern authorPattern = Pattern.compile("class=\"author\">([^\"]*)<", Pattern.DOTALL
+      | Pattern.MULTILINE);
   private static final Pattern editTimestampPattern = Pattern.compile("class=\"time\">([^\"]*)<", Pattern.DOTALL
       | Pattern.MULTILINE);
   private static final Pattern editMessagePattern = Pattern.compile("class=\"message\"><p>([^\"]*)</p>", Pattern.DOTALL
       | Pattern.MULTILINE);
-  private static final Pattern versionPattern = Pattern.compile("action=diff&amp;version=([0-9]*)"
-      , Pattern.DOTALL | Pattern.MULTILINE);
+  private static final Pattern versionPattern = Pattern.compile("action=diff&amp;version=([0-9]*)", Pattern.DOTALL
+      | Pattern.MULTILINE);
+
   private void parse(String s) {
-    //		System.err.println(s); // TODO RM
+    // System.err.println(s); // TODO RM
 
     Matcher m = authorPattern.matcher(s);
 
@@ -142,9 +143,8 @@ public class GetRevision implements ContentProcessable {
     return sa;
   }
 
-
   public boolean hasMoreMessages() {
-    if (first || second || third )
+    if (first || second || third)
       return true;
     return false;
   }
@@ -156,7 +156,7 @@ public class GetRevision implements ContentProcessable {
     } else if (second) {
       second = false;
       return versionGet;
-    } else  {
+    } else {
       third = false;
       return metaGet;
     }

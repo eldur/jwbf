@@ -53,8 +53,7 @@ import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
  * 
  */
 @Slf4j
-@SupportedBy({ MW1_09, MW1_10, MW1_11, MW1_12, MW1_13, MW1_14, MW1_15, MW1_16,
-    MW1_17 })
+@SupportedBy({ MW1_09, MW1_10, MW1_11, MW1_12, MW1_13, MW1_14, MW1_15, MW1_16, MW1_17 })
 public class TemplateUserTitles extends TitleQuery<String> {
 
   /** constant value for the eilimit-parameter. **/
@@ -76,8 +75,7 @@ public class TemplateUserTitles extends TitleQuery<String> {
    * parameters, see
    * {@link TemplateUserTitles#generateRequest(String, String, String)}
    */
-  public TemplateUserTitles(MediaWikiBot bot, String templateName,
-      int... namespaces) throws VersionException {
+  public TemplateUserTitles(MediaWikiBot bot, String templateName, int... namespaces) throws VersionException {
     super(bot);
     this.bot = bot;
     this.templateName = templateName;
@@ -97,8 +95,7 @@ public class TemplateUserTitles extends TitleQuery<String> {
    *          the value for the eicontinue parameter, null for the generation of
    *          the initial request
    */
-  private HttpAction generateRequest(String templateName, String namespace,
-      String eicontinue) {
+  private HttpAction generateRequest(String templateName, String namespace, String eicontinue) {
 
     String uS = "";
     String titleVal = "";
@@ -116,20 +113,16 @@ public class TemplateUserTitles extends TitleQuery<String> {
 
       uS = "/api.php?action=query&list=embeddedin"
 
-          + titleVal
-          + MediaWiki.encode(templateName)
-          + ((namespace != null && namespace.length() != 0) ? ("&einamespace=" + MediaWiki
-              .encode(namespace)) : "") + "&eilimit=" + LIMIT + "&format=xml";
+      + titleVal + MediaWiki.encode(templateName)
+          + ((namespace != null && namespace.length() != 0) ? ("&einamespace=" + MediaWiki.encode(namespace)) : "")
+          + "&eilimit=" + LIMIT + "&format=xml";
 
     } else {
 
-      uS = "/api.php?action=query&list=embeddedin"
-          + "&eicontinue="
-          + MediaWiki.encode(eicontinue)
-          + "&eilimit="
+      uS = "/api.php?action=query&list=embeddedin" + "&eicontinue=" + MediaWiki.encode(eicontinue) + "&eilimit="
           + LIMIT
-          + ((namespace != null && namespace.length() != 0) ? ("&einamespace=" + MediaWiki
-              .encode(namespace)) : "") + "&format=xml";
+          + ((namespace != null && namespace.length() != 0) ? ("&einamespace=" + MediaWiki.encode(namespace)) : "")
+          + "&format=xml";
 
       switch (bot.getVersion()) {
         case MW1_09:
@@ -183,9 +176,8 @@ public class TemplateUserTitles extends TitleQuery<String> {
 
     // get the eicontinue-value
 
-    Pattern p = Pattern.compile("<query-continue>.*?"
-        + "<embeddedin *eicontinue=\"([^\"]*)\" */>" + ".*?</query-continue>",
-        Pattern.DOTALL | Pattern.MULTILINE);
+    Pattern p = Pattern.compile("<query-continue>.*?" + "<embeddedin *eicontinue=\"([^\"]*)\" */>"
+        + ".*?</query-continue>", Pattern.DOTALL | Pattern.MULTILINE);
 
     Matcher m = p.matcher(s);
 
@@ -210,8 +202,7 @@ public class TemplateUserTitles extends TitleQuery<String> {
 
     // get the backlink titles and add them all to the titleCollection
 
-    Pattern p = Pattern
-        .compile("<ei pageid=\".*?\" ns=\".*?\" title=\"(.*?)\" />");
+    Pattern p = Pattern.compile("<ei pageid=\".*?\" ns=\".*?\" title=\"(.*?)\" />");
 
     Matcher m = p.matcher(s);
 
@@ -226,11 +217,9 @@ public class TemplateUserTitles extends TitleQuery<String> {
   protected HttpAction prepareCollection() {
 
     if (getNextPageInfo().length() <= 0) {
-      return generateRequest(templateName, MWAction.createNsString(namespaces),
-          null);
+      return generateRequest(templateName, MWAction.createNsString(namespaces), null);
     } else {
-      return generateRequest(templateName, MWAction.createNsString(namespaces),
-          getNextPageInfo());
+      return generateRequest(templateName, MWAction.createNsString(namespaces), getNextPageInfo());
     }
 
   }

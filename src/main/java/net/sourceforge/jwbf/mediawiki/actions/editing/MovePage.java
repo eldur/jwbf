@@ -89,37 +89,30 @@ public class MovePage extends MWAction {
    * @throws ActionException
    *           ActionException
    */
-  public MovePage(MediaWikiBot bot, String oldtitle, String newtitle,
-      String reason, boolean withsubpages, boolean noredirect)
-      throws ProcessException, ActionException {
+  public MovePage(MediaWikiBot bot, String oldtitle, String newtitle, String reason, boolean withsubpages,
+      boolean noredirect) throws ProcessException, ActionException {
     super(bot.getVersion());
-    token = new GetApiToken(GetApiToken.Intoken.MOVE, oldtitle,
-        bot.getVersion(), bot.getUserinfo());
+    token = new GetApiToken(GetApiToken.Intoken.MOVE, oldtitle, bot.getVersion(), bot.getUserinfo());
     this.oldtitle = oldtitle;
     this.newtitle = newtitle;
     this.reason = reason;
     this.withsubpages = withsubpages;
     this.noredirect = noredirect;
 
-    if (oldtitle == null || oldtitle.length() == 0 || newtitle == null
-        || newtitle.length() == 0) {
-      throw new IllegalArgumentException(
-          "The arguments 'oldtitle' and 'newtitle' must not be null or empty");
+    if (oldtitle == null || oldtitle.length() == 0 || newtitle == null || newtitle.length() == 0) {
+      throw new IllegalArgumentException("The arguments 'oldtitle' and 'newtitle' must not be null or empty");
     }
 
     if (!bot.getUserinfo().getRights().contains("move")) {
-      throw new ProcessException(
-          "The given user doesn't have the rights to move. "
-              + "Add '$wgGroupPermissions['bot']['move'] = true;' "
-              + "to your MediaWiki's LocalSettings.php might solve this problem.");
+      throw new ProcessException("The given user doesn't have the rights to move. "
+          + "Add '$wgGroupPermissions['bot']['move'] = true;' "
+          + "to your MediaWiki's LocalSettings.php might solve this problem.");
     }
 
-    if (withsubpages
-        && !bot.getUserinfo().getRights().contains("move-subpages")) {
-      throw new ProcessException(
-          "The given user doesn't have the rights to move subpages. "
-              + "Add '$wgGroupPermissions['bot']['move-subpages'] = true;' "
-              + "to your MediaWiki's LocalSettings.php might solve this problem.");
+    if (withsubpages && !bot.getUserinfo().getRights().contains("move-subpages")) {
+      throw new ProcessException("The given user doesn't have the rights to move subpages. "
+          + "Add '$wgGroupPermissions['bot']['move-subpages'] = true;' "
+          + "to your MediaWiki's LocalSettings.php might solve this problem.");
     }
   }
 
@@ -129,25 +122,18 @@ public class MovePage extends MWAction {
   private HttpAction getSecondRequest() {
     HttpAction msg = null;
     if (token.getToken() == null || token.getToken().length() == 0) {
-      throw new IllegalArgumentException("The argument 'token' must not be \""
-          + String.valueOf(token.getToken()) + "\"");
+      throw new IllegalArgumentException("The argument 'token' must not be \"" + String.valueOf(token.getToken())
+          + "\"");
     }
     if (log.isTraceEnabled()) {
       log.trace("enter MovePage.generateMoveRequest(String)");
     }
 
-    String uS = "/api.php"
-        + "?action=move"
-        + "&from="
-        + MediaWiki.encode(oldtitle)
-        + "&to="
-        + MediaWiki.encode(newtitle)
-        + "&token="
-        + MediaWiki.encode(token.getToken())
-        + (withsubpages ? "&movesubpages" : "")
-        + (noredirect ? "&noredirect" : "")
-        + ((reason != null && reason.length() != 0) ? "&reason="
-            + MediaWiki.encode(reason) : "") + "&movetalk&format=xml";
+    String uS = "/api.php" + "?action=move" + "&from=" + MediaWiki.encode(oldtitle) + "&to="
+        + MediaWiki.encode(newtitle) + "&token=" + MediaWiki.encode(token.getToken())
+        + (withsubpages ? "&movesubpages" : "") + (noredirect ? "&noredirect" : "")
+        + ((reason != null && reason.length() != 0) ? "&reason=" + MediaWiki.encode(reason) : "")
+        + "&movetalk&format=xml";
 
     if (log.isDebugEnabled()) {
       log.debug("move url: \"" + uS + "\"");
@@ -162,8 +148,7 @@ public class MovePage extends MWAction {
    * {@inheritDoc}
    */
   @Override
-  public String processReturningText(String s, HttpAction hm)
-      throws ProcessException {
+  public String processReturningText(String s, HttpAction hm) throws ProcessException {
     super.processReturningText(s, hm);
 
     if (moveToken) {
@@ -214,8 +199,7 @@ public class MovePage extends MWAction {
   private boolean containsError(Document doc) {
     Element elem = doc.getRootElement().getChild("error");
     if (elem != null) {
-      log.error(elem.getAttributeValue("code") + ": "
-          + elem.getAttributeValue("info"));
+      log.error(elem.getAttributeValue("code") + ": " + elem.getAttributeValue("info"));
 
       return true;
     }
@@ -235,9 +219,8 @@ public class MovePage extends MWAction {
     if (elem != null) {
       // process reply for delete request
       if (log.isInfoEnabled()) {
-        log.info("Moved article '" + elem.getAttributeValue("from") + "' to '"
-            + elem.getAttributeValue("to") + "'" + " with reason '"
-            + elem.getAttributeValue("reason") + "'");
+        log.info("Moved article '" + elem.getAttributeValue("from") + "' to '" + elem.getAttributeValue("to") + "'"
+            + " with reason '" + elem.getAttributeValue("reason") + "'");
       }
     } else {
       log.error("Unknow reply. This is not a reply for a delete action.");

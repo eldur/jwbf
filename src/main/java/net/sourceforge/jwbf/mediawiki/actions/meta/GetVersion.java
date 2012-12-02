@@ -129,8 +129,7 @@ public class GetVersion extends MWAction {
    * {@inheritDoc}
    */
   @Override
-  public final String processAllReturningText(final String s)
-      throws ProcessException {
+  public final String processAllReturningText(final String s) throws ProcessException {
     parse(s);
     return "";
   }
@@ -181,9 +180,8 @@ public class GetVersion extends MWAction {
 
     }
     if (log.isInfoEnabled())
-      log.info("\nVersion is UNKNOWN for JWBF (" + JWBF.getVersion(getClass())
-          + ") : \n\t" + getGenerator() + "\n\t" + "supported versions: "
-          + buffer.toString() + "\n\t"
+      log.info("\nVersion is UNKNOWN for JWBF (" + JWBF.getVersion(getClass()) + ") : \n\t" + getGenerator() + "\n\t"
+          + "supported versions: " + buffer.toString() + "\n\t"
           + "\n\tUsing settings for actual Wikipedia development version");
     return Version.UNKNOWN;
 

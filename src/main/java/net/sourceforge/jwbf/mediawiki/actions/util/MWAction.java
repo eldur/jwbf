@@ -28,7 +28,6 @@ import net.sourceforge.jwbf.core.actions.util.ProcessException;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
 
-
 /**
  * @author Thomas Stock
  * 
@@ -91,8 +90,7 @@ public abstract class MWAction implements ContentProcessable {
    *           on processing problems
    * 
    */
-  public String processReturningText(final String s, final HttpAction hm)
-      throws ProcessException {
+  public String processReturningText(final String s, final HttpAction hm) throws ProcessException {
     return processAllReturningText(s);
   }
 
@@ -142,8 +140,7 @@ public abstract class MWAction implements ContentProcessable {
         String svr = sv.toString().trim();
         svr = svr.substring(0, svr.length() - 1);
 
-        log.debug("found support for: " + svr + " in ↲ \n\t class "
-            + clazz.getCanonicalName());
+        log.debug("found support for: " + svr + " in ↲ \n\t class " + clazz.getCanonicalName());
 
       }
       return sb.value();

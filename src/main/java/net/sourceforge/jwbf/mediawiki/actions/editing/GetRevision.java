@@ -96,8 +96,7 @@ public class GetRevision extends MWAction {
    * @param v
    *          the
    */
-  public GetRevision(Version v, final String articlename, final int properties)
-      throws ProcessException {
+  public GetRevision(Version v, final String articlename, final int properties) throws ProcessException {
     super(v);
     botVersion = v;
     // if (!bot.getUserinfo().getRights().contains("read")) {
@@ -108,10 +107,8 @@ public class GetRevision extends MWAction {
     this.properties = properties;
     sa = new SimpleArticle();
     sa.setTitle(articlename);
-    String uS = "/api.php?action=query&prop=revisions&titles="
-        + MediaWiki.encode(articlename) + "&rvprop="
-        + getDataProperties(properties) + getReversion(properties)
-        + "&rvlimit=1" + "&format=xml";
+    String uS = "/api.php?action=query&prop=revisions&titles=" + MediaWiki.encode(articlename) + "&rvprop="
+        + getDataProperties(properties) + getReversion(properties) + "&rvlimit=1" + "&format=xml";
     msg = new Get(uS);
 
   }
@@ -120,8 +117,7 @@ public class GetRevision extends MWAction {
    * {@inheritDoc}
    */
   @Override
-  public String processReturningText(final String s, HttpAction ha)
-      throws ProcessException {
+  public String processReturningText(final String s, HttpAction ha) throws ProcessException {
     if (msg.getRequest().equals(ha.getRequest()) && singleProcess) {
       if (log.isDebugEnabled()) { // TODO no very nice debug here
         if (s.length() < 151) {
@@ -222,8 +218,7 @@ public class GetRevision extends MWAction {
     while (el.hasNext()) {
       Element element = el.next();
       if (element.getQualifiedName().equalsIgnoreCase("error")) {
-        throw new ApiException(element.getAttributeValue("code"),
-            element.getAttributeValue("info"));
+        throw new ApiException(element.getAttributeValue("code"), element.getAttributeValue("info"));
       } else if (element.getQualifiedName().equalsIgnoreCase("rev")) {
 
         try {
