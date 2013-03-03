@@ -1,13 +1,16 @@
 package net.sourceforge.jwbf;
 
 import java.io.File;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLConnection;
 import java.util.Random;
+
+import lombok.extern.slf4j.Slf4j;
 
 import org.junit.Assume;
 
+@Slf4j
 public abstract class TestHelper {
 
   private static Random wheel = new Random();
@@ -61,11 +64,14 @@ public abstract class TestHelper {
 
   public static void assumeReachable(URL url) {
     try {
-      URLConnection c = url.openConnection();
+      // TODO cache
+      HttpURLConnection c = (HttpURLConnection) url.openConnection();
       c.setConnectTimeout(2000);
       c.connect();
+      Assume.assumeTrue("HTTP/1.1 200 OK".equals(c.getHeaderField(0)));
 
     } catch (Exception e) {
+      log.warn("", e);
       Assume.assumeNoException(e);
     }
   }

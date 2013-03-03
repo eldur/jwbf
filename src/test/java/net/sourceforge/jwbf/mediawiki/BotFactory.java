@@ -17,6 +17,10 @@ import com.google.inject.name.Names;
 
 public class BotFactory {
 
+  private BotFactory() {
+    // do nothing
+  }
+
   private static Injector masterInjector = Guice.createInjector(new AbstractModule() {
 
     @Override
@@ -29,7 +33,7 @@ public class BotFactory {
   public static MediaWikiBot getMediaWikiBot(final Version v, final boolean login) {
 
     final String wikiUrl = getWikiUrl(v);
-
+    TestHelper.assumeReachable(wikiUrl);
     Injector injector = masterInjector.createChildInjector(new AbstractModule() {
 
       @Override
