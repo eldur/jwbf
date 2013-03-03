@@ -75,13 +75,17 @@ public class ImageInfo extends MWAction {
     this(bot, name, EMPTY_STRING_MAP);
   }
 
-  public ImageInfo(MediaWikiBot bot, String name, Map<String, String> params) throws VersionException {
+  public ImageInfo(MediaWikiBot bot, String name, Map<String, String> params)
+      throws VersionException {
     super(bot.getVersion());
     this.bot = bot;
     map.putAll(params);
     prepareMsg(name);
   }
 
+  /**
+   * TODO change params to a map
+   */
   public ImageInfo(MediaWikiBot bot, String name, String[][] params) throws VersionException {
     super(bot.getVersion());
     this.bot = bot;
@@ -108,11 +112,11 @@ public class ImageInfo extends MWAction {
       addProps += "&" + HEIGHT + "=" + height;
 
     if (bot.getVersion().greaterEqThen(Version.MW1_15)) {
-      msg = new Get("/api.php?action=query&titles=File:" + MediaWiki.encode(name) + "&prop=imageinfo" + addProps
-          + "&iiprop=url&format=xml");
+      msg = new Get("/api.php?action=query&titles=File:" + MediaWiki.encode(name)
+          + "&prop=imageinfo" + addProps + "&iiprop=url&format=xml");
     } else {
-      msg = new Get("/api.php?action=query&titles=Image:" + MediaWiki.encode(name) + "&prop=imageinfo" + addProps
-          + "&iiprop=url&format=xml");
+      msg = new Get("/api.php?action=query&titles=Image:" + MediaWiki.encode(name)
+          + "&prop=imageinfo" + addProps + "&iiprop=url&format=xml");
     }
   }
 
@@ -211,7 +215,7 @@ public class ImageInfo extends MWAction {
     if (root != null)
       findContent(root);
     if (urlOfImage.length() < 1)
-      throw new ProcessException("Could not find this image");
+      throw new ProcessException("Could not find this image " + s);
   }
 
   /**

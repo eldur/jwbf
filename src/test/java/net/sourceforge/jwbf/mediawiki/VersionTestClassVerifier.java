@@ -105,7 +105,8 @@ public class VersionTestClassVerifier extends Verifier {
   private void assertAll() {
     if (isVersionTestCase) {
 
-      Assert.assertFalse("no versions are supported; check annotations " + documentedVersions.toString(),
+      Assert.assertFalse(
+          "no versions are supported; check annotations " + documentedVersions.toString(),
           documentedVersions.values().contains(Version.UNKNOWN) && documentedVersions.size() == 1);
       assertDocumentedTests();
       assertAllTestedVersionsAreDocumented();
@@ -121,7 +122,8 @@ public class VersionTestClassVerifier extends Verifier {
   }
 
   private void assertAllTestedVersionsAreDocumented() {
-    assertEquals("There are undocumented tests for versions. ", "", fmt(getTestedButUndocmentedVersions()));
+    assertEquals("There are undocumented tests for versions. ", "",
+        fmt(getTestedButUndocmentedVersions()));
   }
 
   private void assertDocumentedTests() {
@@ -133,7 +135,8 @@ public class VersionTestClassVerifier extends Verifier {
         testedAndDocumentedVersions.put(key, version);
       }
     }
-    assertEquals("not all documented versions are tested ", fmt(documentedVersions), fmt(testedAndDocumentedVersions));
+    assertEquals("not all documented versions are tested ", fmt(documentedVersions),
+        fmt(testedAndDocumentedVersions));
   }
 
   private String fmt(Map<String, Version> versionMap) {
@@ -187,8 +190,11 @@ public class VersionTestClassVerifier extends Verifier {
         MediaWikiBot bot = botProvider.get();
         if (bot != null) {
           for (Class<?> c : clazz) {
-            registerTestedVersion(c, bot.getVersion());
-
+            try {
+              registerTestedVersion(c, bot.getVersion());
+            } catch (RuntimeException e) {
+              e.printStackTrace(); // TODO log
+            }
           }
         }
       }

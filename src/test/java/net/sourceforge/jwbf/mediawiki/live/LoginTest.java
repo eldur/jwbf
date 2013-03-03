@@ -24,9 +24,9 @@ import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_09;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
@@ -40,6 +40,7 @@ import javax.net.ssl.SSLSocket;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
+import net.sourceforge.jwbf.TestHelper;
 import net.sourceforge.jwbf.core.actions.HttpActionClient;
 import net.sourceforge.jwbf.core.actions.util.ActionException;
 import net.sourceforge.jwbf.mediawiki.BotFactory;
@@ -64,6 +65,7 @@ import org.apache.http.impl.conn.SingleClientConnManager;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpParams;
 import org.junit.ClassRule;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Verifier;
@@ -77,7 +79,8 @@ public class LoginTest extends AbstractMediaWikiBotTest {
 
   // TODO what about PostLogin.class
   @ClassRule
-  public static VersionTestClassVerifier classVerifier = new VersionTestClassVerifier(PostLoginOld.class);
+  public static VersionTestClassVerifier classVerifier = new VersionTestClassVerifier(
+      PostLoginOld.class);
 
   @Rule
   public Verifier successRegister = classVerifier.getSuccessRegister(this);
@@ -145,8 +148,7 @@ public class LoginTest extends AbstractMediaWikiBotTest {
   }
 
   /**
-   * Test FAIL login on Mediawiki. TODO change exception test, should fail if no
-   * route to test host
+   * Test FAIL login on Mediawiki. TODO change exception test, should fail if no route to test host
    * 
    * @throws Exception
    *           a
@@ -164,7 +166,7 @@ public class LoginTest extends AbstractMediaWikiBotTest {
    * @throws Exception
    *           a
    */
-  @Test(expected = MalformedURLException.class)
+  @Test(expected = IllegalArgumentException.class)
   public final void loginWikiMW1x09UrlformatsFail() throws Exception {
 
     String defektUrl = getValue("wikiMW1_09_url");
@@ -182,6 +184,7 @@ public class LoginTest extends AbstractMediaWikiBotTest {
    *           a
    */
   @Test
+  @Ignore("1.09 is to old")
   public final void loginWikiMW1x09Urlformats() throws Exception {
     String todoUrl = getValue("wikiMW1_09_url");
     int lastSlash = todoUrl.lastIndexOf("/");
@@ -193,34 +196,40 @@ public class LoginTest extends AbstractMediaWikiBotTest {
   }
 
   /**
-   * Test invalid installation of MW. TODO change exception test, should fail if
-   * no route to test host
+   * Test invalid installation of MW. TODO change exception test, should fail if no route to test
+   * host
    * 
    * @throws Exception
    *           a
    */
-  @Test(expected = ActionException.class)
+  @Test
   public final void installationDefunct() throws Exception {
     String invalidUrl = getValue("wikiMWinvalid_url");
     bot = new MediaWikiBot(invalidUrl);
-
-    bot.login(getValue("wikiMW1_09_user"), getValue("wikiMW1_09_pass"));
+    try {
+      bot.login(getValue("wikiMW1_09_user"), getValue("wikiMW1_09_pass"));
+      fail();
+    } catch (IllegalStateException e) {
+      assertTrue(e.getMessage().startsWith("invalid status: HTTP/1.1 404 Not Found;"));
+    }
   }
 
   /**
-   * Test invalid installation of MW. TODO change exception test, should fail if
-   * no route to test host
+   * Test invalid installation of MW. TODO change exception test, should fail if no route to test
+   * host
    * 
    * @throws Exception
    *           a
    */
-  @Test(expected = ActionException.class)
+  @Test
   public final void conncetionProblem() throws Exception {
     String invalidUrl = "http://www.google.com/invalidWiki/";
     bot = new MediaWikiBot(invalidUrl);
-
-    bot.login(getValue("wikiMW1_09_user"), getValue("wikiMW1_09_pass"));
-
+    try {
+      bot.login(getValue("wikiMW1_09_user"), getValue("wikiMW1_09_pass"));
+    } catch (IllegalStateException e) {
+      assertTrue(e.getMessage().startsWith("invalid status: HTTP/1.1 404 Not Found;"));
+    }
   }
 
   /**
@@ -254,6 +263,7 @@ public class LoginTest extends AbstractMediaWikiBotTest {
 
     assertEquals("https", u.getProtocol());
     int port = 443;
+    TestHelper.assumeReachable(u);
     {
       // test if authentication required
       HttpHost targetHost = new HttpHost(u.getHost(), port, u.getProtocol());
@@ -264,8 +274,10 @@ public class LoginTest extends AbstractMediaWikiBotTest {
       resp.getEntity().consumeContent();
     }
 
-    httpClient.getCredentialsProvider().setCredentials(new AuthScope(u.getHost(), port),
-        new UsernamePasswordCredentials(BotFactory.getWikiUser(latest), BotFactory.getWikiPass(latest)));
+    httpClient.getCredentialsProvider().setCredentials(
+        new AuthScope(u.getHost(), port),
+        new UsernamePasswordCredentials(BotFactory.getWikiUser(latest), BotFactory
+            .getWikiPass(latest)));
 
     HttpActionClient sslFakeClient = new HttpActionClient(httpClient, u);
     bot = new MediaWikiBot(sslFakeClient);
@@ -274,7 +286,8 @@ public class LoginTest extends AbstractMediaWikiBotTest {
     assertTrue(bot.isLoggedIn());
   }
 
-  private AbstractHttpClient getSSLFakeHttpClient() throws NoSuchAlgorithmException, KeyManagementException {
+  private AbstractHttpClient getSSLFakeHttpClient() throws NoSuchAlgorithmException,
+      KeyManagementException {
     SSLContext sslContext = SSLContext.getInstance("SSL");
     sslContext.init(null, new TrustManager[] { new X509TrustManager() {
       public X509Certificate[] getAcceptedIssuers() {

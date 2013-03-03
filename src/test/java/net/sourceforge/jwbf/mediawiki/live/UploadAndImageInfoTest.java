@@ -60,7 +60,8 @@ import org.junit.rules.Verifier;
 public class UploadAndImageInfoTest extends AbstractMediaWikiBotTest {
 
   @ClassRule
-  public static VersionTestClassVerifier classVerifier = new VersionTestClassVerifier(FileUpload.class, ImageInfo.class);
+  public static VersionTestClassVerifier classVerifier = new VersionTestClassVerifier(
+      FileUpload.class, ImageInfo.class);
 
   @Rule
   public Verifier successRegister = classVerifier.getSuccessRegister(this);
@@ -155,7 +156,8 @@ public class UploadAndImageInfoTest extends AbstractMediaWikiBotTest {
    */
   protected final void generalUploadImageInfoTest(MediaWikiBot bot, Version v) throws Exception {
     assertEquals(bot.getVersion(), v);
-    assertTrue("File (" + getValue("validFile") + ") not readable", new File(getValue("validFile")).canRead());
+    assertTrue("File (" + getValue("validFile") + ") not readable",
+        new File(getValue("validFile")).canRead());
     SimpleFile sf = new SimpleFile(getValue("filename"), getValue("validFile"));
     bot.delete("File:" + getValue("filename"));
     BufferedImage img = ImageIO.read(sf.getFile());
@@ -166,16 +168,23 @@ public class UploadAndImageInfoTest extends AbstractMediaWikiBotTest {
     bot.performAction(up);
     URL url = null;
     URL urlSizeVar = null;
-    int newWidth = 0;
-    int newHeight = 123;
+    // TODO bad values, try others
+    int newWidth = 50;
+    int newHeight = 50;
     try {
 
       url = new ImageInfo(bot, sf.getTitle()).getUrl();
     } catch (ProcessException e) {
-      throw new ProcessException(e.getLocalizedMessage() + "; \n is upload enabled? $wgEnableUploads = true;");
+      throw new ProcessException(e.getLocalizedMessage()
+          + "; \n is upload enabled? $wgEnableUploads = true;");
     }
-    urlSizeVar = new ImageInfo(bot, sf.getTitle(), new String[][] { { ImageInfo.HEIGHT, newHeight + "" } }).getUrl();
-    Assert.assertTrue("file not found " + url, url.toExternalForm().length() - bot.getHostUrl().length() > 2);
+    urlSizeVar = new ImageInfo(bot, sf.getTitle() //
+        , new String[][] { //
+        { ImageInfo.HEIGHT, newHeight + "" } //
+            , { ImageInfo.WIDTH, newWidth + "" } //
+        }).getUrl();
+    Assert.assertTrue("file not found " + url, url.toExternalForm().length()
+        - bot.getHostUrl().length() > 2);
     File file = new File(getValue("validFile"));
     assertFile(url, file);
     assertImageDimension(url, upWidth, upHeight);

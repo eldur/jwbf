@@ -18,8 +18,6 @@
  */
 package net.sourceforge.jwbf.mediawiki.actions.login;
 
-import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_09;
-
 import java.util.Map;
 
 import lombok.extern.slf4j.Slf4j;
@@ -37,7 +35,7 @@ import net.sourceforge.jwbf.mediawiki.contentRep.LoginData;
  * @author Thomas Stock
  */
 @Slf4j
-@SupportedBy({ MW1_09 })
+@SupportedBy({})
 public class PostLoginOld extends MWAction implements CookieValidateable {
   private String username = "";
 
@@ -80,7 +78,8 @@ public class PostLoginOld extends MWAction implements CookieValidateable {
    *           never
    * 
    */
-  public final void validateReturningCookies(final Map<String, String> cs, HttpAction hm) throws CookieException {
+  public final void validateReturningCookies(final Map<String, String> cs, HttpAction hm)
+      throws CookieException {
     validateAllReturningCookies(cs);
 
   }

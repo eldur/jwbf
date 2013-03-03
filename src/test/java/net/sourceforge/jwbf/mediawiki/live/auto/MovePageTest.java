@@ -18,16 +18,19 @@ import net.sourceforge.jwbf.test.SimpleNameFinder;
 import net.sourceforge.jwbf.test.TestNamer;
 
 import org.junit.ClassRule;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Verifier;
 import org.junit.runners.Parameterized.Parameters;
 
+@Ignore("because incomplete")
 @TestNamer(SimpleNameFinder.class)
 public class MovePageTest extends ParamHelper {
 
   @ClassRule
-  public static VersionTestClassVerifier classVerifier = new VersionTestClassVerifier(AllPageTitles.class);
+  public static VersionTestClassVerifier classVerifier = new VersionTestClassVerifier(
+      AllPageTitles.class);
 
   @Rule
   public Verifier successRegister = classVerifier.getSuccessRegister(this);
