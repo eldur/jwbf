@@ -47,7 +47,7 @@
 			<fileset dir="${release}/lib" excludes="*.jar"  />
 		</delete>
 
-		<tar tarfile="${target}/${artifactId}-${version}-${svn.version}-src.tar.gz" basedir="${release}" compression="gzip" excludes="*.tar.gz" />
+		<tar tarfile="${target}/${artifactId}-${version}-${scm.version}-src.tar.gz" basedir="${release}" compression="gzip" excludes="*.tar.gz" />
 		<delete includeemptydirs="true">
 			<fileset dir="${release}" includes="*/**" excludes="*.tar.gz, junit" />
 		</delete>
@@ -83,7 +83,7 @@
 
 
 
-		<tar tarfile="${target}/${artifactId}-${version}-${svn.version}-bin.tar.gz" basedir="${release}" compression="gzip" excludes="*.tar.gz" />
+		<tar tarfile="${target}/${artifactId}-${version}-${scm.version}-bin.tar.gz" basedir="${release}" compression="gzip" excludes="*.tar.gz" />
 		<delete includeemptydirs="true">
 			<fileset dir="${release}" includes="*/**" excludes="*.tar.gz, junit" />
 		</delete>
@@ -107,7 +107,7 @@
 			<fileset dir="../buildAdds" includes="*" />
 		</copy>
 
-		<tar tarfile="${target}/${artifactId}-${version}-${svn.version}-binSimple.tar.gz" basedir="${release}" compression="gzip" excludes="*.tar.gz" />
+		<tar tarfile="${target}/${artifactId}-${version}-${scm.version}-binSimple.tar.gz" basedir="${release}" compression="gzip" excludes="*.tar.gz" />
 		<delete includeemptydirs="true">
 			<fileset dir="${release}" includes="*/**" excludes="*.tar.gz, junit" />
 		</delete>
