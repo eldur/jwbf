@@ -115,23 +115,19 @@
 
 	<target name="buildnumber">
 		<property name="ant.regexp.regexpimpl" value="org.apache.tools.ant.util.regexp.JakartaOroRegexp" />
-		<!--<exec executable="svnversion" failifexecutionfails="no" ><arg line="minus minus version" /> </exec> -->
-		<exec executable="svnversion" outputproperty="svn.version" failifexecutionfails="no">
-			<arg line="-n -c" />
+		<exec executable="git" outputproperty="scm.version" failifexecutionfails="no">
+			<arg line="log --oneline -n 1" />
 			<redirector>
 				<outputfilterchain>
 					<tokenfilter>
-						<replaceregex pattern="^([0-9]*:)?" replace="" flags="g" />
-					</tokenfilter>
-					<tokenfilter>
-						<replaceregex pattern="[MSP].*$" replace="" flags="g" />
+						<replaceregex pattern="^([0-9a-f]+).*" replace="\1" flags="g" />
 					</tokenfilter>
 				</outputfilterchain>
 			</redirector>
 		</exec>
-		<echo>Found svn version: ${svn.version}</echo>
-		<condition property="build.number" value="${version}-${svn.version}" else="${version}-unknownBuild">
-			<matches string="${svn.version}" pattern="^[1-9]" />
+		<echo>Found scm version: ${scm.version}</echo>
+		<condition property="build.number" value="${version}-${scm.version}" else="${version}-unknownBuild">
+			<matches string="${scm.version}" pattern="^[0-9a-f]" />
 		</condition>
 		<echo>Build number is: ${build.number}</echo>
 	</target>
