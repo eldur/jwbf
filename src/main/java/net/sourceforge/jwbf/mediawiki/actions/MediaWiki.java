@@ -65,9 +65,11 @@ public final class MediaWiki {
   public static final int NS_CATEGORY = 14;
   public static final int NS_CATEGORY_TALK = 15;
 
-  public static final int[] NS_ALL = { NS_MAIN, NS_MAIN_TALK, NS_USER, NS_USER_TALK, NS_META, NS_META_TALK, NS_IMAGES,
-      NS_IMAGES_TALK, NS_MEDIAWIKI, NS_MEDIAWIKI_TALK, NS_TEMPLATE, NS_TEMPLATE_TALK, NS_HELP, NS_HELP_TALK,
-      NS_CATEGORY, NS_CATEGORY_TALK };
+  public static final int[] NS_ALL = { //
+  NS_MAIN, NS_MAIN_TALK, NS_USER, NS_USER_TALK, NS_META, NS_META_TALK, NS_IMAGES, NS_IMAGES_TALK,
+      NS_MEDIAWIKI, NS_MEDIAWIKI_TALK, NS_TEMPLATE, NS_TEMPLATE_TALK, NS_HELP, NS_HELP_TALK,
+      NS_CATEGORY, NS_CATEGORY_TALK //
+  };
 
   public static final Set<String> BOT_GROUPS = new HashSet<String>();
 
@@ -101,8 +103,7 @@ public final class MediaWiki {
     /**
      * Released 2008-08
      * 
-     * @deprecated requires PHP 5.2 expired 2011-01-06; is installable but
-     *             doesn't work
+     * @deprecated requires PHP 5.2 expired 2011-01-06; is installable but doesn't work
      */
     MW1_13,
     /**
@@ -110,23 +111,35 @@ public final class MediaWiki {
      * 
      * @deprecated database installer doesn't work anymore
      */
-    MW1_14,
+    MW1_14
     /**
      * Released 2009-06
      */
-    MW1_15,
+    , MW1_15
     /**
      * Released 2010-07
      */
-    MW1_16,
+    , MW1_16
     /**
      * Released 2011-06
      */
-    MW1_17,
+    , MW1_17
     /**
      * Released 2011-11
      */
-    MW1_18, UNKNOWN, DEVELOPMENT;
+    , MW1_18
+    /**
+     * Released 2012-05
+     */
+    , MW1_19
+    /**
+     * Released 2012-11
+     */
+    , MW1_20
+    /**
+     * 
+     */
+    , UNKNOWN, DEVELOPMENT;
 
     private static Version last = UNKNOWN;
 
