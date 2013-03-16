@@ -24,7 +24,8 @@ import org.junit.rules.Verifier;
 public class ImageUsageTitlesTest extends AbstractMediaWikiBotTest {
 
   @ClassRule
-  public static VersionTestClassVerifier classVerifier = new VersionTestClassVerifier(ImageUsageTitles.class);
+  public static VersionTestClassVerifier classVerifier = new VersionTestClassVerifier(
+      ImageUsageTitles.class);
 
   @Rule
   public Verifier successRegister = classVerifier.getSuccessRegister(this);
@@ -50,7 +51,8 @@ public class ImageUsageTitlesTest extends AbstractMediaWikiBotTest {
   }
 
   private void test() throws Exception {
-    ImageUsageTitles il = new ImageUsageTitles(bot, "Image:" + getValue("filename"), MediaWiki.NS_ALL);
+    ImageUsageTitles il = new ImageUsageTitles(bot, "Image:" + getValue("filename"),
+        MediaWiki.NS_ALL);
 
     boolean notFound = true;
     int x = 0;

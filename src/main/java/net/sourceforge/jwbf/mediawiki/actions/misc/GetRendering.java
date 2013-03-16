@@ -31,8 +31,7 @@ import org.xml.sax.InputSource;
 /**
  * 
  * Implements function to render wikitext on remote <a href=
- * "http://www.mediawiki.org/wiki/API:Expanding_templates_and_rendering#parse"
- * >parse</a>.
+ * "http://www.mediawiki.org/wiki/API:Expanding_templates_and_rendering#parse" >parse</a>.
  * 
  * @author Thomas Stock
  * 
@@ -57,7 +56,8 @@ public class GetRendering extends MWAction {
   public GetRendering(MediaWikiBot bot, String wikitext) throws VersionException {
     super(bot.getVersion());
     this.bot = bot;
-    msg = new Get("/api.php?action=parse&text=" + MediaWiki.encode(wikitext) + "&titles=API&format=xml");
+    msg = new Get("/api.php?action=parse&text=" + MediaWiki.encode(wikitext)
+        + "&titles=API&format=xml");
 
   }
 
@@ -87,11 +87,11 @@ public class GetRendering extends MWAction {
     html = findElement("text", s).getTextTrim();
     html = html.replace("\n", "");
     switch (bot.getVersion()) {
-      case MW1_12:
-        break;
-      default:
-        int last = html.lastIndexOf("<!--");
-        html = html.substring(0, last);
+    case MW1_12:
+      break;
+    default:
+      int last = html.lastIndexOf("<!--");
+      html = html.substring(0, last);
     }
     return "";
   }

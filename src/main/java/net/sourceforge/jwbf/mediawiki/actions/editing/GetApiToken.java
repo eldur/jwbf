@@ -28,8 +28,7 @@ import org.xml.sax.InputSource;
 
 /**
  * Action class using the MediaWiki-<a
- * href="http://www.mediawiki.org/wiki/API:Changing_wiki_content"
- * >Editing-API</a>. <br />
+ * href="http://www.mediawiki.org/wiki/API:Changing_wiki_content" >Editing-API</a>. <br />
  * Its job is to get the token for some actions like delete or edit.
  * 
  * @author Max Gensthaler
@@ -66,8 +65,7 @@ public final class GetApiToken extends MWAction {
    * @param ui
    *          user info object
    * @throws VersionException
-   *           if this action is not supported of the MediaWiki version
-   *           connected to
+   *           if this action is not supported of the MediaWiki version connected to
    */
   public GetApiToken(Intoken intoken, String title, Version v, Userinfo ui) throws VersionException {
     super(v);
@@ -88,8 +86,8 @@ public final class GetApiToken extends MWAction {
     if (log.isTraceEnabled()) {
       log.trace("enter GetToken.generateTokenRequest()");
     }
-    String uS = "/api.php" + "?action=query" + "&prop=info" + "&intoken=" + intoken.toString().toLowerCase()
-        + "&titles=" + MediaWiki.encode(title) + "&format=xml";
+    String uS = "/api.php" + "?action=query" + "&prop=info" + "&intoken="
+        + intoken.toString().toLowerCase() + "&titles=" + MediaWiki.encode(title) + "&format=xml";
     msg = new Get(uS);
 
   }
@@ -123,7 +121,8 @@ public final class GetApiToken extends MWAction {
       } catch (JDOMException e) {
         if (s.startsWith("unknown_action:")) {
           log.error(
-              "Adding '$wgEnableWriteAPI = true;' to your MediaWiki's LocalSettings.php might remove this problem.", e);
+              "Adding '$wgEnableWriteAPI = true;' to your MediaWiki's LocalSettings.php might remove this problem.",
+              e);
         } else {
           log.error(e.getMessage(), e);
         }
@@ -171,32 +170,32 @@ public final class GetApiToken extends MWAction {
 
       // process reply for token request
       switch (intoken) {
-        case DELETE:
-          token = elem.getAttributeValue("deletetoken");
-          break;
-        case EDIT:
-          token = elem.getAttributeValue("edittoken");
-          break;
-        case MOVE:
-          token = elem.getAttributeValue("movetoken");
-          break;
-        case PROTECT:
-          token = elem.getAttributeValue("protecttoken");
-          break;
-        case EMAIL:
-          token = elem.getAttributeValue("emailtoken");
-          break;
-        case BLOCK:
-          token = elem.getAttributeValue("blocktoken");
-          break;
-        case UNBLOCK:
-          token = elem.getAttributeValue("unblocktoken");
-          break;
-        case IMPORT:
-          token = elem.getAttributeValue("importtoken");
-          break;
-        default:
-          throw new IllegalArgumentException();
+      case DELETE:
+        token = elem.getAttributeValue("deletetoken");
+        break;
+      case EDIT:
+        token = elem.getAttributeValue("edittoken");
+        break;
+      case MOVE:
+        token = elem.getAttributeValue("movetoken");
+        break;
+      case PROTECT:
+        token = elem.getAttributeValue("protecttoken");
+        break;
+      case EMAIL:
+        token = elem.getAttributeValue("emailtoken");
+        break;
+      case BLOCK:
+        token = elem.getAttributeValue("blocktoken");
+        break;
+      case UNBLOCK:
+        token = elem.getAttributeValue("unblocktoken");
+        break;
+      case IMPORT:
+        token = elem.getAttributeValue("importtoken");
+        break;
+      default:
+        throw new IllegalArgumentException();
       }
     } catch (RuntimeException e) {
       throw new RuntimeException("Unknow reply. This is not a token.", e);

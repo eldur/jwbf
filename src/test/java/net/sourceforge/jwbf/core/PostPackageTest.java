@@ -37,7 +37,8 @@ public class PostPackageTest {
           strOut.flush();
         }
         String out = strOut.toString();
-        assertTrue("should contain jwbf, but was: " + out + " <= " + jar.getAbsolutePath(), out.contains("jwbf"));
+        assertTrue("should contain jwbf, but was: " + out + " <= " + jar.getAbsolutePath(),
+            out.contains("jwbf"));
 
       } finally {
         if (in != null)

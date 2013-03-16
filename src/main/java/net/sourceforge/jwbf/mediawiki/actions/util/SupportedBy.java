@@ -11,9 +11,8 @@ import java.lang.annotation.Target;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
 
 /**
- * Annotation which indicates MediaWiki support. It will be used to validate if
- * the given version of MediaWiki supports the selected action. Works only with
- * {@link MWAction}.
+ * Annotation which indicates MediaWiki support. It will be used to validate if the given version of
+ * MediaWiki supports the selected action. Works only with {@link MWAction}.
  * 
  * @author Thomas Stock
  * 

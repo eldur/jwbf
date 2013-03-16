@@ -53,10 +53,9 @@ import org.xml.sax.InputSource;
 
 /**
  * 
- * List log events, filtered by time range, event type, user type, or the page
- * it applies to. Ordered by event timestamp. Parameters: letype (flt), lefrom
- * (paging timestamp), leto (flt), ledirection (dflt=older), leuser (flt),
- * letitle (flt), lelimit (dflt=10, max=500/5000)
+ * List log events, filtered by time range, event type, user type, or the page it applies to.
+ * Ordered by event timestamp. Parameters: letype (flt), lefrom (paging timestamp), leto (flt),
+ * ledirection (dflt=older), leuser (flt), letitle (flt), lelimit (dflt=10, max=500/5000)
  * 
  * api.php ? action=query & list=logevents - List last 10 events of any type
  * 
@@ -89,8 +88,8 @@ public class LogEvents extends MWAction implements Iterator<LogItem>, Iterable<L
   private boolean init = true;
   private boolean selvEx = true;
   /**
-   * Collection that will contain the result (titles of articles linking to the
-   * target) after performing the action has finished.
+   * Collection that will contain the result (titles of articles linking to the target) after
+   * performing the action has finished.
    */
   private Collection<LogItem> logCollection = new Vector<LogItem>();
   private Iterator<LogItem> logIterator = null;
@@ -248,8 +247,8 @@ public class LogEvents extends MWAction implements Iterator<LogItem>, Iterable<L
   }
 
   /**
-   * gets the information about a follow-up page from a provided api response.
-   * If there is one, a new request is added to msgs by calling generateRequest.
+   * gets the information about a follow-up page from a provided api response. If there is one, a
+   * new request is added to msgs by calling generateRequest.
    * 
    * @param s
    *          text for parsing
@@ -258,9 +257,8 @@ public class LogEvents extends MWAction implements Iterator<LogItem>, Iterable<L
 
     // get the blcontinue-value
 
-    Pattern p = Pattern.compile(
-        "<query-continue>.*?" + "<logevents *lestart=\"([^\"]*)\" */>" + ".*?</query-continue>", Pattern.DOTALL
-            | Pattern.MULTILINE);
+    Pattern p = Pattern.compile("<query-continue>.*?" + "<logevents *lestart=\"([^\"]*)\" */>"
+        + ".*?</query-continue>", Pattern.DOTALL | Pattern.MULTILINE);
 
     Matcher m = p.matcher(s);
 

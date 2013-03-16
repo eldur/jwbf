@@ -44,8 +44,8 @@ import net.sourceforge.jwbf.mediawiki.actions.util.VersionException;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 
 /**
- * action class using the MediaWiki-api's "list=embeddedin" that is used to find
- * all articles which use a template.
+ * action class using the MediaWiki-api's "list=embeddedin" that is used to find all articles which
+ * use a template.
  * 
  * @author Tobias Knerr
  * @author Thomas Stock
@@ -60,8 +60,8 @@ public class TemplateUserTitles extends TitleQuery<String> {
   private static final int LIMIT = 50;
   private final MediaWikiBot bot;
   /**
-   * Collection that will contain the result (titles of articles using the
-   * template) after performing the action has finished.
+   * Collection that will contain the result (titles of articles using the template) after
+   * performing the action has finished.
    */
   private Collection<String> titleCollection = new ArrayList<String>();
 
@@ -69,13 +69,13 @@ public class TemplateUserTitles extends TitleQuery<String> {
   private final int[] namespaces;
 
   /**
-   * The public constructor. It will have an MediaWiki-request generated, which
-   * is then added to msgs. When it is answered, the method
-   * processAllReturningText will be called (from outside this class). For the
-   * parameters, see
+   * The public constructor. It will have an MediaWiki-request generated, which is then added to
+   * msgs. When it is answered, the method processAllReturningText will be called (from outside this
+   * class). For the parameters, see
    * {@link TemplateUserTitles#generateRequest(String, String, String)}
    */
-  public TemplateUserTitles(MediaWikiBot bot, String templateName, int... namespaces) throws VersionException {
+  public TemplateUserTitles(MediaWikiBot bot, String templateName, int... namespaces)
+      throws VersionException {
     super(bot);
     this.bot = bot;
     this.templateName = templateName;
@@ -89,11 +89,10 @@ public class TemplateUserTitles extends TitleQuery<String> {
    * @param templateName
    *          the name of the template, not null
    * @param namespace
-   *          the namespace(s) that will be searched for links, as a string of
-   *          numbers separated by '|'; if null, this parameter is omitted
+   *          the namespace(s) that will be searched for links, as a string of numbers separated by
+   *          '|'; if null, this parameter is omitted
    * @param eicontinue
-   *          the value for the eicontinue parameter, null for the generation of
-   *          the initial request
+   *          the value for the eicontinue parameter, null for the generation of the initial request
    */
   private HttpAction generateRequest(String templateName, String namespace, String eicontinue) {
 
@@ -101,44 +100,48 @@ public class TemplateUserTitles extends TitleQuery<String> {
     String titleVal = "";
     if (eicontinue == null) {
       switch (bot.getVersion()) {
-        case MW1_09:
-        case MW1_10:
-          titleVal = "&titles=";
-          break;
+      case MW1_09:
+      case MW1_10:
+        titleVal = "&titles=";
+        break;
 
-        default:
-          titleVal = "&eititle=";
-          break;
+      default:
+        titleVal = "&eititle=";
+        break;
       }
 
       uS = "/api.php?action=query&list=embeddedin"
 
-      + titleVal + MediaWiki.encode(templateName)
-          + ((namespace != null && namespace.length() != 0) ? ("&einamespace=" + MediaWiki.encode(namespace)) : "")
-          + "&eilimit=" + LIMIT + "&format=xml";
+          + titleVal
+          + MediaWiki.encode(templateName)
+          + ((namespace != null && namespace.length() != 0) ? ("&einamespace=" + MediaWiki
+              .encode(namespace)) : "") + "&eilimit=" + LIMIT + "&format=xml";
 
     } else {
 
-      uS = "/api.php?action=query&list=embeddedin" + "&eicontinue=" + MediaWiki.encode(eicontinue) + "&eilimit="
+      uS = "/api.php?action=query&list=embeddedin"
+          + "&eicontinue="
+          + MediaWiki.encode(eicontinue)
+          + "&eilimit="
           + LIMIT
-          + ((namespace != null && namespace.length() != 0) ? ("&einamespace=" + MediaWiki.encode(namespace)) : "")
-          + "&format=xml";
+          + ((namespace != null && namespace.length() != 0) ? ("&einamespace=" + MediaWiki
+              .encode(namespace)) : "") + "&format=xml";
 
       switch (bot.getVersion()) {
-        case MW1_09:
-        case MW1_10:
-        case MW1_11:
-        case MW1_12:
-        case MW1_13:
-        case MW1_14:
-        case MW1_15:
-        case MW1_16:
-          break;
+      case MW1_09:
+      case MW1_10:
+      case MW1_11:
+      case MW1_12:
+      case MW1_13:
+      case MW1_14:
+      case MW1_15:
+      case MW1_16:
+        break;
 
-        case MW1_17:
-        default:
-          uS += "&eititle=" + MediaWiki.encode(templateName);
-          break;
+      case MW1_17:
+      default:
+        uS += "&eititle=" + MediaWiki.encode(templateName);
+        break;
 
       }
 
@@ -165,8 +168,8 @@ public class TemplateUserTitles extends TitleQuery<String> {
   }
 
   /**
-   * gets the information about a follow-up page from a provided api response.
-   * If there is one, a new request is added to msgs by calling generateRequest.
+   * gets the information about a follow-up page from a provided api response. If there is one, a
+   * new request is added to msgs by calling generateRequest.
    * 
    * @param s
    *          text for parsing

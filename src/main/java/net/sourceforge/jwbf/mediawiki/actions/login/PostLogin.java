@@ -88,7 +88,8 @@ public class PostLogin extends MWAction {
 
   }
 
-  private Post getLoginMsg(final String username, final String pw, final String domain, final String token) {
+  private Post getLoginMsg(final String username, final String pw, final String domain,
+      final String token) {
     Post pm = new Post("/api.php?action=login&format=xml");
     pm.addParam("lgname", username);
     pm.addParam("lgpassword", pw);

@@ -171,7 +171,8 @@ public class ArticleTest {
     final String thirdEdit = a.getRevisionId();
     assertTrue(a.isMinorEdit());
     assertFalse("text should be differ:\n" + aaText + "\n" + aText, aaText.equals(aText));
-    assertTrue("dif rev ID, both: " + thirdEdit, Integer.parseInt(firstEdit) != Integer.parseInt(thirdEdit));
+    assertTrue("dif rev ID, both: " + thirdEdit,
+        Integer.parseInt(firstEdit) != Integer.parseInt(thirdEdit));
 
     log.debug("--> end article test");
   }

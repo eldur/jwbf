@@ -40,11 +40,9 @@ public interface ContentProcessable extends ReturningText {
   boolean hasMoreMessages();
 
   /**
-   * Use this in self maintaining lists for e.g., to prevent user to perform
-   * this action manually.
+   * Use this in self maintaining lists for e.g., to prevent user to perform this action manually.
    * 
-   * @deprecated better encapsulate action if no external execution shuld be
-   *             avalibal.
+   * @deprecated better encapsulate action if no external execution shuld be avalibal.
    * @return true if
    */
   boolean isSelfExecuter();

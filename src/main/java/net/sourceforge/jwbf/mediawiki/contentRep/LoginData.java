@@ -22,8 +22,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * TODO API related, use only if posting data works.
- * http://www.mediawiki.org/wiki
+ * TODO API related, use only if posting data works. http://www.mediawiki.org/wiki
  * /API#Posting_Data_.2F_needs_major_editPage.php_rewrite
  * 
  * @author Thomas Stock FIXME check usage

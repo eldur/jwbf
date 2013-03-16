@@ -58,8 +58,7 @@ public class Siteinfo extends GetVersion {
   // content
   /**
    * 
-   * inits with parameters {@link #GENERAL}, {@link #NAMESPACES},
-   * {@link #INTERWIKIMAP}.
+   * inits with parameters {@link #GENERAL}, {@link #NAMESPACES}, {@link #INTERWIKIMAP}.
    */
   public Siteinfo() {
     this(GENERAL, NAMESPACES, INTERWIKIMAP);
@@ -76,7 +75,8 @@ public class Siteinfo extends GetVersion {
       x.append(types[i] + "|");
     }
     String result = x.substring(0, x.length() - 1);
-    msg = new Get("/api.php?action=query&meta=siteinfo" + "&siprop=" + MediaWiki.encode(result) + "&format=xml");
+    msg = new Get("/api.php?action=query&meta=siteinfo" + "&siprop=" + MediaWiki.encode(result)
+        + "&format=xml");
   }
 
   /**

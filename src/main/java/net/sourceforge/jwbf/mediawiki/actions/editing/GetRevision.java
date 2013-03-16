@@ -96,7 +96,8 @@ public class GetRevision extends MWAction {
    * @param v
    *          the
    */
-  public GetRevision(Version v, final String articlename, final int properties) throws ProcessException {
+  public GetRevision(Version v, final String articlename, final int properties)
+      throws ProcessException {
     super(v);
     botVersion = v;
     // if (!bot.getUserinfo().getRights().contains("read")) {
@@ -107,8 +108,9 @@ public class GetRevision extends MWAction {
     this.properties = properties;
     sa = new SimpleArticle();
     sa.setTitle(articlename);
-    String uS = "/api.php?action=query&prop=revisions&titles=" + MediaWiki.encode(articlename) + "&rvprop="
-        + getDataProperties(properties) + getReversion(properties) + "&rvlimit=1" + "&format=xml";
+    String uS = "/api.php?action=query&prop=revisions&titles=" + MediaWiki.encode(articlename)
+        + "&rvprop=" + getDataProperties(properties) + getReversion(properties) + "&rvlimit=1"
+        + "&format=xml";
     msg = new Get(uS);
 
   }

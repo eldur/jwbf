@@ -84,10 +84,11 @@ public class ZimWikiBot implements WikiBot {
   }
 
   /**
-   * Set up a simple text paarser some simple formating routines are supplied ->
-   * bold letters and images are translated from zimWiki to mediaWiki
+   * Set up a simple text paarser some simple formating routines are supplied -> bold letters and
+   * images are translated from zimWiki to mediaWiki
    */
-  public SimpleArticle readData(String name, int properties) throws ActionException, ProcessException {
+  public SimpleArticle readData(String name, int properties) throws ActionException,
+      ProcessException {
     File f = new File(getRootFolder(), name + ZIMEXT);
     SimpleArticle sa = new SimpleArticle();
     sa.setTitle(name);

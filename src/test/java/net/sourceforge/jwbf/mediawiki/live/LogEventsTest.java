@@ -26,7 +26,8 @@ import org.junit.rules.Verifier;
 public class LogEventsTest extends AbstractMediaWikiBotTest {
 
   @ClassRule
-  public static VersionTestClassVerifier classVerifier = new VersionTestClassVerifier(LogEvents.class);
+  public static VersionTestClassVerifier classVerifier = new VersionTestClassVerifier(
+      LogEvents.class);
 
   @Rule
   public Verifier successRegister = classVerifier.getSuccessRegister(this);

@@ -86,8 +86,7 @@ public class HttpActionClient {
   public HttpActionClient(final HttpClient client, final URL url) {
 
     /*
-     * see for docu
-     * http://jakarta.apache.org/commons/httpclient/preference-api.html
+     * see for docu http://jakarta.apache.org/commons/httpclient/preference-api.html
      */
 
     if (url.getPath().length() > 1) {
@@ -120,8 +119,8 @@ public class HttpActionClient {
    * @throws ProcessException
    *           on inner problems
    */
-  public synchronized String performAction(ContentProcessable contentProcessable) throws ActionException,
-      ProcessException {
+  public synchronized String performAction(ContentProcessable contentProcessable)
+      throws ActionException, ProcessException {
 
     String out = "";
     while (contentProcessable.hasMoreMessages()) {
@@ -172,8 +171,8 @@ public class HttpActionClient {
     params.setParameter("http.protocol.content-charset", httpAction.getCharset());
   }
 
-  private String post(HttpRequestBase requestBase, ContentProcessable contentProcessable, HttpAction ha)
-      throws IOException, CookieException, ProcessException {
+  private String post(HttpRequestBase requestBase, ContentProcessable contentProcessable,
+      HttpAction ha) throws IOException, CookieException, ProcessException {
     Post p = (Post) ha;
     MultipartEntity entity = new MultipartEntity();
     for (String key : p.getParams().keySet()) {
@@ -196,8 +195,8 @@ public class HttpActionClient {
     out = contentProcessable.processReturningText(out, ha);
 
     if (contentProcessable instanceof CookieValidateable && client instanceof DefaultHttpClient)
-      ((CookieValidateable) contentProcessable).validateReturningCookies(cookieTransform(((DefaultHttpClient) client)
-          .getCookieStore().getCookies()), ha);
+      ((CookieValidateable) contentProcessable).validateReturningCookies(
+          cookieTransform(((DefaultHttpClient) client).getCookieStore().getCookies()), ha);
     res.getEntity().consumeContent();
 
     return out;
@@ -219,8 +218,8 @@ public class HttpActionClient {
    * @throws ProcessException
    *           on problems
    */
-  private String get(HttpRequestBase requestBase, ContentProcessable cp, HttpAction ha) throws IOException,
-      CookieException, ProcessException {
+  private String get(HttpRequestBase requestBase, ContentProcessable cp, HttpAction ha)
+      throws IOException, CookieException, ProcessException {
     showCookies();
     debug(requestBase, ha, cp);
     String out = "";
@@ -250,16 +249,16 @@ public class HttpActionClient {
     out = sb.toString();
     if (cp != null) {
       if (cp instanceof CookieValidateable && client instanceof DefaultHttpClient)
-        ((CookieValidateable) cp).validateReturningCookies(cookieTransform(((DefaultHttpClient) client)
-            .getCookieStore().getCookies()), ha);
+        ((CookieValidateable) cp).validateReturningCookies(
+            cookieTransform(((DefaultHttpClient) client).getCookieStore().getCookies()), ha);
       out = cp.processReturningText(out, ha);
     }
     res.getEntity().consumeContent();
     return out;
   }
 
-  private HttpResponse execute(HttpRequestBase requestBase) throws IOException, ClientProtocolException,
-      ProcessException {
+  private HttpResponse execute(HttpRequestBase requestBase) throws IOException,
+      ClientProtocolException, ProcessException {
     HttpResponse res = client.execute(requestBase);
     StatusLine statusLine = res.getStatusLine();
     int code = statusLine.getStatusCode();
@@ -337,7 +336,8 @@ public class HttpActionClient {
         type = "(GET ";
       }
       type += cp.getClass().getSimpleName() + ")" + continueing;
-      log.debug("message " + type + " is: \n\t own: " + getHostUrl() + epath + "\n\t act: " + ha.getRequest());
+      log.debug("message " + type + " is: \n\t own: " + getHostUrl() + epath + "\n\t act: "
+          + ha.getRequest());
     }
   }
 

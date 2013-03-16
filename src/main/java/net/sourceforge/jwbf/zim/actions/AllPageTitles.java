@@ -41,10 +41,9 @@ public class AllPageTitles implements Iterable<String>, Iterator<String> {
    * Constructor for an Iterator
    * 
    * @param zim
-   *          this is our zimBot on the local machine it will distinguish
-   *          between test and image files and transform the local root dir of
-   *          zim to the remote dir on the mediWiki server HINT: currently only
-   *          P_ortable N_etwork G_raphics (.png)-files are supported!
+   *          this is our zimBot on the local machine it will distinguish between test and image
+   *          files and transform the local root dir of zim to the remote dir on the mediWiki server
+   *          HINT: currently only P_ortable N_etwork G_raphics (.png)-files are supported!
    */
 
   public AllPageTitles(ZimWikiBot zim) {

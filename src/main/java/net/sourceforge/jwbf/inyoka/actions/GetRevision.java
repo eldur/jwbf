@@ -87,14 +87,14 @@ public class GetRevision implements ContentProcessable {
     return "";
   }
 
-  private static final Pattern authorPattern = Pattern.compile("class=\"author\">([^\"]*)<", Pattern.DOTALL
-      | Pattern.MULTILINE);
-  private static final Pattern editTimestampPattern = Pattern.compile("class=\"time\">([^\"]*)<", Pattern.DOTALL
-      | Pattern.MULTILINE);
-  private static final Pattern editMessagePattern = Pattern.compile("class=\"message\"><p>([^\"]*)</p>", Pattern.DOTALL
-      | Pattern.MULTILINE);
-  private static final Pattern versionPattern = Pattern.compile("action=diff&amp;version=([0-9]*)", Pattern.DOTALL
-      | Pattern.MULTILINE);
+  private static final Pattern authorPattern = Pattern.compile("class=\"author\">([^\"]*)<",
+      Pattern.DOTALL | Pattern.MULTILINE);
+  private static final Pattern editTimestampPattern = Pattern.compile("class=\"time\">([^\"]*)<",
+      Pattern.DOTALL | Pattern.MULTILINE);
+  private static final Pattern editMessagePattern = Pattern.compile(
+      "class=\"message\"><p>([^\"]*)</p>", Pattern.DOTALL | Pattern.MULTILINE);
+  private static final Pattern versionPattern = Pattern.compile("action=diff&amp;version=([0-9]*)",
+      Pattern.DOTALL | Pattern.MULTILINE);
 
   private void parse(String s) {
     // System.err.println(s); // TODO RM

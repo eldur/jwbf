@@ -32,7 +32,8 @@ public class DeleteTest extends AbstractMediaWikiBotTest {
   private static final int COUNT = 1;
 
   @ClassRule
-  public static VersionTestClassVerifier classVerifier = new VersionTestClassVerifier(PostDelete.class);
+  public static VersionTestClassVerifier classVerifier = new VersionTestClassVerifier(
+      PostDelete.class);
 
   @Rule
   public Verifier successRegister = classVerifier.getSuccessRegister(this);
@@ -59,8 +60,9 @@ public class DeleteTest extends AbstractMediaWikiBotTest {
     for (int i = 0; i < COUNT; i++) {
       ContentAccessable ca = bot.getArticle(DELETE_PREFIX + i);
 
-      assertTrue("textlength of Delete " + i + " is greater then 0 (" + ca.getText().length() + ")", ca.getText()
-          .length() == 0);
+      assertTrue(
+          "textlength of Delete " + i + " is greater then 0 (" + ca.getText().length() + ")", ca
+              .getText().length() == 0);
 
     }
   }

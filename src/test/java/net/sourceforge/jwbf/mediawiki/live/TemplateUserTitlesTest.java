@@ -32,7 +32,8 @@ public class TemplateUserTitlesTest extends AbstractMediaWikiBotTest {
   private static final String TESTPATTERNNAME = "Template:ATesT";
 
   @ClassRule
-  public static VersionTestClassVerifier classVerifier = new VersionTestClassVerifier(TemplateUserTitles.class);
+  public static VersionTestClassVerifier classVerifier = new VersionTestClassVerifier(
+      TemplateUserTitles.class);
 
   @Rule
   public Verifier successRegister = classVerifier.getSuccessRegister(this);

@@ -14,8 +14,7 @@ import net.sourceforge.jwbf.mediawiki.actions.util.VersionException;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 
 /**
- * Abstract class which is superclass of all titleiterations, represented by the
- * sufix "Titles".
+ * Abstract class which is superclass of all titleiterations, represented by the sufix "Titles".
  * 
  * @author Thomas Stock
  * @param <T>

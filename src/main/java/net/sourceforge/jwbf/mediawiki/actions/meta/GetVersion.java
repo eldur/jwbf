@@ -77,8 +77,7 @@ public class GetVersion extends MWAction {
 
   /**
    * Create and submit the request to the Wiki. Do not use
-   * {@link MediaWikiBot#performAction(net.sourceforge.jwbf.actions.ContentProcessable)}
-   * .
+   * {@link MediaWikiBot#performAction(net.sourceforge.jwbf.actions.ContentProcessable)} .
    * 
    * @param bot
    *          a
@@ -93,8 +92,8 @@ public class GetVersion extends MWAction {
   }
 
   /*
-   * In this case the superconstructor with no value is allowed, because the
-   * versionrequest is mandatory
+   * In this case the superconstructor with no value is allowed, because the versionrequest is
+   * mandatory
    */
   /**
    * Create the request.
@@ -180,8 +179,8 @@ public class GetVersion extends MWAction {
 
     }
     if (log.isInfoEnabled())
-      log.info("\nVersion is UNKNOWN for JWBF (" + JWBF.getVersion(getClass()) + ") : \n\t" + getGenerator() + "\n\t"
-          + "supported versions: " + buffer.toString() + "\n\t"
+      log.info("\nVersion is UNKNOWN for JWBF (" + JWBF.getVersion(getClass()) + ") : \n\t"
+          + getGenerator() + "\n\t" + "supported versions: " + buffer.toString() + "\n\t"
           + "\n\tUsing settings for actual Wikipedia development version");
     return Version.UNKNOWN;
 

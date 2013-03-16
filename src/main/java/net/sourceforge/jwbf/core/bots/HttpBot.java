@@ -84,8 +84,8 @@ public class HttpBot {
   }
 
   /**
-   * Returns a {@link HttpBot} which supports only its basic methods. Use
-   * {@link #getPage(String)} for an basic read of content.
+   * Returns a {@link HttpBot} which supports only its basic methods. Use {@link #getPage(String)}
+   * for an basic read of content.
    * 
    * @deprecated do not use this
    * @return a
@@ -129,8 +129,7 @@ public class HttpBot {
   /**
    * 
    * @param hostUrl
-   *          base url of a wiki site to connect with; example:
-   *          http://www.yourOwnWiki.org/wiki/
+   *          base url of a wiki site to connect with; example: http://www.yourOwnWiki.org/wiki/
    */
   public final void setConnection(final String hostUrl) {
     try {
@@ -141,8 +140,7 @@ public class HttpBot {
   }
 
   /**
-   * Simple method to get plain HTML or XML data e.g. from custom specialpages
-   * or xml newsfeeds.
+   * Simple method to get plain HTML or XML data e.g. from custom specialpages or xml newsfeeds.
    * 
    * @param u
    *          url like index.php?title=Main_Page
@@ -170,8 +168,7 @@ public class HttpBot {
   }
 
   /**
-   * Simple method to get plain HTML or XML data e.g. from custom specialpages
-   * or xml newsfeeds.
+   * Simple method to get plain HTML or XML data e.g. from custom specialpages or xml newsfeeds.
    * 
    * @param u
    *          url like index.php?title=Main_Page

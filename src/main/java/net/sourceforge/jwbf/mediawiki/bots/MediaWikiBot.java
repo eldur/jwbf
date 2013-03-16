@@ -35,8 +35,8 @@ import net.sourceforge.jwbf.mediawiki.contentRep.LoginData;
 
 /**
  * This class helps you to interact with each <a href="http://www.mediawiki.org"
- * target="_blank">MediaWiki</a>. This class offers a <b>basic set</b> of
- * methods which are defined in the package net.sourceforge.jwbf.actions.mw.*
+ * target="_blank">MediaWiki</a>. This class offers a <b>basic set</b> of methods which are defined
+ * in the package net.sourceforge.jwbf.actions.mw.*
  * 
  * 
  * How to use:
@@ -49,9 +49,9 @@ import net.sourceforge.jwbf.mediawiki.contentRep.LoginData;
  * 
  * <b>How to find the correct wikiurl</b>
  * <p>
- * The correct wikiurl is sometimes not easy to find, because some wikiadmis
- * uses url rewriting rules. In this cases the correct url is the one, which
- * gives you access to <code>api.php</code>. E.g. Compare
+ * The correct wikiurl is sometimes not easy to find, because some wikiadmis uses url rewriting
+ * rules. In this cases the correct url is the one, which gives you access to <code>api.php</code>.
+ * E.g. Compare
  * 
  * <pre>
  * http://www.mediawiki.org/wiki/api.php
@@ -87,8 +87,8 @@ public class MediaWikiBot implements WikiBot {
    * These chars are not allowed in article names.
    */
   public static final char[] INVALID_LABEL_CHARS = "[]{}<>|".toCharArray();
-  private static final int DEFAULT_READ_PROPERTIES = GetRevision.CONTENT | GetRevision.COMMENT | GetRevision.USER
-      | GetRevision.TIMESTAMP | GetRevision.IDS | GetRevision.FLAGS;
+  private static final int DEFAULT_READ_PROPERTIES = GetRevision.CONTENT | GetRevision.COMMENT
+      | GetRevision.USER | GetRevision.TIMESTAMP | GetRevision.IDS | GetRevision.FLAGS;
 
   private static final Set<String> emptySet = Collections.unmodifiableSet(new HashSet<String>());
 
@@ -155,24 +155,23 @@ public class MediaWikiBot implements WikiBot {
    * @param passwd
    *          the password
    * @param domain
-   *          login domain (Special for LDAPAuth extention to authenticate
-   *          against LDAP users)
+   *          login domain (Special for LDAPAuth extention to authenticate against LDAP users)
    * @see PostLogin
    * @see PostLoginOld
    */
   public void login(final String username, final String passwd, final String domain) {
     LoginData login = new LoginData();
     switch (getVersion()) {
-      case MW1_09:
-      case MW1_10:
-      case MW1_11:
-      case MW1_12:
-        performAction(new PostLoginOld(username, passwd, domain, login));
-        break;
+    case MW1_09:
+    case MW1_10:
+    case MW1_11:
+    case MW1_12:
+      performAction(new PostLoginOld(username, passwd, domain, login));
+      break;
 
-      default:
-        performAction(new PostLogin(username, passwd, domain, login));
-        break;
+    default:
+      performAction(new PostLogin(username, passwd, domain, login));
+      break;
     }
 
     this.login = login;
@@ -186,8 +185,8 @@ public class MediaWikiBot implements WikiBot {
   /**
    * TODO mv doc
    * 
-   * Performs a Login. Actual old cookie login works right, because is pending
-   * on {@link #writeContent(ContentAccessable)}
+   * Performs a Login. Actual old cookie login works right, because is pending on
+   * {@link #writeContent(ContentAccessable)}
    * 
    * @param username
    *          the username
@@ -257,8 +256,8 @@ public class MediaWikiBot implements WikiBot {
 
     for (char invChar : INVALID_LABEL_CHARS) { // FIXME Replace with a REGEX
       if (simpleArticle.getTitle().contains(invChar + "")) {
-        throw new ActionException("Invalid character in label\"" + simpleArticle.getTitle() + "\" : \"" + invChar
-            + "\"");
+        throw new ActionException("Invalid character in label\"" + simpleArticle.getTitle()
+            + "\" : \"" + invChar + "\"");
       }
     }
 
@@ -347,14 +346,16 @@ public class MediaWikiBot implements WikiBot {
 
   public synchronized String performAction(ContentProcessable a) {
     if (a.isSelfExecuter()) {
-      throw new ActionException("this is a selfexcecuting action, " + "please do not perform this action manually");
+      throw new ActionException("this is a selfexcecuting action, "
+          + "please do not perform this action manually");
     }
     return getBot().performAction(a);
   }
 
   private HttpBot getBot() {
     if (bot == null) {
-      throw new IllegalStateException("please use another constructor or inject " + HttpBot.class.getCanonicalName());
+      throw new IllegalStateException("please use another constructor or inject "
+          + HttpBot.class.getCanonicalName());
     }
     return bot;
   }

@@ -19,7 +19,8 @@ import org.junit.rules.Verifier;
 public class EditTest extends AbstractMediaWikiBotTest {
 
   @ClassRule
-  public static VersionTestClassVerifier classVerifier = new VersionTestClassVerifier(PostModifyContent.class);
+  public static VersionTestClassVerifier classVerifier = new VersionTestClassVerifier(
+      PostModifyContent.class);
 
   @Rule
   public Verifier successRegister = classVerifier.getSuccessRegister(this);
@@ -28,7 +29,8 @@ public class EditTest extends AbstractMediaWikiBotTest {
   public final void categoryWikiMWLast() {
 
     bot = getMediaWikiBot(Version.getLatest(), true);
-    assertTrue("Wrong Wiki Version " + bot.getVersion(), Version.getLatest().equals(bot.getVersion()));
+    assertTrue("Wrong Wiki Version " + bot.getVersion(),
+        Version.getLatest().equals(bot.getVersion()));
     doTest();
 
   }

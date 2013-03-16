@@ -50,16 +50,16 @@ public class CategoryMembersSimple implements Iterable<String>, Iterator<String>
   private Get msg;
   private final CategoryMembers cm;
   /**
-   * Collection that will contain the result (titles of articles linking to the
-   * target) after performing the action has finished.
+   * Collection that will contain the result (titles of articles linking to the target) after
+   * performing the action has finished.
    */
   private Collection<String> titleCollection = new ArrayList<String>();
   private Iterator<String> titleIterator;
 
   /**
    * @param categoryName
-   *          like "Buildings" or "Chemical elements" without prefix "Category:"
-   *          in {@link MediaWiki#NS_MAIN}
+   *          like "Buildings" or "Chemical elements" without prefix "Category:" in
+   *          {@link MediaWiki#NS_MAIN}
    * @param bot
    *          a
    * @throws ActionException
@@ -86,7 +86,8 @@ public class CategoryMembersSimple implements Iterable<String>, Iterator<String>
    *           on inner problems like mw version
    * 
    */
-  public CategoryMembersSimple(MediaWikiBot bot, String categoryName, int... namespaces) throws ProcessException {
+  public CategoryMembersSimple(MediaWikiBot bot, String categoryName, int... namespaces)
+      throws ProcessException {
     cm = new CategoryMembers(bot, categoryName, namespaces) {
 
       public HttpAction getNextMessage() {

@@ -30,8 +30,8 @@ import org.xml.sax.InputSource;
  * href="http://www.mediawiki.org/wiki/API:Edit_-_Delete">"action=delete"</a>.
  * 
  * <p>
- * To allow your bot to delete articles in your MediaWiki add the following line
- * to your MediaWiki's LocalSettings.php:<br>
+ * To allow your bot to delete articles in your MediaWiki add the following line to your MediaWiki's
+ * LocalSettings.php:<br>
  * 
  * <pre>
  * $wgEnableWriteAPI = true;
@@ -103,7 +103,8 @@ public class PostDelete extends MWAction {
    * @throws ActionException
    *           in case of an action exception
    */
-  public PostDelete(MediaWikiBot bot, String title, String reason) throws ProcessException, ActionException {
+  public PostDelete(MediaWikiBot bot, String title, String reason) throws ProcessException,
+      ActionException {
     this(bot, title);
     this.reason = reason;
   }
@@ -114,8 +115,8 @@ public class PostDelete extends MWAction {
   private HttpAction getSecondRequest() {
     HttpAction msg = null;
     if (token.getToken() == null || token.getToken().length() == 0) {
-      throw new IllegalArgumentException("The argument 'token' must not be \"" + String.valueOf(token.getToken())
-          + "\"");
+      throw new IllegalArgumentException("The argument 'token' must not be \""
+          + String.valueOf(token.getToken()) + "\"");
     }
     if (log.isTraceEnabled()) {
       log.trace("enter PostDelete.generateDeleteRequest(String)");
@@ -178,8 +179,8 @@ public class PostDelete extends MWAction {
   }
 
   /**
-   * Determines if the given XML {@link Document} contains an error message
-   * which then would printed by the logger.
+   * Determines if the given XML {@link Document} contains an error message which then would printed
+   * by the logger.
    * 
    * @param doc
    *          XML <code>Document</code>

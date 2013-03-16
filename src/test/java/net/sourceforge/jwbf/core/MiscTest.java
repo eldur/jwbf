@@ -50,7 +50,8 @@ public class MiscTest {
   }
 
   @Test
-  public void testInit() throws IllegalArgumentException, IllegalAccessException, InvocationTargetException {
+  public void testInit() throws IllegalArgumentException, IllegalAccessException,
+      InvocationTargetException {
     Class<JWBF> clazz = JWBF.class;
     Method[] methods = clazz.getDeclaredMethods();
     Method initMethod = null;

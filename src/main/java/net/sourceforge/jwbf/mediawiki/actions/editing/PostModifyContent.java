@@ -80,7 +80,8 @@ public class PostModifyContent extends MWAction {
    * @throws ActionException
    *           a
    */
-  public PostModifyContent(MediaWikiBot bot, final SimpleArticle a) throws ActionException, ProcessException {
+  public PostModifyContent(MediaWikiBot bot, final SimpleArticle a) throws ActionException,
+      ProcessException {
     super(bot.getVersion());
     if (a.getTitle().length() < 1) {
       throw new ActionException("imposible request, no title");
@@ -99,19 +100,21 @@ public class PostModifyContent extends MWAction {
         if (!bot.isEditApi())
           throw new VersionException("write api off - user triggerd");
         switch (bot.getVersion()) {
-          case MW1_09:
-          case MW1_10:
-          case MW1_11:
-          case MW1_12:
-            throw new VersionException("write api not available");
-          default:
-            break;
+        case MW1_09:
+        case MW1_10:
+        case MW1_11:
+        case MW1_12:
+          throw new VersionException("write api not available");
+        default:
+          break;
         }
         first = false;
-        if (!(bot.getUserinfo().getRights().contains("edit") && bot.getUserinfo().getRights().contains("writeapi"))) {
+        if (!(bot.getUserinfo().getRights().contains("edit") && bot.getUserinfo().getRights()
+            .contains("writeapi"))) {
           throw new VersionException("write api not avalibal");
         }
-        apiReq = new GetApiToken(GetApiToken.Intoken.EDIT, a.getTitle(), bot.getVersion(), bot.getUserinfo());
+        apiReq = new GetApiToken(GetApiToken.Intoken.EDIT, a.getTitle(), bot.getVersion(),
+            bot.getUserinfo());
         apiGet = apiReq.getNextMessage();
         apiEdit = true;
         return apiGet;
@@ -258,8 +261,7 @@ public class PostModifyContent extends MWAction {
    *          a
    * @param b
    *          a
-   * @return true if one or both sets are <code>null</code> or the intersection
-   *         of sets is empty.
+   * @return true if one or both sets are <code>null</code> or the intersection of sets is empty.
    */
   @SuppressWarnings("unchecked")
   public static boolean isIntersectionEmpty(Set<?> a, Set<?> b) {

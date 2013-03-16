@@ -21,8 +21,7 @@ package net.sourceforge.jwbf.mediawiki.actions.util;
 import net.sourceforge.jwbf.core.actions.util.ProcessException;
 
 /**
- * exception indicating that a feature is not supported by the wiki's software
- * version.
+ * exception indicating that a feature is not supported by the wiki's software version.
  * 
  * @author Thomas Stock
  */

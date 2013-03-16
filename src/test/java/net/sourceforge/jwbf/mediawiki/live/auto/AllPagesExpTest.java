@@ -32,7 +32,8 @@ import org.junit.runners.Parameterized.Parameters;
 public class AllPagesExpTest extends ParamHelper {
 
   @ClassRule
-  public static VersionTestClassVerifier classVerifier = new VersionTestClassVerifier(AllPageTitles.class);
+  public static VersionTestClassVerifier classVerifier = new VersionTestClassVerifier(
+      AllPageTitles.class);
 
   @Rule
   public Verifier successRegister = classVerifier.getSuccessRegister(this);

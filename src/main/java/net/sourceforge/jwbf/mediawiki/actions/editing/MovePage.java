@@ -30,8 +30,8 @@ import org.xml.sax.InputSource;
  * href="http://www.mediawiki.org/wiki/API:Edit_-_Move">"action=move"</a>.
  * 
  * <p>
- * To allow your bot to move articles in your MediaWiki add the following line
- * to your MediaWiki's LocalSettings.php:<br>
+ * To allow your bot to move articles in your MediaWiki add the following line to your MediaWiki's
+ * LocalSettings.php:<br>
  * 
  * <pre>
  * $wgEnableWriteAPI = true;
@@ -89,8 +89,8 @@ public class MovePage extends MWAction {
    * @throws ActionException
    *           ActionException
    */
-  public MovePage(MediaWikiBot bot, String oldtitle, String newtitle, String reason, boolean withsubpages,
-      boolean noredirect) throws ProcessException, ActionException {
+  public MovePage(MediaWikiBot bot, String oldtitle, String newtitle, String reason,
+      boolean withsubpages, boolean noredirect) throws ProcessException, ActionException {
     super(bot.getVersion());
     token = new GetApiToken(GetApiToken.Intoken.MOVE, oldtitle, bot.getVersion(), bot.getUserinfo());
     this.oldtitle = oldtitle;
@@ -100,7 +100,8 @@ public class MovePage extends MWAction {
     this.noredirect = noredirect;
 
     if (oldtitle == null || oldtitle.length() == 0 || newtitle == null || newtitle.length() == 0) {
-      throw new IllegalArgumentException("The arguments 'oldtitle' and 'newtitle' must not be null or empty");
+      throw new IllegalArgumentException(
+          "The arguments 'oldtitle' and 'newtitle' must not be null or empty");
     }
 
     if (!bot.getUserinfo().getRights().contains("move")) {
@@ -122,8 +123,8 @@ public class MovePage extends MWAction {
   private HttpAction getSecondRequest() {
     HttpAction msg = null;
     if (token.getToken() == null || token.getToken().length() == 0) {
-      throw new IllegalArgumentException("The argument 'token' must not be \"" + String.valueOf(token.getToken())
-          + "\"");
+      throw new IllegalArgumentException("The argument 'token' must not be \""
+          + String.valueOf(token.getToken()) + "\"");
     }
     if (log.isTraceEnabled()) {
       log.trace("enter MovePage.generateMoveRequest(String)");
@@ -187,8 +188,8 @@ public class MovePage extends MWAction {
   }
 
   /**
-   * Determines if the given XML {@link Document} contains an error message
-   * which then would printed by the logger.
+   * Determines if the given XML {@link Document} contains an error message which then would printed
+   * by the logger.
    * 
    * @param doc
    *          XML <code>Document</code>
@@ -219,8 +220,9 @@ public class MovePage extends MWAction {
     if (elem != null) {
       // process reply for delete request
       if (log.isInfoEnabled()) {
-        log.info("Moved article '" + elem.getAttributeValue("from") + "' to '" + elem.getAttributeValue("to") + "'"
-            + " with reason '" + elem.getAttributeValue("reason") + "'");
+        log.info("Moved article '" + elem.getAttributeValue("from") + "' to '"
+            + elem.getAttributeValue("to") + "'" + " with reason '"
+            + elem.getAttributeValue("reason") + "'");
       }
     } else {
       log.error("Unknow reply. This is not a reply for a delete action.");

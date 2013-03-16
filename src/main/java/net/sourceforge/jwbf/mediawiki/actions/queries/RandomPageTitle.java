@@ -41,8 +41,8 @@ public class RandomPageTitle extends MWAction {
 
   /**
    * 
-   * Creates the class. Defines the invocation to MediaWiki that is needed in
-   * order to get a random page
+   * Creates the class. Defines the invocation to MediaWiki that is needed in order to get a random
+   * page
    * 
    * @param bot
    *          a
@@ -82,7 +82,8 @@ public class RandomPageTitle extends MWAction {
     String title = "";
     try {
       XPathExpression titleParser = parser.compile("/api/query/random/page/@title");
-      InputSource contenido = new InputSource(new ByteArrayInputStream(s.getBytes(MediaWiki.getCharset())));
+      InputSource contenido = new InputSource(new ByteArrayInputStream(s.getBytes(MediaWiki
+          .getCharset())));
       title = titleParser.evaluate(contenido);
     } catch (Exception e) {
       throw new ProcessException("Error parsing the title of the Random Page" + e.toString());

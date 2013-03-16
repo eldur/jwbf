@@ -40,7 +40,8 @@ import org.junit.rules.Verifier;
 public class RenderingTest extends AbstractMediaWikiBotTest {
 
   @ClassRule
-  public static VersionTestClassVerifier classVerifier = new VersionTestClassVerifier(GetRendering.class);
+  public static VersionTestClassVerifier classVerifier = new VersionTestClassVerifier(
+      GetRendering.class);
 
   @Rule
   public Verifier successRegister = classVerifier.getSuccessRegister(this);
@@ -81,7 +82,8 @@ public class RenderingTest extends AbstractMediaWikiBotTest {
   public final void getRenderingMW1x15() throws Exception {
     bot = getMediaWikiBot(Version.MW1_15, true);
     doTest(bot);
-    Assert.assertTrue("Wrong Wiki Version " + bot.getVersion(), Version.MW1_15.equals(bot.getVersion()));
+    Assert.assertTrue("Wrong Wiki Version " + bot.getVersion(),
+        Version.MW1_15.equals(bot.getVersion()));
   }
 
   /**
@@ -93,7 +95,8 @@ public class RenderingTest extends AbstractMediaWikiBotTest {
   public final void getRenderingMW1x16() throws Exception {
     bot = getMediaWikiBot(Version.MW1_16, true);
     doTest(bot);
-    Assert.assertTrue("Wrong Wiki Version " + bot.getVersion(), Version.MW1_16.equals(bot.getVersion()));
+    Assert.assertTrue("Wrong Wiki Version " + bot.getVersion(),
+        Version.MW1_16.equals(bot.getVersion()));
   }
 
   private void doTest(MediaWikiBot bot) throws Exception {

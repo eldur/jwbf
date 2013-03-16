@@ -35,7 +35,8 @@ public class RecentChangesTest extends AbstractMediaWikiBotTest {
   private static final int LIMIT = COUNT * 2;
 
   @ClassRule
-  public static VersionTestClassVerifier classVerifier = new VersionTestClassVerifier(RecentchangeTitles.class);
+  public static VersionTestClassVerifier classVerifier = new VersionTestClassVerifier(
+      RecentchangeTitles.class);
 
   @Rule
   public Verifier successRegister = classVerifier.getSuccessRegister(this);

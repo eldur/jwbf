@@ -49,8 +49,8 @@ import org.junit.rules.Verifier;
 public class CategoryTest extends AbstractMediaWikiBotTest {
 
   @ClassRule
-  public static VersionTestClassVerifier classVerifier = new VersionTestClassVerifier(CategoryMembersFull.class,
-      CategoryMembersSimple.class);
+  public static VersionTestClassVerifier classVerifier = new VersionTestClassVerifier(
+      CategoryMembersFull.class, CategoryMembersSimple.class);
 
   @Rule
   public Verifier successRegister = classVerifier.getSuccessRegister(this);
@@ -83,7 +83,8 @@ public class CategoryTest extends AbstractMediaWikiBotTest {
   public final void categoryWikipediaDe() throws Exception {
 
     bot = new MediaWikiBot("http://de.wikipedia.org/w/index.php");
-    assertTrue("Wrong Wiki Version " + bot.getVersion(), Version.DEVELOPMENT.equals(bot.getVersion()));
+    assertTrue("Wrong Wiki Version " + bot.getVersion(),
+        Version.DEVELOPMENT.equals(bot.getVersion()));
 
     doTest("Moose");
   }

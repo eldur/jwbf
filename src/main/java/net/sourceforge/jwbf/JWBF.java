@@ -48,16 +48,14 @@ public final class JWBF {
   static {
     init(JWBF.class);
     /*
-     * String[] cp = System.getProperty("java.class.path").split(":"); for (int
-     * i = 0; i < cp.length; i++) { try {
+     * String[] cp = System.getProperty("java.class.path").split(":"); for (int i = 0; i <
+     * cp.length; i++) { try {
      * 
-     * if (cp[i].endsWith(".jar") && cp[i].contains("jwbf")) {
-     * registerModule(readArtifactId("file:" + cp[i]), readVersion("file:" +
-     * cp[i]));
+     * if (cp[i].endsWith(".jar") && cp[i].contains("jwbf")) { registerModule(readArtifactId("file:"
+     * + cp[i]), readVersion("file:" + cp[i]));
      * 
-     * } else if (cp[i].contains("jwbf")) {
-     * registerModule(readArtifactId("file:" + cp[i]), readVersion("file:" +
-     * cp[i])); } } catch (Exception e) { System.err.println(cp[i] +
+     * } else if (cp[i].contains("jwbf")) { registerModule(readArtifactId("file:" + cp[i]),
+     * readVersion("file:" + cp[i])); } } catch (Exception e) { System.err.println(cp[i] +
      * " seems to be no regular module"); }
      * 
      * }
@@ -83,10 +81,12 @@ public final class JWBF {
         while (je.hasMoreElements()) {
           JarEntry jarEntry = je.nextElement();
           String slashCount = jarEntry.getName().replaceAll("[a-zA-Z0-9]", "");
-          if (jarEntry.isDirectory() && jarEntry.getName().contains(packagename) && slashCount.length() == 4) {
+          if (jarEntry.isDirectory() && jarEntry.getName().contains(packagename)
+              && slashCount.length() == 4) {
 
-            registerModule(readMFProductTitle(jarFileName) + "-" + jarEntry.getName().split(separatorChar + "")[3],
-                readMFVersion(jarFileName));
+            registerModule(
+                readMFProductTitle(jarFileName) + "-"
+                    + jarEntry.getName().split(separatorChar + "")[3], readMFVersion(jarFileName));
           }
         }
       } catch (IOException e) {

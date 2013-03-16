@@ -18,9 +18,8 @@ import net.sourceforge.jwbf.inyoka.actions.GetRevision;
 
 /**
  * 
- * This class helps you to interact with each wiki as part of <a
- * href="http://ubuntuusers.de" target="_blank">Inyoka</a>. This class offers a
- * set of methods which are defined in the package
+ * This class helps you to interact with each wiki as part of <a href="http://ubuntuusers.de"
+ * target="_blank">Inyoka</a>. This class offers a set of methods which are defined in the package
  * net.sourceforge.jwbf.actions.inyoka.*
  * 
  * @author Thomas Stock
@@ -32,8 +31,7 @@ public class InyokaWikiBot extends HttpBot implements WikiBot {
 
   /**
    * @param url
-   *          wikihosturl like
-   *          "http://wiki.ubuntuusers.de/Startseite?action=export&format=raw&"
+   *          wikihosturl like "http://wiki.ubuntuusers.de/Startseite?action=export&format=raw&"
    * @throws MalformedURLException
    *           if param url does not represent a well-formed url
    */
@@ -52,7 +50,8 @@ public class InyokaWikiBot extends HttpBot implements WikiBot {
    *           on access problems
    * @see GetRevision
    */
-  public synchronized Article getArticle(final String name) throws ActionException, ProcessException {
+  public synchronized Article getArticle(final String name) throws ActionException,
+      ProcessException {
     return getArticle(name, 0);
 
   }
@@ -72,11 +71,13 @@ public class InyokaWikiBot extends HttpBot implements WikiBot {
 
   }
 
-  public synchronized Article getArticle(String name, int properties) throws ActionException, ProcessException {
+  public synchronized Article getArticle(String name, int properties) throws ActionException,
+      ProcessException {
     return new Article(this, readData(name, properties));
   }
 
-  public SimpleArticle readData(String name, int properties) throws ActionException, ProcessException {
+  public SimpleArticle readData(String name, int properties) throws ActionException,
+      ProcessException {
     GetRevision ac = new GetRevision(name);
     performAction(ac);
     return ac.getArticle();
