@@ -19,9 +19,13 @@
 package net.sourceforge.jwbf.mediawiki.actions;
 
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Field;
 import java.net.URLEncoder;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+
+import com.google.common.collect.Lists;
 
 /**
  * 
@@ -87,30 +91,36 @@ public final class MediaWiki {
     /**
      * @deprecated requires PHP 5.2 expired 2011-01-06
      */
+    @Deprecated
     MW1_09,
     /**
      * @deprecated requires PHP 5.2 expired 2011-01-06
      */
+    @Deprecated
     MW1_10,
     /**
      * @deprecated requires PHP 5.2 expired 2011-01-06
      */
+    @Deprecated
     MW1_11,
     /**
      * @deprecated requires PHP 5.2 expired 2011-01-06
      */
+    @Deprecated
     MW1_12,
     /**
      * Released 2008-08
      * 
      * @deprecated requires PHP 5.2 expired 2011-01-06; is installable but doesn't work
      */
+    @Deprecated
     MW1_13,
     /**
      * Released 2009-02
      * 
      * @deprecated database installer doesn't work anymore
      */
+    @Deprecated
     MW1_14
     /**
      * Released 2009-06
@@ -203,16 +213,23 @@ public final class MediaWiki {
      * @return all known stable MW Versions
      */
     public static Version[] valuesStable() {
-      Version[] vxN = new Version[Version.values().length - 2];
+      List<Version> resultVersions = Lists.newArrayList();
 
-      Version[] vx = Version.values();
-      int j = 0;
-      for (int i = 0; i < vx.length; i++) {
-        if (!(vx[i].equals(DEVELOPMENT) || vx[i].equals(UNKNOWN))) {
-          vxN[j++] = vx[i];
+      for (Version version : Version.values()) {
+        boolean isDeprecated = getField(version).isAnnotationPresent(Deprecated.class);
+        if (!(version.equals(DEVELOPMENT) || version.equals(UNKNOWN) || isDeprecated)) {
+          resultVersions.add(version);
         }
       }
-      return vxN;
+      return resultVersions.toArray(new Version[0]);
+    }
+
+    protected static Field getField(Version version) {
+      try {
+        return version.getClass().getField(version.name());
+      } catch (NoSuchFieldException nsfe) {
+        throw new IllegalStateException(nsfe);
+      }
     }
 
   }
