@@ -35,6 +35,7 @@ import net.sourceforge.jwbf.mediawiki.actions.editing.GetRevision;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -220,6 +221,7 @@ public class EditCustomWikiContentTest {
    * @throws Exception
    *           a
    */
+  @Ignore("too old")
   @Test
   public final void contentModifyOnOtherWiki() throws Exception {
     MediaWikiBot bot = new MediaWikiBot(getValue("demoWiki_url"));

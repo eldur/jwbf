@@ -18,10 +18,6 @@
  */
 package net.sourceforge.jwbf.mediawiki.actions.queries;
 
-import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_11;
-import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_12;
-import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_13;
-import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_14;
 import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_15;
 
 import java.util.regex.Matcher;
@@ -46,7 +42,7 @@ import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
  * @author Thomas Stock
  */
 @Slf4j
-@SupportedBy({ MW1_11, MW1_12, MW1_13, MW1_14, MW1_15 })
+@SupportedBy({ MW1_15 })
 abstract class CategoryMembers extends MWAction {
 
   /** constant value for the bllimit-parameter. **/

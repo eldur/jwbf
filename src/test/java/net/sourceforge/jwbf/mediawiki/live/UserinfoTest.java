@@ -14,6 +14,7 @@ import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 
 import org.junit.Assert;
 import org.junit.ClassRule;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Verifier;
@@ -73,6 +74,7 @@ public class UserinfoTest extends AbstractMediaWikiBotTest {
    * @throws Exception
    *           a
    */
+  @Ignore("to complex, use recored test")
   @Test
   public final void userInfoWikiMW1x17Rights() throws Exception {
     bot = getMediaWikiBot(Version.MW1_17, false);

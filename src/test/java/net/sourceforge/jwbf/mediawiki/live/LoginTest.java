@@ -46,6 +46,7 @@ import net.sourceforge.jwbf.core.actions.util.ActionException;
 import net.sourceforge.jwbf.mediawiki.BotFactory;
 import net.sourceforge.jwbf.mediawiki.VersionTestClassVerifier;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
+import net.sourceforge.jwbf.mediawiki.actions.login.PostLogin;
 import net.sourceforge.jwbf.mediawiki.actions.login.PostLoginOld;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 
@@ -80,7 +81,7 @@ public class LoginTest extends AbstractMediaWikiBotTest {
   // TODO what about PostLogin.class
   @ClassRule
   public static VersionTestClassVerifier classVerifier = new VersionTestClassVerifier(
-      PostLoginOld.class);
+      PostLoginOld.class, PostLogin.class);
 
   @Rule
   public Verifier successRegister = classVerifier.getSuccessRegister(this);

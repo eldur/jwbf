@@ -35,6 +35,7 @@ import net.sourceforge.jwbf.mediawiki.actions.meta.Siteinfo;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 
 import org.junit.ClassRule;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Verifier;
@@ -96,7 +97,7 @@ public class SiteinfoTest extends AbstractMediaWikiBotTest {
   @Test
   public final void siteInfoMW1x15() throws Exception {
 
-    bot = getMediaWikiBot(Version.MW1_15, false);
+    bot = getMediaWikiBot(Version.MW1_15, true);
     doTest(bot, Version.MW1_15);
   }
 
@@ -170,6 +171,7 @@ public class SiteinfoTest extends AbstractMediaWikiBotTest {
    * @throws Exception
    *           a
    */
+  @Ignore("test with jetty?")
   @Test
   public final void testUserAgent() throws Exception {
 
