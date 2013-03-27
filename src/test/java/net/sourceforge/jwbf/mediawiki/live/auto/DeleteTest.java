@@ -1,12 +1,10 @@
-/**
- * 
- */
-package net.sourceforge.jwbf.mediawiki.live;
+package net.sourceforge.jwbf.mediawiki.live.auto;
 
 import static net.sourceforge.jwbf.TestHelper.getRandom;
 import static org.junit.Assert.assertTrue;
-import net.sourceforge.jwbf.core.actions.util.ActionException;
-import net.sourceforge.jwbf.core.actions.util.ProcessException;
+
+import java.util.Collection;
+
 import net.sourceforge.jwbf.core.contentRep.ContentAccessable;
 import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
 import net.sourceforge.jwbf.mediawiki.BotFactory;
@@ -16,18 +14,18 @@ import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.actions.editing.PostDelete;
 import net.sourceforge.jwbf.mediawiki.actions.queries.AllPageTitles;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
+import net.sourceforge.jwbf.test.SimpleNameFinder;
+import net.sourceforge.jwbf.test.TestNamer;
 
 import org.junit.ClassRule;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Verifier;
+import org.junit.runners.Parameterized.Parameters;
 
-/**
- * @author Thomas
- * 
- */
-public class DeleteTest extends AbstractMediaWikiBotTest {
+@TestNamer(SimpleNameFinder.class)
+public class DeleteTest extends ParamHelper {
   private static final String DELETE_PREFIX = "Delete";
   private static final int COUNT = 1;
 
@@ -37,6 +35,15 @@ public class DeleteTest extends AbstractMediaWikiBotTest {
 
   @Rule
   public Verifier successRegister = classVerifier.getSuccessRegister(this);
+
+  @Parameters
+  public static Collection<?> stableWikis() {
+    return ParamHelper.prepare(Version.valuesStable());
+  }
+
+  public DeleteTest(Version v) {
+    super(v);
+  }
 
   private void prepare(MediaWikiBot bot) {
     SimpleArticle a = new SimpleArticle();
@@ -48,14 +55,14 @@ public class DeleteTest extends AbstractMediaWikiBotTest {
     }
   }
 
-  private void delete(MediaWikiBot bot) throws ActionException, ProcessException {
+  private void delete(MediaWikiBot bot) {
 
     for (int i = 0; i < COUNT; i++) {
       bot.delete(DELETE_PREFIX + i);
     }
   }
 
-  private void test(MediaWikiBot bot) throws ActionException, ProcessException {
+  private void test(MediaWikiBot bot) {
 
     for (int i = 0; i < COUNT; i++) {
       ContentAccessable ca = bot.getArticle(DELETE_PREFIX + i);
@@ -67,34 +74,8 @@ public class DeleteTest extends AbstractMediaWikiBotTest {
     }
   }
 
-  /**
-   * Test.
-   * 
-   * @throws Exception
-   *           a
-   */
   @Test
-  public final void deleteWikiMW1x15() throws Exception {
-
-    bot = BotFactory.getMediaWikiBot(Version.MW1_15, true);
-    assertTrue("Wrong Wiki Version " + bot.getVersion(), Version.MW1_15.equals(bot.getVersion()));
-
-    prepare(bot);
-    delete(bot);
-    test(bot);
-  }
-
-  /**
-   * Test.
-   * 
-   * @throws Exception
-   *           a
-   */
-  @Test
-  public final void deleteWikiMW1x16() throws Exception {
-
-    bot = BotFactory.getMediaWikiBot(Version.MW1_16, true);
-    assertTrue("Wrong Wiki Version " + bot.getVersion(), Version.MW1_16.equals(bot.getVersion()));
+  public final void delete() {
 
     prepare(bot);
     delete(bot);

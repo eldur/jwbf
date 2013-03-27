@@ -16,9 +16,8 @@
  * Contributors:
  * 
  */
-package net.sourceforge.jwbf.mediawiki.live;
+package net.sourceforge.jwbf.mediawiki.live.auto;
 
-import static net.sourceforge.jwbf.mediawiki.BotFactory.getMediaWikiBot;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -34,19 +33,18 @@ import net.sourceforge.jwbf.mediawiki.actions.queries.CategoryMembersFull;
 import net.sourceforge.jwbf.mediawiki.actions.queries.CategoryMembersSimple;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 import net.sourceforge.jwbf.mediawiki.contentRep.CategoryItem;
+import net.sourceforge.jwbf.test.SimpleNameFinder;
+import net.sourceforge.jwbf.test.TestNamer;
 
 import org.junit.ClassRule;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Verifier;
+import org.junit.runners.Parameterized.Parameters;
 
-/**
- * 
- * @author Thomas Stock
- * 
- */
-public class CategoryTest extends AbstractMediaWikiBotTest {
+@TestNamer(SimpleNameFinder.class)
+public class CategoryTest extends ParamHelper {
 
   @ClassRule
   public static VersionTestClassVerifier classVerifier = new VersionTestClassVerifier(
@@ -54,6 +52,15 @@ public class CategoryTest extends AbstractMediaWikiBotTest {
 
   @Rule
   public Verifier successRegister = classVerifier.getSuccessRegister(this);
+
+  @Parameters
+  public static Collection<?> stableWikis() {
+    return ParamHelper.prepare(Version.valuesStable());
+  }
+
+  public CategoryTest(Version v) {
+    super(v);
+  }
 
   private static final int COUNT = 60;
   private static final String TESTCATNAME = "TestCat";
@@ -96,28 +103,7 @@ public class CategoryTest extends AbstractMediaWikiBotTest {
    *           a
    */
   @Test
-  public final void categoryWikiMW1x15() throws Exception {
-
-    bot = getMediaWikiBot(Version.MW1_15, true);
-    assertTrue("Wrong Wiki Version " + bot.getVersion(), Version.MW1_15.equals(bot.getVersion()));
-    doTest();
-  }
-
-  /**
-   * Test category read. Test category must have more then 50 members.
-   * 
-   * @throws Exception
-   *           a
-   */
-  @Test
-  public final void categoryWikiMW1x16() throws Exception {
-
-    bot = getMediaWikiBot(Version.MW1_16, true);
-    assertTrue("Wrong Wiki Version " + bot.getVersion(), Version.MW1_16.equals(bot.getVersion()));
-    doTest();
-  }
-
-  private void doTest() throws ProcessException {
+  public void doTest() throws ProcessException {
     doTest(TESTCATNAME);
   }
 
