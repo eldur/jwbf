@@ -21,6 +21,8 @@ package net.sourceforge.jwbf.mediawiki.actions.queries;
 
 import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_15;
 import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_16;
+import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_17;
+import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_18;
 
 import java.util.Collection;
 import java.util.Vector;
@@ -45,7 +47,7 @@ import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
  * 
  */
 @Slf4j
-@SupportedBy({ MW1_15, MW1_16 })
+@SupportedBy({ MW1_15, MW1_16, MW1_17, MW1_18 })
 public class AllPageTitles extends TitleQuery<String> {
 
   /** Pattern to parse returned page, @see {@link #parseHasMore(String)}. */

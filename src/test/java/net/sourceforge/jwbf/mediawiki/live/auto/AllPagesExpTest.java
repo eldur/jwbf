@@ -1,9 +1,5 @@
 package net.sourceforge.jwbf.mediawiki.live.auto;
 
-import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_15;
-import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_16;
-import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_17;
-import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_18;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Collection;
@@ -39,8 +35,8 @@ public class AllPagesExpTest extends ParamHelper {
   public Verifier successRegister = classVerifier.getSuccessRegister(this);
 
   @Parameters
-  public static Collection<?> regExValues() {
-    return ParamHelper.prepare(MW1_15, MW1_16, MW1_17, MW1_18);
+  public static Collection<?> stableWikis() {
+    return ParamHelper.prepare(Version.valuesStable());
   }
 
   public AllPagesExpTest(Version v) {

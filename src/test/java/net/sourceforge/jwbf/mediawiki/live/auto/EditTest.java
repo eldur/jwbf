@@ -1,22 +1,25 @@
 package net.sourceforge.jwbf.mediawiki.live.auto;
 
 import static net.sourceforge.jwbf.TestHelper.getRandom;
-import static net.sourceforge.jwbf.mediawiki.BotFactory.getMediaWikiBot;
 import static org.junit.Assert.assertTrue;
-import net.sourceforge.jwbf.core.actions.util.ActionException;
-import net.sourceforge.jwbf.core.actions.util.ProcessException;
+
+import java.util.Collection;
+
 import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
 import net.sourceforge.jwbf.mediawiki.VersionTestClassVerifier;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.actions.editing.PostModifyContent;
-import net.sourceforge.jwbf.mediawiki.live.AbstractMediaWikiBotTest;
+import net.sourceforge.jwbf.test.SimpleNameFinder;
+import net.sourceforge.jwbf.test.TestNamer;
 
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Verifier;
+import org.junit.runners.Parameterized.Parameters;
 
-public class EditTest extends AbstractMediaWikiBotTest {
+@TestNamer(SimpleNameFinder.class)
+public class EditTest extends ParamHelper {
 
   @ClassRule
   public static VersionTestClassVerifier classVerifier = new VersionTestClassVerifier(
@@ -25,18 +28,17 @@ public class EditTest extends AbstractMediaWikiBotTest {
   @Rule
   public Verifier successRegister = classVerifier.getSuccessRegister(this);
 
-  @Test
-  public final void categoryWikiMWLast() {
-
-    bot = getMediaWikiBot(Version.getLatest(), true);
-    assertTrue("Wrong Wiki Version " + bot.getVersion(),
-        Version.getLatest().equals(bot.getVersion()));
-    doTest();
-
+  @Parameters
+  public static Collection<?> stableWikis() {
+    return ParamHelper.prepare(Version.valuesStable());
   }
 
-  // TODO change to an autotest
-  private void doTest() throws ActionException, ProcessException {
+  public EditTest(Version v) {
+    super(v);
+  }
+
+  @Test
+  public void doTest() {
     SimpleArticle sa = new SimpleArticle("Test");
     sa.setText(getRandom(5));
     PostModifyContent pmc = new PostModifyContent(bot, sa);

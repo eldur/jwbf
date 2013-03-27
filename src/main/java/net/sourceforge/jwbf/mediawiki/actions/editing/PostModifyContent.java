@@ -18,14 +18,8 @@
  */
 package net.sourceforge.jwbf.mediawiki.actions.editing;
 
-import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_09;
-import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_10;
-import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_11;
-import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_12;
-import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_13;
-import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_14;
 import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_15;
-import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_16;
+import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.*;
 
 import java.util.HashSet;
 import java.util.Hashtable;
@@ -55,7 +49,7 @@ import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
  * @author Thomas Stock
  */
 @Slf4j
-@SupportedBy({ MW1_09, MW1_10, MW1_11, MW1_12, MW1_13, MW1_14, MW1_15, MW1_16 })
+@SupportedBy({ MW1_15, MW1_16, MW1_17, MW1_18, MW1_19, MW1_20 })
 public class PostModifyContent extends MWAction {
 
   private boolean first = true;

@@ -5,12 +5,10 @@ import static org.junit.Assert.assertEquals;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -34,9 +32,8 @@ public class VersionTestClassVerifier extends Verifier {
 
   private boolean isVersionTestCase = false;
 
-  private final Map<String, Version> USEDVERSIONS = new HashMap<String, Version>();
-  private final Map<String, Version> TESTEDVERSIONS = new HashMap<String, Version>();
-  private final Map<String, Version> documentedVersions = new HashMap<String, Version>();
+  private final Map<String, Version> testedVersions = Maps.newHashMap();
+  private final Map<String, Version> documentedVersions = Maps.newHashMap();
 
   private boolean checkAll = true;
 
@@ -63,23 +60,19 @@ public class VersionTestClassVerifier extends Verifier {
   }
 
   private Collection<Version> getUsedVersions() {
-    final Vector<Version> data = new Vector<Version>();
-    Version[] vas = Version.valuesStable();
-    for (int i = 0; i < vas.length; i++) {
-      data.add(vas[i]);
-    }
-
-    final Iterable<Version> testedKeys = USEDVERSIONS.values();
+    Version[] stableVersions = Version.valuesStable();
+    final List<Version> versions = Lists.newArrayList(stableVersions);
+    final Iterable<Version> testedKeys = testedVersions.values();
     for (Version key : testedKeys) {
-      data.remove(key);
+      versions.remove(key);
     }
 
-    return data;
+    return versions;
   }
 
   private Map<String, Version> getTestedButUndocmentedVersions() {
     final Map<String, Version> data = Maps.newHashMap();
-    data.putAll(TESTEDVERSIONS);
+    data.putAll(testedVersions);
 
     final Set<String> documentedKeys = documentedVersions.keySet();
     for (String key : documentedKeys) {
@@ -96,9 +89,9 @@ public class VersionTestClassVerifier extends Verifier {
    * @param v
    *          a
    */
-  private final void registerTestedVersion(Class<?> clazz, Version v) {
+  private void registerTestedVersion(Class<?> clazz, Version v) {
     if (v != Version.DEVELOPMENT) {
-      TESTEDVERSIONS.put(clazz.getCanonicalName() + "-" + v, v);
+      testedVersions.put(clazz.getCanonicalName() + "-" + v, v);
     }
   }
 
@@ -130,7 +123,7 @@ public class VersionTestClassVerifier extends Verifier {
     Map<String, Version> testedAndDocumentedVersions = Maps.newHashMap();
     for (Entry<String, Version> entrySet : documentedVersions.entrySet()) {
       String key = entrySet.getKey();
-      Version version = TESTEDVERSIONS.get(key);
+      Version version = testedVersions.get(key);
       if (version != null) {
         testedAndDocumentedVersions.put(key, version);
       }

@@ -1,11 +1,5 @@
 package net.sourceforge.jwbf.mediawiki.live.auto;
 
-import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_15;
-import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_16;
-import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_17;
-import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_18;
-import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_19;
-import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_20;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Collection;
@@ -45,8 +39,8 @@ public class BacklinkExpTest extends ParamHelper {
   private static final int COUNT = 60;
 
   @Parameters
-  public static Collection<?> regExValues() {
-    return ParamHelper.prepare(MW1_15, MW1_16, MW1_17, MW1_18, MW1_19, MW1_20);
+  public static Collection<?> stableWikis() {
+    return ParamHelper.prepare(Version.valuesStable());
   }
 
   public BacklinkExpTest(Version v) {
