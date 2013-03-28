@@ -16,7 +16,7 @@
  * Contributors:
  * 
  */
-package net.sourceforge.jwbf.mediawiki.live;
+package net.sourceforge.jwbf.mediawiki.live.auto;
 
 import static net.sourceforge.jwbf.mediawiki.BotFactory.getMediaWikiBot;
 import static net.sourceforge.jwbf.mediawiki.LiveTestFather.getValue;
@@ -34,6 +34,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.Collection;
 
 import javax.imageio.ImageIO;
 
@@ -51,13 +52,14 @@ import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Verifier;
+import org.junit.runners.Parameterized.Parameters;
 
 /**
  * 
  * @author Thomas Stock
  * 
  */
-public class UploadAndImageInfoTest extends AbstractMediaWikiBotTest {
+public class UploadAndImageInfoTest extends ParamHelper {
 
   @ClassRule
   public static VersionTestClassVerifier classVerifier = new VersionTestClassVerifier(
@@ -66,31 +68,19 @@ public class UploadAndImageInfoTest extends AbstractMediaWikiBotTest {
   @Rule
   public Verifier successRegister = classVerifier.getSuccessRegister(this);
 
-  /**
-   * Test category read. Test category must have more then 50 members.
-   * 
-   * @throws Exception
-   *           a
-   */
-  @Test
-  public final void uploadMW1x15() throws Exception {
-
-    bot = getMediaWikiBot(Version.MW1_15, true);
-    generalUploadImageInfoTest(bot, Version.MW1_15);
-
+  @Parameters(name = "{0}")
+  public static Collection<?> stableWikis() {
+    return ParamHelper.prepare(Version.valuesStable());
   }
 
-  /**
-   * Test category read. Test category must have more then 50 members.
-   * 
-   * @throws Exception
-   *           a
-   */
-  @Test
-  public final void uploadMW1x16() throws Exception {
+  public UploadAndImageInfoTest(Version v) {
+    super(v);
+  }
 
-    bot = getMediaWikiBot(Version.MW1_16, true);
-    generalUploadImageInfoTest(bot, Version.MW1_16);
+  @Test
+  public final void upload() throws Exception {
+
+    generalUploadImageInfoTest(bot);
 
   }
 
@@ -132,8 +122,7 @@ public class UploadAndImageInfoTest extends AbstractMediaWikiBotTest {
    */
   @Test(expected = ProcessException.class)
   public final void deleteImage() throws Exception {
-    bot = getMediaWikiBot(Version.MW1_15, true);
-    generalUploadImageInfoTest(bot, Version.MW1_15);
+    generalUploadImageInfoTest(bot);
     bot.delete("File:" + getValue("filename"));
 
     try {
@@ -154,8 +143,7 @@ public class UploadAndImageInfoTest extends AbstractMediaWikiBotTest {
    * @throws Exception
    *           a
    */
-  protected final void generalUploadImageInfoTest(MediaWikiBot bot, Version v) throws Exception {
-    assertEquals(bot.getVersion(), v);
+  protected final void generalUploadImageInfoTest(MediaWikiBot bot) throws Exception {
     assertTrue("File (" + getValue("validFile") + ") not readable",
         new File(getValue("validFile")).canRead());
     SimpleFile sf = new SimpleFile(getValue("filename"), getValue("validFile"));

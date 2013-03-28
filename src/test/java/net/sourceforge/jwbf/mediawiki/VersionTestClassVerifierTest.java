@@ -16,7 +16,8 @@ import org.mockito.Mockito;
 public class VersionTestClassVerifierTest implements Provider<MediaWikiBot> {
 
   @ClassRule
-  public static VersionTestClassVerifier veri = new VersionTestClassVerifier(Fake.class);
+  public static VersionTestClassVerifier veri = new VersionTestClassVerifier(Fake.class)
+      .dontCheckAll();
 
   private MediaWikiBot bot;
 
