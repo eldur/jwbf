@@ -25,34 +25,18 @@ import static net.sourceforge.jwbf.mediawiki.BotFactory.getWikiUser;
 import static net.sourceforge.jwbf.mediawiki.LiveTestFather.getValue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import lombok.extern.slf4j.Slf4j;
 import net.sourceforge.jwbf.JWBF;
 import net.sourceforge.jwbf.core.bots.HttpBot;
 import net.sourceforge.jwbf.core.contentRep.Article;
-import net.sourceforge.jwbf.mediawiki.VersionTestClassVerifier;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
-import net.sourceforge.jwbf.mediawiki.actions.meta.GetVersion;
-import net.sourceforge.jwbf.mediawiki.actions.meta.Siteinfo;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 
-import org.junit.ClassRule;
 import org.junit.Ignore;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.Verifier;
 
-/**
- * 
- * @author Thomas Stock
- * 
- */
+@Slf4j
 public class SiteinfoTest extends AbstractMediaWikiBotTest {
-
-  @ClassRule
-  public static VersionTestClassVerifier classVerifier = new VersionTestClassVerifier(
-      GetVersion.class, Siteinfo.class);
-
-  @Rule
-  public Verifier successRegister = classVerifier.getSuccessRegister(this);
 
   /**
    * Test get siteinfo on Wikipedia DE.
@@ -60,12 +44,13 @@ public class SiteinfoTest extends AbstractMediaWikiBotTest {
    * @throws Exception
    *           a
    */
+  @Ignore("do we need this?")
   @Test
   public final void siteInfoWikipediaDe() throws Exception {
     String liveUrl = "http://de.wikipedia.org/w/index.php";
     assumeReachable(liveUrl);
     bot = new MediaWikiBot(liveUrl);
-    doTest(bot, Version.DEVELOPMENT);
+    // doTest(bot, Version.DEVELOPMENT);
   }
 
   /**
@@ -89,32 +74,6 @@ public class SiteinfoTest extends AbstractMediaWikiBotTest {
   }
 
   /**
-   * Test get siteinfo on a MW.
-   * 
-   * @throws Exception
-   *           a
-   */
-  @Test
-  public final void siteInfoMW1x15() throws Exception {
-
-    bot = getMediaWikiBot(Version.MW1_15, true);
-    doTest(bot, Version.MW1_15);
-  }
-
-  /**
-   * Test get siteinfo on a MW.
-   * 
-   * @throws Exception
-   *           a
-   */
-  @Test
-  public final void siteInfoMW1x16() throws Exception {
-
-    bot = getMediaWikiBot(Version.MW1_16, false);
-    doTest(bot, Version.MW1_16);
-  }
-
-  /**
    * Test last Version.
    * 
    * @throws Exception
@@ -131,38 +90,6 @@ public class SiteinfoTest extends AbstractMediaWikiBotTest {
     Article a = new Article(bot, versionInfoTemplate);
     assertTrue(a.getText() + " should contains " + v.getNumber(),
         a.getText().contains(v.getNumber()));
-  }
-
-  private void doTest(MediaWikiBot bot, Version v) throws Exception {
-    assertEquals(v, bot.getVersion());
-
-    GetVersion gv = new GetVersion();
-    bot.performAction(gv);
-
-    System.out.println(gv.getBase());
-    assertTrue(gv.getBase().length() > 0);
-
-    System.out.println(gv.getCase());
-    assertTrue(gv.getCase().length() > 0);
-
-    System.out.println(gv.getGenerator());
-    assertTrue(gv.getGenerator().length() > 0);
-
-    System.out.println(gv.getMainpage());
-    assertTrue(gv.getMainpage().length() > 0);
-
-    System.out.println(gv.getSitename());
-    assertTrue(gv.getSitename().length() > 0);
-
-    Siteinfo si = new Siteinfo();
-    bot.performAction(si);
-    System.out.println(si.getInterwikis());
-    assertTrue("shuld have interwikis", si.getInterwikis().size() > 5);
-
-    System.out.println(si.getNamespaces());
-    assertTrue("shuld have namespaces", si.getNamespaces().size() > 15);
-    // registerTestedVersion(Siteinfo.class, v); // TODO
-
   }
 
   /**

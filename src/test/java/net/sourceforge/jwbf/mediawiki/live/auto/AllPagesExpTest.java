@@ -42,7 +42,7 @@ public class AllPagesExpTest extends ParamHelper {
 
   @Test
   public void doTest() {
-    AllPageTitles gat = new AllPageTitles(bot, null, null, RedirectFilter.all, MediaWiki.NS_MAIN);
+    AllPageTitles allPages = new AllPageTitles(bot, null, null, RedirectFilter.all, MediaWiki.NS_MAIN);
 
     SimpleArticle sa;
     String testText = TestHelper.getRandom(255);
@@ -65,11 +65,11 @@ public class AllPagesExpTest extends ParamHelper {
       assertTrue("should be a know invalid char", found);
     }
 
-    Iterator<String> is = gat.iterator();
+    Iterator<String> allPagesIterator = allPages.iterator();
     int i = 0;
-    while (is.hasNext()) {
-      String nx = is.next();
-      specialChars.remove(nx);
+    while (allPagesIterator.hasNext()) {
+      String title = allPagesIterator.next();
+      specialChars.remove(title);
       i++;
       if (i > 55) {
         break;
@@ -80,8 +80,8 @@ public class AllPagesExpTest extends ParamHelper {
       specialChars.remove(c + "");
     }
     if (!specialChars.isEmpty()) {
-      while (is.hasNext() || !specialChars.isEmpty()) {
-        specialChars.remove(is.next());
+      while (allPagesIterator.hasNext() || !specialChars.isEmpty()) {
+        specialChars.remove(allPagesIterator.next());
       }
     }
 

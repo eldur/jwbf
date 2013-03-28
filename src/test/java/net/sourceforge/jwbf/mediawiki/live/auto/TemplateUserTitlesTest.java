@@ -1,7 +1,6 @@
-package net.sourceforge.jwbf.mediawiki.live;
+package net.sourceforge.jwbf.mediawiki.live.auto;
 
 import static net.sourceforge.jwbf.TestHelper.getRandom;
-import static net.sourceforge.jwbf.mediawiki.BotFactory.getMediaWikiBot;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -9,7 +8,6 @@ import static org.junit.Assert.fail;
 import java.util.Collection;
 import java.util.Vector;
 
-import net.sourceforge.jwbf.core.bots.util.JwbfException;
 import net.sourceforge.jwbf.core.contentRep.Article;
 import net.sourceforge.jwbf.mediawiki.VersionTestClassVerifier;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
@@ -21,13 +19,14 @@ import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Verifier;
+import org.junit.runners.Parameterized.Parameters;
 
 /**
  * 
  * @author Thomas Stock
  * 
  */
-public class TemplateUserTitlesTest extends AbstractMediaWikiBotTest {
+public class TemplateUserTitlesTest extends ParamHelper {
 
   private static final String TESTPATTERNNAME = "Template:ATesT";
 
@@ -38,29 +37,17 @@ public class TemplateUserTitlesTest extends AbstractMediaWikiBotTest {
   @Rule
   public Verifier successRegister = classVerifier.getSuccessRegister(this);
 
-  @Test
-  public final void templateUserWikiMW1x15() throws Exception {
-    bot = getMediaWikiBot(Version.MW1_15, true);
-    doRegularTest();
-
-    assertTrue("Wrong Wiki Version " + bot.getVersion(), Version.MW1_15.equals(bot.getVersion()));
+  @Parameters(name = "{0}")
+  public static Collection<?> stableWikis() {
+    return ParamHelper.prepare(Version.valuesStable());
   }
 
-  /**
-   * Test.
-   * 
-   * @throws Exception
-   *           a
-   */
-  @Test
-  public final void templateUserWikiMW1x16() throws Exception {
-    bot = getMediaWikiBot(Version.MW1_16, true);
-    doRegularTest();
-
-    assertTrue("Wrong Wiki Version " + bot.getVersion(), Version.MW1_16.equals(bot.getVersion()));
+  public TemplateUserTitlesTest(Version v) {
+    super(v);
   }
 
-  private void doRegularTest() throws JwbfException {
+  @Test
+  public void doRegularTest() {
     TemplateUserTitles a = new TemplateUserTitles(bot, TESTPATTERNNAME, MediaWiki.NS_ALL);
 
     int i = 0;
@@ -93,7 +80,7 @@ public class TemplateUserTitlesTest extends AbstractMediaWikiBotTest {
     assertEquals(TESTPATTERNNAME + " content ", "a test", template.getText());
   }
 
-  private void prepare(MediaWikiBot bot, Collection<String> titles) throws JwbfException {
+  private void prepare(MediaWikiBot bot, Collection<String> titles) {
     Article template = new Article(bot, TESTPATTERNNAME);
     template.setText("a test");
     template.save();
