@@ -1,10 +1,11 @@
 package net.sourceforge.jwbf.mediawiki.actions.misc;
 
-import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_12;
-import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_13;
-import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_14;
 import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_15;
 import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_16;
+import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_17;
+import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_18;
+import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_19;
+import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_20;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -36,7 +37,7 @@ import org.xml.sax.InputSource;
  * @author Thomas Stock
  * 
  */
-@SupportedBy({ MW1_12, MW1_13, MW1_14, MW1_15, MW1_16 })
+@SupportedBy({ MW1_15, MW1_16, MW1_17, MW1_18, MW1_19, MW1_20 })
 public class GetRendering extends MWAction {
 
   private final Get msg;
@@ -53,7 +54,7 @@ public class GetRendering extends MWAction {
    * @throws VersionException
    *           if not supported
    */
-  public GetRendering(MediaWikiBot bot, String wikitext) throws VersionException {
+  public GetRendering(MediaWikiBot bot, String wikitext) {
     super(bot.getVersion());
     this.bot = bot;
     msg = new Get("/api.php?action=parse&text=" + MediaWiki.encode(wikitext)
@@ -83,7 +84,7 @@ public class GetRendering extends MWAction {
    * {@inheritDoc}
    */
   @Override
-  public String processAllReturningText(String s) throws ProcessException {
+  public String processAllReturningText(String s) {
     html = findElement("text", s).getTextTrim();
     html = html.replace("\n", "");
     switch (bot.getVersion()) {

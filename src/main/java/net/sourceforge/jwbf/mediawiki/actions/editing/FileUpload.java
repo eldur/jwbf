@@ -20,6 +20,10 @@ package net.sourceforge.jwbf.mediawiki.actions.editing;
 
 import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_15;
 import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_16;
+import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_17;
+import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_18;
+import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_19;
+import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_20;
 
 import java.io.FileNotFoundException;
 import java.util.regex.Matcher;
@@ -55,7 +59,7 @@ import net.sourceforge.jwbf.mediawiki.contentRep.SimpleFile;
  * 
  */
 @Slf4j
-@SupportedBy({ MW1_15, MW1_16 })
+@SupportedBy({ MW1_15, MW1_16, MW1_17, MW1_18, MW1_19, MW1_20 })
 public class FileUpload extends MWAction {
 
   private final Get g;
