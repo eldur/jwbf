@@ -1,10 +1,6 @@
-/**
- *
- */
-package net.sourceforge.jwbf.mediawiki.live;
+package net.sourceforge.jwbf.mediawiki.live.auto;
 
 import static net.sourceforge.jwbf.TestHelper.getRandom;
-import static net.sourceforge.jwbf.mediawiki.BotFactory.getMediaWikiBot;
 import static net.sourceforge.jwbf.mediawiki.LiveTestFather.getSpecialChars;
 import static org.junit.Assert.assertTrue;
 
@@ -25,12 +21,9 @@ import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Verifier;
+import org.junit.runners.Parameterized.Parameters;
 
-/**
- * @author Thomas Stock
- * 
- */
-public class RecentChangesTest extends AbstractMediaWikiBotTest {
+public class RecentChangesTest extends ParamHelper {
   private static final int COUNT = 13;
   private static final int LIMIT = COUNT * 2;
 
@@ -41,18 +34,13 @@ public class RecentChangesTest extends AbstractMediaWikiBotTest {
   @Rule
   public Verifier successRegister = classVerifier.getSuccessRegister(this);
 
-  /**
-   * Test.
-   * 
-   * @throws Exception
-   *           a
-   */
-  @Test
-  public final void recentChangesWikiMW1x15() throws Exception {
-    bot = getMediaWikiBot(Version.MW1_15, true);
-    doRegularTest(bot);
-    doSpecialCharTest(bot);
-    assertTrue("Wrong Wiki Version " + bot.getVersion(), Version.MW1_15.equals(bot.getVersion()));
+  @Parameters(name = "{0}")
+  public static Collection<?> stableWikis() {
+    return ParamHelper.prepare(Version.valuesStable());
+  }
+
+  public RecentChangesTest(Version v) {
+    super(v);
   }
 
   /**
@@ -62,11 +50,9 @@ public class RecentChangesTest extends AbstractMediaWikiBotTest {
    *           a
    */
   @Test
-  public final void recentChangesWikiMW1x16() throws Exception {
-    bot = getMediaWikiBot(Version.MW1_16, true);
+  public final void recentChanges() throws Exception {
     doRegularTest(bot);
     doSpecialCharTest(bot);
-    assertTrue("Wrong Wiki Version " + bot.getVersion(), Version.MW1_16.equals(bot.getVersion()));
   }
 
   private void prepareWiki(MediaWikiBot bot) throws ActionException, ProcessException {

@@ -18,14 +18,13 @@
  */
 package net.sourceforge.jwbf.mediawiki.actions.editing;
 
-import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_09;
-import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_10;
 import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_11;
-import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_12;
-import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_13;
-import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_14;
 import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_15;
 import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_16;
+import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_17;
+import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_18;
+import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_19;
+import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_20;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -59,7 +58,7 @@ import org.xml.sax.InputSource;
  * 
  */
 @Slf4j
-@SupportedBy({ MW1_09, MW1_10, MW1_11, MW1_12, MW1_13, MW1_14, MW1_15, MW1_16 })
+@SupportedBy({ MW1_15, MW1_16, MW1_17, MW1_18, MW1_19, MW1_20 })
 public class GetRevision extends MWAction {
 
   private final SimpleArticle sa;

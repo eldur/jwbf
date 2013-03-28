@@ -1,13 +1,15 @@
-package net.sourceforge.jwbf.mediawiki.live;
+package net.sourceforge.jwbf.mediawiki.live.auto;
 
 import static net.sourceforge.jwbf.TestHelper.getRandom;
 import static net.sourceforge.jwbf.mediawiki.LiveTestFather.getValue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+
+import java.util.Collection;
+
 import net.sourceforge.jwbf.core.bots.util.JwbfException;
 import net.sourceforge.jwbf.core.contentRep.ArticleMeta;
 import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
-import net.sourceforge.jwbf.mediawiki.BotFactory;
 import net.sourceforge.jwbf.mediawiki.VersionTestClassVerifier;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.actions.editing.GetApiToken;
@@ -19,13 +21,14 @@ import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Verifier;
+import org.junit.runners.Parameterized.Parameters;
 
 /**
  * 
  * @author Thomas Stock
  * 
  */
-public class RevisionTest extends AbstractMediaWikiBotTest {
+public class RevisionTest extends ParamHelper {
 
   @ClassRule
   public static VersionTestClassVerifier classVerifier = new VersionTestClassVerifier(
@@ -34,16 +37,13 @@ public class RevisionTest extends AbstractMediaWikiBotTest {
   @Rule
   public Verifier successRegister = classVerifier.getSuccessRegister(this);
 
-  /**
-   * Test write and read.
-   * 
-   * @throws Exception
-   *           a
-   */
-  @Test
-  public final void getRevisionMW1x15() throws Exception {
-    bot = BotFactory.getMediaWikiBot(Version.MW1_15, true);
-    doTest();
+  @Parameters(name = "{0}")
+  public static Collection<?> stableWikis() {
+    return ParamHelper.prepare(Version.valuesStable());
+  }
+
+  public RevisionTest(Version v) {
+    super(v);
   }
 
   /**
@@ -53,12 +53,7 @@ public class RevisionTest extends AbstractMediaWikiBotTest {
    *           a
    */
   @Test
-  public final void getRevisionMW1x16() throws Exception {
-    bot = BotFactory.getMediaWikiBot(Version.MW1_16, true);
-    doTest();
-  }
-
-  private void doTest() throws Exception {
+  public void doTest() throws Exception {
 
     String title = getValue("wikiMW1_12_user");
     String user = bot.getUserinfo().getUsername();
