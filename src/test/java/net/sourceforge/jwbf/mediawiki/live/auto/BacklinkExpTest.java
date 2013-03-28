@@ -15,8 +15,6 @@ import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.actions.queries.BacklinkTitles;
 import net.sourceforge.jwbf.mediawiki.actions.util.RedirectFilter;
-import net.sourceforge.jwbf.test.SimpleNameFinder;
-import net.sourceforge.jwbf.test.TestNamer;
 
 import org.junit.ClassRule;
 import org.junit.Rule;
@@ -25,7 +23,6 @@ import org.junit.rules.Verifier;
 import org.junit.runners.Parameterized.Parameters;
 
 @Slf4j
-@TestNamer(SimpleNameFinder.class)
 public class BacklinkExpTest extends ParamHelper {
 
   @ClassRule
@@ -38,7 +35,7 @@ public class BacklinkExpTest extends ParamHelper {
   private static final String BACKLINKS = "Backlinks";
   private static final int COUNT = 60;
 
-  @Parameters
+  @Parameters(name = "{0}")
   public static Collection<?> stableWikis() {
     return ParamHelper.prepare(Version.valuesStable());
   }

@@ -33,8 +33,6 @@ import net.sourceforge.jwbf.mediawiki.actions.queries.CategoryMembersFull;
 import net.sourceforge.jwbf.mediawiki.actions.queries.CategoryMembersSimple;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 import net.sourceforge.jwbf.mediawiki.contentRep.CategoryItem;
-import net.sourceforge.jwbf.test.SimpleNameFinder;
-import net.sourceforge.jwbf.test.TestNamer;
 
 import org.junit.ClassRule;
 import org.junit.Ignore;
@@ -43,7 +41,6 @@ import org.junit.Test;
 import org.junit.rules.Verifier;
 import org.junit.runners.Parameterized.Parameters;
 
-@TestNamer(SimpleNameFinder.class)
 public class CategoryTest extends ParamHelper {
 
   @ClassRule
@@ -53,7 +50,7 @@ public class CategoryTest extends ParamHelper {
   @Rule
   public Verifier successRegister = classVerifier.getSuccessRegister(this);
 
-  @Parameters
+  @Parameters(name = "{0}")
   public static Collection<?> stableWikis() {
     return ParamHelper.prepare(Version.valuesStable());
   }

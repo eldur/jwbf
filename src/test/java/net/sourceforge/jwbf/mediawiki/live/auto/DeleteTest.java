@@ -14,8 +14,6 @@ import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.actions.editing.PostDelete;
 import net.sourceforge.jwbf.mediawiki.actions.queries.AllPageTitles;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
-import net.sourceforge.jwbf.test.SimpleNameFinder;
-import net.sourceforge.jwbf.test.TestNamer;
 
 import org.junit.ClassRule;
 import org.junit.Ignore;
@@ -24,7 +22,6 @@ import org.junit.Test;
 import org.junit.rules.Verifier;
 import org.junit.runners.Parameterized.Parameters;
 
-@TestNamer(SimpleNameFinder.class)
 public class DeleteTest extends ParamHelper {
   private static final String DELETE_PREFIX = "Delete";
   private static final int COUNT = 1;
@@ -36,7 +33,7 @@ public class DeleteTest extends ParamHelper {
   @Rule
   public Verifier successRegister = classVerifier.getSuccessRegister(this);
 
-  @Parameters
+  @Parameters(name = "{0}")
   public static Collection<?> stableWikis() {
     return ParamHelper.prepare(Version.valuesStable());
   }

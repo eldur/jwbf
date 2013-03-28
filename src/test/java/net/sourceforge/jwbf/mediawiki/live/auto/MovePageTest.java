@@ -10,8 +10,6 @@ import net.sourceforge.jwbf.core.contentRep.Article;
 import net.sourceforge.jwbf.mediawiki.VersionTestClassVerifier;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.actions.queries.AllPageTitles;
-import net.sourceforge.jwbf.test.SimpleNameFinder;
-import net.sourceforge.jwbf.test.TestNamer;
 
 import org.junit.ClassRule;
 import org.junit.Ignore;
@@ -21,7 +19,6 @@ import org.junit.rules.Verifier;
 import org.junit.runners.Parameterized.Parameters;
 
 @Ignore("because incomplete")
-@TestNamer(SimpleNameFinder.class)
 public class MovePageTest extends ParamHelper {
 
   @ClassRule
@@ -31,7 +28,7 @@ public class MovePageTest extends ParamHelper {
   @Rule
   public Verifier successRegister = classVerifier.getSuccessRegister(this);
 
-  @Parameters
+  @Parameters(name = "{0}")
   public static Collection<?> stableWikis() {
     return ParamHelper.prepare(Version.valuesStable());
   }

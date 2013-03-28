@@ -9,12 +9,12 @@ import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.actions.queries.AllPageTitles;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.live.AbstractMediaWikiBotTest;
-import net.sourceforge.jwbf.test.ParameterizedLabel;
 
 import org.junit.Assert;
 import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
 
-@RunWith(ParameterizedLabel.class)
+@RunWith(Parameterized.class)
 class ParamHelper extends AbstractMediaWikiBotTest {
 
   public ParamHelper(Version v) {
