@@ -145,8 +145,12 @@ public class ImageInfo extends MWAction {
     return urlOfImage;
   }
 
-  public URL getUrl() throws MalformedURLException, ProcessException {
-    return new URL(getUrlAsString());
+  public URL getUrl() {
+    try {
+      return new URL(getUrlAsString());
+    } catch (MalformedURLException e) {
+      throw new IllegalStateException(e);
+    }
   }
 
   /**

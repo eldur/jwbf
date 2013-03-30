@@ -12,6 +12,7 @@ import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.actions.queries.ImageUsageTitles;
 
 import org.junit.ClassRule;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Verifier;
@@ -21,6 +22,7 @@ import org.junit.rules.Verifier;
  * @author Thomas Stock
  * 
  */
+@Ignore("depends on upload")
 public class ImageUsageTitlesTest extends AbstractMediaWikiBotTest {
 
   @ClassRule

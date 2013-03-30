@@ -10,6 +10,7 @@ import java.net.URL;
 import net.sourceforge.jwbf.core.bots.HttpBot;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class HttpBotTest {
@@ -28,6 +29,7 @@ public class HttpBotTest {
    *           a
    */
   @Test
+  @Ignore("test with jetty")
   public final void findContent() throws Exception {
     URL u = new URL(getValue("wikiMW1_13_url"));
     String url = u.getProtocol() + "://" + u.getHost();

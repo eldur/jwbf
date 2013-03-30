@@ -28,6 +28,7 @@ import java.awt.image.BufferedImage;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -48,6 +49,7 @@ import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 import net.sourceforge.jwbf.mediawiki.contentRep.SimpleFile;
 
 import org.junit.Assert;
+import org.junit.Assume;
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
@@ -78,8 +80,11 @@ public class UploadAndImageInfoTest extends ParamHelper {
   }
 
   @Test
-  public final void upload() throws Exception {
-
+  public final void upload() {
+    if (bot.getVersion().greaterEqThen(Version.MW1_17)) {
+      // TODO api upload
+      Assume.assumeTrue("api upload is missing", false);
+    }
     generalUploadImageInfoTest(bot);
 
   }
@@ -108,7 +113,6 @@ public class UploadAndImageInfoTest extends ParamHelper {
   @Test(expected = ActionException.class)
   public final void imageInfoPerformManual() throws Exception {
 
-    bot = getMediaWikiBot(Version.MW1_15, true);
     ImageInfo a = new ImageInfo(bot, "UnknownImage.jpg");
     bot.performAction(a);
 
@@ -143,12 +147,12 @@ public class UploadAndImageInfoTest extends ParamHelper {
    * @throws Exception
    *           a
    */
-  protected final void generalUploadImageInfoTest(MediaWikiBot bot) throws Exception {
+  protected final void generalUploadImageInfoTest(MediaWikiBot bot) {
     assertTrue("File (" + getValue("validFile") + ") not readable",
         new File(getValue("validFile")).canRead());
     SimpleFile sf = new SimpleFile(getValue("filename"), getValue("validFile"));
     bot.delete("File:" + getValue("filename"));
-    BufferedImage img = ImageIO.read(sf.getFile());
+    BufferedImage img = toImage(sf);
     int upWidth = img.getWidth();
     int upHeight = img.getHeight();
     FileUpload up = new FileUpload(sf, bot);
@@ -179,6 +183,14 @@ public class UploadAndImageInfoTest extends ParamHelper {
     assertImageDimension(urlSizeVar, newWidth, newHeight);
   }
 
+  protected BufferedImage toImage(SimpleFile sf) {
+    try {
+      return ImageIO.read(sf.getFile());
+    } catch (IOException e) {
+      throw new IllegalArgumentException(e);
+    }
+  }
+
   /**
    * 
    * @param url
@@ -188,7 +200,7 @@ public class UploadAndImageInfoTest extends ParamHelper {
    * @throws Exception
    *           a
    */
-  protected final void assertFile(URL url, File file) throws Exception {
+  protected final void assertFile(URL url, File file) {
     File temp = new File("temp.file");
 
     download(url.toExternalForm(), temp);
@@ -198,10 +210,14 @@ public class UploadAndImageInfoTest extends ParamHelper {
       throw new RuntimeException("unable to delete file");
   }
 
-  protected void assertImageDimension(URL url, int width, int height) throws IOException {
-    BufferedImage img = ImageIO.read(url);
-    assertEquals(height, img.getHeight());
-    assertEquals(width, img.getWidth());
+  protected void assertImageDimension(URL url, int width, int height) {
+    try {
+      BufferedImage img = ImageIO.read(url);
+      assertEquals(height, img.getHeight());
+      assertEquals(width, img.getWidth());
+    } catch (IOException e) {
+      throw new IllegalArgumentException(e);
+    }
   }
 
   /**
@@ -254,7 +270,7 @@ public class UploadAndImageInfoTest extends ParamHelper {
    * @throws IOException
    *           a
    */
-  protected static final boolean filesAreIdentical(File left, File right) throws IOException {
+  protected static final boolean filesAreIdentical(File left, File right) {
     assert left != null;
     assert right != null;
     assert left.exists();
@@ -262,10 +278,12 @@ public class UploadAndImageInfoTest extends ParamHelper {
 
     if (left.length() != right.length())
       return false;
-
-    FileInputStream lin = new FileInputStream(left);
-    FileInputStream rin = new FileInputStream(right);
+    FileInputStream rin = null;
+    FileInputStream lin = null;
     try {
+
+      rin = new FileInputStream(right);
+      lin = new FileInputStream(left);
       byte[] lbuffer = new byte[4096];
       byte[] rbuffer = new byte[lbuffer.length];
       int lcount = 0;
@@ -286,9 +304,19 @@ public class UploadAndImageInfoTest extends ParamHelper {
         }
         lcount = lin.read(lbuffer);
       }
+    } catch (FileNotFoundException e) {
+      throw new IllegalStateException(e);
+    } catch (IOException e) {
+      throw new IllegalStateException(e);
     } finally {
-      lin.close();
-      rin.close();
+      try {
+        if (lin != null)
+          lin.close();
+        if (rin != null)
+          rin.close();
+      } catch (IOException e) {
+        throw new IllegalStateException(e);
+      }
     }
     return true;
   }
