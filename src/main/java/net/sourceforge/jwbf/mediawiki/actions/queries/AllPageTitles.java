@@ -23,6 +23,8 @@ import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_15;
 import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_16;
 import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_17;
 import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_18;
+import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_19;
+import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_20;
 
 import java.util.Collection;
 import java.util.Vector;
@@ -47,13 +49,16 @@ import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
  * 
  */
 @Slf4j
-@SupportedBy({ MW1_15, MW1_16, MW1_17, MW1_18 })
+@SupportedBy({ MW1_15, MW1_16, MW1_17, MW1_18, MW1_19, MW1_20 })
 public class AllPageTitles extends TitleQuery<String> {
 
   /** Pattern to parse returned page, @see {@link #parseHasMore(String)}. */
   private static final Pattern HAS_MORE_PATTERN = Pattern.compile(
       "<query-continue>.*?<allpages *apfrom=\"([^\"]*)\" */>.*?</query-continue>", Pattern.DOTALL
           | Pattern.MULTILINE);
+  private static final Pattern HAS_MORE_PATTERN_20 = Pattern.compile(
+      "<query-continue>.*?<allpages *apcontinue=\"([^\"]*)\" */>.*?</query-continue>",
+      Pattern.DOTALL | Pattern.MULTILINE);
   private static final Pattern ARTICLE_TITLES_PATTERN = Pattern
       .compile("<p pageid=\".*?\" ns=\".*?\" title=\"(.*?)\" />");
   /** Pattern to parse returned page, @see {@link #parseArticleTitles(String)} */
@@ -89,11 +94,9 @@ public class AllPageTitles extends TitleQuery<String> {
    * @param namespaces
    *          the namespace(s) that will be searched for links, as a string of numbers separated by
    *          '|'; if null, this parameter is omitted TODO are multible namespaces allowed?
-   * @throws VersionException
-   *           if version is incompatible
    */
   public AllPageTitles(MediaWikiBot bot, String from, String prefix, RedirectFilter rf,
-      int... namespaces) throws VersionException {
+      int... namespaces) {
     this(bot, from, prefix, rf, MWAction.createNsString(namespaces));
 
   }
@@ -107,7 +110,7 @@ public class AllPageTitles extends TitleQuery<String> {
    * @throws VersionException
    *           if version is incompatible
    */
-  public AllPageTitles(MediaWikiBot bot, int... namespaces) throws VersionException {
+  public AllPageTitles(MediaWikiBot bot, int... namespaces) {
     this(bot, null, null, RedirectFilter.nonredirects, namespaces);
 
   }
@@ -127,7 +130,7 @@ public class AllPageTitles extends TitleQuery<String> {
    *           if not supported
    */
   protected AllPageTitles(MediaWikiBot bot, String from, String prefix, RedirectFilter rf,
-      String namespaces) throws VersionException {
+      String namespaces) {
     super(bot);
 
     this.bot = bot;
@@ -214,7 +217,22 @@ public class AllPageTitles extends TitleQuery<String> {
     if (log.isTraceEnabled()) {
       log.trace("enter GetAllPagetitles.parseHasMore(String)");
     }
-    Matcher m = HAS_MORE_PATTERN.matcher(s);
+    Pattern hasMorePattern = null;
+    switch (bot.getVersion()) {
+    case MW1_15:
+    case MW1_16:
+    case MW1_17:
+    case MW1_18:
+    case MW1_19:
+      hasMorePattern = HAS_MORE_PATTERN;
+      break;
+
+    default:
+      hasMorePattern = HAS_MORE_PATTERN_20;
+      break;
+    }
+
+    Matcher m = hasMorePattern.matcher(s);
     if (m.find()) {
       return m.group(1);
     } else {

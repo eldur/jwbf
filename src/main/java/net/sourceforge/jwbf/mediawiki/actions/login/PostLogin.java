@@ -19,11 +19,12 @@
  */
 package net.sourceforge.jwbf.mediawiki.actions.login;
 
-import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_11;
-import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_12;
-import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_13;
-import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_14;
 import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_15;
+import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_16;
+import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_17;
+import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_18;
+import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_19;
+import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_20;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -51,7 +52,7 @@ import org.xml.sax.InputSource;
  * @author Thomas Stock
  */
 @Slf4j
-@SupportedBy({ MW1_11, MW1_12, MW1_13, MW1_14, MW1_15 })
+@SupportedBy({ MW1_15, MW1_16, MW1_17, MW1_18, MW1_19, MW1_20 })
 public class PostLogin extends MWAction {
 
   private Post msg;
@@ -152,6 +153,8 @@ public class PostLogin extends MWAction {
       throw new ProcessException("Wrong Password");
     } else if (result.equalsIgnoreCase(notExists)) {
       throw new ActionException("No such User");
+    } else if (result.equalsIgnoreCase("Throttled")) {
+      throw new ActionException("Throttled");
     }
 
   }

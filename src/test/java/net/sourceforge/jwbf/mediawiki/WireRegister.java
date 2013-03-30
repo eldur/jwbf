@@ -5,11 +5,13 @@ import java.util.Map;
 import javax.annotation.CheckForNull;
 import javax.inject.Singleton;
 
+import lombok.extern.slf4j.Slf4j;
 import net.sourceforge.jwbf.core.actions.ContentProcessable;
 
 import com.google.common.collect.Maps;
 
 @Singleton
+@Slf4j
 class WireRegister extends Thread {
 
   private Map<String, String> cache = Maps.newHashMap();
@@ -20,7 +22,7 @@ class WireRegister extends Thread {
 
   public boolean hasContentFor(String url) {
     // TODO Auto-generated method stub
-    System.out.println("try to read cache for " + url);
+    log.debug("try to read cache for " + url);
     return false;
   }
 
@@ -37,7 +39,7 @@ class WireRegister extends Thread {
 
   @Override
   public void run() {
-    System.out.println("store to file");
+    log.debug("store to file");
     // TODO Auto-generated method stub
   }
 }

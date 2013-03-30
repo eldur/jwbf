@@ -20,7 +20,6 @@ package net.sourceforge.jwbf.mediawiki.live;
 
 import static net.sourceforge.jwbf.TestHelper.assumeReachable;
 import static net.sourceforge.jwbf.mediawiki.LiveTestFather.getValue;
-import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_09;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -44,10 +43,7 @@ import net.sourceforge.jwbf.TestHelper;
 import net.sourceforge.jwbf.core.actions.HttpActionClient;
 import net.sourceforge.jwbf.core.actions.util.ActionException;
 import net.sourceforge.jwbf.mediawiki.BotFactory;
-import net.sourceforge.jwbf.mediawiki.VersionTestClassVerifier;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
-import net.sourceforge.jwbf.mediawiki.actions.login.PostLogin;
-import net.sourceforge.jwbf.mediawiki.actions.login.PostLoginOld;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 
 import org.apache.http.HttpHost;
@@ -65,11 +61,8 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.SingleClientConnManager;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpParams;
-import org.junit.ClassRule;
 import org.junit.Ignore;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.Verifier;
 
 /**
  * Test Login.
@@ -77,14 +70,6 @@ import org.junit.rules.Verifier;
  * @author Thomas Stock
  */
 public class LoginTest extends AbstractMediaWikiBotTest {
-
-  // TODO what about PostLogin.class
-  @ClassRule
-  public static VersionTestClassVerifier classVerifier = new VersionTestClassVerifier(
-      PostLoginOld.class, PostLogin.class);
-
-  @Rule
-  public Verifier successRegister = classVerifier.getSuccessRegister(this);
 
   /**
    * Test login on Wikipedia.
@@ -143,48 +128,6 @@ public class LoginTest extends AbstractMediaWikiBotTest {
    *           a
    */
   @Test
-  public final void loginWikiMW1x09() throws Exception {
-    bot = BotFactory.getMediaWikiBot(MW1_09, true);
-    assertTrue(bot.isLoggedIn());
-  }
-
-  /**
-   * Test FAIL login on Mediawiki. TODO change exception test, should fail if no route to test host
-   * 
-   * @throws Exception
-   *           a
-   */
-  @Test(expected = ActionException.class)
-  public final void loginWikiMW1x09Fail() throws Exception {
-    bot = BotFactory.getMediaWikiBot(MW1_09, false);
-    bot.login("Klhjfd", "4sdf");
-
-  }
-
-  /**
-   * Test login where the wiki is in a subfolder, like www.abc.com/wiki .
-   * 
-   * @throws Exception
-   *           a
-   */
-  @Test(expected = IllegalArgumentException.class)
-  public final void loginWikiMW1x09UrlformatsFail() throws Exception {
-
-    String defektUrl = getValue("wikiMW1_09_url");
-    int lastSlash = defektUrl.lastIndexOf("/");
-    defektUrl = defektUrl.substring(0, lastSlash);
-    assertFalse("shuld not end with .php", defektUrl.endsWith(".php"));
-    bot = new MediaWikiBot(defektUrl);
-    bot.login(getValue("wikiMW1_09_user"), getValue("wikiMW1_09_pass"));
-  }
-
-  /**
-   * Test login on a Mediawiki.
-   * 
-   * @throws Exception
-   *           a
-   */
-  @Test
   @Ignore("1.09 is to old")
   public final void loginWikiMW1x09Urlformats() throws Exception {
     String todoUrl = getValue("wikiMW1_09_url");
@@ -204,6 +147,7 @@ public class LoginTest extends AbstractMediaWikiBotTest {
    *           a
    */
   @Test
+  @Ignore("test with jetty")
   public final void installationDefunct() throws Exception {
     String invalidUrl = getValue("wikiMWinvalid_url");
     bot = new MediaWikiBot(invalidUrl);
@@ -211,6 +155,7 @@ public class LoginTest extends AbstractMediaWikiBotTest {
       bot.login(getValue("wikiMW1_09_user"), getValue("wikiMW1_09_pass"));
       fail();
     } catch (IllegalStateException e) {
+      e.printStackTrace();
       assertTrue(e.getMessage().startsWith("invalid status: HTTP/1.1 404 Not Found;"));
     }
   }
@@ -231,21 +176,6 @@ public class LoginTest extends AbstractMediaWikiBotTest {
     } catch (IllegalStateException e) {
       assertTrue(e.getMessage().startsWith("invalid status: HTTP/1.1 404 Not Found;"));
     }
-  }
-
-  /**
-   * Test login on a Mediawiki.
-   * 
-   * @throws Exception
-   *           a
-   */
-  @Test
-  public final void loginWikiMWLast() throws Exception {
-
-    Version latest = Version.getLatest();
-    bot = BotFactory.getMediaWikiBot(latest, false);
-    bot.login(BotFactory.getWikiUser(latest), BotFactory.getWikiPass(latest));
-    assertTrue(bot.isLoggedIn());
   }
 
   /**

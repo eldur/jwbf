@@ -81,7 +81,7 @@ public class DeleteTest extends ParamHelper {
 
   @Ignore
   @Test
-  public void deleteAll() throws Exception {
+  public void deleteAll() {
     Version[] all = { Version.MW1_15, Version.MW1_16 };
     for (Version v : all) {
       MediaWikiBot bot = BotFactory.getMediaWikiBot(v, true);

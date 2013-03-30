@@ -31,11 +31,12 @@ import net.sourceforge.jwbf.mediawiki.actions.util.SupportedBy;
 import net.sourceforge.jwbf.mediawiki.contentRep.LoginData;
 
 /**
- * 
+ * @deprecated only used by old version of MW
  * @author Thomas Stock
  */
 @Slf4j
 @SupportedBy({})
+@Deprecated
 public class PostLoginOld extends MWAction implements CookieValidateable {
   private String username = "";
 

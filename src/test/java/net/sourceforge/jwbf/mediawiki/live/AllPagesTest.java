@@ -52,7 +52,7 @@ public class AllPagesTest extends AbstractMediaWikiBotTest {
   }
 
   @Test
-  public final void allPagesTitle0() throws Exception {
+  public final void allPagesTitle0() {
     String url = "http://de.wikipedia.org/w/index.php"; // TODO replace with a
                                                         // local test
     assumeReachable(url);

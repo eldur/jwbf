@@ -42,7 +42,8 @@ public class AllPagesExpTest extends ParamHelper {
 
   @Test
   public void doTest() {
-    AllPageTitles allPages = new AllPageTitles(bot, null, null, RedirectFilter.all, MediaWiki.NS_MAIN);
+    AllPageTitles allPages = new AllPageTitles(bot, null, null, RedirectFilter.all,
+        MediaWiki.NS_MAIN);
 
     SimpleArticle sa;
     String testText = TestHelper.getRandom(255);
@@ -86,7 +87,7 @@ public class AllPagesExpTest extends ParamHelper {
     }
 
     assertTrue("tc sould be empty but is: " + specialChars, specialChars.isEmpty());
-    assertTrue("i is: " + i, i > 50);
+    assertTrue("i is: " + i + " but should be greater than", i > 50);
 
   }
 
