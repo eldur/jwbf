@@ -29,7 +29,6 @@ import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_20;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -50,6 +49,8 @@ import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
 import org.xml.sax.InputSource;
 
+import com.google.common.collect.Sets;
+
 /**
  * Basic action to receive {@link Version}.
  * 
@@ -67,7 +68,7 @@ public class GetVersion extends MWAction {
   private String theCase = "";
   private String mainpage = "";
 
-  public static Set<String> GENERATOR_EXT = new HashSet<String>();
+  public static final Set<String> GENERATOR_EXT = Sets.newHashSet();
   static {
     GENERATOR_EXT.add("alpha");
     GENERATOR_EXT.add("wmf");
@@ -84,7 +85,7 @@ public class GetVersion extends MWAction {
    * @throws ActionException
    *           a
    */
-  public GetVersion(MediaWikiBot bot) throws ActionException, ProcessException {
+  public GetVersion(MediaWikiBot bot) {
     this();
     bot.performAction(this);
   }
@@ -103,7 +104,7 @@ public class GetVersion extends MWAction {
 
   }
 
-  private void parse(final String xml) throws ProcessException {
+  private void parse(final String xml) {
     SAXBuilder builder = new SAXBuilder();
     Element root = null;
     try {
@@ -126,7 +127,7 @@ public class GetVersion extends MWAction {
    * {@inheritDoc}
    */
   @Override
-  public final String processAllReturningText(final String s) throws ProcessException {
+  public final String processAllReturningText(final String s) {
     parse(s);
     return "";
   }
@@ -162,8 +163,9 @@ public class GetVersion extends MWAction {
    */
   public Version getVersion() {
     for (String generatorFragment : GENERATOR_EXT) {
-      if (getGenerator().contains(generatorFragment))
+      if (getGenerator().contains(generatorFragment)) {
         return Version.DEVELOPMENT;
+      }
     }
 
     Version[] versions = Version.values();
@@ -176,10 +178,11 @@ public class GetVersion extends MWAction {
       }
 
     }
-    if (log.isInfoEnabled())
-      log.info("\nVersion is UNKNOWN for JWBF (" + JWBF.getVersion(getClass()) + ") : \n\t"
+    if (log.isDebugEnabled()) {
+      log.debug("\nVersion is UNKNOWN for JWBF (" + JWBF.getVersion(getClass()) + ") : \n\t"
           + getGenerator() + "\n\t" + "supported versions: " + buffer.toString() + "\n\t"
           + "\n\tUsing settings for actual Wikipedia development version");
+    }
     return Version.UNKNOWN;
 
   }

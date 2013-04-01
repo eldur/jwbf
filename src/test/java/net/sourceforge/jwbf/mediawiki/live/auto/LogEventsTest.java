@@ -6,6 +6,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.Collection;
 
+import lombok.extern.slf4j.Slf4j;
 import net.sourceforge.jwbf.core.contentRep.Article;
 import net.sourceforge.jwbf.mediawiki.VersionTestClassVerifier;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
@@ -19,6 +20,7 @@ import org.junit.Test;
 import org.junit.rules.Verifier;
 import org.junit.runners.Parameterized.Parameters;
 
+@Slf4j
 public class LogEventsTest extends ParamHelper {
 
   @ClassRule
@@ -77,7 +79,7 @@ public class LogEventsTest extends ParamHelper {
     }
 
     for (LogItem logItem : le) {
-      System.out.print(logItem.getTitle() + " ");
+      log.debug(logItem.getTitle() + " ");
       i++;
       if (i > LIMIT) {
         break;

@@ -19,7 +19,11 @@
 package net.sourceforge.jwbf.mediawiki.actions.editing;
 
 import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_15;
-import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.*;
+import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_16;
+import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_17;
+import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_18;
+import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_19;
+import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_20;
 
 import java.util.HashSet;
 import java.util.Hashtable;
@@ -74,8 +78,7 @@ public class PostModifyContent extends MWAction {
    * @throws ActionException
    *           a
    */
-  public PostModifyContent(MediaWikiBot bot, final SimpleArticle a) throws ActionException,
-      ProcessException {
+  public PostModifyContent(MediaWikiBot bot, final SimpleArticle a) {
     super(bot.getVersion());
     if (a.getTitle().length() < 1) {
       throw new ActionException("imposible request, no title");
@@ -141,10 +144,11 @@ public class PostModifyContent extends MWAction {
       }
 
       // postModify.addParam("watch", "unknown")
-      if (a.isMinorEdit())
+      if (a.isMinorEdit()) {
         postModify.addParam("minor", "");
-      else
+      } else {
         postModify.addParam("notminor", "");
+      }
       postModify.addParam("token", apiReq.getToken());
 
     } else {
@@ -193,7 +197,7 @@ public class PostModifyContent extends MWAction {
    * {@inheritDoc}
    */
   @Override
-  public String processReturningText(String s, HttpAction hm) throws ProcessException {
+  public String processReturningText(String s, HttpAction hm) {
     if (s.contains("error")) {
       if (s.length() > 700) {
         s = s.substring(0, 700);

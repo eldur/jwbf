@@ -8,6 +8,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Vector;
 
+import lombok.extern.slf4j.Slf4j;
 import net.sourceforge.jwbf.core.actions.util.ActionException;
 import net.sourceforge.jwbf.core.actions.util.ProcessException;
 import net.sourceforge.jwbf.core.contentRep.Article;
@@ -23,6 +24,7 @@ import org.junit.Test;
 import org.junit.rules.Verifier;
 import org.junit.runners.Parameterized.Parameters;
 
+@Slf4j
 public class RecentChangesTest extends ParamHelper {
   private static final int COUNT = 13;
   private static final int LIMIT = COUNT * 2;
@@ -99,7 +101,7 @@ public class RecentChangesTest extends ParamHelper {
 
     while (is.hasNext() && i < (size * 1.2)) {
       String nx = is.next();
-      System.err.println("rm " + nx);
+      log.debug("rm " + nx);
       specialChars.remove(nx);
       i++;
     }
@@ -133,7 +135,6 @@ public class RecentChangesTest extends ParamHelper {
       while (is.hasNext()) {
         String s = is.next();
         int x = Integer.parseInt(s.split(" ")[1]);
-        // System.out.println(vi);
         vi.remove(Integer.valueOf(x));
         i++;
         if (i > LIMIT || vi.isEmpty()) {

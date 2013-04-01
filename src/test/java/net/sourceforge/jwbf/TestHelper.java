@@ -57,7 +57,7 @@ public abstract class TestHelper {
   public static void prepareLogging() {
     File f = new File("test4log4j.properties");
     if (!f.exists()) {
-      System.err.println("No logfile ! exit");
+      log.error("No logfile ! exit");
       System.exit(1);
     }
   }
@@ -71,7 +71,8 @@ public abstract class TestHelper {
       Assume.assumeTrue("HTTP/1.1 200 OK".equals(c.getHeaderField(0)));
 
     } catch (Exception e) {
-      log.warn("", e);
+      log.warn(e.getMessage());
+      log.trace("", e);
       Assume.assumeNoException(e);
     }
   }

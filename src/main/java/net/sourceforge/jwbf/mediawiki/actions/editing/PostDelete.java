@@ -74,7 +74,7 @@ public class PostDelete extends MWAction {
    * @throws ActionException
    *           a
    */
-  public PostDelete(MediaWikiBot bot, String title) throws ProcessException, ActionException {
+  public PostDelete(MediaWikiBot bot, String title) {
     super(bot.getVersion());
     token = new GetApiToken(GetApiToken.Intoken.DELETE, title, bot.getVersion(), bot.getUserinfo());
     this.title = title;
@@ -104,8 +104,7 @@ public class PostDelete extends MWAction {
    * @throws ActionException
    *           in case of an action exception
    */
-  public PostDelete(MediaWikiBot bot, String title, String reason) throws ProcessException,
-      ActionException {
+  public PostDelete(MediaWikiBot bot, String title, String reason) {
     this(bot, title);
     this.reason = reason;
   }
@@ -141,7 +140,7 @@ public class PostDelete extends MWAction {
    * {@inheritDoc}
    */
   @Override
-  public String processReturningText(String s, HttpAction hm) throws ProcessException {
+  public String processReturningText(String s, HttpAction hm) {
     super.processReturningText(s, hm);
 
     if (delToken) {
@@ -194,7 +193,8 @@ public class PostDelete extends MWAction {
     if (elem != null) {
       log.error(elem.getAttributeValue("info"));
       if (elem.getAttributeValue("code").equals("inpermissiondenied")) {
-        log.error("Adding '$wgGroupPermissions['bot']['delete'] = true;' to your MediaWiki's LocalSettings.php might remove this problem.");
+        log.error("Adding '$wgGroupPermissions['bot']['delete'] = true;'"
+            + " to your MediaWiki's LocalSettings.php might remove this problem.");
       }
       return true;
     }

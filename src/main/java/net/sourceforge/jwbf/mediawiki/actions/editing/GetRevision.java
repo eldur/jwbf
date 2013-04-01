@@ -95,8 +95,7 @@ public class GetRevision extends MWAction {
    * @param v
    *          the
    */
-  public GetRevision(Version v, final String articlename, final int properties)
-      throws ProcessException {
+  public GetRevision(Version v, final String articlename, final int properties) {
     super(v);
     botVersion = v;
     // if (!bot.getUserinfo().getRights().contains("read")) {
@@ -118,7 +117,7 @@ public class GetRevision extends MWAction {
    * {@inheritDoc}
    */
   @Override
-  public String processReturningText(final String s, HttpAction ha) throws ProcessException {
+  public String processReturningText(final String s, HttpAction ha) {
     if (msg.getRequest().equals(ha.getRequest()) && singleProcess) {
       if (log.isDebugEnabled()) { // TODO no very nice debug here
         if (s.length() < 151) {
@@ -184,7 +183,7 @@ public class GetRevision extends MWAction {
     return properties;
   }
 
-  private void parse(final String xml) throws ApiException {
+  private void parse(final String xml) {
     SAXBuilder builder = new SAXBuilder();
     Element root = null;
     try {
@@ -198,8 +197,9 @@ public class GetRevision extends MWAction {
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
-    if (root != null)
+    if (root != null) {
       findContent(root);
+    }
   }
 
   /**
@@ -211,7 +211,7 @@ public class GetRevision extends MWAction {
     return sa;
   }
 
-  private void findContent(final Element root) throws ApiException {
+  private void findContent(final Element root) {
     // if(log.isDebugEnabled())
     // log.debug("try to find content in " + root.getQualifiedName());
     @SuppressWarnings("unchecked")
@@ -219,7 +219,8 @@ public class GetRevision extends MWAction {
     while (el.hasNext()) {
       Element element = el.next();
       if (element.getQualifiedName().equalsIgnoreCase("error")) {
-        throw new ApiException(element.getAttributeValue("code"), element.getAttributeValue("info"));
+        throw new ApiException(element.getAttributeValue("code") //
+            , element.getAttributeValue("info"));
       } else if (element.getQualifiedName().equalsIgnoreCase("rev")) {
 
         try {

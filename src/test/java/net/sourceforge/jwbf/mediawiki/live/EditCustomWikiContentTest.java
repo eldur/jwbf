@@ -230,7 +230,7 @@ public class EditCustomWikiContentTest {
     assertTrue("Version is: " + bot.getVersion(), bot.getVersion() == Version.MW1_13); // TODO
 
     Article a = new Article(bot, getValue("demoWiki_article"));
-    // System.out.println(a.getText());
+    
     a.addText(getRandom(5) + "\nK");
     a.save();
 

@@ -25,7 +25,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Vector;
 
-import net.sourceforge.jwbf.core.actions.util.ProcessException;
+import lombok.extern.slf4j.Slf4j;
 import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
 import net.sourceforge.jwbf.mediawiki.VersionTestClassVerifier;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
@@ -41,6 +41,7 @@ import org.junit.Test;
 import org.junit.rules.Verifier;
 import org.junit.runners.Parameterized.Parameters;
 
+@Slf4j
 public class CategoryTest extends ParamHelper {
 
   @ClassRule
@@ -100,11 +101,11 @@ public class CategoryTest extends ParamHelper {
    *           a
    */
   @Test
-  public void doTest() throws ProcessException {
+  public void doTest() {
     doTest(TESTCATNAME);
   }
 
-  private void doTest(String catname) throws ProcessException {
+  private void doTest(String catname) {
 
     Collection<String> compare1 = new Vector<String>();
     Collection<CategoryItem> compare2 = new Vector<CategoryItem>();
@@ -120,7 +121,7 @@ public class CategoryTest extends ParamHelper {
       }
     }
     if (notEnough) {
-      System.err.println("begin prepare");
+      log.info("begin prepare");
       doPreapare(bot);
     }
 

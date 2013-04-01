@@ -17,7 +17,6 @@ import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
 import net.sourceforge.jwbf.core.actions.Get;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
-import net.sourceforge.jwbf.core.actions.util.ProcessException;
 import net.sourceforge.jwbf.core.contentRep.Userinfo;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
@@ -52,7 +51,7 @@ public class GetUserinfo extends MWAction implements Userinfo {
    * @throws VersionException
    *           a
    */
-  public GetUserinfo(Version v) throws VersionException {
+  public GetUserinfo(Version v) {
     super(v);
     switch (v) {
     case MW1_11:
@@ -93,7 +92,7 @@ public class GetUserinfo extends MWAction implements Userinfo {
    * {@inheritDoc}
    */
   @Override
-  public final String processAllReturningText(final String s) throws ProcessException {
+  public final String processAllReturningText(final String s) {
     parse(s);
     return "";
   }

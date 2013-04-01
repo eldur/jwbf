@@ -145,7 +145,7 @@ public class ArticleTest {
   public final void simpleArticleTest() {
     MediaWikiBot b = getMediaWikiBot(Version.getLatest(), true);
     SimpleArticle sa = b.readData("Main Page");
-    System.out.println(sa.getText());
+    log.debug(sa.getText());
   }
 
   @Test

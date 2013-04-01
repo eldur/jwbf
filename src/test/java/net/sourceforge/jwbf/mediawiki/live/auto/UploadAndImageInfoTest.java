@@ -39,6 +39,7 @@ import java.util.Collection;
 
 import javax.imageio.ImageIO;
 
+import lombok.extern.slf4j.Slf4j;
 import net.sourceforge.jwbf.core.actions.util.ActionException;
 import net.sourceforge.jwbf.core.actions.util.ProcessException;
 import net.sourceforge.jwbf.mediawiki.VersionTestClassVerifier;
@@ -61,6 +62,7 @@ import org.junit.runners.Parameterized.Parameters;
  * @author Thomas Stock
  * 
  */
+@Slf4j
 public class UploadAndImageInfoTest extends ParamHelper {
 
   @ClassRule
@@ -100,7 +102,7 @@ public class UploadAndImageInfoTest extends ParamHelper {
 
     bot = getMediaWikiBot(Version.getLatest(), true);
     ImageInfo a = new ImageInfo(bot, "UnknownImage.jpg");
-    System.out.println(a.getUrlAsString());
+    log.info(a.getUrlAsString());
 
   }
 
@@ -243,7 +245,7 @@ public class UploadAndImageInfoTest extends ParamHelper {
         out.write(buffer, 0, numRead);
         numWritten += numRead;
       }
-      System.out.println(localFileName + "\t" + numWritten);
+      log.info(localFileName + "\t" + numWritten);
     } catch (Exception exception) {
       exception.printStackTrace();
     } finally {
@@ -255,7 +257,7 @@ public class UploadAndImageInfoTest extends ParamHelper {
           out.close();
         }
       } catch (IOException ioe) {
-        System.err.println(ioe.getMessage());
+        log.warn(ioe.getMessage());
       }
     }
   }

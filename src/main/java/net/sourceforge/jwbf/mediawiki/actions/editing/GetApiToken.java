@@ -13,7 +13,6 @@ import java.io.StringReader;
 import lombok.extern.slf4j.Slf4j;
 import net.sourceforge.jwbf.core.actions.Get;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
-import net.sourceforge.jwbf.core.actions.util.ProcessException;
 import net.sourceforge.jwbf.core.contentRep.Userinfo;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
@@ -68,7 +67,7 @@ public final class GetApiToken extends MWAction {
    * @throws VersionException
    *           if this action is not supported of the MediaWiki version connected to
    */
-  public GetApiToken(Intoken intoken, String title, Version v, Userinfo ui) throws VersionException {
+  public GetApiToken(Intoken intoken, String title, Version v, Userinfo ui) {
     super(v);
     this.intoken = intoken;
     generateTokenRequest(intoken, title);
@@ -106,7 +105,7 @@ public final class GetApiToken extends MWAction {
    * {@inheritDoc}
    */
   @Override
-  public String processReturningText(String s, HttpAction hm) throws ProcessException {
+  public String processReturningText(String s, HttpAction hm) {
     if (hm.getRequest().equals(msg.getRequest())) {
       if (log.isTraceEnabled()) {
         log.trace("enter GetToken.processAllReturningText(String)");
@@ -121,9 +120,8 @@ public final class GetApiToken extends MWAction {
         process(doc);
       } catch (JDOMException e) {
         if (s.startsWith("unknown_action:")) {
-          log.error(
-              "Adding '$wgEnableWriteAPI = true;' to your MediaWiki's LocalSettings.php might remove this problem.",
-              e);
+          log.error("Adding '$wgEnableWriteAPI = true;' "
+              + "to your MediaWiki's LocalSettings.php might remove this problem.", e);
         } else {
           log.error(e.getMessage(), e);
         }
@@ -202,7 +200,8 @@ public final class GetApiToken extends MWAction {
       throw new RuntimeException("Unknow reply. This is not a token.", e);
     }
 
-    if (log.isDebugEnabled())
+    if (log.isDebugEnabled()) {
       log.debug("found token =" + token + "\n" + "for: " + msg.getRequest() + "\n");
+    }
   }
 }

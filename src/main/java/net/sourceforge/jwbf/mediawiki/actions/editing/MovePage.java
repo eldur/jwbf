@@ -90,7 +90,7 @@ public class MovePage extends MWAction {
    *           ActionException
    */
   public MovePage(MediaWikiBot bot, String oldtitle, String newtitle, String reason,
-      boolean withsubpages, boolean noredirect) throws ProcessException, ActionException {
+      boolean withsubpages, boolean noredirect) {
     super(bot.getVersion());
     token = new GetApiToken(GetApiToken.Intoken.MOVE, oldtitle, bot.getVersion(), bot.getUserinfo());
     this.oldtitle = oldtitle;
@@ -149,7 +149,7 @@ public class MovePage extends MWAction {
    * {@inheritDoc}
    */
   @Override
-  public String processReturningText(String s, HttpAction hm) throws ProcessException {
+  public String processReturningText(String s, HttpAction hm) {
     super.processReturningText(s, hm);
 
     if (moveToken) {

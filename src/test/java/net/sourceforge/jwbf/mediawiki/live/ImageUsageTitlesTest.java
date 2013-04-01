@@ -5,6 +5,7 @@ import static net.sourceforge.jwbf.mediawiki.BotFactory.getMediaWikiBot;
 import static net.sourceforge.jwbf.mediawiki.LiveTestFather.getValue;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+import lombok.extern.slf4j.Slf4j;
 import net.sourceforge.jwbf.core.contentRep.Article;
 import net.sourceforge.jwbf.mediawiki.VersionTestClassVerifier;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
@@ -23,6 +24,7 @@ import org.junit.rules.Verifier;
  * 
  */
 @Ignore("depends on upload")
+@Slf4j
 public class ImageUsageTitlesTest extends AbstractMediaWikiBotTest {
 
   @ClassRule
@@ -59,7 +61,7 @@ public class ImageUsageTitlesTest extends AbstractMediaWikiBotTest {
     boolean notFound = true;
     int x = 0;
     for (String string : il) {
-      System.out.println(string);
+      log.debug(string);
       x++;
       if (x >= limit) {
         notFound = false;
@@ -71,7 +73,7 @@ public class ImageUsageTitlesTest extends AbstractMediaWikiBotTest {
     }
     x = 0;
     for (String string : il) {
-      System.out.println(string);
+      log.debug(string);
       x++;
       if (x >= limit) {
         break;

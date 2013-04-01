@@ -31,6 +31,7 @@ import java.util.Properties;
 import java.util.TimeZone;
 import java.util.Vector;
 
+import lombok.extern.slf4j.Slf4j;
 import net.sourceforge.jwbf.TestHelper;
 
 import org.junit.ComparisonFailure;
@@ -40,6 +41,7 @@ import com.google.common.collect.Lists;
 /**
  * @author Thomas Stock
  */
+@Slf4j
 public class LiveTestFather extends TestHelper {
 
   private static final Properties data = new Properties();
@@ -68,14 +70,13 @@ public class LiveTestFather extends TestHelper {
     for (String fname : filepos) {
       if (new File(fname).canRead()) {
         filename = fname;
-        System.out.println("use testfile: " + filename);
+        log.info("use testfile: " + filename);
 
         break;
       }
     }
     if (filename.length() < 1) {
-      System.err.println("no testfile found. Use: " + System.getProperty("user.home")
-          + "/.jwbf/test.xml");
+      log.info("no testfile found. Use: " + System.getProperty("user.home") + "/.jwbf/test.xml");
       filename = System.getProperty("user.home") + "/.jwbf/test.xml";
     }
 

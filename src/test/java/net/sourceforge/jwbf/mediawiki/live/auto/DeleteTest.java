@@ -5,6 +5,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.Collection;
 
+import lombok.extern.slf4j.Slf4j;
 import net.sourceforge.jwbf.core.contentRep.ContentAccessable;
 import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
 import net.sourceforge.jwbf.mediawiki.BotFactory;
@@ -22,6 +23,7 @@ import org.junit.Test;
 import org.junit.rules.Verifier;
 import org.junit.runners.Parameterized.Parameters;
 
+@Slf4j
 public class DeleteTest extends ParamHelper {
   private static final String DELETE_PREFIX = "Delete";
   private static final int COUNT = 1;
@@ -87,7 +89,7 @@ public class DeleteTest extends ParamHelper {
       MediaWikiBot bot = BotFactory.getMediaWikiBot(v, true);
       AllPageTitles aPages = new AllPageTitles(bot, MediaWiki.NS_MAIN);
       for (String string : aPages) {
-        System.out.println(string);
+        log.debug(string);
       }
     }
   }

@@ -8,6 +8,7 @@ import static org.junit.Assert.fail;
 import java.util.Collection;
 import java.util.Vector;
 
+import lombok.extern.slf4j.Slf4j;
 import net.sourceforge.jwbf.core.contentRep.Article;
 import net.sourceforge.jwbf.mediawiki.VersionTestClassVerifier;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
@@ -26,6 +27,7 @@ import org.junit.runners.Parameterized.Parameters;
  * @author Thomas Stock
  * 
  */
+@Slf4j
 public class TemplateUserTitlesTest extends ParamHelper {
 
   private static final String TESTPATTERNNAME = "Template:ATesT";
@@ -68,7 +70,7 @@ public class TemplateUserTitlesTest extends ParamHelper {
 
     for (String pageTitle : a) {
       titles.remove(pageTitle);
-      System.out.println(titles);
+      log.debug(titles.toString());
       i++;
     }
     if (i < 50) {
