@@ -22,12 +22,9 @@ import static net.sourceforge.jwbf.TestHelper.assumeReachable;
 import static net.sourceforge.jwbf.mediawiki.BotFactory.getMediaWikiBot;
 import static net.sourceforge.jwbf.mediawiki.BotFactory.getWikiPass;
 import static net.sourceforge.jwbf.mediawiki.BotFactory.getWikiUser;
-import static net.sourceforge.jwbf.mediawiki.LiveTestFather.getValue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import lombok.extern.slf4j.Slf4j;
-import net.sourceforge.jwbf.JWBF;
-import net.sourceforge.jwbf.core.bots.HttpBot;
 import net.sourceforge.jwbf.core.contentRep.Article;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
@@ -90,23 +87,6 @@ public class SiteinfoTest extends AbstractMediaWikiBotTest {
     Article a = new Article(bot, versionInfoTemplate);
     assertTrue(a.getText() + " should contains " + v.getNumber(),
         a.getText().contains(v.getNumber()));
-  }
-
-  /**
-   * Test if useragent ist jwbf.
-   * 
-   * @throws Exception
-   *           a
-   */
-  @Ignore("test with jetty?")
-  @Test
-  public final void testUserAgent() throws Exception {
-
-    HttpBot bot = new HttpBot(""); // XXX does this work?
-    String result = bot.getPage(getValue("useragent_url"));
-    assertTrue("useragent should contain \"JWBF\"", result.contains("JWBF"));
-    assertTrue("useragent should contain actual version",
-        result.contains(JWBF.getVersion(getClass())));
   }
 
 }

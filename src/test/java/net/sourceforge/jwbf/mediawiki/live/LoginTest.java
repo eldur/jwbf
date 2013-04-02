@@ -61,6 +61,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.SingleClientConnManager;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpParams;
+import org.eclipse.jetty.server.Server;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -147,16 +148,18 @@ public class LoginTest extends AbstractMediaWikiBotTest {
    *           a
    */
   @Test
-  @Ignore("test with jetty")
   public final void installationDefunct() throws Exception {
-    String invalidUrl = getValue("wikiMWinvalid_url");
-    bot = new MediaWikiBot(invalidUrl);
+    Server server = new Server(0);
     try {
-      bot.login(getValue("wikiMW1_09_user"), getValue("wikiMW1_09_pass"));
+      server.start();
+      int port = server.getConnectors()[0].getLocalPort();
+      bot = new MediaWikiBot("http://localhost:" + port + "/");
+      bot.login("user", "pass");
       fail();
     } catch (IllegalStateException e) {
-      e.printStackTrace();
       assertTrue(e.getMessage().startsWith("invalid status: HTTP/1.1 404 Not Found;"));
+    } finally {
+      server.stop();
     }
   }
 
