@@ -6,7 +6,7 @@ import javax.annotation.CheckForNull;
 import javax.inject.Singleton;
 
 import lombok.extern.slf4j.Slf4j;
-import net.sourceforge.jwbf.core.actions.ContentProcessable;
+import net.sourceforge.jwbf.core.actions.util.HttpAction;
 
 import com.google.common.collect.Maps;
 
@@ -14,7 +14,7 @@ import com.google.common.collect.Maps;
 @Slf4j
 class WireRegister extends Thread {
 
-  private Map<String, String> cache = Maps.newHashMap();
+  private Map<HttpAction, String> cache = Maps.newHashMap();
 
   public WireRegister() {
     Runtime.getRuntime().addShutdownHook(this);
@@ -26,20 +26,22 @@ class WireRegister extends Thread {
     return false;
   }
 
-  @CheckForNull
-  public String getResponse(String url, ContentProcessable a) {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  public String putResponse(String url, ContentProcessable a, String response) {
-    // TODO Auto-generated method stub
-    return response;
-  }
-
   @Override
   public void run() {
     log.debug("store to file");
     // TODO Auto-generated method stub
+  }
+
+  @CheckForNull
+  public String getResponse(HttpAction httpAction) {
+    httpAction.getClass();
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  public String putResponse(HttpAction httpAction, String response) {
+    // TODO Auto-generated method stub
+    cache.put(httpAction, response);
+    return response;
   }
 }

@@ -129,7 +129,7 @@ public class MediaWikiBot implements WikiBot {
     if (!(url.endsWith(".php") || url.endsWith("/"))) {
       throw new IllegalArgumentException("(" + url + ") url must end with slash or .php");
     }
-    getBot().setConnection(url);
+    getBot().setClient(url);
   }
 
   /**
@@ -144,7 +144,7 @@ public class MediaWikiBot implements WikiBot {
     if (testHostReachable) {
       getBot().getPage(url.toExternalForm());
     }
-    getBot().setConnection(url);
+    getBot().setClient(url);
   }
 
   /**

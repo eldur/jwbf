@@ -18,7 +18,6 @@
  */
 package net.sourceforge.jwbf.core.bots;
 
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -26,8 +25,6 @@ import net.sourceforge.jwbf.core.actions.ContentProcessable;
 import net.sourceforge.jwbf.core.actions.Get;
 import net.sourceforge.jwbf.core.actions.GetPage;
 import net.sourceforge.jwbf.core.actions.HttpActionClient;
-import net.sourceforge.jwbf.core.actions.util.ActionException;
-import net.sourceforge.jwbf.core.actions.util.ProcessException;
 
 /**
  * 
@@ -37,7 +34,7 @@ import net.sourceforge.jwbf.core.actions.util.ProcessException;
 
 public class HttpBot {
 
-  private HttpActionClient cc;
+  private HttpActionClient actionClient;
 
   private String url;
 
@@ -56,8 +53,12 @@ public class HttpBot {
    */
   public HttpBot(final String url) {
     this.url = url;
+    setClient(newURL(url));
+  }
+
+  protected static URL newURL(final String url) {
     try {
-      setConnection(new URL(url));
+      return new URL(url);
     } catch (MalformedURLException e) {
       throw new IllegalArgumentException(e);
     }
@@ -70,7 +71,7 @@ public class HttpBot {
    *          a
    */
   public HttpBot(HttpActionClient cc) {
-    this.cc = cc;
+    actionClient = cc;
   }
 
   /**
@@ -80,7 +81,7 @@ public class HttpBot {
    *          of the host
    */
   public HttpBot(final URL url) {
-    setConnection(url);
+    setClient(url);
   }
 
   /**
@@ -107,13 +108,39 @@ public class HttpBot {
    *          if you whant to add some specials
    * 
    */
-  public final void setConnection(final HttpActionClient client) {
+  public final void setClient(final HttpActionClient client) {
     client.getClass();
-    cc = client;
+    actionClient = client;
+  }
+
+  /**
+   * 
+   * @param hostUrl
+   *          base url of a wiki site to connect with; example: http://www.yourOwnWiki.org/wiki/
+   */
+  public final void setClient(final String hostUrl) {
+    setClient(newURL(hostUrl));
+  }
+
+  /**
+   * 
+   * @param hostUrl
+   *          like http://www.yourOwnWiki.org/wiki/
+   */
+  public final void setClient(final URL hostUrl) {
+    setClient(new HttpActionClient(hostUrl));
+  }
+
+  /**
+   * 
+   * @return a
+   */
+  public final HttpActionClient getClient() {
+    return actionClient;
   }
 
   public final String getHostUrl() {
-    return cc.getHostUrl();
+    return actionClient.getHostUrl();
   }
 
   /**
@@ -123,20 +150,7 @@ public class HttpBot {
    * @return text
    */
   public synchronized String performAction(final ContentProcessable a) {
-    return cc.performAction(a);
-  }
-
-  /**
-   * 
-   * @param hostUrl
-   *          base url of a wiki site to connect with; example: http://www.yourOwnWiki.org/wiki/
-   */
-  public final void setConnection(final String hostUrl) {
-    try {
-      setConnection(new URL(hostUrl));
-    } catch (MalformedURLException e) {
-      throw new IllegalArgumentException(e);
-    }
+    return actionClient.performAction(a);
   }
 
   /**
@@ -148,22 +162,10 @@ public class HttpBot {
    */
   public final String getPage(String u) {
 
-    try {
-      URL url = new URL(u);
-
-      setConnection(url.getProtocol() + "://" + url.getHost());
-    } catch (MalformedURLException e) {
-      throw new ActionException(e);
-    }
-
+    URL url = newURL(u);
+    setClient(url.getProtocol() + "://" + url.getHost());
     GetPage gp = new GetPage(u);
-
-    try {
-      performAction(gp);
-    } catch (ProcessException e) {
-      throw new ActionException(e);
-    }
-
+    performAction(gp);
     return gp.getText();
   }
 
@@ -175,32 +177,7 @@ public class HttpBot {
    * @return HTML content
    */
   public final byte[] getBytes(String u) {
-
-    try {
-      return cc.get(new Get(u));
-    } catch (ProcessException e) {
-      throw new ActionException(e);
-    } catch (IOException e) {
-      throw new ActionException(e);
-    }
-  }
-
-  /**
-   * 
-   * @return a
-   */
-  public final HttpActionClient getClient() {
-    return cc;
-  }
-
-  /**
-   * 
-   * @param hostUrl
-   *          like http://www.yourOwnWiki.org/wiki/
-   */
-  public final void setConnection(final URL hostUrl) {
-    setConnection(new HttpActionClient(hostUrl));
-
+    return actionClient.get(new Get(u));
   }
 
   /**

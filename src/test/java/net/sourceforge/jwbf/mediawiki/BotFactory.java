@@ -1,11 +1,15 @@
 package net.sourceforge.jwbf.mediawiki;
 
+import java.net.URL;
+
 import javax.inject.Inject;
 import javax.inject.Named;
 
 import lombok.extern.slf4j.Slf4j;
 import net.sourceforge.jwbf.TestHelper;
-import net.sourceforge.jwbf.core.actions.ContentProcessable;
+import net.sourceforge.jwbf.core.actions.HttpActionClient;
+import net.sourceforge.jwbf.core.actions.ReturningText;
+import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.core.bots.HttpBot;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
@@ -54,27 +58,33 @@ public class BotFactory {
   @Slf4j
   private static class CacheHttpBot extends HttpBot {
 
-    private final WireRegister wireRegister;
-    private final String url;
-
     @Inject
     public CacheHttpBot(@Named("httpUrl") String url, WireRegister wireRegister) {
+      super(new CacheActionClient(newURL(url), wireRegister));
+    }
+  }
+
+  @Slf4j
+  private static class CacheActionClient extends HttpActionClient {
+
+    private final WireRegister wireRegister;
+
+    public CacheActionClient(URL url, WireRegister wireRegister) {
       super(url);
       this.wireRegister = wireRegister;
-      this.url = url;
-      if (this.wireRegister.hasContentFor(url)) {
+      if (this.wireRegister.hasContentFor(url.toString())) {
         TestHelper.assumeReachable(url); // TODO this is an error
       }
     }
 
     @Override
-    public synchronized String performAction(ContentProcessable a) {
-      log.debug("{}", a);
-      String response = wireRegister.getResponse(url, a);
+    protected String processAction(HttpAction httpAction, ReturningText answerParser) {
+      log.debug("{}", httpAction);
+      String response = wireRegister.getResponse(httpAction);
       if (response != null) {
         return response;
       } else {
-        return wireRegister.putResponse(url, a, super.performAction(a));
+        return wireRegister.putResponse(httpAction, super.processAction(httpAction, answerParser));
       }
     }
   }
