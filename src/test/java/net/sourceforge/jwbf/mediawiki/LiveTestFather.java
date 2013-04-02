@@ -29,7 +29,6 @@ import java.util.Date;
 import java.util.InvalidPropertiesFormatException;
 import java.util.Properties;
 import java.util.TimeZone;
-import java.util.Vector;
 
 import lombok.extern.slf4j.Slf4j;
 import net.sourceforge.jwbf.TestHelper;
@@ -63,7 +62,7 @@ public class LiveTestFather extends TestHelper {
     specialChars.add("]");
 
     // find jwftestfile
-    Collection<String> filepos = new Vector<String>();
+    Collection<String> filepos = Lists.newArrayList();
     filepos.add(System.getProperty("user.home") + "/.jwbf/test.xml");
     filepos.add(System.getProperty("user.home") + "/jwbftest.xml");
     filepos.add("test.xml");

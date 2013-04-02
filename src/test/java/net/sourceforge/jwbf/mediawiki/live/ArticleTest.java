@@ -10,7 +10,6 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.Collection;
 import java.util.Date;
-import java.util.Vector;
 
 import lombok.extern.slf4j.Slf4j;
 import net.sourceforge.jwbf.core.contentRep.Article;
@@ -23,11 +22,13 @@ import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import com.google.common.collect.Lists;
+
 @Slf4j
 public class ArticleTest {
 
   private Collection<MediaWikiBot> getTestBots() {
-    Collection<MediaWikiBot> bots = new Vector<MediaWikiBot>();
+    Collection<MediaWikiBot> bots = Lists.newArrayList();
     bots.add(getMediaWikiBot(Version.MW1_16, true));
     bots.add(getMediaWikiBot(Version.MW1_15, true));
     return bots;

@@ -23,9 +23,11 @@ package net.sourceforge.jwbf.zim.actions;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.util.Iterator;
-import java.util.Vector;
+import java.util.List;
 
 import net.sourceforge.jwbf.zim.bots.ZimWikiBot;
+
+import com.google.common.collect.Lists;
 
 /**
  * 
@@ -34,7 +36,7 @@ import net.sourceforge.jwbf.zim.bots.ZimWikiBot;
  */
 public class AllPageTitles implements Iterable<String>, Iterator<String> {
 
-  private Vector<String> all = new Vector<String>();
+  private List<String> all = Lists.newArrayList();
   private Iterator<String> allIt = null;
 
   /**

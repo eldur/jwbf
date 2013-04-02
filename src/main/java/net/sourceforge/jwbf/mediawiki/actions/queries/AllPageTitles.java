@@ -27,7 +27,6 @@ import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_19;
 import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_20;
 
 import java.util.Collection;
-import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -40,6 +39,8 @@ import net.sourceforge.jwbf.mediawiki.actions.util.RedirectFilter;
 import net.sourceforge.jwbf.mediawiki.actions.util.SupportedBy;
 import net.sourceforge.jwbf.mediawiki.actions.util.VersionException;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
+
+import com.google.common.collect.Lists;
 
 /**
  * Action class using the MediaWiki-api's "list=allpages".
@@ -192,7 +193,7 @@ public class AllPageTitles extends TitleQuery<String> {
     if (log.isTraceEnabled()) {
       log.trace("enter GetAllPagetitles.parseArticleTitles(String)");
     }
-    Collection<String> c = new Vector<String>();
+    Collection<String> c = Lists.newArrayList();
     Matcher m = ARTICLE_TITLES_PATTERN.matcher(s);
     while (m.find()) {
       String title = MediaWiki.decode(m.group(1));

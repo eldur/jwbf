@@ -2,7 +2,9 @@ package net.sourceforge.jwbf.mediawiki.bots;
 
 import java.net.URL;
 import java.util.Iterator;
-import java.util.Vector;
+import java.util.List;
+
+import com.google.common.collect.Lists;
 
 /**
  * @deprecated use your own thread framework
@@ -12,7 +14,7 @@ import java.util.Vector;
 public class MediaWikiThreadBot extends MediaWikiBot {
 
   private ThreadGroup tg = null;
-  private Vector<Thread> rv = new Vector<Thread>();
+  private List<Thread> rv = Lists.newArrayList();
 
   public MediaWikiThreadBot(URL u) {
     super(u);

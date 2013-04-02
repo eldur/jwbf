@@ -4,7 +4,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.Vector;
+import java.util.List;
 
 import lombok.extern.slf4j.Slf4j;
 import net.sourceforge.jwbf.core.actions.util.ActionException;
@@ -21,6 +21,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Verifier;
 import org.junit.runners.Parameterized.Parameters;
+
+import com.google.common.collect.Lists;
 
 @Slf4j
 public class BacklinkExpTest extends ParamHelper {
@@ -75,7 +77,7 @@ public class BacklinkExpTest extends ParamHelper {
     BacklinkTitles gbt = new BacklinkTitles(bot, BACKLINKS, rf, MediaWiki.NS_MAIN,
         MediaWiki.NS_CATEGORY);
 
-    Vector<String> vx = new Vector<String>();
+    List<String> vx = Lists.newArrayList();
     Iterator<String> is = gbt.iterator();
     boolean notEnougth = true;
     int i = 0;

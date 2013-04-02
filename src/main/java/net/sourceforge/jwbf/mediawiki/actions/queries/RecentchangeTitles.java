@@ -29,14 +29,12 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Vector;
+import java.util.Set;
 
 import lombok.extern.slf4j.Slf4j;
 import net.sourceforge.jwbf.core.actions.Get;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
-import net.sourceforge.jwbf.core.actions.util.ProcessException;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
@@ -49,6 +47,9 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
 import org.xml.sax.InputSource;
+
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 
 /**
  * 
@@ -73,9 +74,16 @@ public class RecentchangeTitles extends TitleQuery<String> {
 
   private final int[] namespaces;
 
+  /**
+   * Collection that will contain the result (titles of articles linking to the target) after
+   * performing the action has finished.
+   */
+  private Collection<String> titleCollection = Lists.newArrayList();
+  private final boolean uniqChanges;
+
   private class RecentInnerAction extends InnerAction {
 
-    protected RecentInnerAction(Version v) throws VersionException {
+    protected RecentInnerAction(Version v) {
       super(v);
     }
 
@@ -83,36 +91,25 @@ public class RecentchangeTitles extends TitleQuery<String> {
      * {@inheritDoc}
      */
     @Override
-    public String processAllReturningText(final String s) throws ProcessException {
+    public String processAllReturningText(final String s) {
 
       titleCollection.clear();
       parseArticleTitles(s);
 
-      if (log.isInfoEnabled())
-        log.info("found: " + titleCollection);
+      if (log.isDebugEnabled()) {
+        log.debug("found: " + titleCollection);
+      }
       if (uniqChanges) {
-        HashSet<String> hs = new HashSet<String>();
-        hs.addAll(titleCollection);
+        Set<String> set = Sets.newHashSet();
+        set.addAll(titleCollection);
         titleCollection.clear();
-        titleCollection.addAll(hs);
+        titleCollection.addAll(set);
       }
       titleIterator = titleCollection.iterator();
 
       return "";
     }
-
   }
-
-  /**
-   * Collection that will contain the result (titles of articles linking to the target) after
-   * performing the action has finished.
-   */
-  private Collection<String> titleCollection = new Vector<String>();
-  private final boolean uniqChanges;
-
-  /**
-   * information necessary to get the next api page.
-   */
 
   /**
    * generates the next MediaWiki-request (GetMethod) and adds it to msgs.
@@ -156,7 +153,7 @@ public class RecentchangeTitles extends TitleQuery<String> {
   /**
    *
    */
-  public RecentchangeTitles(MediaWikiBot bot, int... ns) throws VersionException {
+  public RecentchangeTitles(MediaWikiBot bot, int... ns) {
     this(bot, false, ns);
 
   }
@@ -164,8 +161,7 @@ public class RecentchangeTitles extends TitleQuery<String> {
   /**
    *
    */
-  public RecentchangeTitles(MediaWikiBot bot, boolean uniqChanges, int... ns)
-      throws VersionException {
+  public RecentchangeTitles(MediaWikiBot bot, boolean uniqChanges, int... ns) {
     super(bot);
     namespaces = ns;
     this.bot = bot;
@@ -176,7 +172,7 @@ public class RecentchangeTitles extends TitleQuery<String> {
   /**
    *
    */
-  public RecentchangeTitles(MediaWikiBot bot) throws VersionException {
+  public RecentchangeTitles(MediaWikiBot bot) {
     this(bot, MediaWiki.NS_ALL);
 
   }
@@ -202,8 +198,9 @@ public class RecentchangeTitles extends TitleQuery<String> {
     } catch (IOException e) {
       e.printStackTrace();
     }
-    if (root != null)
+    if (root != null) {
       findContent(root);
+    }
     return titleCollection;
 
   }
@@ -255,7 +252,7 @@ public class RecentchangeTitles extends TitleQuery<String> {
   }
 
   @Override
-  protected InnerAction getInnerAction(Version v) throws VersionException {
+  protected InnerAction getInnerAction(Version v) {
 
     return new RecentInnerAction(v);
   }

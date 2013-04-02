@@ -27,7 +27,6 @@ import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_19;
 import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_20;
 
 import java.util.Collection;
-import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -41,6 +40,8 @@ import net.sourceforge.jwbf.mediawiki.actions.util.RedirectFilter;
 import net.sourceforge.jwbf.mediawiki.actions.util.SupportedBy;
 import net.sourceforge.jwbf.mediawiki.actions.util.VersionException;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
+
+import com.google.common.collect.Lists;
 
 /**
  * action class using the MediaWiki-api's "list=backlinks".
@@ -168,7 +169,7 @@ public class BacklinkTitles extends TitleQuery<String> {
   protected Collection<String> parseArticleTitles(String s) {
 
     // get the other backlink titles and add them all to the titleCollection
-    Collection<String> titleCollection = new Vector<String>();
+    Collection<String> titleCollection = Lists.newArrayList();
 
     Pattern p = Pattern
         .compile("<bl pageid=\".*?\" ns=\".*?\" title=\"([^\"]*)\" (redirect=\"\" )?/>");

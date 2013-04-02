@@ -24,7 +24,6 @@ import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_16;
 import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_17;
 
 import java.util.Collection;
-import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -36,6 +35,8 @@ import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.actions.util.SupportedBy;
 import net.sourceforge.jwbf.mediawiki.actions.util.VersionException;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
+
+import com.google.common.collect.Lists;
 
 /**
  * action class using the MediaWiki-api's "list=imagelinks" and later imageUsage.
@@ -214,7 +215,7 @@ public class ImageUsageTitles extends TitleQuery<String> {
 
     @Override
     public Collection<String> parseArticleTitles(String s) {
-      Collection<String> titleCollection = new Vector<String>();
+      Collection<String> titleCollection = Lists.newArrayList();
 
       Pattern p = Pattern.compile("<iu pageid=\".*?\" ns=\".*?\" title=\"(.*?)\" />");
 
@@ -274,7 +275,7 @@ public class ImageUsageTitles extends TitleQuery<String> {
 
     @Override
     public Collection<String> parseArticleTitles(String s) {
-      Collection<String> titleCollection = new Vector<String>();
+      Collection<String> titleCollection = Lists.newArrayList();
 
       Pattern p = Pattern.compile("<iu pageid=\".*?\" ns=\".*?\" title=\"(.*?)\" />");
 
@@ -329,7 +330,7 @@ public class ImageUsageTitles extends TitleQuery<String> {
 
     @Override
     public Collection<String> parseArticleTitles(String s) {
-      Collection<String> titleCollection = new Vector<String>();
+      Collection<String> titleCollection = Lists.newArrayList();
       Pattern p = Pattern.compile("<il pageid=\".*?\" ns=\".*?\" title=\"(.*?)\" />");
 
       Matcher m = p.matcher(s);

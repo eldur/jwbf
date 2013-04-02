@@ -6,7 +6,6 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.util.Collection;
-import java.util.Vector;
 
 import lombok.extern.slf4j.Slf4j;
 import net.sourceforge.jwbf.core.contentRep.Article;
@@ -21,6 +20,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Verifier;
 import org.junit.runners.Parameterized.Parameters;
+
+import com.google.common.collect.Lists;
 
 /**
  * 
@@ -53,7 +54,7 @@ public class TemplateUserTitlesTest extends ParamHelper {
     TemplateUserTitles a = new TemplateUserTitles(bot, TESTPATTERNNAME, MediaWiki.NS_ALL);
 
     int i = 0;
-    Collection<String> titles = new Vector<String>();
+    Collection<String> titles = Lists.newArrayList();
 
     for (int j = 0; j < 55; j++) {
       titles.add("Patx" + j);

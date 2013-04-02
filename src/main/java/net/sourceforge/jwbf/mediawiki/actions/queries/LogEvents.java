@@ -30,7 +30,6 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -50,6 +49,8 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
 import org.xml.sax.InputSource;
+
+import com.google.common.collect.Lists;
 
 /**
  * 
@@ -91,7 +92,7 @@ public class LogEvents extends MWAction implements Iterator<LogItem>, Iterable<L
    * Collection that will contain the result (titles of articles linking to the target) after
    * performing the action has finished.
    */
-  private Collection<LogItem> logCollection = new Vector<LogItem>();
+  private Collection<LogItem> logCollection = Lists.newArrayList();
   private Iterator<LogItem> logIterator = null;
   private final String[] type;
   private String nextPageInfo = "";

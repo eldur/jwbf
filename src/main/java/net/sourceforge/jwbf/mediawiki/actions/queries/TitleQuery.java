@@ -2,16 +2,14 @@ package net.sourceforge.jwbf.mediawiki.actions.queries;
 
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.Vector;
 
 import lombok.extern.slf4j.Slf4j;
-import net.sourceforge.jwbf.core.actions.util.ActionException;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
-import net.sourceforge.jwbf.core.actions.util.ProcessException;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
-import net.sourceforge.jwbf.mediawiki.actions.util.VersionException;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
+
+import com.google.common.collect.Lists;
 
 /**
  * Abstract class which is superclass of all titleiterations, represented by the sufix "Titles".
@@ -34,12 +32,12 @@ public abstract class TitleQuery<T> implements Iterable<T>, Iterator<T> {
     return nextPageInfo;
   }
 
-  protected TitleQuery(MediaWikiBot bot) throws VersionException {
+  protected TitleQuery(MediaWikiBot bot) {
     this.bot = bot;
     inner = getInnerAction(bot.getVersion());
   }
 
-  protected InnerAction getInnerAction(Version v) throws VersionException {
+  protected InnerAction getInnerAction(Version v) {
     return new InnerAction(v);
   }
 
@@ -90,19 +88,9 @@ public abstract class TitleQuery<T> implements Iterable<T>, Iterator<T> {
 
     if (inner.init || (!titleIterator.hasNext() && hasNextPage())) {
       inner.init = false;
-      try {
-        inner.setHasMoreMessages(true);
-        inner.msg = prepareCollection();
-
-        bot.performAction(inner);
-
-      } catch (ActionException ae) {
-        ae.printStackTrace();
-
-      } catch (ProcessException e) {
-        e.printStackTrace();
-
-      }
+      inner.setHasMoreMessages(true);
+      inner.msg = prepareCollection();
+      bot.performAction(inner);
     }
   }
 
@@ -121,7 +109,7 @@ public abstract class TitleQuery<T> implements Iterable<T>, Iterator<T> {
     private HttpAction msg;
     private boolean init = true;
 
-    protected InnerAction(Version v) throws VersionException {
+    protected InnerAction(Version v) {
       super(v);
     }
 
@@ -140,8 +128,8 @@ public abstract class TitleQuery<T> implements Iterable<T>, Iterator<T> {
      * {@inheritDoc}
      */
     @Override
-    public String processAllReturningText(final String s) throws ProcessException {
-      Collection<T> knownResults = new Vector<T>();
+    public String processAllReturningText(final String s) {
+      Collection<T> knownResults = Lists.newArrayList();
 
       knownResults.addAll(parseArticleTitles(s));
       nextPageInfo = parseHasMore(s);

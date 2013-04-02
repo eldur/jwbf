@@ -23,7 +23,6 @@ import static org.junit.Assert.fail;
 
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.Vector;
 
 import lombok.extern.slf4j.Slf4j;
 import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
@@ -40,6 +39,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Verifier;
 import org.junit.runners.Parameterized.Parameters;
+
+import com.google.common.collect.Lists;
 
 @Slf4j
 public class CategoryTest extends ParamHelper {
@@ -107,8 +108,8 @@ public class CategoryTest extends ParamHelper {
 
   private void doTest(String catname) {
 
-    Collection<String> compare1 = new Vector<String>();
-    Collection<CategoryItem> compare2 = new Vector<CategoryItem>();
+    Collection<String> compare1 = Lists.newArrayList();
+    Collection<CategoryItem> compare2 = Lists.newArrayList();
     Iterator<String> is = new CategoryMembersSimple(bot, catname).iterator();
     int i = 0;
     boolean notEnough = true;
