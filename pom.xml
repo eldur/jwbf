@@ -8,6 +8,11 @@
   <name>JWBF</name>
   <version>2.0.0-SNAPSHOT</version>
   <description>Java Wiki Bot Framework - A Wiki helper</description>
+  <parent>
+    <groupId>org.sonatype.oss</groupId>
+    <artifactId>oss-parent</artifactId>
+    <version>7</version>
+  </parent>
   <url>http://jwbf.sourceforge.net/</url>
   <issueManagement>
     <url>https://github.com/eldur/jwbf/issues</url>
@@ -414,17 +419,6 @@
       </plugin>
     </plugins>
   </reporting>
-  <distributionManagement>
-    <repository>
-      <id>sourceforge.net</id>
-      <url>sftp://web.sourceforge.net/home/groups/j/jw/jwbf/m2repo-release</url>
-    </repository>
-    <snapshotRepository>
-      <id>sourceforge.net</id>
-      <url>sftp://web.sourceforge.net/home/groups/j/jw/jwbf/m2repo-snapshot</url>
-      <uniqueVersion>false</uniqueVersion>
-    </snapshotRepository>
-  </distributionManagement>
   <properties>
     <maven.test.jvmargs>-Dfile.encoding=US-ASCII</maven.test.jvmargs>
   </properties>
