@@ -33,8 +33,6 @@ import java.util.TimeZone;
 import lombok.extern.slf4j.Slf4j;
 import net.sourceforge.jwbf.TestHelper;
 
-import org.junit.ComparisonFailure;
-
 import com.google.common.collect.Lists;
 
 /**
@@ -129,9 +127,10 @@ public class LiveTestFather extends TestHelper {
   public static String getValue(final String key) {
     if (!data.containsKey(key) || data.getProperty(key).trim().length() <= 0) {
       addEmptyKey(key);
-
-      throw new ComparisonFailure("No or empty value for key: \"" + key + "\" in " + filename, key,
-          filename);
+      log.warn("EMPTY value for " + key);
+      // throw new ComparisonFailure("No or empty value for key: \"" + key + "\" in " + filename,
+      // key,
+      // filename);
     }
     return data.getProperty(key);
   }

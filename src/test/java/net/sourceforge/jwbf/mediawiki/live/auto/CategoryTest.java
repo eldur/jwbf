@@ -58,7 +58,7 @@ public class CategoryTest extends ParamHelper {
   }
 
   public CategoryTest(Version v) {
-    super(v);
+    super(v, classVerifier);
   }
 
   private static final int COUNT = 60;

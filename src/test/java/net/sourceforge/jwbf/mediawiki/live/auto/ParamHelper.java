@@ -5,20 +5,27 @@ import static net.sourceforge.jwbf.mediawiki.BotFactory.getMediaWikiBot;
 import java.util.Arrays;
 import java.util.Collection;
 
+import net.sourceforge.jwbf.mediawiki.VersionTestClassVerifier;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.actions.queries.AllPageTitles;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.live.AbstractMediaWikiBotTest;
 
 import org.junit.Assert;
+import org.junit.internal.AssumptionViolatedException;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
 @RunWith(Parameterized.class)
 class ParamHelper extends AbstractMediaWikiBotTest {
 
-  public ParamHelper(Version v) {
-    bot = getMediaWikiBot(v, true);
+  public ParamHelper(Version v, VersionTestClassVerifier verifier) {
+    try {
+      bot = getMediaWikiBot(v, true);
+    } catch (AssumptionViolatedException re) {
+      verifier.addIgnoredVersion(v);
+      throw re;
+    }
     Assert.assertEquals(v, bot.getVersion());
   }
 

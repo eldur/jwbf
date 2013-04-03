@@ -12,20 +12,27 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.annotation.Nullable;
 import javax.inject.Provider;
 
+import lombok.extern.slf4j.Slf4j;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 
 import org.junit.Assert;
+import org.junit.Assume;
 import org.junit.rules.Verifier;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
 
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 
+@Slf4j
 public class VersionTestClassVerifier extends Verifier {
 
   private final Class<?>[] clazz;
@@ -36,6 +43,8 @@ public class VersionTestClassVerifier extends Verifier {
   private final Map<String, Version> documentedVersions = Maps.newHashMap();
 
   private boolean checkAll = true;
+
+  private List<Version> ignoredVersions = Lists.newArrayList();
 
   public VersionTestClassVerifier(Class<?>... clazz) {
     this.clazz = clazz;
@@ -60,14 +69,21 @@ public class VersionTestClassVerifier extends Verifier {
   }
 
   private Collection<Version> getUsedVersions() {
-    Version[] stableVersions = Version.valuesStable();
-    final List<Version> versions = Lists.newArrayList(stableVersions);
-    final Iterable<Version> testedKeys = testedVersions.values();
-    for (Version key : testedKeys) {
-      versions.remove(key);
-    }
 
-    return versions;
+    assumeNoIgnoredVersions();
+    Version[] stableVersions = Version.valuesStable();
+    Iterable<Version> versions = Lists.newArrayList(stableVersions);
+
+    final Set<Version> testedKeys = Sets.newHashSet(testedVersions.values());
+
+    versions = Iterables.filter(versions, new Predicate<Version>() {
+
+      public boolean apply(@Nullable Version version) {
+        return !testedKeys.contains(version);
+      }
+    });
+
+    return Lists.newArrayList(versions);
   }
 
   private Map<String, Version> getTestedButUndocmentedVersions() {
@@ -116,7 +132,7 @@ public class VersionTestClassVerifier extends Verifier {
 
   private void assertAllTestedVersionsAreDocumented() {
     assertEquals("There are undocumented tests for versions. ", "",
-        fmt(getTestedButUndocmentedVersions()));
+        fmt(getTestedButUndocmentedVersions().entrySet()));
   }
 
   private void assertDocumentedTests() {
@@ -128,13 +144,18 @@ public class VersionTestClassVerifier extends Verifier {
         testedAndDocumentedVersions.put(key, version);
       }
     }
-    assertEquals("not all documented versions are tested ", fmt(documentedVersions),
-        fmt(testedAndDocumentedVersions));
+    assumeNoIgnoredVersions();
+    assertEquals("not all documented versions are tested ", fmt(documentedVersions.entrySet()),
+        fmt(testedAndDocumentedVersions.entrySet()));
   }
 
-  private String fmt(Map<String, Version> versionMap) {
+  private void assumeNoIgnoredVersions() {
+    Assume.assumeTrue(ignoredVersions.isEmpty());
+  }
+
+  private String fmt(Iterable<Entry<String, Version>> elements) {
     StringBuilder sb = new StringBuilder();
-    List<Entry<String, Version>> entrySet = Lists.newArrayList(versionMap.entrySet());
+    List<Entry<String, Version>> entrySet = Lists.newArrayList(elements);
     Collections.sort(entrySet, new Comparator<Entry<String, Version>>() {
 
       public int compare(Entry<String, Version> o1, Entry<String, Version> o2) {
@@ -186,7 +207,7 @@ public class VersionTestClassVerifier extends Verifier {
             try {
               registerTestedVersion(c, bot.getVersion());
             } catch (RuntimeException e) {
-              e.printStackTrace(); // TODO log
+              log.error("", e);
             }
           }
         }
@@ -197,6 +218,11 @@ public class VersionTestClassVerifier extends Verifier {
   public VersionTestClassVerifier dontCheckAll() {
     checkAll = false;
     return this;
+  }
+
+  public void addIgnoredVersion(Version v) {
+    ignoredVersions.add(v);
+
   }
 
 }

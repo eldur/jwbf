@@ -31,7 +31,7 @@ public class EditTest extends ParamHelper {
   }
 
   public EditTest(Version v) {
-    super(v);
+    super(v, classVerifier);
   }
 
   @Test

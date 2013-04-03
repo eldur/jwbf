@@ -193,7 +193,9 @@ public class LoginTest extends AbstractMediaWikiBotTest {
     AbstractHttpClient httpClient = getSSLFakeHttpClient();
     Version latest = Version.getLatest();
 
-    URL u = new URL(getValue("wiki_url_latest").replace("http", "https"));
+    String url = getValue("wiki_url_latest").replace("http", "https");
+    assumeReachable(url);
+    URL u = new URL(url);
 
     assertEquals("https", u.getProtocol());
     int port = 443;

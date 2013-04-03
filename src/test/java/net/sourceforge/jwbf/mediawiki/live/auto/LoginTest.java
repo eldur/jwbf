@@ -26,7 +26,7 @@ public class LoginTest extends ParamHelper {
   private Version v;
 
   public LoginTest(Version v) {
-    super(v);
+    super(v, classVerifier);
     this.v = v;
   }
 

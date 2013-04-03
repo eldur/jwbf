@@ -34,7 +34,7 @@ public class MovePageTest extends ParamHelper {
   }
 
   public MovePageTest(Version v) {
-    super(v);
+    super(v, classVerifier);
   }
 
   @Test

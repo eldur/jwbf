@@ -7,8 +7,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import lombok.extern.slf4j.Slf4j;
-import net.sourceforge.jwbf.core.actions.util.ActionException;
-import net.sourceforge.jwbf.core.actions.util.ProcessException;
 import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
 import net.sourceforge.jwbf.mediawiki.VersionTestClassVerifier;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
@@ -43,10 +41,10 @@ public class BacklinkExpTest extends ParamHelper {
   }
 
   public BacklinkExpTest(Version v) {
-    super(v);
+    super(v, classVerifier);
   }
 
-  protected final void doPreapare() throws ActionException, ProcessException {
+  protected final void doPreapare() {
     log.info("prepareing backlinks...");
     SimpleArticle a = new SimpleArticle();
     for (int i = 0; i <= COUNT; i++) {
@@ -68,7 +66,7 @@ public class BacklinkExpTest extends ParamHelper {
    *           a
    */
   @Test
-  public final void test() throws Exception {
+  public final void test() {
     doTest(RedirectFilter.all);
   }
 

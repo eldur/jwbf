@@ -37,7 +37,7 @@ public class AllPagesExpTest extends ParamHelper {
   }
 
   public AllPagesExpTest(Version v) {
-    super(v);
+    super(v, classVerifier);
   }
 
   @Test

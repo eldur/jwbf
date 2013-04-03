@@ -29,7 +29,7 @@ public class RenderingTest extends ParamHelper {
   }
 
   public RenderingTest(Version v) {
-    super(v);
+    super(v, classVerifier);
   }
 
   /**

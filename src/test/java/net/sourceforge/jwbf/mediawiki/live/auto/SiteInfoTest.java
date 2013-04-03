@@ -32,7 +32,7 @@ public class SiteInfoTest extends ParamHelper {
   }
 
   public SiteInfoTest(Version v) {
-    super(v);
+    super(v, classVerifier);
   }
 
   @Test

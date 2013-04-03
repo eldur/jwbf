@@ -43,7 +43,7 @@ public class RevisionTest extends ParamHelper {
   }
 
   public RevisionTest(Version v) {
-    super(v);
+    super(v, classVerifier);
   }
 
   /**

@@ -78,7 +78,7 @@ public class UploadAndImageInfoTest extends ParamHelper {
   }
 
   public UploadAndImageInfoTest(Version v) {
-    super(v);
+    super(v, classVerifier);
   }
 
   @Test

@@ -17,16 +17,19 @@ import net.sourceforge.jwbf.core.bots.HttpBot;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.ContextHandler;
+import org.junit.Assume;
 import org.junit.Test;
 
 public class HttpBotTest {
 
   @Test
   public void testConstr() throws Exception {
-    HttpBot bot = new HttpBot(getValue("wikiMW1_13_url")) {
+    String url = getValue("wikiMW1_13_url");
+    Assume.assumeFalse(url.trim().isEmpty());
+    HttpBot bot = new HttpBot(url) {
     };
     assertNotNull(bot);
-    bot = new HttpBot(new URL(getValue("wikiMW1_13_url"))) {
+    bot = new HttpBot(new URL(url)) {
     };
     assertNotNull(bot);
   }

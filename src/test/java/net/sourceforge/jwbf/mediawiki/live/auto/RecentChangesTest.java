@@ -53,7 +53,7 @@ public class RecentChangesTest extends ParamHelper {
   }
 
   public RecentChangesTest(Version v) {
-    super(v);
+    super(v, classVerifier);
   }
 
   @Before

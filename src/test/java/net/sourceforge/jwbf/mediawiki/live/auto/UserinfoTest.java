@@ -32,7 +32,7 @@ public class UserinfoTest extends ParamHelper {
   private Version v;
 
   public UserinfoTest(Version v) {
-    super(v);
+    super(v, classVerifier);
     this.v = v;
   }
 

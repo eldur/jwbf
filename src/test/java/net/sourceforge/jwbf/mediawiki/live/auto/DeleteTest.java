@@ -41,7 +41,7 @@ public class DeleteTest extends ParamHelper {
   }
 
   public DeleteTest(Version v) {
-    super(v);
+    super(v, classVerifier);
   }
 
   private void prepare(MediaWikiBot bot) {

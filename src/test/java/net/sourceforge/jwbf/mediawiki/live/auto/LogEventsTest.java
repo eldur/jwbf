@@ -36,7 +36,7 @@ public class LogEventsTest extends ParamHelper {
   }
 
   public LogEventsTest(Version v) {
-    super(v);
+    super(v, classVerifier);
   }
 
   private static final int LIMIT = 55;

@@ -46,7 +46,7 @@ public class TemplateUserTitlesTest extends ParamHelper {
   }
 
   public TemplateUserTitlesTest(Version v) {
-    super(v);
+    super(v, classVerifier);
   }
 
   @Test
