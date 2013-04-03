@@ -31,12 +31,6 @@
 		<copy todir="${release}/src">
 			<fileset dir="src/main/java" includes="**/*" />
 		</copy>
-		<copy todir="${release}/test">
-			<fileset dir="src/test/java" includes="**/*" />
-		</copy>
-		<copy todir="${release}">
-			<fileset dir="buildAdds" includes="*" />
-		</copy>
 		<copy todir="${release}/lib" flatten="true" >
 			<path >
 				<pathelement path="${classpath.compile}" />
@@ -77,9 +71,6 @@
 		<delete includeemptydirs="true" verbose="true" >
 			<fileset dir="${release}/lib" excludes="*.jar"  />
 		</delete>
-		<copy todir="${release}">
-			<fileset dir="../buildAdds" includes="*" />
-		</copy>
 
 
 
@@ -101,10 +92,6 @@
 				<include name="jwbf*.jar"/>
 			</fileset>
 
-		</copy>
-
-		<copy todir="${release}">
-			<fileset dir="../buildAdds" includes="*" />
 		</copy>
 
 		<tar tarfile="${target}/${artifactId}-${version}-${scm.version}-binSimple.tar.gz" basedir="${release}" compression="gzip" excludes="*.tar.gz" />
