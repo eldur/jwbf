@@ -20,7 +20,6 @@
 package net.sourceforge.jwbf.core.actions;
 
 import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -31,9 +30,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Nonnull;
+
 import lombok.extern.slf4j.Slf4j;
 import net.sourceforge.jwbf.JWBF;
-import net.sourceforge.jwbf.core.actions.util.ActionException;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.core.actions.util.ProcessException;
 
@@ -107,11 +107,8 @@ public class HttpActionClient {
    * @param contentProcessable
    *          a
    * @return message, never null
-   * @throws ActionException
-   *           on problems with http, cookies and io
-   * @throws ProcessException
-   *           on inner problems
    */
+  @Nonnull
   public synchronized String performAction(ContentProcessable contentProcessable) {
 
     String out = "";
@@ -175,7 +172,7 @@ public class HttpActionClient {
     debug(requestBase, ha, contentProcessable);
     HttpResponse res = execute(requestBase);
 
-    String out = toStringResponse(res);
+    String out = writeToString(ha, res);
 
     out = contentProcessable.processReturningText(out, ha);
 
@@ -196,19 +193,7 @@ public class HttpActionClient {
     }
   }
 
-  protected String toStringResponse(HttpResponse res) {
-    try {
-      ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
-
-      res.getEntity().writeTo(byteOut);
-      String out = new String(byteOut.toByteArray());
-      return out;
-    } catch (IOException e) {
-      throw new IllegalStateException(e);
-    }
-  }
-
-  protected StringBody newStringBody(String content, Charset charset) {
+  private StringBody newStringBody(String content, Charset charset) {
     try {
       return new StringBody(content, charset);
     } catch (UnsupportedEncodingException e) {
@@ -218,21 +203,13 @@ public class HttpActionClient {
 
   protected void consume(HttpResponse res) {
     try {
-      res.getEntity().consumeContent();
+      res.getEntity().getContent().close();
     } catch (IOException e) {
       throw new IllegalStateException(e);
     }
   }
 
-  /**
-   * Process a GET Message.
-   * 
-   * @param requestBase
-   *          a
-   * @param cp
-   *          a
-   * @return a returning message, not null
-   */
+  @Nonnull
   private String get(HttpRequestBase requestBase, ReturningText cp, HttpAction ha) {
     showCookies();
     debug(requestBase, ha, cp);
@@ -240,10 +217,8 @@ public class HttpActionClient {
 
     HttpResponse res = execute(requestBase);
 
-    StringBuffer sb = new StringBuffer();
-    writeToString(ha, res, sb);
+    out = writeToString(ha, res);
 
-    out = sb.toString();
     if (cp != null) {
       validateCookies(cp, ha);
       out = cp.processReturningText(out, ha);
@@ -252,7 +227,8 @@ public class HttpActionClient {
     return out;
   }
 
-  private void writeToString(HttpAction ha, HttpResponse res, StringBuffer sb) {
+  private String writeToString(HttpAction ha, HttpResponse res) {
+    StringBuffer sb = new StringBuffer();
     BufferedReader br = null;
     try {
       Charset charSet = Charset.forName(ha.getCharset());
@@ -273,6 +249,7 @@ public class HttpActionClient {
         }
       }
     }
+    return sb.toString();
   }
 
   private HttpResponse execute(HttpRequestBase requestBase) {
@@ -287,18 +264,13 @@ public class HttpActionClient {
     StatusLine statusLine = res.getStatusLine();
     int code = statusLine.getStatusCode();
     if (code >= HttpStatus.SC_BAD_REQUEST) {
+      consume(res);
       throw new ProcessException("invalid status: " + statusLine + "; for " + requestBase.getURI());
     }
     return res;
   }
 
-  /**
-   * Process a GET Message.
-   * 
-   * @param get
-   *          a
-   * @return a returning message, not null
-   */
+  @Nonnull
   public byte[] get(Get get) {
     showCookies();
     HttpGet authgets = new HttpGet(get.getRequest());
