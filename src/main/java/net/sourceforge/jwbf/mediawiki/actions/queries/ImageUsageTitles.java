@@ -53,8 +53,6 @@ public class ImageUsageTitles extends TitleQuery<String> {
   /** constant value for the illimit-parameter. **/
   private static final int LIMIT = 50;
 
-  private boolean init = true;
-
   private final MediaWikiBot bot;
 
   private final String imageName;
@@ -67,22 +65,12 @@ public class ImageUsageTitles extends TitleQuery<String> {
    * class). For the parameters, see
    * {@link ImageUsageTitles#generateRequest(String, String, String)}
    */
-  public ImageUsageTitles(MediaWikiBot bot, String imageName, int... namespaces)
-      {
+  public ImageUsageTitles(MediaWikiBot bot, String imageName, int... namespaces) {
     super(bot);
     this.bot = bot;
     this.imageName = imageName;
     this.namespaces = namespaces;
     switch (bot.getVersion()) {
-    case MW1_09:
-    case MW1_10:
-      handler = new Mw1_09Handler();
-      break;
-
-    case MW1_11:
-    case MW1_12:
-    case MW1_13:
-    case MW1_14:
     case MW1_15:
     case MW1_16:
       handler = new Mw1_11Handler();
@@ -204,7 +192,8 @@ public class ImageUsageTitles extends TitleQuery<String> {
     @Override
     public Get generateRequest(String imageName, String namespace) {
 
-      String uS = MediaWiki.URL_API + "?action=query&list=imageusage"
+      String uS = MediaWiki.URL_API
+          + "?action=query&list=imageusage"
           + "&iutitle="
           + MediaWiki.encode(imageName)
           + ((namespace != null && namespace.length() != 0) ? ("&iunamespace=" + MediaWiki
@@ -264,7 +253,8 @@ public class ImageUsageTitles extends TitleQuery<String> {
     @Override
     public Get generateRequest(String imageName, String namespace) {
 
-      String uS = MediaWiki.URL_API + "?action=query&list=imageusage"
+      String uS = MediaWiki.URL_API
+          + "?action=query&list=imageusage"
           + "&iutitle="
           + MediaWiki.encode(imageName)
           + ((namespace != null && namespace.length() != 0) ? ("&iunamespace=" + MediaWiki
@@ -292,60 +282,6 @@ public class ImageUsageTitles extends TitleQuery<String> {
 
       Pattern p = Pattern.compile("<query-continue>.*?"
           + "<imageusage *iucontinue=\"([^\"]*)\" */>" + ".*?</query-continue>", Pattern.DOTALL
-          | Pattern.MULTILINE);
-
-      Matcher m = p.matcher(s);
-
-      if (m.find()) {
-        return m.group(1);
-      } else {
-        return "";
-      }
-
-    }
-
-  }
-
-  private class Mw1_09Handler extends VersionHandler {
-
-    @Override
-    public Get generateContinueRequest(String imageName, String namespace, String ilcontinue) {
-
-      String uS = MediaWiki.URL_API + "?action=query&list=imagelinks" + "&ilcontinue="
-          + MediaWiki.encode(ilcontinue) + "&illimit=" + LIMIT + "&format=xml";
-      return new Get(uS);
-    }
-
-    @Override
-    public Get generateRequest(String imageName, String namespace) {
-
-      String uS = MediaWiki.URL_API + "?action=query&list=imagelinks"
-          + "&titles="
-          + MediaWiki.encode(imageName)
-          + ((namespace != null && namespace.length() != 0) ? ("&ilnamespace=" + MediaWiki
-              .encode(namespace)) : "") + "&illimit=" + LIMIT + "&format=xml";
-      return new Get(uS);
-
-    }
-
-    @Override
-    public Collection<String> parseArticleTitles(String s) {
-      Collection<String> titleCollection = Lists.newArrayList();
-      Pattern p = Pattern.compile("<il pageid=\".*?\" ns=\".*?\" title=\"(.*?)\" />");
-
-      Matcher m = p.matcher(s);
-
-      while (m.find()) {
-        titleCollection.add(m.group(1));
-      }
-      return titleCollection;
-    }
-
-    @Override
-    public String parseHasMore(String s) {
-
-      Pattern p = Pattern.compile("<query-continue>.*?"
-          + "<imagelinks *ilcontinue=\"([^\"]*)\" */>" + ".*?</query-continue>", Pattern.DOTALL
           | Pattern.MULTILINE);
 
       Matcher m = p.matcher(s);

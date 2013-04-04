@@ -95,9 +95,6 @@ public class BacklinkTitles extends TitleQuery<String> {
     super(bot);
     assert bot != null;
     assert articleName != null && redirectFilter != null;
-    if (bot.getVersion() == Version.MW1_09 && redirectFilter != RedirectFilter.all) {
-      throw new VersionException("redirect filtering is not available in this MediaWiki version");
-    }
     this.redirectFilter = redirectFilter;
     this.namespaces = namespaces;
 
@@ -180,14 +177,6 @@ public class BacklinkTitles extends TitleQuery<String> {
 
     switch (apiVersion) {
 
-    case MW1_09:
-    case MW1_10:
-      return new RequestBuilder1x09();
-
-    case MW1_11:
-    case MW1_12:
-    case MW1_13:
-    case MW1_14:
     case MW1_15:
     case MW1_16:
       return new RequestBuilder1x11();

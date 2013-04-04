@@ -1,10 +1,11 @@
 package net.sourceforge.jwbf.mediawiki;
 
 import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.DEVELOPMENT;
-import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_09;
-import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_10;
-import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_11;
-import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_12;
+import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_16;
+import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_17;
+import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_18;
+import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_19;
+import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_20;
 import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.UNKNOWN;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertFalse;
@@ -38,10 +39,10 @@ public class VersionDetectionTest {
   @Test
   public void testVersionEq() {
 
-    assertTrue(MW1_11.greaterEqThen(MW1_09));
-    assertTrue(MW1_11.greaterEqThen(MW1_10));
-    assertTrue(MW1_11.greaterEqThen(MW1_11));
-    assertFalse(MW1_11.greaterEqThen(MW1_12));
+    assertTrue(MW1_18.greaterEqThen(MW1_16));
+    assertTrue(MW1_18.greaterEqThen(MW1_17));
+    assertTrue(MW1_18.greaterEqThen(MW1_17));
+    assertFalse(MW1_19.greaterEqThen(MW1_20));
   }
 
   // @Test
@@ -52,25 +53,25 @@ public class VersionDetectionTest {
   // }
 
   @Test
-  public void testMW109() {
-    Version[] vt = MWAction.findSupportedVersions(VersionSupportTest109.class);
-    Version[] vx = { MW1_09 };
+  public void testMW_A() {
+    Version[] vt = MWAction.findSupportedVersions(VersionSupportTest_A.class);
+    Version[] vx = { MW1_17 };
     assertArrayEquals(vx, vt);
 
   }
 
   @Test
-  public void testMW109110() {
-    Version[] vt = MWAction.findSupportedVersions(VersionSupportTest109110.class);
-    Version[] vx = { MW1_09, MW1_10 };
+  public void testMW_A_B() {
+    Version[] vt = MWAction.findSupportedVersions(VersionSupportTest_A_B.class);
+    Version[] vx = { MW1_17, MW1_18 };
     assertArrayEquals(vx, vt);
 
   }
 
   @Test
-  public void testMW109110ext() {
-    Version[] vt = MWAction.findSupportedVersions(VersionSupportTest109110ext.class);
-    Version[] vx = { MW1_09, MW1_10 };
+  public void testMW_A_B_ext() {
+    Version[] vt = MWAction.findSupportedVersions(VersionSupportTest_A_B_ext.class);
+    Version[] vx = { MW1_17, MW1_18 };
     assertArrayEquals(vx, vt);
 
   }
@@ -84,18 +85,18 @@ public class VersionDetectionTest {
   }
 
   @Test
-  public void testInterface111112() {
+  public void testInterface_C_D() {
     Version[] vt = MWAction.findSupportedVersions(VersionSupportInDectable.class);
-    Version[] vx = { MW1_11, MW1_12 };
+    Version[] vx = { MW1_19, MW1_20 };
     assertArrayEquals(vx, vt);
 
   }
 
-  @SupportedBy({ MW1_09 })
-  protected class VersionSupportTest109 extends MWAction {
+  @SupportedBy({ MW1_17 })
+  protected class VersionSupportTest_A extends MWAction {
 
     @SuppressWarnings("deprecation")
-    protected VersionSupportTest109() {
+    protected VersionSupportTest_A() {
       super();
     }
 
@@ -105,11 +106,11 @@ public class VersionDetectionTest {
 
   }
 
-  @SupportedBy({ MW1_09, MW1_10 })
-  protected class VersionSupportTest109110 extends MWAction {
+  @SupportedBy({ MW1_17, MW1_18 })
+  protected class VersionSupportTest_A_B extends MWAction {
 
     @SuppressWarnings("deprecation")
-    protected VersionSupportTest109110() {
+    protected VersionSupportTest_A_B() {
       super();
     }
 
@@ -119,15 +120,15 @@ public class VersionDetectionTest {
 
   }
 
-  protected class VersionSupportTest109110ext extends VersionSupportTest109110 {
+  protected class VersionSupportTest_A_B_ext extends VersionSupportTest_A_B {
 
-    protected VersionSupportTest109110ext() {
+    protected VersionSupportTest_A_B_ext() {
       super();
     }
 
   }
 
-  @SupportedBy({ MW1_11, MW1_12 })
+  @SupportedBy({ MW1_19, MW1_20 })
   protected class VersionSupportInDectable {
 
   }

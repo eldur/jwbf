@@ -7,9 +7,6 @@ import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_18;
 import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_19;
 import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_20;
 
-import java.io.IOException;
-import java.io.Reader;
-import java.io.StringReader;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
@@ -22,11 +19,7 @@ import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.actions.util.SupportedBy;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 
-import org.jdom.Document;
 import org.jdom.Element;
-import org.jdom.JDOMException;
-import org.jdom.input.SAXBuilder;
-import org.xml.sax.InputSource;
 
 /**
  * 
@@ -77,34 +70,17 @@ public class GetRendering extends MWAction {
   public String processAllReturningText(String s) {
     html = findElement("text", s).getTextTrim();
     html = html.replace("\n", "");
-    switch (bot.getVersion()) {
-    case MW1_12:
-      break;
-    default:
-      int last = html.lastIndexOf("<!--");
-      html = html.substring(0, last);
-    }
+    int last = html.lastIndexOf("<!--");
+    html = html.substring(0, last);
     return "";
   }
 
   protected Element findElement(String elementName, String xml) {
-    SAXBuilder builder = new SAXBuilder();
-    Element root = null;
-    try {
-      Reader i = new StringReader(xml);
-      Document doc = builder.build(new InputSource(i));
-
-      root = doc.getRootElement();
-
-    } catch (JDOMException e) {
-      e.printStackTrace();
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-    if (root != null)
+    Element root = getRootElement(xml);
+    if (root != null) {
       return findContent(root, elementName);
-    else
-      return null; // XXX okay ?
+    }
+    throw new IllegalStateException("root element shoud be");
   }
 
   private Element findContent(final Element e, final String name) {
@@ -115,7 +91,6 @@ public class GetRendering extends MWAction {
       Element element = el.next();
 
       if (element.getQualifiedName().equalsIgnoreCase(name)) {
-        // System.out.println(element.getQualifiedName());
         return element;
 
       } else {

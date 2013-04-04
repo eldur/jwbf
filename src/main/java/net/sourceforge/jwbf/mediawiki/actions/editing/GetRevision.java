@@ -18,7 +18,6 @@
  */
 package net.sourceforge.jwbf.mediawiki.actions.editing;
 
-import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_11;
 import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_15;
 import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_16;
 import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_17;
@@ -70,8 +69,6 @@ public class GetRevision extends MWAction {
 
   private boolean singleProcess = true;
 
-  private final Version botVersion;
-
   /**
    * TODO follow redirects. TODO change constructor fild ordering; bot
    * 
@@ -84,7 +81,6 @@ public class GetRevision extends MWAction {
    */
   public GetRevision(Version v, final String articlename, final int properties) {
     super(v);
-    botVersion = v;
     // if (!bot.getUserinfo().getRights().contains("read")) {
     // throw new
     // ActionException("reading is not permited, make sure that this account is able to read");
@@ -144,10 +140,10 @@ public class GetRevision extends MWAction {
     if ((property & USER) > 0) {
       properties += "user|";
     }
-    if ((property & IDS) > 0 && botVersion.greaterEqThen(MW1_11)) {
+    if ((property & IDS) > 0) {
       properties += "ids|";
     }
-    if ((property & FLAGS) > 0 && botVersion.greaterEqThen(MW1_11)) {
+    if ((property & FLAGS) > 0) {
       properties += "flags|";
     }
 

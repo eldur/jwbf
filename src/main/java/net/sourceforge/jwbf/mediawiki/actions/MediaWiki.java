@@ -76,40 +76,7 @@ public final class MediaWiki {
    * 
    */
   public enum Version {
-    /**
-     * @deprecated requires PHP 5.2 expired 2011-01-06
-     */
-    @Deprecated
-    MW1_09,
-    /**
-     * @deprecated requires PHP 5.2 expired 2011-01-06
-     */
-    @Deprecated
-    MW1_10,
-    /**
-     * @deprecated requires PHP 5.2 expired 2011-01-06
-     */
-    @Deprecated
-    MW1_11,
-    /**
-     * @deprecated requires PHP 5.2 expired 2011-01-06
-     */
-    @Deprecated
-    MW1_12,
-    /**
-     * Released 2008-08
-     * 
-     * @deprecated requires PHP 5.2 expired 2011-01-06; is installable but doesn't work
-     */
-    @Deprecated
-    MW1_13,
-    /**
-     * Released 2009-02
-     * 
-     * @deprecated database installer doesn't work anymore
-     */
-    @Deprecated
-    MW1_14
+    UNKNOWN
     /**
      * Released 2009-06
      */
@@ -137,7 +104,7 @@ public final class MediaWiki {
     /**
      * 
      */
-    , UNKNOWN, DEVELOPMENT;
+    , DEVELOPMENT;
 
     private static Version last = UNKNOWN;
 

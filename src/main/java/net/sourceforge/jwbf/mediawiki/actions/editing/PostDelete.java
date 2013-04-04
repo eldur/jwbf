@@ -171,7 +171,7 @@ public class PostDelete extends MWAction {
   private boolean containsError(Element rootElement) {
     Element elem = rootElement.getChild("error");
     if (elem != null) {
-      log.error(elem.getAttributeValue("info"));
+      log.warn(elem.getAttributeValue("info"));
       if (elem.getAttributeValue("code").equals("inpermissiondenied")) {
         log.error("Adding '$wgGroupPermissions['bot']['delete'] = true;'"
             + " to your MediaWiki's LocalSettings.php might remove this problem.");

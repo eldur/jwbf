@@ -35,7 +35,6 @@ import javax.annotation.Nonnull;
 import lombok.extern.slf4j.Slf4j;
 import net.sourceforge.jwbf.JWBF;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
-import net.sourceforge.jwbf.core.actions.util.ProcessException;
 
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
@@ -261,7 +260,8 @@ public class HttpActionClient {
     int code = statusLine.getStatusCode();
     if (code >= HttpStatus.SC_BAD_REQUEST) {
       consume(res);
-      throw new ProcessException("invalid status: " + statusLine + "; for " + requestBase.getURI());
+      throw new IllegalStateException("invalid status: " + statusLine + "; for "
+          + requestBase.getURI());
     }
     return res;
   }

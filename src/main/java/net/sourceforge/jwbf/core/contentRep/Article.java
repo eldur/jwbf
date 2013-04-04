@@ -242,7 +242,10 @@ public class Article implements ArticleMeta, ContentSetable {
 
   /**
    * {@inheritDoc}
+   * 
+   * @deprecated see inheritDoc
    */
+  @Deprecated
   public boolean isRedirect() {
     return sa.isRedirect();
   }

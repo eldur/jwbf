@@ -243,7 +243,10 @@ public class SimpleArticle implements ArticleMeta, Serializable, Cloneable, Cont
 
   /**
    * {@inheritDoc}
+   * 
+   * @deprecated see inheritDoc
    */
+  @Deprecated
   public boolean isRedirect() {
     if (redirectPattern.matcher(text).matches()) {
       return true;

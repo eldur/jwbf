@@ -1,15 +1,13 @@
 package net.sourceforge.jwbf.mediawiki.actions.editing;
 
-import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_12;
-import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_13;
-import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_14;
 import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_15;
 import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_16;
-
-import java.io.IOException;
-import java.io.StringReader;
-
+import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_17;
+import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_18;
+import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_19;
+import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_20;
 import lombok.extern.slf4j.Slf4j;
+import net.sourceforge.jwbf.core.RequestBuilder;
 import net.sourceforge.jwbf.core.actions.Post;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.core.actions.util.ProcessException;
@@ -21,8 +19,8 @@ import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
-import org.jdom.input.SAXBuilder;
-import org.xml.sax.InputSource;
+
+import com.google.common.base.Strings;
 
 /**
  * Action class using the MediaWiki-API's <a
@@ -57,7 +55,7 @@ import org.xml.sax.InputSource;
  * @author Christoph Giesel
  */
 @Slf4j
-@SupportedBy({ MW1_12, MW1_13, MW1_14, MW1_15, MW1_16 })
+@SupportedBy({ MW1_15, MW1_16, MW1_17, MW1_18, MW1_19, MW1_20 })
 public class MovePage extends MWAction {
 
   private final String oldtitle;
@@ -125,12 +123,33 @@ public class MovePage extends MWAction {
       log.trace("enter MovePage.generateMoveRequest(String)");
     }
 
-    String uS = MediaWiki.URL_API + "?action=move" + "&from=" + MediaWiki.encode(oldtitle) + "&to="
-        + MediaWiki.encode(newtitle) + "&token=" + MediaWiki.encode(token.getToken())
-        + (withsubpages ? "&movesubpages" : "") + (noredirect ? "&noredirect" : "")
-        + ((reason != null && reason.length() != 0) ? "&reason=" + MediaWiki.encode(reason) : "")
-        + "&movetalk&format=xml";
+    RequestBuilder requestBuilder = new RequestBuilder(MediaWiki.URL_API);
+    requestBuilder //
+        .param("action", "move") //
+        .param("from", MediaWiki.encode(oldtitle)) //
+        .param("to", MediaWiki.encode(newtitle)) //
+        .param("token", MediaWiki.encode(token.getToken())) //
+        .param("movetalk", "") // XXX
+        .param("format", "xml") //
+    ;
 
+    if (withsubpages) {
+      requestBuilder //
+          .param("movesubpages", "") //
+      ;
+    }
+    if (noredirect) {
+      requestBuilder //
+          .param("noredirect", "") //
+      ;
+    }
+    if (!Strings.isNullOrEmpty(reason)) {
+      requestBuilder //
+          .param("reason", MediaWiki.encode(reason)) //
+      ;
+    }
+
+    String uS = requestBuilder.build();
     if (log.isDebugEnabled()) {
       log.debug("move url: \"" + uS + "\"");
     }
@@ -158,23 +177,9 @@ public class MovePage extends MWAction {
       if (log.isDebugEnabled()) {
         log.debug("Got returning text: \"" + s + "\"");
       }
-      SAXBuilder builder = new SAXBuilder();
-      try {
-        Document doc = builder.build(new InputSource(new StringReader(s)));
-        if (!containsError(doc)) {
-          process(doc);
-        }
-      } catch (JDOMException e) {
-        String msg = e.getMessage();
-        if (s.startsWith("unknown_action:")) {
-          msg = "unknown_action; Adding '$wgEnableWriteAPI = true;' to your MediaWiki's "
-              + "LocalSettings.php might remove this problem.";
-        }
-        log.error(msg, e);
-        throw new ProcessException(msg, e);
-      } catch (IOException e) {
-        log.error(e.getMessage(), e);
-        throw new ProcessException(e);
+      Element doc = getRootElement(s);
+      if (!containsError(doc)) {
+        process(doc);
       }
       setHasMoreMessages(false);
     }
@@ -186,14 +191,14 @@ public class MovePage extends MWAction {
    * Determines if the given XML {@link Document} contains an error message which then would printed
    * by the logger.
    * 
-   * @param doc
+   * @param rootElement
    *          XML <code>Document</code>
    * @throws JDOMException
    *           thrown if the document could not be parsed
    * @return if
    */
-  private boolean containsError(Document doc) {
-    Element elem = doc.getRootElement().getChild("error");
+  private boolean containsError(Element rootElement) {
+    Element elem = rootElement.getChild("error");
     if (elem != null) {
       log.error(elem.getAttributeValue("code") + ": " + elem.getAttributeValue("info"));
 
@@ -205,13 +210,9 @@ public class MovePage extends MWAction {
   /**
    * Processing the XML {@link Document} returned from the MediaWiki API.
    * 
-   * @param doc
-   *          XML <code>Document</code>
-   * @throws JDOMException
-   *           thrown if the document could not be parsed
    */
-  private void process(Document doc) {
-    Element elem = doc.getRootElement().getChild("move");
+  private void process(Element rootElement) {
+    Element elem = rootElement.getChild("move");
     if (elem != null) {
       // process reply for delete request
       if (log.isInfoEnabled()) {

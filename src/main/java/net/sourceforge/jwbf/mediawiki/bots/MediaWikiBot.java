@@ -26,7 +26,6 @@ import net.sourceforge.jwbf.mediawiki.actions.editing.GetRevision;
 import net.sourceforge.jwbf.mediawiki.actions.editing.PostDelete;
 import net.sourceforge.jwbf.mediawiki.actions.editing.PostModifyContent;
 import net.sourceforge.jwbf.mediawiki.actions.login.PostLogin;
-import net.sourceforge.jwbf.mediawiki.actions.login.PostLoginOld;
 import net.sourceforge.jwbf.mediawiki.actions.meta.GetUserinfo;
 import net.sourceforge.jwbf.mediawiki.actions.meta.GetVersion;
 import net.sourceforge.jwbf.mediawiki.actions.meta.Siteinfo;
@@ -156,18 +155,7 @@ public class MediaWikiBot implements WikiBot {
    */
   public void login(final String username, final String passwd, final String domain) {
     LoginData login = new LoginData();
-    switch (getVersion()) {
-    case MW1_09:
-    case MW1_10:
-    case MW1_11:
-    case MW1_12:
-      performAction(new PostLoginOld(username, passwd, domain, login));
-      break;
-
-    default:
-      performAction(new PostLogin(username, passwd, domain, login));
-      break;
-    }
+    performAction(new PostLogin(username, passwd, domain, login));
 
     this.login = login;
     loginChangeUserInfo = true;

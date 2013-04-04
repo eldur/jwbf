@@ -71,8 +71,7 @@ public class TemplateUserTitles extends TitleQuery<String> {
    * class). For the parameters, see
    * {@link TemplateUserTitles#generateRequest(String, String, String)}
    */
-  public TemplateUserTitles(MediaWikiBot bot, String templateName, int... namespaces)
-      {
+  public TemplateUserTitles(MediaWikiBot bot, String templateName, int... namespaces) {
     super(bot);
     this.bot = bot;
     this.templateName = templateName;
@@ -96,18 +95,10 @@ public class TemplateUserTitles extends TitleQuery<String> {
     String uS = "";
     String titleVal = "";
     if (eicontinue == null) {
-      switch (bot.getVersion()) {
-      case MW1_09:
-      case MW1_10:
-        titleVal = "&titles=";
-        break;
+      titleVal = "&eititle=";
 
-      default:
-        titleVal = "&eititle=";
-        break;
-      }
-
-      uS = MediaWiki.URL_API + "?action=query&list=embeddedin"
+      uS = MediaWiki.URL_API
+          + "?action=query&list=embeddedin"
 
           + titleVal
           + MediaWiki.encode(templateName)
@@ -116,7 +107,8 @@ public class TemplateUserTitles extends TitleQuery<String> {
 
     } else {
 
-      uS = MediaWiki.URL_API + "?action=query&list=embeddedin"
+      uS = MediaWiki.URL_API
+          + "?action=query&list=embeddedin"
           + "&eicontinue="
           + MediaWiki.encode(eicontinue)
           + "&eilimit="
@@ -124,23 +116,7 @@ public class TemplateUserTitles extends TitleQuery<String> {
           + ((namespace != null && namespace.length() != 0) ? ("&einamespace=" + MediaWiki
               .encode(namespace)) : "") + "&format=xml";
 
-      switch (bot.getVersion()) {
-      case MW1_09:
-      case MW1_10:
-      case MW1_11:
-      case MW1_12:
-      case MW1_13:
-      case MW1_14:
-      case MW1_15:
-      case MW1_16:
-        break;
-
-      case MW1_17:
-      default:
-        uS += "&eititle=" + MediaWiki.encode(templateName);
-        break;
-
-      }
+      uS += "&eititle=" + MediaWiki.encode(templateName);
 
     }
 
@@ -157,7 +133,6 @@ public class TemplateUserTitles extends TitleQuery<String> {
    * @return empty string
    */
   public String processAllReturningText(final String s) {
-    // System.out.println(s);
     parseArticleTitles(s);
     parseHasMore(s);
     titleIterator = titleCollection.iterator();

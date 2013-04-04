@@ -45,19 +45,9 @@ public class GetUserinfo extends MWAction implements Userinfo {
 
   public GetUserinfo(Version v) {
     super(v);
-    switch (v) {
-    case MW1_11:
-      msg = new Get(MediaWiki.URL_API + "?" + "action=query&" + "meta=userinfo&" + "uiprop="
-          + MediaWiki.encode("blockinfo|hasmsg|groups|rights") + "&" + "format=xml");
-
-      break;
-    default:
-      msg = new Get(MediaWiki.URL_API + "?" + "action=query&" + "meta=userinfo&" + "uiprop="
-          + MediaWiki.encode("blockinfo|hasmsg|groups|rights|options|editcount|ratelimits") + "&"
-          + "format=xml");
-
-      break;
-    }
+    msg = new Get(MediaWiki.URL_API + "?" + "action=query&" + "meta=userinfo&" + "uiprop="
+        + MediaWiki.encode("blockinfo|hasmsg|groups|rights|options|editcount|ratelimits") + "&"
+        + "format=xml");
 
   }
 

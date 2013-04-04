@@ -18,16 +18,14 @@
  */
 package net.sourceforge.jwbf.mediawiki.actions.queries;
 
-import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_15;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import lombok.extern.slf4j.Slf4j;
+import net.sourceforge.jwbf.core.RequestBuilder;
 import net.sourceforge.jwbf.core.actions.Get;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
-import net.sourceforge.jwbf.mediawiki.actions.util.SupportedBy;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 
 /**
@@ -35,12 +33,9 @@ import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
  * information see <a href=
  * "http://www.mediawiki.org/wiki/API:Query_-_Lists#categorymembers_.2F_cm">API documentation</a>.
  * 
- * TODO change visibilty to package, refactor test
- * 
  * @author Thomas Stock
  */
 @Slf4j
-@SupportedBy({ MW1_15 })
 abstract class CategoryMembers extends MWAction {
 
   /** constant value for the bllimit-parameter. **/
@@ -59,7 +54,7 @@ abstract class CategoryMembers extends MWAction {
    */
   protected final String categoryName;
 
-  protected RequestBuilder requestBuilder = null;
+  protected RequestGenerator requestBuilder = null;
 
   protected final int[] namespace;
   private String namespaceStr = "";
@@ -68,10 +63,9 @@ abstract class CategoryMembers extends MWAction {
    * The private constructor, which is used to create follow-up actions.
    * 
    * 
-   *           on version problems
+   * on version problems
    */
-  protected CategoryMembers(MediaWikiBot bot, String categoryName, int[] namespace)
-      {
+  protected CategoryMembers(MediaWikiBot bot, String categoryName, int[] namespace) {
     super(bot.getVersion());
     this.namespace = namespace.clone();
     namespaceStr = createNsString(namespace);
@@ -82,16 +76,7 @@ abstract class CategoryMembers extends MWAction {
   }
 
   private void createRequestor() {
-
-    switch (bot.getVersion()) {
-    case MW1_11:
-      requestBuilder = new RequestBuilder_1_11();
-      break;
-
-    default:
-      requestBuilder = new RequestBuilder();
-      break;
-    }
+    requestBuilder = new RequestGenerator();
 
   }
 
@@ -195,75 +180,45 @@ abstract class CategoryMembers extends MWAction {
 
   protected abstract void addCatItem(String title, int pageid, int ns);
 
-  protected class RequestBuilder_1_11 extends RequestBuilder {
+  protected class RequestGenerator {
 
-    RequestBuilder_1_11() {
-      super();
-    }
+    private static final String CMTITLE = "cmtitle";
 
-    @Override
-    String continiue(String cmcontinue) {
-      String uS = "";
-      String nsinj = "";
-      if (namespaceStr.length() > 0) {
-        nsinj = "&cmnamespace=" + MediaWiki.encode(namespaceStr);
-      }
-      uS = MediaWiki.URL_API + "?action=query&list=categorymembers" + "&cmcategory="
-          + MediaWiki.encode(categoryName) + nsinj + "&cmcontinue=" + MediaWiki.encode(cmcontinue)
-          + "&cmlimit=" + LIMIT + "&format=xml";
-      return uS;
-    }
-
-    @Override
-    String first(String categoryName) {
-      String uS = "";
-      String nsinj = "";
-      if (namespaceStr.length() > 0) {
-        nsinj = "&cmnamespace=" + MediaWiki.encode(namespaceStr);
-      }
-
-      uS = MediaWiki.URL_API + "?action=query&list=categorymembers" + "&cmcategory="
-          + MediaWiki.encode(categoryName) + nsinj + "&cmlimit=" + LIMIT + "&format=xml";
-      return uS;
-    }
-
-  }
-
-  protected class RequestBuilder {
-
-    RequestBuilder() {
+    RequestGenerator() {
 
     }
 
     String continiue(String cmcontinue) {
-      String uS = "";
-      String nsinj = "";
-      if (namespaceStr.length() > 0) {
-        nsinj = "&cmnamespace=" + MediaWiki.encode(namespaceStr);
-      }
+      RequestBuilder requestBuilder = newRequestBuilder();
 
+      requestBuilder.param("cmcontinue", MediaWiki.encode(cmcontinue));
+      requestBuilder.param(CMTITLE, "Category:" + MediaWiki.encode(categoryName));
       // TODO: do not add Category: - instead, change other methods' descs (e.g.
       // in MediaWikiBot)
+      return requestBuilder.build();
+    }
 
-      uS = MediaWiki.URL_API + "?action=query&list=categorymembers" + "&cmtitle=Category:"
-          + MediaWiki.encode(categoryName) + nsinj + "&cmcontinue=" + MediaWiki.encode(cmcontinue)
-          + "&cmlimit=" + LIMIT + "&format=xml";
-      return uS;
+    private RequestBuilder newRequestBuilder() {
+      RequestBuilder requestBuilder = new RequestBuilder(MediaWiki.URL_API);
+      if (namespaceStr.length() > 0) {
+        requestBuilder.param("cmnamespace", MediaWiki.encode(namespaceStr));
+      }
+
+      requestBuilder //
+          .param("action", "query") //
+          .param("list", "categorymembers") //
+          .param("cmlimit", LIMIT + "") //
+          .param("format", "xml") //
+      ;
+      return requestBuilder;
     }
 
     String first(String categoryName) {
-      String uS = "";
-      String nsinj = "";
-      if (namespaceStr.length() > 0) {
-        nsinj = "&cmnamespace=" + MediaWiki.encode(namespaceStr);
-      }
 
-      // TODO: do not add Category: - instead, change other methods' descs (e.g.
-      // in MediaWikiBot)
+      RequestBuilder requestBuilder = newRequestBuilder();
+      requestBuilder.param(CMTITLE, "Category:" + MediaWiki.encode(categoryName));
 
-      uS = MediaWiki.URL_API + "?action=query&list=categorymembers" + "&cmtitle=Category:"
-          + MediaWiki.encode(categoryName) + nsinj + "&cmlimit=" + LIMIT + "&format=xml";
-      return uS;
+      return requestBuilder.build();
     }
 
   }

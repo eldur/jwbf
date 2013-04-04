@@ -1,29 +1,30 @@
 package net.sourceforge.jwbf.mediawiki.live.auto;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 import java.util.Collection;
 import java.util.Set;
 
+import net.sourceforge.jwbf.TestHelper;
 import net.sourceforge.jwbf.core.contentRep.Article;
 import net.sourceforge.jwbf.mediawiki.VersionTestClassVerifier;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
-import net.sourceforge.jwbf.mediawiki.actions.queries.AllPageTitles;
+import net.sourceforge.jwbf.mediawiki.actions.editing.MovePage;
 
+import org.junit.Before;
 import org.junit.ClassRule;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Verifier;
 import org.junit.runners.Parameterized.Parameters;
 
-@Ignore("because incomplete")
 public class MovePageTest extends ParamHelper {
 
   @ClassRule
   public static VersionTestClassVerifier classVerifier = new VersionTestClassVerifier(
-      AllPageTitles.class);
+      MovePage.class);
 
   @Rule
   public Verifier successRegister = classVerifier.getSuccessRegister(this);
@@ -33,6 +34,10 @@ public class MovePageTest extends ParamHelper {
     return ParamHelper.prepare(Version.valuesStable());
   }
 
+  private final String oldPage = "old";
+  private final String newPage = "new";
+  private final String lastPage = "last";
+
   public MovePageTest(Version v) {
     super(v, classVerifier);
   }
@@ -41,16 +46,29 @@ public class MovePageTest extends ParamHelper {
   public final void test() {
     Set<String> rights = bot.getUserinfo().getRights();
     assertTrue("bot has no move rights", rights.contains("move"));
-    // TODO complete
-    String oldPage = "old";
-    String newPage = "new";
+
     Article a = bot.getArticle(oldPage);
-    // a.delete();
-    a.setText("A");
+    String randomText = TestHelper.getRandomAlpha(23);
+    a.setText(randomText);
     a.save();
-    fail("rev: " + a.getRevisionId());
-    // bot.performAction(new MovePage(bot, "old", "new", "no reason", true,
-    // true));
-    // fail("ups " + rights);
+    bot.performAction(new MovePage(bot, oldPage, newPage, "no reason", false, true));
+    Article b = bot.getArticle(newPage);
+    assertFalse(b.getText().startsWith("#"));
+    assertEquals(randomText, b.getText());
+    randomText = TestHelper.getRandomAlpha(23);
+    b.setText(randomText);
+    b.save();
+    bot.performAction(new MovePage(bot, newPage, lastPage, "no reason", false, false));
+    Article c = bot.getArticle(lastPage);
+    assertEquals(randomText, c.getText());
+    b = bot.getArticle(newPage);
+    assertTrue(b.getText().startsWith("#"));
+  }
+
+  @Before
+  public void before() {
+    bot.delete(newPage);
+    bot.delete(oldPage);
+    bot.delete(lastPage);
   }
 }
