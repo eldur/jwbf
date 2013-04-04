@@ -130,7 +130,7 @@ public class MovePage extends MWAction {
       log.trace("enter MovePage.generateMoveRequest(String)");
     }
 
-    String uS = "/api.php" + "?action=move" + "&from=" + MediaWiki.encode(oldtitle) + "&to="
+    String uS = MediaWiki.URL_API + "?action=move" + "&from=" + MediaWiki.encode(oldtitle) + "&to="
         + MediaWiki.encode(newtitle) + "&token=" + MediaWiki.encode(token.getToken())
         + (withsubpages ? "&movesubpages" : "") + (noredirect ? "&noredirect" : "")
         + ((reason != null && reason.length() != 0) ? "&reason=" + MediaWiki.encode(reason) : "")

@@ -107,7 +107,7 @@ public class TemplateUserTitles extends TitleQuery<String> {
         break;
       }
 
-      uS = "/api.php?action=query&list=embeddedin"
+      uS = MediaWiki.URL_API + "?action=query&list=embeddedin"
 
           + titleVal
           + MediaWiki.encode(templateName)
@@ -116,7 +116,7 @@ public class TemplateUserTitles extends TitleQuery<String> {
 
     } else {
 
-      uS = "/api.php?action=query&list=embeddedin"
+      uS = MediaWiki.URL_API + "?action=query&list=embeddedin"
           + "&eicontinue="
           + MediaWiki.encode(eicontinue)
           + "&eilimit="

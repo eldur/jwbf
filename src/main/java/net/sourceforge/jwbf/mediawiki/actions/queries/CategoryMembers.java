@@ -210,7 +210,7 @@ abstract class CategoryMembers extends MWAction {
       if (namespaceStr.length() > 0) {
         nsinj = "&cmnamespace=" + MediaWiki.encode(namespaceStr);
       }
-      uS = "/api.php?action=query&list=categorymembers" + "&cmcategory="
+      uS = MediaWiki.URL_API + "?action=query&list=categorymembers" + "&cmcategory="
           + MediaWiki.encode(categoryName) + nsinj + "&cmcontinue=" + MediaWiki.encode(cmcontinue)
           + "&cmlimit=" + LIMIT + "&format=xml";
       return uS;
@@ -224,7 +224,7 @@ abstract class CategoryMembers extends MWAction {
         nsinj = "&cmnamespace=" + MediaWiki.encode(namespaceStr);
       }
 
-      uS = "/api.php?action=query&list=categorymembers" + "&cmcategory="
+      uS = MediaWiki.URL_API + "?action=query&list=categorymembers" + "&cmcategory="
           + MediaWiki.encode(categoryName) + nsinj + "&cmlimit=" + LIMIT + "&format=xml";
       return uS;
     }
@@ -247,7 +247,7 @@ abstract class CategoryMembers extends MWAction {
       // TODO: do not add Category: - instead, change other methods' descs (e.g.
       // in MediaWikiBot)
 
-      uS = "/api.php?action=query&list=categorymembers" + "&cmtitle=Category:"
+      uS = MediaWiki.URL_API + "?action=query&list=categorymembers" + "&cmtitle=Category:"
           + MediaWiki.encode(categoryName) + nsinj + "&cmcontinue=" + MediaWiki.encode(cmcontinue)
           + "&cmlimit=" + LIMIT + "&format=xml";
       return uS;
@@ -263,7 +263,7 @@ abstract class CategoryMembers extends MWAction {
       // TODO: do not add Category: - instead, change other methods' descs (e.g.
       // in MediaWikiBot)
 
-      uS = "/api.php?action=query&list=categorymembers" + "&cmtitle=Category:"
+      uS = MediaWiki.URL_API + "?action=query&list=categorymembers" + "&cmtitle=Category:"
           + MediaWiki.encode(categoryName) + nsinj + "&cmlimit=" + LIMIT + "&format=xml";
       return uS;
     }

@@ -59,7 +59,8 @@ public class PostLoginOld extends MWAction implements CookieValidateable {
     this.username = username;
     this.login = login;
 
-    Post pm = new Post("/index.php?title=Special:Userlogin&action=submitlogin&type=login");
+    Post pm = new Post(MediaWiki.URL_INDEX
+        + "?title=Special:Userlogin&action=submitlogin&type=login");
     pm.addParam("wpLoginattempt", "Log in");
     pm.addParam("wpRemember", "1");
     pm.addParam("wpName", username);

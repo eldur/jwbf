@@ -116,7 +116,7 @@ public class PostDelete extends MWAction {
       log.trace("enter PostDelete.generateDeleteRequest(String)");
     }
 
-    String uS = "/api.php" + "?action=delete" + "&title=" + MediaWiki.encode(title) + "&token="
+    String uS = MediaWiki.URL_API + "?action=delete" + "&title=" + MediaWiki.encode(title) + "&token="
         + MediaWiki.encode(token.getToken()) + "&format=xml";
     if (reason != null) {
       uS = uS + "&reason=" + MediaWiki.encode(reason);

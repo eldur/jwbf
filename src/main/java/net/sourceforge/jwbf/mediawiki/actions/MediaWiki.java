@@ -21,10 +21,10 @@ package net.sourceforge.jwbf.mediawiki.actions;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
 import java.net.URLEncoder;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 
 /**
@@ -34,23 +34,10 @@ import com.google.common.collect.Lists;
  */
 public final class MediaWiki {
 
-  /**
-   * @deprecated use {@link #NS_MAIN} instead. Wrong value.
-   */
-  @Deprecated
-  public static final int ARTICLE = 1 << 1;
-  /**
-   * @deprecated use {@link #NS_MAIN} instead. Wrong value.
-   */
-  @Deprecated
-  public static final int MEDIA = 1 << 2;
-  /**
-   * @deprecated use {@link #NS_CATEGORY} instead.
-   */
-  @Deprecated
-  public static final int SUBCATEGORY = 1 << 3;
-
   static final String CHARSET = "UTF-8";
+
+  public static final String URL_API = "/api.php";
+  public static final String URL_INDEX = "/index.php";
 
   public static final int NS_MAIN = 0;
   public static final int NS_MAIN_TALK = 1;
@@ -75,10 +62,11 @@ public final class MediaWiki {
       NS_CATEGORY, NS_CATEGORY_TALK //
   };
 
-  public static final Set<String> BOT_GROUPS = new HashSet<String>();
+  public static final Set<String> BOT_GROUPS;
 
   static {
-    BOT_GROUPS.add("bot");
+
+    BOT_GROUPS = ImmutableSet.of("bot");
   }
 
   /**
@@ -188,24 +176,13 @@ public final class MediaWiki {
     }
 
     /**
-     * @deprecated use {@link #getLatest()} instead.
-     * @return the latest version
-     */
-    @Deprecated
-    public static Version getLast() {
-      return getLatest();
-    }
-
-    /**
      * 
      * @param v
      *          a
      * @return true if
      */
     public boolean greaterEqThen(Version v) {
-      if (v.getIntValue() > getIntValue())
-        return false;
-      return true;
+      return (v.getIntValue() <= getIntValue());
     }
 
     /**

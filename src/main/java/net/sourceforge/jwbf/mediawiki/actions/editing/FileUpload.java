@@ -90,7 +90,8 @@ public class FileUpload extends MWAction {
     }
 
     this.a = a;
-    String uS = "/index.php?title=" + MediaWiki.encode(a.getTitle()) + "&action=edit&dontcountme=s";
+    String uS = MediaWiki.URL_INDEX + "?title=" + MediaWiki.encode(a.getTitle())
+        + "&action=edit&dontcountme=s";
 
     g = new Get(uS);
 
@@ -122,7 +123,7 @@ public class FileUpload extends MWAction {
     String uS = "";
     // try {
     uS = "/Spezial:Hochladen";
-    uS = "/index.php?title=Special:Upload";
+    uS = MediaWiki.URL_INDEX + "?title=Special:Upload";
     // uS = "/index.php?title=" + URLEncoder.encode("Spezial:Hochladen",
     // MediaWikiBot.CHARSET);
     // + "&action=submit";

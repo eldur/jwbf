@@ -124,14 +124,14 @@ public class RecentchangeTitles extends TitleQuery<String> {
 
     String uS = "";
     if (rcstart.length() > 0) {
-      uS = "/api.php?action=query&list=recentchanges"
+      uS = MediaWiki.URL_API + "?action=query&list=recentchanges"
 
           + ((namespace != null) ? ("&rcnamespace=" + MediaWiki.encode(MWAction
               .createNsString(namespace))) : "") + "&rcstart=" + rcstart
           // + "&rcusertype=" // (dflt=not|bot)
           + "&rclimit=" + limit + "&format=xml";
     } else {
-      uS = "/api.php?action=query&list=recentchanges"
+      uS = MediaWiki.URL_API + "?action=query&list=recentchanges"
 
           + ((namespace != null) ? ("&rcnamespace=" + MediaWiki.encode(MWAction
               .createNsString(namespace))) : "")

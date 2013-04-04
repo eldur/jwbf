@@ -115,7 +115,7 @@ public class PostModifyContent extends MWAction {
         return apiGet;
 
       } catch (VersionException e) {
-        String request = new RequestBuilder("/index.php") //
+        String request = new RequestBuilder(MediaWiki.URL_INDEX) //
             .param("title", MediaWiki.encode(a.getTitle())) //
             .param("action", "edit") //
             .param("dontcountme", "s") //
@@ -129,7 +129,7 @@ public class PostModifyContent extends MWAction {
     }
     if (apiEdit) {
 
-      String request = new RequestBuilder("/api.php") //
+      String request = new RequestBuilder(MediaWiki.URL_API) //
           .param("action", "edit") //
           .param("format", "xml") //
           .param("title", MediaWiki.encode(a.getTitle())) //
@@ -151,7 +151,8 @@ public class PostModifyContent extends MWAction {
       postModify.addParam("token", apiReq.getToken());
 
     } else {
-      String uS = "/index.php?title=" + MediaWiki.encode(a.getTitle()) + "&action=submit";
+      String uS = MediaWiki.URL_INDEX + "?title=" + MediaWiki.encode(a.getTitle())
+          + "&action=submit";
 
       postModify = new Post(uS);
       postModify.addParam("wpSave", "Save");

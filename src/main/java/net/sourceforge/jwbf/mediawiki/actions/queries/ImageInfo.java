@@ -112,10 +112,10 @@ public class ImageInfo extends MWAction {
       addProps += "&" + HEIGHT + "=" + height;
 
     if (bot.getVersion().greaterEqThen(Version.MW1_15)) {
-      msg = new Get("/api.php?action=query&titles=File:" + MediaWiki.encode(name)
+      msg = new Get(MediaWiki.URL_API + "?action=query&titles=File:" + MediaWiki.encode(name)
           + "&prop=imageinfo" + addProps + "&iiprop=url&format=xml");
     } else {
-      msg = new Get("/api.php?action=query&titles=Image:" + MediaWiki.encode(name)
+      msg = new Get(MediaWiki.URL_API + "?action=query&titles=Image:" + MediaWiki.encode(name)
           + "&prop=imageinfo" + addProps + "&iiprop=url&format=xml");
     }
   }

@@ -55,7 +55,7 @@ public class RandomPageTitle extends MWAction {
     super(bot.getVersion());
     this.bot = bot;
 
-    msg = new Get("/api.php?action=query&list=random&rnnamespace=0&rnlimit=1&format=xml");
+    msg = new Get(MediaWiki.URL_API + "?action=query&list=random&rnnamespace=0&rnlimit=1&format=xml");
 
   }
 

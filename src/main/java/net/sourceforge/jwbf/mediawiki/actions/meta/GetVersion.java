@@ -38,6 +38,7 @@ import net.sourceforge.jwbf.core.actions.Get;
 import net.sourceforge.jwbf.core.actions.util.ActionException;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.core.actions.util.ProcessException;
+import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.actions.util.SupportedBy;
@@ -100,7 +101,7 @@ public class GetVersion extends MWAction {
   @SuppressWarnings("deprecation")
   public GetVersion() {
 
-    msg = new Get("/api.php?action=query&meta=siteinfo&format=xml");
+    msg = new Get(MediaWiki.URL_API + "?action=query&meta=siteinfo&format=xml");
 
   }
 

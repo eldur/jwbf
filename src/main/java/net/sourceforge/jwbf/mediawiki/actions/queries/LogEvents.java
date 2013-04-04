@@ -38,6 +38,7 @@ import net.sourceforge.jwbf.core.actions.Get;
 import net.sourceforge.jwbf.core.actions.util.ActionException;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.core.actions.util.ProcessException;
+import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.actions.util.SupportedBy;
 import net.sourceforge.jwbf.mediawiki.actions.util.VersionException;
@@ -168,7 +169,7 @@ public class LogEvents extends MWAction implements Iterator<LogItem>, Iterable<L
 
     String uS = "";
 
-    uS = "/api.php?action=query&list=logevents";
+    uS = MediaWiki.URL_API + "?action=query&list=logevents";
     if (logtype.length > 0) {
       StringBuffer logtemp = new StringBuffer();
       for (int i = 0; i < logtype.length; i++) {
@@ -194,7 +195,7 @@ public class LogEvents extends MWAction implements Iterator<LogItem>, Iterable<L
 
     String uS = "";
 
-    uS = "/api.php?action=query&list=logevents";
+    uS = MediaWiki.URL_API + "?action=query&list=logevents";
     if (logtype.length > 0) {
       StringBuffer logtemp = new StringBuffer();
       for (int i = 0; i < logtype.length; i++) {

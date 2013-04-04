@@ -75,7 +75,7 @@ public class Siteinfo extends GetVersion {
       x.append(types[i] + "|");
     }
     String result = x.substring(0, x.length() - 1);
-    msg = new Get("/api.php?action=query&meta=siteinfo" + "&siprop=" + MediaWiki.encode(result)
+    msg = new Get(MediaWiki.URL_API + "?action=query&meta=siteinfo" + "&siprop=" + MediaWiki.encode(result)
         + "&format=xml");
   }
 

@@ -57,7 +57,7 @@ public class GetRendering extends MWAction {
   public GetRendering(MediaWikiBot bot, String wikitext) {
     super(bot.getVersion());
     this.bot = bot;
-    msg = new Get("/api.php?action=parse&text=" + MediaWiki.encode(wikitext)
+    msg = new Get(MediaWiki.URL_API + "?action=parse&text=" + MediaWiki.encode(wikitext)
         + "&titles=API&format=xml");
 
   }

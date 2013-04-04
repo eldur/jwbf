@@ -171,7 +171,7 @@ public class AllPageTitles extends TitleQuery<String> {
       apfilterredir = "nonredirects";
     }
 
-    String uS = "/api.php?action=query&list=allpages&"
+    String uS = MediaWiki.URL_API + "?action=query&list=allpages&"
         + ((from != null && from.length() > 0) ? ("&apfrom=" + MediaWiki.encode(from)) : "")
         + ((prefix != null) ? ("&apprefix=" + MediaWiki.encode(prefix)) : "")
         + ((namespace != null && namespace.length() != 0) ? ("&apnamespace=" + MediaWiki

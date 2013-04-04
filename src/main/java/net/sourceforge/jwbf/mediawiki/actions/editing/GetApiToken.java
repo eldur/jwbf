@@ -78,7 +78,7 @@ public final class GetApiToken extends MWAction {
     if (log.isTraceEnabled()) {
       log.trace("enter GetToken.generateTokenRequest()");
     }
-    String uS = "/api.php" + "?action=query" + "&prop=info" + "&intoken="
+    String uS = MediaWiki.URL_API + "?action=query" + "&prop=info" + "&intoken="
         + intoken.toString().toLowerCase() + "&titles=" + MediaWiki.encode(title) + "&format=xml";
     msg = new Get(uS);
 

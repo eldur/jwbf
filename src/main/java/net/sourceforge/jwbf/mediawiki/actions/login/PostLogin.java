@@ -37,6 +37,7 @@ import net.sourceforge.jwbf.core.actions.Post;
 import net.sourceforge.jwbf.core.actions.util.ActionException;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.core.actions.util.ProcessException;
+import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.actions.util.SupportedBy;
 import net.sourceforge.jwbf.mediawiki.contentRep.LoginData;
@@ -91,7 +92,7 @@ public class PostLogin extends MWAction {
 
   private Post getLoginMsg(final String username, final String pw, final String domain,
       final String token) {
-    Post pm = new Post("/api.php?action=login&format=xml");
+    Post pm = new Post(MediaWiki.URL_API + "?action=login&format=xml");
     pm.addParam("lgname", username);
     pm.addParam("lgpassword", pw);
     if (domain != null)

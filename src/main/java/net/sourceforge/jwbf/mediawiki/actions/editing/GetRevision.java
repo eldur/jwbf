@@ -99,7 +99,7 @@ public class GetRevision extends MWAction {
     this.properties = properties;
     sa = new SimpleArticle();
     sa.setTitle(articlename);
-    String uS = "/api.php?action=query&prop=revisions&titles=" + MediaWiki.encode(articlename)
+    String uS = MediaWiki.URL_API + "?action=query&prop=revisions&titles=" + MediaWiki.encode(articlename)
         + "&rvprop=" + getDataProperties(properties) + getReversion(properties) + "&rvlimit=1"
         + "&format=xml";
     msg = new Get(uS);

@@ -11,6 +11,7 @@ import net.sourceforge.jwbf.core.actions.HttpActionClient;
 import net.sourceforge.jwbf.core.actions.ReturningText;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.core.bots.HttpBot;
+import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 
@@ -102,6 +103,6 @@ public class BotFactory {
   public static String getWikiUrl(Version v) {
     String local = LiveTestFather.getValue("localwikihost");
     String version = "mw-" + v.getNumber().replace(".", "-");
-    return "http://" + local + "/" + version + "/index.php";
+    return "http://" + local + "/" + version + MediaWiki.URL_INDEX;
   }
 }

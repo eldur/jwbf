@@ -195,7 +195,7 @@ public class ImageUsageTitles extends TitleQuery<String> {
     @Override
     public Get generateContinueRequest(String imageName, String namespace, String ilcontinue) {
 
-      String uS = "/api.php?action=query&list=imageusage" + "&iucontinue="
+      String uS = MediaWiki.URL_API + "?action=query&list=imageusage" + "&iucontinue="
           + MediaWiki.encode(ilcontinue) + "&iulimit=" + LIMIT + "&format=xml" + "&iutitle="
           + MediaWiki.encode(imageName);
       return new Get(uS);
@@ -204,7 +204,7 @@ public class ImageUsageTitles extends TitleQuery<String> {
     @Override
     public Get generateRequest(String imageName, String namespace) {
 
-      String uS = "/api.php?action=query&list=imageusage"
+      String uS = MediaWiki.URL_API + "?action=query&list=imageusage"
           + "&iutitle="
           + MediaWiki.encode(imageName)
           + ((namespace != null && namespace.length() != 0) ? ("&iunamespace=" + MediaWiki
@@ -256,7 +256,7 @@ public class ImageUsageTitles extends TitleQuery<String> {
     @Override
     public Get generateContinueRequest(String imageName, String namespace, String ilcontinue) {
 
-      String uS = "/api.php?action=query&list=imageusage" + "&iucontinue="
+      String uS = MediaWiki.URL_API + "?action=query&list=imageusage" + "&iucontinue="
           + MediaWiki.encode(ilcontinue) + "&iulimit=" + LIMIT + "&format=xml";
       return new Get(uS);
     }
@@ -264,7 +264,7 @@ public class ImageUsageTitles extends TitleQuery<String> {
     @Override
     public Get generateRequest(String imageName, String namespace) {
 
-      String uS = "/api.php?action=query&list=imageusage"
+      String uS = MediaWiki.URL_API + "?action=query&list=imageusage"
           + "&iutitle="
           + MediaWiki.encode(imageName)
           + ((namespace != null && namespace.length() != 0) ? ("&iunamespace=" + MediaWiki
@@ -311,7 +311,7 @@ public class ImageUsageTitles extends TitleQuery<String> {
     @Override
     public Get generateContinueRequest(String imageName, String namespace, String ilcontinue) {
 
-      String uS = "/api.php?action=query&list=imagelinks" + "&ilcontinue="
+      String uS = MediaWiki.URL_API + "?action=query&list=imagelinks" + "&ilcontinue="
           + MediaWiki.encode(ilcontinue) + "&illimit=" + LIMIT + "&format=xml";
       return new Get(uS);
     }
@@ -319,7 +319,7 @@ public class ImageUsageTitles extends TitleQuery<String> {
     @Override
     public Get generateRequest(String imageName, String namespace) {
 
-      String uS = "/api.php?action=query&list=imagelinks"
+      String uS = MediaWiki.URL_API + "?action=query&list=imagelinks"
           + "&titles="
           + MediaWiki.encode(imageName)
           + ((namespace != null && namespace.length() != 0) ? ("&ilnamespace=" + MediaWiki
