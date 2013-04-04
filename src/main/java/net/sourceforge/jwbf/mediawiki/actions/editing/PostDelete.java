@@ -6,10 +6,6 @@ import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_17;
 import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_18;
 import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_19;
 import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_20;
-
-import java.io.IOException;
-import java.io.StringReader;
-
 import lombok.extern.slf4j.Slf4j;
 import net.sourceforge.jwbf.core.actions.Post;
 import net.sourceforge.jwbf.core.actions.util.ActionException;
@@ -23,8 +19,6 @@ import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
-import org.jdom.input.SAXBuilder;
-import org.xml.sax.InputSource;
 
 /**
  * Action class using the MediaWiki-API's <a
@@ -154,13 +148,12 @@ public class PostDelete extends MWAction {
       if (log.isDebugEnabled()) {
         log.debug("Got returning text: \"" + s + "\"");
       }
-      SAXBuilder builder = new SAXBuilder();
       try {
-        Document doc = builder.build(new InputSource(new StringReader(s)));
+        Element doc = getRootElement(s);
         if (!containsError(doc)) {
           process(doc);
         }
-      } catch (JDOMException e) {
+      } catch (IllegalArgumentException e) {
         String msg = e.getMessage();
         if (s.startsWith("unknown_action:")) {
           msg = "unknown_action; Adding '$wgEnableWriteAPI = true;' to your MediaWiki's "
@@ -168,9 +161,6 @@ public class PostDelete extends MWAction {
         }
         log.error(msg, e);
         throw new ProcessException(msg, e);
-      } catch (IOException e) {
-        log.error(e.getMessage(), e);
-        throw new ProcessException(e);
       }
       setHasMoreMessages(false);
     }
@@ -188,8 +178,8 @@ public class PostDelete extends MWAction {
    *           thrown if the document could not be parsed
    * @return if
    */
-  private boolean containsError(Document doc) {
-    Element elem = doc.getRootElement().getChild("error");
+  private boolean containsError(Element rootElement) {
+    Element elem = rootElement.getChild("error");
     if (elem != null) {
       log.error(elem.getAttributeValue("info"));
       if (elem.getAttributeValue("code").equals("inpermissiondenied")) {
@@ -201,16 +191,8 @@ public class PostDelete extends MWAction {
     return false;
   }
 
-  /**
-   * Processing the XML {@link Document} returned from the MediaWiki API.
-   * 
-   * @param doc
-   *          XML <code>Document</code>
-   * @throws JDOMException
-   *           thrown if the document could not be parsed
-   */
-  private void process(Document doc) {
-    Element elem = doc.getRootElement().getChild("delete");
+  private void process(Element rootElement) {
+    Element elem = rootElement.getChild("delete");
     if (elem != null) {
       // process reply for delete request
       if (log.isInfoEnabled()) {

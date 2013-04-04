@@ -18,6 +18,9 @@
  */
 package net.sourceforge.jwbf.mediawiki.actions.util;
 
+import java.io.IOException;
+import java.io.Reader;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -27,6 +30,12 @@ import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.core.actions.util.ProcessException;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
+
+import org.jdom.Document;
+import org.jdom.Element;
+import org.jdom.JDOMException;
+import org.jdom.input.SAXBuilder;
+import org.xml.sax.InputSource;
 
 /**
  * @author Thomas Stock
@@ -212,5 +221,23 @@ public abstract class MWAction implements ContentProcessable {
   @Deprecated
   public boolean isSelfExecuter() {
     return false;
+  }
+
+  protected Element getRootElement(final String xml) {
+    SAXBuilder builder = new SAXBuilder();
+    Element root = null;
+    try {
+      Reader i = new StringReader(xml);
+      Document doc = builder.build(new InputSource(i));
+
+      root = doc.getRootElement();
+
+    } catch (JDOMException e) {
+      log.error(xml);
+      throw new IllegalArgumentException(e);
+    } catch (IOException e) {
+      throw new IllegalArgumentException(e);
+    }
+    return root;
   }
 }

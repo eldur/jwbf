@@ -1,20 +1,15 @@
 package net.sourceforge.jwbf.core;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.HashSet;
-import java.util.Set;
 
 import net.sourceforge.jwbf.JWBF;
-import net.sourceforge.jwbf.mediawiki.actions.editing.PostModifyContent;
 
 import org.junit.Test;
 
@@ -22,24 +17,7 @@ public class MiscTest {
 
   @Test
   public void subsetTest() {
-    assertFalse(!PostModifyContent.isIntersectionEmpty(null, null));
-    Set<String> a = new HashSet<String>();
-    Set<String> b = new HashSet<String>();
-    assertTrue(a.containsAll(b));
-    assertTrue(PostModifyContent.isIntersectionEmpty(a, b));
-    assertTrue(PostModifyContent.isIntersectionEmpty(b, a));
 
-    b.add("a");
-    b.add("c");
-    assertFalse(!PostModifyContent.isIntersectionEmpty(a, b));
-    assertFalse(!PostModifyContent.isIntersectionEmpty(b, a));
-    a.add("a");
-    a.add("b");
-
-    assertTrue(!PostModifyContent.isIntersectionEmpty(a, b));
-    assertTrue(!PostModifyContent.isIntersectionEmpty(b, a));
-    assertTrue(a.size() > 1);
-    assertTrue(b.size() > 1);
   }
 
   @Test
@@ -50,8 +28,7 @@ public class MiscTest {
   }
 
   @Test
-  public void testInit() throws IllegalArgumentException, IllegalAccessException,
-      InvocationTargetException {
+  public void testInit() throws Exception {
     Class<JWBF> clazz = JWBF.class;
     Method[] methods = clazz.getDeclaredMethods();
     Method initMethod = null;
@@ -62,9 +39,9 @@ public class MiscTest {
       }
     }
     assertNotNull("no init method found", initMethod);
-    if (initMethod == null)
+    if (initMethod == null) {
       return; // XXX for eclipse
-    if (!initMethod.isAccessible()) {
+    } else if (!initMethod.isAccessible()) {
       initMethod.setAccessible(true);
     }
 

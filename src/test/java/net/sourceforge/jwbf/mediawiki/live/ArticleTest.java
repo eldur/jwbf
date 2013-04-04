@@ -34,6 +34,19 @@ public class ArticleTest {
     return bots;
   }
 
+  @Test
+  public void testErrorEdit() {
+    String title = "z error " + getRandomAlph(3);
+    MediaWikiBot bot = getMediaWikiBot(Version.getLatest(), true);
+    Article a = new Article(bot, title);
+    try {
+      a.setText(getRandom(42));
+      a.save();
+    } finally {
+      a.delete();
+    }
+  }
+
   /**
    * 
    * @throws Exception
@@ -75,12 +88,7 @@ public class ArticleTest {
                                                                                 // delta
 
       }
-      try {
-        a.delete(); // clean up
-      } catch (VersionException e) {
-        e.printStackTrace();
-      }
-
+      a.delete(); // clean up
     }
 
   }

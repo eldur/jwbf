@@ -25,11 +25,12 @@ import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_18;
 import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_19;
 import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_20;
 
-import java.util.HashSet;
 import java.util.Hashtable;
+import java.util.Map;
 import java.util.Set;
 
 import lombok.extern.slf4j.Slf4j;
+import net.sourceforge.jwbf.core.RequestBuilder;
 import net.sourceforge.jwbf.core.actions.Get;
 import net.sourceforge.jwbf.core.actions.Post;
 import net.sourceforge.jwbf.core.actions.util.ActionException;
@@ -43,6 +44,11 @@ import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.actions.util.SupportedBy;
 import net.sourceforge.jwbf.mediawiki.actions.util.VersionException;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
+
+import org.jdom.Element;
+
+import com.google.common.collect.Sets;
+import com.google.common.collect.Sets.SetView;
 
 /**
  * 
@@ -60,7 +66,7 @@ public class PostModifyContent extends MWAction {
   private boolean second = true;
 
   private final ContentAccessable a;
-  private Hashtable<String, String> tab = new Hashtable<String, String>();
+  private Map<String, String> tab = new Hashtable<String, String>();
   private MediaWikiBot bot;
   private GetApiToken apiReq = null;
   private HttpAction apiGet = null;
@@ -94,16 +100,8 @@ public class PostModifyContent extends MWAction {
 
     if (first) {
       try {
-        if (!bot.isEditApi())
+        if (!bot.isEditApi()) {
           throw new VersionException("write api off - user triggerd");
-        switch (bot.getVersion()) {
-        case MW1_09:
-        case MW1_10:
-        case MW1_11:
-        case MW1_12:
-          throw new VersionException("write api not available");
-        default:
-          break;
         }
         first = false;
         if (!(bot.getUserinfo().getRights().contains("edit") && bot.getUserinfo().getRights()
@@ -117,12 +115,12 @@ public class PostModifyContent extends MWAction {
         return apiGet;
 
       } catch (VersionException e) {
-        String uS = "/index.php?title=" + MediaWiki.encode(a.getTitle()) // TODO
-                                                                         // check
-                                                                         // encoding
-                                                                         // here
-            + "&action=edit&dontcountme=s";
-        initOldGet = new Get(uS);
+        String request = new RequestBuilder("/index.php") //
+            .param("title", MediaWiki.encode(a.getTitle())) //
+            .param("action", "edit") //
+            .param("dontcountme", "s") //
+            .build();
+        initOldGet = new Get(request);
         first = false;
         return initOldGet;
       } catch (JwbfException e) {
@@ -130,17 +128,18 @@ public class PostModifyContent extends MWAction {
       }
     }
     if (apiEdit) {
-      String uS = "/api.php?action=edit&title=" + MediaWiki.encode(a.getTitle());
-      postModify = new Post(uS);
+
+      String request = new RequestBuilder("/api.php") //
+          .param("action", "edit") //
+          .param("format", "xml") //
+          .param("title", MediaWiki.encode(a.getTitle())) //
+          .build();
+      postModify = new Post(request);
       postModify.addParam("summary", a.getEditSummary());
       postModify.addParam("text", a.getText());
-      try {
-        Set<String> groups = bot.getUserinfo().getGroups();
-        if (!isIntersectionEmpty(groups, MediaWiki.BOT_GROUPS)) {
-          postModify.addParam("bot", "");
-        }
-      } catch (JwbfException e) {
-        log.warn("{}", e);
+      Set<String> groups = bot.getUserinfo().getGroups();
+      if (!isIntersectionEmpty(groups, MediaWiki.BOT_GROUPS)) {
+        postModify.addParam("bot", "");
       }
 
       // postModify.addParam("watch", "unknown")
@@ -156,13 +155,9 @@ public class PostModifyContent extends MWAction {
 
       postModify = new Post(uS);
       postModify.addParam("wpSave", "Save");
-
       postModify.addParam("wpStarttime", tab.get("wpStarttime"));
-
       postModify.addParam("wpEditToken", tab.get("wpEditToken"));
-
       postModify.addParam("wpEdittime", tab.get("wpEdittime"));
-
       postModify.addParam("wpTextbox1", a.getText());
 
       String editSummaryText = a.getEditSummary();
@@ -177,7 +172,7 @@ public class PostModifyContent extends MWAction {
 
       }
 
-      log.info("WRITE: " + a.getTitle());
+      log.debug("WRITE: " + a.getTitle());
 
     }
     second = false;
@@ -198,7 +193,9 @@ public class PostModifyContent extends MWAction {
    */
   @Override
   public String processReturningText(String s, HttpAction hm) {
-    if (s.contains("error")) {
+    Element rootElement = getRootElement(s);
+    Element elem = rootElement.getChild("error");
+    if (elem != null) {
       if (s.length() > 700) {
         s = s.substring(0, 700);
       }
@@ -224,8 +221,10 @@ public class PostModifyContent extends MWAction {
    *          where to search
    * @param tab
    *          tabel with required values
+   * @deprecated too old
    */
-  private void getWpValues(final String text, Hashtable<String, String> tab) {
+  @Deprecated
+  private void getWpValues(final String text, Map<String, String> tab) {
 
     String[] tParts = text.split("\n");
     for (int i = 0; i < tParts.length; i++) {
@@ -261,16 +260,15 @@ public class PostModifyContent extends MWAction {
    *          a
    * @return true if one or both sets are <code>null</code> or the intersection of sets is empty.
    */
-  @SuppressWarnings("unchecked")
-  public static boolean isIntersectionEmpty(Set<?> a, Set<?> b) {
-    if (a != null && b != null) {
-      Set<?> aTemp = new HashSet(a);
-      Set<?> bTemp = new HashSet(b);
-      aTemp.retainAll(bTemp);
-      bTemp.retainAll(aTemp);
-      return !(aTemp.size() > 0 && bTemp.size() > 0);
+  boolean isIntersectionEmpty(Set<?> a, Set<?> b) {
+    if (a == b) {
+      return true;
     }
-    return true;
+    if (a == null || b == null) {
+      return false;
+    }
+    SetView<?> intersection = Sets.intersection(a, b);
+    return intersection.isEmpty();
   }
 
 }

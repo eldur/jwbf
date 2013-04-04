@@ -6,10 +6,6 @@ import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_17;
 import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_18;
 import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_19;
 import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_20;
-
-import java.io.IOException;
-import java.io.StringReader;
-
 import lombok.extern.slf4j.Slf4j;
 import net.sourceforge.jwbf.core.actions.Get;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
@@ -20,11 +16,7 @@ import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.actions.util.SupportedBy;
 import net.sourceforge.jwbf.mediawiki.actions.util.VersionException;
 
-import org.jdom.Document;
 import org.jdom.Element;
-import org.jdom.JDOMException;
-import org.jdom.input.SAXBuilder;
-import org.xml.sax.InputSource;
 
 /**
  * Action class using the MediaWiki-<a
@@ -113,20 +105,15 @@ public final class GetApiToken extends MWAction {
       if (log.isDebugEnabled()) {
         log.debug("Got returning text: \"" + s + "\"");
       }
-      SAXBuilder builder = new SAXBuilder();
       try {
-        Document doc = builder.build(new InputSource(new StringReader(s)));
-
-        process(doc);
-      } catch (JDOMException e) {
+        process(getRootElement(s));
+      } catch (IllegalArgumentException e) {
         if (s.startsWith("unknown_action:")) {
           log.error("Adding '$wgEnableWriteAPI = true;' "
               + "to your MediaWiki's LocalSettings.php might remove this problem.", e);
         } else {
           log.error(e.getMessage(), e);
         }
-      } catch (IOException e) {
-        log.error(e.getMessage(), e);
       }
     }
     return "";
@@ -155,17 +142,9 @@ public final class GetApiToken extends MWAction {
     return first;
   }
 
-  /**
-   * Processing the XML {@link Document} returned from the MediaWiki API.
-   * 
-   * @param doc
-   *          XML <code>Document</code>
-   * @throws JDOMException
-   *           thrown if the document could not be parsed
-   */
-  private void process(Document doc) {
+  private void process(Element rootElement) {
     try {
-      Element elem = doc.getRootElement().getChild("query").getChild("pages").getChild("page");
+      Element elem = rootElement.getChild("query").getChild("pages").getChild("page");
 
       // process reply for token request
       switch (intoken) {
