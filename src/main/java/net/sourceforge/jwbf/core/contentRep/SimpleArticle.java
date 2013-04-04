@@ -55,11 +55,6 @@ public class SimpleArticle implements ArticleMeta, Serializable, Cloneable, Cont
     // do nothing
   }
 
-  /**
-   * 
-   * @param ca
-   *          a
-   */
   public SimpleArticle(ContentAccessable ca) {
 
     if (ca.getTitle() != null) {
@@ -79,11 +74,6 @@ public class SimpleArticle implements ArticleMeta, Serializable, Cloneable, Cont
 
   }
 
-  /**
-   * 
-   * @param sa
-   *          a
-   */
   public SimpleArticle(ArticleMeta sa) {
     this((ContentAccessable) sa);
 

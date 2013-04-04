@@ -54,7 +54,7 @@ public class ImageUsageTitlesTest extends AbstractMediaWikiBotTest {
 
   }
 
-  private void test() throws Exception {
+  private void test() {
     ImageUsageTitles il = new ImageUsageTitles(bot, "Image:" + getValue("filename"),
         MediaWiki.NS_ALL);
 

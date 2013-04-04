@@ -16,8 +16,6 @@ public class GetRevisionTest {
   /**
    * Test write and read
    * 
-   * @throws Exception
-   *           a
    */
   @Ignore("seems that the page layout changend")
   @Test
@@ -28,7 +26,7 @@ public class GetRevisionTest {
     doTest(bot);
   }
 
-  private final void doTest(InyokaWikiBot bot) throws Exception {
+  private final void doTest(InyokaWikiBot bot) {
     // TODO not a really good test
     String label;
     label = "Startseite";

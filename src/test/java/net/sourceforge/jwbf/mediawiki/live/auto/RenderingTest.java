@@ -32,11 +32,6 @@ public class RenderingTest extends ParamHelper {
     super(v, classVerifier);
   }
 
-  /**
-   * 
-   * @throws Exception
-   *           a
-   */
   @Test
   public final void render() {
     doTest(bot);

@@ -20,7 +20,6 @@ import net.sourceforge.jwbf.core.actions.util.ProcessException;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.actions.util.SupportedBy;
-import net.sourceforge.jwbf.mediawiki.actions.util.VersionException;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 
 import org.jdom.Document;
@@ -45,15 +44,6 @@ public class GetRendering extends MWAction {
   private final MediaWikiBot bot;
   private boolean isSelfEx = true;
 
-  /**
-   * 
-   * @param bot
-   *          a
-   * @param wikitext
-   *          a
-   * @throws VersionException
-   *           if not supported
-   */
   public GetRendering(MediaWikiBot bot, String wikitext) {
     super(bot.getVersion());
     this.bot = bot;

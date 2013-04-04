@@ -62,8 +62,6 @@ public class BacklinkExpTest extends ParamHelper {
   /**
    * Test backlinks.
    * 
-   * @throws Exception
-   *           a
    */
   @Test
   public final void test() {

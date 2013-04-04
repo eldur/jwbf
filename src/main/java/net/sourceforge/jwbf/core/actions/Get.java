@@ -28,11 +28,9 @@ public class Get implements HttpAction {
   /**
    * Use utf-8 as default charset.
    * 
-   * @param req
-   *          a
    */
-  public Get(String req) {
-    this(req, "utf-8");
+  public Get(String url) {
+    this(url, "utf-8");
   }
 
   /**

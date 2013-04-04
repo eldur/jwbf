@@ -33,27 +33,17 @@ import org.junit.Test;
  */
 public class RenderingTest extends AbstractMediaWikiBotTest {
 
-  /**
-   * 
-   * @throws Exception
-   *           a
-   */
   @Ignore("check this")
   @Test
-  public final void getRenderingWikipediaDe() throws Exception {
+  public final void getRenderingWikipediaDe() {
     String liveUrl = "http://de.wikipedia.org/w/index.php";
     assumeReachable(liveUrl);
     bot = new MediaWikiBot(liveUrl);
     // doTest(bot);
   }
 
-  /**
-   * 
-   * @throws Exception
-   *           a
-   */
   @Test(expected = ActionException.class)
-  public final void getRenderingPerformManual() throws Exception {
+  public final void getRenderingPerformManual() {
     String liveUrl = "http://de.wikipedia.org/w/index.php";
     assumeReachable(liveUrl);
     bot = new MediaWikiBot(liveUrl);

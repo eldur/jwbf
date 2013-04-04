@@ -22,7 +22,6 @@ import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.actions.util.SupportedBy;
-import net.sourceforge.jwbf.mediawiki.actions.util.VersionException;
 
 import org.jdom.Document;
 import org.jdom.Element;
@@ -44,13 +43,6 @@ public class GetUserinfo extends MWAction implements Userinfo {
   private final Set<String> groups = new HashSet<String>();
   private Get msg;
 
-  /**
-   * 
-   * @param v
-   *          a
-   * @throws VersionException
-   *           a
-   */
   public GetUserinfo(Version v) {
     super(v);
     switch (v) {

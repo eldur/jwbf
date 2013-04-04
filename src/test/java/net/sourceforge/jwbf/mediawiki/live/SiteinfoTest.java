@@ -38,12 +38,10 @@ public class SiteinfoTest extends AbstractMediaWikiBotTest {
   /**
    * Test get siteinfo on Wikipedia DE.
    * 
-   * @throws Exception
-   *           a
    */
   @Ignore("do we need this?")
   @Test
-  public final void siteInfoWikipediaDe() throws Exception {
+  public final void siteInfoWikipediaDe() {
     String liveUrl = "http://de.wikipedia.org/w/index.php";
     assumeReachable(liveUrl);
     bot = new MediaWikiBot(liveUrl);
@@ -58,8 +56,6 @@ public class SiteinfoTest extends AbstractMediaWikiBotTest {
    * $wgGroupPermissions['*']['read'] = false;
    * </pre>
    * 
-   * @throws Exception
-   *           a
    */
   @Test
   public final void siteInfoMW1x15Blocking() throws Exception {
@@ -70,14 +66,8 @@ public class SiteinfoTest extends AbstractMediaWikiBotTest {
     assertEquals(Version.MW1_15, bot.getVersion());
   }
 
-  /**
-   * Test last Version.
-   * 
-   * @throws Exception
-   *           a
-   */
   @Test
-  public final void siteInfoLastVersion() throws Exception {
+  public final void siteInfoLastVersion() {
     String liveUrl = "http://www.mediawiki.org/w/api.php";
     assumeReachable(liveUrl);
     Version v = Version.getLatest();

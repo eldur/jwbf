@@ -47,13 +47,8 @@ public class ArticleTest {
     }
   }
 
-  /**
-   * 
-   * @throws Exception
-   *           a
-   */
   @Test
-  public final void readWriteDelete() throws Exception {
+  public final void readWriteDelete() {
 
     Collection<MediaWikiBot> bots = getTestBots();
 
@@ -93,11 +88,6 @@ public class ArticleTest {
 
   }
 
-  /**
-   * 
-   * @throws Exception
-   *           a
-   */
   @Test
   @Ignore("check later")
   public final void meta() {

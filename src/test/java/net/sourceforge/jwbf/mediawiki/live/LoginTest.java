@@ -74,12 +74,9 @@ public class LoginTest extends AbstractMediaWikiBotTest {
 
   /**
    * Test login on Wikipedia.
-   * 
-   * @throws Exception
-   *           a
    */
   @Test
-  public final void loginWikipedia1() throws Exception {
+  public final void loginWikipedia1() {
     String liveUrl = getValue("login_wikipedia1_url");
     assumeReachable(liveUrl);
     bot = new MediaWikiBot(liveUrl);
@@ -89,12 +86,9 @@ public class LoginTest extends AbstractMediaWikiBotTest {
 
   /**
    * Test login on Wikipedia.
-   * 
-   * @throws Exception
-   *           a
    */
   @Test
-  public final void loginWikipedia1Urlformats() throws Exception {
+  public final void loginWikipedia1Urlformats() {
 
     String liveUrl = getValue("login_wikipedia1_url");
     int lastSlash = liveUrl.lastIndexOf("/");
@@ -108,8 +102,6 @@ public class LoginTest extends AbstractMediaWikiBotTest {
   /**
    * Test FAIL login on Wikipedia.
    * 
-   * @throws Exception
-   *           a
    */
   @Test(expected = ActionException.class)
   public final void loginWikipedia1Fail() {
@@ -125,12 +117,10 @@ public class LoginTest extends AbstractMediaWikiBotTest {
   /**
    * Test login on a Mediawiki.
    * 
-   * @throws Exception
-   *           a
    */
   @Test
   @Ignore("1.09 is to old")
-  public final void loginWikiMW1x09Urlformats() throws Exception {
+  public final void loginWikiMW1x09Urlformats() {
     String todoUrl = getValue("wikiMW1_09_url");
     int lastSlash = todoUrl.lastIndexOf("/");
     todoUrl = todoUrl.substring(0, lastSlash + 1);
@@ -143,9 +133,6 @@ public class LoginTest extends AbstractMediaWikiBotTest {
   /**
    * Test invalid installation of MW. TODO change exception test, should fail if no route to test
    * host
-   * 
-   * @throws Exception
-   *           a
    */
   @Test
   public final void installationDefunct() throws Exception {
@@ -166,12 +153,9 @@ public class LoginTest extends AbstractMediaWikiBotTest {
   /**
    * Test invalid installation of MW. TODO change exception test, should fail if no route to test
    * host
-   * 
-   * @throws Exception
-   *           a
    */
   @Test
-  public final void conncetionProblem() throws Exception {
+  public final void conncetionProblem() {
     String invalidUrl = "http://www.google.com/invalidWiki/";
     bot = new MediaWikiBot(invalidUrl);
     try {
@@ -183,9 +167,6 @@ public class LoginTest extends AbstractMediaWikiBotTest {
 
   /**
    * Login on last MW with SSL and htaccess.
-   * 
-   * @throws Exception
-   *           a
    */
   @Test
   public final void loginWikiMWLastSSLAndHtaccess() throws Exception {

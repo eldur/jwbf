@@ -78,8 +78,6 @@ public class HttpActionClient {
 
   /**
    * 
-   * @param client
-   *          a
    * @param url
    *          like "http://host/of/wiki/"
    */
@@ -104,8 +102,6 @@ public class HttpActionClient {
 
   /**
    * 
-   * @param contentProcessable
-   *          a
    * @return message, never null
    */
   @Nonnull
@@ -288,8 +284,6 @@ public class HttpActionClient {
   /**
    * send the cookies to the logger.
    * 
-   * @param client
-   *          a
    * @deprecated is a bit too chatty
    */
   @Deprecated

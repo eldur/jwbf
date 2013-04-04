@@ -8,7 +8,6 @@ import java.util.Map;
 import java.util.Set;
 
 import net.sourceforge.jwbf.core.actions.util.ActionException;
-import net.sourceforge.jwbf.core.actions.util.ProcessException;
 import net.sourceforge.jwbf.core.bots.HttpBot;
 import net.sourceforge.jwbf.core.bots.WikiBot;
 import net.sourceforge.jwbf.core.contentRep.Article;
@@ -44,46 +43,40 @@ public class InyokaWikiBot extends HttpBot implements WikiBot {
    * @param name
    *          of article
    * @return a content representation of requested article, never null
-   * @throws ActionException
-   *           on problems with http, cookies and io
-   * @throws ProcessException
-   *           on access problems
+   * 
    * @see GetRevision
    */
-  public synchronized Article getArticle(final String name) throws ActionException,
-      ProcessException {
+  public synchronized Article getArticle(final String name) {
     return getArticle(name, 0);
 
   }
 
-  public void login(String user, String passwd) throws ActionException {
+  public void login(String user, String passwd) {
     throw new ActionException("Login is not supported");
 
   }
 
-  public void writeContent(SimpleArticle sa) throws ActionException, ProcessException {
+  public void writeContent(SimpleArticle sa) {
     throw new ActionException("Writing is not supported");
 
   }
 
-  public void delete(String title) throws ActionException, ProcessException {
+  public void delete(String title) {
     throw new ActionException("Deleting is not supported");
 
   }
 
-  public synchronized Article getArticle(String name, int properties) throws ActionException,
-      ProcessException {
+  public synchronized Article getArticle(String name, int properties) {
     return new Article(this, readData(name, properties));
   }
 
-  public SimpleArticle readData(String name, int properties) throws ActionException,
-      ProcessException {
+  public SimpleArticle readData(String name, int properties) {
     GetRevision ac = new GetRevision(name);
     performAction(ac);
     return ac.getArticle();
   }
 
-  public Userinfo getUserinfo() throws ActionException, ProcessException {
+  public Userinfo getUserinfo() {
     // TODO incomplete
     return new Userinfo() {
 
@@ -113,7 +106,7 @@ public class InyokaWikiBot extends HttpBot implements WikiBot {
     return false;
   }
 
-  public SimpleArticle readData(String name) throws ActionException, ProcessException {
+  public SimpleArticle readData(String name) {
     return readData(name, DEFAULT);
   }
 

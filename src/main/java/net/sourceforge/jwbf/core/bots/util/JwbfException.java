@@ -32,40 +32,20 @@ import net.sourceforge.jwbf.JWBF;
  */
 public class JwbfException extends RuntimeException {
 
-  /**
-   * 
-   */
   private static final long serialVersionUID = -2456904376052276104L;
 
-  /**
-   * @param message
-   *          a
-   */
   public JwbfException(String message) {
     super(message);
   }
 
-  /**
-   * @param t
-   *          a
-   */
   public JwbfException(Throwable t) {
     super(t);
   }
 
-  /**
-   * @param message
-   *          a
-   * @param t
-   *          a
-   */
   public JwbfException(String message, Throwable t) {
     super(message, t);
   }
 
-  /**
-   * @return the
-   */
   public Class<?> getExceptionSrcClass() {
     return getStackTraceClass();
   }
@@ -81,10 +61,6 @@ public class JwbfException extends RuntimeException {
 
   }
 
-  /**
-   * 
-   * @return the
-   */
   private String getModulInfo() {
 
     Class<?> clazz = getStackTraceClass();

@@ -8,7 +8,6 @@ import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_19;
 import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_20;
 import lombok.extern.slf4j.Slf4j;
 import net.sourceforge.jwbf.core.actions.Post;
-import net.sourceforge.jwbf.core.actions.util.ActionException;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.core.actions.util.ProcessException;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
@@ -58,15 +57,6 @@ public class PostDelete extends MWAction {
 
   /**
    * Constructs a new <code>PostDelete</code> action.
-   * 
-   * @param bot
-   *          a
-   * @param title
-   *          a
-   * @throws ProcessException
-   *           a
-   * @throws ActionException
-   *           a
    */
   public PostDelete(MediaWikiBot bot, String title) {
     super(bot.getVersion());
@@ -93,10 +83,10 @@ public class PostDelete extends MWAction {
    *          the title of the page to delete
    * @param reason
    *          reason for the deletion (may be null)
-   * @throws ProcessException
-   *           in case of a precessing exception
-   * @throws ActionException
-   *           in case of an action exception
+   * 
+   *          in case of a precessing exception
+   * 
+   *          in case of an action exception
    */
   public PostDelete(MediaWikiBot bot, String title, String reason) {
     this(bot, title);
@@ -116,8 +106,8 @@ public class PostDelete extends MWAction {
       log.trace("enter PostDelete.generateDeleteRequest(String)");
     }
 
-    String uS = MediaWiki.URL_API + "?action=delete" + "&title=" + MediaWiki.encode(title) + "&token="
-        + MediaWiki.encode(token.getToken()) + "&format=xml";
+    String uS = MediaWiki.URL_API + "?action=delete" + "&title=" + MediaWiki.encode(title)
+        + "&token=" + MediaWiki.encode(token.getToken()) + "&format=xml";
     if (reason != null) {
       uS = uS + "&reason=" + MediaWiki.encode(reason);
     }

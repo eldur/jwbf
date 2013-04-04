@@ -68,7 +68,7 @@ public class ImageUsageTitles extends TitleQuery<String> {
    * {@link ImageUsageTitles#generateRequest(String, String, String)}
    */
   public ImageUsageTitles(MediaWikiBot bot, String imageName, int... namespaces)
-      throws VersionException {
+      {
     super(bot);
     this.bot = bot;
     this.imageName = imageName;
@@ -95,7 +95,7 @@ public class ImageUsageTitles extends TitleQuery<String> {
     }
   }
 
-  public ImageUsageTitles(MediaWikiBot bot, String nextPageInfo) throws VersionException {
+  public ImageUsageTitles(MediaWikiBot bot, String nextPageInfo) {
     this(bot, nextPageInfo, MediaWiki.NS_ALL);
 
   }

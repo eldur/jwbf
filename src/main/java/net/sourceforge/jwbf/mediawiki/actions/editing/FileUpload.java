@@ -38,7 +38,6 @@ import net.sourceforge.jwbf.core.actions.util.ProcessException;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.actions.util.SupportedBy;
-import net.sourceforge.jwbf.mediawiki.actions.util.VersionException;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 import net.sourceforge.jwbf.mediawiki.contentRep.SimpleFile;
 
@@ -68,18 +67,7 @@ public class FileUpload extends MWAction {
   private final SimpleFile a;
   private Post msg;
 
-  /**
-   * 
-   * @param a
-   *          the
-   * @param bot
-   *          a
-   * @throws ActionException
-   *           on problems with file
-   * @throws VersionException
-   *           on wrong MediaWiki version
-   */
-  public FileUpload(final SimpleFile a, MediaWikiBot bot) throws ActionException, VersionException {
+  public FileUpload(final SimpleFile a, MediaWikiBot bot) {
     super(bot.getVersion());
     if (!a.getFile().isFile() || !a.getFile().canRead()) {
       throw new ActionException("no such file " + a.getFile());
@@ -97,18 +85,7 @@ public class FileUpload extends MWAction {
 
   }
 
-  /**
-   * 
-   * @param filename
-   *          to uplad
-   * @param bot
-   *          a
-   * @throws ActionException
-   *           on problems with file
-   * @throws VersionException
-   *           on wrong MediaWiki version
-   */
-  public FileUpload(MediaWikiBot bot, String filename) throws ActionException, VersionException {
+  public FileUpload(MediaWikiBot bot, String filename) {
     this(new SimpleFile(filename), bot);
   }
 
@@ -186,7 +163,7 @@ public class FileUpload extends MWAction {
    * {@inheritDoc}
    */
   @Override
-  public String processAllReturningText(String s) throws ProcessException {
+  public String processAllReturningText(String s) {
 
     if (s.contains("error")) {
       Pattern errFinder = Pattern.compile("<p>(.*?)</p>", Pattern.DOTALL | Pattern.MULTILINE);

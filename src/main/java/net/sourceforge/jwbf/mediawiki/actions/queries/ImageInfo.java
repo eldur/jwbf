@@ -22,14 +22,12 @@ import javax.imageio.ImageIO;
 
 import lombok.extern.slf4j.Slf4j;
 import net.sourceforge.jwbf.core.actions.Get;
-import net.sourceforge.jwbf.core.actions.util.ActionException;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.core.actions.util.ProcessException;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.actions.util.SupportedBy;
-import net.sourceforge.jwbf.mediawiki.actions.util.VersionException;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 
 import org.apache.commons.lang.math.NumberUtils;
@@ -38,6 +36,8 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
 import org.xml.sax.InputSource;
+
+import com.google.common.base.Strings;
 
 /**
  * Action to receive the full address of an image. Like "Img.gif" to
@@ -60,25 +60,22 @@ public class ImageInfo extends MWAction {
   private boolean selfEx = true;
   private Map<String, String> map = new HashMap<String, String>();
 
+  final private String name;
+
   /**
-   * 
    * Get an absolute url to an image.
    * 
-   * @param bot
-   *          a
    * @param name
    *          of, like "Test.gif"
-   * @throws VersionException
-   *           if not supported
    */
-  public ImageInfo(MediaWikiBot bot, String name) throws VersionException {
+  public ImageInfo(MediaWikiBot bot, String name) {
     this(bot, name, EMPTY_STRING_MAP);
   }
 
-  public ImageInfo(MediaWikiBot bot, String name, Map<String, String> params)
-      throws VersionException {
+  public ImageInfo(MediaWikiBot bot, String name, Map<String, String> params) {
     super(bot.getVersion());
     this.bot = bot;
+    this.name = name;
     map.putAll(params);
     prepareMsg(name);
   }
@@ -86,9 +83,10 @@ public class ImageInfo extends MWAction {
   /**
    * TODO change params to a map
    */
-  public ImageInfo(MediaWikiBot bot, String name, String[][] params) throws VersionException {
+  public ImageInfo(MediaWikiBot bot, String name, String[][] params) {
     super(bot.getVersion());
     this.bot = bot;
+    this.name = name;
     if (params != null) {
       for (String[] param : params) {
         if (param.length == 2) {
@@ -122,18 +120,18 @@ public class ImageInfo extends MWAction {
 
   /**
    * @return position like "http://server.tld/path/to/Test.gif"
-   * @throws ProcessException
-   *           on
    */
-  public String getUrlAsString() throws ProcessException {
+  public String getUrlAsString() {
     try {
       selfEx = false;
       bot.performAction(this);
-    } catch (ActionException e1) {
-      e1.printStackTrace();
     } finally {
       selfEx = true;
     }
+    if (Strings.isNullOrEmpty(urlOfImage)) {
+      throw new ProcessException("no url for image with name \"" + name + "\"");
+    }
+
     try {
       new URL(urlOfImage);
     } catch (MalformedURLException e) {
@@ -164,16 +162,7 @@ public class ImageInfo extends MWAction {
     return selfEx;
   }
 
-  /**
-   * @return a
-   * @throws ProcessException
-   *           on
-   * @throws ActionException
-   *           on
-   * @throws IOException
-   *           on
-   */
-  public BufferedImage getAsImage() throws ProcessException, IOException {
+  public BufferedImage getAsImage() throws IOException {
     return ImageIO.read(new URL(getUrlAsString()));
   }
 
@@ -181,13 +170,13 @@ public class ImageInfo extends MWAction {
    * {@inheritDoc}
    */
   @Override
-  public String processAllReturningText(String s) throws ProcessException {
+  public String processAllReturningText(String s) {
     findUrlOfImage(s);
     return "";
   }
 
   @SuppressWarnings("unchecked")
-  private void findContent(final Element root) throws ProcessException {
+  private void findContent(final Element root) {
 
     Iterator<Element> el = root.getChildren().iterator();
     while (el.hasNext()) {
@@ -203,7 +192,7 @@ public class ImageInfo extends MWAction {
 
   }
 
-  private void findUrlOfImage(String s) throws ProcessException {
+  private void findUrlOfImage(String s) {
     SAXBuilder builder = new SAXBuilder();
     Element root = null;
     try {
@@ -216,10 +205,11 @@ public class ImageInfo extends MWAction {
     } catch (IOException e) {
       log.warn("", e);
     }
-    if (root != null)
+    if (root != null) {
       findContent(root);
-    if (urlOfImage.length() < 1)
+    } else if (urlOfImage.length() < 1) {
       throw new ProcessException("Could not find this image " + s);
+    }
   }
 
   /**

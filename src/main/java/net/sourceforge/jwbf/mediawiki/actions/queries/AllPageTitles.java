@@ -90,8 +90,6 @@ public class AllPageTitles extends TitleQuery<String> {
    *          restricts search to titles that begin with this value, may be null
    * @param rf
    *          include redirects in the list
-   * @param bot
-   *          a
    * @param namespaces
    *          the namespace(s) that will be searched for links, as a string of numbers separated by
    *          '|'; if null, this parameter is omitted TODO are multible namespaces allowed?
@@ -102,34 +100,11 @@ public class AllPageTitles extends TitleQuery<String> {
 
   }
 
-  /**
-   * 
-   * @param bot
-   *          a
-   * @param namespaces
-   *          the
-   * @throws VersionException
-   *           if version is incompatible
-   */
   public AllPageTitles(MediaWikiBot bot, int... namespaces) {
     this(bot, null, null, RedirectFilter.nonredirects, namespaces);
 
   }
 
-  /**
-   * @param from
-   *          a
-   * @param prefix
-   *          a
-   * @param rf
-   *          the
-   * @param namespaces
-   *          the
-   * @param bot
-   *          the
-   * @throws VersionException
-   *           if not supported
-   */
   protected AllPageTitles(MediaWikiBot bot, String from, String prefix, RedirectFilter rf,
       String namespaces) {
     super(bot);
@@ -171,7 +146,8 @@ public class AllPageTitles extends TitleQuery<String> {
       apfilterredir = "nonredirects";
     }
 
-    String uS = MediaWiki.URL_API + "?action=query&list=allpages&"
+    String uS = MediaWiki.URL_API
+        + "?action=query&list=allpages&"
         + ((from != null && from.length() > 0) ? ("&apfrom=" + MediaWiki.encode(from)) : "")
         + ((prefix != null) ? ("&apprefix=" + MediaWiki.encode(prefix)) : "")
         + ((namespace != null && namespace.length() != 0) ? ("&apnamespace=" + MediaWiki

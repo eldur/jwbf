@@ -2,8 +2,6 @@ package net.sourceforge.jwbf.trac.bots;
 
 import java.net.MalformedURLException;
 
-import net.sourceforge.jwbf.core.actions.util.ActionException;
-import net.sourceforge.jwbf.core.actions.util.ProcessException;
 import net.sourceforge.jwbf.core.bots.HttpBot;
 import net.sourceforge.jwbf.core.bots.WikiBot;
 import net.sourceforge.jwbf.core.contentRep.Article;
@@ -40,14 +38,13 @@ public class TracWikiBot extends HttpBot implements WikiBot {
    * @param name
    *          of article in a tracwiki like "TracWiki" , the main page is "WikiStart"
    * @return a content representation of requested article, never null
-   * @throws ActionException
-   *           on problems with http, cookies and io
-   * @throws ProcessException
-   *           on access problems
+   * 
+   *         on problems with http, cookies and io
+   * 
+   *         on access problems
    * @see GetRevision
    */
-  public synchronized Article readContent(final String name) throws ActionException,
-      ProcessException {
+  public synchronized Article readContent(final String name) {
     return readContent(name, 0);
 
   }
@@ -57,17 +54,17 @@ public class TracWikiBot extends HttpBot implements WikiBot {
 
   }
 
-  public void writeContent(ContentAccessable sa) throws ActionException, ProcessException {
+  public void writeContent(ContentAccessable sa) {
     throw new IllegalStateException("Writing is not supported");
 
   }
 
-  public void postDelete(String title) throws ActionException, ProcessException {
+  public void postDelete(String title) {
     throw new IllegalStateException("Deleting is not supported");
 
   }
 
-  public Article readContent(String label, int properties) throws ActionException, ProcessException {
+  public Article readContent(String label, int properties) {
     GetRevision ac = new GetRevision(label);
     performAction(ac);
     return new Article(this, ac.getArticle());
@@ -77,7 +74,7 @@ public class TracWikiBot extends HttpBot implements WikiBot {
     throw new IllegalStateException();
   }
 
-  public Userinfo getUserinfo() throws ActionException, ProcessException {
+  public Userinfo getUserinfo() {
     throw new IllegalStateException();
   }
 

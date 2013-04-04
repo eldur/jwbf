@@ -57,21 +57,11 @@ public class UserinfoTest extends ParamHelper {
 
   }
 
-  /**
-   * 
-   * @throws Exception
-   *           a
-   */
   @Test
   public final void userInfo() {
     testDetails(bot, getWikiUser(v));
   }
 
-  /**
-   * 
-   * @throws Exception
-   *           a
-   */
   @Ignore("to complex, use recored test")
   @Test
   public final void userInfoWikiMW1x17Rights() throws Exception {

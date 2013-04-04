@@ -74,16 +74,6 @@ public class PostModifyContent extends MWAction {
   private Post postModify = null;
   private boolean apiEdit = false;
 
-  /**
-   * @param bot
-   *          a
-   * @param a
-   *          the
-   * @throws ProcessException
-   *           a
-   * @throws ActionException
-   *           a
-   */
   public PostModifyContent(MediaWikiBot bot, final SimpleArticle a) {
     super(bot.getVersion());
     if (a.getTitle().length() < 1) {
@@ -255,10 +245,6 @@ public class PostModifyContent extends MWAction {
   }
 
   /**
-   * @param a
-   *          a
-   * @param b
-   *          a
    * @return true if one or both sets are <code>null</code> or the intersection of sets is empty.
    */
   boolean isIntersectionEmpty(Set<?> a, Set<?> b) {

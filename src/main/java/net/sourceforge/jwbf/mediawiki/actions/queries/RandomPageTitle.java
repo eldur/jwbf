@@ -20,7 +20,6 @@ import net.sourceforge.jwbf.core.actions.util.ProcessException;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.actions.util.SupportedBy;
-import net.sourceforge.jwbf.mediawiki.actions.util.VersionException;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 
 import org.xml.sax.InputSource;
@@ -44,28 +43,23 @@ public class RandomPageTitle extends MWAction {
    * Creates the class. Defines the invocation to MediaWiki that is needed in order to get a random
    * page
    * 
-   * @param bot
-   *          a
    * @param name
    *          of, like "Test.gif"
-   * @throws VersionException
-   *           if not supported
    */
-  public RandomPageTitle(MediaWikiBot bot) throws VersionException {
+  public RandomPageTitle(MediaWikiBot bot) {
     super(bot.getVersion());
     this.bot = bot;
 
-    msg = new Get(MediaWiki.URL_API + "?action=query&list=random&rnnamespace=0&rnlimit=1&format=xml");
+    msg = new Get(MediaWiki.URL_API
+        + "?action=query&list=random&rnnamespace=0&rnlimit=1&format=xml");
 
   }
 
   /**
-   * Returns the Title of a random page
+   * @return Title of a random page
    * 
-   * @return
-   * @throws ProcessException
    */
-  public String getTitle() throws ProcessException {
+  public String getTitle() {
     try {
       return bot.performAction(this);
     } catch (ActionException e) {
@@ -77,7 +71,7 @@ public class RandomPageTitle extends MWAction {
    * {@inheritDoc}
    */
   @Override
-  public String processAllReturningText(String s) throws ProcessException {
+  public String processAllReturningText(String s) {
     XPath parser = XPathFactory.newInstance().newXPath();
     String title = "";
     try {

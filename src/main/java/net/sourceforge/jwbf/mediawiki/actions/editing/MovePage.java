@@ -11,7 +11,6 @@ import java.io.StringReader;
 
 import lombok.extern.slf4j.Slf4j;
 import net.sourceforge.jwbf.core.actions.Post;
-import net.sourceforge.jwbf.core.actions.util.ActionException;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.core.actions.util.ProcessException;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
@@ -84,10 +83,6 @@ public class MovePage extends MWAction {
    *          if <b>TRUE</b> also move the subpages
    * @param noredirect
    *          if <b>TRUE</b> create no redirects
-   * @throws ProcessException
-   *           ProcessException
-   * @throws ActionException
-   *           ActionException
    */
   public MovePage(MediaWikiBot bot, String oldtitle, String newtitle, String reason,
       boolean withsubpages, boolean noredirect) {

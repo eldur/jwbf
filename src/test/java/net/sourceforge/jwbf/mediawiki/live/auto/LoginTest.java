@@ -45,8 +45,6 @@ public class LoginTest extends ParamHelper {
   /**
    * Test login on a Mediawiki.
    * 
-   * @throws Exception
-   *           a
    */
   @Test
   public final void login() {
@@ -59,8 +57,6 @@ public class LoginTest extends ParamHelper {
   /**
    * Test FAIL login on Mediawiki. TODO change exception test, should fail if no route to test host
    * 
-   * @throws Exception
-   *           a
    */
   @Test
   public final void loginFail() {
@@ -76,11 +72,9 @@ public class LoginTest extends ParamHelper {
   /**
    * Test login where the wiki is in a subfolder, like www.abc.com/wiki .
    * 
-   * @throws Exception
-   *           a
    */
   @Test(expected = IllegalArgumentException.class)
-  public final void loginUrlformatsFail() throws Exception {
+  public final void loginUrlformatsFail() {
 
     String defektUrl = BotFactory.getWikiUrl(v);
     int lastSlash = defektUrl.lastIndexOf("/");

@@ -16,12 +16,6 @@ import org.junit.Test;
 @Slf4j
 public class BacklinkTest extends AbstractMediaWikiBotTest {
 
-  /**
-   * Test backlinks.
-   * 
-   * @throws Exception
-   *           a
-   */
   @Test
   public final void backlinksWikipediaDe() throws Exception {
     String url = "http://de.wikipedia.org/w/index.php";

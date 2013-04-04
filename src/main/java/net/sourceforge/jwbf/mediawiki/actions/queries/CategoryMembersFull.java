@@ -41,13 +41,13 @@ public class CategoryMembersFull extends CategoryMembers implements Iterable<Cat
 
   /**
    * 
-   * @throws ActionException
+   * 
    *           on any kind of http or version problems
-   * @throws ProcessException
+   * 
    *           on inner problems like a version mismatch
    */
   public CategoryMembersFull(MediaWikiBot bot, String categoryName, int... namespaces)
-      throws ProcessException {
+      {
     super(bot, categoryName, namespaces);
   }
 
@@ -119,7 +119,7 @@ public class CategoryMembersFull extends CategoryMembers implements Iterable<Cat
    * {@inheritDoc}
    */
   @Override
-  public String processAllReturningText(String s) throws ProcessException {
+  public String processAllReturningText(String s) {
     titleCollection.clear();
     String buff = super.processAllReturningText(s);
 

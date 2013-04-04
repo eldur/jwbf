@@ -14,7 +14,6 @@ import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.actions.util.SupportedBy;
-import net.sourceforge.jwbf.mediawiki.actions.util.VersionException;
 
 import org.jdom.Element;
 
@@ -56,7 +55,7 @@ public final class GetApiToken extends MWAction {
    *          site info object
    * @param ui
    *          user info object
-   * @throws VersionException
+   * 
    *           if this action is not supported of the MediaWiki version connected to
    */
   public GetApiToken(Intoken intoken, String title, Version v, Userinfo ui) {

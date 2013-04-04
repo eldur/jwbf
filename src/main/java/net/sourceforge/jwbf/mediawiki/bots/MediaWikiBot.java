@@ -108,11 +108,6 @@ public class MediaWikiBot implements WikiBot {
     bot = new HttpBot(u);
   }
 
-  /**
-   * 
-   * @param client
-   *          a
-   */
   public MediaWikiBot(final HttpActionClient client) {
     bot = new HttpBot(client);
   }
@@ -389,8 +384,8 @@ public class MediaWikiBot implements WikiBot {
   /**
    * 
    * @return a
-   * @throws ActionException
-   *           on problems with http, cookies and io
+   * 
+   *         on problems with http, cookies and io
    * @see Siteinfo
    */
   @Nonnull

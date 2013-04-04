@@ -67,14 +67,8 @@ public class RecentChangesTest extends ParamHelper {
     watch.stop();
   }
 
-  /**
-   * Test.
-   * 
-   * @throws Exception
-   *           a
-   */
   @Test
-  public final void recentChanges() throws Exception {
+  public final void recentChanges() {
     doRegularTest(bot);
     doSpecialCharTest(bot);
   }

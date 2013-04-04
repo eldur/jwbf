@@ -72,7 +72,7 @@ public class TemplateUserTitles extends TitleQuery<String> {
    * {@link TemplateUserTitles#generateRequest(String, String, String)}
    */
   public TemplateUserTitles(MediaWikiBot bot, String templateName, int... namespaces)
-      throws VersionException {
+      {
     super(bot);
     this.bot = bot;
     this.templateName = templateName;

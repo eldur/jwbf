@@ -19,11 +19,9 @@ public class Post implements HttpAction {
   /**
    * Use utf-8 as default charset
    * 
-   * @param req
-   *          a
    */
-  public Post(String req) {
-    this(req, "utf-8");
+  public Post(String url) {
+    this(url, "utf-8");
   }
 
   public void addParam(String key, Object value) {

@@ -60,15 +60,8 @@ public class CategoryMembersSimple implements Iterable<String>, Iterator<String>
    * @param categoryName
    *          like "Buildings" or "Chemical elements" without prefix "Category:" in
    *          {@link MediaWiki#NS_MAIN}
-   * @param bot
-   *          a
-   * @throws ActionException
-   *           on any kind of http or version problems
-   * @throws ProcessException
-   *           on inner problems like mw version
-   * 
    */
-  public CategoryMembersSimple(MediaWikiBot bot, String categoryName) throws ProcessException {
+  public CategoryMembersSimple(MediaWikiBot bot, String categoryName) {
     this(bot, categoryName, MediaWiki.NS_MAIN);
 
   }
@@ -76,18 +69,10 @@ public class CategoryMembersSimple implements Iterable<String>, Iterator<String>
   /**
    * @param categoryName
    *          like "Buildings" or "Chemical elements" without prefix "Category:"
-   * @param bot
-   *          a
    * @param namespaces
    *          for search
-   * @throws ActionException
-   *           on any kind of http or version problems
-   * @throws ProcessException
-   *           on inner problems like mw version
-   * 
    */
-  public CategoryMembersSimple(MediaWikiBot bot, String categoryName, int... namespaces)
-      throws ProcessException {
+  public CategoryMembersSimple(MediaWikiBot bot, String categoryName, int... namespaces) {
     cm = new CategoryMembers(bot, categoryName, namespaces) {
 
       public HttpAction getNextMessage() {
@@ -107,10 +92,11 @@ public class CategoryMembersSimple implements Iterable<String>, Iterator<String>
       }
 
       @Override
-      public String processAllReturningText(String s) throws ProcessException {
+      public String processAllReturningText(String s) {
 
-        if (log.isDebugEnabled())
+        if (log.isDebugEnabled()) {
           log.debug("processAllReturningText");
+        }
         titleCollection.clear();
         String buff = super.processAllReturningText(s);
 

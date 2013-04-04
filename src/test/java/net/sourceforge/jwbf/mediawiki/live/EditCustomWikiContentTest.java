@@ -48,14 +48,8 @@ public class EditCustomWikiContentTest {
   private MediaWikiBot bot;
   private Random random = new Random(System.currentTimeMillis());
 
-  /**
-   * Setup custom wiki.
-   * 
-   * @throws Exception
-   *           a
-   */
   @Before
-  public void setUp() throws Exception {
+  public void setUp() {
 
     bot = BotFactory.getMediaWikiBot(Version.getLatest(), true);
   }
@@ -63,11 +57,9 @@ public class EditCustomWikiContentTest {
   /**
    * Test content modification.
    * 
-   * @throws Exception
-   *           a
    */
   @Test
-  public final void contentModify() throws Exception {
+  public final void contentModify() {
     String title = getValue("test_live_article");
     SimpleArticle sa;
     sa = new SimpleArticle(title);
@@ -101,11 +93,9 @@ public class EditCustomWikiContentTest {
   /**
    * Test the read of metadata on english Mediawiki.
    * 
-   * @throws Exception
-   *           a
    */
   @Test
-  public final void contentModifyDetails() throws Exception {
+  public final void contentModifyDetails() {
     String title = getValue("test_live_article");
     String summary = "clear it";
     SimpleArticle t = new SimpleArticle(title);
@@ -127,12 +117,9 @@ public class EditCustomWikiContentTest {
 
   /**
    * Test utf-8 read on english Mediawiki.
-   * 
-   * @throws Exception
-   *           a
    */
   @Test
-  public final void contentModifySimpleUtf8Get() throws Exception {
+  public final void contentModifySimpleUtf8Get() {
     String utf8value = "öäüÖÄÜß";
     String title = getValue("test_live_article");
     SimpleArticle sa;
@@ -148,11 +135,9 @@ public class EditCustomWikiContentTest {
   /**
    * Test utf-8 read on english Mediawiki. -Dfile.encoding=ASCII
    * 
-   * @throws Exception
-   *           a
    */
   @Test
-  public final void contentModifyIPAUtf8Get() throws Exception {
+  public final void contentModifyIPAUtf8Get() {
     String original = System.getProperty("file.encoding");
     try {
       String encoding = "US-ASCII";
@@ -179,11 +164,9 @@ public class EditCustomWikiContentTest {
   /**
    * Test utf-8 read on english Mediawiki.
    * 
-   * @throws Exception
-   *           a
    */
   @Test
-  public final void contentModifyComplexUtf8Get() throws Exception {
+  public final void contentModifyComplexUtf8Get() {
     String utf8value = "öä 品 üÖÄÜß り新しく作成したりできます Л" + "ин 瓦茲القواميس والمراجع";
 
     String title = getValue("test_live_article");
@@ -198,14 +181,8 @@ public class EditCustomWikiContentTest {
     assertTrue(sa.getEditTimestamp() != null);
   }
 
-  /**
-   * Test getTimestamp.
-   * 
-   * @throws Exception
-   *           a
-   */
   @Test
-  public final void getTimestamp() throws Exception {
+  public final void getTimestamp() {
 
     String label = getValue("test_live_article");
     ArticleMeta sa;
@@ -217,9 +194,6 @@ public class EditCustomWikiContentTest {
 
   /**
    * Test utf-8 read on english Mediawiki.
-   * 
-   * @throws Exception
-   *           a
    */
   @Ignore("too old")
   @Test
@@ -230,7 +204,7 @@ public class EditCustomWikiContentTest {
     assertTrue("Version is: " + bot.getVersion(), bot.getVersion() == Version.MW1_13); // TODO
 
     Article a = new Article(bot, getValue("demoWiki_article"));
-    
+
     a.addText(getRandom(5) + "\nK");
     a.save();
 

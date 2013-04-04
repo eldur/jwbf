@@ -31,9 +31,7 @@ import java.util.Iterator;
 
 import lombok.extern.slf4j.Slf4j;
 import net.sourceforge.jwbf.core.actions.Get;
-import net.sourceforge.jwbf.core.actions.util.ActionException;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
-import net.sourceforge.jwbf.core.actions.util.ProcessException;
 import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
@@ -77,10 +75,6 @@ public class GetRevision extends MWAction {
   /**
    * TODO follow redirects. TODO change constructor fild ordering; bot
    * 
-   * @throws ProcessException
-   *           a
-   * @throws ActionException
-   *           a
    * @param articlename
    *          of
    * @param properties
@@ -99,9 +93,9 @@ public class GetRevision extends MWAction {
     this.properties = properties;
     sa = new SimpleArticle();
     sa.setTitle(articlename);
-    String uS = MediaWiki.URL_API + "?action=query&prop=revisions&titles=" + MediaWiki.encode(articlename)
-        + "&rvprop=" + getDataProperties(properties) + getReversion(properties) + "&rvlimit=1"
-        + "&format=xml";
+    String uS = MediaWiki.URL_API + "?action=query&prop=revisions&titles="
+        + MediaWiki.encode(articlename) + "&rvprop=" + getDataProperties(properties)
+        + getReversion(properties) + "&rvlimit=1" + "&format=xml";
     msg = new Get(uS);
 
   }

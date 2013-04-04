@@ -37,8 +37,6 @@ public class HttpBotTest {
   /**
    * Test if useragent ist jwbf.
    * 
-   * @throws Exception
-   *           a
    */
   @Test
   public final void testUserAgent() throws Exception {

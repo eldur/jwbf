@@ -35,7 +35,6 @@ import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
 import net.sourceforge.jwbf.JWBF;
 import net.sourceforge.jwbf.core.actions.Get;
-import net.sourceforge.jwbf.core.actions.util.ActionException;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.core.actions.util.ProcessException;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
@@ -78,13 +77,6 @@ public class GetVersion extends MWAction {
   /**
    * Create and submit the request to the Wiki. Do not use
    * {@link MediaWikiBot#performAction(net.sourceforge.jwbf.actions.ContentProcessable)} .
-   * 
-   * @param bot
-   *          a
-   * @throws ProcessException
-   *           a
-   * @throws ActionException
-   *           a
    */
   public GetVersion(MediaWikiBot bot) {
     this();

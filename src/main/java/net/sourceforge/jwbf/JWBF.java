@@ -123,13 +123,6 @@ public final class JWBF {
     // do nothing
   }
 
-  /**
-   * 
-   * @param artifactId
-   *          a
-   * @param version
-   *          a
-   */
   private static void registerModule(String artifactId, String version) {
     PARTS.put(artifactId, version);
 
@@ -137,7 +130,7 @@ public final class JWBF {
 
   /**
    * @param clazz
-   *          a class of the module
+   *          of the module
    * @return the version
    */
   public static String getVersion(Class<?> clazz) {
@@ -150,7 +143,7 @@ public final class JWBF {
 
   /**
    * @param clazz
-   *          a class of the module
+   *          of the module
    * @return the version
    */
   public static String getPartId(Class<?> clazz) {
@@ -194,17 +187,15 @@ public final class JWBF {
 
   /**
    * 
-   * @param path
-   *          a
    * @return the version from manifest
    * @throws IOException
    *           if path invalid
    */
-  private static String readMFVersion(String path) throws IOException {
+  private static String readMFVersion(String filesystemPath) throws IOException {
     if (version.length() < 1) {
       String implementationVersion = null;
 
-      implementationVersion = readFromManifest(path, "Implementation-Version");
+      implementationVersion = readFromManifest(filesystemPath, "Implementation-Version");
 
       if (implementationVersion == null) {
         version = "DEVEL";
@@ -216,17 +207,13 @@ public final class JWBF {
   }
 
   /**
-   * 
-   * @param path
-   *          a
-   * @return the
    * @throws IOException
    *           if path invalid
    */
-  private static String readMFProductTitle(String path) throws IOException {
+  private static String readMFProductTitle(String filesystemPath) throws IOException {
     if (title.length() < 1) {
       String implementationTitle = null;
-      implementationTitle = readFromManifest(path, "Implementation-Title");
+      implementationTitle = readFromManifest(filesystemPath, "Implementation-Title");
 
       if (implementationTitle == null) {
         title = "jwbf-generic";
@@ -239,24 +226,20 @@ public final class JWBF {
 
   /**
    * 
-   * @param path
-   *          a
-   * @param key
-   *          a
-   * @return value
    * @throws IOException
    *           if path invalid
    */
-  private static String readFromManifest(String path, String key) throws IOException {
+  private static String readFromManifest(String filesystemPath, String manifestKey)
+      throws IOException {
     if (manifest == null) {
       URL manifestUrl;
-      if (path.endsWith(".jar")) {
+      if (filesystemPath.endsWith(".jar")) {
 
-        manifestUrl = new URL("jar:file:" + path + "!/META-INF/MANIFEST.MF");
+        manifestUrl = new URL("jar:file:" + filesystemPath + "!/META-INF/MANIFEST.MF");
       } else {
-        if (!path.endsWith(File.separator))
-          path += File.separatorChar;
-        manifestUrl = searchMF(path);
+        if (!filesystemPath.endsWith(File.separator))
+          filesystemPath += File.separatorChar;
+        manifestUrl = searchMF(filesystemPath);
       }
       if (manifestUrl != null)
         manifest = new Manifest(manifestUrl.openStream());
@@ -270,7 +253,7 @@ public final class JWBF {
       }
       return null;
     }
-    return manifest.getMainAttributes().getValue(key);
+    return manifest.getMainAttributes().getValue(manifestKey);
   }
 
   private static URL searchMF(String f) throws IOException {

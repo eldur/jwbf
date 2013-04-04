@@ -53,12 +53,8 @@ public class GetRevision implements ContentProcessable {
   /**
    * TODO follow redirects.
    * 
-   * @param articlename
-   *          a
-   * @throws ProcessException
-   *           if arcticlename is empty
    */
-  public GetRevision(final String articlename) throws ProcessException {
+  public GetRevision(final String articlename) {
     if (articlename.length() <= 0) {
       throw new ProcessException("articlename is empty");
     }
@@ -74,7 +70,7 @@ public class GetRevision implements ContentProcessable {
 
   }
 
-  public String processReturningText(String s, HttpAction hm) throws ProcessException {
+  public String processReturningText(String s, HttpAction hm) {
     if (hm == contentGet) {
       sa.setText(s);
     } else if (hm == versionGet) {

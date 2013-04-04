@@ -40,11 +40,9 @@ public class AllPagesTest extends AbstractMediaWikiBotTest {
   /**
    * Test category read. Test category must have more then 50 members.
    * 
-   * @throws Exception
-   *           a
    */
   @Test
-  public final void allPagesWikipediaDe() throws Exception {
+  public final void allPagesWikipediaDe() {
     String url = "http://de.wikipedia.org/w/index.php";
     assumeReachable(url);
     bot = new MediaWikiBot(url);

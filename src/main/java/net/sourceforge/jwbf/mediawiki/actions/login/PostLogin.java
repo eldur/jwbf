@@ -107,7 +107,7 @@ public class PostLogin extends MWAction {
    * {@inheritDoc}
    */
   @Override
-  public String processAllReturningText(final String s) throws ProcessException {
+  public String processAllReturningText(final String s) {
     SAXBuilder builder = new SAXBuilder();
     Element root = null;
     try {
@@ -135,10 +135,10 @@ public class PostLogin extends MWAction {
    * 
    * @param startElement
    *          the, where the search begins
-   * @throws ProcessException
+   * 
    *           if problems with login
    */
-  private void findContent(final Element startElement) throws ProcessException {
+  private void findContent(final Element startElement) {
 
     Element loginEl = startElement.getChild("login");
     String result = loginEl.getAttributeValue("result");

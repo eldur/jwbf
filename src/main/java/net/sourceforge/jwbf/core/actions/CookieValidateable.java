@@ -2,7 +2,6 @@ package net.sourceforge.jwbf.core.actions;
 
 import java.util.Map;
 
-import net.sourceforge.jwbf.core.actions.util.CookieException;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 
 /**
@@ -12,15 +11,7 @@ import net.sourceforge.jwbf.core.actions.util.HttpAction;
  * 
  */
 public interface CookieValidateable {
-  /**
-   * 
-   * @param cs
-   *          a
-   * @param hm
-   *          a
-   * @throws CookieException
-   *           on problems with cookies
-   */
-  void validateReturningCookies(final Map<String, String> cs, HttpAction hm) throws CookieException;
+
+  void validateReturningCookies(final Map<String, String> cookies, HttpAction action);
 
 }

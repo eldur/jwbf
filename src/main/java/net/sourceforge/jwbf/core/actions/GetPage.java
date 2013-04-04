@@ -19,7 +19,6 @@
 package net.sourceforge.jwbf.core.actions;
 
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
-import net.sourceforge.jwbf.core.actions.util.ProcessException;
 
 /**
  * Simple method to get plain HTML or XML data e.g. from custom specialpages or xml newsfeeds or
@@ -78,11 +77,11 @@ public class GetPage implements ContentProcessable {
    *          the returning text
    * @param hm
    *          the
-   * @throws ProcessException
+   * 
    *           on any problems with inner browser
    * @return the returning text
    */
-  public String processReturningText(String s, HttpAction hm) throws ProcessException {
+  public String processReturningText(String s, HttpAction hm) {
     text = s;
     return s;
   }

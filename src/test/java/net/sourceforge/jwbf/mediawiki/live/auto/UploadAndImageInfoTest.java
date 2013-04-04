@@ -91,14 +91,8 @@ public class UploadAndImageInfoTest extends ParamHelper {
 
   }
 
-  /**
-   * because image does not exists.
-   * 
-   * @throws Exception
-   *           a
-   */
   @Test(expected = ProcessException.class)
-  public final void imageInfoFail() throws Exception {
+  public final void imageInfoFail() {
 
     bot = getMediaWikiBot(Version.getLatest(), true);
     ImageInfo a = new ImageInfo(bot, "UnknownImage.jpg");
@@ -106,14 +100,8 @@ public class UploadAndImageInfoTest extends ParamHelper {
 
   }
 
-  /**
-   * because image does not exists.
-   * 
-   * @throws Exception
-   *           a
-   */
   @Test(expected = ActionException.class)
-  public final void imageInfoPerformManual() throws Exception {
+  public final void imageInfoPerformManual() {
 
     ImageInfo a = new ImageInfo(bot, "UnknownImage.jpg");
     bot.performAction(a);
@@ -123,37 +111,33 @@ public class UploadAndImageInfoTest extends ParamHelper {
   /**
    * Test to delete an image.
    * 
-   * @throws Exception
-   *           a
    */
-  @Test(expected = ProcessException.class)
-  public final void deleteImage() throws Exception {
+  @Test
+  public final void deleteImage() {
+    if (bot.getVersion().greaterEqThen(Version.MW1_17)) {
+      // TODO api upload
+      Assume.assumeTrue("api upload is missing", false);
+    }
     generalUploadImageInfoTest(bot);
-    bot.delete("File:" + getValue("filename"));
+    String testFilename = getValue("filename");
+    String urlAsString = new ImageInfo(bot, testFilename).getUrlAsString();
+    assertTrue(urlAsString.endsWith("Test.gif"));
+    bot.delete("File:" + testFilename);
 
     try {
-
-      new URL(new ImageInfo(bot, getValue("filename")).getUrlAsString());
+      urlAsString = new ImageInfo(bot, testFilename).getUrlAsString();
+      fail("file was found ");
     } catch (ProcessException e) {
-      throw new ProcessException(e.getLocalizedMessage() + "; \n is upload enabled ?");
+      assertEquals("no url for image with name \"Test.gif\"", e.getMessage());
     }
-    fail("file was found ");
   }
 
-  /**
-   * 
-   * @param bot
-   *          a
-   * @param v
-   *          a
-   * @throws Exception
-   *           a
-   */
   protected final void generalUploadImageInfoTest(MediaWikiBot bot) {
-    assertTrue("File (" + getValue("validFile") + ") not readable",
-        new File(getValue("validFile")).canRead());
-    SimpleFile sf = new SimpleFile(getValue("filename"), getValue("validFile"));
-    bot.delete("File:" + getValue("filename"));
+    String validFile = getValue("validFile");
+    assertTrue("File (" + validFile + ") not readable", new File(validFile).canRead());
+    String testFilename = getValue("filename");
+    SimpleFile sf = new SimpleFile(testFilename, validFile);
+    bot.delete("File:" + testFilename);
     BufferedImage img = toImage(sf);
     int upWidth = img.getWidth();
     int upHeight = img.getHeight();
@@ -179,7 +163,7 @@ public class UploadAndImageInfoTest extends ParamHelper {
         }).getUrl();
     Assert.assertTrue("file not found " + url, url.toExternalForm().length()
         - bot.getHostUrl().length() > 2);
-    File file = new File(getValue("validFile"));
+    File file = new File(validFile);
     assertFile(url, file);
     assertImageDimension(url, upWidth, upHeight);
     assertImageDimension(urlSizeVar, newWidth, newHeight);
@@ -193,23 +177,15 @@ public class UploadAndImageInfoTest extends ParamHelper {
     }
   }
 
-  /**
-   * 
-   * @param url
-   *          a
-   * @param file
-   *          a
-   * @throws Exception
-   *           a
-   */
   protected final void assertFile(URL url, File file) {
     File temp = new File("temp.file");
 
     download(url.toExternalForm(), temp);
     Assert.assertTrue("files are not ident", filesAreIdentical(temp, file));
 
-    if (!temp.delete())
+    if (!temp.delete()) {
       throw new RuntimeException("unable to delete file");
+    }
   }
 
   protected void assertImageDimension(URL url, int width, int height) {
@@ -222,13 +198,6 @@ public class UploadAndImageInfoTest extends ParamHelper {
     }
   }
 
-  /**
-   * 
-   * @param address
-   *          a
-   * @param localFileName
-   *          a
-   */
   protected static final void download(String address, File localFileName) {
     OutputStream out = null;
     URLConnection conn = null;
@@ -262,16 +231,6 @@ public class UploadAndImageInfoTest extends ParamHelper {
     }
   }
 
-  /**
-   * 
-   * @param left
-   *          a
-   * @param right
-   *          a
-   * @return true if
-   * @throws IOException
-   *           a
-   */
   protected static final boolean filesAreIdentical(File left, File right) {
     assert left != null;
     assert right != null;

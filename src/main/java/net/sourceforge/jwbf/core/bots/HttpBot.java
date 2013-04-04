@@ -46,8 +46,6 @@ public class HttpBot {
   }
 
   /**
-   * Design for extension.
-   * 
    * @param url
    *          of the host
    */
@@ -64,18 +62,11 @@ public class HttpBot {
     }
   }
 
-  /**
-   * Design for extension.
-   * 
-   * @param cc
-   *          a
-   */
-  public HttpBot(HttpActionClient cc) {
-    actionClient = cc;
+  public HttpBot(HttpActionClient actionClient) {
+    this.actionClient = actionClient;
   }
 
   /**
-   * Design for extension.
    * 
    * @param url
    *          of the host
@@ -145,9 +136,7 @@ public class HttpBot {
 
   /**
    * 
-   * @param a
-   *          a
-   * @return text
+   * @return http raw content
    */
   public synchronized String performAction(final ContentProcessable a) {
     return actionClient.performAction(a);

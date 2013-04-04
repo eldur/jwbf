@@ -27,7 +27,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import net.sourceforge.jwbf.core.actions.util.ActionException;
-import net.sourceforge.jwbf.core.actions.util.ProcessException;
 import net.sourceforge.jwbf.core.bots.WikiBot;
 import net.sourceforge.jwbf.core.bots.util.CacheHandler;
 import net.sourceforge.jwbf.core.contentRep.Article;
@@ -64,22 +63,22 @@ public class ZimWikiBot implements WikiBot {
     this.rootFolder = rootFolder;
   }
 
-  public void login(String user, String passwd) throws ActionException {
+  public void login(String user, String passwd) {
     throw new ActionException("login is not supported because this is a desktopwiki");
 
   }
 
-  public void delete(String title) throws ActionException, ProcessException {
+  public void delete(String title) {
     // TODO Auto-generated method stub
 
   }
 
-  public Article getArticle(String title) throws ActionException, ProcessException {
+  public Article getArticle(String title) {
 
     return getArticle(title, 0); // FIXME add regular constants
   }
 
-  public Article getArticle(String title, int properties) throws ActionException, ProcessException {
+  public Article getArticle(String title, int properties) {
     return new Article(this, readData(title, properties));
   }
 
@@ -87,8 +86,7 @@ public class ZimWikiBot implements WikiBot {
    * Set up a simple text paarser some simple formating routines are supplied -> bold letters and
    * images are translated from zimWiki to mediaWiki
    */
-  public SimpleArticle readData(String name, int properties) throws ActionException,
-      ProcessException {
+  public SimpleArticle readData(String name, int properties) {
     File f = new File(getRootFolder(), name + ZIMEXT);
     SimpleArticle sa = new SimpleArticle();
     sa.setTitle(name);
@@ -139,7 +137,7 @@ public class ZimWikiBot implements WikiBot {
     return sa;
   }
 
-  public void writeContent(SimpleArticle sa) throws ActionException, ProcessException {
+  public void writeContent(SimpleArticle sa) {
     // TODO Auto-generated method stub
 
   }
@@ -148,7 +146,7 @@ public class ZimWikiBot implements WikiBot {
     return rootFolder;
   }
 
-  public Userinfo getUserinfo() throws ActionException, ProcessException {
+  public Userinfo getUserinfo() {
     return new Userinfo() {
 
       public String getUsername() {
@@ -176,7 +174,7 @@ public class ZimWikiBot implements WikiBot {
     return "Zim";
   }
 
-  public SimpleArticle readData(String name) throws ActionException, ProcessException {
+  public SimpleArticle readData(String name) {
     return readData(name, DEFAULT);
   }
 

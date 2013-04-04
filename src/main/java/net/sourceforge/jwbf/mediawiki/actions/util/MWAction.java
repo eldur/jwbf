@@ -27,7 +27,6 @@ import java.util.Collection;
 import lombok.extern.slf4j.Slf4j;
 import net.sourceforge.jwbf.core.actions.ContentProcessable;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
-import net.sourceforge.jwbf.core.actions.util.ProcessException;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
 
@@ -79,10 +78,10 @@ public abstract class MWAction implements ContentProcessable {
    * 
    * @param v
    *          of the bot
-   * @throws VersionException
-   *           if action is incompatible
+   * 
+   *          if action is incompatible
    */
-  protected MWAction(Version v) throws VersionException {
+  protected MWAction(Version v) {
     checkVersionNewerEquals(v);
 
   }
@@ -95,11 +94,11 @@ public abstract class MWAction implements ContentProcessable {
    * @param hm
    *          the requestor message
    * @return the returning text
-   * @throws ProcessException
-   *           on processing problems
+   * 
+   *         on processing problems
    * 
    */
-  public String processReturningText(final String s, final HttpAction hm) throws ProcessException {
+  public String processReturningText(final String s, final HttpAction hm) {
     return processAllReturningText(s);
   }
 
@@ -107,11 +106,11 @@ public abstract class MWAction implements ContentProcessable {
    * @param s
    *          the returning text
    * @return the returning text
-   * @throws ProcessException
-   *           never
+   * 
+   *         never
    * 
    */
-  public String processAllReturningText(final String s) throws ProcessException {
+  public String processAllReturningText(final String s) {
     return s;
   }
 
@@ -121,18 +120,13 @@ public abstract class MWAction implements ContentProcessable {
    */
   private Version[] getVersionArray() {
 
-    if (v != null)
+    if (v != null) {
       return v;
+    }
     v = findSupportedVersions(getClass());
     return v;
   }
 
-  /**
-   * 
-   * @param clazz
-   *          a
-   * @return an
-   */
   public static final Version[] findSupportedVersions(Class<?> clazz) {
     if (clazz.getName().contains(Object.class.getName())) {
       Version[] v = new MediaWiki.Version[1];
@@ -158,19 +152,14 @@ public abstract class MWAction implements ContentProcessable {
     }
   }
 
-  /**
-   * 
-   * @param v
-   *          a
-   * @throws VersionException
-   *           if version is not supported
-   */
-  protected void checkVersionNewerEquals(Version v) throws VersionException {
-    if (getSupportedVersions().contains(v))
+  protected void checkVersionNewerEquals(Version v) {
+    if (getSupportedVersions().contains(v)) {
       return;
+    }
     for (Version vx : getSupportedVersions()) {
-      if (v.greaterEqThen(vx))
+      if (v.greaterEqThen(vx)) {
         return;
+      }
     }
     throw new VersionException("unsupported version: " + v);
   }

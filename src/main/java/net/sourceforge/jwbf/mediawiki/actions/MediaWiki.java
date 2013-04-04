@@ -176,9 +176,6 @@ public final class MediaWiki {
     }
 
     /**
-     * 
-     * @param v
-     *          a
      * @return true if
      */
     public boolean greaterEqThen(Version v) {
@@ -186,7 +183,6 @@ public final class MediaWiki {
     }
 
     /**
-     * 
      * @return all known stable MW Versions
      */
     public static Version[] valuesStable() {
@@ -215,18 +211,11 @@ public final class MediaWiki {
     // do nothing
   }
 
-  /**
-   * 
-   * @return the
-   */
   public static String getCharset() {
     return CHARSET;
   }
 
   /**
-   * 
-   * @param s
-   *          a
    * @return encoded s
    */
   public static String encode(String s) {
@@ -238,9 +227,6 @@ public final class MediaWiki {
   }
 
   /**
-   * 
-   * @param s
-   *          a
    * @return decoded s
    */
   public static String decode(final String s) {

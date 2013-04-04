@@ -81,8 +81,6 @@ public class CategoryTest extends ParamHelper {
   /**
    * Test category read. Test category must have more then 50 members.
    * 
-   * @throws Exception
-   *           a
    */
   @Ignore("for wikipedia a login is required")
   @Test
@@ -98,8 +96,6 @@ public class CategoryTest extends ParamHelper {
   /**
    * Test category read. Test category must have more then 50 members.
    * 
-   * @throws Exception
-   *           a
    */
   @Test
   public void doTest() {

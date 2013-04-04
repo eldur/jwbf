@@ -80,8 +80,7 @@ public class PostLoginOld extends MWAction implements CookieValidateable {
    *           never
    * 
    */
-  public final void validateReturningCookies(final Map<String, String> cs, HttpAction hm)
-      throws CookieException {
+  public final void validateReturningCookies(final Map<String, String> cs, HttpAction hm) {
     validateAllReturningCookies(cs);
 
   }
@@ -92,7 +91,7 @@ public class PostLoginOld extends MWAction implements CookieValidateable {
    * @throws CookieException
    *           when no cookies returning
    */
-  public void validateAllReturningCookies(final Map<String, String> cs) throws CookieException {
+  public void validateAllReturningCookies(final Map<String, String> cs) {
     String compare = username;
 
     compare = MediaWiki.encode(username);
@@ -105,8 +104,9 @@ public class PostLoginOld extends MWAction implements CookieValidateable {
     } else {
 
       if (cs.containsValue(compare)) {
-        if (log.isInfoEnabled())
+        if (log.isInfoEnabled()) {
           log.info("Logged in as: " + username);
+        }
         login.setup(username, true);
         return;
       } else {

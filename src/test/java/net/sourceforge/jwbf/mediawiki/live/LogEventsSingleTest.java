@@ -17,12 +17,9 @@ public class LogEventsSingleTest extends AbstractMediaWikiBotTest {
 
   /**
    * Test category read. Test category must have more then 50 members.
-   * 
-   * @throws Exception
-   *           a
    */
   @Test(expected = ActionException.class)
-  public final void logEventsPerformManual() throws Exception {
+  public final void logEventsPerformManual() {
 
     String liveUrl = "http://de.wikipedia.org/w/index.php";
     assumeReachable(liveUrl);
@@ -31,13 +28,8 @@ public class LogEventsSingleTest extends AbstractMediaWikiBotTest {
     bot.performAction(le);
   }
 
-  /**
-   * 
-   * @throws Exception
-   *           a
-   */
   @Test
-  public final void logEventsWikipediaDe() throws Exception {
+  public final void logEventsWikipediaDe() {
     String liveUrl = "http://de.wikipedia.org/w/index.php";
     assumeReachable(liveUrl);
     bot = new MediaWikiBot(liveUrl);

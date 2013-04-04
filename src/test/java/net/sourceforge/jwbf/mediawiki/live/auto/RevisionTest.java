@@ -49,8 +49,6 @@ public class RevisionTest extends ParamHelper {
   /**
    * Test write and read.
    * 
-   * @throws Exception
-   *           a
    */
   @Test
   public void doTest() throws Exception {

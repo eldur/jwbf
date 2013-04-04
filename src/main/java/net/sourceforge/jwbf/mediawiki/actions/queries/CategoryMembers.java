@@ -25,11 +25,9 @@ import java.util.regex.Pattern;
 
 import lombok.extern.slf4j.Slf4j;
 import net.sourceforge.jwbf.core.actions.Get;
-import net.sourceforge.jwbf.core.actions.util.ProcessException;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.actions.util.SupportedBy;
-import net.sourceforge.jwbf.mediawiki.actions.util.VersionException;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 
 /**
@@ -69,11 +67,11 @@ abstract class CategoryMembers extends MWAction {
   /**
    * The private constructor, which is used to create follow-up actions.
    * 
-   * @throws VersionException
+   * 
    *           on version problems
    */
   protected CategoryMembers(MediaWikiBot bot, String categoryName, int[] namespace)
-      throws VersionException {
+      {
     super(bot.getVersion());
     this.namespace = namespace.clone();
     namespaceStr = createNsString(namespace);
@@ -137,7 +135,7 @@ abstract class CategoryMembers extends MWAction {
    * @return empty string
    */
   @Override
-  public String processAllReturningText(final String s) throws ProcessException {
+  public String processAllReturningText(final String s) {
     parseArticleTitles(s);
     parseHasMore(s);
     return "";

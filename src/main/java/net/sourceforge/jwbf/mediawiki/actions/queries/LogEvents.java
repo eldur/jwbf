@@ -101,57 +101,41 @@ public class LogEvents extends MWAction implements Iterator<LogItem>, Iterable<L
 
   /**
    * information necessary to get the next api page.
-   */
-
-  /**
-   * @param bot
-   *          a
+   * 
    * @param type
    *          of like {@link #MOVE}
-   * @throws VersionException
-   *           if incompatible with this version
+   * 
    */
-  public LogEvents(MediaWikiBot bot, String type) throws VersionException {
+  public LogEvents(MediaWikiBot bot, String type) {
     this(bot, new String[] { type });
   }
 
   /**
-   * @param bot
-   *          a
    * @param type
    *          of like {@link #MOVE}
-   * @throws VersionException
-   *           if incompatible with this version
    */
-  public LogEvents(MediaWikiBot bot, String[] type) throws VersionException {
+  public LogEvents(MediaWikiBot bot, String[] type) {
     this(bot, 50, type.clone());
   }
 
   /**
-   * @param bot
-   *          a
    * @param limit
    *          of events
    * @param type
    *          of like {@link #MOVE}
-   * @throws VersionException
-   *           if incompatible with this version
    */
-  public LogEvents(MediaWikiBot bot, int limit, String type) throws VersionException {
+  public LogEvents(MediaWikiBot bot, int limit, String type) {
     this(bot, limit, new String[] { type });
   }
 
   /**
-   * @param bot
-   *          a
    * @param limit
    *          of events
    * @param type
    *          of like {@link #MOVE}
-   * @throws VersionException
-   *           if incompatible with this version
+   * 
    */
-  public LogEvents(MediaWikiBot bot, int limit, String[] type) throws VersionException {
+  public LogEvents(MediaWikiBot bot, int limit, String[] type) {
     super(bot.getVersion());
     this.bot = bot;
     this.type = type;
@@ -163,7 +147,6 @@ public class LogEvents extends MWAction implements Iterator<LogItem>, Iterable<L
    * 
    * @param logtype
    *          type of log, like upload
-   * @return a
    */
   private Get generateRequest(String... logtype) {
 
@@ -189,7 +172,6 @@ public class LogEvents extends MWAction implements Iterator<LogItem>, Iterable<L
    * 
    * @param logtype
    *          type of log, like upload
-   * @return a
    */
   private Get generateContinueRequest(String[] logtype, String continueing) {
 
@@ -214,7 +196,7 @@ public class LogEvents extends MWAction implements Iterator<LogItem>, Iterable<L
    * {@inheritDoc}
    */
   @Override
-  public String processAllReturningText(final String s) throws ProcessException {
+  public String processAllReturningText(final String s) {
     logCollection.clear();
     parseArticleTitles(s);
     parseHasMore(s);
@@ -270,8 +252,9 @@ public class LogEvents extends MWAction implements Iterator<LogItem>, Iterable<L
     } else {
       hasMoreResults = false;
     }
-    if (log.isDebugEnabled())
+    if (log.isDebugEnabled()) {
       log.debug("has more = " + hasMoreResults);
+    }
 
   }
 

@@ -100,10 +100,6 @@ public class VersionTestClassVerifier extends Verifier {
   /**
    * Use in a valid testcase.
    * 
-   * @param clazz
-   *          a
-   * @param v
-   *          a
    */
   private void registerTestedVersion(Class<?> clazz, Version v) {
     if (v != Version.DEVELOPMENT) {
