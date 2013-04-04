@@ -247,13 +247,15 @@ public class SimpleArticle implements ArticleMeta, Serializable, Cloneable, Cont
     this.editor = editor;
   }
 
+  private static Pattern redirectPattern = Pattern //
+      .compile("#(.*)redirect (.*)" //
+          , Pattern.CASE_INSENSITIVE);
+
   /**
    * {@inheritDoc}
    */
   public boolean isRedirect() {
-
-    Pattern pattern = Pattern.compile("#(.*)redirect(.*)", Pattern.CASE_INSENSITIVE);
-    if (pattern.matcher(text).matches()) {
+    if (redirectPattern.matcher(text).matches()) {
       return true;
     }
 

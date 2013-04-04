@@ -191,7 +191,7 @@ public class SimpleArticleTest {
   }
 
   @Test
-  public void testIsNoRedirect() {
+  public void testIsRedirectFail() {
     article.setText("Text\n#redirect [[A]]");
     assertFalse(article.isRedirect());
     article.setText("Text #REDIRECT [[A]]");
