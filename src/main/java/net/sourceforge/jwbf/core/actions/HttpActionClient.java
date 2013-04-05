@@ -105,7 +105,6 @@ public class HttpActionClient {
    */
   @Nonnull
   public synchronized String performAction(ContentProcessable contentProcessable) {
-
     String out = "";
     while (contentProcessable.hasMoreMessages()) {
       HttpAction httpAction = contentProcessable.getNextMessage();

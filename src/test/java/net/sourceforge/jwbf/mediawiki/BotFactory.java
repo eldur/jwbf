@@ -3,7 +3,7 @@ package net.sourceforge.jwbf.mediawiki;
 import java.net.URL;
 
 import javax.inject.Inject;
-import javax.inject.Named;
+import javax.inject.Singleton;
 
 import lombok.extern.slf4j.Slf4j;
 import net.sourceforge.jwbf.TestHelper;
@@ -15,10 +15,11 @@ import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 
+import org.mockito.Mockito;
+
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import com.google.inject.name.Names;
 
 public class BotFactory {
 
@@ -37,36 +38,47 @@ public class BotFactory {
 
   public static MediaWikiBot getMediaWikiBot(final Version v, final boolean login) {
 
+    Injector injector = getBotInjector(v, login);
+    return injector.getInstance(MediaWikiBot.class);
+  }
+
+  public static Injector getBotInjector(Version v, boolean login) {
     final String wikiUrl = getWikiUrl(v);
     TestHelper.assumeReachable(wikiUrl);
     Injector injector = masterInjector.createChildInjector(new AbstractModule() {
 
       @Override
       protected void configure() {
-        bind(String.class).annotatedWith(Names.named("httpUrl")).toInstance(wikiUrl);
+        bind(CacheActionClient.class).toInstance(
+            Mockito.spy(new CacheActionClient(wikiUrl, new WireRegister())));
         bind(HttpBot.class).to(CacheHttpBot.class);
-
+        bind(MediaWikiBot.class).asEagerSingleton();
       }
     });
     MediaWikiBot bot = injector.getInstance(MediaWikiBot.class);
-
     if (login) {
       bot.login(getWikiUser(v), getWikiPass(v));
     }
-    return bot;
+    return injector;
   }
 
   @Slf4j
+  @Singleton
   private static class CacheHttpBot extends HttpBot {
 
     @Inject
-    public CacheHttpBot(@Named("httpUrl") String url, WireRegister wireRegister) {
-      super(new CacheActionClient(newURL(url), wireRegister));
+    public CacheHttpBot(CacheActionClient actionClient) {
+      super(actionClient);
     }
   }
 
   @Slf4j
-  private static class CacheActionClient extends HttpActionClient {
+  public static class CacheActionClient extends HttpActionClient {
+
+    public CacheActionClient(String url, WireRegister wireRegister) {
+      super(HttpBot.newURL(url));
+      this.wireRegister = wireRegister;
+    }
 
     private final WireRegister wireRegister;
 

@@ -54,7 +54,7 @@ public class HttpBot {
     setClient(newURL(url));
   }
 
-  protected static URL newURL(final String url) {
+  public static URL newURL(final String url) {
     try {
       return new URL(url);
     } catch (MalformedURLException e) {

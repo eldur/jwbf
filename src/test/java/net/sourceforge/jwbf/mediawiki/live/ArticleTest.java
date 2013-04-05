@@ -7,6 +7,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 import java.util.Collection;
 import java.util.Date;
@@ -14,15 +17,22 @@ import java.util.Date;
 import lombok.extern.slf4j.Slf4j;
 import net.sourceforge.jwbf.core.contentRep.Article;
 import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
+import net.sourceforge.jwbf.mediawiki.BotFactory;
+import net.sourceforge.jwbf.mediawiki.BotFactory.CacheActionClient;
 import net.sourceforge.jwbf.mediawiki.LiveTestFather;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
+import net.sourceforge.jwbf.mediawiki.actions.editing.GetRevision;
+import net.sourceforge.jwbf.mediawiki.actions.login.PostLogin;
+import net.sourceforge.jwbf.mediawiki.actions.meta.GetVersion;
 import net.sourceforge.jwbf.mediawiki.actions.util.VersionException;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 
 import org.junit.Ignore;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 import com.google.common.collect.Lists;
+import com.google.inject.Injector;
 
 @Slf4j
 public class ArticleTest {
@@ -142,9 +152,48 @@ public class ArticleTest {
 
   @Test
   public final void simpleArticleTest() {
-    MediaWikiBot b = getMediaWikiBot(Version.getLatest(), true);
+    Injector injector = BotFactory.getBotInjector(Version.getLatest(), true);
+    MediaWikiBot b = injector.getInstance(MediaWikiBot.class);
+
     SimpleArticle sa = b.readData("Main Page");
-    log.debug(sa.getText());
+    sa.getText();
+    sa.getText();
+
+    CacheActionClient actionClient = injector.getInstance(CacheActionClient.class);
+    verify(actionClient, times(1)).performAction(Mockito.isA(PostLogin.class));
+    verify(actionClient, times(1)).performAction(Mockito.isA(GetVersion.class));
+    verify(actionClient, times(1)).performAction(Mockito.isA(GetRevision.class));
+    Mockito.reset(actionClient);
+    try {
+      SimpleArticle sa2 = new SimpleArticle(b.getArticle("Main Page"));
+      sa2.getText();
+      sa2.getText();
+      // very expensive (for documentation)
+      verify(actionClient, times(7)).performAction(Mockito.isA(GetRevision.class));
+      fail();
+    } catch (IllegalArgumentException iae) {
+      assertEquals("do not convert an net.sourceforge.jwbf.core.contentRep.Article"
+          + " to a net.sourceforge.jwbf.core.contentRep.SimpleArticle,"
+          + " because its very expensive", iae.getMessage());
+    }
+  }
+
+  @Test
+  public final void articleTest() {
+    Injector injector = BotFactory.getBotInjector(Version.getLatest(), true);
+    MediaWikiBot b = injector.getInstance(MediaWikiBot.class);
+
+    Article sa = b.getArticle("Main Page");
+    sa.getText();
+    sa.getText();
+    sa.getTitle();
+    sa.getTitle();
+
+    CacheActionClient actionClient = injector.getInstance(CacheActionClient.class);
+    verify(actionClient, times(1)).performAction(Mockito.isA(PostLogin.class));
+    verify(actionClient, times(1)).performAction(Mockito.isA(GetVersion.class));
+    verify(actionClient, times(2)).performAction(Mockito.isA(GetRevision.class));
+
   }
 
   @Test

@@ -56,7 +56,10 @@ public class SimpleArticle implements ArticleMeta, Serializable, Cloneable, Cont
   }
 
   public SimpleArticle(ContentAccessable ca) {
-
+    if (ca instanceof Article) {
+      throw new IllegalArgumentException("do not convert an " + Article.class.getCanonicalName()
+          + " to a " + getClass().getCanonicalName() + ", because its very expensive");
+    }
     if (ca.getTitle() != null) {
       title = ca.getTitle();
     }
