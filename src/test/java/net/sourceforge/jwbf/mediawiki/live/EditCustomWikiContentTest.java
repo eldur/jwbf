@@ -135,6 +135,8 @@ public class EditCustomWikiContentTest {
   /**
    * Test utf-8 read on english Mediawiki. -Dfile.encoding=ASCII
    * 
+   * FIXME do not check this via system property
+   * 
    */
   @Test
   public final void contentModifyIPAUtf8Get() {
@@ -213,7 +215,7 @@ public class EditCustomWikiContentTest {
   }
 
   private void doWait() {
-    doWait(1500);
+    doWait(1);
   }
 
   private void doWait(int milis) {
