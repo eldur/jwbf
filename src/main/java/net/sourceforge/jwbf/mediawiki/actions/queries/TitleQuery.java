@@ -19,7 +19,7 @@ import com.google.common.collect.Lists;
  *          of
  */
 @Slf4j
-public abstract class TitleQuery<T> implements Iterable<T>, Iterator<T> {
+public abstract class TitleQuery<T> extends MWAction implements Iterable<T>, Iterator<T> {
 
   protected Iterator<T> titleIterator;
   private InnerAction inner;
@@ -39,6 +39,10 @@ public abstract class TitleQuery<T> implements Iterable<T>, Iterator<T> {
 
   protected InnerAction getInnerAction(Version v) {
     return new InnerAction(v);
+  }
+
+  public HttpAction getNextMessage() {
+    throw new UnsupportedOperationException();
   }
 
   /**

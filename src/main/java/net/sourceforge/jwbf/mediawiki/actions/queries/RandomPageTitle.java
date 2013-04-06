@@ -1,24 +1,18 @@
 package net.sourceforge.jwbf.mediawiki.actions.queries;
 
 import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_15;
-
-import java.io.ByteArrayInputStream;
-
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathExpression;
-import javax.xml.xpath.XPathFactory;
-
+import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_16;
+import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_17;
+import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_18;
+import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_19;
+import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_20;
 import lombok.extern.slf4j.Slf4j;
 import net.sourceforge.jwbf.core.actions.Get;
-import net.sourceforge.jwbf.core.actions.util.ActionException;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
-import net.sourceforge.jwbf.core.actions.util.ProcessException;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.actions.util.SupportedBy;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
-
-import org.xml.sax.InputSource;
 
 /**
  * Action to receive the title of a random page
@@ -28,7 +22,7 @@ import org.xml.sax.InputSource;
  * @author Juan Ignacio Cidre
  */
 @Slf4j
-@SupportedBy({ MW1_15 })
+@SupportedBy({ MW1_15, MW1_16, MW1_17, MW1_18, MW1_19, MW1_20 })
 public class RandomPageTitle extends MWAction {
 
   private Get msg;
@@ -56,11 +50,7 @@ public class RandomPageTitle extends MWAction {
    * 
    */
   public String getTitle() {
-    try {
-      return bot.performAction(this);
-    } catch (ActionException e) {
-      throw new ProcessException("Error finding the Random Page " + e.toString());
-    }
+    return bot.performAction(this);
   }
 
   /**
@@ -68,17 +58,7 @@ public class RandomPageTitle extends MWAction {
    */
   @Override
   public String processAllReturningText(String s) {
-    XPath parser = XPathFactory.newInstance().newXPath();
-    String title = "";
-    try {
-      XPathExpression titleParser = parser.compile("/api/query/random/page/@title");
-      InputSource contenido = new InputSource(new ByteArrayInputStream(s.getBytes(MediaWiki
-          .getCharset())));
-      title = titleParser.evaluate(contenido);
-    } catch (Exception e) {
-      throw new ProcessException("Error parsing the title of the Random Page" + e.toString());
-    }
-
+    String title = evaluateXpath(s, "/api/query/random/page/@title");
     log.debug("Title: " + title);
     return title;
   }

@@ -6,7 +6,6 @@ import java.util.Collection;
 
 import net.sourceforge.jwbf.mediawiki.VersionTestClassVerifier;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
-import net.sourceforge.jwbf.mediawiki.actions.editing.PostModifyContent;
 import net.sourceforge.jwbf.mediawiki.actions.queries.RandomPageTitle;
 
 import org.junit.ClassRule;
@@ -19,7 +18,7 @@ public class RandomPageTitleTest extends ParamHelper {
 
   @ClassRule
   public static VersionTestClassVerifier classVerifier = new VersionTestClassVerifier(
-      PostModifyContent.class);
+      RandomPageTitle.class);
 
   @Rule
   public Verifier successRegister = classVerifier.getSuccessRegister(this);

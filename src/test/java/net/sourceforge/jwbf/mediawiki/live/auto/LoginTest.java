@@ -6,7 +6,7 @@ import static org.junit.Assert.fail;
 
 import java.util.Collection;
 
-import net.sourceforge.jwbf.core.actions.util.ProcessException;
+import net.sourceforge.jwbf.core.actions.util.ActionException;
 import net.sourceforge.jwbf.mediawiki.BotFactory;
 import net.sourceforge.jwbf.mediawiki.VersionTestClassVerifier;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
@@ -64,7 +64,7 @@ public class LoginTest extends ParamHelper {
       MediaWikiBot bot = BotFactory.getMediaWikiBot(v, false);
       bot.login("Klhjfd", "4sdf");
       fail();
-    } catch (ProcessException pe) {
+    } catch (ActionException pe) {
       assertTrue(ImmutableSet.of("Throttled", "No such User").contains(pe.getMessage()));
     }
   }

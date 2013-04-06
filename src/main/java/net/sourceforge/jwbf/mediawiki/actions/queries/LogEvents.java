@@ -25,9 +25,6 @@ import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_18;
 import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_19;
 import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_20;
 
-import java.io.IOException;
-import java.io.Reader;
-import java.io.StringReader;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.regex.Matcher;
@@ -45,11 +42,7 @@ import net.sourceforge.jwbf.mediawiki.actions.util.VersionException;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 import net.sourceforge.jwbf.mediawiki.contentRep.LogItem;
 
-import org.jdom.Document;
 import org.jdom.Element;
-import org.jdom.JDOMException;
-import org.jdom.input.SAXBuilder;
-import org.xml.sax.InputSource;
 
 import com.google.common.collect.Lists;
 
@@ -207,26 +200,15 @@ public class LogEvents extends MWAction implements Iterator<LogItem>, Iterable<L
   /**
    * picks the article name from a MediaWiki api response.
    * 
-   * @param s
+   * @param xml
    *          text for parsing
    */
-  private void parseArticleTitles(String s) {
+  private void parseArticleTitles(String xml) {
 
-    SAXBuilder builder = new SAXBuilder();
-    Element root = null;
-    try {
-      Reader i = new StringReader(s);
-      Document doc = builder.build(new InputSource(i));
-
-      root = doc.getRootElement();
-
-    } catch (JDOMException e) {
-      e.printStackTrace();
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-    if (root != null)
+    Element root = getRootElement(xml);
+    if (root != null) {
       findContent(root);
+    }
 
   }
 

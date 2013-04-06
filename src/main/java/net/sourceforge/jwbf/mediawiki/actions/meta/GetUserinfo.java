@@ -7,9 +7,6 @@ import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_18;
 import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_19;
 import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_20;
 
-import java.io.IOException;
-import java.io.Reader;
-import java.io.StringReader;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -23,11 +20,7 @@ import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.actions.util.SupportedBy;
 
-import org.jdom.Document;
 import org.jdom.Element;
-import org.jdom.JDOMException;
-import org.jdom.input.SAXBuilder;
-import org.xml.sax.InputSource;
 
 /**
  * 
@@ -55,19 +48,8 @@ public class GetUserinfo extends MWAction implements Userinfo {
     log.debug(xml);
     rights.clear();
     groups.clear();
-    SAXBuilder builder = new SAXBuilder();
-    Element root = null;
-    try {
-      Reader i = new StringReader(xml);
-      Document doc = builder.build(new InputSource(i));
-
-      root = doc.getRootElement();
-      findContent(root);
-    } catch (JDOMException e) {
-      e.printStackTrace();
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
+    Element root = getRootElement(xml);
+    findContent(root);
   }
 
   /**

@@ -26,9 +26,6 @@ import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_18;
 import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_19;
 import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_20;
 
-import java.io.IOException;
-import java.io.Reader;
-import java.io.StringReader;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -36,18 +33,13 @@ import lombok.extern.slf4j.Slf4j;
 import net.sourceforge.jwbf.JWBF;
 import net.sourceforge.jwbf.core.actions.Get;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
-import net.sourceforge.jwbf.core.actions.util.ProcessException;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.actions.util.SupportedBy;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 
-import org.jdom.Document;
 import org.jdom.Element;
-import org.jdom.JDOMException;
-import org.jdom.input.SAXBuilder;
-import org.xml.sax.InputSource;
 
 import com.google.common.collect.Sets;
 
@@ -98,22 +90,8 @@ public class GetVersion extends MWAction {
   }
 
   private void parse(final String xml) {
-    SAXBuilder builder = new SAXBuilder();
-    Element root = null;
-    try {
-      Reader i = new StringReader(xml);
-      Document doc = builder.build(new InputSource(i));
-
-      root = doc.getRootElement();
-      findContent(root);
-    } catch (JDOMException e) {
-      log.error(e.getClass().getName() + e.getLocalizedMessage());
-      log.error(xml);
-      throw new ProcessException(e.getLocalizedMessage());
-    } catch (IOException e) {
-      log.error(e.getClass().getName() + e.getLocalizedMessage());
-      throw new ProcessException(e.getLocalizedMessage());
-    }
+    Element root = getRootElement(xml);
+    findContent(root);
   }
 
   /**

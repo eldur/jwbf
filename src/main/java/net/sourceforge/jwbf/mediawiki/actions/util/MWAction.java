@@ -18,11 +18,19 @@
  */
 package net.sourceforge.jwbf.mediawiki.actions.util;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collection;
+
+import javax.annotation.CheckForNull;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathExpression;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
 
 import lombok.extern.slf4j.Slf4j;
 import net.sourceforge.jwbf.core.actions.ContentProcessable;
@@ -212,6 +220,24 @@ public abstract class MWAction implements ContentProcessable {
     return false;
   }
 
+  protected String evaluateXpath(String s, String xpath) {
+
+    XPath parser = XPathFactory.newInstance().newXPath();
+    try {
+      XPathExpression titleParser = parser.compile(xpath);
+      ByteArrayInputStream byteStream //
+      = new ByteArrayInputStream(s.getBytes(MediaWiki.getCharset()));
+      InputSource contenido = new InputSource(byteStream);
+      return titleParser.evaluate(contenido);
+    } catch (XPathExpressionException e) {
+      throw new IllegalArgumentException(e);
+    } catch (UnsupportedEncodingException e) {
+      throw new IllegalArgumentException(e);
+    }
+
+  }
+
+  @CheckForNull
   protected Element getRootElement(final String xml) {
     SAXBuilder builder = new SAXBuilder();
     Element root = null;

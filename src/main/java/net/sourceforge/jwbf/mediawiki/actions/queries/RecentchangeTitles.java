@@ -25,9 +25,6 @@ import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_18;
 import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_19;
 import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_20;
 
-import java.io.IOException;
-import java.io.Reader;
-import java.io.StringReader;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Set;
@@ -42,11 +39,7 @@ import net.sourceforge.jwbf.mediawiki.actions.util.SupportedBy;
 import net.sourceforge.jwbf.mediawiki.actions.util.VersionException;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 
-import org.jdom.Document;
 import org.jdom.Element;
-import org.jdom.JDOMException;
-import org.jdom.input.SAXBuilder;
-import org.xml.sax.InputSource;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
@@ -124,14 +117,16 @@ public class RecentchangeTitles extends TitleQuery<String> {
 
     String uS = "";
     if (rcstart.length() > 0) {
-      uS = MediaWiki.URL_API + "?action=query&list=recentchanges"
+      uS = MediaWiki.URL_API
+          + "?action=query&list=recentchanges"
 
           + ((namespace != null) ? ("&rcnamespace=" + MediaWiki.encode(MWAction
               .createNsString(namespace))) : "") + "&rcstart=" + rcstart
           // + "&rcusertype=" // (dflt=not|bot)
           + "&rclimit=" + limit + "&format=xml";
     } else {
-      uS = MediaWiki.URL_API + "?action=query&list=recentchanges"
+      uS = MediaWiki.URL_API
+          + "?action=query&list=recentchanges"
 
           + ((namespace != null) ? ("&rcnamespace=" + MediaWiki.encode(MWAction
               .createNsString(namespace))) : "")
@@ -185,19 +180,7 @@ public class RecentchangeTitles extends TitleQuery<String> {
    */
   @Override
   protected Collection<String> parseArticleTitles(String s) {
-    SAXBuilder builder = new SAXBuilder();
-    Element root = null;
-    try {
-      Reader i = new StringReader(s);
-      Document doc = builder.build(new InputSource(i));
-
-      root = doc.getRootElement();
-
-    } catch (JDOMException e) {
-      e.printStackTrace();
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
+    Element root = getRootElement(s);
     if (root != null) {
       findContent(root);
     }

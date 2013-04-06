@@ -9,8 +9,6 @@ import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_20;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.io.Reader;
-import java.io.StringReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collections;
@@ -31,11 +29,7 @@ import net.sourceforge.jwbf.mediawiki.actions.util.SupportedBy;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 
 import org.apache.commons.lang.math.NumberUtils;
-import org.jdom.Document;
 import org.jdom.Element;
-import org.jdom.JDOMException;
-import org.jdom.input.SAXBuilder;
-import org.xml.sax.InputSource;
 
 import com.google.common.base.Strings;
 
@@ -193,18 +187,7 @@ public class ImageInfo extends MWAction {
   }
 
   private void findUrlOfImage(String s) {
-    SAXBuilder builder = new SAXBuilder();
-    Element root = null;
-    try {
-      Reader i = new StringReader(s);
-      Document doc = builder.build(new InputSource(i));
-      root = doc.getRootElement();
-
-    } catch (JDOMException e) {
-      log.warn("", e);
-    } catch (IOException e) {
-      log.warn("", e);
-    }
+    Element root = getRootElement(s);
     if (root != null) {
       findContent(root);
     } else if (urlOfImage.length() < 1) {
