@@ -38,7 +38,6 @@ import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.actions.util.RedirectFilter;
 import net.sourceforge.jwbf.mediawiki.actions.util.SupportedBy;
-import net.sourceforge.jwbf.mediawiki.actions.util.VersionException;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 
 import com.google.common.collect.Lists;
@@ -111,11 +110,7 @@ public class BacklinkTitles extends TitleQuery<String> {
 
   @Override
   protected Object clone() throws CloneNotSupportedException {
-    try {
-      return new BacklinkTitles(bot, articleName, redirectFilter, namespaces);
-    } catch (VersionException e) {
-      throw new CloneNotSupportedException(e.getLocalizedMessage());
-    }
+    return new BacklinkTitles(bot, articleName, redirectFilter, namespaces);
   }
 
   /**

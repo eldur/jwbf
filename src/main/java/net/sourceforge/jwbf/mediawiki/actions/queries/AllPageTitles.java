@@ -37,7 +37,6 @@ import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.actions.util.RedirectFilter;
 import net.sourceforge.jwbf.mediawiki.actions.util.SupportedBy;
-import net.sourceforge.jwbf.mediawiki.actions.util.VersionException;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 
 import com.google.common.collect.Lists;
@@ -232,11 +231,7 @@ public class AllPageTitles extends TitleQuery<String> {
    */
   @Override
   protected Object clone() throws CloneNotSupportedException {
-    try {
-      return new AllPageTitles(bot, from, prefix, rf, namespaces);
-    } catch (VersionException e) {
-      throw new CloneNotSupportedException(e.getLocalizedMessage());
-    }
+    return new AllPageTitles(bot, from, prefix, rf, namespaces);
   }
 
 }

@@ -37,7 +37,6 @@ import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.actions.util.SupportedBy;
-import net.sourceforge.jwbf.mediawiki.actions.util.VersionException;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 
 /**
@@ -132,6 +131,7 @@ public class TemplateUserTitles extends TitleQuery<String> {
    * 
    * @return empty string
    */
+  @Override
   public String processAllReturningText(final String s) {
     parseArticleTitles(s);
     parseHasMore(s);
@@ -201,11 +201,7 @@ public class TemplateUserTitles extends TitleQuery<String> {
 
   @Override
   protected Object clone() throws CloneNotSupportedException {
-    try {
-      return new TemplateUserTitles(bot, templateName, namespaces);
-    } catch (VersionException e) {
-      throw new CloneNotSupportedException(e.getLocalizedMessage());
-    }
+    return new TemplateUserTitles(bot, templateName, namespaces);
   }
 
 }

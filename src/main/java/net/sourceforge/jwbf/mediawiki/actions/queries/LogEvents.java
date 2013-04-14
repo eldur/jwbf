@@ -38,7 +38,6 @@ import net.sourceforge.jwbf.core.actions.util.ProcessException;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.actions.util.SupportedBy;
-import net.sourceforge.jwbf.mediawiki.actions.util.VersionException;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 import net.sourceforge.jwbf.mediawiki.contentRep.LogItem;
 
@@ -337,11 +336,7 @@ public class LogEvents extends MWAction implements Iterator<LogItem>, Iterable<L
    */
   @Override
   protected Object clone() throws CloneNotSupportedException {
-    try {
-      return new LogEvents(bot, limit, type);
-    } catch (VersionException e) {
-      throw new CloneNotSupportedException(e.getLocalizedMessage());
-    }
+    return new LogEvents(bot, limit, type);
   }
 
   /**
