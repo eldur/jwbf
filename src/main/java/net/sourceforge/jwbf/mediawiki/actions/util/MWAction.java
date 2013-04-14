@@ -161,12 +161,16 @@ public abstract class MWAction implements ContentProcessable {
   }
 
   protected void checkVersionNewerEquals(Version v) {
-    if (getSupportedVersions().contains(v)) {
+    v.getClass();
+    Collection<Version> supportedVersions = getSupportedVersions();
+    if (supportedVersions.contains(v)) {
       return;
     }
-    for (Version vx : getSupportedVersions()) {
-      if (v.greaterEqThen(vx)) {
-        return;
+    if (!supportedVersions.isEmpty()) {
+      for (Version vx : supportedVersions) {
+        if (v.greaterEqThen(vx)) {
+          return;
+        }
       }
     }
     throw new VersionException("unsupported version: " + v);

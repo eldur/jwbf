@@ -3,6 +3,9 @@ package net.sourceforge.jwbf.core;
 import java.util.List;
 import java.util.Map.Entry;
 
+import net.sourceforge.jwbf.core.actions.Get;
+import net.sourceforge.jwbf.core.actions.Post;
+
 import com.google.common.base.Joiner;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Lists;
@@ -22,6 +25,14 @@ public class RequestBuilder {
       params.put(key, value);
     }
     return this;
+  }
+
+  public Post buildPost() {
+    return new Post(build());
+  }
+
+  public Get buildGet() {
+    return new Get(build());
   }
 
   public String build() {

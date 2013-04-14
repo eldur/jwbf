@@ -25,20 +25,17 @@ import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_18;
 import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_19;
 import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_20;
 
-import java.util.Hashtable;
-import java.util.Map;
 import java.util.Set;
 
 import lombok.extern.slf4j.Slf4j;
 import net.sourceforge.jwbf.core.RequestBuilder;
-import net.sourceforge.jwbf.core.actions.Get;
 import net.sourceforge.jwbf.core.actions.Post;
 import net.sourceforge.jwbf.core.actions.util.ActionException;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.core.actions.util.ProcessException;
-import net.sourceforge.jwbf.core.bots.util.JwbfException;
 import net.sourceforge.jwbf.core.contentRep.ContentAccessable;
 import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
+import net.sourceforge.jwbf.core.contentRep.Userinfo;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.actions.util.SupportedBy;
@@ -47,14 +44,12 @@ import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 
 import org.jdom.Element;
 
+import com.google.common.base.Strings;
 import com.google.common.collect.Sets;
 import com.google.common.collect.Sets.SetView;
 
 /**
- * 
- * 
  * Writes an article.
- * 
  * 
  * @author Thomas Stock
  */
@@ -66,17 +61,17 @@ public class PostModifyContent extends MWAction {
   private boolean second = true;
 
   private final ContentAccessable a;
-  private Map<String, String> tab = new Hashtable<String, String>();
   private MediaWikiBot bot;
   private GetApiToken apiReq = null;
   private HttpAction apiGet = null;
-  private HttpAction initOldGet = null;
   private Post postModify = null;
-  private boolean apiEdit = false;
+  static final String PARAM_MINOR = "minor";
+  static final String PARAM_MINOR_NOT = "notminor";
+  static final String PARAM_BOTEDIT = "bot";
 
   public PostModifyContent(MediaWikiBot bot, final SimpleArticle a) {
     super(bot.getVersion());
-    if (a.getTitle().length() < 1) {
+    if (Strings.isNullOrEmpty(a.getTitle())) {
       throw new ActionException("imposible request, no title");
     }
     this.a = a;
@@ -88,87 +83,46 @@ public class PostModifyContent extends MWAction {
    */
   public HttpAction getNextMessage() {
 
-    if (first) {
-      try {
-        if (!bot.isEditApi()) {
-          throw new VersionException("write api off - user triggerd");
-        }
-        first = false;
-        if (!(bot.getUserinfo().getRights().contains("edit") && bot.getUserinfo().getRights()
-            .contains("writeapi"))) {
-          throw new VersionException("write api not avalibal");
-        }
-        apiReq = new GetApiToken(GetApiToken.Intoken.EDIT, a.getTitle(), bot.getVersion(),
-            bot.getUserinfo());
-        apiGet = apiReq.getNextMessage();
-        apiEdit = true;
-        return apiGet;
-
-      } catch (VersionException e) {
-        String request = new RequestBuilder(MediaWiki.URL_INDEX) //
-            .param("title", MediaWiki.encode(a.getTitle())) //
-            .param("action", "edit") //
-            .param("dontcountme", "s") //
-            .build();
-        initOldGet = new Get(request);
-        first = false;
-        return initOldGet;
-      } catch (JwbfException e) {
-        throw new RuntimeException(e);
-      }
+    Userinfo userinfo = bot.getUserinfo();
+    Set<String> rights = userinfo.getRights();
+    boolean canWrite = (rights.contains(Userinfo.RIGHT_EDIT) && rights
+        .contains(Userinfo.RIGHT_WRITEAPI));
+    if (!(bot.isEditApi() && canWrite)) {
+      throw new VersionException("editing is not allowed");
     }
-    if (apiEdit) {
+    if (first) {
+      first = false;
+      apiReq = new GetApiToken(GetApiToken.Intoken.EDIT, a.getTitle(), bot.getVersion(), userinfo);
+      apiGet = apiReq.getNextMessage();
+      return apiGet;
+    } else if (second) {
 
-      String request = new RequestBuilder(MediaWiki.URL_API) //
+      postModify = new RequestBuilder(MediaWiki.URL_API) //
           .param("action", "edit") //
           .param("format", "xml") //
           .param("title", MediaWiki.encode(a.getTitle())) //
-          .build();
-      postModify = new Post(request);
+          .buildPost();
       postModify.addParam("summary", a.getEditSummary());
       postModify.addParam("text", a.getText());
-      Set<String> groups = bot.getUserinfo().getGroups();
+      Set<String> groups = userinfo.getGroups();
       if (!isIntersectionEmpty(groups, MediaWiki.BOT_GROUPS)) {
-        postModify.addParam("bot", "");
+        postModify.addParam(PARAM_BOTEDIT, "");
       }
 
       // postModify.addParam("watch", "unknown")
       if (a.isMinorEdit()) {
-        postModify.addParam("minor", "");
+        postModify.addParam(PARAM_MINOR, "");
       } else {
-        postModify.addParam("notminor", "");
+        postModify.addParam(PARAM_MINOR_NOT, "");
       }
       postModify.addParam("token", apiReq.getToken());
 
+      second = false;
+
+      return postModify;
     } else {
-      String uS = MediaWiki.URL_INDEX + "?title=" + MediaWiki.encode(a.getTitle())
-          + "&action=submit";
-
-      postModify = new Post(uS);
-      postModify.addParam("wpSave", "Save");
-      postModify.addParam("wpStarttime", tab.get("wpStarttime"));
-      postModify.addParam("wpEditToken", tab.get("wpEditToken"));
-      postModify.addParam("wpEdittime", tab.get("wpEdittime"));
-      postModify.addParam("wpTextbox1", a.getText());
-
-      String editSummaryText = a.getEditSummary();
-      if (editSummaryText != null && editSummaryText.length() > 200) {
-        editSummaryText = editSummaryText.substring(0, 200);
-      }
-
-      postModify.addParam("wpSummary", editSummaryText);
-      if (a.isMinorEdit()) {
-
-        postModify.addParam("wpMinoredit", "1");
-
-      }
-
-      log.debug("WRITE: " + a.getTitle());
-
+      throw new IllegalStateException("this action has only two messages");
     }
-    second = false;
-
-    return postModify;
   }
 
   /**
@@ -192,56 +146,11 @@ public class PostModifyContent extends MWAction {
       }
       throw new ProcessException(s);
     }
-    if (initOldGet != null && hm.getRequest().equals(initOldGet.getRequest())) {
-      getWpValues(s, tab);
-      if (log.isDebugEnabled()) {
-        log.debug(tab.toString());
-      }
-
-    } else if (apiGet != null && hm.getRequest().equals(apiGet.getRequest())) {
-      log.debug("parseapi");
+    if (apiGet != null && hm.getRequest().equals(apiGet.getRequest())) {
       apiReq.processReturningText(s, hm);
     }
 
     return s;
-  }
-
-  /**
-   * 
-   * @param text
-   *          where to search
-   * @param tab
-   *          tabel with required values
-   * @deprecated too old
-   */
-  @Deprecated
-  private void getWpValues(final String text, Map<String, String> tab) {
-
-    String[] tParts = text.split("\n");
-    for (int i = 0; i < tParts.length; i++) {
-      if (tParts[i].indexOf("wpEditToken") > 0) {
-        // \<input type='hidden' value=\"(.*?)\" name=\"wpEditToken\"
-        int begin = tParts[i].indexOf("value") + 7;
-        int end = tParts[i].indexOf("name") - 2;
-        tab.put("wpEditToken", tParts[i].substring(begin, end));
-
-      } else if (tParts[i].indexOf("wpEdittime") > 0) {
-        // value="(\d+)" name=["\']wpEdittime["\']
-        int begin = tParts[i].indexOf("value") + 7;
-        int end = tParts[i].indexOf("name") - 2;
-
-        tab.put("wpEdittime", tParts[i].substring(begin, end));
-
-      } else if (tParts[i].indexOf("wpStarttime") > 0) {
-        // value="(\d+)" name=["\']wpStarttime["\']
-        int begin = tParts[i].indexOf("value") + 7;
-        int end = tParts[i].indexOf("name") - 2;
-
-        tab.put("wpStarttime", tParts[i].substring(begin, end));
-
-      }
-    }
-
   }
 
   /**

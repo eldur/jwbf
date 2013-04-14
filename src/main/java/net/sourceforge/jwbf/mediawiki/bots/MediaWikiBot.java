@@ -395,7 +395,7 @@ public class MediaWikiBot implements WikiBot {
    * 
    * @return the
    */
-  public final boolean isEditApi() {
+  public boolean isEditApi() {
     return useEditApi;
   }
 

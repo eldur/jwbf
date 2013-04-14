@@ -41,7 +41,7 @@ public class EditTest extends ParamHelper {
     PostModifyContent pmc = new PostModifyContent(bot, sa);
 
     bot.performAction(pmc);
-    assertTrue("i is: ", 50 > 3);
+    assertTrue("i is: ", 50 > 3); // FIXME WTF
 
   }
 
