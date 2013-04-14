@@ -180,9 +180,7 @@ public class RecentchangeTitles extends TitleQuery<String> {
   @Override
   protected Collection<String> parseArticleTitles(String s) {
     Element root = getRootElement(s);
-    if (root != null) {
-      findContent(root);
-    }
+    findContent(root);
     return titleCollection;
 
   }

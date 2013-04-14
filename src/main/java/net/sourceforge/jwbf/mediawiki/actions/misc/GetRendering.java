@@ -77,10 +77,7 @@ public class GetRendering extends MWAction {
 
   protected Element findElement(String elementName, String xml) {
     Element root = getRootElement(xml);
-    if (root != null) {
-      return findContent(root, elementName);
-    }
-    throw new IllegalStateException("root element shoud be");
+    return findContent(root, elementName);
   }
 
   private Element findContent(final Element e, final String name) {

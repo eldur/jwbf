@@ -32,7 +32,6 @@ import net.sourceforge.jwbf.core.RequestBuilder;
 import net.sourceforge.jwbf.core.actions.Post;
 import net.sourceforge.jwbf.core.actions.util.ActionException;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
-import net.sourceforge.jwbf.core.actions.util.ProcessException;
 import net.sourceforge.jwbf.core.contentRep.ContentAccessable;
 import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
 import net.sourceforge.jwbf.core.contentRep.Userinfo;
@@ -41,8 +40,6 @@ import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.actions.util.SupportedBy;
 import net.sourceforge.jwbf.mediawiki.actions.util.VersionException;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
-
-import org.jdom.Element;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Sets;
@@ -137,20 +134,18 @@ public class PostModifyContent extends MWAction {
    * {@inheritDoc}
    */
   @Override
-  public String processReturningText(String s, HttpAction hm) {
-    Element rootElement = getRootElement(s);
-    Element elem = rootElement.getChild("error");
-    if (elem != null) {
-      if (s.length() > 700) {
-        s = s.substring(0, 700);
-      }
-      throw new ProcessException(s);
-    }
-    if (apiGet != null && hm.getRequest().equals(apiGet.getRequest())) {
-      apiReq.processReturningText(s, hm);
+  public String processReturningText(String xml, HttpAction hm) {
+    String request = hm.getRequest();
+    if (request.equals(apiGet.getRequest())) {
+      apiReq.processReturningText(xml, hm);
+    } else if (request.equals(postModify.getRequest())) {
+      getRootElement(xml);
+    } else {
+      log.trace(xml);
+      throw new ActionException("unknown response");
     }
 
-    return s;
+    return xml;
   }
 
   /**

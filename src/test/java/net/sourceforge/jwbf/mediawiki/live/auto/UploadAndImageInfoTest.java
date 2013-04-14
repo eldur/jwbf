@@ -91,7 +91,7 @@ public class UploadAndImageInfoTest extends ParamHelper {
 
   }
 
-  @Test(expected = ProcessException.class)
+  @Test(expected = ActionException.class)
   public final void imageInfoFail() {
 
     bot = getMediaWikiBot(Version.getLatest(), true);
@@ -127,7 +127,7 @@ public class UploadAndImageInfoTest extends ParamHelper {
     try {
       urlAsString = new ImageInfo(bot, testFilename).getUrlAsString();
       fail("file was found ");
-    } catch (ProcessException e) {
+    } catch (ActionException e) {
       assertEquals("no url for image with name \"Test.gif\"", e.getMessage());
     }
   }

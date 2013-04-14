@@ -139,8 +139,8 @@ public class PostDelete extends MWAction {
         log.debug("Got returning text: \"" + s + "\"");
       }
       try {
-        Element doc = getRootElement(s);
-        if (!containsError(doc)) {
+        Element doc = getRootElementWithError(s);
+        if (getErrorElement(doc) == null) {
           process(doc);
         }
       } catch (IllegalArgumentException e) {
@@ -168,17 +168,17 @@ public class PostDelete extends MWAction {
    *           thrown if the document could not be parsed
    * @return if
    */
-  private boolean containsError(Element rootElement) {
-    Element elem = rootElement.getChild("error");
-    if (elem != null) {
-      log.warn(elem.getAttributeValue("info"));
-      if (elem.getAttributeValue("code").equals("inpermissiondenied")) {
+  @Override
+  protected Element getErrorElement(Element rootElement) {
+    Element containsError = super.getErrorElement(rootElement);
+    if (containsError != null) {
+      log.warn(containsError.getAttributeValue("info"));
+      if (containsError.getAttributeValue("code").equals("inpermissiondenied")) {
         log.error("Adding '$wgGroupPermissions['bot']['delete'] = true;'"
             + " to your MediaWiki's LocalSettings.php might remove this problem.");
       }
-      return true;
     }
-    return false;
+    return containsError;
   }
 
   private void process(Element rootElement) {

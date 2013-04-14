@@ -205,9 +205,7 @@ public class LogEvents extends MWAction implements Iterator<LogItem>, Iterable<L
   private void parseArticleTitles(String xml) {
 
     Element root = getRootElement(xml);
-    if (root != null) {
-      findContent(root);
-    }
+    findContent(root);
 
   }
 

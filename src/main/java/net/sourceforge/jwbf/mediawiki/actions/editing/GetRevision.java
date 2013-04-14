@@ -167,10 +167,13 @@ public class GetRevision extends MWAction {
   }
 
   private void parse(final String xml) {
-    Element root = getRootElement(xml);
-    if (root != null) {
-      findContent(root);
+    Element root = getRootElementWithError(xml);
+    Element error = getErrorElement(root);
+    if (error != null) {
+      throw new ApiException(error.getAttributeValue("code") //
+          , error.getAttributeValue("info"));
     }
+    findContent(root);
   }
 
   /**
@@ -183,16 +186,12 @@ public class GetRevision extends MWAction {
   }
 
   private void findContent(final Element root) {
-    // if(log.isDebugEnabled())
-    // log.debug("try to find content in " + root.getQualifiedName());
+
     @SuppressWarnings("unchecked")
     Iterator<Element> el = root.getChildren().iterator();
     while (el.hasNext()) {
       Element element = el.next();
-      if (element.getQualifiedName().equalsIgnoreCase("error")) {
-        throw new ApiException(element.getAttributeValue("code") //
-            , element.getAttributeValue("info"));
-      } else if (element.getQualifiedName().equalsIgnoreCase("rev")) {
+      if (element.getQualifiedName().equalsIgnoreCase("rev")) {
 
         try {
           sa.setText(element.getText());

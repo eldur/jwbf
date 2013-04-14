@@ -18,7 +18,6 @@ import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 
 import org.jdom.Document;
 import org.jdom.Element;
-import org.jdom.JDOMException;
 
 import com.google.common.base.Strings;
 
@@ -177,34 +176,11 @@ public class MovePage extends MWAction {
       if (log.isDebugEnabled()) {
         log.debug("Got returning text: \"" + s + "\"");
       }
-      Element doc = getRootElement(s);
-      if (!containsError(doc)) {
-        process(doc);
-      }
+      process(getRootElement(s));
       setHasMoreMessages(false);
     }
 
     return "";
-  }
-
-  /**
-   * Determines if the given XML {@link Document} contains an error message which then would printed
-   * by the logger.
-   * 
-   * @param rootElement
-   *          XML <code>Document</code>
-   * @throws JDOMException
-   *           thrown if the document could not be parsed
-   * @return if
-   */
-  private boolean containsError(Element rootElement) {
-    Element elem = rootElement.getChild("error");
-    if (elem != null) {
-      log.error(elem.getAttributeValue("code") + ": " + elem.getAttributeValue("info"));
-
-      return true;
-    }
-    return false;
   }
 
   /**

@@ -90,7 +90,7 @@ public class GetVersion extends MWAction {
   }
 
   private void parse(final String xml) {
-    Element root = getRootElement(xml);
+    Element root = getRootElementWithError(xml);
     findContent(root);
   }
 
@@ -188,6 +188,7 @@ public class GetVersion extends MWAction {
         generator = element.getAttributeValue("generator");
         theCase = element.getAttributeValue("case");
       } else {
+        // FIXME recursion is bad
         findContent(element);
       }
     }

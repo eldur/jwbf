@@ -20,6 +20,7 @@ import javax.imageio.ImageIO;
 
 import lombok.extern.slf4j.Slf4j;
 import net.sourceforge.jwbf.core.actions.Get;
+import net.sourceforge.jwbf.core.actions.util.ActionException;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.core.actions.util.ProcessException;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
@@ -116,21 +117,26 @@ public class ImageInfo extends MWAction {
    * @return position like "http://server.tld/path/to/Test.gif"
    */
   public String getUrlAsString() {
+    String exceptionMsg = "no url for image with name \"" + name + "\"";
     try {
       selfEx = false;
-      bot.performAction(this);
+      try {
+        bot.performAction(this);
+      } catch (ProcessException e) {
+        throw new ActionException(exceptionMsg);
+      }
     } finally {
       selfEx = true;
     }
     if (Strings.isNullOrEmpty(urlOfImage)) {
-      throw new ProcessException("no url for image with name \"" + name + "\"");
+      throw new ActionException(exceptionMsg);
     }
 
     try {
       new URL(urlOfImage);
     } catch (MalformedURLException e) {
       if (bot.getHostUrl().length() <= 0) {
-        throw new ProcessException("please use the constructor with hostUrl; " + urlOfImage);
+        throw new ActionException("please use the constructor with hostUrl; " + urlOfImage);
       }
       urlOfImage = bot.getHostUrl() + urlOfImage;
     }
@@ -187,10 +193,9 @@ public class ImageInfo extends MWAction {
   }
 
   private void findUrlOfImage(String s) {
-    Element root = getRootElement(s);
-    if (root != null) {
-      findContent(root);
-    } else if (urlOfImage.length() < 1) {
+    Element root = getRootElementWithError(s);
+    findContent(root);
+    if (urlOfImage.length() < 1) {
       throw new ProcessException("Could not find this image " + s);
     }
   }

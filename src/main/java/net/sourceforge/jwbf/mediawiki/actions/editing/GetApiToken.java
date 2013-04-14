@@ -56,7 +56,7 @@ public final class GetApiToken extends MWAction {
    * @param ui
    *          user info object
    * 
-   *           if this action is not supported of the MediaWiki version connected to
+   *          if this action is not supported of the MediaWiki version connected to
    */
   public GetApiToken(Intoken intoken, String title, Version v, Userinfo ui) {
     super(v);
@@ -106,6 +106,7 @@ public final class GetApiToken extends MWAction {
       }
       try {
         process(getRootElement(s));
+        // TODO check catch
       } catch (IllegalArgumentException e) {
         if (s.startsWith("unknown_action:")) {
           log.error("Adding '$wgEnableWriteAPI = true;' "
