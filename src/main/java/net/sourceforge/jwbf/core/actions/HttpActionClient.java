@@ -124,8 +124,13 @@ public class HttpActionClient {
     } else {
       request = httpAction.getRequest();
     }
-    HttpRequestBase httpRequest = new HttpGet(request);
     log.debug(request);
+    HttpRequestBase httpRequest;
+    try {
+      httpRequest = new HttpGet(request);
+    } catch (RuntimeException e) {
+      throw new IllegalStateException(request, e);
+    }
     if (httpAction instanceof Get) {
       modifyRequestParams(httpRequest, httpAction);
 

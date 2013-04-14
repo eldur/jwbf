@@ -50,7 +50,6 @@ import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 import net.sourceforge.jwbf.mediawiki.contentRep.SimpleFile;
 
 import org.junit.Assert;
-import org.junit.Assume;
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
@@ -83,33 +82,20 @@ public class UploadAndImageInfoTest extends ParamHelper {
 
   @Test
   public final void upload() {
-    ignore();
     generalUploadImageInfoTest(bot);
-
   }
 
-  private void ignore() {
-    if (bot.getVersion().greaterEqThen(Version.MW1_17)) {
-      // TODO api upload
-      Assume.assumeTrue("api upload is missing", false);
-    }
-  }
-
-  @Test(expected = ActionException.class)
+  @Test
   public final void imageInfoFail() {
 
     bot = getMediaWikiBot(Version.getLatest(), true);
-    ImageInfo a = new ImageInfo(bot, "UnknownImage.jpg");
-    log.info(a.getUrlAsString());
-
-  }
-
-  @Test(expected = ActionException.class)
-  public final void imageInfoPerformManual() {
-
-    ImageInfo a = new ImageInfo(bot, "UnknownImage.jpg");
-    bot.performAction(a);
-
+    String name = "UnknownImage.jpg";
+    ImageInfo a = new ImageInfo(bot, name);
+    try {
+      log.info(a.getUrlAsString());
+    } catch (ActionException e) {
+      assertEquals(String.format("no url for image with name \"%s\"", name), e.getMessage());
+    }
   }
 
   /**
@@ -118,7 +104,6 @@ public class UploadAndImageInfoTest extends ParamHelper {
    */
   @Test
   public final void deleteImage() {
-    ignore();
     generalUploadImageInfoTest(bot);
     String testFilename = getValue("filename");
     String urlAsString = new ImageInfo(bot, testFilename).getUrlAsString();
