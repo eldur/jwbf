@@ -200,6 +200,17 @@
     </plugins>
   </build>
   <profiles>
+    <profile>
+      <id>noLiveTests</id>
+      <activation>
+        <property>
+          <name>noLiveTests</name>
+        </property>
+      </activation>
+      <properties>
+        <noLiveTests>true</noLiveTests>
+      </properties>
+    </profile>
   </profiles>
   <dependencies>
     <dependency>

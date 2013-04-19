@@ -18,6 +18,9 @@
  */
 package net.sourceforge.jwbf.mediawiki;
 
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -30,9 +33,14 @@ import java.util.InvalidPropertiesFormatException;
 import java.util.Properties;
 import java.util.TimeZone;
 
+import lombok.val;
 import lombok.extern.slf4j.Slf4j;
 import net.sourceforge.jwbf.TestHelper;
 
+import org.junit.internal.AssumptionViolatedException;
+import org.mockito.Mockito;
+
+import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 
 /**
@@ -41,14 +49,9 @@ import com.google.common.collect.Lists;
 @Slf4j
 public class LiveTestFather extends TestHelper {
 
-  private static final Properties data = new Properties();
-
-  private static String filename = "";
+  private final SimpleMap data;
 
   private static final Collection<String> specialChars = Lists.newArrayList();
-
-  private LiveTestFather() {
-  }
 
   static {
     specialChars.add("\"");
@@ -58,45 +61,27 @@ public class LiveTestFather extends TestHelper {
     specialChars.add("&");
     specialChars.add("[");
     specialChars.add("]");
+  }
 
-    // find jwftestfile
-    Collection<String> filepos = Lists.newArrayList();
-    filepos.add(System.getProperty("user.home") + "/.jwbf/test.xml");
-    filepos.add(System.getProperty("user.home") + "/jwbftest.xml");
-    filepos.add("test.xml");
-    for (String fname : filepos) {
-      if (new File(fname).canRead()) {
-        filename = fname;
-        log.info("use testfile: " + filename);
+  private LiveTestFather() {
+    val noLiveTests = System.getProperty("noLiveTests", "false");
+    val workWithDisk = !Boolean.valueOf(noLiveTests).booleanValue();
+    if (workWithDisk) {
+      data = new TestConfig();
+    } else {
+      data = mock(SimpleMap.class);
+      when(data.get(Mockito.isA(String.class))) //
+          .thenThrow(new AssumptionViolatedException("ignore this"));
+    }
+  }
 
-        break;
-      }
-    }
-    if (filename.length() < 1) {
-      log.info("no testfile found. Use: " + System.getProperty("user.home") + "/.jwbf/test.xml");
-      filename = System.getProperty("user.home") + "/.jwbf/test.xml";
-    }
+  private static LiveTestFather instance;
 
-    try {
-      Thread.sleep(1000);
-    } catch (InterruptedException e2) {
-      e2.printStackTrace();
+  private static LiveTestFather get() {
+    if (instance == null) {
+      instance = new LiveTestFather();
     }
-    try {
-      data.loadFromXML(new FileInputStream(filename));
-    } catch (InvalidPropertiesFormatException e) {
-      e.printStackTrace();
-    } catch (FileNotFoundException e) {
-      File f = new File(filename);
-      try {
-        f.createNewFile();
-      } catch (IOException e1) {
-        e1.printStackTrace();
-      }
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-
+    return instance;
   }
 
   /**
@@ -104,35 +89,113 @@ public class LiveTestFather extends TestHelper {
    * @return the current UTC
    */
   public static Date getCurrentUTC() {
-    long currentDate = System.currentTimeMillis();
-    TimeZone tz = TimeZone.getDefault();
-    Calendar localCal = Calendar.getInstance(tz);
+    val currentDate = System.currentTimeMillis();
+    val tz = TimeZone.getDefault();
+    val localCal = Calendar.getInstance(tz);
     localCal.setTimeInMillis(currentDate - tz.getOffset(currentDate));
 
     return new Date(localCal.getTimeInMillis());
 
   }
 
-  private static void addEmptyKey(String key) {
-    data.put(key, " ");
-    try {
-      data.storeToXML(new FileOutputStream(filename), "");
-    } catch (FileNotFoundException e) {
-      e.printStackTrace();
-    } catch (IOException e) {
-      e.printStackTrace();
+  public String getVal(String key) {
+    val value = data.get(key);
+    if (Strings.isNullOrEmpty(value)) {
+      data.put(key, " ");
+      log.warn("EMPTY value for " + key);
     }
+    return data.get(key);
   }
 
   public static String getValue(final String key) {
-    if (!data.containsKey(key) || data.getProperty(key).trim().length() <= 0) {
-      addEmptyKey(key);
-      log.warn("EMPTY value for " + key);
-      // throw new ComparisonFailure("No or empty value for key: \"" + key + "\" in " + filename,
-      // key,
-      // filename);
+    return get().getVal(key);
+  }
+
+  private static interface SimpleMap {
+    String get(String key);
+
+    String put(String key, String value);
+  }
+
+  private static class TestConfig implements SimpleMap {
+
+    private final Properties properties;
+    private final String filename;
+
+    public TestConfig() {
+      properties = new Properties();
+      filename = findTestConfig();
+      readOrCreate(filename);
     }
-    return data.getProperty(key);
+
+    private void write(String filename) {
+      synchronized (this) {
+        try {
+          properties.storeToXML(new FileOutputStream(filename), "");
+        } catch (FileNotFoundException e) {
+          throw new IllegalStateException(e);
+        } catch (IOException e) {
+          throw new IllegalStateException(e);
+        }
+      }
+    }
+
+    private void readOrCreate(String filename) {
+      synchronized (this) {
+        try {
+          properties.loadFromXML(new FileInputStream(filename));
+        } catch (InvalidPropertiesFormatException e) {
+          throw new IllegalStateException(e);
+        } catch (FileNotFoundException e) {
+          File f = new File(filename);
+          try {
+            f.createNewFile();
+          } catch (IOException e1) {
+            throw new IllegalStateException(e);
+          }
+        } catch (IOException e) {
+          throw new IllegalStateException(e);
+        }
+      }
+    }
+
+    private String findTestConfig() {
+      // find jwftestfile
+      String filename = "";
+      Collection<String> filepos = Lists.newArrayList();
+      filepos.add(System.getProperty("user.home") + "/.jwbf/test.xml");
+      filepos.add(System.getProperty("user.home") + "/jwbftest.xml");
+      filepos.add("test.xml");
+
+      for (String fname : filepos) {
+        if (new File(fname).canRead()) {
+          filename = fname;
+          log.info("use testfile: " + filename);
+
+          break;
+        }
+      }
+      if (filename.length() < 1) {
+        log.info("no testfile found. Use: " + System.getProperty("user.home") + "/.jwbf/test.xml");
+        filename = System.getProperty("user.home") + "/.jwbf/test.xml";
+      }
+      return filename;
+    }
+
+    public String get(String key) {
+      String value = properties.getProperty(key);
+      if (!Strings.isNullOrEmpty(value)) {
+        value = value.trim();
+      }
+      return value;
+    }
+
+    public String put(String key, String value) {
+      val result = (String) properties.put(key, value);
+      write(filename);
+      return result;
+    }
+
   }
 
   public static Collection<String> getSpecialChars() {

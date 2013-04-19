@@ -1,6 +1,5 @@
 package net.sourceforge.jwbf.core.live;
 
-import static net.sourceforge.jwbf.mediawiki.LiveTestFather.getValue;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -17,20 +16,16 @@ import net.sourceforge.jwbf.core.bots.HttpBot;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.ContextHandler;
-import org.junit.Assume;
 import org.junit.Test;
 
 public class HttpBotTest {
 
   @Test
   public void testConstr() throws Exception {
-    String url = getValue("wikiMW1_13_url");
-    Assume.assumeFalse(url.trim().isEmpty());
-    HttpBot bot = new HttpBot(url) {
-    };
+    String url = "http://192.0.2.1/";
+    HttpBot bot = new HttpBot(url);
     assertNotNull(bot);
-    bot = new HttpBot(new URL(url)) {
-    };
+    bot = new HttpBot(new URL(url));
     assertNotNull(bot);
   }
 
