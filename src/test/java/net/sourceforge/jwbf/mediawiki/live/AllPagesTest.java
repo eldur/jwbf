@@ -18,7 +18,6 @@
  */
 package net.sourceforge.jwbf.mediawiki.live;
 
-import static net.sourceforge.jwbf.TestHelper.assumeReachable;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Iterator;
@@ -43,17 +42,14 @@ public class AllPagesTest extends AbstractMediaWikiBotTest {
    */
   @Test
   public final void allPagesWikipediaDe() {
-    String url = "http://de.wikipedia.org/w/index.php";
-    assumeReachable(url);
+    String url = getWikipediaDeUrl();
     bot = new MediaWikiBot(url);
     doTest();
   }
 
   @Test
   public final void allPagesTitle0() {
-    String url = "http://de.wikipedia.org/w/index.php"; // TODO replace with a
-                                                        // local test
-    assumeReachable(url);
+    String url = getWikipediaDeUrl(); // TODO replace with a local test
     bot = new MediaWikiBot(url);
     AllPageTitles all = new AllPageTitles(bot, null, null, RedirectFilter.all, MediaWiki.NS_ALL);
     for (String title : all) {

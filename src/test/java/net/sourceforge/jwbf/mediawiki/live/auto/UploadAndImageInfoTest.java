@@ -83,12 +83,16 @@ public class UploadAndImageInfoTest extends ParamHelper {
 
   @Test
   public final void upload() {
+    ignore();
+    generalUploadImageInfoTest(bot);
+
+  }
+
+  private void ignore() {
     if (bot.getVersion().greaterEqThen(Version.MW1_17)) {
       // TODO api upload
       Assume.assumeTrue("api upload is missing", false);
     }
-    generalUploadImageInfoTest(bot);
-
   }
 
   @Test(expected = ActionException.class)
@@ -114,10 +118,7 @@ public class UploadAndImageInfoTest extends ParamHelper {
    */
   @Test
   public final void deleteImage() {
-    if (bot.getVersion().greaterEqThen(Version.MW1_17)) {
-      // TODO api upload
-      Assume.assumeTrue("api upload is missing", false);
-    }
+    ignore();
     generalUploadImageInfoTest(bot);
     String testFilename = getValue("filename");
     String urlAsString = new ImageInfo(bot, testFilename).getUrlAsString();

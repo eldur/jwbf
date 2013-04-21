@@ -21,8 +21,7 @@ public class LogEventsSingleTest extends AbstractMediaWikiBotTest {
   @Test(expected = ActionException.class)
   public final void logEventsPerformManual() {
 
-    String liveUrl = "http://de.wikipedia.org/w/index.php";
-    assumeReachable(liveUrl);
+    String liveUrl = getWikipediaDeUrl();
     bot = new MediaWikiBot(liveUrl);
     LogEvents le = new LogEvents(bot, LogEvents.DELETE);
     bot.performAction(le);
@@ -30,7 +29,7 @@ public class LogEventsSingleTest extends AbstractMediaWikiBotTest {
 
   @Test
   public final void logEventsWikipediaDe() {
-    String liveUrl = "http://de.wikipedia.org/w/index.php";
+    String liveUrl = getWikipediaDeUrl();
     assumeReachable(liveUrl);
     bot = new MediaWikiBot(liveUrl);
     LogEventsTest.doTest(bot, false, LogEvents.DELETE);

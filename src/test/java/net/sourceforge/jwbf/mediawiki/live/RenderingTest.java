@@ -18,7 +18,6 @@
  */
 package net.sourceforge.jwbf.mediawiki.live;
 
-import static net.sourceforge.jwbf.TestHelper.assumeReachable;
 import net.sourceforge.jwbf.core.actions.util.ActionException;
 import net.sourceforge.jwbf.mediawiki.actions.misc.GetRendering;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
@@ -36,16 +35,14 @@ public class RenderingTest extends AbstractMediaWikiBotTest {
   @Ignore("check this")
   @Test
   public final void getRenderingWikipediaDe() {
-    String liveUrl = "http://de.wikipedia.org/w/index.php";
-    assumeReachable(liveUrl);
+    String liveUrl = getWikipediaDeUrl();
     bot = new MediaWikiBot(liveUrl);
     // doTest(bot);
   }
 
   @Test(expected = ActionException.class)
   public final void getRenderingPerformManual() {
-    String liveUrl = "http://de.wikipedia.org/w/index.php";
-    assumeReachable(liveUrl);
+    String liveUrl = getWikipediaDeUrl();
     bot = new MediaWikiBot(liveUrl);
     GetRendering r = new GetRendering(bot, "bert");
     bot.performAction(r);

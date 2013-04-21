@@ -34,7 +34,6 @@ import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 import net.sourceforge.jwbf.mediawiki.contentRep.CategoryItem;
 
 import org.junit.ClassRule;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Verifier;
@@ -76,21 +75,6 @@ public class CategoryTest extends ParamHelper {
     } catch (Exception e) {
       e.printStackTrace();
     }
-  }
-
-  /**
-   * Test category read. Test category must have more then 50 members.
-   * 
-   */
-  @Ignore("for wikipedia a login is required")
-  @Test
-  public final void categoryWikipediaDe() throws Exception {
-
-    bot = new MediaWikiBot("http://de.wikipedia.org/w/index.php");
-    assertTrue("Wrong Wiki Version " + bot.getVersion(),
-        Version.DEVELOPMENT.equals(bot.getVersion()));
-
-    doTest("Moose");
   }
 
   /**

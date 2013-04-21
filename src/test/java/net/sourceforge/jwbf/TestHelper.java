@@ -68,7 +68,8 @@ public abstract class TestHelper {
       HttpURLConnection c = (HttpURLConnection) url.openConnection();
       c.setConnectTimeout(2000);
       c.connect();
-      Assume.assumeTrue("HTTP/1.1 200 OK".equals(c.getHeaderField(0)));
+      String headerField = c.getHeaderField(0);
+      Assume.assumeTrue(headerField.endsWith("200 OK"));
 
     } catch (Exception e) {
       log.warn(e.getMessage());
@@ -84,11 +85,6 @@ public abstract class TestHelper {
     } catch (MalformedURLException e) {
       throw new IllegalArgumentException(e);
     }
-  }
-
-  public static void assumeLiveTestEnvoirnmentReachable() {
-    // TODO test
-    Assume.assumeNoException(new RuntimeException("envoirnment not reachable"));
   }
 
 }

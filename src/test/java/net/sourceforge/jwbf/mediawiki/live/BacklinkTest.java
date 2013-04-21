@@ -18,8 +18,7 @@ public class BacklinkTest extends AbstractMediaWikiBotTest {
 
   @Test
   public final void backlinksWikipediaDe() throws Exception {
-    String url = "http://de.wikipedia.org/w/index.php";
-    LiveTestFather.assumeReachable(url);
+    String url = getWikipediaDeUrl();
     bot = new MediaWikiBot(url);
     BacklinkTitles is = new BacklinkTitles(bot, LiveTestFather.getValue("backlinks_article"));
 

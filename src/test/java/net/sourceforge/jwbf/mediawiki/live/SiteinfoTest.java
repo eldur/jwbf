@@ -42,8 +42,7 @@ public class SiteinfoTest extends AbstractMediaWikiBotTest {
   @Ignore("do we need this?")
   @Test
   public final void siteInfoWikipediaDe() {
-    String liveUrl = "http://de.wikipedia.org/w/index.php";
-    assumeReachable(liveUrl);
+    String liveUrl = getWikipediaDeUrl();
     bot = new MediaWikiBot(liveUrl);
     // doTest(bot, Version.DEVELOPMENT);
   }
