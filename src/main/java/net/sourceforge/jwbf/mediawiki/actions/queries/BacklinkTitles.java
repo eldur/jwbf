@@ -122,7 +122,8 @@ public class BacklinkTitles extends TitleQuery<String> {
    */
   @Override
   protected String parseHasMore(final String s) {
-
+    log.trace(s);
+    // TODO do not use pattern matching
     // get the blcontinue-value
     Pattern p = Pattern.compile("<query-continue>.*?" + "<backlinks *blcontinue=\"([^\"]*)\" */>"
         + ".*?</query-continue>", Pattern.DOTALL | Pattern.MULTILINE);
@@ -174,7 +175,7 @@ public class BacklinkTitles extends TitleQuery<String> {
 
     case MW1_15:
     case MW1_16:
-      return new RequestBuilder1x11();
+      return new RequestBuilder1x15();
 
     default: // MW1_17 and up
       return new RequestBuilder1x17();
@@ -233,7 +234,7 @@ public class BacklinkTitles extends TitleQuery<String> {
   }
 
   /** request builder for MW versions 1_11 to (at least) 1_13. */
-  private static class RequestBuilder1x11 implements RequestBuilder {
+  private static class RequestBuilder1x15 implements RequestBuilder {
     /**
      * {@inheritDoc}
      */
@@ -243,34 +244,6 @@ public class BacklinkTitles extends TitleQuery<String> {
       return MediaWiki.URL_API
           + "?action=query&list=backlinks"
           + "&bltitle="
-          + MediaWiki.encode(articleName)
-          + ((namespace != null && MWAction.createNsString(namespace).length() != 0) ? ("&blnamespace=" + MediaWiki
-              .encode(MWAction.createNsString(namespace))) : "") + "&blfilterredir="
-          + MediaWiki.encode(redirectFilter.toString()) + "&bllimit=" + LIMIT + "&format=xml";
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public String buildContinueRequest(String articleName, String blcontinue) {
-
-      return MediaWiki.URL_API + "?action=query&list=backlinks" + "&blcontinue="
-          + MediaWiki.encode(blcontinue) + "&bllimit=" + LIMIT + "&format=xml";
-    }
-
-  }
-
-  /** request builder for MW versions 1_09 and 1_10. */
-  private static class RequestBuilder1x09 implements RequestBuilder {
-    /**
-     * {@inheritDoc}
-     */
-    public String buildInitialRequest(String articleName, RedirectFilter redirectFilter,
-        int[] namespace) {
-
-      return MediaWiki.URL_API
-          + "?action=query&list=backlinks"
-          + "&titles="
           + MediaWiki.encode(articleName)
           + ((namespace != null && MWAction.createNsString(namespace).length() != 0) ? ("&blnamespace=" + MediaWiki
               .encode(MWAction.createNsString(namespace))) : "") + "&blfilterredir="

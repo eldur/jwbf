@@ -3,8 +3,6 @@ package net.sourceforge.jwbf.mediawiki.live;
 import static net.sourceforge.jwbf.TestHelper.getRandomAlpha;
 import static net.sourceforge.jwbf.mediawiki.BotFactory.getMediaWikiBot;
 import static org.junit.Assert.assertTrue;
-import net.sourceforge.jwbf.core.actions.util.ActionException;
-import net.sourceforge.jwbf.core.actions.util.ProcessException;
 import net.sourceforge.jwbf.core.bots.WikiBot;
 import net.sourceforge.jwbf.core.bots.util.JwbfException;
 import net.sourceforge.jwbf.core.contentRep.Article;
@@ -64,25 +62,7 @@ public class ThreadTest {
       while (true) {
         Article a = new Article(bot, TITLE);
         a.addText(getRandomAlpha(1));
-        try {
-          a.save(getName());
-        } catch (ActionException e) {
-          // TODO Auto-generated catch block
-          e.printStackTrace();
-        } catch (ProcessException e) {
-          // TODO Auto-generated catch block
-          e.printStackTrace();
-        }
-        // synchronized (bot) {
-        // notify();
-        // }
-        //
-        // try {
-        // wait();
-        // } catch (InterruptedException e) {
-        // // TODO Auto-generated catch block
-        // e.printStackTrace();
-        // }
+        a.save(getName());
       }
     }
   }
