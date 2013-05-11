@@ -1,5 +1,6 @@
 package net.sourceforge.jwbf.mediawiki;
 
+import static com.google.common.collect.ImmutableList.of;
 import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.DEVELOPMENT;
 import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_16;
 import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_17;
@@ -7,10 +8,13 @@ import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_18;
 import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_19;
 import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_20;
 import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.UNKNOWN;
-import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+
+import java.util.List;
+
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
@@ -54,41 +58,41 @@ public class VersionDetectionTest {
 
   @Test
   public void testMW_A() {
-    Version[] vt = MWAction.findSupportedVersions(VersionSupportTest_A.class);
-    Version[] vx = { MW1_17 };
-    assertArrayEquals(vx, vt);
+    List<Version> vt = MWAction.findSupportedVersions(VersionSupportTest_A.class);
+    List<Version> vx = of(MW1_17);
+    assertEquals(vx, vt);
 
   }
 
   @Test
   public void testMW_A_B() {
-    Version[] vt = MWAction.findSupportedVersions(VersionSupportTest_A_B.class);
-    Version[] vx = { MW1_17, MW1_18 };
-    assertArrayEquals(vx, vt);
+    List<Version> vt = MWAction.findSupportedVersions(VersionSupportTest_A_B.class);
+    List<Version> vx = of(MW1_17, MW1_18);
+    assertEquals(vx, vt);
 
   }
 
   @Test
   public void testMW_A_B_ext() {
-    Version[] vt = MWAction.findSupportedVersions(VersionSupportTest_A_B_ext.class);
-    Version[] vx = { MW1_17, MW1_18 };
-    assertArrayEquals(vx, vt);
+    List<Version> vt = MWAction.findSupportedVersions(VersionSupportTest_A_B_ext.class);
+    List<Version> vx = of(MW1_17, MW1_18);
+    assertEquals(vx, vt);
 
   }
 
   @Test
   public void testUnknown() {
-    Version[] vt = MWAction.findSupportedVersions(VersionSupportNotDef.class);
-    Version[] vx = { UNKNOWN };
-    assertArrayEquals(vx, vt);
+    List<Version> vt = MWAction.findSupportedVersions(VersionSupportNotDef.class);
+    List<Version> vx = of(UNKNOWN);
+    assertEquals(vx, vt);
 
   }
 
   @Test
   public void testInterface_C_D() {
-    Version[] vt = MWAction.findSupportedVersions(VersionSupportInDectable.class);
-    Version[] vx = { MW1_19, MW1_20 };
-    assertArrayEquals(vx, vt);
+    List<Version> vt = MWAction.findSupportedVersions(VersionSupportInDectable.class);
+    List<Version> vx = of(MW1_19, MW1_20);
+    assertEquals(vx, vt);
 
   }
 

@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -47,8 +48,6 @@ import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
 import org.xml.sax.InputSource;
 
-import com.google.common.collect.Lists;
-
 /**
  * @author Thomas Stock
  * 
@@ -56,7 +55,7 @@ import com.google.common.collect.Lists;
 @Slf4j
 public abstract class MWAction implements ContentProcessable {
 
-  private Version[] v;
+  private List<Version> v;
   private boolean hasMore = true;
   static final ExceptionHandler DEFAULT_EXCEPTION_HANDLER = new ExceptionHandler() {
 
@@ -136,24 +135,11 @@ public abstract class MWAction implements ContentProcessable {
     return s;
   }
 
-  /**
-   * 
-   * @return a
-   */
-  private Version[] getVersionArray() {
-
-    if (v != null) {
-      return v;
-    }
-    v = findSupportedVersions(getClass());
-    return v;
-  }
-
-  public static final Version[] findSupportedVersions(Class<?> clazz) {
+  public static final List<Version> findSupportedVersions(Class<?> clazz) {
     if (clazz.getName().contains(Object.class.getName())) {
       Version[] v = new MediaWiki.Version[1];
       v[0] = Version.UNKNOWN;
-      return v;
+      return Arrays.asList(v);
     } else if (clazz.isAnnotationPresent(SupportedBy.class)) {
       SupportedBy sb = clazz.getAnnotation(SupportedBy.class);
       if (log.isDebugEnabled()) {
@@ -168,7 +154,7 @@ public abstract class MWAction implements ContentProcessable {
         log.debug("found support for: " + svr + " in ↲ \n\t class " + clazz.getCanonicalName());
 
       }
-      return sb.value();
+      return Arrays.asList(sb.value());
     } else {
       return findSupportedVersions(clazz.getSuperclass());
     }
@@ -197,14 +183,12 @@ public abstract class MWAction implements ContentProcessable {
   /**
    * {@inheritDoc}
    */
-  public Collection<Version> getSupportedVersions() {
-    List<Version> v = Lists.newArrayList();
+  public List<Version> getSupportedVersions() {
 
-    Version[] va = getVersionArray();
-    for (int i = 0; i < va.length; i++) {
-      v.add(va[i]);
+    if (v != null) {
+      return v;
     }
-
+    v = findSupportedVersions(getClass());
     return v;
   }
 

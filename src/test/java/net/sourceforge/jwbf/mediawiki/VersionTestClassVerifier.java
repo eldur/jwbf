@@ -61,9 +61,9 @@ public class VersionTestClassVerifier extends Verifier {
 
   private void addInitSupporterVersions(Class<?> mwc) {
     isVersionTestCase = true;
-    Version[] vs = MWAction.findSupportedVersions(mwc);
-    for (int j = 0; j < vs.length; j++) {
-      documentedVersions.put(mwc.getCanonicalName() + "-" + vs[j], vs[j]);
+    List<Version> versions = MWAction.findSupportedVersions(mwc);
+    for (Version version : versions) {
+      documentedVersions.put(mwc.getCanonicalName() + "-" + version, version);
     }
 
   }
