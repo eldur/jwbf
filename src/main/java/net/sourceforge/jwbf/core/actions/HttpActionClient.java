@@ -205,7 +205,7 @@ public class HttpActionClient {
 
   @Nonnull
   private String get(HttpRequestBase requestBase, ReturningText cp, HttpAction ha) {
-    showCookies();
+    traceCookies();
     debug(requestBase, ha, cp);
     String out = "";
 
@@ -267,7 +267,7 @@ public class HttpActionClient {
 
   @Nonnull
   public byte[] get(Get get) {
-    showCookies();
+    traceCookies();
     HttpGet authgets = new HttpGet(get.getRequest());
     return get(authgets, null, get).getBytes();
   }
@@ -280,21 +280,15 @@ public class HttpActionClient {
     return m;
   }
 
-  /**
-   * send the cookies to the logger.
-   * 
-   * @deprecated is a bit too chatty
-   */
-  @Deprecated
-  private void showCookies() {
-    if (client instanceof DefaultHttpClient && log.isDebugEnabled()) {
+  private void traceCookies() {
+    if (log.isTraceEnabled() && client instanceof DefaultHttpClient) {
       List<Cookie> cookies = ((DefaultHttpClient) client).getCookieStore().getCookies();
       if (cookies.size() > 0) {
         StringBuffer cStr = new StringBuffer();
         for (Cookie cookie : cookies) {
           cStr.append(cookie.toString() + ", ");
         }
-        log.debug("cookie: {" + cStr + "}");
+        log.trace("cookie: {" + cStr + "}");
       }
     }
   }
@@ -319,8 +313,9 @@ public class HttpActionClient {
         type = "(GET ";
       }
       type += cp.getClass().getSimpleName() + ")" + continueing;
-      log.debug("message " + type + " is: \n\t own: " + getHostUrl() + epath + "\n\t act: "
-          + ha.getRequest());
+      log.debug("message " + type + " is: " //
+          + "\n\t hostPath : " + getHostUrl() + epath //
+          + "\n\t queryPath: " + ha.getRequest());
     }
   }
 

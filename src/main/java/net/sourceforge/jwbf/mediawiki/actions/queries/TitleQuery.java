@@ -49,7 +49,7 @@ public abstract class TitleQuery<T> extends MWAction implements Iterable<T>, Ite
    * {@inheritDoc}
    */
   @SuppressWarnings("unchecked")
-  public final Iterator<T> iterator() {
+  public Iterator<T> iterator() {
     try {
       return (Iterator<T>) clone();
     } catch (CloneNotSupportedException e) {

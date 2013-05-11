@@ -23,8 +23,8 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
@@ -47,6 +47,8 @@ import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
 import org.xml.sax.InputSource;
 
+import com.google.common.collect.Lists;
+
 /**
  * @author Thomas Stock
  * 
@@ -56,6 +58,15 @@ public abstract class MWAction implements ContentProcessable {
 
   private Version[] v;
   private boolean hasMore = true;
+  static final ExceptionHandler DEFAULT_EXCEPTION_HANDLER = new ExceptionHandler() {
+
+    public void handle(RuntimeException e) {
+      throw e;
+
+    }
+  };
+
+  private static ExceptionHandler exceptionHandler = DEFAULT_EXCEPTION_HANDLER;
 
   /**
    * 
@@ -165,25 +176,29 @@ public abstract class MWAction implements ContentProcessable {
 
   protected void checkVersionNewerEquals(Version v) {
     v.getClass();
-    Collection<Version> supportedVersions = getSupportedVersions();
-    if (supportedVersions.contains(v)) {
-      return;
-    }
-    if (!supportedVersions.isEmpty()) {
-      for (Version vx : supportedVersions) {
-        if (v.greaterEqThen(vx)) {
-          return;
+    try {
+      Collection<Version> supportedVersions = getSupportedVersions();
+      if (supportedVersions.contains(v)) {
+        return;
+      }
+      if (!supportedVersions.isEmpty()) {
+        for (Version vx : supportedVersions) {
+          if (v.greaterEqThen(vx)) {
+            return;
+          }
         }
       }
+      throw new VersionException("unsupported version: " + v);
+    } catch (RuntimeException e) {
+      exceptionHandler.handle(e);
     }
-    throw new VersionException("unsupported version: " + v);
   }
 
   /**
    * {@inheritDoc}
    */
-  public final Collection<Version> getSupportedVersions() {
-    Collection<Version> v = new ArrayList<Version>();
+  public Collection<Version> getSupportedVersions() {
+    List<Version> v = Lists.newArrayList();
 
     Version[] va = getVersionArray();
     for (int i = 0; i < va.length; i++) {
@@ -297,6 +312,16 @@ public abstract class MWAction implements ContentProcessable {
       log.error(elem.getAttributeValue("code") + ": " + elem.getAttributeValue("info"));
     }
     return elem;
+  }
+
+  /**
+   * @deprecated no alternative method is given, because it is not recommended to change the
+   *             exception handling
+   */
+  @Deprecated
+  public static void setExceptionHandler(ExceptionHandler exceptionHandler) {
+    log.warn("it is not recommended, to change the default handler, because of API changes");
+    MWAction.exceptionHandler = exceptionHandler;
   }
 
 }
