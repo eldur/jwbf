@@ -17,15 +17,14 @@ import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 
 import org.jdom.Document;
 import org.jdom.Element;
-import org.jdom.JDOMException;
 
 /**
  * Action class using the MediaWiki-API's <a
  * href="http://www.mediawiki.org/wiki/API:Edit_-_Delete">"action=delete"</a>.
  * 
  * <p>
- * To allow your bot to delete articles in your MediaWiki add the following line to your MediaWiki's
- * LocalSettings.php:<br>
+ * To allow your bot to delete articles in your MediaWiki add the following line
+ * to your MediaWiki's LocalSettings.php:<br>
  * 
  * <pre>
  * $wgEnableWriteAPI = true;
@@ -159,14 +158,8 @@ public class PostDelete extends MWAction {
   }
 
   /**
-   * Determines if the given XML {@link Document} contains an error message which then would printed
-   * by the logger.
-   * 
-   * @param doc
-   *          XML <code>Document</code>
-   * @throws JDOMException
-   *           thrown if the document could not be parsed
-   * @return if
+   * Determines if the given XML {@link Document} contains an error message
+   * which then would printed by the logger.
    */
   @Override
   protected Element getErrorElement(Element rootElement) {

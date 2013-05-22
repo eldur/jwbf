@@ -147,14 +147,8 @@ public class Article implements ArticleMeta, ContentSetable {
   }
 
   /**
-   * 
-   * @param bot
-   *          the
-   * @param text
-   *          the
-   * @param label
-   *          the
-   * @deprecated use {@link #Article(String)} and {@link #setText(String)} instead.
+   * @deprecated use {@link #Article(String)} and {@link #setText(String)}
+   *             instead.
    */
   @Deprecated
   public Article(WikiBot bot, String text, String title) {
@@ -173,9 +167,6 @@ public class Article implements ArticleMeta, ContentSetable {
 
   /**
    * Saves with a given comment.
-   * 
-   * @param summary
-   *          the
    */
   public void save(String summary) {
     setEditSummary(summary);
@@ -184,7 +175,6 @@ public class Article implements ArticleMeta, ContentSetable {
 
   /**
    * clear content.
-   * 
    */
   public void clear() {
     setText("");
@@ -193,7 +183,6 @@ public class Article implements ArticleMeta, ContentSetable {
 
   /**
    * Deletes this article, if the user has the required rights.
-   * 
    */
   public void delete() {
     bot.delete(sa.getTitle());

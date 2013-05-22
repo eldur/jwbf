@@ -25,16 +25,13 @@ import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 @SupportedBy({ MW1_15, MW1_16, MW1_17, MW1_18, MW1_19, MW1_20 })
 public class RandomPageTitle extends MWAction {
 
-  private Get msg;
+  private final Get msg;
   private final MediaWikiBot bot;
 
   /**
    * 
-   * Creates the class. Defines the invocation to MediaWiki that is needed in order to get a random
-   * page
-   * 
-   * @param name
-   *          of, like "Test.gif"
+   * Creates the class. Defines the invocation to MediaWiki that is needed in
+   * order to get a random page
    */
   public RandomPageTitle(MediaWikiBot bot) {
     super(bot.getVersion());

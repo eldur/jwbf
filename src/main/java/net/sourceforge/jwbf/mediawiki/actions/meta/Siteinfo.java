@@ -30,9 +30,9 @@ import org.jdom.Element;
 @SupportedBy({ MW1_15, MW1_16, MW1_17, MW1_18, MW1_19, MW1_20 })
 public class Siteinfo extends GetVersion {
 
-  private Get msg;
-  private Map<Integer, String> namespaces = new HashMap<Integer, String>();
-  private Map<String, String> interwiki = new HashMap<String, String>();
+  private final Get msg;
+  private final Map<Integer, String> namespaces = new HashMap<Integer, String>();
+  private final Map<String, String> interwiki = new HashMap<String, String>();
 
   public static final String GENERAL = "general";
   public static final String NAMESPACES = "namespaces"; // : A list of all
@@ -41,9 +41,7 @@ public class Siteinfo extends GetVersion {
   // # specialpagealiases: A list of all special page aliases
   // # magicwords: A list of magic words and their aliases
   // # statistics: Site statistics à la Special:Statistics
-  /**
-   * @since {@link Version#MW1_11}
-   */
+
   public static final String INTERWIKIMAP = "interwikimap"; // : A list of all
                                                             // interwiki
                                                             // prefixes and
@@ -58,7 +56,8 @@ public class Siteinfo extends GetVersion {
   // content
   /**
    * 
-   * inits with parameters {@link #GENERAL}, {@link #NAMESPACES}, {@link #INTERWIKIMAP}.
+   * inits with parameters {@link #GENERAL}, {@link #NAMESPACES},
+   * {@link #INTERWIKIMAP}.
    */
   public Siteinfo() {
     this(GENERAL, NAMESPACES, INTERWIKIMAP);
@@ -75,8 +74,8 @@ public class Siteinfo extends GetVersion {
       x.append(types[i] + "|");
     }
     String result = x.substring(0, x.length() - 1);
-    msg = new Get(MediaWiki.URL_API + "?action=query&meta=siteinfo" + "&siprop=" + MediaWiki.encode(result)
-        + "&format=xml");
+    msg = new Get(MediaWiki.URL_API + "?action=query&meta=siteinfo" + "&siprop="
+        + MediaWiki.encode(result) + "&format=xml");
   }
 
   /**

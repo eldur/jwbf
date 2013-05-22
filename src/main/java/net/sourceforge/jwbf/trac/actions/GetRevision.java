@@ -34,8 +34,6 @@ import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
  * 
  * @author Thomas Stock
  * 
- * @supportedBy Trac ??? TODO find out version
- * 
  */
 @Slf4j
 public class GetRevision implements ContentProcessable {
@@ -47,7 +45,7 @@ public class GetRevision implements ContentProcessable {
   private boolean third = true;
   private final Get contentGet;
   private Get metaGet;
-  private Get versionGet;
+  private final Get versionGet;
   private int version = 0;
 
   /**

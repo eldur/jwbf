@@ -29,6 +29,7 @@ import java.text.ParseException;
 import java.util.Iterator;
 
 import lombok.extern.slf4j.Slf4j;
+import net.sourceforge.jwbf.core.RequestBuilder;
 import net.sourceforge.jwbf.core.actions.Get;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
@@ -71,13 +72,6 @@ public class GetRevision extends MWAction {
 
   /**
    * TODO follow redirects. TODO change constructor fild ordering; bot
-   * 
-   * @param articlename
-   *          of
-   * @param properties
-   *          the
-   * @param v
-   *          the
    */
   public GetRevision(Version v, final String articlename, final int properties) {
     super(v);
@@ -89,11 +83,14 @@ public class GetRevision extends MWAction {
     this.properties = properties;
     sa = new SimpleArticle();
     sa.setTitle(articlename);
-    String uS = MediaWiki.URL_API + "?action=query&prop=revisions&titles="
-        + MediaWiki.encode(articlename) + "&rvprop=" + getDataProperties(properties)
-        + getReversion(properties) + "&rvlimit=1" + "&format=xml";
-    msg = new Get(uS);
-
+    msg = new RequestBuilder(MediaWiki.URL_API) //
+        .param("action", "query") //
+        .param("prop", "revisions") //
+        .param("titles", MediaWiki.encode(articlename)) //
+        .param("rvprop", getDataProperties(properties) + getReversion(properties)) //
+        .param("rvlimit", "1") //
+        .param("format", "xml") //
+        .buildGet();
   }
 
   /**
@@ -121,9 +118,6 @@ public class GetRevision extends MWAction {
   /**
    * TODO Not very nice implementation.
    * 
-   * @param property
-   *          the
-   * @return a
    */
   private String getDataProperties(final int property) {
     String properties = "";
@@ -176,10 +170,6 @@ public class GetRevision extends MWAction {
     findContent(root);
   }
 
-  /**
-   * 
-   * @return the
-   */
   public SimpleArticle getArticle() {
 
     return sa;
@@ -208,14 +198,14 @@ public class GetRevision extends MWAction {
           }
         }
 
-        sa.setRevisionId(getAsStringValues(element, "revid"));
-        sa.setEditSummary(getAsStringValues(element, "comment"));
-        sa.setEditor(getAsStringValues(element, "user"));
+        sa.setRevisionId(getAttrValueOf(element, "revid"));
+        sa.setEditSummary(getAttrValueOf(element, "comment"));
+        sa.setEditor(getAttrValueOf(element, "user"));
 
         if ((properties & TIMESTAMP) > 0) {
 
           try {
-            sa.setEditTimestamp(getAsStringValues(element, "timestamp"));
+            sa.setEditTimestamp(getAttrValueOf(element, "timestamp"));
           } catch (ParseException e) {
             log.debug("timestamp could not be parsed");
           }
@@ -229,19 +219,21 @@ public class GetRevision extends MWAction {
 
   }
 
-  private String getAsStringValues(Element e, String attrName) {
-    String buff = "";
-    try {
-      buff = e.getAttributeValue(attrName);
-      if (buff == null) {
-        throw new NullPointerException();
-      }
-    } catch (Exception npe) {
-      // LOG.debug("no value for " + attrName );
-      buff = "";
+  private String getAttrValueOf(Element element, String key) {
+    return getAttrValueOf(element, key, "");
+  }
+
+  private String getAttrValueOf(Element element, String key, String otherwise) {
+    String value = null;
+
+    value = element.getAttributeValue(key);
+    if (value == null) {
+      log.trace("no value for {}", key);
+      return otherwise;
     }
-    // LOG.debug("value for " + attrName + " = \"" + buff + "\"");
-    return buff;
+
+    log.trace("value for {}= \"{}\"", key, value);
+    return value;
   }
 
   /**
