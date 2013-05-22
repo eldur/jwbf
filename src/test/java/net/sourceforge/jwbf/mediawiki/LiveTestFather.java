@@ -42,6 +42,7 @@ import org.mockito.Mockito;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
+import com.google.common.io.Files;
 
 /**
  * @author Thomas Stock
@@ -149,6 +150,7 @@ public class LiveTestFather extends TestHelper {
         } catch (FileNotFoundException e) {
           File f = new File(filename);
           try {
+            Files.createParentDirs(f);
             f.createNewFile();
           } catch (IOException e1) {
             throw new IllegalStateException(e);
@@ -163,7 +165,8 @@ public class LiveTestFather extends TestHelper {
       // find jwftestfile
       String filename = "";
       Collection<String> filepos = Lists.newArrayList();
-      filepos.add(System.getProperty("user.home") + "/.jwbf/test.xml");
+      String jwbfDefaultTestConfig = System.getProperty("user.home") + "/.jwbf/test.xml";
+      filepos.add(jwbfDefaultTestConfig);
       filepos.add(System.getProperty("user.home") + "/jwbftest.xml");
       filepos.add("test.xml");
 
@@ -176,8 +179,8 @@ public class LiveTestFather extends TestHelper {
         }
       }
       if (filename.length() < 1) {
-        log.info("no testfile found. Use: " + System.getProperty("user.home") + "/.jwbf/test.xml");
-        filename = System.getProperty("user.home") + "/.jwbf/test.xml";
+        log.warn("no testfile found. Use: " + jwbfDefaultTestConfig);
+        filename = jwbfDefaultTestConfig;
       }
       return filename;
     }
