@@ -8,6 +8,8 @@ import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.google.common.primitives.Ints;
+
 /**
  * 
  * @author Thomas Stock
@@ -26,16 +28,28 @@ public class BacklinkTest extends AbstractMediaWikiBotTest {
     while (is.hasNext()) {
       is.next();
       i++;
-      if (i > getIntValue("backlinks_article_count") + 1) {
+      if (i > maxBacklinkArticleCount() + 1) {
         break;
       }
     }
 
-    Assert.assertTrue("Fail: " + i + " < " + getIntValue("backlinks_article_count"),
-        i > getIntValue("backlinks_article_count"));
+    Assert.assertTrue("Fail: " + i + " <= " + maxBacklinkArticleCount(),
+        i >= maxBacklinkArticleCount());
   }
 
-  private static int getIntValue(final String key) throws Exception {
-    return Integer.parseInt(LiveTestFather.getValue(key));
+  private int maxBacklinkArticleCount() throws Exception {
+    int intValue = getIntValue("backlinks_article_count");
+    return intValue;
+  }
+
+  private static int getIntValue(final String key) {
+    String value = LiveTestFather.getValue(key);
+
+    Integer intOrNull = Ints.tryParse(value);
+    if (intOrNull == null) {
+      return 0;
+    } else {
+      return intOrNull.intValue();
+    }
   }
 }
