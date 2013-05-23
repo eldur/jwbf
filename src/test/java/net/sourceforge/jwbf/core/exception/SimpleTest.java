@@ -7,7 +7,6 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 
 import net.sourceforge.jwbf.JWBF;
-import net.sourceforge.jwbf.TestHelper;
 import net.sourceforge.jwbf.core.actions.util.ActionException;
 
 import org.junit.Test;
@@ -17,7 +16,7 @@ import org.junit.Test;
  * @author Thomas Stock
  * 
  */
-public class SimpleTest extends TestHelper {
+public class SimpleTest {
 
   @Test
   public void basic1() {

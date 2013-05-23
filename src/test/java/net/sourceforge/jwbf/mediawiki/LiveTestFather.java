@@ -35,7 +35,6 @@ import java.util.TimeZone;
 
 import lombok.val;
 import lombok.extern.slf4j.Slf4j;
-import net.sourceforge.jwbf.TestHelper;
 
 import org.junit.internal.AssumptionViolatedException;
 import org.mockito.Mockito;
@@ -48,7 +47,7 @@ import com.google.common.io.Files;
  * @author Thomas Stock
  */
 @Slf4j
-public class LiveTestFather extends TestHelper {
+public class LiveTestFather {
 
   private final SimpleMap data;
 

@@ -19,6 +19,14 @@ public class TestHelperTest {
   }
 
   @Test
+  public void testOffRetry() {
+    for (int i = 0; i < 50; i++) {
+      testOff();
+      testOn();
+    }
+  }
+
+  @Test
   public void testOn() {
     String url = "http://www.google.com/";
     try {

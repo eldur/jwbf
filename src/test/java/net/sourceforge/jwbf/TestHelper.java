@@ -1,29 +1,30 @@
 package net.sourceforge.jwbf;
 
-import java.io.File;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Random;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 
 import lombok.extern.slf4j.Slf4j;
 
 import org.junit.Assume;
 
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
+
 @Slf4j
-public abstract class TestHelper {
+public class TestHelper {
 
   private static Random wheel = new Random();
 
-  private static final TestHelper helper = new TestHelper() {
-  };
-
-  public TestHelper() {
-    super();
+  private TestHelper() {
   }
 
   public static String getRandomAlpha(int length) {
-    return helper.getRandomAlph(length);
+    return getRandomAlph(length);
   }
 
   public static String getRandomAlph(int length) {
@@ -50,32 +51,36 @@ public abstract class TestHelper {
     return out.toString();
   }
 
-  /**
-   * @deprecated do not use log4j
-   */
-  @Deprecated
-  public static void prepareLogging() {
-    File f = new File("test4log4j.properties");
-    if (!f.exists()) {
-      log.error("No logfile ! exit");
-      System.exit(1);
-    }
-  }
+  private static LoadingCache<URL, Boolean> reachableCache = CacheBuilder.newBuilder() //
+      .expireAfterAccess(30, TimeUnit.SECONDS) //
+      .build(new CacheLoader<URL, Boolean>() {
+
+        @Override
+        public Boolean load(URL url) throws Exception {
+          try {
+            HttpURLConnection c = (HttpURLConnection) url.openConnection();
+            c.setConnectTimeout(2000);
+            c.connect();
+            String headerField = c.getHeaderField(0);
+            return headerField.endsWith("200 OK");
+
+          } catch (Exception e) {
+            log.warn(e.getMessage());
+            log.trace("", e);
+
+          }
+          return Boolean.FALSE;
+        }
+      });
 
   public static void assumeReachable(URL url) {
     try {
-      // TODO cache
-      HttpURLConnection c = (HttpURLConnection) url.openConnection();
-      c.setConnectTimeout(2000);
-      c.connect();
-      String headerField = c.getHeaderField(0);
-      Assume.assumeTrue(headerField.endsWith("200 OK"));
-
-    } catch (Exception e) {
-      log.warn(e.getMessage());
-      log.trace("", e);
-      Assume.assumeNoException(e);
+      Boolean reachable = reachableCache.get(url);
+      Assume.assumeTrue(reachable.booleanValue());
+    } catch (ExecutionException e1) {
+      throw new IllegalStateException(e1);
     }
+
   }
 
   public static void assumeReachable(String url) {

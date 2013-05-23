@@ -3,7 +3,6 @@ package net.sourceforge.jwbf.zim.live;
 import java.io.File;
 
 import lombok.extern.slf4j.Slf4j;
-import net.sourceforge.jwbf.TestHelper;
 
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -14,7 +13,6 @@ public class BasicTest {
 
   @BeforeClass
   public static void setUp() throws Exception {
-    TestHelper.prepareLogging();
     File dir = new File("zimTest");
     dir.mkdir();
     if (!(dir.isDirectory() && dir.exists())) {
