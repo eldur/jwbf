@@ -1,7 +1,7 @@
 #!/bin/sh
 set -eu
 cd target
-upload=./../rsyncSourceForge.sh
+upload=./../.rsyncSourceForge.sh
 
 remoteWebPath=/home/project-web/jwbf/htdocs
 remoteDocs=$remoteWebPath/doc/

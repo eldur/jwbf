@@ -1,6 +1,6 @@
 #!/bin/sh
 set -eu
-upload=./../rsyncSourceForge.sh
+upload=./../.rsyncSourceForge.sh
 cd target
 incl=include-rsync.tmp
 readme=README.md
