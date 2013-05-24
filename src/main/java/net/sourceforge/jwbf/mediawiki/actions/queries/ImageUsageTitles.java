@@ -28,17 +28,21 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import lombok.extern.slf4j.Slf4j;
+import net.sourceforge.jwbf.core.RequestBuilder;
 import net.sourceforge.jwbf.core.actions.Get;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
+import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.actions.util.SupportedBy;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 
+import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 
 /**
- * action class using the MediaWiki-api's "list=imagelinks" and later imageUsage.
+ * action class using the MediaWiki-api's "list=imagelinks" and later
+ * imageUsage.
  * 
  * @author Tobias Knerr
  * @author Thomas Stock
@@ -59,9 +63,10 @@ public class ImageUsageTitles extends TitleQuery<String> {
   private final VersionHandler handler;
 
   /**
-   * The public constructor. It will have an MediaWiki-request generated, which is then added to
-   * msgs. When it is answered, the method processAllReturningText will be called (from outside this
-   * class). For the parameters, see
+   * The public constructor. It will have an MediaWiki-request generated, which
+   * is then added to msgs. When it is answered, the method
+   * processAllReturningText will be called (from outside this class). For the
+   * parameters, see
    * {@link ImageUsageTitles#generateRequest(String, String, String)}
    */
   public ImageUsageTitles(MediaWikiBot bot, String imageName, int... namespaces) {
@@ -93,10 +98,11 @@ public class ImageUsageTitles extends TitleQuery<String> {
    * @param imageName
    *          the title of the image, not null
    * @param namespace
-   *          the namespace(s) that will be searched for links, as a string of numbers separated by
-   *          '|'; if null, this parameter is omitted
+   *          the namespace(s) that will be searched for links, as a string of
+   *          numbers separated by '|'; if null, this parameter is omitted
    * @param ilcontinue
-   *          the value for the ilcontinue parameter, null for the generation of the initial request
+   *          the value for the ilcontinue parameter, null for the generation of
+   *          the initial request
    * @return a
    */
   private Get generateRequest(String imageName, String namespace, String ilcontinue) {
@@ -112,8 +118,8 @@ public class ImageUsageTitles extends TitleQuery<String> {
   }
 
   /**
-   * gets the information about a follow-up page from a provided api response. If there is one, a
-   * new request is added to msgs by calling generateRequest.
+   * gets the information about a follow-up page from a provided api response.
+   * If there is one, a new request is added to msgs by calling generateRequest.
    * 
    * @param s
    *          text for parsing
@@ -173,27 +179,35 @@ public class ImageUsageTitles extends TitleQuery<String> {
     public abstract Collection<String> parseArticleTitles(String s);
   }
 
+  private RequestBuilder newRequestBuilder() {
+    return new ApiRequestBuilder() //
+        .action("query") //
+        .formatXml() //
+        .param("list", "imageusage") //
+        .param("iulimit", LIMIT + "") //
+    ;
+  }
+
   private class DefaultHandler extends VersionHandler {
 
     @Override
     public Get generateContinueRequest(String imageName, String namespace, String ilcontinue) {
+      RequestBuilder requestBuilder = newRequestBuilder();
+      requestBuilder.param("iucontinue", MediaWiki.encode(ilcontinue));
+      requestBuilder.param("iutitle", MediaWiki.encode(imageName));
 
-      String uS = MediaWiki.URL_API + "?action=query&list=imageusage" + "&iucontinue="
-          + MediaWiki.encode(ilcontinue) + "&iulimit=" + LIMIT + "&format=xml" + "&iutitle="
-          + MediaWiki.encode(imageName);
-      return new Get(uS);
+      return requestBuilder.buildGet();
     }
 
     @Override
     public Get generateRequest(String imageName, String namespace) {
+      RequestBuilder requestBuilder = newRequestBuilder();
+      requestBuilder.param("iutitle", MediaWiki.encode(imageName));
 
-      String uS = MediaWiki.URL_API
-          + "?action=query&list=imageusage"
-          + "&iutitle="
-          + MediaWiki.encode(imageName)
-          + ((namespace != null && namespace.length() != 0) ? ("&iunamespace=" + MediaWiki
-              .encode(namespace)) : "") + "&iulimit=" + LIMIT + "&format=xml";
-      return new Get(uS);
+      if (!Strings.isNullOrEmpty(namespace)) {
+        requestBuilder.param("iunamespace", MediaWiki.encode(namespace));
+      }
+      return requestBuilder.buildGet();
 
     }
 
@@ -231,30 +245,28 @@ public class ImageUsageTitles extends TitleQuery<String> {
   }
 
   /**
-   * VersionHandler for MW versions 1.10 .. 1.16. This one is identical to the one for 1.17 except
-   * for the iutitle parameter in generateContinueRequest.
+   * VersionHandler for MW versions 1.10 .. 1.16. This one is identical to the
+   * one for 1.17 except for the iutitle parameter in generateContinueRequest.
    * 
    */
   private class Mw1_11Handler extends VersionHandler {
 
     @Override
     public Get generateContinueRequest(String imageName, String namespace, String ilcontinue) {
-
-      String uS = MediaWiki.URL_API + "?action=query&list=imageusage" + "&iucontinue="
-          + MediaWiki.encode(ilcontinue) + "&iulimit=" + LIMIT + "&format=xml";
-      return new Get(uS);
+      RequestBuilder requestBuilder = newRequestBuilder();
+      requestBuilder.param("iucontinue", MediaWiki.encode(ilcontinue));
+      return requestBuilder.buildGet();
     }
 
     @Override
     public Get generateRequest(String imageName, String namespace) {
+      RequestBuilder requestBuilder = newRequestBuilder();
+      requestBuilder.param("iutitle", MediaWiki.encode(imageName));
 
-      String uS = MediaWiki.URL_API
-          + "?action=query&list=imageusage"
-          + "&iutitle="
-          + MediaWiki.encode(imageName)
-          + ((namespace != null && namespace.length() != 0) ? ("&iunamespace=" + MediaWiki
-              .encode(namespace)) : "") + "&iulimit=" + LIMIT + "&format=xml";
-      return new Get(uS);
+      if (!Strings.isNullOrEmpty(namespace)) {
+        requestBuilder.param("iunamespace", MediaWiki.encode(namespace));
+      }
+      return requestBuilder.buildGet();
 
     }
 

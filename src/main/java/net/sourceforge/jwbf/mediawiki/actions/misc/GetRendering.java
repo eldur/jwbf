@@ -14,6 +14,7 @@ import net.sourceforge.jwbf.core.actions.Get;
 import net.sourceforge.jwbf.core.actions.util.ActionException;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.core.actions.util.ProcessException;
+import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.actions.util.SupportedBy;
@@ -24,7 +25,8 @@ import org.jdom.Element;
 /**
  * 
  * Implements function to render wikitext on remote <a href=
- * "http://www.mediawiki.org/wiki/API:Expanding_templates_and_rendering#parse" >parse</a>.
+ * "http://www.mediawiki.org/wiki/API:Expanding_templates_and_rendering#parse"
+ * >parse</a>.
  * 
  * @author Thomas Stock
  * 
@@ -40,8 +42,12 @@ public class GetRendering extends MWAction {
   public GetRendering(MediaWikiBot bot, String wikitext) {
     super(bot.getVersion());
     this.bot = bot;
-    msg = new Get(MediaWiki.URL_API + "?action=parse&text=" + MediaWiki.encode(wikitext)
-        + "&titles=API&format=xml");
+    msg = new ApiRequestBuilder() //
+        .action("parse") //
+        .formatXml() //
+        .param("text", MediaWiki.encode(wikitext)) //
+        .param("titles", "API") //
+        .buildGet();
 
   }
 

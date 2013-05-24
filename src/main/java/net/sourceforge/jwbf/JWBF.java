@@ -25,11 +25,12 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Collections;
 import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
+
+import com.google.common.collect.Maps;
 
 /**
  * 
@@ -38,7 +39,7 @@ import java.util.jar.Manifest;
  */
 public final class JWBF {
 
-  private static final Map<String, String> PARTS = new HashMap<String, String>();
+  private static final Map<String, String> PARTS = Maps.newHashMap();
   private static String version = "";
   private static String title = "";
   private static Manifest manifest = null;
@@ -47,20 +48,6 @@ public final class JWBF {
   private static boolean errorInfo = true;
   static {
     init(JWBF.class);
-    /*
-     * String[] cp = System.getProperty("java.class.path").split(":"); for (int i = 0; i <
-     * cp.length; i++) { try {
-     * 
-     * if (cp[i].endsWith(".jar") && cp[i].contains("jwbf")) { registerModule(readArtifactId("file:"
-     * + cp[i]), readVersion("file:" + cp[i]));
-     * 
-     * } else if (cp[i].contains("jwbf")) { registerModule(readArtifactId("file:" + cp[i]),
-     * readVersion("file:" + cp[i])); } } catch (Exception e) { System.err.println(cp[i] +
-     * " seems to be no regular module"); }
-     * 
-     * }
-     */
-
   }
   private static final String jarFileIndex = "jar:file:";
 

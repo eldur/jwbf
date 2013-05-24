@@ -33,7 +33,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.sourceforge.jwbf.JWBF;
 import net.sourceforge.jwbf.core.actions.Get;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
-import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
+import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.actions.util.SupportedBy;
@@ -68,7 +68,7 @@ public class GetVersion extends MWAction {
 
   /**
    * Create and submit the request to the Wiki. Do not use
-   * {@link MediaWikiBot#performAction(net.sourceforge.jwbf.actions.ContentProcessable)} .
+   * {@link MediaWikiBot#performAction(net.sourceforge.jwbf.actions.ContentProcessable)}
    */
   public GetVersion(MediaWikiBot bot) {
     this();
@@ -76,17 +76,19 @@ public class GetVersion extends MWAction {
   }
 
   /*
-   * In this case the superconstructor with no value is allowed, because the versionrequest is
-   * mandatory
+   * In this case the superconstructor with no value is allowed, because the
+   * versionrequest is mandatory
    */
   /**
    * Create the request.
    */
   @SuppressWarnings("deprecation")
   public GetVersion() {
-
-    msg = new Get(MediaWiki.URL_API + "?action=query&meta=siteinfo&format=xml");
-
+    msg = new ApiRequestBuilder() //
+        .action("query") //
+        .formatXml() //
+        .param("meta", "siteinfo") //
+        .buildGet();
   }
 
   private void parse(final String xml) {

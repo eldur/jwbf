@@ -12,17 +12,18 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
 import javax.imageio.ImageIO;
 
 import lombok.extern.slf4j.Slf4j;
+import net.sourceforge.jwbf.core.RequestBuilder;
 import net.sourceforge.jwbf.core.actions.Get;
 import net.sourceforge.jwbf.core.actions.util.ActionException;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.core.actions.util.ProcessException;
+import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
@@ -33,6 +34,7 @@ import org.apache.commons.lang.math.NumberUtils;
 import org.jdom.Element;
 
 import com.google.common.base.Strings;
+import com.google.common.collect.Maps;
 
 /**
  * Action to receive the full address of an image. Like "Img.gif" to
@@ -53,7 +55,7 @@ public class ImageInfo extends MWAction {
   private Get msg;
   private final MediaWikiBot bot;
   private boolean selfEx = true;
-  private Map<String, String> map = new HashMap<String, String>();
+  private final Map<String, String> map = Maps.newHashMap();
 
   final private String name;
 
@@ -96,21 +98,29 @@ public class ImageInfo extends MWAction {
   }
 
   private void prepareMsg(String name) {
-    int width = NumberUtils.toInt(map.get(WIDTH));
-    int height = NumberUtils.toInt(map.get(HEIGHT));
-    String addProps = "";
-    if (width > 0)
-      addProps += "&" + WIDTH + "=" + width;
-    if (height > 0)
-      addProps += "&" + HEIGHT + "=" + height;
 
-    if (bot.getVersion().greaterEqThen(Version.MW1_15)) {
-      msg = new Get(MediaWiki.URL_API + "?action=query&titles=File:" + MediaWiki.encode(name)
-          + "&prop=imageinfo" + addProps + "&iiprop=url&format=xml");
-    } else {
-      msg = new Get(MediaWiki.URL_API + "?action=query&titles=Image:" + MediaWiki.encode(name)
-          + "&prop=imageinfo" + addProps + "&iiprop=url&format=xml");
+    RequestBuilder requestBuilder = new ApiRequestBuilder() //
+        .action("query") //
+        .formatXml() //
+        .param("iiprop", "url") //
+        .param("prop", "imageinfo") //
+    ;
+
+    int width = NumberUtils.toInt(map.get(WIDTH));
+    if (width > 0) {
+      requestBuilder.param(WIDTH, width + "");
     }
+
+    int height = NumberUtils.toInt(map.get(HEIGHT));
+    if (height > 0) {
+      requestBuilder.param(HEIGHT, height + "");
+    }
+    if (bot.getVersion().greaterEqThen(Version.MW1_15)) {
+      requestBuilder.param("titles", "File:" + MediaWiki.encode(name));
+    } else {
+      requestBuilder.param("titles", "Image:" + MediaWiki.encode(name));
+    }
+    msg = requestBuilder.buildGet();
   }
 
   /**

@@ -29,10 +29,10 @@ import java.text.ParseException;
 import java.util.Iterator;
 
 import lombok.extern.slf4j.Slf4j;
-import net.sourceforge.jwbf.core.RequestBuilder;
 import net.sourceforge.jwbf.core.actions.Get;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
+import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.actions.util.ApiException;
@@ -83,13 +83,13 @@ public class GetRevision extends MWAction {
     this.properties = properties;
     sa = new SimpleArticle();
     sa.setTitle(articlename);
-    msg = new RequestBuilder(MediaWiki.URL_API) //
-        .param("action", "query") //
+    msg = new ApiRequestBuilder() //
+        .action("query") //
+        .formatXml() //
         .param("prop", "revisions") //
         .param("titles", MediaWiki.encode(articlename)) //
         .param("rvprop", getDataProperties(properties) + getReversion(properties)) //
         .param("rvlimit", "1") //
-        .param("format", "xml") //
         .buildGet();
   }
 

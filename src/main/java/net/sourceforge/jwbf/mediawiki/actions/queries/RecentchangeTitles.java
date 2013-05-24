@@ -30,8 +30,9 @@ import java.util.Iterator;
 import java.util.Set;
 
 import lombok.extern.slf4j.Slf4j;
-import net.sourceforge.jwbf.core.actions.Get;
+import net.sourceforge.jwbf.core.RequestBuilder;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
+import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
@@ -45,9 +46,10 @@ import com.google.common.collect.Sets;
 
 /**
  * 
- * Gets a list of pages recently changed, ordered by modification timestamp. Parameters: rcfrom
- * (paging timestamp), rcto (flt), rcnamespace (flt), rcminor (flt), rcusertype (dflt=not|bot),
- * rcdirection (dflt=older), rclimit (dflt=10, max=500/5000) F
+ * Gets a list of pages recently changed, ordered by modification timestamp.
+ * Parameters: rcfrom (paging timestamp), rcto (flt), rcnamespace (flt), rcminor
+ * (flt), rcusertype (dflt=not|bot), rcdirection (dflt=older), rclimit (dflt=10,
+ * max=500/5000) F
  * 
  * api.php ? action=query & list=recentchanges - List last 10 changes
  * 
@@ -67,10 +69,10 @@ public class RecentchangeTitles extends TitleQuery<String> {
   private final int[] namespaces;
 
   /**
-   * Collection that will contain the result (titles of articles linking to the target) after
-   * performing the action has finished.
+   * Collection that will contain the result (titles of articles linking to the
+   * target) after performing the action has finished.
    */
-  private Collection<String> titleCollection = Lists.newArrayList();
+  private final Collection<String> titleCollection = Lists.newArrayList();
   private final boolean uniqChanges;
 
   private class RecentInnerAction extends InnerAction {
@@ -107,34 +109,27 @@ public class RecentchangeTitles extends TitleQuery<String> {
    * generates the next MediaWiki-request (GetMethod) and adds it to msgs.
    * 
    * @param namespace
-   *          the namespace(s) that will be searched for links, as a string of numbers separated by
-   *          '|'; if null, this parameter is omitted
+   *          the namespace(s) that will be searched for links, as a string of
+   *          numbers separated by '|'; if null, this parameter is omitted
    * @param rcstart
    *          timestamp
    */
   private HttpAction generateRequest(int[] namespace, String rcstart) {
 
-    String uS = "";
+    RequestBuilder requestBuilder = new ApiRequestBuilder() //
+        .action("query") //
+        .formatXml() //
+        .param("list", "recentchanges") //
+        .param("rclimit", limit + "") //
+    ;
+    if (namespace != null) {
+      requestBuilder.param("rcnamespace", MediaWiki.encode(MWAction.createNsString(namespace)));
+    }
     if (rcstart.length() > 0) {
-      uS = MediaWiki.URL_API
-          + "?action=query&list=recentchanges"
-
-          + ((namespace != null) ? ("&rcnamespace=" + MediaWiki.encode(MWAction
-              .createNsString(namespace))) : "") + "&rcstart=" + rcstart
-          // + "&rcusertype=" // (dflt=not|bot)
-          + "&rclimit=" + limit + "&format=xml";
-    } else {
-      uS = MediaWiki.URL_API
-          + "?action=query&list=recentchanges"
-
-          + ((namespace != null) ? ("&rcnamespace=" + MediaWiki.encode(MWAction
-              .createNsString(namespace))) : "")
-          // + "&rcminor="
-          // + "&rcusertype=" // (dflt=not|bot)
-          + "&rclimit=" + limit + "&format=xml";
+      requestBuilder.param("rcstart", rcstart);
     }
 
-    return new Get(uS);
+    return requestBuilder.buildGet();
 
   }
 

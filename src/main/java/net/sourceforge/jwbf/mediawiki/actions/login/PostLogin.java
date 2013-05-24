@@ -27,14 +27,14 @@ import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_19;
 import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_20;
 
 import java.util.HashMap;
-import java.util.Map;
 
+import lombok.val;
 import lombok.extern.slf4j.Slf4j;
 import net.sourceforge.jwbf.core.actions.Post;
 import net.sourceforge.jwbf.core.actions.util.ActionException;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.core.actions.util.ProcessException;
-import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
+import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.actions.util.SupportedBy;
 import net.sourceforge.jwbf.mediawiki.contentRep.LoginData;
@@ -85,7 +85,10 @@ public class PostLogin extends MWAction {
 
   private Post getLoginMsg(final String username, final String pw, final String domain,
       final String token) {
-    Post pm = new Post(MediaWiki.URL_API + "?action=login&format=xml");
+    Post pm = new ApiRequestBuilder() //
+        .action("login") //
+        .formatXml() //
+        .buildPost();
     pm.addParam("lgname", username);
     pm.addParam("lgpassword", pw);
     if (domain != null)
@@ -117,7 +120,7 @@ public class PostLogin extends MWAction {
     Element loginEl = startElement.getChild("login");
     String result = loginEl.getAttributeValue("result");
     if (result.equalsIgnoreCase(success)) {
-      Map<String, String> properties = new HashMap<String, String>();
+      val properties = new HashMap<String, String>();
       properties.put("userId", loginEl.getAttribute("lguserid").toString());
       login.setup(loginEl.getAttributeValue("lgusername"), true);
     } else if (result.equalsIgnoreCase(needToken) && reTryLimit) {

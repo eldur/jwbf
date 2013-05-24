@@ -31,11 +31,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import lombok.extern.slf4j.Slf4j;
+import net.sourceforge.jwbf.core.RequestBuilder;
 import net.sourceforge.jwbf.core.actions.Get;
 import net.sourceforge.jwbf.core.actions.util.ActionException;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.core.actions.util.ProcessException;
-import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
+import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.actions.util.SupportedBy;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
@@ -47,9 +48,10 @@ import com.google.common.collect.Lists;
 
 /**
  * 
- * List log events, filtered by time range, event type, user type, or the page it applies to.
- * Ordered by event timestamp. Parameters: letype (flt), lefrom (paging timestamp), leto (flt),
- * ledirection (dflt=older), leuser (flt), letitle (flt), lelimit (dflt=10, max=500/5000)
+ * List log events, filtered by time range, event type, user type, or the page
+ * it applies to. Ordered by event timestamp. Parameters: letype (flt), lefrom
+ * (paging timestamp), leto (flt), ledirection (dflt=older), leuser (flt),
+ * letitle (flt), lelimit (dflt=10, max=500/5000)
  * 
  * api.php ? action=query & list=logevents - List last 10 events of any type
  * 
@@ -82,10 +84,10 @@ public class LogEvents extends MWAction implements Iterator<LogItem>, Iterable<L
   private boolean init = true;
   private boolean selvEx = true;
   /**
-   * Collection that will contain the result (titles of articles linking to the target) after
-   * performing the action has finished.
+   * Collection that will contain the result (titles of articles linking to the
+   * target) after performing the action has finished.
    */
-  private Collection<LogItem> logCollection = Lists.newArrayList();
+  private final Collection<LogItem> logCollection = Lists.newArrayList();
   private Iterator<LogItem> logIterator = null;
   private final String[] type;
   private String nextPageInfo = "";
@@ -134,54 +136,29 @@ public class LogEvents extends MWAction implements Iterator<LogItem>, Iterable<L
     this.limit = limit;
   }
 
-  /**
-   * generates the next MediaWiki-request (GetMethod) and adds it to msgs.
-   * 
-   * @param logtype
-   *          type of log, like upload
-   */
   private Get generateRequest(String... logtype) {
 
-    String uS = "";
-
-    uS = MediaWiki.URL_API + "?action=query&list=logevents";
+    RequestBuilder requestBuilder = new ApiRequestBuilder() //
+        .action("query") //
+        .formatXml() //
+        .param("list", "logevents") //
+        .param("lelimit", limit + "") //
+    ;
     if (logtype.length > 0) {
       StringBuffer logtemp = new StringBuffer();
       for (int i = 0; i < logtype.length; i++) {
         logtemp.append(logtype[i] + "|");
       }
-      uS += "&letype=" + logtemp.substring(0, logtemp.length() - 1);
+      requestBuilder.param("letype", logtemp.substring(0, logtemp.length() - 1));
     }
 
-    uS += "&lelimit=" + limit + "&format=xml";
-
-    return new Get(uS);
+    return requestBuilder.buildGet();
 
   }
 
-  /**
-   * generates the next MediaWiki-request (GetMethod) and adds it to msgs.
-   * 
-   * @param logtype
-   *          type of log, like upload
-   */
   private Get generateContinueRequest(String[] logtype, String continueing) {
-
-    String uS = "";
-
-    uS = MediaWiki.URL_API + "?action=query&list=logevents";
-    if (logtype.length > 0) {
-      StringBuffer logtemp = new StringBuffer();
-      for (int i = 0; i < logtype.length; i++) {
-        logtemp.append(logtype[i] + "|");
-      }
-      uS += "&letype=" + logtemp.substring(0, logtemp.length() - 1);
-    }
-
-    uS += "&lelimit=" + limit + "&format=xml";
-
-    return new Get(uS);
-
+    // FIXME continueing is unused
+    return generateRequest(logtype);
   }
 
   /**
@@ -210,8 +187,8 @@ public class LogEvents extends MWAction implements Iterator<LogItem>, Iterable<L
   }
 
   /**
-   * gets the information about a follow-up page from a provided api response. If there is one, a
-   * new request is added to msgs by calling generateRequest.
+   * gets the information about a follow-up page from a provided api response.
+   * If there is one, a new request is added to msgs by calling generateRequest.
    * 
    * @param s
    *          text for parsing

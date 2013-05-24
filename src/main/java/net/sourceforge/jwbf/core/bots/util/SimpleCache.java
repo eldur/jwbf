@@ -8,13 +8,14 @@ import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.zip.CRC32;
 import java.util.zip.Checksum;
 
 import lombok.extern.slf4j.Slf4j;
 import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
+
+import com.google.common.collect.Maps;
 
 @Slf4j
 public class SimpleCache implements CacheHandler {
@@ -23,7 +24,7 @@ public class SimpleCache implements CacheHandler {
   private final String ext = ".txt";
   private final int maxSaveTimeMils;
   private final int objectLiveTimeMilis = 100;
-  private final Map<String, CachArticle> dynStore = new HashMap<String, CachArticle>();
+  private final Map<String, CachArticle> dynStore = Maps.newHashMap();
 
   public SimpleCache(File folder, int maxSaveTimeMils) {
     this.folder = folder;

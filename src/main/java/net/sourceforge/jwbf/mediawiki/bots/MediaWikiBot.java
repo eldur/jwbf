@@ -1,8 +1,6 @@
 package net.sourceforge.jwbf.mediawiki.bots;
 
 import java.net.URL;
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.Set;
 
 import javax.annotation.Nonnull;
@@ -31,6 +29,8 @@ import net.sourceforge.jwbf.mediawiki.actions.meta.GetVersion;
 import net.sourceforge.jwbf.mediawiki.actions.meta.Siteinfo;
 import net.sourceforge.jwbf.mediawiki.actions.util.VersionException;
 import net.sourceforge.jwbf.mediawiki.contentRep.LoginData;
+
+import com.google.common.collect.ImmutableSet;
 
 /**
  * This class helps you to interact with each <a href="http://www.mediawiki.org"
@@ -87,7 +87,7 @@ public class MediaWikiBot implements WikiBot {
   private static final int DEFAULT_READ_PROPERTIES = GetRevision.CONTENT | GetRevision.COMMENT
       | GetRevision.USER | GetRevision.TIMESTAMP | GetRevision.IDS | GetRevision.FLAGS;
 
-  private static final Set<String> emptySet = Collections.unmodifiableSet(new HashSet<String>());
+  private static final Set<String> emptySet = ImmutableSet.of();
 
   /**
    * use this constructor, if you want to work with IoC.

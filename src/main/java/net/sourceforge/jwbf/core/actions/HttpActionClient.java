@@ -32,6 +32,7 @@ import java.util.Map;
 
 import javax.annotation.Nonnull;
 
+import lombok.val;
 import lombok.extern.slf4j.Slf4j;
 import net.sourceforge.jwbf.JWBF;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
@@ -63,11 +64,11 @@ import org.apache.http.params.HttpParams;
 @Slf4j
 public class HttpActionClient {
 
-  private HttpClient client;
+  private final HttpClient client;
 
   private String path = "";
 
-  private HttpHost host;
+  private final HttpHost host;
 
   private int prevHash;
 
@@ -83,7 +84,8 @@ public class HttpActionClient {
   public HttpActionClient(final HttpClient client, final URL url) {
 
     /*
-     * see for docu http://jakarta.apache.org/commons/httpclient/preference-api.html
+     * see for docu
+     * http://jakarta.apache.org/commons/httpclient/preference-api.html
      */
 
     if (url.getPath().length() > 1) {
@@ -273,7 +275,7 @@ public class HttpActionClient {
   }
 
   private Map<String, String> cookieTransform(List<Cookie> ca) {
-    Map<String, String> m = new HashMap<String, String>();
+    val m = new HashMap<String, String>();
     for (Cookie cookie : ca) {
       m.put(cookie.getName(), cookie.getValue());
     }

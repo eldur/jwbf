@@ -7,7 +7,6 @@ import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_18;
 import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_19;
 import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_20;
 
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -15,12 +14,15 @@ import lombok.extern.slf4j.Slf4j;
 import net.sourceforge.jwbf.core.actions.Get;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.core.contentRep.Userinfo;
+import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.actions.util.SupportedBy;
 
 import org.jdom.Element;
+
+import com.google.common.collect.Sets;
 
 /**
  * 
@@ -32,16 +34,20 @@ import org.jdom.Element;
 public class GetUserinfo extends MWAction implements Userinfo {
 
   private String username = "";
-  private final Set<String> rights = new HashSet<String>();
-  private final Set<String> groups = new HashSet<String>();
-  private Get msg;
+  private final Set<String> rights = Sets.newHashSet();
+  private final Set<String> groups = Sets.newHashSet();
+  private final Get msg;
 
   public GetUserinfo(Version v) {
     super(v);
-    msg = new Get(MediaWiki.URL_API + "?" + "action=query&" + "meta=userinfo&" + "uiprop="
-        + MediaWiki.encode("blockinfo|hasmsg|groups|rights|options|editcount|ratelimits") + "&"
-        + "format=xml");
-
+    String properties = MediaWiki
+        .encode("blockinfo|hasmsg|groups|rights|options|editcount|ratelimits");
+    msg = new ApiRequestBuilder() //
+        .action("query") //
+        .formatXml() //
+        .param("meta", "userinfo") //
+        .param("uiprop", properties) //
+        .buildGet();
   }
 
   private void parse(final String xml) {

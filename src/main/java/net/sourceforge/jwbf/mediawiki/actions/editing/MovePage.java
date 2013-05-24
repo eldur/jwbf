@@ -11,6 +11,7 @@ import net.sourceforge.jwbf.core.RequestBuilder;
 import net.sourceforge.jwbf.core.actions.Post;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.core.actions.util.ProcessException;
+import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.actions.util.SupportedBy;
@@ -26,8 +27,8 @@ import com.google.common.base.Strings;
  * href="http://www.mediawiki.org/wiki/API:Edit_-_Move">"action=move"</a>.
  * 
  * <p>
- * To allow your bot to move articles in your MediaWiki add the following line to your MediaWiki's
- * LocalSettings.php:<br>
+ * To allow your bot to move articles in your MediaWiki add the following line
+ * to your MediaWiki's LocalSettings.php:<br>
  * 
  * <pre>
  * $wgEnableWriteAPI = true;
@@ -122,14 +123,13 @@ public class MovePage extends MWAction {
       log.trace("enter MovePage.generateMoveRequest(String)");
     }
 
-    RequestBuilder requestBuilder = new RequestBuilder(MediaWiki.URL_API);
-    requestBuilder //
-        .param("action", "move") //
+    RequestBuilder requestBuilder = new ApiRequestBuilder() //
+        .action("move") //
+        .formatXml() //
         .param("from", MediaWiki.encode(oldtitle)) //
         .param("to", MediaWiki.encode(newtitle)) //
         .param("token", MediaWiki.encode(token.getToken())) //
         .param("movetalk", "") // XXX
-        .param("format", "xml") //
     ;
 
     if (withsubpages) {

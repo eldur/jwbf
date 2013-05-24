@@ -8,17 +8,19 @@ import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_19;
 import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_20;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
 import net.sourceforge.jwbf.core.actions.Get;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
+import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.util.SupportedBy;
 
 import org.jdom.Element;
+
+import com.google.common.collect.Maps;
 
 /**
  * Gets details from the given MediaWiki installation like installed version.
@@ -31,8 +33,8 @@ import org.jdom.Element;
 public class Siteinfo extends GetVersion {
 
   private final Get msg;
-  private final Map<Integer, String> namespaces = new HashMap<Integer, String>();
-  private final Map<String, String> interwiki = new HashMap<String, String>();
+  private final Map<Integer, String> namespaces = Maps.newHashMap();
+  private final Map<String, String> interwiki = Maps.newHashMap();
 
   public static final String GENERAL = "general";
   public static final String NAMESPACES = "namespaces"; // : A list of all
@@ -74,8 +76,13 @@ public class Siteinfo extends GetVersion {
       x.append(types[i] + "|");
     }
     String result = x.substring(0, x.length() - 1);
-    msg = new Get(MediaWiki.URL_API + "?action=query&meta=siteinfo" + "&siprop="
-        + MediaWiki.encode(result) + "&format=xml");
+    msg = new ApiRequestBuilder() //
+        .action("query") //
+        .formatXml() //
+        .param("meta", "siteinfo") //
+        .param("siprop", MediaWiki.encode(result)) //
+        .buildGet();
+
   }
 
   /**

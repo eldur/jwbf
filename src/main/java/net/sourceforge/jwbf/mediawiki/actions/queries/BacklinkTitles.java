@@ -31,8 +31,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import lombok.extern.slf4j.Slf4j;
+import net.sourceforge.jwbf.core.RequestBuilder;
 import net.sourceforge.jwbf.core.actions.Get;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
+import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
@@ -54,8 +56,8 @@ import com.google.common.collect.Lists;
 public class BacklinkTitles extends TitleQuery<String> {
 
   /**
-   * enum that defines the three posibilities of dealing with article lists including both redirects
-   * and non-redirects.
+   * enum that defines the three posibilities of dealing with article lists
+   * including both redirects and non-redirects.
    * <ul>
    * <li>all: List all pages regardless of their redirect flag</li>
    * <li>redirects: Only list redirects</li>
@@ -67,27 +69,28 @@ public class BacklinkTitles extends TitleQuery<String> {
   private static final int LIMIT = 50;
 
   /** object creating the requests that are sent to the api. */
-  private RequestBuilder requestBuilder = null;
+  private RequestCreator requestBuilder = null;
 
   private final String articleName;
 
-  private MediaWikiBot bot;
+  private final MediaWikiBot bot;
   private final RedirectFilter redirectFilter;
   private final int[] namespaces;
 
   /**
-   * The public constructor. It will have a MediaWiki-request generated, which is then added to
-   * msgs. When it is answered, the method processAllReturningText will be called (from outside this
-   * class).
+   * The public constructor. It will have a MediaWiki-request generated, which
+   * is then added to msgs. When it is answered, the method
+   * processAllReturningText will be called (from outside this class).
    * 
    * @param articleName
    *          the title of the article, != null
    * @param namespaces
-   *          the namespace(s) that will be searched for links, as a string of numbers separated by
-   *          '|'; if null, this parameter is omitted. See for e.g. {@link MediaWiki#NS_ALL}.
+   *          the namespace(s) that will be searched for links, as a string of
+   *          numbers separated by '|'; if null, this parameter is omitted. See
+   *          for e.g. {@link MediaWiki#NS_ALL}.
    * @param redirectFilter
-   *          filter that determines how to handle redirects, must be all for MW versions before
-   *          1.11; != null
+   *          filter that determines how to handle redirects, must be all for MW
+   *          versions before 1.11; != null
    */
   public BacklinkTitles(MediaWikiBot bot, String articleName, RedirectFilter redirectFilter,
       int... namespaces) {
@@ -114,8 +117,9 @@ public class BacklinkTitles extends TitleQuery<String> {
   }
 
   /**
-   * gets the information about a follow-up page from a provided api response. If there is one, the
-   * information for the next page parameter is added to the nextPageInfo field.
+   * gets the information about a follow-up page from a provided api response.
+   * If there is one, the information for the next page parameter is added to
+   * the nextPageInfo field.
    * 
    * @param s
    *          text for parsing
@@ -169,30 +173,30 @@ public class BacklinkTitles extends TitleQuery<String> {
    * @param apiVersion
    *          for which the request builder is working.
    */
-  private RequestBuilder createRequestBuilder(Version apiVersion) {
+  private RequestCreator createRequestBuilder(Version apiVersion) {
 
     switch (apiVersion) {
 
     case MW1_15:
     case MW1_16:
-      return new RequestBuilder1x15();
+      return new RequestCreator1x15();
 
     default: // MW1_17 and up
-      return new RequestBuilder1x17();
+      return new RequestCreator1x17();
 
     }
 
   }
 
   /** interface for classes that create a request strings. */
-  private interface RequestBuilder {
+  private interface RequestCreator {
 
     /**
      * generates an initial MediaWiki-request.
      * 
      * @return the request in string form
      */
-    String buildInitialRequest(String articleName, RedirectFilter redirectFilter, int[] namespace);
+    Get newInitialRequest(String articleName, RedirectFilter redirectFilter, int[] namespace);
 
     /**
      * generates a follow-up MediaWiki-request.
@@ -201,62 +205,70 @@ public class BacklinkTitles extends TitleQuery<String> {
      *          key for continuing
      * @return the request in string form
      */
-    String buildContinueRequest(String articleName, String blcontinue);
+    Get newContinueRequest(String articleName, String blcontinue);
 
   }
 
+  private static RequestBuilder newRequestBuilder() {
+    return new ApiRequestBuilder() //
+        .action("query") //
+        .formatXml() //
+        .param("list", "backlinks") //
+        .param("bllimit", LIMIT + "") //
+    ;
+  }
+
   /** request builder for MW versions 1_17 onwards. */
-  private static class RequestBuilder1x17 implements RequestBuilder {
+  private static class RequestCreator1x17 implements RequestCreator {
     /**
      * {@inheritDoc}
      */
-    public String buildInitialRequest(String articleName, RedirectFilter redirectFilter,
-        int[] namespace) {
-
-      return MediaWiki.URL_API
-          + "?action=query&list=backlinks"
-          + "&bltitle="
-          + MediaWiki.encode(articleName)
-          + ((namespace != null && MWAction.createNsString(namespace).length() != 0) ? ("&blnamespace=" + MediaWiki
-              .encode(MWAction.createNsString(namespace))) : "") + "&blfilterredir="
-          + MediaWiki.encode(redirectFilter.toString()) + "&bllimit=" + LIMIT + "&format=xml";
+    public Get newInitialRequest(String articleName, RedirectFilter redirectFilter, int[] namespace) {
+      RequestBuilder requestBuilder = newRequestBuilder() //
+          .param("bltitle", MediaWiki.encode(articleName)) //
+          .param("blfilterredir", MediaWiki.encode(redirectFilter.toString())) //
+      ;
+      if (namespace != null) {
+        requestBuilder.param("blnamespace", MediaWiki.encode(MWAction.createNsString(namespace)));
+      }
+      return requestBuilder.buildGet();
     }
 
     /**
      * {@inheritDoc}
      */
-    public String buildContinueRequest(String articleName, String blcontinue) {
-      return MediaWiki.URL_API + "?action=query&list=backlinks" + "&blcontinue="
-          + MediaWiki.encode(blcontinue) + "&bllimit=" + LIMIT + "&bltitle="
-          + MediaWiki.encode(articleName) + "&format=xml";
+    public Get newContinueRequest(String articleName, String blcontinue) {
+      return newRequestBuilder() //
+          .param("blcontinue", MediaWiki.encode(blcontinue)) //
+          .param("bltitle", MediaWiki.encode(articleName)) //
+          .buildGet();
     }
 
   }
 
   /** request builder for MW versions 1_11 to (at least) 1_13. */
-  private static class RequestBuilder1x15 implements RequestBuilder {
+  private static class RequestCreator1x15 implements RequestCreator {
     /**
      * {@inheritDoc}
      */
-    public String buildInitialRequest(String articleName, RedirectFilter redirectFilter,
-        int[] namespace) {
-
-      return MediaWiki.URL_API
-          + "?action=query&list=backlinks"
-          + "&bltitle="
-          + MediaWiki.encode(articleName)
-          + ((namespace != null && MWAction.createNsString(namespace).length() != 0) ? ("&blnamespace=" + MediaWiki
-              .encode(MWAction.createNsString(namespace))) : "") + "&blfilterredir="
-          + MediaWiki.encode(redirectFilter.toString()) + "&bllimit=" + LIMIT + "&format=xml";
+    public Get newInitialRequest(String articleName, RedirectFilter redirectFilter, int[] namespace) {
+      RequestBuilder requestBuilder = newRequestBuilder() //
+          .param("bltitle", MediaWiki.encode(articleName)) //
+          .param("blfilterredir", MediaWiki.encode(redirectFilter.toString())) //
+      ;
+      if (namespace != null) {
+        requestBuilder.param("blnamespace", MediaWiki.encode(MWAction.createNsString(namespace)));
+      }
+      return requestBuilder.buildGet();
     }
 
     /**
      * {@inheritDoc}
      */
-    public String buildContinueRequest(String articleName, String blcontinue) {
-
-      return MediaWiki.URL_API + "?action=query&list=backlinks" + "&blcontinue="
-          + MediaWiki.encode(blcontinue) + "&bllimit=" + LIMIT + "&format=xml";
+    public Get newContinueRequest(String articleName, String blcontinue) {
+      return newRequestBuilder() //
+          .param("blcontinue", MediaWiki.encode(blcontinue)) //
+          .buildGet();
     }
 
   }
@@ -264,9 +276,9 @@ public class BacklinkTitles extends TitleQuery<String> {
   @Override
   protected HttpAction prepareCollection() {
     if (getNextPageInfo().length() > 0) {
-      return new Get(requestBuilder.buildContinueRequest(articleName, getNextPageInfo()));
+      return requestBuilder.newContinueRequest(articleName, getNextPageInfo());
     } else {
-      return new Get(requestBuilder.buildInitialRequest(articleName, redirectFilter, namespaces));
+      return requestBuilder.newInitialRequest(articleName, redirectFilter, namespaces);
     }
   }
 

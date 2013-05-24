@@ -7,9 +7,11 @@ import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_18;
 import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_19;
 import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_20;
 import lombok.extern.slf4j.Slf4j;
+import net.sourceforge.jwbf.core.RequestBuilder;
 import net.sourceforge.jwbf.core.actions.Post;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.core.actions.util.ProcessException;
+import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.actions.util.SupportedBy;
@@ -96,7 +98,7 @@ public class PostDelete extends MWAction {
    * @return the delete action
    */
   private HttpAction getSecondRequest() {
-    HttpAction msg = null;
+    Post msg = null;
     if (token.getToken() == null || token.getToken().length() == 0) {
       throw new IllegalArgumentException("The argument 'token' must not be \""
           + String.valueOf(token.getToken()) + "\"");
@@ -104,16 +106,18 @@ public class PostDelete extends MWAction {
     if (log.isTraceEnabled()) {
       log.trace("enter PostDelete.generateDeleteRequest(String)");
     }
+    RequestBuilder requestBuilder = new ApiRequestBuilder() //
+        .action("delete") //
+        .formatXml() //
+        .param("title", MediaWiki.encode(title)) //
+        .param("token", MediaWiki.encode(token.getToken())) //
+    ;
 
-    String uS = MediaWiki.URL_API + "?action=delete" + "&title=" + MediaWiki.encode(title)
-        + "&token=" + MediaWiki.encode(token.getToken()) + "&format=xml";
     if (reason != null) {
-      uS = uS + "&reason=" + MediaWiki.encode(reason);
+      requestBuilder.param("reason", MediaWiki.encode(reason));
     }
-    if (log.isDebugEnabled()) {
-      log.debug("delete url: \"" + uS + "\"");
-    }
-    msg = new Post(uS);
+    msg = requestBuilder.buildPost();
+    log.debug("delete url: \"{}\"", msg.getRequest());
 
     return msg;
   }

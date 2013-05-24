@@ -23,7 +23,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.HashSet;
 import java.util.Set;
 
 import net.sourceforge.jwbf.core.actions.util.ActionException;
@@ -32,6 +31,8 @@ import net.sourceforge.jwbf.core.bots.util.CacheHandler;
 import net.sourceforge.jwbf.core.contentRep.Article;
 import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
 import net.sourceforge.jwbf.core.contentRep.Userinfo;
+
+import com.google.common.collect.Sets;
 
 /**
  * 
@@ -83,8 +84,8 @@ public class ZimWikiBot implements WikiBot {
   }
 
   /**
-   * Set up a simple text paarser some simple formating routines are supplied -> bold letters and
-   * images are translated from zimWiki to mediaWiki
+   * Set up a simple text paarser some simple formating routines are supplied ->
+   * bold letters and images are translated from zimWiki to mediaWiki
    */
   public SimpleArticle readData(String name, int properties) {
     File f = new File(getRootFolder(), name + ZIMEXT);
@@ -154,7 +155,7 @@ public class ZimWikiBot implements WikiBot {
       }
 
       public Set<String> getRights() {
-        Set<String> v = new HashSet<String>();
+        Set<String> v = Sets.newHashSet();
         if (rootFolder.canRead()) {
           v.add("read");
         }
@@ -165,7 +166,7 @@ public class ZimWikiBot implements WikiBot {
       }
 
       public Set<String> getGroups() {
-        return new HashSet<String>();
+        return Sets.newHashSet();
       }
     };
   }

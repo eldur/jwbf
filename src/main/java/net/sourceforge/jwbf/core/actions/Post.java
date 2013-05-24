@@ -1,14 +1,15 @@
 package net.sourceforge.jwbf.core.actions;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 
+import com.google.common.collect.Maps;
+
 public class Post implements HttpAction {
 
   private final String req;
-  private Map<String, Object> params = new HashMap<String, Object>();
+  private final Map<String, Object> params = Maps.newHashMap();
   private final String charset;
 
   public Post(String req, String charset) {

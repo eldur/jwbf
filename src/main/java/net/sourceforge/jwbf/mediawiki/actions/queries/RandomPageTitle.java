@@ -9,7 +9,7 @@ import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_20;
 import lombok.extern.slf4j.Slf4j;
 import net.sourceforge.jwbf.core.actions.Get;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
-import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
+import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.actions.util.SupportedBy;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
@@ -37,8 +37,13 @@ public class RandomPageTitle extends MWAction {
     super(bot.getVersion());
     this.bot = bot;
 
-    msg = new Get(MediaWiki.URL_API
-        + "?action=query&list=random&rnnamespace=0&rnlimit=1&format=xml");
+    msg = new ApiRequestBuilder() //
+        .action("query") //
+        .formatXml() //
+        .param("list", "random") //
+        .param("rnnamespace", "0") // TODO select namespace
+        .param("rnlimit", "1") // TODO select random count
+        .buildGet();
 
   }
 

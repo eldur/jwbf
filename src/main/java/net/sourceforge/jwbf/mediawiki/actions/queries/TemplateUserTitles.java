@@ -32,16 +32,19 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import lombok.extern.slf4j.Slf4j;
-import net.sourceforge.jwbf.core.actions.Get;
+import net.sourceforge.jwbf.core.RequestBuilder;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
+import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.actions.util.SupportedBy;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 
+import com.google.common.base.Strings;
+
 /**
- * action class using the MediaWiki-api's "list=embeddedin" that is used to find all articles which
- * use a template.
+ * action class using the MediaWiki-api's "list=embeddedin" that is used to find
+ * all articles which use a template.
  * 
  * @author Tobias Knerr
  * @author Thomas Stock
@@ -56,18 +59,19 @@ public class TemplateUserTitles extends TitleQuery<String> {
   private static final int LIMIT = 50;
   private final MediaWikiBot bot;
   /**
-   * Collection that will contain the result (titles of articles using the template) after
-   * performing the action has finished.
+   * Collection that will contain the result (titles of articles using the
+   * template) after performing the action has finished.
    */
-  private Collection<String> titleCollection = new ArrayList<String>();
+  private final Collection<String> titleCollection = new ArrayList<String>();
 
   private final String templateName;
   private final int[] namespaces;
 
   /**
-   * The public constructor. It will have an MediaWiki-request generated, which is then added to
-   * msgs. When it is answered, the method processAllReturningText will be called (from outside this
-   * class). For the parameters, see
+   * The public constructor. It will have an MediaWiki-request generated, which
+   * is then added to msgs. When it is answered, the method
+   * processAllReturningText will be called (from outside this class). For the
+   * parameters, see
    * {@link TemplateUserTitles#generateRequest(String, String, String)}
    */
   public TemplateUserTitles(MediaWikiBot bot, String templateName, int... namespaces) {
@@ -84,42 +88,30 @@ public class TemplateUserTitles extends TitleQuery<String> {
    * @param templateName
    *          the name of the template, not null
    * @param namespace
-   *          the namespace(s) that will be searched for links, as a string of numbers separated by
-   *          '|'; if null, this parameter is omitted
+   *          the namespace(s) that will be searched for links, as a string of
+   *          numbers separated by '|'; if null, this parameter is omitted
    * @param eicontinue
-   *          the value for the eicontinue parameter, null for the generation of the initial request
+   *          the value for the eicontinue parameter, null for the generation of
+   *          the initial request
    */
   private HttpAction generateRequest(String templateName, String namespace, String eicontinue) {
 
-    String uS = "";
-    String titleVal = "";
-    if (eicontinue == null) {
-      titleVal = "&eititle=";
+    RequestBuilder requestBuilder = new ApiRequestBuilder() //
+        .action("query") //
+        .formatXml() //
+        .param("list", "embeddedin") //
+        .param("eilimit", LIMIT + "") //
+        .param("eititle", MediaWiki.encode(templateName)) //
+    ;
 
-      uS = MediaWiki.URL_API
-          + "?action=query&list=embeddedin"
-
-          + titleVal
-          + MediaWiki.encode(templateName)
-          + ((namespace != null && namespace.length() != 0) ? ("&einamespace=" + MediaWiki
-              .encode(namespace)) : "") + "&eilimit=" + LIMIT + "&format=xml";
-
-    } else {
-
-      uS = MediaWiki.URL_API
-          + "?action=query&list=embeddedin"
-          + "&eicontinue="
-          + MediaWiki.encode(eicontinue)
-          + "&eilimit="
-          + LIMIT
-          + ((namespace != null && namespace.length() != 0) ? ("&einamespace=" + MediaWiki
-              .encode(namespace)) : "") + "&format=xml";
-
-      uS += "&eititle=" + MediaWiki.encode(templateName);
-
+    if (!Strings.isNullOrEmpty(namespace)) {
+      requestBuilder.param("einamespace", MediaWiki.encode(namespace));
+    }
+    if (eicontinue != null) {
+      requestBuilder.param("eicontinue", MediaWiki.encode(eicontinue));
     }
 
-    return new Get(uS);
+    return requestBuilder.buildGet();
 
   }
 
@@ -140,8 +132,8 @@ public class TemplateUserTitles extends TitleQuery<String> {
   }
 
   /**
-   * gets the information about a follow-up page from a provided api response. If there is one, a
-   * new request is added to msgs by calling generateRequest.
+   * gets the information about a follow-up page from a provided api response.
+   * If there is one, a new request is added to msgs by calling generateRequest.
    * 
    * @param s
    *          text for parsing

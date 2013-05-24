@@ -28,13 +28,13 @@ import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_20;
 import java.util.Set;
 
 import lombok.extern.slf4j.Slf4j;
-import net.sourceforge.jwbf.core.RequestBuilder;
 import net.sourceforge.jwbf.core.actions.Post;
 import net.sourceforge.jwbf.core.actions.util.ActionException;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.core.contentRep.ContentAccessable;
 import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
 import net.sourceforge.jwbf.core.contentRep.Userinfo;
+import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.actions.util.SupportedBy;
@@ -58,7 +58,7 @@ public class PostModifyContent extends MWAction {
   private boolean second = true;
 
   private final ContentAccessable a;
-  private MediaWikiBot bot;
+  private final MediaWikiBot bot;
   private GetApiToken apiReq = null;
   private HttpAction apiGet = null;
   private Post postModify = null;
@@ -94,9 +94,9 @@ public class PostModifyContent extends MWAction {
       return apiGet;
     } else if (second) {
 
-      postModify = new RequestBuilder(MediaWiki.URL_API) //
-          .param("action", "edit") //
-          .param("format", "xml") //
+      postModify = new ApiRequestBuilder() //
+          .action("edit") //
+          .formatXml() //
           .param("title", MediaWiki.encode(a.getTitle())) //
           .buildPost();
       postModify.addParam("summary", a.getEditSummary());
@@ -149,7 +149,8 @@ public class PostModifyContent extends MWAction {
   }
 
   /**
-   * @return true if one or both sets are <code>null</code> or the intersection of sets is empty.
+   * @return true if one or both sets are <code>null</code> or the intersection
+   *         of sets is empty.
    */
   boolean isIntersectionEmpty(Set<?> a, Set<?> b) {
     if (a == b) {

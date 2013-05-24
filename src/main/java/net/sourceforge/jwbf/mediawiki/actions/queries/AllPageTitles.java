@@ -31,14 +31,17 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import lombok.extern.slf4j.Slf4j;
+import net.sourceforge.jwbf.core.RequestBuilder;
 import net.sourceforge.jwbf.core.actions.Get;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
+import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.actions.util.RedirectFilter;
 import net.sourceforge.jwbf.mediawiki.actions.util.SupportedBy;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 
+import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 
 /**
@@ -144,16 +147,24 @@ public class AllPageTitles extends TitleQuery<String> {
     } else {
       apfilterredir = "nonredirects";
     }
+    RequestBuilder requestBuilder = new ApiRequestBuilder() //
+        .action("query") //
+        .formatXml() //
+        .param("list", "allpages") //
+        .param("apfilterredir", apfilterredir) //
+        .param("aplimit", LIMIT + "") //
+    ;
 
-    String uS = MediaWiki.URL_API
-        + "?action=query&list=allpages&"
-        + ((from != null && from.length() > 0) ? ("&apfrom=" + MediaWiki.encode(from)) : "")
-        + ((prefix != null) ? ("&apprefix=" + MediaWiki.encode(prefix)) : "")
-        + ((namespace != null && namespace.length() != 0) ? ("&apnamespace=" + MediaWiki
-            .encode(namespace)) : "") + "&apfilterredir=" + apfilterredir + "&aplimit=" + LIMIT
-        + "&format=xml";
-    return new Get(uS);
-
+    if (!Strings.isNullOrEmpty(from)) {
+      requestBuilder.param("apfrom", MediaWiki.encode(from));
+    }
+    if (!Strings.isNullOrEmpty(prefix)) {
+      requestBuilder.param("apprefix", MediaWiki.encode(prefix));
+    }
+    if (!Strings.isNullOrEmpty(namespace)) {
+      requestBuilder.param("apnamespace", MediaWiki.encode(namespace));
+    }
+    return requestBuilder.buildGet();
   }
 
   /**

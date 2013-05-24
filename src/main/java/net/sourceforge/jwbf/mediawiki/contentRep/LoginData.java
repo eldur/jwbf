@@ -18,11 +18,13 @@
  */
 package net.sourceforge.jwbf.mediawiki.contentRep;
 
-import java.util.HashMap;
 import java.util.Map;
 
+import com.google.common.collect.Maps;
+
 /**
- * TODO API related, use only if posting data works. http://www.mediawiki.org/wiki
+ * TODO API related, use only if posting data works.
+ * http://www.mediawiki.org/wiki
  * /API#Posting_Data_.2F_needs_major_editPage.php_rewrite
  * 
  * @author Thomas Stock FIXME check usage
@@ -31,7 +33,7 @@ import java.util.Map;
 public class LoginData {
 
   private String userName;
-  private final Map<String, String> properties = new HashMap<String, String>();
+  private final Map<String, String> properties = Maps.newHashMap();
   private boolean isLoggedIn;
 
   public LoginData() {

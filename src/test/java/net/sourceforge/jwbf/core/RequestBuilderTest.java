@@ -17,9 +17,14 @@ public class RequestBuilderTest {
         .param("b", "c") //
         .param("b", "c") //
         .build());
-    assertEquals("/a?d=e&b=c", new RequestBuilder("/a") //
-        .param("d", "e") //
+    assertEquals("/a?b=c&q=None", new RequestBuilder("/a") //
         .param("b", "c") //
+        .param("q", "") //
+        .param("", "z") //
+        .build());
+    assertEquals("/a?d=e&b=1", new RequestBuilder("/a") //
+        .param("d", "e") //
+        .param("b", 1) //
         .param("d", "e") //
         .build());
   }

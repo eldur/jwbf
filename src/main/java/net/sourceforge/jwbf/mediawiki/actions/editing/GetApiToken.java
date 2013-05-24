@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.sourceforge.jwbf.core.actions.Get;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.core.contentRep.Userinfo;
+import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
@@ -77,9 +78,13 @@ public final class GetApiToken extends MWAction {
     if (log.isTraceEnabled()) {
       log.trace("enter GetToken.generateTokenRequest()");
     }
-    String uS = MediaWiki.URL_API + "?action=query" + "&prop=info" + "&intoken="
-        + intoken.toString().toLowerCase() + "&titles=" + MediaWiki.encode(title) + "&format=xml";
-    msg = new Get(uS);
+    msg = new ApiRequestBuilder() //
+        .action("query") //
+        .formatXml() //
+        .param("prop", "info") //
+        .param("intoken", intoken.toString().toLowerCase()) //
+        .param("titles", MediaWiki.encode(title)) //
+        .buildGet();
 
   }
 
