@@ -102,6 +102,10 @@ public final class MediaWiki {
      */
     , MW1_20
     /**
+     * Released 2013-05-25
+     */
+    , MW1_21
+    /**
      * 
      */
     , DEVELOPMENT;
