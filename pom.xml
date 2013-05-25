@@ -42,8 +42,8 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.0</version>
         <configuration>
-          <source>1.5</source>
-          <target>1.5</target>
+          <source>1.6</source>
+          <target>1.6</target>
         </configuration>
       </plugin>
       <plugin>
@@ -133,7 +133,7 @@
               <goal>run</goal>
             </goals>
             <configuration>
-              <tasks>
+            <target>
                 <echo>Build Dir: ${project.build.directory}</echo>
                 <echo>${java.home}</echo>
                 <property name="classpath.compile" refid="maven.compile.classpath" />
@@ -146,7 +146,7 @@
                 <ant antfile="${basedir}/build-mvn.xml" inheritRefs="true">
                   <target name="package" />
                 </ant>
-              </tasks>
+            </target>
             </configuration>
           </execution>
           <execution>
@@ -156,7 +156,7 @@
               <goal>run</goal>
             </goals>
             <configuration>
-              <tasks>
+            <target>
                 <echo>Build Dir: ${project.build.directory}</echo>
                 <echo>${java.home}</echo>
                 <property name="classpath.compile" refid="maven.compile.classpath" />
@@ -169,7 +169,7 @@
                 <ant antfile="${basedir}/build-mvn.xml" inheritRefs="true">
                   <target name="manifest" />
                 </ant>
-              </tasks>
+            </target>
             </configuration>
           </execution>
         </executions>
@@ -177,7 +177,7 @@
           <dependency>
             <groupId>sun.jdk</groupId>
             <artifactId>tools</artifactId>
-            <version>1.5</version>
+            <version>1.6</version>
             <scope>system</scope>
             <systemPath>${java.home}/../lib/tools.jar</systemPath>
           </dependency>
