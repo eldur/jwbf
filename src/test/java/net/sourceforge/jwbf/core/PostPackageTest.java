@@ -8,8 +8,17 @@ import java.io.File;
 import java.io.FilenameFilter;
 import java.io.InputStreamReader;
 import java.io.StringWriter;
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
 
 import org.junit.Test;
+
+import com.google.common.base.Charsets;
+import com.google.common.base.Predicate;
+import com.google.common.collect.Collections2;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.io.Resources;
 
 public class PostPackageTest {
 
@@ -45,5 +54,38 @@ public class PostPackageTest {
           in.close();
       }
     }
+  }
+
+  @Test
+  public void testImportsForSimpleStart() throws Exception {
+    File file = new File("src/main/java/net/sourceforge/jwbf/JWBF.java");
+    List<String> content = Resources.readLines(file.toURI().toURL(), Charsets.UTF_8);
+    assertTrue(content.size() > 1);
+    Collection<String> imports = Collections2.filter(content, new Predicate<String>() {
+
+      public boolean apply(String line) {
+        return line.startsWith("import ");
+      }
+    });
+    Collection<String> invalidImports = Collections2.filter(imports, new Predicate<String>() {
+
+      Set<String> validImports = ImmutableSet.of( //
+          "^import java.io.*" //
+          , "^import java.net.*" //
+          , "^import java.util.*" //
+      );
+
+      public boolean apply(String line) {
+        boolean result = true;
+        for (String validImportRegex : validImports) {
+          result = line.matches(validImportRegex);
+          if (result) {
+            break;
+          }
+        }
+        return !result;
+      }
+    });
+    assertTrue("Do not use this import: " + invalidImports.toString(), invalidImports.isEmpty());
   }
 }
