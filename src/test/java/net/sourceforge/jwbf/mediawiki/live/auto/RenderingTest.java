@@ -5,7 +5,6 @@ import java.util.Collection;
 import net.sourceforge.jwbf.mediawiki.VersionTestClassVerifier;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.actions.misc.GetRendering;
-import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 
 import org.junit.Assert;
 import org.junit.ClassRule;
@@ -34,10 +33,6 @@ public class RenderingTest extends ParamHelper {
 
   @Test
   public final void render() {
-    doTest(bot);
-  }
-
-  private void doTest(MediaWikiBot bot) {
     GetRendering r = new GetRendering(bot, "bert");
     Assert.assertEquals("<p>bert</p>", r.getHtml());
 

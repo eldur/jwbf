@@ -30,13 +30,12 @@ public class GetRendering extends MWAction {
   private boolean isSelfEx = true;
 
   public GetRendering(MediaWikiBot bot, String wikitext) {
-    super(bot.getVersion());
     this.bot = bot;
     msg = new ApiRequestBuilder() //
         .action("parse") //
         .formatXml() //
         .param("text", MediaWiki.encode(wikitext)) //
-        .param("titles", "API") //
+        .param("title", "API") //
         .buildGet();
 
   }
