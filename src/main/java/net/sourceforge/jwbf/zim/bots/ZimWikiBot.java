@@ -84,8 +84,8 @@ public class ZimWikiBot implements WikiBot {
   }
 
   /**
-   * Set up a simple text paarser some simple formating routines are supplied ->
-   * bold letters and images are translated from zimWiki to mediaWiki
+   * Set up a simple text paarser some simple formating routines are supplied -> bold letters and
+   * images are translated from zimWiki to mediaWiki
    */
   public SimpleArticle readData(String name, int properties) {
     File f = new File(getRootFolder(), name + ZIMEXT);

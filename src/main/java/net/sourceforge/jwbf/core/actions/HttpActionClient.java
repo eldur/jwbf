@@ -84,8 +84,7 @@ public class HttpActionClient {
   public HttpActionClient(final HttpClient client, final URL url) {
 
     /*
-     * see for docu
-     * http://jakarta.apache.org/commons/httpclient/preference-api.html
+     * see for docu http://jakarta.apache.org/commons/httpclient/preference-api.html
      */
 
     if (url.getPath().length() > 1) {

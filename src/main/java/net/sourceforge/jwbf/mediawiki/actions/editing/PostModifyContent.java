@@ -149,8 +149,7 @@ public class PostModifyContent extends MWAction {
   }
 
   /**
-   * @return true if one or both sets are <code>null</code> or the intersection
-   *         of sets is empty.
+   * @return true if one or both sets are <code>null</code> or the intersection of sets is empty.
    */
   boolean isIntersectionEmpty(Set<?> a, Set<?> b) {
     if (a == b) {

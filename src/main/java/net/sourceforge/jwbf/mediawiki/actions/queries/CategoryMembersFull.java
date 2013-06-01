@@ -42,12 +42,11 @@ public class CategoryMembersFull extends CategoryMembers implements Iterable<Cat
   /**
    * 
    * 
-   *           on any kind of http or version problems
+   * on any kind of http or version problems
    * 
-   *           on inner problems like a version mismatch
+   * on inner problems like a version mismatch
    */
-  public CategoryMembersFull(MediaWikiBot bot, String categoryName, int... namespaces)
-      {
+  public CategoryMembersFull(MediaWikiBot bot, String categoryName, int... namespaces) {
     super(bot, categoryName, namespaces);
   }
 

@@ -20,8 +20,7 @@ import org.jdom.Element;
 
 /**
  * Action class using the MediaWiki-<a
- * href="http://www.mediawiki.org/wiki/API:Changing_wiki_content"
- * >Editing-API</a>. <br />
+ * href="http://www.mediawiki.org/wiki/API:Changing_wiki_content" >Editing-API</a>. <br />
  * Its job is to get the token for some actions like delete or edit.
  * 
  * @author Max Gensthaler
@@ -56,8 +55,7 @@ public final class GetApiToken extends MWAction {
    * @param ui
    *          user info object
    * 
-   *          if this action is not supported of the MediaWiki version connected
-   *          to
+   *          if this action is not supported of the MediaWiki version connected to
    */
   public GetApiToken(Intoken intoken, String title, Version v, Userinfo ui) {
     super(v);

@@ -78,7 +78,7 @@ public class GetPage implements ContentProcessable {
    * @param hm
    *          the
    * 
-   *           on any problems with inner browser
+   *          on any problems with inner browser
    * @return the returning text
    */
   public String processReturningText(String s, HttpAction hm) {

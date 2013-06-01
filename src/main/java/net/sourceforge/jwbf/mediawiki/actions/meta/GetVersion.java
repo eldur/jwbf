@@ -76,8 +76,8 @@ public class GetVersion extends MWAction {
   }
 
   /*
-   * In this case the superconstructor with no value is allowed, because the
-   * versionrequest is mandatory
+   * In this case the superconstructor with no value is allowed, because the versionrequest is
+   * mandatory
    */
   /**
    * Create the request.

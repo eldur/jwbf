@@ -58,8 +58,7 @@ public class Siteinfo extends GetVersion {
   // content
   /**
    * 
-   * inits with parameters {@link #GENERAL}, {@link #NAMESPACES},
-   * {@link #INTERWIKIMAP}.
+   * inits with parameters {@link #GENERAL}, {@link #NAMESPACES}, {@link #INTERWIKIMAP}.
    */
   public Siteinfo() {
     this(GENERAL, NAMESPACES, INTERWIKIMAP);

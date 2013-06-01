@@ -25,8 +25,7 @@ import org.jdom.Element;
 /**
  * 
  * Implements function to render wikitext on remote <a href=
- * "http://www.mediawiki.org/wiki/API:Expanding_templates_and_rendering#parse"
- * >parse</a>.
+ * "http://www.mediawiki.org/wiki/API:Expanding_templates_and_rendering#parse" >parse</a>.
  * 
  * @author Thomas Stock
  * 

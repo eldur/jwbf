@@ -25,8 +25,8 @@ import org.jdom.Element;
  * href="http://www.mediawiki.org/wiki/API:Edit_-_Delete">"action=delete"</a>.
  * 
  * <p>
- * To allow your bot to delete articles in your MediaWiki add the following line
- * to your MediaWiki's LocalSettings.php:<br>
+ * To allow your bot to delete articles in your MediaWiki add the following line to your MediaWiki's
+ * LocalSettings.php:<br>
  * 
  * <pre>
  * $wgEnableWriteAPI = true;
@@ -162,8 +162,8 @@ public class PostDelete extends MWAction {
   }
 
   /**
-   * Determines if the given XML {@link Document} contains an error message
-   * which then would printed by the logger.
+   * Determines if the given XML {@link Document} contains an error message which then would printed
+   * by the logger.
    */
   @Override
   protected Element getErrorElement(Element rootElement) {

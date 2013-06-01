@@ -147,8 +147,7 @@ public class Article implements ArticleMeta, ContentSetable {
   }
 
   /**
-   * @deprecated use {@link #Article(String)} and {@link #setText(String)}
-   *             instead.
+   * @deprecated use {@link #Article(String)} and {@link #setText(String)} instead.
    */
   @Deprecated
   public Article(WikiBot bot, String text, String title) {

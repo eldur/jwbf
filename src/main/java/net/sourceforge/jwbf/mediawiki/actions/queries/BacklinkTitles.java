@@ -56,8 +56,8 @@ import com.google.common.collect.Lists;
 public class BacklinkTitles extends TitleQuery<String> {
 
   /**
-   * enum that defines the three posibilities of dealing with article lists
-   * including both redirects and non-redirects.
+   * enum that defines the three posibilities of dealing with article lists including both redirects
+   * and non-redirects.
    * <ul>
    * <li>all: List all pages regardless of their redirect flag</li>
    * <li>redirects: Only list redirects</li>
@@ -78,19 +78,18 @@ public class BacklinkTitles extends TitleQuery<String> {
   private final int[] namespaces;
 
   /**
-   * The public constructor. It will have a MediaWiki-request generated, which
-   * is then added to msgs. When it is answered, the method
-   * processAllReturningText will be called (from outside this class).
+   * The public constructor. It will have a MediaWiki-request generated, which is then added to
+   * msgs. When it is answered, the method processAllReturningText will be called (from outside this
+   * class).
    * 
    * @param articleName
    *          the title of the article, != null
    * @param namespaces
-   *          the namespace(s) that will be searched for links, as a string of
-   *          numbers separated by '|'; if null, this parameter is omitted. See
-   *          for e.g. {@link MediaWiki#NS_ALL}.
+   *          the namespace(s) that will be searched for links, as a string of numbers separated by
+   *          '|'; if null, this parameter is omitted. See for e.g. {@link MediaWiki#NS_ALL}.
    * @param redirectFilter
-   *          filter that determines how to handle redirects, must be all for MW
-   *          versions before 1.11; != null
+   *          filter that determines how to handle redirects, must be all for MW versions before
+   *          1.11; != null
    */
   public BacklinkTitles(MediaWikiBot bot, String articleName, RedirectFilter redirectFilter,
       int... namespaces) {
@@ -117,9 +116,8 @@ public class BacklinkTitles extends TitleQuery<String> {
   }
 
   /**
-   * gets the information about a follow-up page from a provided api response.
-   * If there is one, the information for the next page parameter is added to
-   * the nextPageInfo field.
+   * gets the information about a follow-up page from a provided api response. If there is one, the
+   * information for the next page parameter is added to the nextPageInfo field.
    * 
    * @param s
    *          text for parsing

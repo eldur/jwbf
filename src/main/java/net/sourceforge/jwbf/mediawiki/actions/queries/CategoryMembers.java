@@ -30,10 +30,9 @@ import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 
 /**
- * A abstract action class using the MediaWiki-api's "list=categorymembers ".
- * For further information see <a href=
- * "http://www.mediawiki.org/wiki/API:Query_-_Lists#categorymembers_.2F_cm">API
- * documentation</a>.
+ * A abstract action class using the MediaWiki-api's "list=categorymembers ". For further
+ * information see <a href=
+ * "http://www.mediawiki.org/wiki/API:Query_-_Lists#categorymembers_.2F_cm">API documentation</a>.
  * 
  * @author Thomas Stock
  */
@@ -97,8 +96,7 @@ abstract class CategoryMembers extends MWAction {
    * 
    * 
    * @param cmcontinue
-   *          the value for the blcontinue parameter, null for the generation of
-   *          the initial request
+   *          the value for the blcontinue parameter, null for the generation of the initial request
    * @return a
    */
   protected final Get generateContinueRequest(String cmcontinue) {
@@ -130,8 +128,8 @@ abstract class CategoryMembers extends MWAction {
   }
 
   /**
-   * gets the information about a follow-up page from a provided api response.
-   * If there is one, a new request is added to msgs by calling generateRequest.
+   * gets the information about a follow-up page from a provided api response. If there is one, a
+   * new request is added to msgs by calling generateRequest.
    * 
    * @param s
    *          text for parsing

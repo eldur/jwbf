@@ -46,10 +46,9 @@ import com.google.common.collect.Sets;
 
 /**
  * 
- * Gets a list of pages recently changed, ordered by modification timestamp.
- * Parameters: rcfrom (paging timestamp), rcto (flt), rcnamespace (flt), rcminor
- * (flt), rcusertype (dflt=not|bot), rcdirection (dflt=older), rclimit (dflt=10,
- * max=500/5000) F
+ * Gets a list of pages recently changed, ordered by modification timestamp. Parameters: rcfrom
+ * (paging timestamp), rcto (flt), rcnamespace (flt), rcminor (flt), rcusertype (dflt=not|bot),
+ * rcdirection (dflt=older), rclimit (dflt=10, max=500/5000) F
  * 
  * api.php ? action=query & list=recentchanges - List last 10 changes
  * 
@@ -69,8 +68,8 @@ public class RecentchangeTitles extends TitleQuery<String> {
   private final int[] namespaces;
 
   /**
-   * Collection that will contain the result (titles of articles linking to the
-   * target) after performing the action has finished.
+   * Collection that will contain the result (titles of articles linking to the target) after
+   * performing the action has finished.
    */
   private final Collection<String> titleCollection = Lists.newArrayList();
   private final boolean uniqChanges;
@@ -109,8 +108,8 @@ public class RecentchangeTitles extends TitleQuery<String> {
    * generates the next MediaWiki-request (GetMethod) and adds it to msgs.
    * 
    * @param namespace
-   *          the namespace(s) that will be searched for links, as a string of
-   *          numbers separated by '|'; if null, this parameter is omitted
+   *          the namespace(s) that will be searched for links, as a string of numbers separated by
+   *          '|'; if null, this parameter is omitted
    * @param rcstart
    *          timestamp
    */

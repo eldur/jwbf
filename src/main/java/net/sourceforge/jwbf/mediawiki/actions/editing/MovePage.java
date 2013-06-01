@@ -27,8 +27,8 @@ import com.google.common.base.Strings;
  * href="http://www.mediawiki.org/wiki/API:Edit_-_Move">"action=move"</a>.
  * 
  * <p>
- * To allow your bot to move articles in your MediaWiki add the following line
- * to your MediaWiki's LocalSettings.php:<br>
+ * To allow your bot to move articles in your MediaWiki add the following line to your MediaWiki's
+ * LocalSettings.php:<br>
  * 
  * <pre>
  * $wgEnableWriteAPI = true;

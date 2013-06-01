@@ -34,8 +34,8 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * This class helps you to interact with each <a href="http://www.mediawiki.org"
- * target="_blank">MediaWiki</a>. This class offers a <b>basic set</b> of
- * methods which are defined in the package net.sourceforge.jwbf.actions.mw.*
+ * target="_blank">MediaWiki</a>. This class offers a <b>basic set</b> of methods which are defined
+ * in the package net.sourceforge.jwbf.actions.mw.*
  * 
  * 
  * How to use:
@@ -48,9 +48,9 @@ import com.google.common.collect.ImmutableSet;
  * 
  * <b>How to find the correct wikiurl</b>
  * <p>
- * The correct wikiurl is sometimes not easy to find, because some wikiadmis
- * uses url rewriting rules. In this cases the correct url is the one, which
- * gives you access to <code>api.php</code>. E.g. Compare
+ * The correct wikiurl is sometimes not easy to find, because some wikiadmis uses url rewriting
+ * rules. In this cases the correct url is the one, which gives you access to <code>api.php</code>.
+ * E.g. Compare
  * 
  * <pre>
  * http://www.mediawiki.org/wiki/api.php
@@ -147,8 +147,7 @@ public class MediaWikiBot implements WikiBot {
    * @param passwd
    *          the password
    * @param domain
-   *          login domain (Special for LDAPAuth extention to authenticate
-   *          against LDAP users)
+   *          login domain (Special for LDAPAuth extention to authenticate against LDAP users)
    * @see PostLogin
    */
   public void login(final String username, final String passwd, final String domain) {
@@ -165,8 +164,8 @@ public class MediaWikiBot implements WikiBot {
 
   /**
    * 
-   * Performs a Login. Actual old cookie login works right, because is pending
-   * on {@link #writeContent(ContentAccessable)}
+   * Performs a Login. Actual old cookie login works right, because is pending on
+   * {@link #writeContent(ContentAccessable)}
    * 
    * @param username
    *          the username
