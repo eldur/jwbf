@@ -64,15 +64,28 @@ public class LiveTestFather {
   }
 
   private LiveTestFather() {
-    val noLiveTests = System.getProperty("noLiveTests", "false");
-    val workWithDisk = !Boolean.valueOf(noLiveTests).booleanValue();
-    if (workWithDisk) {
+    if (executeLiveTests()) {
       data = new TestConfig();
     } else {
       data = mock(SimpleMap.class);
       when(data.get(Mockito.isA(String.class))) //
           .thenThrow(new AssumptionViolatedException("ignore this"));
     }
+  }
+
+  protected boolean executeLiveTests() {
+    val workWithDisk = optSysProperty("noLiveTests", false);
+    if (workWithDisk) {
+      throw new IllegalArgumentException("do not uses this toggle - use withLiveTests");
+    }
+
+    return optSysProperty("withLiveTests", false);
+  }
+
+  private boolean optSysProperty(String name, boolean defaultValue) {
+    val stringValue = System.getProperty(name, defaultValue + "");
+    val booleanValue = Boolean.valueOf(stringValue).booleanValue();
+    return booleanValue;
   }
 
   private static LiveTestFather instance;
