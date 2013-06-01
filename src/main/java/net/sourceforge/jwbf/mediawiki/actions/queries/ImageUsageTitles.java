@@ -19,10 +19,6 @@
  */
 package net.sourceforge.jwbf.mediawiki.actions.queries;
 
-import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_15;
-import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_16;
-import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_17;
-
 import java.util.Collection;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -34,7 +30,6 @@ import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
-import net.sourceforge.jwbf.mediawiki.actions.util.SupportedBy;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 
 import com.google.common.base.Strings;
@@ -49,7 +44,6 @@ import com.google.common.collect.Lists;
  * 
  */
 @Slf4j
-@SupportedBy({ MW1_15, MW1_16, MW1_17 })
 public class ImageUsageTitles extends TitleQuery<String> {
 
   /** constant value for the illimit-parameter. **/

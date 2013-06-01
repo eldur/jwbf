@@ -1,12 +1,5 @@
 package net.sourceforge.jwbf.mediawiki.actions.meta;
 
-import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_15;
-import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_16;
-import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_17;
-import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_18;
-import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_19;
-import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_20;
-
 import java.util.Iterator;
 import java.util.Set;
 
@@ -18,7 +11,6 @@ import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
-import net.sourceforge.jwbf.mediawiki.actions.util.SupportedBy;
 
 import org.jdom.Element;
 
@@ -30,7 +22,6 @@ import com.google.common.collect.Sets;
  * 
  */
 @Slf4j
-@SupportedBy({ MW1_15, MW1_16, MW1_17, MW1_18, MW1_19, MW1_20 })
 public class GetUserinfo extends MWAction implements Userinfo {
 
   private String username = "";

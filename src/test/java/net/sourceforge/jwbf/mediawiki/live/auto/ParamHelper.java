@@ -4,12 +4,9 @@ import static net.sourceforge.jwbf.mediawiki.BotFactory.getMediaWikiBot;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
 
 import net.sourceforge.jwbf.mediawiki.VersionTestClassVerifier;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
-import net.sourceforge.jwbf.mediawiki.actions.queries.AllPageTitles;
-import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.live.AbstractMediaWikiBotTest;
 
 import org.junit.Assert;
@@ -31,9 +28,6 @@ class ParamHelper extends AbstractMediaWikiBotTest {
   }
 
   static Collection<?> prepare(Version... versions) {
-
-    List<Version> documentedVersions = MWAction.findSupportedVersions(AllPageTitles.class); // TODO
-    // maybe
 
     Object[][] objects = new Object[versions.length][1];
     for (int i = 0; i < versions.length; i++) {

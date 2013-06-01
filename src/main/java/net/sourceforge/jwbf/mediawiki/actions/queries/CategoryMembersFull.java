@@ -1,12 +1,5 @@
 package net.sourceforge.jwbf.mediawiki.actions.queries;
 
-import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_15;
-import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_16;
-import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_17;
-import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_18;
-import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_19;
-import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_20;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -17,7 +10,6 @@ import net.sourceforge.jwbf.core.actions.util.ActionException;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.core.actions.util.ProcessException;
 import net.sourceforge.jwbf.core.bots.util.JwbfException;
-import net.sourceforge.jwbf.mediawiki.actions.util.SupportedBy;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 import net.sourceforge.jwbf.mediawiki.contentRep.CategoryItem;
 
@@ -27,7 +19,6 @@ import net.sourceforge.jwbf.mediawiki.contentRep.CategoryItem;
  * @author Thomas Stock
  */
 @Slf4j
-@SupportedBy({ MW1_15, MW1_16, MW1_17, MW1_18, MW1_19, MW1_20 })
 public class CategoryMembersFull extends CategoryMembers implements Iterable<CategoryItem>,
     Iterator<CategoryItem> {
 

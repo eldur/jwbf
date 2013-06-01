@@ -19,13 +19,6 @@
  */
 package net.sourceforge.jwbf.mediawiki.actions.queries;
 
-import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_15;
-import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_16;
-import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_17;
-import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_18;
-import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_19;
-import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_20;
-
 import java.util.Collection;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -38,7 +31,6 @@ import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.actions.util.RedirectFilter;
-import net.sourceforge.jwbf.mediawiki.actions.util.SupportedBy;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 
 import com.google.common.base.Strings;
@@ -52,7 +44,6 @@ import com.google.common.collect.Lists;
  * 
  */
 @Slf4j
-@SupportedBy({ MW1_15, MW1_16, MW1_17, MW1_18, MW1_19, MW1_20 })
 public class AllPageTitles extends TitleQuery<String> {
 
   /** Pattern to parse returned page, @see {@link #parseHasMore(String)}. */

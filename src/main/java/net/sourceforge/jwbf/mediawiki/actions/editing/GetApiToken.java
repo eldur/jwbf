@@ -1,11 +1,5 @@
 package net.sourceforge.jwbf.mediawiki.actions.editing;
 
-import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_15;
-import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_16;
-import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_17;
-import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_18;
-import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_19;
-import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_20;
 import lombok.extern.slf4j.Slf4j;
 import net.sourceforge.jwbf.core.actions.Get;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
@@ -14,7 +8,6 @@ import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
-import net.sourceforge.jwbf.mediawiki.actions.util.SupportedBy;
 
 import org.jdom.Element;
 
@@ -27,7 +20,6 @@ import org.jdom.Element;
  * @author Thomas Stock
  */
 @Slf4j
-@SupportedBy({ MW1_15, MW1_16, MW1_17, MW1_18, MW1_19, MW1_20 })
 public final class GetApiToken extends MWAction {
   /** Types that need a token. See API field intoken. */
   // TODO this does not feel the elegant way.

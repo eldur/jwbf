@@ -19,7 +19,7 @@ import com.google.common.primitives.Ints;
 public class BacklinkTest extends AbstractMediaWikiBotTest {
 
   @Test
-  public final void backlinksWikipediaDe() throws Exception {
+  public final void backlinksWikipediaDe() {
     String url = getWikipediaDeUrl();
     bot = new MediaWikiBot(url);
     BacklinkTitles is = new BacklinkTitles(bot, LiveTestFather.getValue("backlinks_article"));
@@ -37,7 +37,7 @@ public class BacklinkTest extends AbstractMediaWikiBotTest {
         i >= maxBacklinkArticleCount());
   }
 
-  private int maxBacklinkArticleCount() throws Exception {
+  private int maxBacklinkArticleCount() {
     int intValue = getIntValue("backlinks_article_count");
     return intValue;
   }

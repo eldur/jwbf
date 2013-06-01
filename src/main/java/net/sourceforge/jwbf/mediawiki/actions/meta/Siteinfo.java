@@ -1,12 +1,5 @@
 package net.sourceforge.jwbf.mediawiki.actions.meta;
 
-import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_15;
-import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_16;
-import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_17;
-import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_18;
-import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_19;
-import static net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version.MW1_20;
-
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.Map;
@@ -16,7 +9,6 @@ import net.sourceforge.jwbf.core.actions.Get;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
-import net.sourceforge.jwbf.mediawiki.actions.util.SupportedBy;
 
 import org.jdom.Element;
 
@@ -29,7 +21,6 @@ import com.google.common.collect.Maps;
  * @see Siteinfo
  * 
  */
-@SupportedBy({ MW1_15, MW1_16, MW1_17, MW1_18, MW1_19, MW1_20 })
 public class Siteinfo extends GetVersion {
 
   private final Get msg;

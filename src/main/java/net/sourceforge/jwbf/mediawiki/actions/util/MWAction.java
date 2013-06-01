@@ -23,8 +23,6 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 
 import javax.annotation.CheckForNull;
@@ -86,11 +84,6 @@ public abstract class MWAction implements ContentProcessable {
     hasMore = b;
   }
 
-  /**
-   * 
-   * @deprecated use {@link #MWAction(Version)} instead
-   */
-  @Deprecated
   protected MWAction() {
 
   }
@@ -100,10 +93,10 @@ public abstract class MWAction implements ContentProcessable {
    * @param v
    *          of the bot
    * 
-   *          if action is incompatible
+   * @deprecated do not uses this
    */
+  @Deprecated
   protected MWAction(Version v) {
-    checkVersionNewerEquals(v);
 
   }
 
@@ -133,60 +126,6 @@ public abstract class MWAction implements ContentProcessable {
    */
   public String processAllReturningText(final String s) {
     return s;
-  }
-
-  public static final List<Version> findSupportedVersions(Class<?> clazz) {
-    if (clazz.getName().contains(Object.class.getName())) {
-      Version[] v = new MediaWiki.Version[1];
-      v[0] = Version.UNKNOWN;
-      return Arrays.asList(v);
-    } else if (clazz.isAnnotationPresent(SupportedBy.class)) {
-      SupportedBy sb = clazz.getAnnotation(SupportedBy.class);
-      if (log.isDebugEnabled()) {
-        Version[] vtemp = sb.value();
-        StringBuffer sv = new StringBuffer();
-        for (int i = 0; i < vtemp.length; i++) {
-          sv.append(vtemp[i].getNumber() + ", ");
-        }
-        String svr = sv.toString().trim();
-        svr = svr.substring(0, svr.length() - 1);
-
-        log.debug("found support for: " + svr + " in ↲ \n\t class " + clazz.getCanonicalName());
-
-      }
-      return Arrays.asList(sb.value());
-    } else {
-      return findSupportedVersions(clazz.getSuperclass());
-    }
-  }
-
-  protected void checkVersionNewerEquals(Version v) {
-    v.getClass();
-    try {
-      Collection<Version> supportedVersions = getSupportedVersions();
-      if (supportedVersions.contains(v)) {
-        return;
-      }
-      if (!supportedVersions.isEmpty()) {
-        for (Version vx : supportedVersions) {
-          if (v.greaterEqThen(vx)) {
-            return;
-          }
-        }
-      }
-      throw new VersionException("unsupported version: " + v);
-    } catch (RuntimeException e) {
-      exceptionHandler.handle(e);
-    }
-  }
-
-  public List<Version> getSupportedVersions() {
-
-    if (v != null) {
-      return v;
-    }
-    v = findSupportedVersions(getClass());
-    return v;
   }
 
   /**

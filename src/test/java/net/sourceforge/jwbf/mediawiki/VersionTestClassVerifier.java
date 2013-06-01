@@ -17,7 +17,6 @@ import javax.inject.Provider;
 
 import lombok.extern.slf4j.Slf4j;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
-import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 
 import org.junit.Assert;
@@ -52,20 +51,7 @@ public class VersionTestClassVerifier extends Verifier {
 
   @Override
   public Statement apply(Statement base, Description description) {
-    for (Class<?> c : clazz) {
-
-      addInitSupporterVersions(c);
-    }
     return super.apply(base, description);
-  }
-
-  private void addInitSupporterVersions(Class<?> mwc) {
-    isVersionTestCase = true;
-    List<Version> versions = MWAction.findSupportedVersions(mwc);
-    for (Version version : versions) {
-      documentedVersions.put(mwc.getCanonicalName() + "-" + version, version);
-    }
-
   }
 
   private Collection<Version> getUsedVersions() {
