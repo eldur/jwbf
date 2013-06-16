@@ -1,5 +1,6 @@
 #!/bin/sh
 set -eu
+mvn clean package assembly:single -DskipTests
 upload=./../.rsyncSourceForge.sh
 cd target
 incl=include-rsync.tmp
