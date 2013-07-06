@@ -92,7 +92,7 @@
             <addMavenDescriptor>false</addMavenDescriptor>
             <manifestEntries>
               <Implementation-Version>${buildNumber}</Implementation-Version>
-              <Implementation-Title>${artifactId}</Implementation-Title>
+              <Implementation-Title>${project.artifactId}</Implementation-Title>
               <Main-Class>net.sourceforge.jwbf.JWBF</Main-Class>
               <Built-By>jwbf</Built-By>
             </manifestEntries>
