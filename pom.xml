@@ -6,7 +6,7 @@
   <artifactId>jwbf</artifactId>
   <packaging>jar</packaging>
   <name>JWBF</name>
-  <version>2.0-SNAPSHOT</version>
+  <version>2.0.0</version>
   <description>Java Wiki Bot Framework - A Wiki helper</description>
   <prerequisites>
     <maven>3.0</maven>
@@ -24,6 +24,7 @@
   <developers>
   </developers>
   <scm>
+    <developerConnection>scm:git:git@github.com:eldur/jwbf.git</developerConnection>
     <connection>scm:git:git@github.com:eldur/jwbf.git</connection>
     <url>https://github.com/eldur/jwbf</url>
   </scm>
@@ -145,6 +146,20 @@
         </executions>
       </plugin>
       <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-source-plugin</artifactId>
+        <version>2.2.1</version>
+        <executions>
+          <execution>
+            <id>attach-sources</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>jar-no-fork</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
         <artifactId>maven-assembly-plugin</artifactId>
         <version>2.4</version>
         <configuration>
@@ -174,6 +189,32 @@
       <properties>
         <noLiveTests>true</noLiveTests>
       </properties>
+    </profile>
+    <profile>
+      <id>release-sign-artifacts</id>
+      <activation>
+        <property>
+          <name>performRelease</name>
+          <value>true</value>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-gpg-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>sign-artifacts</id>
+                <phase>verify</phase>
+                <goals>
+                  <goal>sign</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
     </profile>
   </profiles>
   <dependencies>
