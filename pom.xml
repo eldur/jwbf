@@ -4,12 +4,11 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>net.sourceforge</groupId>
   <artifactId>jwbf</artifactId>
-  <packaging>jar</packaging>
   <name>JWBF</name>
   <version>3.0.0-SNAPSHOT</version>
   <description>Java Wiki Bot Framework - A Wiki helper</description>
   <prerequisites>
-    <maven>3.0</maven>
+    <maven>3.1.1</maven>
   </prerequisites>
   <parent>
     <groupId>org.sonatype.oss</groupId>
@@ -41,10 +40,10 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.0</version>
+        <version>3.1</version>
         <configuration>
-          <source>1.6</source>
-          <target>1.6</target>
+          <source>1.7</source>
+          <target>1.7</target>
         </configuration>
       </plugin>
       <plugin>
@@ -68,7 +67,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-checkstyle-plugin</artifactId>
-        <version>2.10</version>
+        <version>2.11</version>
         <executions>
           <execution>
             <id>check</id>
@@ -103,7 +102,7 @@
       <plugin>
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
-        <version>0.6.2.201302030002</version>
+        <version>0.6.4.201312101107</version>
         <executions>
           <execution>
             <goals>
@@ -123,7 +122,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
-        <version>2.14</version>
+        <version>2.16</version>
         <configuration>
           <systemPropertyVariables>
             <jacoco-agent.destfile>target/jacoco.exec</jacoco-agent.destfile>
@@ -135,7 +134,7 @@
         <inherited>true</inherited>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
-        <version>2.9</version>
+        <version>2.9.1</version>
         <executions>
           <execution>
             <id>attach-javadocs</id>
@@ -203,6 +202,7 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-gpg-plugin</artifactId>
+            <version>1.4</version>
             <executions>
               <execution>
                 <id>sign-artifacts</id>
@@ -221,7 +221,7 @@
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
-      <version>0.11.6</version>
+      <version>1.12.4</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
@@ -232,12 +232,12 @@
     <dependency>
       <groupId>org.apache.httpcomponents</groupId>
       <artifactId>httpclient</artifactId>
-      <version>4.2.3</version>
+      <version>4.3.2</version>
     </dependency>
     <dependency>
       <groupId>org.apache.httpcomponents</groupId>
       <artifactId>httpmime</artifactId>
-      <version>4.2.3</version>
+      <version>4.3.2</version>
     </dependency>
     <dependency>
       <groupId>commons-lang</groupId>
@@ -257,7 +257,7 @@
     <dependency>
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
-      <version>14.0.1</version>
+      <version>16.0</version>
     </dependency>
     <dependency>
       <groupId>junit</groupId>
@@ -280,31 +280,31 @@
     <dependency>
       <groupId>com.google.code.findbugs</groupId>
       <artifactId>jsr305</artifactId>
-      <version>2.0.1</version>
+      <version>2.0.3</version>
     </dependency>
     <dependency>
       <groupId>org.jacoco</groupId>
       <artifactId>org.jacoco.agent</artifactId>
       <classifier>runtime</classifier>
-      <version>0.6.2.201302030002</version>
+      <version>0.6.4.201312101107</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>ch.qos.logback</groupId>
       <artifactId>logback-classic</artifactId>
-      <version>1.0.11</version>
+      <version>1.0.13</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.eclipse.jetty</groupId>
       <artifactId>jetty-server</artifactId>
-      <version>8.1.11.v20130520</version>
+      <version>9.1.1.v20140108</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.eclipse.jetty</groupId>
       <artifactId>jetty-servlet</artifactId>
-      <version>8.1.11.v20130520</version>
+      <version>9.1.1.v20140108</version>
       <scope>test</scope>
     </dependency>
   </dependencies>

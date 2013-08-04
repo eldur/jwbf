@@ -43,7 +43,7 @@ import com.google.common.collect.Lists;
  * timestamp. Parameters: letype (flt), lefrom (paging timestamp), leto (flt), ledirection (dflt=older), leuser (flt),
  * letitle (flt), lelimit (dflt=10, max=500/5000) api.php ? action=query & list=logevents - List last 10 events of any
  * type TODO This is a semi-complete extension point
- *
+ * 
  * @author Thomas Stock
  */
 @Slf4j
@@ -80,7 +80,7 @@ public class LogEvents extends MWAction implements Iterator<LogItem>, Iterable<L
 
   /**
    * information necessary to get the next api page.
-   *
+   * 
    * @param type
    *          of like {@link #MOVE}
    */
@@ -158,7 +158,7 @@ public class LogEvents extends MWAction implements Iterator<LogItem>, Iterable<L
 
   /**
    * picks the article name from a MediaWiki api response.
-   *
+   * 
    * @param xml
    *          text for parsing
    */
@@ -172,7 +172,7 @@ public class LogEvents extends MWAction implements Iterator<LogItem>, Iterable<L
   /**
    * gets the information about a follow-up page from a provided api response. If there is one, a new request is added
    * to msgs by calling generateRequest.
-   *
+   * 
    * @param s
    *          text for parsing
    */
@@ -191,9 +191,7 @@ public class LogEvents extends MWAction implements Iterator<LogItem>, Iterable<L
     } else {
       hasMoreResults = false;
     }
-    if (log.isDebugEnabled()) {
-      log.debug("has more = " + hasMoreResults);
-    }
+    log.debug("has more = {}", hasMoreResults);
 
   }
 
@@ -232,13 +230,9 @@ public class LogEvents extends MWAction implements Iterator<LogItem>, Iterable<L
         bot.performAction(this);
         selvEx = true; // TODO not good
         setHasMoreMessages(true);
-        if (log.isDebugEnabled())
         log.debug("preparing success");
-      } catch (ActionException e) {
-        e.printStackTrace();
-        setHasMoreMessages(false);
-      } catch (ProcessException e) {
-        e.printStackTrace();
+      } catch (ActionException | ProcessException e) {
+        log.warn("", e);
         setHasMoreMessages(false);
       }
 
@@ -248,6 +242,7 @@ public class LogEvents extends MWAction implements Iterator<LogItem>, Iterable<L
   /**
    * {@inheritDoc}
    */
+  @Override
   public HttpAction getNextMessage() {
     return msg;
   }
@@ -255,6 +250,7 @@ public class LogEvents extends MWAction implements Iterator<LogItem>, Iterable<L
   /**
    * {@inheritDoc}
    */
+  @Override
   public boolean hasNext() {
     prepareCollection();
     return logIterator.hasNext();
@@ -263,6 +259,7 @@ public class LogEvents extends MWAction implements Iterator<LogItem>, Iterable<L
   /**
    * {@inheritDoc}
    */
+  @Override
   public LogItem next() {
     prepareCollection();
     return logIterator.next();
@@ -271,6 +268,7 @@ public class LogEvents extends MWAction implements Iterator<LogItem>, Iterable<L
   /**
    * {@inheritDoc}
    */
+  @Override
   public void remove() {
     logIterator.remove();
 
@@ -279,6 +277,7 @@ public class LogEvents extends MWAction implements Iterator<LogItem>, Iterable<L
   /**
    * {@inheritDoc}
    */
+  @Override
   @SuppressWarnings("unchecked")
   public Iterator<LogItem> iterator() {
     try {
@@ -299,7 +298,7 @@ public class LogEvents extends MWAction implements Iterator<LogItem>, Iterable<L
 
   /**
    * {@inheritDoc}
-   *
+   * 
    * @deprecated see super
    */
   @Deprecated

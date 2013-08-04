@@ -16,6 +16,7 @@ import org.junit.Test;
 
 import com.google.common.base.Charsets;
 import com.google.common.base.Predicate;
+import com.google.common.base.Strings;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.io.Resources;
@@ -46,8 +47,10 @@ public class PostPackageTest {
           strOut.flush();
         }
         String out = strOut.toString();
-        assertTrue("should contain jwbf, but was: " + out + " <= " + jar.getAbsolutePath(),
-            out.contains("jwbf"));
+        if (!Strings.isNullOrEmpty(out)) {
+          assertTrue("should contain jwbf, but was: \"" + out + "\" <= " + jar.getAbsolutePath(),
+              out.contains("jwbf"));
+        }
 
       } finally {
         if (in != null)

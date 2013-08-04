@@ -14,6 +14,7 @@ import net.sourceforge.jwbf.JWBF;
 import net.sourceforge.jwbf.core.actions.HttpActionClient;
 import net.sourceforge.jwbf.core.bots.HttpBot;
 
+import org.eclipse.jetty.server.NetworkConnector;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.ContextHandler;
@@ -40,7 +41,7 @@ public class HttpBotTest {
     };
     server.setHandler(handler);
     server.start();
-    port = server.getConnectors()[0].getLocalPort();
+    port = ((NetworkConnector) server.getConnectors()[0]).getLocalPort();
   }
 
   @Test

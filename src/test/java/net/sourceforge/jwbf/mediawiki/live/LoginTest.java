@@ -61,6 +61,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.SingleClientConnManager;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpParams;
+import org.eclipse.jetty.server.NetworkConnector;
 import org.eclipse.jetty.server.Server;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -101,7 +102,6 @@ public class LoginTest extends AbstractMediaWikiBotTest {
 
   /**
    * Test FAIL login on Wikipedia.
-   * 
    */
   @Test(expected = ActionException.class)
   public final void loginWikipedia1Fail() {
@@ -116,7 +116,6 @@ public class LoginTest extends AbstractMediaWikiBotTest {
 
   /**
    * Test login on a Mediawiki.
-   * 
    */
   @Test
   @Ignore("1.09 is to old")
@@ -131,15 +130,14 @@ public class LoginTest extends AbstractMediaWikiBotTest {
   }
 
   /**
-   * Test invalid installation of MW. TODO change exception test, should fail if no route to test
-   * host
+   * Test invalid installation of MW. TODO change exception test, should fail if no route to test host
    */
   @Test
   public final void installationDefunct() throws Exception {
     Server server = new Server(0);
     try {
       server.start();
-      int port = server.getConnectors()[0].getLocalPort();
+      int port = ((NetworkConnector) server.getConnectors()[0]).getLocalPort();
       bot = new MediaWikiBot("http://localhost:" + port + "/");
       bot.login("user", "pass");
       fail();
@@ -151,8 +149,7 @@ public class LoginTest extends AbstractMediaWikiBotTest {
   }
 
   /**
-   * Test invalid installation of MW. TODO change exception test, should fail if no route to test
-   * host
+   * Test invalid installation of MW. TODO change exception test, should fail if no route to test host
    */
   @Test
   public final void conncetionProblem() {
@@ -207,13 +204,16 @@ public class LoginTest extends AbstractMediaWikiBotTest {
       KeyManagementException {
     SSLContext sslContext = SSLContext.getInstance("SSL");
     sslContext.init(null, new TrustManager[] { new X509TrustManager() {
+      @Override
       public X509Certificate[] getAcceptedIssuers() {
         return null;
       }
 
+      @Override
       public void checkClientTrusted(X509Certificate[] certs, String authType) {
       }
 
+      @Override
       public void checkServerTrusted(X509Certificate[] certs, String authType) {
       }
     } }, new SecureRandom());
@@ -221,16 +221,20 @@ public class LoginTest extends AbstractMediaWikiBotTest {
     SSLSocketFactory sf = new SSLSocketFactory(sslContext);
     sf.setHostnameVerifier(new X509HostnameVerifier() {
 
+      @Override
       public boolean verify(String hostname, SSLSession session) {
         return true;
       }
 
+      @Override
       public void verify(String host, String[] cns, String[] subjectAlts) throws SSLException {
       }
 
+      @Override
       public void verify(String host, X509Certificate cert) throws SSLException {
       }
 
+      @Override
       public void verify(String host, SSLSocket ssl) throws IOException {
       }
     });
