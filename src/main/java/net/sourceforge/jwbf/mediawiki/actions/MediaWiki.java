@@ -28,9 +28,7 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 
 /**
- * 
  * @author Thomas Stock
- * 
  */
 public final class MediaWiki {
 
@@ -73,7 +71,6 @@ public final class MediaWiki {
    * Representaion of MediaWiki version.
    * 
    * @author Thomas Stock
-   * 
    */
   public enum Version {
     UNKNOWN
@@ -106,6 +103,10 @@ public final class MediaWiki {
      */
     , MW1_21
     /**
+     * Released 2013-12-06
+     */
+    , MW1_22
+    /**
      * 
      */
     , DEVELOPMENT;
@@ -113,7 +114,6 @@ public final class MediaWiki {
     private static Version last = UNKNOWN;
 
     /**
-     * 
      * @return a, like 1.15
      */
     public String getNumber() {
@@ -131,7 +131,6 @@ public final class MediaWiki {
     }
 
     /**
-     * 
      * @return the latest version
      */
     public static Version getLatest() {
