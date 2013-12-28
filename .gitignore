@@ -3,3 +3,4 @@
 .settings/
 .cache
 target/
+bin/

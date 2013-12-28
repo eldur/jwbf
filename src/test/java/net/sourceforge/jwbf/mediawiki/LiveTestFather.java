@@ -74,16 +74,19 @@ public class LiveTestFather {
   }
 
   protected boolean executeLiveTests() {
-    val workWithDisk = optSysProperty("noLiveTests", false);
+    val workWithDisk = optSysProperty("noLiveTests", false, true);
     if (workWithDisk) {
-      throw new IllegalArgumentException("do not uses this toggle - use withLiveTests");
+      throw new IllegalArgumentException("do not uses this toggle - use \"-DwithLiveTests\"");
     }
 
-    return optSysProperty("withLiveTests", false);
+    return optSysProperty("withLiveTests", false, true);
   }
 
-  private boolean optSysProperty(String name, boolean defaultValue) {
+  private boolean optSysProperty(String name, boolean defaultValue, boolean emptyValue) {
     val stringValue = System.getProperty(name, defaultValue + "");
+    if ("".equals(stringValue)) {
+      return emptyValue;
+    }
     val booleanValue = Boolean.valueOf(stringValue).booleanValue();
     return booleanValue;
   }
@@ -98,7 +101,6 @@ public class LiveTestFather {
   }
 
   /**
-   * 
    * @return the current UTC
    */
   public static Date getCurrentUTC() {
@@ -197,6 +199,7 @@ public class LiveTestFather {
       return filename;
     }
 
+    @Override
     public String get(String key) {
       String value = properties.getProperty(key);
       if (!Strings.isNullOrEmpty(value)) {
@@ -205,6 +208,7 @@ public class LiveTestFather {
       return value;
     }
 
+    @Override
     public String put(String key, String value) {
       val result = (String) properties.put(key, value);
       write(filename);
