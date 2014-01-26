@@ -25,41 +25,22 @@ import net.sourceforge.jwbf.core.actions.ContentProcessable;
 import net.sourceforge.jwbf.core.actions.Get;
 import net.sourceforge.jwbf.core.actions.GetPage;
 import net.sourceforge.jwbf.core.actions.HttpActionClient;
+import net.sourceforge.jwbf.core.actions.HttpActionClient.Builder;
 
 /**
- * 
  * @author Thomas Stock
- * 
  */
 
 public class HttpBot {
 
-  private HttpActionClient actionClient;
-
-  private String url;
-
-  /**
-   * do nothing, but keep in mind, that you have to setup the connection
-   */
-  public HttpBot() {
-
-  }
+  private final HttpActionClient actionClient;
 
   /**
    * @param url
    *          of the host
    */
   public HttpBot(final String url) {
-    this.url = url;
-    setClient(newURL(url));
-  }
-
-  public static URL newURL(final String url) {
-    try {
-      return new URL(url);
-    } catch (MalformedURLException e) {
-      throw new IllegalArgumentException(e);
-    }
+    this.actionClient = clientBuilder().withUrl(url).build();
   }
 
   public HttpBot(HttpActionClient actionClient) {
@@ -67,17 +48,16 @@ public class HttpBot {
   }
 
   /**
-   * 
    * @param url
    *          of the host
    */
   public HttpBot(final URL url) {
-    setClient(url);
+    this(clientBuilder().withUrl(url).build());
   }
 
   /**
-   * Returns a {@link HttpBot} which supports only its basic methods. Use {@link #getPage(String)}
-   * for an basic read of content.
+   * Returns a {@link HttpBot} which supports only its basic methods. Use {@link #getPage(String)} for an basic read of
+   * content.
    * 
    * @deprecated do not use this
    * @return a
@@ -93,37 +73,11 @@ public class HttpBot {
 
   }
 
-  /**
-   * 
-   * @param client
-   *          if you whant to add some specials
-   * 
-   */
-  public final void setClient(final HttpActionClient client) {
-    client.getClass();
-    actionClient = client;
+  private static Builder clientBuilder() {
+    return HttpActionClient.builder();
   }
 
   /**
-   * 
-   * @param hostUrl
-   *          base url of a wiki site to connect with; example: http://www.yourOwnWiki.org/wiki/
-   */
-  public final void setClient(final String hostUrl) {
-    setClient(newURL(hostUrl));
-  }
-
-  /**
-   * 
-   * @param hostUrl
-   *          like http://www.yourOwnWiki.org/wiki/
-   */
-  public final void setClient(final URL hostUrl) {
-    setClient(new HttpActionClient(hostUrl));
-  }
-
-  /**
-   * 
    * @return a
    */
   public final HttpActionClient getClient() {
@@ -135,7 +89,6 @@ public class HttpBot {
   }
 
   /**
-   * 
    * @return http raw content
    */
   public synchronized String performAction(final ContentProcessable a) {
@@ -149,12 +102,9 @@ public class HttpBot {
    *          url like index.php?title=Main_Page
    * @return HTML content
    */
-  public final String getPage(String u) {
-
-    URL url = newURL(u);
-    setClient(url.getProtocol() + "://" + url.getHost());
-    GetPage gp = new GetPage(u);
-    performAction(gp);
+  public static String getPage(HttpActionClient client) {
+    GetPage gp = new GetPage(client.getUrl());
+    new HttpBot(client).performAction(gp);
     return gp.getText();
   }
 
@@ -167,17 +117,6 @@ public class HttpBot {
    */
   public final byte[] getBytes(String u) {
     return actionClient.get(new Get(u));
-  }
-
-  /**
-   * 
-   * TODO check usage of hosturl
-   * 
-   * @deprecated
-   */
-  @Deprecated
-  public String getUrl() {
-    return url;
   }
 
 }

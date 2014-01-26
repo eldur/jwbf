@@ -76,7 +76,7 @@ public class BotFactory {
   public static class CacheActionClient extends HttpActionClient {
 
     public CacheActionClient(String url, WireRegister wireRegister) {
-      super(HttpBot.newURL(url));
+      super(HttpActionClient.newURL(url));
       this.wireRegister = wireRegister;
     }
 

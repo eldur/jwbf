@@ -9,11 +9,11 @@ object WikiReader extends App {
   val article = wikiBot.getArticle("42")
   println(article.getText().substring(5, 42))
   // HITCHHIKER'S GUIDE TO THE GALAXY FANS
-  change(article)
+  applyChangesTo(article)
   wikiBot.login("user", "***")
   article.save()
 
-  def change(article: Article) {
+  def applyChangesTo(article: Article) {
     // ...
   }
 }

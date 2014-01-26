@@ -33,12 +33,9 @@ import net.sourceforge.jwbf.mediawiki.contentRep.LoginData;
 import com.google.common.collect.ImmutableSet;
 
 /**
- * This class helps you to interact with each <a href="http://www.mediawiki.org"
- * target="_blank">MediaWiki</a>. This class offers a <b>basic set</b> of methods which are defined
- * in the package net.sourceforge.jwbf.actions.mw.*
- * 
- * 
- * How to use:
+ * This class helps you to interact with each <a href="http://www.mediawiki.org" target="_blank">MediaWiki</a>. This
+ * class offers a <b>basic set</b> of methods which are defined in the package net.sourceforge.jwbf.actions.mw.* How to
+ * use:
  * 
  * <pre>
  * MediaWikiBot b = new MediaWikiBot(&quot;http://yourwiki.org&quot;);
@@ -48,9 +45,8 @@ import com.google.common.collect.ImmutableSet;
  * 
  * <b>How to find the correct wikiurl</b>
  * <p>
- * The correct wikiurl is sometimes not easy to find, because some wikiadmis uses url rewriting
- * rules. In this cases the correct url is the one, which gives you access to <code>api.php</code>.
- * E.g. Compare
+ * The correct wikiurl is sometimes not easy to find, because some wikiadmis uses url rewriting rules. In this cases the
+ * correct url is the one, which gives you access to <code>api.php</code>. E.g. Compare
  * 
  * <pre>
  * http://www.mediawiki.org/wiki/api.php
@@ -63,7 +59,6 @@ import com.google.common.collect.ImmutableSet;
  * @author Thomas Stock
  * @author Tobias Knerr
  * @author Justus Bisser
- * 
  */
 @Slf4j
 public class MediaWikiBot implements WikiBot {
@@ -91,7 +86,6 @@ public class MediaWikiBot implements WikiBot {
 
   /**
    * use this constructor, if you want to work with IoC.
-   * 
    */
   public MediaWikiBot() {
 
@@ -117,15 +111,13 @@ public class MediaWikiBot implements WikiBot {
    */
 
   public MediaWikiBot(final String url) {
-    bot = new HttpBot(url);
     if (!(url.endsWith(".php") || url.endsWith("/"))) {
       throw new IllegalArgumentException("(" + url + ") url must end with slash or .php");
     }
-    getBot().setClient(url);
+    bot = new HttpBot(url);
   }
 
   /**
-   * 
    * @param url
    *          wikihosturl like "http://www.mediawiki.org/w/"
    * @param testHostReachable
@@ -134,9 +126,8 @@ public class MediaWikiBot implements WikiBot {
   public MediaWikiBot(URL url, boolean testHostReachable) {
     bot = new HttpBot(url);
     if (testHostReachable) {
-      getBot().getPage(url.toExternalForm());
+      HttpBot.getPage(bot.getClient());
     }
-    getBot().setClient(url);
   }
 
   /**
@@ -163,7 +154,6 @@ public class MediaWikiBot implements WikiBot {
   }
 
   /**
-   * 
    * Performs a Login. Actual old cookie login works right, because is pending on
    * {@link #writeContent(ContentAccessable)}
    * 
@@ -173,13 +163,13 @@ public class MediaWikiBot implements WikiBot {
    *          the password
    * @see PostLogin
    */
+  @Override
   public void login(final String username, final String passwd) {
 
     login(username, passwd, null);
   }
 
   /**
-   * 
    * @param name
    *          of article in a mediawiki like "Main Page"
    * @param properties
@@ -194,6 +184,7 @@ public class MediaWikiBot implements WikiBot {
   /**
    * {@inheritDoc}
    */
+  @Override
   public synchronized SimpleArticle readData(final String name, final int properties) {
 
     GetRevision ac = new GetRevision(getVersion(), name, properties);
@@ -207,13 +198,13 @@ public class MediaWikiBot implements WikiBot {
   /**
    * {@inheritDoc}
    */
+  @Override
   public SimpleArticle readData(String name) {
 
     return readData(name, DEFAULT_READ_PROPERTIES);
   }
 
   /**
-   * 
    * @param name
    *          of article in a mediawiki like "Main Page"
    * @return a content representation of requested article, never null
@@ -227,6 +218,7 @@ public class MediaWikiBot implements WikiBot {
   /**
    * {@inheritDoc}
    */
+  @Override
   public synchronized void writeContent(final SimpleArticle simpleArticle) {
     if (!isLoggedIn()) {
       throw new ActionException("Please login first");
@@ -245,7 +237,6 @@ public class MediaWikiBot implements WikiBot {
   }
 
   /**
-   * 
    * @return true if
    */
   public final boolean isLoggedIn() {
@@ -260,6 +251,7 @@ public class MediaWikiBot implements WikiBot {
   /**
    * {@inheritDoc}
    */
+  @Override
   public Userinfo getUserinfo() {
     log.debug("get userinfo");
     if (ui == null || loginChangeUserInfo) {
@@ -274,14 +266,17 @@ public class MediaWikiBot implements WikiBot {
         if (login != null && login.getUserName().length() > 0) {
           ui = new Userinfo() {
 
+            @Override
             public String getUsername() {
               return login.getUserName();
             }
 
+            @Override
             public Set<String> getRights() {
               return emptySet;
             }
 
+            @Override
             public Set<String> getGroups() {
               return emptySet;
             }
@@ -289,14 +284,17 @@ public class MediaWikiBot implements WikiBot {
         } else {
           ui = new Userinfo() {
 
+            @Override
             public String getUsername() {
               return "unknown";
             }
 
+            @Override
             public Set<String> getRights() {
               return emptySet;
             }
 
+            @Override
             public Set<String> getGroups() {
               return emptySet;
             }
@@ -311,6 +309,7 @@ public class MediaWikiBot implements WikiBot {
   /**
    * {@inheritDoc}
    */
+  @Override
   public void delete(String title) {
     performAction(new PostDelete(this, title));
   }
@@ -339,7 +338,6 @@ public class MediaWikiBot implements WikiBot {
   }
 
   /**
-   * 
    * @return the
    * @throws IllegalStateException
    *           if no version was found.
@@ -365,10 +363,7 @@ public class MediaWikiBot implements WikiBot {
   }
 
   /**
-   * 
-   * @return a
-   * 
-   *         on problems with http, cookies and io
+   * @return a on problems with http, cookies and io
    * @see Siteinfo
    */
   @Nonnull
@@ -387,7 +382,6 @@ public class MediaWikiBot implements WikiBot {
   }
 
   /**
-   * 
    * @return the
    */
   public boolean isEditApi() {
@@ -405,6 +399,7 @@ public class MediaWikiBot implements WikiBot {
   /**
    * {@inheritDoc}
    */
+  @Override
   public final String getWikiType() {
     return MediaWiki.class.getName() + " " + getVersion();
   }

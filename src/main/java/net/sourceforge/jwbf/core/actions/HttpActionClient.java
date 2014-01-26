@@ -24,6 +24,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.HashMap;
@@ -55,29 +56,34 @@ import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.HttpParams;
 
+import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
+
 /**
  * The main interaction class.
  * 
  * @author Thomas Stock
- * 
  */
 @Slf4j
 public class HttpActionClient {
 
+  private static final String USER_AGENT = "JWBF " + JWBF.getVersion(HttpActionClient.class);
+
   private final HttpClient client;
 
-  private String path = "";
+  private final String path;
 
   private final HttpHost host;
 
   private int prevHash;
+
+  private final URL url;
 
   public HttpActionClient(final URL url) {
     this(new DefaultHttpClient(), url);
   }
 
   /**
-   * 
    * @param url
    *          like "http://host/of/wiki/"
    */
@@ -86,22 +92,47 @@ public class HttpActionClient {
     /*
      * see for docu http://jakarta.apache.org/commons/httpclient/preference-api.html
      */
-
-    if (url.getPath().length() > 1) {
-      path = url.getPath().substring(0, url.getPath().lastIndexOf("/"));
-    }
-    client.getParams().setParameter("http.useragent" //
-        , "JWBF " + JWBF.getVersion(getClass()));
-    client.getParams() //
-        .setParameter("http.protocol.expect-continue", Boolean.FALSE);
-    // is good for wikipedia server
-    host = new HttpHost(url.getHost(), url.getPort(), url.getProtocol());
+    this.url = url;
+    path = pathOf(url);
+    host = newHost(url);
+    applyUserAgentTo(client, USER_AGENT);
+    applyNoExpectContinueTo(client);
 
     this.client = client;
   }
 
+  public HttpActionClient(Builder builder) {
+    this.url = builder.url;
+    host = newHost(builder.url);
+    path = pathOf(builder.url);
+    this.client = builder.client;
+  }
+
+  private HttpHost newHost(final URL url) {
+    return new HttpHost(url.getHost(), url.getPort(), url.getProtocol());
+  }
+
+  private static void applyNoExpectContinueTo(final HttpClient client) {
+    client.getParams() //
+        .setParameter("http.protocol.expect-continue", Boolean.FALSE);
+    // ^^ is good for wikipedia server
+  }
+
+  private static HttpClient applyUserAgentTo(final HttpClient client, String userAgent) {
+    client.getParams().setParameter("http.useragent" //
+        , userAgent);
+    return client;
+  }
+
+  private String pathOf(final URL url) {
+    if (url.getPath().length() > 1) {
+      return url.getPath().substring(0, url.getPath().lastIndexOf("/"));
+    } else {
+      return "";
+    }
+  }
+
   /**
-   * 
    * @return message, never null
    */
   @Nonnull
@@ -326,10 +357,72 @@ public class HttpActionClient {
   }
 
   /**
-   * 
-   * @return the
+   * @return like http://localhost
    */
   public String getHostUrl() {
     return host.toURI();
   }
+
+  /**
+   * @return like http://localhost/a/b?c=d
+   */
+  public String getUrl() {
+    return url.toExternalForm();
+  }
+
+  public static class Builder {
+
+    private HttpClient client;
+    private URL url;
+    private String userAgent;
+
+    public Builder withUserAgent(String userAgent) {
+      this.userAgent = userAgent;
+      return this;
+    }
+
+    public HttpActionClient build() {
+      if (client == null) {
+        withClient(new DefaultHttpClient());
+      }
+      applyNoExpectContinueTo(client);
+      if (Strings.isNullOrEmpty(userAgent)) {
+        userAgent = USER_AGENT;
+      }
+      applyUserAgentTo(client, userAgent);
+      Preconditions.checkNotNull(url, "no url is defined");
+      return new HttpActionClient(this);
+    }
+
+    public Builder withClient(HttpClient client) {
+      this.client = client;
+      return this;
+    }
+
+    public Builder withUrl(URL url) {
+      this.url = url;
+      return this;
+    }
+
+    public Builder withUrl(String url) {
+      return withUrl(newURL(url));
+    }
+  }
+
+  public static HttpActionClient of(String url) {
+    return builder().withUrl(url).build();
+  }
+
+  public static Builder builder() {
+    return new Builder();
+  }
+
+  public static URL newURL(final String url) {
+    try {
+      return new URL(url);
+    } catch (MalformedURLException e) {
+      throw new IllegalArgumentException(e);
+    }
+  }
+
 }

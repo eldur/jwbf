@@ -1,7 +1,7 @@
 package net.sourceforge.jwbf.core.live;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.net.URL;
@@ -11,53 +11,89 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import net.sourceforge.jwbf.JWBF;
+import net.sourceforge.jwbf.core.actions.HttpActionClient;
 import net.sourceforge.jwbf.core.bots.HttpBot;
 
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.ContextHandler;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class HttpBotTest {
 
-  @Test
-  public void testConstr() throws Exception {
-    String url = "http://192.0.2.1/";
-    HttpBot bot = new HttpBot(url);
-    assertNotNull(bot);
-    bot = new HttpBot(new URL(url));
-    assertNotNull(bot);
-  }
+  private static int port;
+  private static Server server;
 
-  /**
-   * Test if useragent ist jwbf.
-   * 
-   */
-  @Test
-  public final void testUserAgent() throws Exception {
-    Server server = new Server(0);
+  @BeforeClass
+  public static void beforeClass() throws Exception {
+    server = new Server(0);
     ContextHandler handler = new ContextHandler() {
       @Override
       public void doHandle(String arg0, Request request, HttpServletRequest arg2,
           HttpServletResponse response) throws IOException, ServletException {
-        response.getWriter().println(request.getHeader("User-Agent"));
+        response.getWriter().print(request.getHeader("User-Agent"));
         response.setStatus(HttpServletResponse.SC_OK);
         request.setHandled(true);
       }
     };
     server.setHandler(handler);
-    try {
-      server.start();
-      int port = server.getConnectors()[0].getLocalPort();
-      String url = "http://localhost:" + port + "/";
-      HttpBot bot = new HttpBot(url);
-      String result = bot.getPage(url);
-      assertTrue("useragent should contain \"JWBF\"", result.contains("JWBF"));
-      assertTrue("useragent should contain actual version",
-          result.contains(JWBF.getVersion(getClass())));
-    } finally {
-      server.stop();
-    }
+    server.start();
+    port = server.getConnectors()[0].getLocalPort();
+  }
+
+  @Test
+  public void testInit() throws Exception {
+    // GIVEN
+    String url = "http://192.0.2.1/";
+    // WHEN
+    HttpBot bot = new HttpBot(url);
+    // GIVEN
+    assertNotNull(bot);
+    // WHEN
+    bot = new HttpBot(new URL(url));
+    // THEN
+    assertNotNull(bot);
+  }
+
+  @Test
+  public final void testUserAgent() throws Exception {
+    // GIVEN
+    String url = "http://localhost:" + port + "/";
+    HttpActionClient client = HttpActionClient.of(url);
+
+    // WHEN
+    String result = getTrimed(client);
+
+    // THEN
+    assertEquals("JWBF " + JWBF.getVersion(getClass()), result);
+  }
+
+  @Test
+  public final void testUserAgent_any() throws Exception {
+    // GIVEN
+    String url = "http://localhost:" + port + "/";
+    String userAgent = "test user agent";
+    HttpActionClient client = HttpActionClient.builder() //
+        .withUrl(url) //
+        .withUserAgent(userAgent) //
+        .build();
+
+    // WHEN
+    String result = getTrimed(client);
+
+    // THEN
+    assertEquals(userAgent, result);
+  }
+
+  private String getTrimed(HttpActionClient client) {
+    return HttpBot.getPage(client).trim();
+  }
+
+  @AfterClass
+  public static void afterClass() throws Exception {
+    server.stop();
   }
 
 }
