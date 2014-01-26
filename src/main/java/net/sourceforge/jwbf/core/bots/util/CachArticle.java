@@ -7,7 +7,6 @@ import net.sourceforge.jwbf.core.contentRep.ArticleMeta;
 import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
 
 /**
- * 
  * @author Thomas Stock
  * @deprecated
  */
@@ -45,7 +44,6 @@ class CachArticle extends SimpleArticle implements Serializable {
 
   /*
    * (non-Javadoc)
-   * 
    * @see java.lang.Object#hashCode()
    */
   @Override
@@ -58,7 +56,6 @@ class CachArticle extends SimpleArticle implements Serializable {
 
   /*
    * (non-Javadoc)
-   * 
    * @see java.lang.Object#equals(java.lang.Object)
    */
   @Override

@@ -39,7 +39,6 @@ import com.google.common.collect.Sets;
  * Basic action to receive {@link Version}.
  * 
  * @author Thomas Stock
- * 
  */
 @Slf4j
 public class GetVersion extends MWAction {
@@ -67,8 +66,7 @@ public class GetVersion extends MWAction {
   }
 
   /*
-   * In this case the superconstructor with no value is allowed, because the versionrequest is
-   * mandatory
+   * In this case the superconstructor with no value is allowed, because the versionrequest is mandatory
    */
   /**
    * Create the request.
@@ -97,7 +95,6 @@ public class GetVersion extends MWAction {
   }
 
   /**
-   * 
    * @return the, like "Wikipedia"
    */
   public String getSitename() {
@@ -105,7 +102,6 @@ public class GetVersion extends MWAction {
   }
 
   /**
-   * 
    * @return the, like "http://de.wikipedia.org/wiki/Wikipedia:Hauptseite"
    */
   public String getBase() {
@@ -113,7 +109,6 @@ public class GetVersion extends MWAction {
   }
 
   /**
-   * 
    * @return the, like "first-letter"
    */
   public String getCase() {
@@ -121,7 +116,6 @@ public class GetVersion extends MWAction {
   }
 
   /**
-   * 
    * @return the
    * @see Version
    */
@@ -152,7 +146,6 @@ public class GetVersion extends MWAction {
   }
 
   /**
-   * 
    * @return the MediaWiki Generator, like "MediaWiki 1.16alpha"
    */
   public String getGenerator() {
@@ -160,7 +153,6 @@ public class GetVersion extends MWAction {
   }
 
   /**
-   * 
    * @return the, like "Main Page"
    */
   public String getMainpage() {

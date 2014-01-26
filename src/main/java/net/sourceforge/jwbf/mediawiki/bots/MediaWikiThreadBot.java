@@ -8,7 +8,6 @@ import com.google.common.collect.Lists;
 
 /**
  * @deprecated use your own thread framework
- * 
  */
 @Deprecated
 public class MediaWikiThreadBot extends MediaWikiBot {

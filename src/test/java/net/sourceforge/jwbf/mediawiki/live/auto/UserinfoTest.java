@@ -25,7 +25,6 @@ import org.junit.runners.Parameterized.Parameters;
 
 /**
  * @author Thomas
- * 
  */
 public class UserinfoTest extends ParamHelper {
 

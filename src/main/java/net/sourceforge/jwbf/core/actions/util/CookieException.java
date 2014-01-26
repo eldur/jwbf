@@ -19,9 +19,7 @@
 package net.sourceforge.jwbf.core.actions.util;
 
 /**
- * 
  * @author Thomas Stock
- * 
  */
 public class CookieException extends ActionException {
 
@@ -31,7 +29,6 @@ public class CookieException extends ActionException {
   private static final long serialVersionUID = 1L;
 
   /**
-   * 
    * @param arg0
    *          exception text
    */

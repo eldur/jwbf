@@ -23,11 +23,10 @@ import java.io.File;
 import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
 
 /**
- * This is a simple content helper class that implements the EditContentAccesable interface, plus
- * setter methods. The field Text from SimpleArticle can be used as a description for the file.
+ * This is a simple content helper class that implements the EditContentAccesable interface, plus setter methods. The
+ * field Text from SimpleArticle can be used as a description for the file.
  * 
  * @author Justus Bisser
- * 
  */
 public class SimpleFile extends SimpleArticle {
 
@@ -38,7 +37,6 @@ public class SimpleFile extends SimpleArticle {
   private File filename;
 
   /**
-   * 
    * @param label
    *          new filename
    * @param filename
@@ -51,7 +49,6 @@ public class SimpleFile extends SimpleArticle {
   }
 
   /**
-   * 
    * @param label
    *          new filename
    * @param filename
@@ -64,7 +61,6 @@ public class SimpleFile extends SimpleArticle {
   }
 
   /**
-   * 
    * @param filename
    *          local filename
    */
@@ -75,7 +71,6 @@ public class SimpleFile extends SimpleArticle {
   }
 
   /**
-   * 
    * @param filename
    *          local filename
    */
@@ -86,7 +81,6 @@ public class SimpleFile extends SimpleArticle {
   }
 
   /**
-   * 
    * @return the
    */
   public String getFilename() {
@@ -94,7 +88,6 @@ public class SimpleFile extends SimpleArticle {
   }
 
   /**
-   * 
    * @return the
    */
   public File getFile() {
@@ -103,7 +96,6 @@ public class SimpleFile extends SimpleArticle {
 
   /*
    * (non-Javadoc)
-   * 
    * @see java.lang.Object#hashCode()
    */
   @Override
@@ -116,7 +108,6 @@ public class SimpleFile extends SimpleArticle {
 
   /*
    * (non-Javadoc)
-   * 
    * @see java.lang.Object#equals(java.lang.Object)
    */
   @Override

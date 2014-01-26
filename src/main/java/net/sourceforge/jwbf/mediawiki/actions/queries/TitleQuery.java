@@ -106,7 +106,6 @@ public abstract class TitleQuery<T> extends MWAction implements Iterable<T>, Ite
    * Inner helper class for this type.
    * 
    * @author Thomas Stock
-   * 
    */
   public class InnerAction extends MWAction {
 

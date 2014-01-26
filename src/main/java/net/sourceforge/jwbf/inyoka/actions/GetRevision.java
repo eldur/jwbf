@@ -33,7 +33,6 @@ import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
  * Reads the content of a given article.
  * 
  * @author Thomas Stock
- * 
  */
 @Slf4j
 public class GetRevision implements ContentProcessable {

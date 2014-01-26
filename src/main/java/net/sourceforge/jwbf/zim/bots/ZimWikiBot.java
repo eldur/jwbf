@@ -35,9 +35,7 @@ import net.sourceforge.jwbf.core.contentRep.Userinfo;
 import com.google.common.collect.Sets;
 
 /**
- * 
  * @author Martin Koch
- * 
  */
 public class ZimWikiBot implements WikiBot {
   private static final String ZIMEXT = ".txt";
@@ -51,7 +49,6 @@ public class ZimWikiBot implements WikiBot {
    * 
    * @param zimRootFolder
    *          this is the folder on your local machine
-   * 
    */
 
   public ZimWikiBot(String zimRootFolder) {
@@ -84,8 +81,8 @@ public class ZimWikiBot implements WikiBot {
   }
 
   /**
-   * Set up a simple text paarser some simple formating routines are supplied -> bold letters and
-   * images are translated from zimWiki to mediaWiki
+   * Set up a simple text paarser some simple formating routines are supplied -> bold letters and images are translated
+   * from zimWiki to mediaWiki
    */
   public SimpleArticle readData(String name, int properties) {
     File f = new File(getRootFolder(), name + ZIMEXT);

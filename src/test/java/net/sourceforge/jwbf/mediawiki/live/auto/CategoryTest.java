@@ -79,7 +79,6 @@ public class CategoryTest extends ParamHelper {
 
   /**
    * Test category read. Test category must have more then 50 members.
-   * 
    */
   @Test
   public void doTest() {

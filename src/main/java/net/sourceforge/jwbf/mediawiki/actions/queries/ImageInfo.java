@@ -29,11 +29,9 @@ import com.google.common.base.Strings;
 import com.google.common.collect.Maps;
 
 /**
- * Action to receive the full address of an image. Like "Img.gif" to
- * "http://wikihost.tld/w/images/x/y/Img.gif".
+ * Action to receive the full address of an image. Like "Img.gif" to "http://wikihost.tld/w/images/x/y/Img.gif".
  * 
  * @author Thomas Stock
- * 
  */
 @Slf4j
 public class ImageInfo extends MWAction {

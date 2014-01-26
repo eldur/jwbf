@@ -57,9 +57,7 @@ import org.junit.rules.Verifier;
 import org.junit.runners.Parameterized.Parameters;
 
 /**
- * 
  * @author Thomas Stock
- * 
  */
 @Slf4j
 public class UploadAndImageInfoTest extends ParamHelper {
@@ -100,7 +98,6 @@ public class UploadAndImageInfoTest extends ParamHelper {
 
   /**
    * Test to delete an image.
-   * 
    */
   @Test
   public final void deleteImage() {

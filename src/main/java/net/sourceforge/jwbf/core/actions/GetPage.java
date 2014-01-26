@@ -21,12 +21,9 @@ package net.sourceforge.jwbf.core.actions;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 
 /**
- * Simple method to get plain HTML or XML data e.g. from custom specialpages or xml newsfeeds or
- * something else.
+ * Simple method to get plain HTML or XML data e.g. from custom specialpages or xml newsfeeds or something else.
  * 
  * @author Thomas Stock
- * 
- * 
  */
 public class GetPage implements ContentProcessable {
 
@@ -35,7 +32,6 @@ public class GetPage implements ContentProcessable {
   private String text = "";
 
   /**
-   * 
    * @param u
    *          like "/index.php?title=Special:Recentchanges&feed=rss"
    * @param charset
@@ -46,7 +42,6 @@ public class GetPage implements ContentProcessable {
   }
 
   /**
-   * 
    * @param u
    *          like "/index.php?title=Special:Recentchanges&feed=rss"
    */
@@ -76,9 +71,7 @@ public class GetPage implements ContentProcessable {
    * @param s
    *          the returning text
    * @param hm
-   *          the
-   * 
-   *          on any problems with inner browser
+   *          the on any problems with inner browser
    * @return the returning text
    */
   public String processReturningText(String s, HttpAction hm) {
@@ -87,7 +80,6 @@ public class GetPage implements ContentProcessable {
   }
 
   /**
-   * 
    * @return the requested text
    */
   public String getText() {

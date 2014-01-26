@@ -41,7 +41,6 @@ import com.google.common.collect.Lists;
  * 
  * @author Tobias Knerr
  * @author Thomas Stock
- * 
  */
 @Slf4j
 public class AllPageTitles extends TitleQuery<String> {
@@ -72,9 +71,8 @@ public class AllPageTitles extends TitleQuery<String> {
   private final RedirectFilter rf;
 
   /**
-   * The public constructor. It will have an MediaWiki-request generated, which is then added to
-   * msgs. When it is answered, the method processAllReturningText will be called (from outside this
-   * class).
+   * The public constructor. It will have an MediaWiki-request generated, which is then added to msgs. When it is
+   * answered, the method processAllReturningText will be called (from outside this class).
    * 
    * @param from
    *          page title to start from, may be null
@@ -83,8 +81,8 @@ public class AllPageTitles extends TitleQuery<String> {
    * @param rf
    *          include redirects in the list
    * @param namespaces
-   *          the namespace(s) that will be searched for links, as a string of numbers separated by
-   *          '|'; if null, this parameter is omitted TODO are multible namespaces allowed?
+   *          the namespace(s) that will be searched for links, as a string of numbers separated by '|'; if null, this
+   *          parameter is omitted TODO are multible namespaces allowed?
    */
   public AllPageTitles(MediaWikiBot bot, String from, String prefix, RedirectFilter rf,
       int... namespaces) {
@@ -120,8 +118,8 @@ public class AllPageTitles extends TitleQuery<String> {
    * @param rf
    *          include redirects in the list
    * @param namespace
-   *          the namespace(s) that will be searched for links, as a string of numbers separated by
-   *          '|'; if null, this parameter is omitted
+   *          the namespace(s) that will be searched for links, as a string of numbers separated by '|'; if null, this
+   *          parameter is omitted
    * @return a
    */
   private Get generateRequest(String from, String prefix, RedirectFilter rf, String namespace) {
@@ -182,8 +180,8 @@ public class AllPageTitles extends TitleQuery<String> {
   }
 
   /**
-   * Gets the information about a follow-up page from a provided api response. If there is one, a
-   * new request is added to msgs by calling generateRequest. If no exists, the string is empty.
+   * Gets the information about a follow-up page from a provided api response. If there is one, a new request is added
+   * to msgs by calling generateRequest. If no exists, the string is empty.
    * 
    * @param s
    *          text for parsing

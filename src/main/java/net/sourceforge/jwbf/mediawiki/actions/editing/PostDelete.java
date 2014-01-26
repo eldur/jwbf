@@ -14,18 +14,14 @@ import org.jdom.Document;
 import org.jdom.Element;
 
 /**
- * Action class using the MediaWiki-API's <a
- * href="http://www.mediawiki.org/wiki/API:Edit_-_Delete">"action=delete"</a>.
- * 
+ * Action class using the MediaWiki-API's <a href="http://www.mediawiki.org/wiki/API:Edit_-_Delete">"action=delete"</a>.
  * <p>
- * To allow your bot to delete articles in your MediaWiki add the following line to your MediaWiki's
- * LocalSettings.php:<br>
+ * To allow your bot to delete articles in your MediaWiki add the following line to your MediaWiki's LocalSettings.php:<br>
  * 
  * <pre>
  * $wgEnableWriteAPI = true;
  * $wgGroupPermissions['bot']['delete'] = true;
  * </pre>
- * 
  * <p>
  * Delete an article with
  * 
@@ -75,11 +71,7 @@ public class PostDelete extends MWAction {
    * @param title
    *          the title of the page to delete
    * @param reason
-   *          reason for the deletion (may be null)
-   * 
-   *          in case of a precessing exception
-   * 
-   *          in case of an action exception
+   *          reason for the deletion (may be null) in case of a precessing exception in case of an action exception
    */
   public PostDelete(MediaWikiBot bot, String title, String reason) {
     this(bot, title);
@@ -115,7 +107,6 @@ public class PostDelete extends MWAction {
   }
 
   /**
-   * 
    * {@inheritDoc}
    */
   @Override
@@ -154,8 +145,7 @@ public class PostDelete extends MWAction {
   }
 
   /**
-   * Determines if the given XML {@link Document} contains an error message which then would printed
-   * by the logger.
+   * Determines if the given XML {@link Document} contains an error message which then would printed by the logger.
    */
   @Override
   protected Element getErrorElement(Element rootElement) {

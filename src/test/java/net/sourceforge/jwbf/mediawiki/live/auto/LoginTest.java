@@ -44,7 +44,6 @@ public class LoginTest extends ParamHelper {
 
   /**
    * Test login on a Mediawiki.
-   * 
    */
   @Test
   public final void login() {
@@ -56,7 +55,6 @@ public class LoginTest extends ParamHelper {
 
   /**
    * Test FAIL login on Mediawiki. TODO change exception test, should fail if no route to test host
-   * 
    */
   @Test
   public final void loginFail() {
@@ -71,7 +69,6 @@ public class LoginTest extends ParamHelper {
 
   /**
    * Test login where the wiki is in a subfolder, like www.abc.com/wiki .
-   * 
    */
   @Test(expected = IllegalArgumentException.class)
   public final void loginUrlformatsFail() {

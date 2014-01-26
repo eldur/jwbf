@@ -24,9 +24,7 @@ import org.junit.runners.Parameterized.Parameters;
 import com.google.common.collect.Lists;
 
 /**
- * 
  * @author Thomas Stock
- * 
  */
 @Slf4j
 public class TemplateUserTitlesTest extends ParamHelper {

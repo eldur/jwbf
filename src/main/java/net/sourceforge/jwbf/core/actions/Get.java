@@ -6,7 +6,6 @@ import net.sourceforge.jwbf.core.actions.util.HttpAction;
  * TODO Usage of this class.
  * 
  * @author Thomas Stock
- * 
  */
 public class Get implements HttpAction {
 
@@ -14,7 +13,6 @@ public class Get implements HttpAction {
   private final String charset;
 
   /**
-   * 
    * @param req
    *          like index.html?parm=value
    * @param charset
@@ -27,7 +25,6 @@ public class Get implements HttpAction {
 
   /**
    * Use utf-8 as default charset.
-   * 
    */
   public Get(String url) {
     this(url, "utf-8");
@@ -57,7 +54,6 @@ public class Get implements HttpAction {
 
   /*
    * (non-Javadoc)
-   * 
    * @see java.lang.Object#hashCode()
    */
   @Override
@@ -71,7 +67,6 @@ public class Get implements HttpAction {
 
   /*
    * (non-Javadoc)
-   * 
    * @see java.lang.Object#equals(java.lang.Object)
    */
   @Override

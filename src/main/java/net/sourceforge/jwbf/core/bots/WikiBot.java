@@ -7,7 +7,6 @@ import net.sourceforge.jwbf.core.contentRep.Userinfo;
  * Main interface for all kinds of wikibots.
  * 
  * @author Thomas Stock
- * 
  */
 public interface WikiBot {
 

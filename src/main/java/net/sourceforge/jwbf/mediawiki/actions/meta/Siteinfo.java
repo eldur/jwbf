@@ -19,7 +19,6 @@ import com.google.common.collect.Maps;
  * 
  * @author Thomas Stock
  * @see Siteinfo
- * 
  */
 public class Siteinfo extends GetVersion {
 
@@ -48,7 +47,6 @@ public class Siteinfo extends GetVersion {
   // # rightsinfo: Get information about the license governing the wiki's
   // content
   /**
-   * 
    * inits with parameters {@link #GENERAL}, {@link #NAMESPACES}, {@link #INTERWIKIMAP}.
    */
   public Siteinfo() {
@@ -56,7 +54,6 @@ public class Siteinfo extends GetVersion {
   }
 
   /**
-   * 
    * @param types
    *          the, see {@link #GENERAL}, {@link #INTERWIKIMAP}, ...
    */
@@ -113,7 +110,6 @@ public class Siteinfo extends GetVersion {
   }
 
   /**
-   * 
    * @return of
    */
   public Map<Integer, String> getNamespaces() {
@@ -121,7 +117,6 @@ public class Siteinfo extends GetVersion {
   }
 
   /**
-   * 
    * @return of
    */
   public int[] getNamespacesArray() {
@@ -139,7 +134,6 @@ public class Siteinfo extends GetVersion {
   }
 
   /**
-   * 
    * @return of
    */
   public Map<String, String> getInterwikis() {

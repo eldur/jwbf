@@ -17,9 +17,7 @@ import org.jdom.Element;
 import com.google.common.collect.Sets;
 
 /**
- * 
  * @author Thomas Stock
- * 
  */
 @Slf4j
 public class GetUserinfo extends MWAction implements Userinfo {

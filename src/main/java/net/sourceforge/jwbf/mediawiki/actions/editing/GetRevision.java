@@ -37,8 +37,6 @@ import org.jdom.Element;
  * Reads the content of a given article.
  * 
  * @author Thomas Stock
- * 
- * 
  */
 @Slf4j
 public class GetRevision extends MWAction {
@@ -108,7 +106,6 @@ public class GetRevision extends MWAction {
 
   /**
    * TODO Not very nice implementation.
-   * 
    */
   private String getDataProperties(final int property) {
     String properties = "";

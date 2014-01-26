@@ -19,7 +19,6 @@ public class Post implements HttpAction {
 
   /**
    * Use utf-8 as default charset
-   * 
    */
   public Post(String url) {
     this(url, "utf-8");

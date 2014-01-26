@@ -32,9 +32,7 @@ import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 
 /**
- * 
  * @author Thomas Stock
- * 
  */
 public final class JWBF {
 
@@ -172,7 +170,6 @@ public final class JWBF {
   }
 
   /**
-   * 
    * @return the version from manifest
    * @throws IOException
    *           if path invalid
@@ -211,7 +208,6 @@ public final class JWBF {
   }
 
   /**
-   * 
    * @throws IOException
    *           if path invalid
    */

@@ -11,15 +11,11 @@ import net.sourceforge.jwbf.core.contentRep.Userinfo;
 import net.sourceforge.jwbf.trac.actions.GetRevision;
 
 /**
- * /**
- * 
- * This class helps you to interact with each wiki as part of <a href="http://trac.edgewall.org/"
+ * /** This class helps you to interact with each wiki as part of <a href="http://trac.edgewall.org/"
  * target="_blank">Trac</a>. This class offers a set of methods which are defined in the package
  * net.sourceforge.jwbf.actions.trac.*
  * 
  * @author Thomas Stock
- * 
- * 
  */
 public class TracWikiBot extends HttpBot implements WikiBot {
 
@@ -34,14 +30,10 @@ public class TracWikiBot extends HttpBot implements WikiBot {
   }
 
   /**
-   * 
    * @param name
    *          of article in a tracwiki like "TracWiki" , the main page is "WikiStart"
-   * @return a content representation of requested article, never null
-   * 
-   *         on problems with http, cookies and io
-   * 
-   *         on access problems
+   * @return a content representation of requested article, never null on problems with http, cookies and io on access
+   *         problems
    * @see GetRevision
    */
   public synchronized Article readContent(final String name) {

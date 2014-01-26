@@ -8,9 +8,7 @@ import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 
 /**
- * Action to receive the title of a random page
- * 
- * TODO write a test that shows compatibility with all these versions
+ * Action to receive the title of a random page TODO write a test that shows compatibility with all these versions
  * 
  * @author Juan Ignacio Cidre
  */
@@ -21,9 +19,7 @@ public class RandomPageTitle extends MWAction {
   private final MediaWikiBot bot;
 
   /**
-   * 
-   * Creates the class. Defines the invocation to MediaWiki that is needed in order to get a random
-   * page
+   * Creates the class. Defines the invocation to MediaWiki that is needed in order to get a random page
    */
   public RandomPageTitle(MediaWikiBot bot) {
     super(bot.getVersion());
@@ -41,7 +37,6 @@ public class RandomPageTitle extends MWAction {
 
   /**
    * @return Title of a random page
-   * 
    */
   public String getTitle() {
     return bot.performAction(this);

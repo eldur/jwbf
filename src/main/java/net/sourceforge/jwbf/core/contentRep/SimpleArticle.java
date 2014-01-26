@@ -25,11 +25,9 @@ import java.util.Date;
 import java.util.regex.Pattern;
 
 /**
- * This is a simple content helper class that implements the EditContentAccesable interface, plus
- * setter methods.
+ * This is a simple content helper class that implements the EditContentAccesable interface, plus setter methods.
  * 
  * @author Thomas Stock
- * 
  */
 public class SimpleArticle implements ArticleMeta, Serializable, Cloneable, ContentSetable {
 
@@ -99,7 +97,6 @@ public class SimpleArticle implements ArticleMeta, Serializable, Cloneable, Cont
   }
 
   /**
-   * 
    * @param text
    *          of article
    * @param title
@@ -113,7 +110,6 @@ public class SimpleArticle implements ArticleMeta, Serializable, Cloneable, Cont
   }
 
   /**
-   * 
    * @param title
    *          of article
    */
@@ -130,7 +126,6 @@ public class SimpleArticle implements ArticleMeta, Serializable, Cloneable, Cont
 
   /*
    * (non-Javadoc)
-   * 
    * @see net.sourceforge.jwbf.core.contentRep.ContentSetable#setEditSummary(java .lang.String)
    */
   public void setEditSummary(final String s) {
@@ -146,7 +141,6 @@ public class SimpleArticle implements ArticleMeta, Serializable, Cloneable, Cont
 
   /*
    * (non-Javadoc)
-   * 
    * @see net.sourceforge.jwbf.core.contentRep.ContentSetable#setMinorEdit(boolean)
    */
   public void setMinorEdit(final boolean minor) {
@@ -170,7 +164,6 @@ public class SimpleArticle implements ArticleMeta, Serializable, Cloneable, Cont
   }
 
   /**
-   * 
    * @param label
    *          the label, like "Main Page"
    * @deprecated use {@link #setTitle(String)} instead
@@ -182,7 +175,6 @@ public class SimpleArticle implements ArticleMeta, Serializable, Cloneable, Cont
 
   /*
    * (non-Javadoc)
-   * 
    * @see net.sourceforge.jwbf.core.contentRep.ContentSetable#setTitle(java.lang. String)
    */
   public void setTitle(final String title) {
@@ -198,7 +190,6 @@ public class SimpleArticle implements ArticleMeta, Serializable, Cloneable, Cont
 
   /*
    * (non-Javadoc)
-   * 
    * @see net.sourceforge.jwbf.core.contentRep.ContentSetable#setText(java.lang.String )
    */
   public void setText(final String text) {
@@ -207,7 +198,6 @@ public class SimpleArticle implements ArticleMeta, Serializable, Cloneable, Cont
 
   /*
    * (non-Javadoc)
-   * 
    * @see net.sourceforge.jwbf.core.contentRep.ContentSetable#addText(java.lang.String )
    */
   public void addText(final String text) {
@@ -216,7 +206,6 @@ public class SimpleArticle implements ArticleMeta, Serializable, Cloneable, Cont
 
   /*
    * (non-Javadoc)
-   * 
    * @see net.sourceforge.jwbf.core.contentRep.ContentSetable#addTextnl(java.lang .String)
    */
   public void addTextnl(final String text) {
@@ -233,7 +222,6 @@ public class SimpleArticle implements ArticleMeta, Serializable, Cloneable, Cont
 
   /*
    * (non-Javadoc)
-   * 
    * @see net.sourceforge.jwbf.core.contentRep.ContentSetable#setEditor(java.lang .String)
    */
   public void setEditor(final String editor) {
@@ -266,7 +254,6 @@ public class SimpleArticle implements ArticleMeta, Serializable, Cloneable, Cont
   }
 
   /**
-   * 
    * @param editTimestamp
    *          set
    * @throws ParseException
@@ -283,7 +270,6 @@ public class SimpleArticle implements ArticleMeta, Serializable, Cloneable, Cont
   }
 
   /**
-   * 
    * @param d
    *          the
    */
@@ -293,7 +279,6 @@ public class SimpleArticle implements ArticleMeta, Serializable, Cloneable, Cont
 
   /*
    * (non-Javadoc)
-   * 
    * @see java.lang.Object#equals(java.lang.Object)
    */
   @Override
@@ -330,7 +315,6 @@ public class SimpleArticle implements ArticleMeta, Serializable, Cloneable, Cont
 
   /*
    * (non-Javadoc)
-   * 
    * @see java.lang.Object#hashCode()
    */
   @Override
@@ -352,7 +336,6 @@ public class SimpleArticle implements ArticleMeta, Serializable, Cloneable, Cont
   }
 
   /**
-   * 
    * @param revId
    *          the
    */

@@ -19,20 +19,16 @@
 package net.sourceforge.jwbf.core.contentRep;
 
 /**
- * 
  * @author Thomas Stock
- * 
  */
 public interface ContentAccessable {
 
   /**
-   * 
    * @return the
    */
   String getEditSummary();
 
   /**
-   * 
    * @return the
    */
   String getEditor();

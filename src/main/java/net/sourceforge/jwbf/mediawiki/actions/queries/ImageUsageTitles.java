@@ -41,7 +41,6 @@ import com.google.common.collect.Lists;
  * @author Tobias Knerr
  * @author Thomas Stock
  * @since MediaWiki 1.9.0
- * 
  */
 @Slf4j
 public class ImageUsageTitles extends TitleQuery<String> {
@@ -56,9 +55,8 @@ public class ImageUsageTitles extends TitleQuery<String> {
   private final VersionHandler handler;
 
   /**
-   * The public constructor. It will have an MediaWiki-request generated, which is then added to
-   * msgs. When it is answered, the method processAllReturningText will be called (from outside this
-   * class). For the parameters, see
+   * The public constructor. It will have an MediaWiki-request generated, which is then added to msgs. When it is
+   * answered, the method processAllReturningText will be called (from outside this class). For the parameters, see
    * {@link ImageUsageTitles#generateRequest(String, String, String)}
    */
   public ImageUsageTitles(MediaWikiBot bot, String imageName, int... namespaces) {
@@ -90,8 +88,8 @@ public class ImageUsageTitles extends TitleQuery<String> {
    * @param imageName
    *          the title of the image, not null
    * @param namespace
-   *          the namespace(s) that will be searched for links, as a string of numbers separated by
-   *          '|'; if null, this parameter is omitted
+   *          the namespace(s) that will be searched for links, as a string of numbers separated by '|'; if null, this
+   *          parameter is omitted
    * @param ilcontinue
    *          the value for the ilcontinue parameter, null for the generation of the initial request
    * @return a
@@ -109,8 +107,8 @@ public class ImageUsageTitles extends TitleQuery<String> {
   }
 
   /**
-   * gets the information about a follow-up page from a provided api response. If there is one, a
-   * new request is added to msgs by calling generateRequest.
+   * gets the information about a follow-up page from a provided api response. If there is one, a new request is added
+   * to msgs by calling generateRequest.
    * 
    * @param s
    *          text for parsing
@@ -236,9 +234,8 @@ public class ImageUsageTitles extends TitleQuery<String> {
   }
 
   /**
-   * VersionHandler for MW versions 1.10 .. 1.16. This one is identical to the one for 1.17 except
-   * for the iutitle parameter in generateContinueRequest.
-   * 
+   * VersionHandler for MW versions 1.10 .. 1.16. This one is identical to the one for 1.17 except for the iutitle
+   * parameter in generateContinueRequest.
    */
   private class Mw1_11Handler extends VersionHandler {
 

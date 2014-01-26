@@ -24,18 +24,14 @@ public class CategoryMembersFull extends CategoryMembers implements Iterable<Cat
 
   private Get msg;
   /**
-   * Collection that will contain the result (titles of articles linking to the target) after
-   * performing the action has finished.
+   * Collection that will contain the result (titles of articles linking to the target) after performing the action has
+   * finished.
    */
   private Collection<CategoryItem> titleCollection = new ArrayList<CategoryItem>();
   private Iterator<CategoryItem> titleIterator;
 
   /**
-   * 
-   * 
-   * on any kind of http or version problems
-   * 
-   * on inner problems like a version mismatch
+   * on any kind of http or version problems on inner problems like a version mismatch
    */
   public CategoryMembersFull(MediaWikiBot bot, String categoryName, int... namespaces) {
     super(bot, categoryName, namespaces);

@@ -15,7 +15,6 @@ public class GetRevisionTest {
 
   /**
    * Test write and read
-   * 
    */
   @Ignore("seems that the page layout changend")
   @Test

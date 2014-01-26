@@ -27,7 +27,6 @@ import com.google.common.collect.Maps;
  * /API#Posting_Data_.2F_needs_major_editPage.php_rewrite
  * 
  * @author Thomas Stock FIXME check usage
- * 
  */
 public class LoginData {
 

@@ -12,9 +12,7 @@ import net.sourceforge.jwbf.core.actions.util.ActionException;
 import org.junit.Test;
 
 /**
- * 
  * @author Thomas Stock
- * 
  */
 public class SimpleTest {
 

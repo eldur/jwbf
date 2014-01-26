@@ -21,20 +21,16 @@ package net.sourceforge.jwbf.core.actions;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 
 /**
- * 
  * @author Thomas Stock
- * 
  */
 public interface ContentProcessable extends ReturningText {
 
   /**
    * @return the of messages in this action
-   * 
    */
   HttpAction getNextMessage();
 
   /**
-   * 
    * @return true if
    */
   boolean hasMoreMessages();

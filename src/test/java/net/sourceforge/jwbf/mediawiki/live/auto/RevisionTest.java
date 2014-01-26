@@ -24,9 +24,7 @@ import org.junit.rules.Verifier;
 import org.junit.runners.Parameterized.Parameters;
 
 /**
- * 
  * @author Thomas Stock
- * 
  */
 public class RevisionTest extends ParamHelper {
 
@@ -48,7 +46,6 @@ public class RevisionTest extends ParamHelper {
 
   /**
    * Test write and read.
-   * 
    */
   @Test
   public void doTest() throws Exception {

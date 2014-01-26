@@ -3,9 +3,7 @@ package net.sourceforge.jwbf.mediawiki.actions.util;
 import net.sourceforge.jwbf.core.actions.util.ProcessException;
 
 /**
- * 
  * @author Thomas Stock
- * 
  */
 public class ApiException extends ProcessException {
 

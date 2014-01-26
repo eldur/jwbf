@@ -6,9 +6,7 @@ import net.sourceforge.jwbf.core.bots.WikiBot;
 import net.sourceforge.jwbf.core.bots.util.JwbfException;
 
 /**
- * 
  * @author Thomas Stock
- * 
  */
 public class Article implements ArticleMeta, ContentSetable {
 
@@ -123,7 +121,6 @@ public class Article implements ArticleMeta, ContentSetable {
   }
 
   /**
-   * 
    * @param bot
    *          the
    * @param title
@@ -135,7 +132,6 @@ public class Article implements ArticleMeta, ContentSetable {
   }
 
   /**
-   * 
    * @param bot
    *          the
    * @param sa

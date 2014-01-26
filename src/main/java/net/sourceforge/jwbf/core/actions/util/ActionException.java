@@ -21,7 +21,6 @@ package net.sourceforge.jwbf.core.actions.util;
 import net.sourceforge.jwbf.core.bots.util.JwbfException;
 
 /**
- * 
  * @author Thomas Stock
  */
 public class ActionException extends JwbfException {

@@ -15,12 +15,10 @@ import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 import org.jdom.Element;
 
 /**
- * 
  * Implements function to render wikitext on remote <a href=
  * "http://www.mediawiki.org/wiki/API:Expanding_templates_and_rendering#parse" >parse</a>.
  * 
  * @author Thomas Stock
- * 
  */
 public class GetRendering extends MWAction {
 
@@ -111,7 +109,6 @@ public class GetRendering extends MWAction {
   }
 
   /**
-   * 
    * @return the
    */
   public String getHtml() {

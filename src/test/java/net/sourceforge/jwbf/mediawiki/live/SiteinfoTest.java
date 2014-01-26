@@ -37,7 +37,6 @@ public class SiteinfoTest extends AbstractMediaWikiBotTest {
 
   /**
    * Test get siteinfo on Wikipedia DE.
-   * 
    */
   @Ignore("do we need this?")
   @Test
@@ -48,13 +47,11 @@ public class SiteinfoTest extends AbstractMediaWikiBotTest {
   }
 
   /**
-   * Test get siteinfo on a MW. Prepare a the wiki, that the siteinfopage is only readable if user
-   * is logged in.
+   * Test get siteinfo on a MW. Prepare a the wiki, that the siteinfopage is only readable if user is logged in.
    * 
    * <pre>
    * $wgGroupPermissions['*']['read'] = false;
    * </pre>
-   * 
    */
   @Test
   public final void siteInfoMW1x15Blocking() throws Exception {

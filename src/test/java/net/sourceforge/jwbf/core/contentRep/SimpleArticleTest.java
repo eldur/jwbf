@@ -49,7 +49,6 @@ public class SimpleArticleTest {
 
   /**
    * Tests edit summary.
-   * 
    */
   @Test
   public void testEditSummary() {

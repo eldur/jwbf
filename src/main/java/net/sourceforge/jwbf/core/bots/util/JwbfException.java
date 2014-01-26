@@ -28,7 +28,6 @@ import net.sourceforge.jwbf.JWBF;
 
 /**
  * @author Thomas Stock
- * 
  */
 public class JwbfException extends RuntimeException {
 

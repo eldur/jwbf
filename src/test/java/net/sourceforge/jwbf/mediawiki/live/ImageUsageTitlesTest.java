@@ -19,9 +19,7 @@ import org.junit.Test;
 import org.junit.rules.Verifier;
 
 /**
- * 
  * @author Thomas Stock
- * 
  */
 @Ignore("depends on upload")
 @Slf4j

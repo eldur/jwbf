@@ -39,9 +39,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 /**
- * 
  * @author Thomas Stock
- * 
  */
 public class EditCustomWikiContentTest {
 
@@ -56,7 +54,6 @@ public class EditCustomWikiContentTest {
 
   /**
    * Test content modification.
-   * 
    */
   @Test
   public final void contentModify() {
@@ -92,7 +89,6 @@ public class EditCustomWikiContentTest {
 
   /**
    * Test the read of metadata on english Mediawiki.
-   * 
    */
   @Test
   public final void contentModifyDetails() {
@@ -133,10 +129,7 @@ public class EditCustomWikiContentTest {
   }
 
   /**
-   * Test utf-8 read on english Mediawiki. -Dfile.encoding=ASCII
-   * 
-   * FIXME do not check this via system property
-   * 
+   * Test utf-8 read on english Mediawiki. -Dfile.encoding=ASCII FIXME do not check this via system property
    */
   @Test
   public final void contentModifyIPAUtf8Get() {
@@ -165,7 +158,6 @@ public class EditCustomWikiContentTest {
 
   /**
    * Test utf-8 read on english Mediawiki.
-   * 
    */
   @Test
   public final void contentModifyComplexUtf8Get() {

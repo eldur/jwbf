@@ -30,15 +30,12 @@ import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 import org.junit.Test;
 
 /**
- * 
  * @author Thomas Stock
- * 
  */
 public class AllPagesTest extends AbstractMediaWikiBotTest {
 
   /**
    * Test category read. Test category must have more then 50 members.
-   * 
    */
   @Test
   public final void allPagesWikipediaDe() {

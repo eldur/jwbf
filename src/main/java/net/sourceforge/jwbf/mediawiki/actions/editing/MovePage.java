@@ -16,12 +16,9 @@ import org.jdom.Element;
 import com.google.common.base.Strings;
 
 /**
- * Action class using the MediaWiki-API's <a
- * href="http://www.mediawiki.org/wiki/API:Edit_-_Move">"action=move"</a>.
- * 
+ * Action class using the MediaWiki-API's <a href="http://www.mediawiki.org/wiki/API:Edit_-_Move">"action=move"</a>.
  * <p>
- * To allow your bot to move articles in your MediaWiki add the following line to your MediaWiki's
- * LocalSettings.php:<br>
+ * To allow your bot to move articles in your MediaWiki add the following line to your MediaWiki's LocalSettings.php:<br>
  * 
  * <pre>
  * $wgEnableWriteAPI = true;
@@ -30,7 +27,6 @@ import com.google.common.base.Strings;
  * $wgGroupPermissions['bot']['move-subpages'] = true;       // optional
  * $wgGroupPermissions['bot']['move-rootuserpages'] = true;  // optional
  * </pre>
- * 
  * <p>
  * Move an article with
  * 
@@ -150,7 +146,6 @@ public class MovePage extends MWAction {
   }
 
   /**
-   * 
    * {@inheritDoc}
    */
   @Override
@@ -177,7 +172,6 @@ public class MovePage extends MWAction {
 
   /**
    * Processing the XML {@link Document} returned from the MediaWiki API.
-   * 
    */
   private void process(Element rootElement) {
     Element elem = rootElement.getChild("move");

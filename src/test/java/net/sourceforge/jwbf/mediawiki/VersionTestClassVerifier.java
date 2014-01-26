@@ -85,7 +85,6 @@ public class VersionTestClassVerifier extends Verifier {
 
   /**
    * Use in a valid testcase.
-   * 
    */
   private void registerTestedVersion(Class<?> clazz, Version v) {
     if (v != Version.DEVELOPMENT) {

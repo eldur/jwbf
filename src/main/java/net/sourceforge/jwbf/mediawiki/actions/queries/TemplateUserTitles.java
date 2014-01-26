@@ -35,13 +35,11 @@ import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 import com.google.common.base.Strings;
 
 /**
- * action class using the MediaWiki-api's "list=embeddedin" that is used to find all articles which
- * use a template.
+ * action class using the MediaWiki-api's "list=embeddedin" that is used to find all articles which use a template.
  * 
  * @author Tobias Knerr
  * @author Thomas Stock
  * @since MediaWiki 1.9.0
- * 
  */
 @Slf4j
 public class TemplateUserTitles extends TitleQuery<String> {
@@ -50,8 +48,8 @@ public class TemplateUserTitles extends TitleQuery<String> {
   private static final int LIMIT = 50;
   private final MediaWikiBot bot;
   /**
-   * Collection that will contain the result (titles of articles using the template) after
-   * performing the action has finished.
+   * Collection that will contain the result (titles of articles using the template) after performing the action has
+   * finished.
    */
   private final Collection<String> titleCollection = new ArrayList<String>();
 
@@ -59,9 +57,8 @@ public class TemplateUserTitles extends TitleQuery<String> {
   private final int[] namespaces;
 
   /**
-   * The public constructor. It will have an MediaWiki-request generated, which is then added to
-   * msgs. When it is answered, the method processAllReturningText will be called (from outside this
-   * class). For the parameters, see
+   * The public constructor. It will have an MediaWiki-request generated, which is then added to msgs. When it is
+   * answered, the method processAllReturningText will be called (from outside this class). For the parameters, see
    * {@link TemplateUserTitles#generateRequest(String, String, String)}
    */
   public TemplateUserTitles(MediaWikiBot bot, String templateName, int... namespaces) {
@@ -78,8 +75,8 @@ public class TemplateUserTitles extends TitleQuery<String> {
    * @param templateName
    *          the name of the template, not null
    * @param namespace
-   *          the namespace(s) that will be searched for links, as a string of numbers separated by
-   *          '|'; if null, this parameter is omitted
+   *          the namespace(s) that will be searched for links, as a string of numbers separated by '|'; if null, this
+   *          parameter is omitted
    * @param eicontinue
    *          the value for the eicontinue parameter, null for the generation of the initial request
    */
@@ -109,7 +106,6 @@ public class TemplateUserTitles extends TitleQuery<String> {
    * 
    * @param s
    *          the answer to the most recently generated MediaWiki-request
-   * 
    * @return empty string
    */
   @Override
@@ -121,8 +117,8 @@ public class TemplateUserTitles extends TitleQuery<String> {
   }
 
   /**
-   * gets the information about a follow-up page from a provided api response. If there is one, a
-   * new request is added to msgs by calling generateRequest.
+   * gets the information about a follow-up page from a provided api response. If there is one, a new request is added
+   * to msgs by calling generateRequest.
    * 
    * @param s
    *          text for parsing

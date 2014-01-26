@@ -9,9 +9,7 @@ import net.sourceforge.jwbf.mediawiki.live.auto.LogEventsTest;
 import org.junit.Test;
 
 /**
- * 
  * @author Thomas Stock
- * 
  */
 public class LogEventsSingleTest extends AbstractMediaWikiBotTest {
 

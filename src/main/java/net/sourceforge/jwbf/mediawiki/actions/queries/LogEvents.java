@@ -39,17 +39,12 @@ import org.jdom.Element;
 import com.google.common.collect.Lists;
 
 /**
- * 
- * List log events, filtered by time range, event type, user type, or the page it applies to.
- * Ordered by event timestamp. Parameters: letype (flt), lefrom (paging timestamp), leto (flt),
- * ledirection (dflt=older), leuser (flt), letitle (flt), lelimit (dflt=10, max=500/5000)
- * 
- * api.php ? action=query & list=logevents - List last 10 events of any type
- * 
- * TODO This is a semi-complete extension point
- * 
+ * List log events, filtered by time range, event type, user type, or the page it applies to. Ordered by event
+ * timestamp. Parameters: letype (flt), lefrom (paging timestamp), leto (flt), ledirection (dflt=older), leuser (flt),
+ * letitle (flt), lelimit (dflt=10, max=500/5000) api.php ? action=query & list=logevents - List last 10 events of any
+ * type TODO This is a semi-complete extension point
+ *
  * @author Thomas Stock
- * 
  */
 @Slf4j
 public class LogEvents extends MWAction implements Iterator<LogItem>, Iterable<LogItem> {
@@ -74,8 +69,8 @@ public class LogEvents extends MWAction implements Iterator<LogItem>, Iterable<L
   private boolean init = true;
   private boolean selvEx = true;
   /**
-   * Collection that will contain the result (titles of articles linking to the target) after
-   * performing the action has finished.
+   * Collection that will contain the result (titles of articles linking to the target) after performing the action has
+   * finished.
    */
   private final Collection<LogItem> logCollection = Lists.newArrayList();
   private Iterator<LogItem> logIterator = null;
@@ -85,10 +80,9 @@ public class LogEvents extends MWAction implements Iterator<LogItem>, Iterable<L
 
   /**
    * information necessary to get the next api page.
-   * 
+   *
    * @param type
    *          of like {@link #MOVE}
-   * 
    */
   public LogEvents(MediaWikiBot bot, String type) {
     this(bot, new String[] { type });
@@ -117,7 +111,6 @@ public class LogEvents extends MWAction implements Iterator<LogItem>, Iterable<L
    *          of events
    * @param type
    *          of like {@link #MOVE}
-   * 
    */
   public LogEvents(MediaWikiBot bot, int limit, String[] type) {
     super(bot.getVersion());
@@ -165,7 +158,7 @@ public class LogEvents extends MWAction implements Iterator<LogItem>, Iterable<L
 
   /**
    * picks the article name from a MediaWiki api response.
-   * 
+   *
    * @param xml
    *          text for parsing
    */
@@ -177,9 +170,9 @@ public class LogEvents extends MWAction implements Iterator<LogItem>, Iterable<L
   }
 
   /**
-   * gets the information about a follow-up page from a provided api response. If there is one, a
-   * new request is added to msgs by calling generateRequest.
-   * 
+   * gets the information about a follow-up page from a provided api response. If there is one, a new request is added
+   * to msgs by calling generateRequest.
+   *
    * @param s
    *          text for parsing
    */
@@ -240,7 +233,7 @@ public class LogEvents extends MWAction implements Iterator<LogItem>, Iterable<L
         selvEx = true; // TODO not good
         setHasMoreMessages(true);
         if (log.isDebugEnabled())
-          log.debug("preparing success");
+        log.debug("preparing success");
       } catch (ActionException e) {
         e.printStackTrace();
         setHasMoreMessages(false);
@@ -306,7 +299,7 @@ public class LogEvents extends MWAction implements Iterator<LogItem>, Iterable<L
 
   /**
    * {@inheritDoc}
-   * 
+   *
    * @deprecated see super
    */
   @Deprecated

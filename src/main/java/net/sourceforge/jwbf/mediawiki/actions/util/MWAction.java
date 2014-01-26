@@ -48,7 +48,6 @@ import org.xml.sax.InputSource;
 
 /**
  * @author Thomas Stock
- * 
  */
 @Slf4j
 public abstract class MWAction implements ContentProcessable {
@@ -66,7 +65,6 @@ public abstract class MWAction implements ContentProcessable {
   private static ExceptionHandler exceptionHandler = DEFAULT_EXCEPTION_HANDLER;
 
   /**
-   * 
    * @return true if and changes state to false
    */
   public boolean hasMoreMessages() {
@@ -76,7 +74,6 @@ public abstract class MWAction implements ContentProcessable {
   }
 
   /**
-   * 
    * @param b
    *          if so
    */
@@ -89,10 +86,8 @@ public abstract class MWAction implements ContentProcessable {
   }
 
   /**
-   * 
    * @param v
    *          of the bot
-   * 
    * @deprecated do not uses this
    */
   @Deprecated
@@ -107,10 +102,7 @@ public abstract class MWAction implements ContentProcessable {
    *          the answer to the most recently generated MediaWiki API request
    * @param hm
    *          the requestor message
-   * @return the returning text
-   * 
-   *         on processing problems
-   * 
+   * @return the returning text on processing problems
    */
   public String processReturningText(final String s, final HttpAction hm) {
     return processAllReturningText(s);
@@ -119,10 +111,7 @@ public abstract class MWAction implements ContentProcessable {
   /**
    * @param s
    *          the returning text
-   * @return the returning text
-   * 
-   *         never
-   * 
+   * @return the returning text never
    */
   public String processAllReturningText(final String s) {
     return s;
@@ -216,8 +205,7 @@ public abstract class MWAction implements ContentProcessable {
   }
 
   /**
-   * Determines if the given XML {@link Document} contains an error message which then would printed
-   * by the logger.
+   * Determines if the given XML {@link Document} contains an error message which then would printed by the logger.
    * 
    * @param rootElement
    *          XML <code>Document</code>
@@ -235,8 +223,7 @@ public abstract class MWAction implements ContentProcessable {
   }
 
   /**
-   * @deprecated no alternative method is given, because it is not recommended to change the
-   *             exception handling
+   * @deprecated no alternative method is given, because it is not recommended to change the exception handling
    */
   @Deprecated
   public static void setExceptionHandler(ExceptionHandler exceptionHandler) {

@@ -21,11 +21,9 @@ package net.sourceforge.jwbf.mediawiki.contentRep;
 import net.sourceforge.jwbf.mediawiki.actions.queries.CategoryMembersFull;
 
 /**
- * This class helps to get detail information about category items and was returned by
- * {@link CategoryMembersFull}.
+ * This class helps to get detail information about category items and was returned by {@link CategoryMembersFull}.
  * 
  * @author Thomas Stock
- * 
  */
 public class CategoryItem {
 
@@ -41,7 +39,6 @@ public class CategoryItem {
   }
 
   /**
-   * 
    * @return the
    */
   public String getTitle() {
@@ -49,7 +46,6 @@ public class CategoryItem {
   }
 
   /**
-   * 
    * @param title
    *          the
    */
@@ -58,7 +54,6 @@ public class CategoryItem {
   }
 
   /**
-   * 
    * @return the
    */
   public int getNamespace() {
@@ -66,7 +61,6 @@ public class CategoryItem {
   }
 
   /**
-   * 
    * @param namespace
    *          the
    */
@@ -75,7 +69,6 @@ public class CategoryItem {
   }
 
   /**
-   * 
    * @return the
    */
   public int getPageid() {

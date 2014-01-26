@@ -34,7 +34,6 @@ import net.sourceforge.jwbf.mediawiki.contentRep.LoginData;
 import org.jdom.Element;
 
 /**
- * 
  * @author Thomas Stock
  */
 @Slf4j
@@ -54,7 +53,6 @@ public class PostLogin extends MWAction {
   private final String domain;
 
   /**
-   * 
    * @param username
    *          the
    * @param pw
@@ -137,7 +135,6 @@ public class PostLogin extends MWAction {
 
   /*
    * (non-Javadoc)
-   * 
    * @see net.sourceforge.jwbf.mediawiki.actions.util.MWAction#hasMoreMessages()
    */
   @Override

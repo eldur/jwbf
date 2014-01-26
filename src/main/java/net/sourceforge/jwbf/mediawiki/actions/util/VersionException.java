@@ -30,7 +30,6 @@ public class VersionException extends ProcessException {
   private static final long serialVersionUID = -156908450310809588L;
 
   /**
-   * 
    * @param s
    *          exeption text
    */

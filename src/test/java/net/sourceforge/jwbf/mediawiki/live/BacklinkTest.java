@@ -11,9 +11,7 @@ import org.junit.Test;
 import com.google.common.primitives.Ints;
 
 /**
- * 
  * @author Thomas Stock
- * 
  */
 @Slf4j
 public class BacklinkTest extends AbstractMediaWikiBotTest {
