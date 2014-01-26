@@ -36,6 +36,7 @@ import lombok.val;
 import lombok.extern.slf4j.Slf4j;
 import net.sourceforge.jwbf.JWBF;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
+import net.sourceforge.jwbf.core.bots.HttpBot;
 
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
@@ -59,7 +60,6 @@ import org.apache.http.params.HttpParams;
  * The main interaction class.
  * 
  * @author Thomas Stock
- * 
  */
 @Slf4j
 public class HttpActionClient {
@@ -72,15 +72,39 @@ public class HttpActionClient {
 
   private int prevHash;
 
+  /**
+   * @deprecated will be replaced with a builder in 3.x
+   */
+  @Deprecated
+  public HttpActionClient(String urlString, String userAgent) {
+    URL url = HttpBot.newURL(urlString);
+    if (url.getPath().length() > 1) {
+      path = url.getPath().substring(0, url.getPath().lastIndexOf("/"));
+    }
+    client = new DefaultHttpClient();
+    client.getParams().setParameter("http.useragent" //
+        , "JWBF " + JWBF.getVersion(getClass()));
+    client.getParams() //
+        .setParameter("http.protocol.expect-continue", Boolean.FALSE);
+    // is good for wikipedia server
+    host = new HttpHost(url.getHost(), url.getPort(), url.getProtocol());
+
+  }
+
+  /**
+   * @deprecated will be replaced with a builder in 3.x
+   */
+  @Deprecated
   public HttpActionClient(final URL url) {
     this(new DefaultHttpClient(), url);
   }
 
   /**
-   * 
    * @param url
    *          like "http://host/of/wiki/"
+   * @deprecated will be replaced with a builder in 3.x
    */
+  @Deprecated
   public HttpActionClient(final HttpClient client, final URL url) {
 
     /*
@@ -101,7 +125,6 @@ public class HttpActionClient {
   }
 
   /**
-   * 
    * @return message, never null
    */
   @Nonnull
@@ -326,7 +349,6 @@ public class HttpActionClient {
   }
 
   /**
-   * 
    * @return the
    */
   public String getHostUrl() {

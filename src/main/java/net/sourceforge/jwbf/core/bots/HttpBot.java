@@ -27,9 +27,7 @@ import net.sourceforge.jwbf.core.actions.GetPage;
 import net.sourceforge.jwbf.core.actions.HttpActionClient;
 
 /**
- * 
  * @author Thomas Stock
- * 
  */
 
 public class HttpBot {
@@ -67,7 +65,6 @@ public class HttpBot {
   }
 
   /**
-   * 
    * @param url
    *          of the host
    */
@@ -76,8 +73,8 @@ public class HttpBot {
   }
 
   /**
-   * Returns a {@link HttpBot} which supports only its basic methods. Use {@link #getPage(String)}
-   * for an basic read of content.
+   * Returns a {@link HttpBot} which supports only its basic methods. Use {@link #getPage(String)} for an basic read of
+   * content.
    * 
    * @deprecated do not use this
    * @return a
@@ -94,10 +91,8 @@ public class HttpBot {
   }
 
   /**
-   * 
    * @param client
    *          if you whant to add some specials
-   * 
    */
   public final void setClient(final HttpActionClient client) {
     client.getClass();
@@ -105,7 +100,6 @@ public class HttpBot {
   }
 
   /**
-   * 
    * @param hostUrl
    *          base url of a wiki site to connect with; example: http://www.yourOwnWiki.org/wiki/
    */
@@ -114,7 +108,6 @@ public class HttpBot {
   }
 
   /**
-   * 
    * @param hostUrl
    *          like http://www.yourOwnWiki.org/wiki/
    */
@@ -123,7 +116,6 @@ public class HttpBot {
   }
 
   /**
-   * 
    * @return a
    */
   public final HttpActionClient getClient() {
@@ -135,7 +127,6 @@ public class HttpBot {
   }
 
   /**
-   * 
    * @return http raw content
    */
   public synchronized String performAction(final ContentProcessable a) {
@@ -170,7 +161,6 @@ public class HttpBot {
   }
 
   /**
-   * 
    * TODO check usage of hosturl
    * 
    * @deprecated
