@@ -21,95 +21,164 @@ package net.sourceforge.jwbf;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLStreamHandler;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
+
+import lombok.val;
 
 /**
  * @author Thomas Stock
  */
 public final class JWBF {
 
-  private static final Map<String, String> PARTS = new HashMap<String, String>();
-  private static String version = "";
-  private static String title = "";
-  private static Manifest manifest = null;
-
-  private static final char separatorChar = '/';
   private static boolean errorInfo = true;
-  static {
-    init(JWBF.class);
-  }
-  private static final String jarFileIndex = "jar:file:";
+  static Map<String, String> cache = null;
 
-  private static void init(Class<?> clazz) {
-    PARTS.clear();
-    version = "";
-    title = "";
-    manifest = null;
-    String packagename = clazz.getPackage().getName().replace('.', separatorChar);
-    URL url = clazz.getClassLoader().getResource(packagename);
-    boolean isJar = url.toExternalForm().toLowerCase().contains(jarFileIndex);
-    if (isJar) {
-      try {
-        int jarEnd = url.toExternalForm().indexOf("!" + separatorChar);
-        String jarFileName = url.toExternalForm().substring(jarFileIndex.length(), jarEnd);
-        JarFile jar = new JarFile(jarFileName);
-        Enumeration<JarEntry> je = jar.entries();
-        while (je.hasMoreElements()) {
-          JarEntry jarEntry = je.nextElement();
-          String slashCount = jarEntry.getName().replaceAll("[a-zA-Z0-9]", "");
-          if (jarEntry.isDirectory() && jarEntry.getName().contains(packagename)
-              && slashCount.length() == 4) {
+  static final String DEVEL = "DEVEL";
+  static final char SEPARATOR_CHAR = '/';
+  private static final String JAR_FILE_INDEX = "jar:file:";
+  private static final String FILE_INDEX = "file:";
 
-            registerModule(
-                readMFProductTitle(jarFileName) + "-"
-                    + jarEntry.getName().split(separatorChar + "")[3], readMFVersion(jarFileName));
-          }
-        }
-      } catch (IOException e) {
-        e.printStackTrace();
-      }
-    } else {
-      try {
-        File root = new File(url.toURI());
-        File[] dirs = root.listFiles(new FileFilter() {
+  private static final FileFilter DIRECTORY_FILTER = new FileFilter() {
 
-          public boolean accept(File f) {
-            return f.isDirectory();
-          }
-        });
-        for (File dir : dirs) {
-          int lastIndex = dir.toString().lastIndexOf(separatorChar) + 1;
-          String partTitle = dir.toString().substring(lastIndex, dir.toString().length());
-          registerModule(readMFProductTitle(root + "") + "-" + partTitle, readMFVersion(root + ""));
-
-        }
-      } catch (URISyntaxException e1) {
-        e1.printStackTrace();
-      } catch (IOException e) {
-        e.printStackTrace();
-      }
+    @Override
+    public boolean accept(File f) {
+      return f.isDirectory();
     }
-  }
+  };
 
-  /**
-   *
-   *
-   */
   private JWBF() {
     // do nothing
   }
 
-  private static void registerModule(String artifactId, String version) {
-    PARTS.put(artifactId, version);
+  private static Map<String, String> lazyVersion() {
+    val clazz = JWBF.class;
+    val packageName = packageNameOf(clazz);
+    val url = urlOf(clazz, packageName);
+    synchronized (JWBF.class) {
+      if (cache == null) {
+        synchronized (JWBF.class) {
+          cache = init(packageName, url);
+        }
+      }
+    }
+    return cache;
+  }
 
+  static Map<String, String> init(String packageName, URL url) {
+    val lowerCaseUrl = urlExtract(url).toLowerCase();
+    if (lowerCaseUrl.startsWith(JAR_FILE_INDEX)) {
+      return jarManifestLookup(packageName, url);
+    } else if (lowerCaseUrl.startsWith(FILE_INDEX)) {
+      return fileSystemManifestLookup(packageName, url);
+    } else {
+      return new HashMap<>();
+    }
+  }
+
+  private static URL urlOf(Class<?> clazz, String packagename) {
+    return clazz.getClassLoader().getResource(packagename);
+  }
+
+  private static String packageNameOf(Class<?> clazz) {
+    return clazz.getPackage().getName().replace('.', SEPARATOR_CHAR);
+  }
+
+  private static Map<String, String> fileSystemManifestLookup(String packageName, URL url) {
+    Manifest manifest = findManifest(urlToFile(url).getAbsolutePath());
+    File root = urlToFile(url);
+
+    File[] dirs = root.listFiles(DIRECTORY_FILTER);
+    List<ContainerEntry> entries = filesToEntries(dirs, packageName);
+    return makeVersionMap(packageName, manifest, entries);
+  }
+
+  private static Map<String, String> jarManifestLookup(String packageName, URL url) {
+    int jarEnd = urlExtract(url).indexOf("!" + SEPARATOR_CHAR);
+    val jarFileName = urlExtract(url).substring(JAR_FILE_INDEX.length(), jarEnd);
+    Manifest manifest = findManifest(jarFileName);
+    List<ContainerEntry> elements = jarToEntries(jarFileName);
+    return makeVersionMap(packageName, manifest, elements);
+  }
+
+  private static String urlExtract(URL url) {
+    return url.toExternalForm();
+  }
+
+  static Map<String, String> makeVersionMap(String packageName, Manifest manifest,
+      List<ContainerEntry> elements) {
+
+    Map<String, String> parts = new HashMap<>();
+    for (ContainerEntry element : elements) {
+
+      String jarEntryName = element.getName();
+      String shlashes = jarEntryName.replaceAll("[a-zA-Z0-9]", "");
+      if (element.isDirectory() && jarEntryName.contains(packageName) && shlashes.length() == 4) {
+
+        String wikiSystemName = jarEntryName.split(SEPARATOR_CHAR + "")[3];
+        String artifactId = readMFProductTitle(manifest) + "-" + wikiSystemName;
+        String readMFVersion = readMFVersion(manifest);
+
+        parts.put(artifactId, readMFVersion);
+      }
+    }
+
+    return parts;
+  }
+
+  private static List<ContainerEntry> filesToEntries(File[] dirs, String packageName) {
+    List<ContainerEntry> result = new ArrayList<>();
+    if (dirs != null) {
+      for (File f : dirs) {
+        if (f.isDirectory()) {
+          String name = makeFileName(f, packageName);
+          if (!name.isEmpty()) {
+            result.add(new ContainerEntry(name, true));
+          }
+          result.addAll(filesToEntries(f.listFiles(DIRECTORY_FILTER), packageName));
+        }
+      }
+    }
+    return result;
+  }
+
+  private static String makeFileName(File file, String packageName) {
+    String path = file.getAbsolutePath();
+    int indexOfPackage = path.indexOf(packageName);
+    if (indexOfPackage == -1) {
+      return "";
+    }
+    return path.substring(indexOfPackage);
+  }
+
+  static List<ContainerEntry> jarToEntries(String jarFileName) {
+    List<ContainerEntry> result = new ArrayList<>();
+
+    try (JarFile jar = new JarFile(jarFileName)) {
+      Enumeration<JarEntry> je = jar.entries();
+      while (je.hasMoreElements()) {
+        JarEntry jarEntry = je.nextElement();
+        boolean directory = jarEntry.isDirectory();
+        result.add(new ContainerEntry(jarEntry.getName(), directory));
+      }
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    return result;
   }
 
   /**
@@ -118,11 +187,7 @@ public final class JWBF {
    * @return the version
    */
   public static String getVersion(Class<?> clazz) {
-    try {
-      return getPartInfo(clazz)[1];
-    } catch (Exception e) {
-      return "Version Unknown";
-    }
+    return getPartInfo(lazyVersion(), clazz, "Version unknown", 1);
   }
 
   /**
@@ -131,31 +196,29 @@ public final class JWBF {
    * @return the version
    */
   public static String getPartId(Class<?> clazz) {
-    try {
-
-      return getPartInfo(clazz)[0];
-    } catch (Exception e) {
-      return "No Module for " + clazz.getName();
-    }
+    return getPartInfo(lazyVersion(), clazz, "No Module for " + clazz.getName(), 0);
   }
 
-  private static String[] getPartInfo(Class<?> clazz) {
-    String classContainer = clazz.getPackage().getName().split("\\.")[3];
-    Iterable<String> keys = PARTS.keySet();
-    for (String key : keys) {
-      if (key.contains(classContainer)) {
-        String[] result = { key, PARTS.get(key) };
-        return result;
+  private static String getPartInfo(Map<String, String> versionDetails, Class<?> clazz,
+      String fallbackValue, int elementNo) {
+    String[] packageParts = clazz.getPackage().getName().split("\\.");
+    if (packageParts.length > 3) {
+      String classContainer = packageParts[3];
+      for (Entry<String, String> key : versionDetails.entrySet()) {
+        if (key.getKey().contains(classContainer)) {
+          String[] result = { key.getKey(), key.getValue() };
+          return result[elementNo];
+        }
       }
     }
-    return null;
+    return fallbackValue;
   }
 
   /**
    * Prints the JWBF Version.
    */
   public static void printVersion() {
-    System.out.println(PARTS);
+    System.out.println(getVersions());
   }
 
   public static void main(String[] args) {
@@ -165,90 +228,155 @@ public final class JWBF {
   /**
    * @return the JWBF Version.
    */
-  public static Map<String, String> getVersion() {
-    return Collections.unmodifiableMap(PARTS);
+  public static Map<String, String> getVersions() {
+    return Collections.unmodifiableMap(lazyVersion());
   }
 
-  /**
-   * @return the version from manifest
-   * @throws IOException
-   *           if path invalid
-   */
-  private static String readMFVersion(String filesystemPath) throws IOException {
-    if (version.length() < 1) {
-      String implementationVersion = null;
-
-      implementationVersion = readFromManifest(filesystemPath, "Implementation-Version");
-
-      if (implementationVersion == null) {
-        version = "DEVEL";
-      } else {
-        version = implementationVersion;
-      }
-    }
-    return version;
+  private static String readMFVersion(Manifest manifest) {
+    return readFromManifest(manifest, "Implementation-Version", DEVEL);
   }
 
-  /**
-   * @throws IOException
-   *           if path invalid
-   */
-  private static String readMFProductTitle(String filesystemPath) throws IOException {
-    if (title.length() < 1) {
-      String implementationTitle = null;
-      implementationTitle = readFromManifest(filesystemPath, "Implementation-Title");
-
-      if (implementationTitle == null) {
-        title = "jwbf-generic";
-      } else {
-        title = implementationTitle;
-      }
-    }
-    return title;
+  private static String readMFProductTitle(Manifest mainfest) {
+    return readFromManifest(mainfest, "Implementation-Title", "jwbf-generic");
   }
 
-  /**
-   * @throws IOException
-   *           if path invalid
-   */
-  private static String readFromManifest(String filesystemPath, String manifestKey)
-      throws IOException {
-    if (manifest == null) {
-      URL manifestUrl;
-      if (filesystemPath.endsWith(".jar")) {
-
-        manifestUrl = new URL("jar:file:" + filesystemPath + "!/META-INF/MANIFEST.MF");
-      } else {
-        if (!filesystemPath.endsWith(File.separator))
-          filesystemPath += File.separatorChar;
-        manifestUrl = searchMF(filesystemPath);
-      }
-      if (manifestUrl != null)
-        manifest = new Manifest(manifestUrl.openStream());
-    }
+  private static String readFromManifest(Manifest manifest, String manifestKey, String fallback) {
 
     if (manifest == null) {
-      if (errorInfo) {
-        errorInfo = false;
-        String msg = "E: no MANIFEST.MF found, please create it.";
-        System.err.println(msg);
-      }
-      return null;
+      return logAndReturn(fallback);
     }
-    return manifest.getMainAttributes().getValue(manifestKey);
+    val result = manifest.getMainAttributes().getValue(manifestKey);
+    if (result == null) {
+      return logAndReturn(fallback);
+    }
+    return result;
   }
 
-  private static URL searchMF(String f) throws IOException {
-    if (f == null)
-      return null;
-    File fi = new File(f);
-    String foundE = "target" + File.separatorChar + "MANIFEST.MF";
-    if (new File(fi, foundE).exists()) {
-      return new URL("file:" + fi + File.separatorChar + foundE);
+  private static String logAndReturn(String fallback) {
+    if (errorInfo) {
+      errorInfo = false;
+      String msg = "E: no MANIFEST.MF found, please create it.";
+      System.err.println(msg);
+    }
+    return fallback;
+  }
+
+  private static Manifest findManifest(String filesystemPath) {
+    URL manifestUrl;
+    if (filesystemPath.endsWith(".jar")) {
+
+      manifestUrl = newURL(JAR_FILE_INDEX + filesystemPath + "!/META-INF/MANIFEST.MF");
     } else {
-      return searchMF(fi.getParent());
+      if (!filesystemPath.endsWith(File.separator)) {
+        filesystemPath += File.separatorChar;
+      }
+      manifestUrl = searchMF(filesystemPath);
+    }
+    if (manifestUrl != null) {
+      return newManifest(manifestUrl);
+    }
+    return null;
+  }
+
+  private static Manifest newManifest(URL manifestUrl) {
+    try {
+      return new Manifest(manifestUrl.openStream());
+    } catch (IOException e) {
+      e.printStackTrace();
+      return null;
+    }
+  }
+
+  private static URL searchMF(String fileName) {
+    if (fileName == null) {
+      return null;
+    }
+    File file = new File(fileName);
+    String manifestFileName = "MANIFEST.MF";
+    File manifestFile = new File(file, manifestFileName);
+    if (manifestFile.exists()) {
+      return newURL(FILE_INDEX + file + File.separatorChar + manifestFileName);
+    } else {
+      return searchMF(file.getParent());
+    }
+  }
+
+  static class ContainerEntry {
+
+    private final String name;
+    private final boolean directory;
+
+    public ContainerEntry(String name, boolean directory) {
+      this.name = name;
+      this.directory = directory;
+    }
+
+    public String getName() {
+      return name;
+    }
+
+    public boolean isDirectory() {
+      return directory;
+    }
+
+    @Override
+    public String toString() {
+      return Objects.toString(name) + " " + directory;
+    }
+
+    @Override
+    public int hashCode() {
+      return Objects.hash(name, directory);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+      if (obj == null) {
+        return false;
+      } else if (obj == this) {
+        return true;
+      } else if (obj instanceof ContainerEntry) {
+        ContainerEntry that = (ContainerEntry) obj;
+        return Objects.equals(this.name, that.name) && //
+            Objects.equals(this.directory, that.directory) //
+        ;
+      } else {
+        return false;
+      }
     }
 
   }
 
+  public static URL newURLWithoutHandler(final String url) {
+    try {
+      return new URL(null, url, new UnsupportedHandler());
+    } catch (MalformedURLException e) {
+      throw new IllegalArgumentException(url, e);
+    }
+  }
+
+  public static URL newURL(final String url) {
+    try {
+      return new URL(url);
+    } catch (MalformedURLException e) {
+      throw new IllegalArgumentException(url, e);
+    }
+  }
+
+  private static class UnsupportedHandler extends URLStreamHandler {
+
+    @Override
+    protected URLConnection openConnection(URL u) throws IOException {
+      throw new UnsupportedOperationException();
+    }
+
+  }
+
+  public static File urlToFile(URL url) {
+    try {
+      return new File(url.toURI());
+    } catch (URISyntaxException e) {
+      throw new IllegalArgumentException(urlExtract(url), e);
+    }
+  }
 }

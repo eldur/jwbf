@@ -417,6 +417,10 @@ public class HttpActionClient {
     return new Builder();
   }
 
+  /**
+   * @deprecated use JWBF#newUrl instead
+   */
+  @Deprecated
   public static URL newURL(final String url) {
     try {
       return new URL(url);

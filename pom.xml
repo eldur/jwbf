@@ -91,7 +91,7 @@
           <archive>
             <addMavenDescriptor>false</addMavenDescriptor>
             <manifestEntries>
-              <Implementation-Version>${buildNumber}</Implementation-Version>
+              <Implementation-Version>${project.version}-${buildNumber}</Implementation-Version>
               <Implementation-Title>${project.artifactId}</Implementation-Title>
               <Main-Class>net.sourceforge.jwbf.JWBF</Main-Class>
               <Built-By>jwbf</Built-By>
@@ -128,6 +128,7 @@
             <jacoco-agent.destfile>target/jacoco.exec</jacoco-agent.destfile>
           </systemPropertyVariables>
           <argLine>${maven.test.jvmargs}</argLine>
+          <runOrder>random</runOrder>
         </configuration>
       </plugin>
       <plugin>

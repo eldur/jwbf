@@ -29,6 +29,7 @@ public class PostPackageTest {
     assumeTrue(mvnTargetDir.exists());
     File[] files = mvnTargetDir.listFiles(new FilenameFilter() {
 
+      @Override
       public boolean accept(File dir, String name) {
         return name.contains(".jar") && !name.contains("javadoc") && !name.contains("sources");
       }
@@ -66,6 +67,7 @@ public class PostPackageTest {
     assertTrue(content.size() > 1);
     Collection<String> imports = Collections2.filter(content, new Predicate<String>() {
 
+      @Override
       public boolean apply(String line) {
         return line.startsWith("import ");
       }
@@ -73,11 +75,13 @@ public class PostPackageTest {
     Collection<String> invalidImports = Collections2.filter(imports, new Predicate<String>() {
 
       Set<String> validImports = ImmutableSet.of( //
-          "^import java.io.*" //
-          , "^import java.net.*" //
-          , "^import java.util.*" //
+          "^import java\\.io.*" //
+          , "^import java\\.net.*" //
+          , "^import java\\.util.*" //
+          , "^import lombok\\.val;" //
       );
 
+      @Override
       public boolean apply(String line) {
         boolean result = true;
         for (String validImportRegex : validImports) {

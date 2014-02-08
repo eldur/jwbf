@@ -108,7 +108,7 @@ public class UploadAndImageInfoTest extends ParamHelper {
     bot.delete("File:" + testFilename);
 
     try {
-      urlAsString = new ImageInfo(bot, testFilename).getUrlAsString();
+      new ImageInfo(bot, testFilename).getUrlAsString();
       fail("file was found ");
     } catch (ActionException e) {
       assertEquals("no url for image with name \"Test.gif\"", e.getMessage());
