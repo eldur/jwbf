@@ -1,8 +1,6 @@
 package net.sourceforge.jwbf.mediawiki;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import net.sourceforge.jwbf.JWBF;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 
@@ -29,9 +27,4 @@ public class NsTest {
     assertEquals(t, MediaWiki.decode(s));
   }
 
-  @Test
-  public final void showVersions() {
-    assertNotNull(JWBF.getVersion());
-    JWBF.printVersion();
-  }
 }

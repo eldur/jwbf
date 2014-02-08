@@ -23,10 +23,5 @@ public class MediaWikiBotTest {
     assertEquals(Version.UNKNOWN, version);
   }
 
-  @Test
-  public void testChangeUserAgent() {
-    bot = new MediaWikiBot(new HttpActionClient("http://localhost/", "myUserAgent"));
-  }
-
   // TODO test all other methods with a mock client
 }
