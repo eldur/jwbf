@@ -18,7 +18,6 @@
  */
 package net.sourceforge.jwbf.core.bots;
 
-import java.net.MalformedURLException;
 import java.net.URL;
 
 import net.sourceforge.jwbf.core.actions.ContentProcessable;
@@ -35,55 +34,23 @@ public class HttpBot {
 
   private final HttpActionClient actionClient;
 
-  /**
-   * @param url
-   *          of the host
-   */
-  public HttpBot(final String url) {
-    this.actionClient = clientBuilder().withUrl(url).build();
-  }
-
   public HttpBot(HttpActionClient actionClient) {
     this.actionClient = actionClient;
   }
 
-  /**
-   * @param url
-   *          of the host
-   */
-  public HttpBot(final URL url) {
+  public HttpBot(final String url) {
     this(clientBuilder().withUrl(url).build());
   }
 
-  /**
-   * Returns a {@link HttpBot} which supports only its basic methods. Use {@link #getPage(String)} for an basic read of
-   * content.
-   * 
-   * @deprecated do not use this
-   * @return a
-   */
-  @Deprecated
-  public static HttpBot getInstance() {
-
-    try {
-      return new HttpBot(new URL("http://localhost/"));
-    } catch (MalformedURLException e) {
-      throw new RuntimeException(e);
-    }
-
+  public HttpBot(final URL url) {
+    this(clientBuilder().withUrl(url).build());
   }
 
   private static Builder clientBuilder() {
     return HttpActionClient.builder();
   }
 
-  /**
-   * @return a
-   */
-  public final HttpActionClient getClient() {
-    return actionClient;
-  }
-
+  // TODO check usage
   public final String getHostUrl() {
     return actionClient.getHostUrl();
   }
@@ -106,6 +73,10 @@ public class HttpBot {
     GetPage gp = new GetPage(client.getUrl());
     new HttpBot(client).performAction(gp);
     return gp.getText();
+  }
+
+  public static String getPage(String url) {
+    return getPage(HttpActionClient.of(url));
   }
 
   /**

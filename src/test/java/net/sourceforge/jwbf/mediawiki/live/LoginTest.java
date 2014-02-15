@@ -39,6 +39,7 @@ import javax.net.ssl.SSLSocket;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
+import net.sourceforge.jwbf.JettyServer;
 import net.sourceforge.jwbf.TestHelper;
 import net.sourceforge.jwbf.core.actions.HttpActionClient;
 import net.sourceforge.jwbf.core.actions.util.ActionException;
@@ -58,11 +59,10 @@ import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.conn.ssl.X509HostnameVerifier;
 import org.apache.http.impl.client.AbstractHttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.conn.SingleClientConnManager;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpParams;
-import org.eclipse.jetty.server.NetworkConnector;
-import org.eclipse.jetty.server.Server;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -134,31 +134,16 @@ public class LoginTest extends AbstractMediaWikiBotTest {
    */
   @Test
   public final void installationDefunct() throws Exception {
-    Server server = new Server(0);
+    JettyServer server = new JettyServer();
     try {
       server.start();
-      int port = ((NetworkConnector) server.getConnectors()[0]).getLocalPort();
-      bot = new MediaWikiBot("http://localhost:" + port + "/");
+      bot = new MediaWikiBot("http://localhost:" + server.getPort() + "/");
       bot.login("user", "pass");
       fail();
     } catch (IllegalStateException e) {
       assertTrue(e.getMessage().startsWith("invalid status: HTTP/1.1 404 Not Found;"));
     } finally {
       server.stop();
-    }
-  }
-
-  /**
-   * Test invalid installation of MW. TODO change exception test, should fail if no route to test host
-   */
-  @Test
-  public final void conncetionProblem() {
-    String invalidUrl = "http://www.google.com/invalidWiki/";
-    bot = new MediaWikiBot(invalidUrl);
-    try {
-      bot.login(getValue("wikiMW1_09_user"), getValue("wikiMW1_09_pass"));
-    } catch (IllegalStateException e) {
-      assertTrue(e.getMessage().startsWith("invalid status: HTTP/1.1 404 Not Found;"));
     }
   }
 
@@ -193,7 +178,8 @@ public class LoginTest extends AbstractMediaWikiBotTest {
         new UsernamePasswordCredentials(BotFactory.getWikiUser(latest), BotFactory
             .getWikiPass(latest)));
 
-    HttpActionClient sslFakeClient = new HttpActionClient(httpClient, u);
+    HttpClientBuilder clientBuilder = HttpClientBuilder.create();
+    HttpActionClient sslFakeClient = new HttpActionClient(clientBuilder, u);
     bot = new MediaWikiBot(sslFakeClient);
 
     bot.login(BotFactory.getWikiUser(latest), BotFactory.getWikiPass(latest));

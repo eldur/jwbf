@@ -23,7 +23,7 @@ import net.sourceforge.jwbf.core.actions.util.HttpAction;
 /**
  * @author Thomas Stock
  */
-public interface ContentProcessable extends ReturningText {
+public interface ContentProcessable extends ReturningTextProcessor {
 
   /**
    * @return the of messages in this action

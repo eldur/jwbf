@@ -75,6 +75,8 @@ public class MediaWikiBot implements WikiBot {
   @Inject
   private HttpBot bot;
 
+  private HttpActionClient client;
+
   /**
    * These chars are not allowed in article names.
    */
@@ -96,10 +98,11 @@ public class MediaWikiBot implements WikiBot {
    *          wikihosturl like "http://www.mediawiki.org/w/"
    */
   public MediaWikiBot(final URL u) {
-    bot = new HttpBot(u);
+    this(HttpActionClient.of(u));
   }
 
   public MediaWikiBot(final HttpActionClient client) {
+    this.client = client;
     bot = new HttpBot(client);
   }
 
@@ -114,7 +117,8 @@ public class MediaWikiBot implements WikiBot {
     if (!(url.endsWith(".php") || url.endsWith("/"))) {
       throw new IllegalArgumentException("(" + url + ") url must end with slash or .php");
     }
-    bot = new HttpBot(url);
+    this.client = HttpActionClient.of(url);
+    bot = new HttpBot(client);
   }
 
   /**
@@ -124,9 +128,9 @@ public class MediaWikiBot implements WikiBot {
    *          if true, test if host reachable
    */
   public MediaWikiBot(URL url, boolean testHostReachable) {
-    bot = new HttpBot(url);
+    bot = new HttpBot(client);
     if (testHostReachable) {
-      HttpBot.getPage(bot.getClient());
+      HttpBot.getPage(client);
     }
   }
 
@@ -326,10 +330,10 @@ public class MediaWikiBot implements WikiBot {
       throw new ActionException("this is a selfexcecuting action, "
           + "please do not perform this action manually");
     }
-    return getBot().performAction(a);
+    return bot().performAction(a);
   }
 
-  private HttpBot getBot() {
+  private HttpBot bot() {
     if (bot == null) {
       throw new IllegalStateException("please use another constructor or inject "
           + HttpBot.class.getCanonicalName());
@@ -405,7 +409,7 @@ public class MediaWikiBot implements WikiBot {
   }
 
   public String getHostUrl() {
-    return getBot().getHostUrl();
+    return bot().getHostUrl();
   }
 
 }

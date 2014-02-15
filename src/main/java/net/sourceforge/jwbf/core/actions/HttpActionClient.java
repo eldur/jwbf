@@ -23,17 +23,11 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import javax.annotation.Nonnull;
 
-import lombok.val;
 import lombok.extern.slf4j.Slf4j;
 import net.sourceforge.jwbf.JWBF;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
@@ -42,18 +36,16 @@ import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.StatusLine;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.params.ClientPNames;
-import org.apache.http.cookie.Cookie;
-import org.apache.http.entity.mime.MultipartEntity;
-import org.apache.http.entity.mime.content.FileBody;
-import org.apache.http.entity.mime.content.StringBody;
-import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.params.HttpParams;
 
 import com.google.common.base.Preconditions;
@@ -80,14 +72,14 @@ public class HttpActionClient {
   private final URL url;
 
   public HttpActionClient(final URL url) {
-    this(new DefaultHttpClient(), url);
+    this(HttpClientBuilder.create(), url);
   }
 
   /**
    * @param url
    *          like "http://host/of/wiki/"
    */
-  public HttpActionClient(final HttpClient client, final URL url) {
+  public HttpActionClient(final HttpClientBuilder clientBuilder, final URL url) {
 
     /*
      * see for docu http://jakarta.apache.org/commons/httpclient/preference-api.html
@@ -95,10 +87,11 @@ public class HttpActionClient {
     this.url = url;
     path = pathOf(url);
     host = newHost(url);
-    applyUserAgentTo(client, USER_AGENT);
-    applyNoExpectContinueTo(client);
+    applyUserAgentTo(clientBuilder, USER_AGENT);
 
-    this.client = client;
+    clientBuilder.setDefaultRequestConfig(RequestConfig.DEFAULT);
+    this.client = clientBuilder.build();
+    applyNoExpectContinueTo(this.client);
   }
 
   public HttpActionClient(Builder builder) {
@@ -112,15 +105,20 @@ public class HttpActionClient {
     return new HttpHost(url.getHost(), url.getPort(), url.getProtocol());
   }
 
+  /**
+   * @deprecated
+   */
+  @Deprecated
   private static void applyNoExpectContinueTo(final HttpClient client) {
-    client.getParams() //
-        .setParameter("http.protocol.expect-continue", Boolean.FALSE);
+
+    // FIXME set or check?
+    // client.getParams() // http://www.mediawiki.org/wiki/API:FAQ
+    // .setParameter(CoreProtocolPNames.USE_EXPECT_CONTINUE, Boolean.FALSE);
     // ^^ is good for wikipedia server
   }
 
-  private static HttpClient applyUserAgentTo(final HttpClient client, String userAgent) {
-    client.getParams().setParameter("http.useragent" //
-        , userAgent);
+  private static HttpClientBuilder applyUserAgentTo(final HttpClientBuilder client, String userAgent) {
+    client.setUserAgent(userAgent);
     return client;
   }
 
@@ -140,7 +138,7 @@ public class HttpActionClient {
     String out = "";
     while (contentProcessable.hasMoreMessages()) {
       HttpAction httpAction = contentProcessable.getNextMessage();
-      ReturningText answerParser = contentProcessable;
+      ReturningTextProcessor answerParser = contentProcessable;
       out = processAction(httpAction, answerParser);
 
     }
@@ -148,28 +146,17 @@ public class HttpActionClient {
 
   }
 
-  protected String processAction(HttpAction httpAction, ReturningText answerParser) {
-    final String request;
-    if (path.length() > 1) {
-      request = path + httpAction.getRequest();
-    } else {
-      request = httpAction.getRequest();
-    }
-    log.debug(request);
-    HttpRequestBase httpRequest;
-    try {
-      httpRequest = new HttpGet(request);
-    } catch (RuntimeException e) {
-      throw new IllegalStateException(request, e);
-    }
+  protected String processAction(HttpAction httpAction, ReturningTextProcessor answerParser) {
+    final String requestString = makeRequestString(httpAction);
+    log.debug(requestString);
     if (httpAction instanceof Get) {
+      HttpRequestBase httpRequest = new HttpGet(requestString);
       modifyRequestParams(httpRequest, httpAction);
 
       // do get
       return get(httpRequest, answerParser, httpAction);
     } else if (httpAction instanceof Post) {
-
-      httpRequest = new HttpPost(request);
+      HttpRequestBase httpRequest = new HttpPost(requestString);
       modifyRequestParams(httpRequest, httpAction);
 
       // do post
@@ -178,6 +165,20 @@ public class HttpActionClient {
     throw new IllegalArgumentException("httpAction should be GET or POST");
   }
 
+  private String makeRequestString(HttpAction httpAction) {
+    final String requestString;
+    if (path.length() > 1) {
+      requestString = path + httpAction.getRequest();
+    } else {
+      requestString = httpAction.getRequest();
+    }
+    return requestString;
+  }
+
+  /**
+   * @deprecated
+   */
+  @Deprecated
   private void modifyRequestParams(HttpRequestBase request, HttpAction httpAction) {
     HttpParams params = request.getParams();
     params.setParameter(ClientPNames.DEFAULT_HOST, host);
@@ -185,51 +186,26 @@ public class HttpActionClient {
   }
 
   private String post(HttpRequestBase requestBase //
-      , ReturningText contentProcessable, HttpAction ha) {
+      , ReturningTextProcessor contentProcessable, HttpAction ha) {
     Post p = (Post) ha;
-    MultipartEntity entity = new MultipartEntity();
+    MultipartEntityBuilder entityBuilder = MultipartEntityBuilder.create();
     for (String key : p.getParams().keySet()) {
       Object content = p.getParams().get(key);
       if (content != null) {
         if (content instanceof String) {
           Charset charset = Charset.forName(p.getCharset());
-          entity.addPart(key, newStringBody((String) content, charset));
+          String text = (String) content;
+          entityBuilder.addTextBody(key, text, ContentType.create("xml/text", charset));
         } else if (content instanceof File) {
-          entity.addPart(key, new FileBody((File) content));
+          File file = (File) content;
+          entityBuilder.addBinaryBody(key, file);
         }
       }
     }
-    ((HttpPost) requestBase).setEntity(entity);
-    debug(requestBase, ha, contentProcessable);
-    HttpResponse res = execute(requestBase);
+    ((HttpPost) requestBase).setEntity(entityBuilder.build());
 
-    String out = writeToString(ha, res);
+    return executeAndProcess(requestBase, contentProcessable, ha);
 
-    out = contentProcessable.processReturningText(out, ha);
-
-    validateCookies(contentProcessable, ha);
-    consume(res);
-
-    return out;
-
-  }
-
-  private void validateCookies(ReturningText contentProcessable, HttpAction ha) {
-    if (contentProcessable instanceof CookieValidateable //
-        && client instanceof DefaultHttpClient) {
-      CookieValidateable cookieValidateable = (CookieValidateable) contentProcessable;
-      DefaultHttpClient defaultHttpClient = (DefaultHttpClient) client;
-      List<Cookie> cookies = defaultHttpClient.getCookieStore().getCookies();
-      cookieValidateable.validateReturningCookies(cookieTransform(cookies), ha);
-    }
-  }
-
-  private StringBody newStringBody(String content, Charset charset) {
-    try {
-      return new StringBody(content, charset);
-    } catch (UnsupportedEncodingException e) {
-      throw new IllegalArgumentException(e);
-    }
   }
 
   protected void consume(HttpResponse res) {
@@ -241,44 +217,46 @@ public class HttpActionClient {
   }
 
   @Nonnull
-  private String get(HttpRequestBase requestBase, ReturningText cp, HttpAction ha) {
-    traceCookies();
-    debug(requestBase, ha, cp);
-    String out = "";
-
-    HttpResponse res = execute(requestBase);
-
-    out = writeToString(ha, res);
-
-    if (cp != null) {
-      validateCookies(cp, ha);
-      out = cp.processReturningText(out, ha);
-    }
-    consume(res);
-    return out;
+  private String get(HttpRequestBase requestBase, ReturningTextProcessor cp, HttpAction ha) {
+    return executeAndProcess(requestBase, cp, ha);
   }
 
-  private String writeToString(HttpAction ha, HttpResponse res) {
-    StringBuffer sb = new StringBuffer();
-    BufferedReader br = null;
-    try {
-      Charset charSet = Charset.forName(ha.getCharset());
+  private String executeAndProcess(HttpRequestBase requestBase, ReturningTextProcessor cp,
+      HttpAction ha) {
 
-      br = new BufferedReader(new InputStreamReader(res.getEntity().getContent(), charSet));
+    log.debug("message {} is: " //
+        + "\n\t hostPath : {} " //
+        + "\n\t queryPath: {}", debug(requestBase, ha, cp));
+    HttpResponse res = execute(requestBase);
+
+    final String out = writeToString(ha, res);
+    try {
+      if (cp != null) {
+        return cp.processReturningText(out, ha);
+      } else {
+        return out;
+      }
+    } finally {
+      consume(res);
+    }
+  }
+
+  @Nonnull
+  private String writeToString(HttpAction ha, HttpResponse res) {
+    StringBuilder sb = new StringBuilder();
+    Charset charSet = Charset.forName(ha.getCharset());
+    try ( //
+    InputStreamReader inputStreamReader = new InputStreamReader(res.getEntity().getContent(),
+        charSet); //
+        BufferedReader br = new BufferedReader(inputStreamReader); //
+    ) {
+
       String line;
       while ((line = br.readLine()) != null) {
         sb.append(line).append("\n");
       }
     } catch (IOException e) {
       throw new IllegalStateException(e);
-    } finally {
-      if (br != null) {
-        try {
-          br.close();
-        } catch (IOException e) {
-          throw new IllegalStateException(e);
-        }
-      }
     }
     return sb.toString();
   }
@@ -286,9 +264,14 @@ public class HttpActionClient {
   private HttpResponse execute(HttpRequestBase requestBase) {
     HttpResponse res = null;
     try {
+      RequestConfig requestConfig = requestBase.getConfig();
+      if (requestConfig != null) {
+        requestConfig.isExpectContinueEnabled(); // TODO
+      } else {
+        // TODO
+      }
+
       res = client.execute(requestBase);
-    } catch (ClientProtocolException e) {
-      throw new IllegalStateException(e);
     } catch (IOException e) {
       throw new IllegalStateException(e);
     }
@@ -297,62 +280,55 @@ public class HttpActionClient {
     if (code >= HttpStatus.SC_BAD_REQUEST) {
       consume(res);
       throw new IllegalStateException("invalid status: " + statusLine + "; for "
-          + requestBase.getURI());
+          + requestBase.getConfig() + requestBase.getURI());
     }
     return res;
   }
 
   @Nonnull
   public byte[] get(Get get) {
-    traceCookies();
     HttpGet authgets = new HttpGet(get.getRequest());
     return get(authgets, null, get).getBytes();
   }
 
-  private Map<String, String> cookieTransform(List<Cookie> ca) {
-    val m = new HashMap<String, String>();
-    for (Cookie cookie : ca) {
-      m.put(cookie.getName(), cookie.getValue());
+  private Object[] debug(HttpUriRequest request, HttpAction ha, ReturningTextProcessor cp) {
+    if (cp != null) {
+      final String continueing = debugContinueingMsg(cp);
+      final String path = debugRequestPathOf(request);
+      final String type = debugTypeOf(ha, cp, continueing);
+      return new String[] { type, path, ha.getRequest() };
     }
-    return m;
+    return new String[0];
   }
 
-  private void traceCookies() {
-    if (log.isTraceEnabled() && client instanceof DefaultHttpClient) {
-      List<Cookie> cookies = ((DefaultHttpClient) client).getCookieStore().getCookies();
-      if (cookies.size() > 0) {
-        StringBuffer cStr = new StringBuffer();
-        for (Cookie cookie : cookies) {
-          cStr.append(cookie.toString() + ", ");
-        }
-        log.trace("cookie: {" + cStr + "}");
-      }
-    }
+  private String debugRequestPathOf(HttpUriRequest request) {
+    String requestString = request.getURI().toString();
+    int lastSlash = requestString.lastIndexOf("/");
+    requestString = getHostUrl() + requestString.substring(0, lastSlash);
+    // XXX using inner ^^ state getHost?
+    return requestString;
   }
 
-  private void debug(HttpUriRequest e, HttpAction ha, ReturningText cp) {
-    if (log.isDebugEnabled() && cp != null) {
+  private String debugContinueingMsg(ReturningTextProcessor cp) {
+    final String continueing;
+    // FIXME internal state mutating on debug WTF
+    if (prevHash == cp.hashCode()) {
+      continueing = " [continuing req]";
+    } else {
+      continueing = "";
+    }
+    prevHash = cp.hashCode();
+    return continueing;
+  }
 
-      String continueing = "";
-      if (prevHash == cp.hashCode()) {
-        continueing = " [continuing req]";
-      } else {
-        continueing = "";
-      }
-      prevHash = cp.hashCode();
-      String epath = e.getURI().toString();
-      int sl = epath.lastIndexOf("/");
-      epath = epath.substring(0, sl);
-      String type = "";
-      if (ha instanceof Post) {
-        type = "(POST ";
-      } else if (ha instanceof Get) {
-        type = "(GET ";
-      }
-      type += cp.getClass().getSimpleName() + ")" + continueing;
-      log.debug("message " + type + " is: " //
-          + "\n\t hostPath : " + getHostUrl() + epath //
-          + "\n\t queryPath: " + ha.getRequest());
+  private String debugTypeOf(HttpAction ha, ReturningTextProcessor cp, final String continueing) {
+    final String suffix = cp.getClass().getSimpleName() + ")" + continueing;
+    if (ha instanceof Post) {
+      return "(POST " + suffix;
+    } else if (ha instanceof Get) {
+      return "(GET " + suffix;
+    } else {
+      throw new IllegalStateException();
     }
   }
 
@@ -382,14 +358,20 @@ public class HttpActionClient {
     }
 
     public HttpActionClient build() {
+      HttpClientBuilder httpClientBuilder;
+      httpClientBuilder = HttpClientBuilder.create();
       if (client == null) {
-        withClient(new DefaultHttpClient());
+        if (Strings.isNullOrEmpty(userAgent)) {
+          userAgent = USER_AGENT;
+        }
+        applyUserAgentTo(httpClientBuilder, userAgent);
+
+        withClient(httpClientBuilder.build());
+        applyNoExpectContinueTo(client);
+
+      } else {
+        // TODO check client properties
       }
-      applyNoExpectContinueTo(client);
-      if (Strings.isNullOrEmpty(userAgent)) {
-        userAgent = USER_AGENT;
-      }
-      applyUserAgentTo(client, userAgent);
       Preconditions.checkNotNull(url, "no url is defined");
       return new HttpActionClient(this);
     }
@@ -405,7 +387,7 @@ public class HttpActionClient {
     }
 
     public Builder withUrl(String url) {
-      return withUrl(newURL(url));
+      return withUrl(JWBF.newURL(url));
     }
   }
 
@@ -413,20 +395,12 @@ public class HttpActionClient {
     return builder().withUrl(url).build();
   }
 
-  public static Builder builder() {
-    return new Builder();
+  public static HttpActionClient of(URL url) {
+    return builder().withUrl(url).build();
   }
 
-  /**
-   * @deprecated use JWBF#newUrl instead
-   */
-  @Deprecated
-  public static URL newURL(final String url) {
-    try {
-      return new URL(url);
-    } catch (MalformedURLException e) {
-      throw new IllegalArgumentException(e);
-    }
+  public static Builder builder() {
+    return new Builder();
   }
 
 }

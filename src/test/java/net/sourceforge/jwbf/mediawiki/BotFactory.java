@@ -6,9 +6,10 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import lombok.extern.slf4j.Slf4j;
+import net.sourceforge.jwbf.JWBF;
 import net.sourceforge.jwbf.TestHelper;
 import net.sourceforge.jwbf.core.actions.HttpActionClient;
-import net.sourceforge.jwbf.core.actions.ReturningText;
+import net.sourceforge.jwbf.core.actions.ReturningTextProcessor;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.core.bots.HttpBot;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
@@ -76,7 +77,7 @@ public class BotFactory {
   public static class CacheActionClient extends HttpActionClient {
 
     public CacheActionClient(String url, WireRegister wireRegister) {
-      super(HttpActionClient.newURL(url));
+      super(JWBF.newURL(url));
       this.wireRegister = wireRegister;
     }
 
@@ -91,7 +92,7 @@ public class BotFactory {
     }
 
     @Override
-    protected String processAction(HttpAction httpAction, ReturningText answerParser) {
+    protected String processAction(HttpAction httpAction, ReturningTextProcessor answerParser) {
       log.debug("{}", httpAction);
       String response = wireRegister.getResponse(httpAction);
       if (response != null) {

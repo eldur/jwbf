@@ -2,7 +2,7 @@ package net.sourceforge.jwbf.core.actions;
 
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 
-public interface ReturningText {
+public interface ReturningTextProcessor {
 
   /**
    * @param s
