@@ -10,7 +10,6 @@ import net.sourceforge.jwbf.core.actions.util.ActionException;
 import net.sourceforge.jwbf.core.actions.util.ProcessException;
 import net.sourceforge.jwbf.core.bots.HttpBot;
 import net.sourceforge.jwbf.core.bots.WikiBot;
-import net.sourceforge.jwbf.core.contentRep.Article;
 import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
 import net.sourceforge.jwbf.core.contentRep.Userinfo;
 import net.sourceforge.jwbf.mediawiki.MediaWiki;
@@ -23,6 +22,7 @@ import net.sourceforge.jwbf.mediawiki.actions.meta.GetUserinfo;
 import net.sourceforge.jwbf.mediawiki.actions.meta.GetVersion;
 import net.sourceforge.jwbf.mediawiki.actions.meta.Siteinfo;
 import net.sourceforge.jwbf.mediawiki.contentRep.LoginData;
+import net.sourceforge.jwbf.mediawiki.contentRep.MediaWikiArticle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -157,8 +157,8 @@ public class MediaWikiBot implements WikiBot {
    * @return a content representation of requested article, never null
    * @see GetRevision
    */
-  public synchronized Article getArticle(final String name, final int properties) {
-    return new Article(this, readData(name, properties));
+  public synchronized MediaWikiArticle getArticle(final String name, final int properties) {
+    return new MediaWikiArticle(this, readData(name, properties));
   }
 
   /**
@@ -182,7 +182,7 @@ public class MediaWikiBot implements WikiBot {
    * @return a content representation of requested article, never null
    * @see GetRevision
    */
-  public synchronized Article getArticle(final String name) {
+  public synchronized MediaWikiArticle getArticle(final String name) {
     return getArticle(name, DEFAULT_READ_PROPERTIES);
   }
 

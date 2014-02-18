@@ -13,6 +13,10 @@ public class ApiRequestBuilder extends RequestBuilder {
     return this;
   }
 
+  /**
+   * @deprecated use json instead (you have to change response handling)
+   */
+  @Deprecated
   public ApiRequestBuilder formatXml() {
     // TODO only json or xml
     param("format", "xml");
