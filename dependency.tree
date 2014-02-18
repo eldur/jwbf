@@ -41,4 +41,12 @@ net.sourceforge:jwbf:jar:3.0.0-SNAPSHOT
 |  \- org.eclipse.jetty:jetty-io:jar:9.2.3.v20140905:test
 +- org.eclipse.jetty:jetty-servlet:jar:9.2.3.v20140905:test
 |  \- org.eclipse.jetty:jetty-security:jar:9.2.3.v20140905:test
-\- joda-time:joda-time:jar:2.4:test
++- joda-time:joda-time:jar:2.4:test
+\- org.wikidata.wdtk:wdtk-dumpfiles:jar:0.3.0-SNAPSHOT:compile
+   +- org.wikidata.wdtk:wdtk-datamodel:jar:0.3.0-SNAPSHOT:compile
+   |  \- org.json:json:jar:20140107:compile
+   +- org.wikidata.wdtk:wdtk-util:jar:0.3.0-SNAPSHOT:compile
+   |  \- org.apache.commons:commons-compress:jar:1.7:compile
+   |     \- org.tukaani:xz:jar:1.4:compile
+   +- org.wikidata.wdtk:wdtk-storage:jar:0.3.0-SNAPSHOT:compile
+   \- org.json:org.json:jar:chargebee-1.0:compile
