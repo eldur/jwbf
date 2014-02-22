@@ -187,7 +187,7 @@ public final class JWBF {
    * @return the version
    */
   public static String getVersion(Class<?> clazz) {
-    return getPartInfo(lazyVersion(), clazz, "Version unknown", 1);
+    return getPartInfo(lazyVersion(), clazz, "Version unknown").version;
   }
 
   /**
@@ -196,22 +196,31 @@ public final class JWBF {
    * @return the version
    */
   public static String getPartId(Class<?> clazz) {
-    return getPartInfo(lazyVersion(), clazz, "No Module for " + clazz.getName(), 0);
+    return getPartInfo(lazyVersion(), clazz, "No Module for " + clazz.getName()).id;
   }
 
-  private static String getPartInfo(Map<String, String> versionDetails, Class<?> clazz,
-      String fallbackValue, int elementNo) {
+  private static PartContainer getPartInfo(Map<String, String> versionDetails, Class<?> clazz,
+      String fallbackValue) {
     String[] packageParts = clazz.getPackage().getName().split("\\.");
     if (packageParts.length > 3) {
       String classContainer = packageParts[3];
-      for (Entry<String, String> key : versionDetails.entrySet()) {
-        if (key.getKey().contains(classContainer)) {
-          String[] result = { key.getKey(), key.getValue() };
-          return result[elementNo];
+      for (Entry<String, String> entry : versionDetails.entrySet()) {
+        if (entry.getKey().contains(classContainer)) {
+          return new PartContainer(entry.getKey(), entry.getValue());
         }
       }
     }
-    return fallbackValue;
+    return new PartContainer(fallbackValue, fallbackValue);
+  }
+
+  private static class PartContainer {
+    final String id;
+    final String version;
+
+    public PartContainer(String id, String version) {
+      this.id = id;
+      this.version = version;
+    }
   }
 
   /**
@@ -255,7 +264,7 @@ public final class JWBF {
   private static String logAndReturn(String fallback) {
     if (errorInfo) {
       errorInfo = false;
-      String msg = "E: no MANIFEST.MF found, please create it.";
+      val msg = "E: no MANIFEST.MF found, please create it.";
       System.err.println(msg);
     }
     return fallback;
@@ -291,9 +300,9 @@ public final class JWBF {
     if (fileName == null) {
       return null;
     }
-    File file = new File(fileName);
-    String manifestFileName = "MANIFEST.MF";
-    File manifestFile = new File(file, manifestFileName);
+    val file = new File(fileName);
+    val manifestFileName = "MANIFEST.MF";
+    val manifestFile = new File(file, manifestFileName);
     if (manifestFile.exists()) {
       return newURL(FILE_INDEX + file + File.separatorChar + manifestFileName);
     } else {
@@ -336,7 +345,7 @@ public final class JWBF {
       } else if (obj == this) {
         return true;
       } else if (obj instanceof ContainerEntry) {
-        ContainerEntry that = (ContainerEntry) obj;
+        val that = (ContainerEntry) obj;
         return Objects.equals(this.name, that.name) && //
             Objects.equals(this.directory, that.directory) //
         ;
