@@ -10,6 +10,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.URL;
 import java.nio.file.Files;
 import java.util.List;
 import java.util.jar.Attributes;
@@ -22,6 +23,7 @@ import net.sourceforge.jwbf.JWBF.ContainerEntry;
 import net.sourceforge.jwbf.core.actions.HttpActionClient;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import com.google.common.base.Function;
@@ -31,8 +33,14 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Ordering;
 
 public class JWBFTest {
+
+  @Before
+  public void before() {
+    JWBF.cache = null;
+  }
 
   @Test
   public void testInit_invalidFile() {
@@ -135,7 +143,10 @@ public class JWBFTest {
 
   @Test
   public void testGetVersions() {
-    // GIVEN TODO
+    // GIVEN
+    JWBF.cache = ImmutableMap.<String, String> builder() //
+        .put("jwbf-generic-mediawiki", JWBF.DEVEL) //
+        .build();
 
     // WHEN
     String version = JWBF.getVersion(MediaWikiBot.class);
@@ -146,7 +157,10 @@ public class JWBFTest {
 
   @Test
   public void testGetPartId() {
-    // GIVEN TODO
+    // GIVEN
+    JWBF.cache = ImmutableMap.<String, String> builder() //
+        .put("jwbf-generic-mediawiki", "anyVersion") //
+        .build();
 
     // WHEN
     String partId = JWBF.getPartId(MediaWikiBot.class);
@@ -157,8 +171,10 @@ public class JWBFTest {
 
   @Test
   public void testGetPartId_core() {
-    // GIVEN TODO
-
+    // GIVEN
+    JWBF.cache = ImmutableMap.<String, String> builder() //
+        .put("jwbf-generic-core", "anyVersion") //
+        .build();
     // WHEN
     String partId = JWBF.getPartId(HttpActionClient.class);
 
@@ -241,8 +257,8 @@ public class JWBFTest {
         return new ContainerEntry(input.getName().replaceAll("[0-9]+", ""), input.isDirectory());
       }
     };
-    val mutated = ImmutableList.copyOf(Lists.transform(result, function));
     // THEN
+    val mutated = Ordering.usingToString().immutableSortedCopy(Lists.transform(result, function));
 
     val expected = ImmutableList.<ContainerEntry> builder() //
         .add(new ContainerEntry("META-INF/MANIFEST.MF", false)) //
@@ -250,6 +266,7 @@ public class JWBFTest {
         .add(new ContainerEntry("target/jarfile-test/jarContent/test/", true)) //
         .build();
     assertEquals(expected, mutated);
+
   }
 
   public void newJarFile(File jarFile, File inputDir) throws IOException {
@@ -304,4 +321,83 @@ public class JWBFTest {
     entry.setTime(source.lastModified());
     return entry;
   }
+
+  @Test
+  public void testUrlToFile() throws Exception {
+    // GIVEN
+    File file = new File(".").getAbsoluteFile();
+    URL url = file.toURI().toURL();
+
+    // WHEN
+    File urlToFile = JWBF.urlToFile(url);
+
+    // THEN
+    assertEquals(file, urlToFile);
+  }
+
+  @Test
+  public void testToUri() {
+    try {
+      // GIVEN/WHEN
+      JWBF.toUri("\\invalid");
+      fail();
+    } catch (IllegalArgumentException e) {
+      // THEN
+      assertEquals("\\invalid", e.getMessage());
+    }
+  }
+
+  @Test
+  public void testNewURL() {
+    try {
+      // GIVEN/WHEN
+      JWBF.newURL("\\invalid");
+      fail();
+    } catch (IllegalArgumentException e) {
+      // THEN
+      assertEquals("\\invalid", e.getMessage());
+    }
+  }
+
+  @Test
+  public void testNewURLWithoutHandler() {
+    try {
+      // GIVEN/WHEN
+      JWBF.newURLWithoutHandler("\\invalid");
+      fail();
+    } catch (IllegalArgumentException e) {
+      // THEN
+      assertEquals("\\invalid", e.getMessage());
+    }
+  }
+
+  @Test
+  public void testNewURLWithoutHandler_open() {
+    // GIVEN
+    URL noHandlerUrl = JWBF.newURLWithoutHandler("http://www.google.com");
+    try {
+      // WHEN
+      noHandlerUrl.openConnection();
+      fail();
+    } catch (IOException e) {
+      fail(e.getMessage());
+    } catch (UnsupportedOperationException e) {
+      // THEN
+      assertEquals(null, e.getMessage());
+    }
+  }
+
+  @Test
+  public void testReadFromManifest() throws Exception {
+    // GIVEN
+    Manifest manifest = new Manifest();
+    String fallback = "fallback";
+
+    // WHEN
+    String value = JWBF.readFromManifest(manifest, "test", fallback);
+
+    // THEN
+    assertEquals(fallback, value);
+  }
+
 }

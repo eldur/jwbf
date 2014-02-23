@@ -22,6 +22,7 @@ import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -249,7 +250,7 @@ public final class JWBF {
     return readFromManifest(mainfest, "Implementation-Title", "jwbf-generic");
   }
 
-  private static String readFromManifest(Manifest manifest, String manifestKey, String fallback) {
+  static String readFromManifest(Manifest manifest, String manifestKey, String fallback) {
 
     if (manifest == null) {
       return logAndReturn(fallback);
@@ -382,10 +383,15 @@ public final class JWBF {
   }
 
   public static File urlToFile(URL url) {
+    String urlString = url.toString();
+    return new File(toUri(urlString));
+  }
+
+  static URI toUri(String urlString) {
     try {
-      return new File(url.toURI());
+      return new URI(urlString);
     } catch (URISyntaxException e) {
-      throw new IllegalArgumentException(urlExtract(url), e);
+      throw new IllegalArgumentException(urlString, e);
     }
   }
 }
