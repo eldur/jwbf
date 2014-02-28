@@ -4,6 +4,7 @@ import java.util.Map;
 
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 
 public class Post implements HttpAction {
@@ -25,17 +26,24 @@ public class Post implements HttpAction {
   }
 
   public void addParam(String key, Object value) {
+    param(key, value);
+  }
+
+  public Post param(String key, Object value) {
     params.put(key, value);
+    return this;
   }
 
-  public Map<String, Object> getParams() {
-    return params;
+  public ImmutableMap<String, Object> getParams() {
+    return ImmutableMap.copyOf(params);
   }
 
+  @Override
   public String getRequest() {
     return req;
   }
 
+  @Override
   public String getCharset() {
     return charset;
   }

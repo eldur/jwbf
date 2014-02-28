@@ -69,6 +69,7 @@ public class PostModifyContent extends MWAction {
   /**
    * {@inheritDoc}
    */
+  @Override
   public HttpAction getNextMessage() {
 
     Userinfo userinfo = bot.getUserinfo();
@@ -89,9 +90,10 @@ public class PostModifyContent extends MWAction {
           .action("edit") //
           .formatXml() //
           .param("title", MediaWiki.encode(a.getTitle())) //
-          .buildPost();
-      postModify.addParam("summary", a.getEditSummary());
-      postModify.addParam("text", a.getText());
+          .buildPost() //
+          .param("summary", a.getEditSummary()) //
+          .param("text", a.getText()) //
+      ;
       Set<String> groups = userinfo.getGroups();
       if (!isIntersectionEmpty(groups, MediaWiki.BOT_GROUPS)) {
         postModify.addParam(PARAM_BOTEDIT, "");

@@ -1,12 +1,9 @@
 package net.sourceforge.jwbf.core.actions;
 
+import java.util.Objects;
+
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 
-/**
- * TODO Usage of this class.
- * 
- * @author Thomas Stock
- */
 public class Get implements HttpAction {
 
   private final String req;
@@ -33,6 +30,7 @@ public class Get implements HttpAction {
   /**
    * {@inheritDoc}
    */
+  @Override
   public String getRequest() {
     return req;
   }
@@ -40,55 +38,34 @@ public class Get implements HttpAction {
   /**
    * {@inheritDoc}
    */
+  @Override
   public String getCharset() {
     return charset;
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public String toString() {
-    return getCharset() + getRequest();
+    return getRequest() + " " + getCharset();
   }
 
-  /*
-   * (non-Javadoc)
-   * @see java.lang.Object#hashCode()
-   */
   @Override
   public int hashCode() {
-    final int prime = 31;
-    int result = 1;
-    result = prime * result + ((charset == null) ? 0 : charset.hashCode());
-    result = prime * result + ((req == null) ? 0 : req.hashCode());
-    return result;
+    return Objects.hash(charset, req);
   }
 
-  /*
-   * (non-Javadoc)
-   * @see java.lang.Object#equals(java.lang.Object)
-   */
   @Override
   public boolean equals(Object obj) {
-    if (this == obj)
+    if (obj == null) {
+      return false;
+    } else if (this == obj) {
       return true;
-    if (obj == null)
+    } else if (obj instanceof Get) {
+      Get that = (Get) obj;
+      return Objects.equals(this.req, that.req) //
+          && Objects.equals(this.charset, that.charset);
+    } else {
       return false;
-    if (getClass() != obj.getClass())
-      return false;
-    Get other = (Get) obj;
-    if (charset == null) {
-      if (other.charset != null)
-        return false;
-    } else if (!charset.equals(other.charset))
-      return false;
-    if (req == null) {
-      if (other.req != null)
-        return false;
-    } else if (!req.equals(other.req))
-      return false;
-    return true;
+    }
   }
 
 }
