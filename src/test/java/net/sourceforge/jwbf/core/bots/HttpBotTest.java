@@ -1,7 +1,7 @@
 package net.sourceforge.jwbf.core.bots;
 
+import static net.sourceforge.jwbf.JettyServer.headerMapHandler;
 import static net.sourceforge.jwbf.JettyServer.textHandler;
-import static net.sourceforge.jwbf.JettyServer.userAgentHandler;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
@@ -38,7 +38,7 @@ public class HttpBotTest {
   @Test
   public void testInit() throws MalformedURLException {
     // GIVEN
-    startServerWith(userAgentHandler());
+    startServerWith(headerMapHandler());
     String url = "http://192.0.2.1/";
     // WHEN
     HttpBot bot = new HttpBot(url);
@@ -53,7 +53,7 @@ public class HttpBotTest {
   @Test
   public final void testGetPage_UserAgent() {
     // GIVEN
-    startServerWith(userAgentHandler());
+    startServerWith(headerMapHandler());
     String url = "http://localhost:" + port + "/";
     HttpActionClient client = HttpActionClient.of(url);
 
@@ -67,9 +67,10 @@ public class HttpBotTest {
   @Test
   public final void testGetPage_UserAgent_any() {
     // GIVEN
-    startServerWith(userAgentHandler());
+    startServerWith(headerMapHandler());
     String url = "http://localhost:" + port + "/";
     String userAgent = "my user agent";
+
     HttpActionClient client = HttpActionClient.builder() //
         .withUrl(url) //
         .withUserAgent(userAgent) //
@@ -98,8 +99,11 @@ public class HttpBotTest {
   }
 
   private String userAgentHeaderOf(String userAgent) {
-    ImmutableList<String> of = ImmutableList.of("Accept-Encoding=[gzip,deflate]",
-        "Connection=[keep-alive]", "User-Agent=[" + userAgent + "]");
+    ImmutableList<String> of = ImmutableList.of( //
+        "Accept-Encoding=[gzip,deflate]", //
+        "Connection=[keep-alive]", //
+        "Host=[localhost:????]", //
+        "User-Agent=[" + userAgent + "]");
 
     return "{" + Joiner.on(", ").join(of) + "}\n";
   }

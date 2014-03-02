@@ -1,10 +1,19 @@
 package net.sourceforge.jwbf.core.actions;
 
+import static com.google.common.net.HttpHeaders.ACCEPT_ENCODING;
+import static com.google.common.net.HttpHeaders.CONNECTION;
+import static com.google.common.net.HttpHeaders.CONTENT_LENGTH;
+import static com.google.common.net.HttpHeaders.CONTENT_TYPE;
+import static com.google.common.net.HttpHeaders.HOST;
+import static com.google.common.net.HttpHeaders.USER_AGENT;
 import static org.junit.Assert.assertEquals;
 import net.sourceforge.jwbf.JettyServer;
+import net.sourceforge.jwbf.core.RequestBuilder;
 
-import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.junit.Test;
+
+import com.google.common.collect.ImmutableMap;
 
 public class HttpActionClientTest {
 
@@ -56,19 +65,62 @@ public class HttpActionClientTest {
     JettyServer server = new JettyServer();
     try {
       // GIVEN
-      server.setHandler(JettyServer.userAgentHandler());
+      server.setHandler(JettyServer.headerMapHandler());
       server.startSilent();
       String url = "http://localhost:" + server.getPort();
       testee = HttpActionClient.builder() //
-          .withClient(new DefaultHttpClient()) //
+          .withClient(HttpClientBuilder.create().build()) //
           .withUrl(url) //
           .build();
       // WHEN
       byte[] bs = testee.get(new Get(url));
 
       // THEN
-      assertEquals("{Connection=[keep-alive], User-Agent=[Apache-HttpClient/4.3.2 (java 1.5)]}\n",
+      assertEquals(
+          "{Accept-Encoding=[gzip,deflate], Connection=[keep-alive], Host=[localhost:????], User-Agent=[Apache-HttpClient/4.3.2 (java 1.5)]}\n",
           new String(bs));
+
+    } finally {
+      server.stopSilent();
+    }
+  }
+
+  @Test
+  public void testPostParameters() {
+    JettyServer server = new JettyServer();
+    try {
+      // GIVEN
+      server.setHandler(JettyServer.headerMapHandler());
+      server.startSilent();
+
+      Post post = RequestBuilder.of("/").buildPost();
+
+      HttpActionClient hac = HttpActionClient.builder() //
+          .withUrl(server.getTestUrl()) //
+          .withUserAgent("none") //
+          .build() //
+      ;
+      ResponseHandler<String> a = ContentProcessableBuilder //
+          .create(hac) //
+          .withActions(post) //
+          .build();
+
+      // WHEN
+      String result = a.get().trim();
+
+      // THEN
+      // TODO list
+      ImmutableMap<String, String> expected = ImmutableMap.<String, String> builder()
+          .put(ACCEPT_ENCODING, "[gzip,deflate]") //
+          .put(USER_AGENT, "[none]") //
+          .put(CONNECTION, "[keep-alive]") //
+          .put(HOST, "[localhost:????]") //
+          .put(CONTENT_TYPE, "[multipart/form-data; boundary=????]") //
+          .put(CONTENT_LENGTH, "[???]") //
+          .build();
+
+      assertEquals(expected.toString().replace(", ", "\n") //
+          , result.replace(", ", "\n"));
 
     } finally {
       server.stopSilent();

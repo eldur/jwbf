@@ -23,6 +23,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.URI;
 import java.net.URL;
 import java.nio.charset.Charset;
 
@@ -37,16 +38,13 @@ import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.StatusLine;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.methods.HttpUriRequest;
-import org.apache.http.client.params.ClientPNames;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.params.HttpParams;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
@@ -81,21 +79,14 @@ public class HttpActionClient {
    */
   public HttpActionClient(final HttpClientBuilder clientBuilder, final URL url) {
 
-    /*
-     * see for docu http://jakarta.apache.org/commons/httpclient/preference-api.html
-     */
     this.url = url;
     path = pathOf(url);
     host = newHost(url);
-    applyUserAgentTo(clientBuilder, USER_AGENT);
-
-    clientBuilder.setDefaultRequestConfig(RequestConfig.DEFAULT);
     this.client = clientBuilder.build();
-    applyNoExpectContinueTo(this.client);
   }
 
   public HttpActionClient(Builder builder) {
-    this.url = builder.url;
+    this.url = Preconditions.checkNotNull(builder.url, "no url is defined");
     host = newHost(builder.url);
     path = pathOf(builder.url);
     this.client = builder.client;
@@ -105,26 +96,10 @@ public class HttpActionClient {
     return new HttpHost(url.getHost(), url.getPort(), url.getProtocol());
   }
 
-  /**
-   * @deprecated
-   */
-  @Deprecated
-  private static void applyNoExpectContinueTo(final HttpClient client) {
-
-    // FIXME set or check?
-    // client.getParams() // http://www.mediawiki.org/wiki/API:FAQ
-    // .setParameter(CoreProtocolPNames.USE_EXPECT_CONTINUE, Boolean.FALSE);
-    // ^^ is good for wikipedia server
-  }
-
-  private static HttpClientBuilder applyUserAgentTo(final HttpClientBuilder client, String userAgent) {
-    client.setUserAgent(userAgent);
-    return client;
-  }
-
   private String pathOf(final URL url) {
-    if (url.getPath().length() > 1) {
-      return url.getPath().substring(0, url.getPath().lastIndexOf("/"));
+    String urlPath = url.getPath();
+    if (urlPath.length() > 1) {
+      return urlPath.substring(0, urlPath.lastIndexOf("/"));
     } else {
       return "";
     }
@@ -143,23 +118,19 @@ public class HttpActionClient {
 
     }
     return out;
-
   }
 
   protected String processAction(HttpAction httpAction, ReturningTextProcessor answerParser) {
     final String requestString = makeRequestString(httpAction);
     log.debug(requestString);
+    URI uri = JWBF.toUri(host.toURI() + requestString);
     if (httpAction instanceof Get) {
-      HttpRequestBase httpRequest = new HttpGet(requestString);
-      modifyRequestParams(httpRequest, httpAction);
+      HttpRequestBase httpRequest = new HttpGet(uri);
 
-      // do get
       return get(httpRequest, answerParser, httpAction);
     } else if (httpAction instanceof Post) {
-      HttpRequestBase httpRequest = new HttpPost(requestString);
-      modifyRequestParams(httpRequest, httpAction);
+      HttpRequestBase httpRequest = new HttpPost(uri);
 
-      // do post
       return post(httpRequest, answerParser, httpAction);
     }
     throw new IllegalArgumentException("httpAction should be GET or POST");
@@ -173,16 +144,6 @@ public class HttpActionClient {
       requestString = httpAction.getRequest();
     }
     return requestString;
-  }
-
-  /**
-   * @deprecated
-   */
-  @Deprecated
-  private void modifyRequestParams(HttpRequestBase request, HttpAction httpAction) {
-    HttpParams params = request.getParams();
-    params.setParameter(ClientPNames.DEFAULT_HOST, host);
-    params.setParameter("http.protocol.content-charset", httpAction.getCharset());
   }
 
   private String post(HttpRequestBase requestBase //
@@ -264,13 +225,6 @@ public class HttpActionClient {
   private HttpResponse execute(HttpRequestBase requestBase) {
     HttpResponse res = null;
     try {
-      RequestConfig requestConfig = requestBase.getConfig();
-      if (requestConfig != null) {
-        requestConfig.isExpectContinueEnabled(); // TODO
-      } else {
-        // TODO
-      }
-
       res = client.execute(requestBase);
     } catch (IOException e) {
       throw new IllegalStateException(e);
@@ -280,7 +234,7 @@ public class HttpActionClient {
     if (code >= HttpStatus.SC_BAD_REQUEST) {
       consume(res);
       throw new IllegalStateException("invalid status: " + statusLine + "; for "
-          + requestBase.getConfig() + requestBase.getURI());
+          + requestBase.getURI());
     }
     return res;
   }
@@ -304,8 +258,7 @@ public class HttpActionClient {
   private String debugRequestPathOf(HttpUriRequest request) {
     String requestString = request.getURI().toString();
     int lastSlash = requestString.lastIndexOf("/");
-    requestString = getHostUrl() + requestString.substring(0, lastSlash);
-    // XXX using inner ^^ state getHost?
+    requestString = host.toURI() + requestString.substring(0, lastSlash);
     return requestString;
   }
 
@@ -335,7 +288,7 @@ public class HttpActionClient {
   /**
    * @return like http://localhost
    */
-  public String getHostUrl() {
+  String getHostUrl() {
     return host.toURI();
   }
 
@@ -358,21 +311,20 @@ public class HttpActionClient {
     }
 
     public HttpActionClient build() {
-      HttpClientBuilder httpClientBuilder;
-      httpClientBuilder = HttpClientBuilder.create();
+      HttpClientBuilder httpClientBuilder = HttpClientBuilder.create();
       if (client == null) {
         if (Strings.isNullOrEmpty(userAgent)) {
           userAgent = USER_AGENT;
         }
-        applyUserAgentTo(httpClientBuilder, userAgent);
-
+        httpClientBuilder.setUserAgent(userAgent);
         withClient(httpClientBuilder.build());
-        applyNoExpectContinueTo(client);
 
       } else {
-        // TODO check client properties
+        if (userAgent != null) {
+          String msg = "useragent must be setted in your client";
+          throw new IllegalArgumentException(msg);
+        }
       }
-      Preconditions.checkNotNull(url, "no url is defined");
       return new HttpActionClient(this);
     }
 

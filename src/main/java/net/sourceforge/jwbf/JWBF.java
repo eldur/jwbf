@@ -387,7 +387,7 @@ public final class JWBF {
     return new File(toUri(urlString));
   }
 
-  static URI toUri(String urlString) {
+  public static URI toUri(String urlString) {
     try {
       return new URI(urlString);
     } catch (URISyntaxException e) {

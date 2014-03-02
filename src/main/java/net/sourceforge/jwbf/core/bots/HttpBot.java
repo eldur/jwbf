@@ -50,11 +50,6 @@ public class HttpBot {
     return HttpActionClient.builder();
   }
 
-  // TODO check usage
-  public final String getHostUrl() {
-    return actionClient.getHostUrl();
-  }
-
   /**
    * @return http raw content
    */
@@ -69,7 +64,8 @@ public class HttpBot {
    *          url like index.php?title=Main_Page
    * @return HTML content
    */
-  public static String getPage(HttpActionClient client) {
+  public static String getPage(final HttpActionClient client) {
+
     GetPage gp = new GetPage(client.getUrl());
     new HttpBot(client).performAction(gp);
     return gp.getText();

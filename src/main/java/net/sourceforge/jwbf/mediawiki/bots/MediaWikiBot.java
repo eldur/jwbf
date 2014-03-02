@@ -408,8 +408,4 @@ public class MediaWikiBot implements WikiBot {
     return MediaWiki.class.getName() + " " + getVersion();
   }
 
-  public String getHostUrl() {
-    return bot().getHostUrl();
-  }
-
 }

@@ -59,4 +59,8 @@ public class RequestBuilder {
     return path + paramString;
   }
 
+  public static RequestBuilder of(String path) {
+    return new RequestBuilder(path);
+  }
+
 }

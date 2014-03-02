@@ -2,7 +2,6 @@ package net.sourceforge.jwbf.mediawiki.actions.queries;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collections;
 import java.util.Iterator;
@@ -11,9 +10,9 @@ import java.util.Map;
 import javax.imageio.ImageIO;
 
 import lombok.extern.slf4j.Slf4j;
+import net.sourceforge.jwbf.JWBF;
 import net.sourceforge.jwbf.core.RequestBuilder;
 import net.sourceforge.jwbf.core.actions.Get;
-import net.sourceforge.jwbf.core.actions.util.ActionException;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.core.actions.util.ProcessException;
 import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
@@ -25,7 +24,7 @@ import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 import org.apache.commons.lang.math.NumberUtils;
 import org.jdom.Element;
 
-import com.google.common.base.Strings;
+import com.google.common.base.Preconditions;
 import com.google.common.collect.Maps;
 
 /**
@@ -116,38 +115,23 @@ public class ImageInfo extends MWAction {
    * @return position like "http://server.tld/path/to/Test.gif"
    */
   public String getUrlAsString() {
-    String exceptionMsg = "no url for image with name \"" + name + "\"";
-    try {
-      selfEx = false;
-      try {
-        bot.performAction(this);
-      } catch (ProcessException e) {
-        throw new ActionException(exceptionMsg);
-      }
-    } finally {
-      selfEx = true;
-    }
-    if (Strings.isNullOrEmpty(urlOfImage)) {
-      throw new ActionException(exceptionMsg);
-    }
-
-    try {
-      new URL(urlOfImage);
-    } catch (MalformedURLException e) {
-      if (bot.getHostUrl().length() <= 0) {
-        throw new ActionException("please use the constructor with hostUrl; " + urlOfImage);
-      }
-      urlOfImage = bot.getHostUrl() + urlOfImage;
-    }
-    return urlOfImage;
+    return getUrl().toExternalForm();
   }
 
   public URL getUrl() {
     try {
-      return new URL(getUrlAsString());
-    } catch (MalformedURLException e) {
-      throw new IllegalStateException(e);
+      selfEx = false;
+      bot.performAction(this);
+    } catch (ProcessException e) {
+      String exceptionMsg = "no url for image with name \"" + name + "\"";
+      throw new ProcessException(exceptionMsg);
+    } finally {
+      selfEx = true;
     }
+
+    String url = Preconditions.checkNotNull(urlOfImage, "imate url is null");
+
+    return JWBF.newURL(url);
   }
 
   /**
@@ -162,7 +146,7 @@ public class ImageInfo extends MWAction {
   }
 
   public BufferedImage getAsImage() throws IOException {
-    return ImageIO.read(new URL(getUrlAsString()));
+    return ImageIO.read(getUrl());
   }
 
   /**
@@ -202,6 +186,7 @@ public class ImageInfo extends MWAction {
   /**
    * {@inheritDoc}
    */
+  @Override
   public HttpAction getNextMessage() {
     return msg;
   }

@@ -52,6 +52,7 @@ public class GetPage implements ContentProcessable {
   /**
    * @return true if
    */
+  @Override
   public boolean hasMoreMessages() {
     final boolean b = hasMore;
     hasMore = false;
@@ -62,6 +63,7 @@ public class GetPage implements ContentProcessable {
    * @see ContentProcessable#getNextMessage()
    * @return a
    */
+  @Override
   public HttpAction getNextMessage() {
     return msg;
   }
@@ -74,6 +76,7 @@ public class GetPage implements ContentProcessable {
    *          the on any problems with inner browser
    * @return the returning text
    */
+  @Override
   public String processReturningText(String s, HttpAction hm) {
     text = s;
     return s;
@@ -89,6 +92,7 @@ public class GetPage implements ContentProcessable {
   /**
    * {@inheritDoc}
    */
+  @Override
   public boolean isSelfExecuter() {
     return false;
   }

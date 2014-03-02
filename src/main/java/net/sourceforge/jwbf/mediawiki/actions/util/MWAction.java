@@ -56,6 +56,7 @@ public abstract class MWAction implements ContentProcessable {
   private boolean hasMore = true;
   static final ExceptionHandler DEFAULT_EXCEPTION_HANDLER = new ExceptionHandler() {
 
+    @Override
     public void handle(RuntimeException e) {
       throw e;
 
@@ -67,6 +68,7 @@ public abstract class MWAction implements ContentProcessable {
   /**
    * @return true if and changes state to false
    */
+  @Override
   public boolean hasMoreMessages() {
     final boolean b = hasMore;
     hasMore = false;
@@ -104,6 +106,7 @@ public abstract class MWAction implements ContentProcessable {
    *          the requestor message
    * @return the returning text on processing problems
    */
+  @Override
   public String processReturningText(final String s, final HttpAction hm) {
     return processAllReturningText(s);
   }
@@ -146,6 +149,7 @@ public abstract class MWAction implements ContentProcessable {
    * 
    * @deprecated see interface
    */
+  @Override
   @Deprecated
   public boolean isSelfExecuter() {
     return false;

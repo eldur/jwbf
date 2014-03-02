@@ -2,7 +2,7 @@ package net.sourceforge.jwbf;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Enumeration;
+import java.util.Collections;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -13,23 +13,13 @@ import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.ContextHandler;
 
-import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableListMultimap;
 import com.google.common.collect.ImmutableMultimap;
+import com.google.common.collect.Maps.EntryTransformer;
 import com.google.common.collect.Multimaps;
+import com.google.common.net.HttpHeaders;
 
 public class JettyServer extends Server {
-
-  private static final Predicate<String> SKIP_HOST_VALUE = new Predicate<String>() {
-
-    @Override
-    public boolean apply(String input) {
-      if (input != null && input.matches("localhost:[0-9]+")) {
-        return false;
-      }
-      return true;
-    }
-  };
 
   public JettyServer() {
     super(0);
@@ -62,12 +52,8 @@ public class JettyServer extends Server {
   public static ImmutableMultimap<String, String> headersOf(Request request) {
     ImmutableListMultimap.Builder<String, String> builder = ImmutableListMultimap
         .<String, String> builder();
-    Enumeration<String> headerNames = request.getHeaderNames();
-    while (headerNames.hasMoreElements()) {
-      String name = headerNames.nextElement();
-      Enumeration<String> headersOfName = request.getHeaders(name);
-      while (headersOfName.hasMoreElements()) {
-        String headerValue = headersOfName.nextElement();
+    for (String name : Collections.list(request.getHeaderNames())) {
+      for (String headerValue : Collections.list(request.getHeaders(name))) {
         builder.put(name, headerValue);
       }
     }
@@ -76,11 +62,27 @@ public class JettyServer extends Server {
 
   public static ImmutableMultimap<String, String> filterLocalhost(
       ImmutableMultimap<String, String> in) {
+    EntryTransformer<String, String, String> transformer = new EntryTransformer<String, String, String>() {
+
+      @Override
+      public String transformEntry(String key, String value) {
+        if (key.equals(HttpHeaders.HOST)) {
+          return value.replaceAll("localhost:[0-9]+", "localhost:????");
+        } else if (key.equals(HttpHeaders.CONTENT_TYPE)) {
+          return value.replaceAll("(boundary=)(.*)", "$1????");
+        } else if (key.equals(HttpHeaders.CONTENT_LENGTH)) {
+          return "???";
+        } else {
+          return value;
+        }
+      }
+    };
+
     return ImmutableListMultimap. //
-        copyOf(Multimaps.filterValues(in, SKIP_HOST_VALUE));
+        copyOf(Multimaps.transformEntries(in, transformer));
   }
 
-  public static ContextHandler userAgentHandler() {
+  public static ContextHandler headerMapHandler() {
     return new ContextHandler() {
       @Override
       public void doHandle(String arg0, Request request, HttpServletRequest arg2,
@@ -110,5 +112,9 @@ public class JettyServer extends Server {
       }
 
     };
+  }
+
+  public String getTestUrl() {
+    return "http://localhost:" + getPort() + "/";
   }
 }

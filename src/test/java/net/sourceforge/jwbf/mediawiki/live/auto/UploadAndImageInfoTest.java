@@ -40,7 +40,6 @@ import java.util.Collection;
 import javax.imageio.ImageIO;
 
 import lombok.extern.slf4j.Slf4j;
-import net.sourceforge.jwbf.core.actions.util.ActionException;
 import net.sourceforge.jwbf.core.actions.util.ProcessException;
 import net.sourceforge.jwbf.mediawiki.VersionTestClassVerifier;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
@@ -91,7 +90,7 @@ public class UploadAndImageInfoTest extends ParamHelper {
     ImageInfo a = new ImageInfo(bot, name);
     try {
       log.info(a.getUrlAsString());
-    } catch (ActionException e) {
+    } catch (ProcessException e) {
       assertEquals(String.format("no url for image with name \"%s\"", name), e.getMessage());
     }
   }
@@ -110,7 +109,7 @@ public class UploadAndImageInfoTest extends ParamHelper {
     try {
       new ImageInfo(bot, testFilename).getUrlAsString();
       fail("file was found ");
-    } catch (ActionException e) {
+    } catch (ProcessException e) {
       assertEquals("no url for image with name \"Test.gif\"", e.getMessage());
     }
   }
@@ -144,8 +143,6 @@ public class UploadAndImageInfoTest extends ParamHelper {
         { ImageInfo.HEIGHT, newHeight + "" } //
             , { ImageInfo.WIDTH, newWidth + "" } //
         }).getUrl();
-    Assert.assertTrue("file not found " + url, url.toExternalForm().length()
-        - bot.getHostUrl().length() > 2);
     File file = new File(validFile);
     assertFile(url, file);
     assertImageDimension(url, upWidth, upHeight);
