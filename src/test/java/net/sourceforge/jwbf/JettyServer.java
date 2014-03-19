@@ -13,10 +13,12 @@ import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.ContextHandler;
 
+import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableListMultimap;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Maps.EntryTransformer;
 import com.google.common.collect.Multimaps;
+import com.google.common.collect.Ordering;
 import com.google.common.net.HttpHeaders;
 
 public class JettyServer extends Server {
@@ -49,7 +51,7 @@ public class JettyServer extends Server {
     }
   }
 
-  public static ImmutableMultimap<String, String> headersOf(Request request) {
+  static ImmutableMultimap<String, String> headersOf(Request request) {
     ImmutableListMultimap.Builder<String, String> builder = ImmutableListMultimap
         .<String, String> builder();
     for (String name : Collections.list(request.getHeaderNames())) {
@@ -57,11 +59,10 @@ public class JettyServer extends Server {
         builder.put(name, headerValue);
       }
     }
-    return builder.build();
+    return builder.orderKeysBy(Ordering.natural()).build();
   }
 
-  public static ImmutableMultimap<String, String> filterLocalhost(
-      ImmutableMultimap<String, String> in) {
+  static ImmutableMultimap<String, String> filterLocalhost(ImmutableMultimap<String, String> in) {
     EntryTransformer<String, String, String> transformer = new EntryTransformer<String, String, String>() {
 
       @Override
@@ -77,9 +78,10 @@ public class JettyServer extends Server {
         }
       }
     };
-
-    return ImmutableListMultimap. //
-        copyOf(Multimaps.transformEntries(in, transformer));
+    return ImmutableListMultimap.<String, String> builder() //
+        .putAll(Multimaps.transformEntries(in, transformer)) //
+        .orderKeysBy(Ordering.natural()) //
+        .build();
   }
 
   public static ContextHandler headerMapHandler() {
@@ -91,7 +93,9 @@ public class JettyServer extends Server {
         ImmutableMultimap<String, String> headerMap = JettyServer.headersOf(request);
 
         PrintWriter writer = response.getWriter();
-        writer.print(JettyServer.filterLocalhost(headerMap));
+        ImmutableMultimap<String, String> filtered = JettyServer.filterLocalhost(headerMap);
+        // TODO write JSON
+        writer.print(Joiner.on("\n").join(filtered.entries()));
         response.setStatus(HttpServletResponse.SC_OK);
         request.setHandled(true);
       }
@@ -112,6 +116,10 @@ public class JettyServer extends Server {
       }
 
     };
+  }
+
+  public static String entry(String key, String value) {
+    return key + "=" + value + "";
   }
 
   public String getTestUrl() {

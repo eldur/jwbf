@@ -6,6 +6,7 @@ import static com.google.common.net.HttpHeaders.CONTENT_LENGTH;
 import static com.google.common.net.HttpHeaders.CONTENT_TYPE;
 import static com.google.common.net.HttpHeaders.HOST;
 import static com.google.common.net.HttpHeaders.USER_AGENT;
+import static net.sourceforge.jwbf.JettyServer.entry;
 import static org.junit.Assert.assertEquals;
 import net.sourceforge.jwbf.JettyServer;
 import net.sourceforge.jwbf.core.RequestBuilder;
@@ -13,7 +14,8 @@ import net.sourceforge.jwbf.core.RequestBuilder;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.junit.Test;
 
-import com.google.common.collect.ImmutableMap;
+import com.google.common.base.Joiner;
+import com.google.common.collect.ImmutableList;
 
 public class HttpActionClientTest {
 
@@ -49,6 +51,7 @@ public class HttpActionClientTest {
       server.startSilent();
       String url = "http://localhost:" + server.getPort();
       testee = HttpActionClient.of(url);
+
       // WHEN
       byte[] bs = testee.get(new Get(url));
 
@@ -67,18 +70,24 @@ public class HttpActionClientTest {
       // GIVEN
       server.setHandler(JettyServer.headerMapHandler());
       server.startSilent();
-      String url = "http://localhost:" + server.getPort();
+      String url = server.getTestUrl();
       testee = HttpActionClient.builder() //
           .withClient(HttpClientBuilder.create().build()) //
           .withUrl(url) //
           .build();
+
       // WHEN
       byte[] bs = testee.get(new Get(url));
 
       // THEN
-      assertEquals(
-          "{Accept-Encoding=[gzip,deflate], Connection=[keep-alive], Host=[localhost:????], User-Agent=[Apache-HttpClient/4.3.2 (java 1.5)]}\n",
-          new String(bs));
+      ImmutableList<String> expected = ImmutableList.<String> builder()
+          .add(entry(ACCEPT_ENCODING, "gzip,deflate")) //
+          .add(entry(CONNECTION, "keep-alive")) //
+          .add(entry(HOST, "localhost:????")) //
+          .add(entry(USER_AGENT, "Apache-HttpClient/4.3.2 (java 1.5)")) //
+          .build();
+
+      assertEquals(Joiner.on("\n").join(expected), new String(bs).trim());
 
     } finally {
       server.stopSilent();
@@ -109,18 +118,16 @@ public class HttpActionClientTest {
       String result = a.get().trim();
 
       // THEN
-      // TODO list
-      ImmutableMap<String, String> expected = ImmutableMap.<String, String> builder()
-          .put(ACCEPT_ENCODING, "[gzip,deflate]") //
-          .put(USER_AGENT, "[none]") //
-          .put(CONNECTION, "[keep-alive]") //
-          .put(HOST, "[localhost:????]") //
-          .put(CONTENT_TYPE, "[multipart/form-data; boundary=????]") //
-          .put(CONTENT_LENGTH, "[???]") //
+      ImmutableList<String> expected = ImmutableList.<String> builder()
+          .add(entry(ACCEPT_ENCODING, "gzip,deflate")) //
+          .add(entry(CONNECTION, "keep-alive")) //
+          .add(entry(CONTENT_LENGTH, "???")) //
+          .add(entry(CONTENT_TYPE, "multipart/form-data; boundary=????")) //
+          .add(entry(HOST, "localhost:????")) //
+          .add(entry(USER_AGENT, "none")) //
           .build();
 
-      assertEquals(expected.toString().replace(", ", "\n") //
-          , result.replace(", ", "\n"));
+      assertEquals(Joiner.on("\n").join(expected), result);
 
     } finally {
       server.stopSilent();

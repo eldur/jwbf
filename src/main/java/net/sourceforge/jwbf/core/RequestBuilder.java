@@ -1,19 +1,31 @@
 package net.sourceforge.jwbf.core;
 
-import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 
 import net.sourceforge.jwbf.core.actions.Get;
 import net.sourceforge.jwbf.core.actions.Post;
 
+import com.google.common.base.Function;
 import com.google.common.base.Joiner;
+import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.Lists;
+import com.google.common.collect.FluentIterable;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Multimap;
+import com.google.common.collect.Ordering;
 
 public class RequestBuilder {
 
+  private static final Function<Entry<String, String>, String> TO_KEY_VALUE_PAIR = new Function<Map.Entry<String, String>, String>() {
+
+    @Override
+    public String apply(Entry<String, String> input) {
+      Entry<String, String> nonNullIn = Preconditions.checkNotNull(input);
+      return nonNullIn.getKey() + "=" + nonNullIn.getValue();
+    }
+  };
   private final Multimap<String, String> params = ArrayListMultimap.create();
   private final String path;
 
@@ -50,10 +62,11 @@ public class RequestBuilder {
 
     String paramString = "";
     if (!params.isEmpty()) {
-      List<String> values = Lists.newArrayList();
-      for (Entry<String, String> entry : params.entries()) {
-        values.add(entry.getKey() + "=" + entry.getValue());
-      }
+      ImmutableList<String> values = FluentIterable.from(params.entries()) //
+          .transform(TO_KEY_VALUE_PAIR) //
+          .toSortedList(Ordering.natural()) //
+      ;
+
       paramString = "?" + Joiner.on("&").join(values);
     }
     return path + paramString;

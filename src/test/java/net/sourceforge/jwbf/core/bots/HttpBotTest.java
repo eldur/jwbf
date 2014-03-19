@@ -1,5 +1,10 @@
 package net.sourceforge.jwbf.core.bots;
 
+import static com.google.common.net.HttpHeaders.ACCEPT_ENCODING;
+import static com.google.common.net.HttpHeaders.CONNECTION;
+import static com.google.common.net.HttpHeaders.HOST;
+import static com.google.common.net.HttpHeaders.USER_AGENT;
+import static net.sourceforge.jwbf.JettyServer.entry;
 import static net.sourceforge.jwbf.JettyServer.headerMapHandler;
 import static net.sourceforge.jwbf.JettyServer.textHandler;
 import static org.junit.Assert.assertEquals;
@@ -21,7 +26,6 @@ import com.google.common.collect.ImmutableList;
 
 public class HttpBotTest {
 
-  private static int port;
   private static JettyServer server;
 
   private static void startServerWith(ContextHandler userAgentHandler) {
@@ -32,7 +36,6 @@ public class HttpBotTest {
     } catch (Exception e) {
       throw new IllegalStateException(e);
     }
-    port = server.getPort();
   }
 
   @Test
@@ -54,7 +57,7 @@ public class HttpBotTest {
   public final void testGetPage_UserAgent() {
     // GIVEN
     startServerWith(headerMapHandler());
-    String url = "http://localhost:" + port + "/";
+    String url = server.getTestUrl();
     HttpActionClient client = HttpActionClient.of(url);
 
     // WHEN
@@ -68,7 +71,7 @@ public class HttpBotTest {
   public final void testGetPage_UserAgent_any() {
     // GIVEN
     startServerWith(headerMapHandler());
-    String url = "http://localhost:" + port + "/";
+    String url = server.getTestUrl();
     String userAgent = "my user agent";
 
     HttpActionClient client = HttpActionClient.builder() //
@@ -89,7 +92,7 @@ public class HttpBotTest {
     // GIVEN
     String expected = "test\n";
     startServerWith(textHandler(expected));
-    String url = "http://localhost:" + port + "/";
+    String url = server.getTestUrl();
 
     // WHEN
     String page = HttpBot.getPage(url);
@@ -99,13 +102,14 @@ public class HttpBotTest {
   }
 
   private String userAgentHeaderOf(String userAgent) {
-    ImmutableList<String> of = ImmutableList.of( //
-        "Accept-Encoding=[gzip,deflate]", //
-        "Connection=[keep-alive]", //
-        "Host=[localhost:????]", //
-        "User-Agent=[" + userAgent + "]");
+    ImmutableList<String> expected = ImmutableList.<String> builder()
+        .add(entry(ACCEPT_ENCODING, "gzip,deflate")) //
+        .add(entry(CONNECTION, "keep-alive")) //
+        .add(entry(HOST, "localhost:????")) //
+        .add(entry(USER_AGENT, userAgent)) //
+        .build();
 
-    return "{" + Joiner.on(", ").join(of) + "}\n";
+    return Joiner.on("\n").join(expected) + "\n";
   }
 
   @After

@@ -22,7 +22,7 @@ public class RequestBuilderTest {
         .param("q", "") //
         .param("", "z") //
         .build());
-    assertEquals("/a?d=e&b=1", new RequestBuilder("/a") //
+    assertEquals("/a?b=1&d=e", new RequestBuilder("/a") //
         .param("d", "e") //
         .param("b", 1) //
         .param("d", "e") //
