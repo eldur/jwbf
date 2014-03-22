@@ -63,7 +63,6 @@ public class GetRevision extends MWAction {
    * TODO follow redirects. TODO change constructor fild ordering; bot
    */
   public GetRevision(Version v, final String articlename, final int properties) {
-    super(v);
     // if (!bot.getUserinfo().getRights().contains("read")) {
     // throw new
     // ActionException("reading is not permited, make sure that this account is able to read");
@@ -227,6 +226,7 @@ public class GetRevision extends MWAction {
   /**
    * {@inheritDoc}
    */
+  @Override
   public HttpAction getNextMessage() {
     return msg;
   }

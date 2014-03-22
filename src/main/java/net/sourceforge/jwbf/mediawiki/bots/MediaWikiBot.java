@@ -261,7 +261,7 @@ public class MediaWikiBot implements WikiBot {
     if (ui == null || loginChangeUserInfo) {
       GetUserinfo a;
       try {
-        a = new GetUserinfo(getVersion());
+        a = new GetUserinfo();
 
         performAction(a);
         ui = a;

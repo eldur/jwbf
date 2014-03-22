@@ -72,7 +72,6 @@ public class MovePage extends MWAction {
    */
   public MovePage(MediaWikiBot bot, String oldtitle, String newtitle, String reason,
       boolean withsubpages, boolean noredirect) {
-    super(bot.getVersion());
     token = new GetApiToken(GetApiToken.Intoken.MOVE, oldtitle, bot.getVersion(), bot.getUserinfo());
     this.oldtitle = oldtitle;
     this.newtitle = newtitle;
@@ -190,6 +189,7 @@ public class MovePage extends MWAction {
   /**
    * {@inheritDoc}
    */
+  @Override
   public HttpAction getNextMessage() {
     if (token.hasMoreMessages()) {
       setHasMoreMessages(true);

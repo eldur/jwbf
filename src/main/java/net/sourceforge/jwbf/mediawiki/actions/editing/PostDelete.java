@@ -48,7 +48,6 @@ public class PostDelete extends MWAction {
    * Constructs a new <code>PostDelete</code> action.
    */
   public PostDelete(MediaWikiBot bot, String title) {
-    super(bot.getVersion());
     token = new GetApiToken(GetApiToken.Intoken.DELETE, title, bot.getVersion(), bot.getUserinfo());
     this.title = title;
     if (title == null || title.length() == 0) {
@@ -176,6 +175,7 @@ public class PostDelete extends MWAction {
   /**
    * {@inheritDoc}
    */
+  @Override
   public HttpAction getNextMessage() {
     if (token.hasMoreMessages()) {
       setHasMoreMessages(true);

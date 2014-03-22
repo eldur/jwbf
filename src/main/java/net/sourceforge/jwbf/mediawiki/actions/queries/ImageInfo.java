@@ -58,7 +58,6 @@ public class ImageInfo extends MWAction {
   }
 
   public ImageInfo(MediaWikiBot bot, String name, Map<String, String> params) {
-    super(bot.getVersion());
     this.bot = bot;
     this.name = name;
     map.putAll(params);
@@ -69,7 +68,6 @@ public class ImageInfo extends MWAction {
    * TODO change params to a map
    */
   public ImageInfo(MediaWikiBot bot, String name, String[][] params) {
-    super(bot.getVersion());
     this.bot = bot;
     this.name = name;
     if (params != null) {

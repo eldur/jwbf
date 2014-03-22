@@ -22,7 +22,6 @@ public class RandomPageTitle extends MWAction {
    * Creates the class. Defines the invocation to MediaWiki that is needed in order to get a random page
    */
   public RandomPageTitle(MediaWikiBot bot) {
-    super(bot.getVersion());
     this.bot = bot;
 
     msg = new ApiRequestBuilder() //
@@ -55,6 +54,7 @@ public class RandomPageTitle extends MWAction {
   /**
    * {@inheritDoc}
    */
+  @Override
   public HttpAction getNextMessage() {
     return msg;
   }

@@ -56,21 +56,17 @@ import com.google.common.collect.Queues;
 @Slf4j
 public class FileUpload extends MWAction {
 
-  private final SimpleFile a;
-  private Deque<HttpAction> actions;
+  private final Deque<HttpAction> actions;
   private UploadAction actionHandler;
 
   public FileUpload(final SimpleFile simpleFile, MediaWikiBot bot) {
-    super(bot.getVersion());
     if (!simpleFile.getFile().isFile() || !simpleFile.getFile().canRead()) {
       throw new ActionException("no such file " + simpleFile.getFile());
     }
-
     if (!bot.isLoggedIn()) {
       throw new ActionException("Please login first");
     }
 
-    a = simpleFile;
     if (!simpleFile.getFile().exists()) {
       throw new IllegalStateException("file not found" + simpleFile.getFile());
     }
@@ -96,6 +92,7 @@ public class FileUpload extends MWAction {
   /**
    * {@inheritDoc}
    */
+  @Override
   public HttpAction getNextMessage() {
     return actions.pop();
   }
@@ -121,6 +118,7 @@ public class FileUpload extends MWAction {
       a = simpleFile;
     }
 
+    @Override
     public Deque<HttpAction> getActions() {
       Deque<HttpAction> actions = Queues.newArrayDeque();
       Get g = new RequestBuilder(MediaWiki.URL_INDEX) //
@@ -147,6 +145,7 @@ public class FileUpload extends MWAction {
       return actions;
     }
 
+    @Override
     public String handleResponse(String xml, HttpAction hm) {
       if (xml.contains("error")) {
         Pattern errFinder = Pattern.compile("<p>(.*?)</p>", Pattern.DOTALL | Pattern.MULTILINE);
@@ -165,7 +164,7 @@ public class FileUpload extends MWAction {
   }
 
   private static class ApiUpload implements UploadAction {
-    private Deque<HttpAction> actions = Queues.newArrayDeque();
+    private final Deque<HttpAction> actions = Queues.newArrayDeque();
     private final MediaWikiBot bot;
     private final SimpleFile simpleFile;
     private GetApiToken getApiToken;
@@ -175,6 +174,7 @@ public class FileUpload extends MWAction {
       this.simpleFile = simpleFile;
     }
 
+    @Override
     public Deque<HttpAction> getActions() {
       getApiToken = new GetApiToken(Intoken.EDIT, simpleFile.getFilename(), bot.getVersion(),
           bot.getUserinfo());
@@ -182,6 +182,7 @@ public class FileUpload extends MWAction {
       return actions;
     }
 
+    @Override
     public String handleResponse(String xml, HttpAction hm) {
       if (getApiToken != null) {
         getApiToken.processReturningText(xml, hm);

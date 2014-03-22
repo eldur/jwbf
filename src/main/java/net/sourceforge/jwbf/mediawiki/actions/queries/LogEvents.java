@@ -113,7 +113,6 @@ public class LogEvents extends MWAction implements Iterator<LogItem>, Iterable<L
    *          of like {@link #MOVE}
    */
   public LogEvents(MediaWikiBot bot, int limit, String[] type) {
-    super(bot.getVersion());
     this.bot = bot;
     this.type = type;
     this.limit = limit;

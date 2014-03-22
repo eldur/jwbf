@@ -63,7 +63,6 @@ abstract class CategoryMembers extends MWAction {
    * The private constructor, which is used to create follow-up actions. on version problems
    */
   protected CategoryMembers(MediaWikiBot bot, String categoryName, int[] namespace) {
-    super(bot.getVersion());
     this.namespace = namespace.clone();
     namespaceStr = createNsString(namespace);
     this.categoryName = categoryName.replace(" ", "_");

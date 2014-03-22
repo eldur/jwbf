@@ -27,7 +27,6 @@ import net.sourceforge.jwbf.core.RequestBuilder;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
-import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 
@@ -63,10 +62,6 @@ public class RecentchangeTitles extends TitleQuery<String> {
   private final boolean uniqChanges;
 
   private class RecentInnerAction extends InnerAction {
-
-    protected RecentInnerAction(Version v) {
-      super(v);
-    }
 
     /**
      * {@inheritDoc}
@@ -209,9 +204,8 @@ public class RecentchangeTitles extends TitleQuery<String> {
   }
 
   @Override
-  protected InnerAction getInnerAction(Version v) {
-
-    return new RecentInnerAction(v);
+  protected InnerAction getInnerAction() {
+    return new RecentInnerAction();
   }
 
 }

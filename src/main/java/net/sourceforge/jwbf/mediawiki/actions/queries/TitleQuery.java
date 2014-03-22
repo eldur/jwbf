@@ -5,7 +5,6 @@ import java.util.Iterator;
 
 import lombok.extern.slf4j.Slf4j;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
-import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 
@@ -22,7 +21,7 @@ import com.google.common.collect.Lists;
 public abstract class TitleQuery<T> extends MWAction implements Iterable<T>, Iterator<T> {
 
   protected Iterator<T> titleIterator;
-  private InnerAction inner;
+  private final InnerAction inner;
   private final MediaWikiBot bot;
 
   /** Information necessary to get the next api page. */
@@ -34,13 +33,14 @@ public abstract class TitleQuery<T> extends MWAction implements Iterable<T>, Ite
 
   protected TitleQuery(MediaWikiBot bot) {
     this.bot = bot;
-    inner = getInnerAction(bot.getVersion());
+    inner = getInnerAction();
   }
 
-  protected InnerAction getInnerAction(Version v) {
-    return new InnerAction(v);
+  protected InnerAction getInnerAction() {
+    return new InnerAction();
   }
 
+  @Override
   public HttpAction getNextMessage() {
     throw new UnsupportedOperationException();
   }
@@ -48,6 +48,7 @@ public abstract class TitleQuery<T> extends MWAction implements Iterable<T>, Ite
   /**
    * {@inheritDoc}
    */
+  @Override
   @SuppressWarnings("unchecked")
   public Iterator<T> iterator() {
     try {
@@ -62,6 +63,7 @@ public abstract class TitleQuery<T> extends MWAction implements Iterable<T>, Ite
   /**
    * {@inheritDoc}
    */
+  @Override
   public final boolean hasNext() {
     doCollection();
     return titleIterator.hasNext();
@@ -70,6 +72,7 @@ public abstract class TitleQuery<T> extends MWAction implements Iterable<T>, Ite
   /**
    * {@inheritDoc}
    */
+  @Override
   public final T next() {
     doCollection();
     return titleIterator.next();
@@ -78,6 +81,7 @@ public abstract class TitleQuery<T> extends MWAction implements Iterable<T>, Ite
   /**
    * {@inheritDoc}
    */
+  @Override
   public final void remove() {
     titleIterator.remove();
   }
@@ -112,10 +116,6 @@ public abstract class TitleQuery<T> extends MWAction implements Iterable<T>, Ite
     private HttpAction msg;
     private boolean init = true;
 
-    protected InnerAction(Version v) {
-      super(v);
-    }
-
     protected void setMessage(HttpAction msg) {
       this.msg = msg;
     }
@@ -123,6 +123,7 @@ public abstract class TitleQuery<T> extends MWAction implements Iterable<T>, Ite
     /**
      * {@inheritDoc}
      */
+    @Override
     public HttpAction getNextMessage() {
       return msg;
     }

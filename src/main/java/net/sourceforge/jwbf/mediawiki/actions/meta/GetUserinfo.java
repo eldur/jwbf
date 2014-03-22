@@ -9,7 +9,6 @@ import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.core.contentRep.Userinfo;
 import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
-import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 
 import org.jdom.Element;
@@ -27,8 +26,7 @@ public class GetUserinfo extends MWAction implements Userinfo {
   private final Set<String> groups = Sets.newHashSet();
   private final Get msg;
 
-  public GetUserinfo(Version v) {
-    super(v);
+  public GetUserinfo() {
     String properties = MediaWiki
         .encode("blockinfo|hasmsg|groups|rights|options|editcount|ratelimits");
     msg = new ApiRequestBuilder() //
@@ -59,6 +57,7 @@ public class GetUserinfo extends MWAction implements Userinfo {
   /**
    * {@inheritDoc}
    */
+  @Override
   public Set<String> getRights() {
     return rights;
   }
@@ -66,6 +65,7 @@ public class GetUserinfo extends MWAction implements Userinfo {
   /**
    * {@inheritDoc}
    */
+  @Override
   public Set<String> getGroups() {
     return groups;
   }
@@ -73,6 +73,7 @@ public class GetUserinfo extends MWAction implements Userinfo {
   /**
    * {@inheritDoc}
    */
+  @Override
   public String getUsername() {
     return username;
   }
@@ -112,6 +113,7 @@ public class GetUserinfo extends MWAction implements Userinfo {
   /**
    * {@inheritDoc}
    */
+  @Override
   public HttpAction getNextMessage() {
     return msg;
   }

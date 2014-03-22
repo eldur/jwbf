@@ -23,7 +23,6 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
-import java.util.List;
 
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
@@ -38,7 +37,6 @@ import net.sourceforge.jwbf.core.actions.util.ActionException;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.core.actions.util.ProcessException;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
-import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
 
 import org.jdom.Document;
 import org.jdom.Element;
@@ -52,7 +50,10 @@ import org.xml.sax.InputSource;
 @Slf4j
 public abstract class MWAction implements ContentProcessable {
 
-  private List<Version> v;
+  /**
+   * @deprecated remove
+   */
+  @Deprecated
   private boolean hasMore = true;
   static final ExceptionHandler DEFAULT_EXCEPTION_HANDLER = new ExceptionHandler() {
 
@@ -76,24 +77,14 @@ public abstract class MWAction implements ContentProcessable {
   }
 
   /**
-   * @param b
-   *          if so
+   * @deprecated do not use this method TODO rm
    */
+  @Deprecated
   public void setHasMoreMessages(boolean b) {
     hasMore = b;
   }
 
   protected MWAction() {
-
-  }
-
-  /**
-   * @param v
-   *          of the bot
-   * @deprecated do not uses this
-   */
-  @Deprecated
-  protected MWAction(Version v) {
 
   }
 

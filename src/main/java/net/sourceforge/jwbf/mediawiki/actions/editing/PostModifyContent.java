@@ -58,7 +58,6 @@ public class PostModifyContent extends MWAction {
   static final String PARAM_BOTEDIT = "bot";
 
   public PostModifyContent(MediaWikiBot bot, final SimpleArticle a) {
-    super(bot.getVersion());
     if (Strings.isNullOrEmpty(a.getTitle())) {
       throw new ActionException("imposible request, no title");
     }

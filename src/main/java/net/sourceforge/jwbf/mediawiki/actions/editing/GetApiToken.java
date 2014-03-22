@@ -47,7 +47,6 @@ public final class GetApiToken extends MWAction {
    *          user info object if this action is not supported of the MediaWiki version connected to
    */
   public GetApiToken(Intoken intoken, String title, Version v, Userinfo ui) {
-    super(v);
     this.intoken = intoken;
     generateTokenRequest(intoken, title);
 
@@ -114,6 +113,7 @@ public final class GetApiToken extends MWAction {
   /**
    * {@inheritDoc}
    */
+  @Override
   public HttpAction getNextMessage() {
     if (first) {
       first = false;
