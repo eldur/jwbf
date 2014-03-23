@@ -19,7 +19,7 @@
 package net.sourceforge.jwbf.mediawiki.live;
 
 import static net.sourceforge.jwbf.TestHelper.assumeReachable;
-import static net.sourceforge.jwbf.mediawiki.LiveTestFather.getValue;
+import static net.sourceforge.jwbf.mediawiki.LiveTestFather.getValueOrSkip;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -78,10 +78,10 @@ public class LoginTest extends AbstractMediaWikiBotTest {
    */
   @Test
   public final void loginWikipedia1() {
-    String liveUrl = getValue("login_wikipedia1_url");
+    String liveUrl = getValueOrSkip("login_wikipedia1_url");
     assumeReachable(liveUrl);
     bot = new MediaWikiBot(liveUrl);
-    bot.login(getValue("login_wikipedia1_user_valid"), getValue("login_wikipedia1_pass_valid"));
+    bot.login(getValueOrSkip("login_wikipedia1_user_valid"), getValueOrSkip("login_wikipedia1_pass_valid"));
     assertTrue(bot.isLoggedIn());
   }
 
@@ -91,12 +91,12 @@ public class LoginTest extends AbstractMediaWikiBotTest {
   @Test
   public final void loginWikipedia1Urlformats() {
 
-    String liveUrl = getValue("login_wikipedia1_url");
+    String liveUrl = getValueOrSkip("login_wikipedia1_url");
     int lastSlash = liveUrl.lastIndexOf("/");
     liveUrl = liveUrl.substring(0, lastSlash + 1);
     assumeReachable(liveUrl);
     bot = new MediaWikiBot(liveUrl);
-    bot.login(getValue("login_wikipedia1_user_valid"), getValue("login_wikipedia1_pass_valid"));
+    bot.login(getValueOrSkip("login_wikipedia1_user_valid"), getValueOrSkip("login_wikipedia1_pass_valid"));
     assertTrue(bot.isLoggedIn());
   }
 
@@ -106,7 +106,7 @@ public class LoginTest extends AbstractMediaWikiBotTest {
   @Test(expected = ActionException.class)
   public final void loginWikipedia1Fail() {
 
-    String liveUrl = getValue("login_wikipedia1_url");
+    String liveUrl = getValueOrSkip("login_wikipedia1_url");
     assumeReachable(liveUrl);
     bot = new MediaWikiBot(liveUrl);
     bot.login("Klhjfd", "4sdf");
@@ -120,12 +120,12 @@ public class LoginTest extends AbstractMediaWikiBotTest {
   @Test
   @Ignore("1.09 is to old")
   public final void loginWikiMW1x09Urlformats() {
-    String todoUrl = getValue("wikiMW1_09_url");
+    String todoUrl = getValueOrSkip("wikiMW1_09_url");
     int lastSlash = todoUrl.lastIndexOf("/");
     todoUrl = todoUrl.substring(0, lastSlash + 1);
     assertFalse("shuld not end with .php", todoUrl.endsWith(".php"));
     bot = new MediaWikiBot(todoUrl);
-    bot.login(getValue("wikiMW1_09_user"), getValue("wikiMW1_09_pass"));
+    bot.login(getValueOrSkip("wikiMW1_09_user"), getValueOrSkip("wikiMW1_09_pass"));
     assertTrue(bot.isLoggedIn());
   }
 
@@ -156,7 +156,7 @@ public class LoginTest extends AbstractMediaWikiBotTest {
     AbstractHttpClient httpClient = getSSLFakeHttpClient();
     Version latest = Version.getLatest();
 
-    String url = getValue("wiki_url_latest").replace("http", "https");
+    String url = getValueOrSkip("wiki_url_latest").replace("http", "https");
     assumeReachable(url);
     URL u = new URL(url);
 

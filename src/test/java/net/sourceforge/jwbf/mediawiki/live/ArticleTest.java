@@ -152,6 +152,7 @@ public class ArticleTest {
 
   @Test
   public final void simpleArticleTest() {
+    LiveTestFather.skipIfIsNoIntegTest();
     Injector injector = BotFactory.getBotInjector(Version.getLatest(), true);
     MediaWikiBot b = injector.getInstance(MediaWikiBot.class);
 
@@ -180,6 +181,7 @@ public class ArticleTest {
 
   @Test
   public final void articleTest() {
+    LiveTestFather.skipIfIsNoIntegTest();
     Injector injector = BotFactory.getBotInjector(Version.getLatest(), true);
     MediaWikiBot b = injector.getInstance(MediaWikiBot.class);
 

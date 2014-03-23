@@ -38,13 +38,17 @@ public class BotFactory {
   });
 
   public static MediaWikiBot getMediaWikiBot(final Version v, final boolean login) {
+    LiveTestFather.skipIfIsNoIntegTest();
+    return getIntegMediaWikiBot(v, login);
+  }
 
+  public static MediaWikiBot getIntegMediaWikiBot(final Version v, final boolean login) {
     Injector injector = getBotInjector(v, login);
     return injector.getInstance(MediaWikiBot.class);
   }
 
   public static Injector getBotInjector(Version v, boolean login) {
-    final String wikiUrl = getWikiUrl(v);
+    final String wikiUrl = getWikiUrlOrSkip(v);
     TestHelper.assumeReachable(wikiUrl);
     Injector injector = masterInjector.createChildInjector(new AbstractModule() {
 
@@ -113,9 +117,10 @@ public class BotFactory {
     return "nimdA";
   }
 
-  public static String getWikiUrl(Version v) {
-    String local = LiveTestFather.getValue("localwikihost");
+  public static String getWikiUrlOrSkip(Version v) {
+    String local = LiveTestFather.getValueOrSkip("localwikihost");
     String version = "mw-" + v.getNumber().replace(".", "-");
     return "http://" + local + "/" + version + MediaWiki.URL_INDEX;
   }
+
 }

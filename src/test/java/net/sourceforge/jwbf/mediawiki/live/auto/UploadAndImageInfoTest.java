@@ -19,7 +19,7 @@
 package net.sourceforge.jwbf.mediawiki.live.auto;
 
 import static net.sourceforge.jwbf.mediawiki.BotFactory.getMediaWikiBot;
-import static net.sourceforge.jwbf.mediawiki.LiveTestFather.getValue;
+import static net.sourceforge.jwbf.mediawiki.LiveTestFather.getValueOrSkip;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -101,7 +101,7 @@ public class UploadAndImageInfoTest extends ParamHelper {
   @Test
   public final void deleteImage() {
     generalUploadImageInfoTest(bot);
-    String testFilename = getValue("filename");
+    String testFilename = getValueOrSkip("filename");
     String urlAsString = new ImageInfo(bot, testFilename).getUrlAsString();
     assertTrue(urlAsString.endsWith("Test.gif"));
     bot.delete("File:" + testFilename);
@@ -115,9 +115,9 @@ public class UploadAndImageInfoTest extends ParamHelper {
   }
 
   protected final void generalUploadImageInfoTest(MediaWikiBot bot) {
-    String validFile = getValue("validFile");
+    String validFile = getValueOrSkip("validFile");
     assertTrue("File (" + validFile + ") not readable", new File(validFile).canRead());
-    String testFilename = getValue("filename");
+    String testFilename = getValueOrSkip("filename");
     SimpleFile sf = new SimpleFile(testFilename, validFile);
     bot.delete("File:" + testFilename);
     BufferedImage img = toImage(sf);

@@ -1,7 +1,7 @@
 package net.sourceforge.jwbf.mediawiki.live.auto;
 
 import static net.sourceforge.jwbf.TestHelper.getRandom;
-import static net.sourceforge.jwbf.mediawiki.LiveTestFather.getValue;
+import static net.sourceforge.jwbf.mediawiki.LiveTestFather.getValueOrSkip;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -50,7 +50,7 @@ public class RevisionTest extends ParamHelper {
   @Test
   public void doTest() throws Exception {
 
-    String title = getValue("wikiMW1_12_user");
+    String title = getValueOrSkip("wikiMW1_12_user");
     String user = bot.getUserinfo().getUsername();
     SimpleArticle sa;
     // write init content

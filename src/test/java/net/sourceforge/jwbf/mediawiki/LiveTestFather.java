@@ -18,9 +18,6 @@
  */
 package net.sourceforge.jwbf.mediawiki;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -36,8 +33,7 @@ import java.util.TimeZone;
 import lombok.val;
 import lombok.extern.slf4j.Slf4j;
 
-import org.junit.internal.AssumptionViolatedException;
-import org.mockito.Mockito;
+import org.junit.Assume;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
@@ -64,16 +60,10 @@ public class LiveTestFather {
   }
 
   private LiveTestFather() {
-    if (executeLiveTests()) {
       data = new TestConfig();
-    } else {
-      data = mock(SimpleMap.class);
-      when(data.get(Mockito.isA(String.class))) //
-          .thenThrow(new AssumptionViolatedException("ignore this"));
-    }
   }
 
-  protected boolean executeLiveTests() {
+  public static boolean executeLiveTests() {
     val workWithDisk = optSysProperty("noLiveTests", false, true);
     if (workWithDisk) {
       throw new IllegalArgumentException("do not uses this toggle - use \"-DwithLiveTests\"");
@@ -82,7 +72,7 @@ public class LiveTestFather {
     return optSysProperty("withLiveTests", false, true);
   }
 
-  private boolean optSysProperty(String name, boolean defaultValue, boolean emptyValue) {
+  private static boolean optSysProperty(String name, boolean defaultValue, boolean emptyValue) {
     val stringValue = System.getProperty(name, defaultValue + "");
     if ("".equals(stringValue)) {
       return emptyValue;
@@ -113,7 +103,7 @@ public class LiveTestFather {
 
   }
 
-  public String getVal(String key) {
+  private String getVal(String key) {
     val value = data.get(key);
     if (Strings.isNullOrEmpty(value)) {
       data.put(key, " ");
@@ -122,7 +112,8 @@ public class LiveTestFather {
     return data.get(key);
   }
 
-  public static String getValue(final String key) {
+  public static String getValueOrSkip(final String key) {
+    skipIfIsNoIntegTest();
     return get().getVal(key);
   }
 
@@ -219,6 +210,11 @@ public class LiveTestFather {
 
   public static Collection<String> getSpecialChars() {
     return specialChars;
+  }
+
+  public static void skipIfIsNoIntegTest() {
+    Assume.assumeTrue(LiveTestFather.executeLiveTests());
+
   }
 
 }

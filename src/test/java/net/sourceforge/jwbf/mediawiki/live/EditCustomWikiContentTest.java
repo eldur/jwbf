@@ -19,7 +19,7 @@
 package net.sourceforge.jwbf.mediawiki.live;
 
 import static net.sourceforge.jwbf.TestHelper.getRandom;
-import static net.sourceforge.jwbf.mediawiki.LiveTestFather.getValue;
+import static net.sourceforge.jwbf.mediawiki.LiveTestFather.getValueOrSkip;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -57,7 +57,7 @@ public class EditCustomWikiContentTest {
    */
   @Test
   public final void contentModify() {
-    String title = getValue("test_live_article");
+    String title = getValueOrSkip("test_live_article");
     SimpleArticle sa;
     sa = new SimpleArticle(title);
     sa.setText(getRandom(64));
@@ -92,7 +92,7 @@ public class EditCustomWikiContentTest {
    */
   @Test
   public final void contentModifyDetails() {
-    String title = getValue("test_live_article");
+    String title = getValueOrSkip("test_live_article");
     String summary = "clear it";
     SimpleArticle t = new SimpleArticle(title);
     t.setText(getRandom(64));
@@ -117,7 +117,7 @@ public class EditCustomWikiContentTest {
   @Test
   public final void contentModifySimpleUtf8Get() {
     String utf8value = "öäüÖÄÜß";
-    String title = getValue("test_live_article");
+    String title = getValueOrSkip("test_live_article");
     SimpleArticle sa;
     sa = new SimpleArticle(title);
     sa.setText(utf8value);
@@ -142,7 +142,7 @@ public class EditCustomWikiContentTest {
       String utf8 = "츠 ᅳ פעילות הבינאáßçकखी國際ɕɕkɕoːɐ̯eːaɕɐɑɒæɑ̃ɕʌbɓʙβcɕçɕɕçɕɔɔɕɕ𐎄";
       String utf8value = "\uCE20 \u1173 \u05E4\u05E2\u05D9\u05DC\u05D5\u05EA \u05D4\u05D1\u05D9\u05E0\u05D0\u00E1\u00DF\u00E7\u0915\u0916\u0940\u570B\u969B\u0255\u0255k\u0255o\u02D0\u0250\u032Fe\u02D0a\u0255\u0250\u0251\u0252\u00E6\u0251\u0303\u0255\u028Cb\u0253\u0299\u03B2c\u0255\u00E7\u0255\u0255\u00E7\u0255\u0254\u0254\u0255\u0255\uD800\uDF84";
       assertEquals(utf8value, utf8);
-      String title = getValue("test_live_article");
+      String title = getValueOrSkip("test_live_article");
       SimpleArticle sa;
       sa = new SimpleArticle(title);
       sa.setText(utf8value);
@@ -163,7 +163,7 @@ public class EditCustomWikiContentTest {
   public final void contentModifyComplexUtf8Get() {
     String utf8value = "öä 品 üÖÄÜß り新しく作成したりできます Л" + "ин 瓦茲القواميس والمراجع";
 
-    String title = getValue("test_live_article");
+    String title = getValueOrSkip("test_live_article");
     SimpleArticle sa;
     sa = new SimpleArticle(title);
     sa.setText(utf8value);
@@ -178,7 +178,7 @@ public class EditCustomWikiContentTest {
   @Test
   public final void getTimestamp() {
 
-    String label = getValue("test_live_article");
+    String label = getValueOrSkip("test_live_article");
     ArticleMeta sa;
 
     sa = bot.getArticle(label);
@@ -192,16 +192,16 @@ public class EditCustomWikiContentTest {
   @Ignore("too old")
   @Test
   public final void contentModifyOnOtherWiki() {
-    MediaWikiBot bot = new MediaWikiBot(getValue("demoWiki_url"));
+    MediaWikiBot bot = new MediaWikiBot(getValueOrSkip("demoWiki_url"));
     bot.useEditApi(false);
-    bot.login(getValue("demoWiki_user"), getValue("demoWiki_pass"));
+    bot.login(getValueOrSkip("demoWiki_user"), getValueOrSkip("demoWiki_pass"));
 
-    Article a = new Article(bot, getValue("demoWiki_article"));
+    Article a = new Article(bot, getValueOrSkip("demoWiki_article"));
 
     a.addText(getRandom(5) + "\nK");
     a.save();
 
-    Article b = new Article(bot, getValue("demoWiki_article"));
+    Article b = new Article(bot, getValueOrSkip("demoWiki_article"));
 
     assertEquals(a.getText(), b.getText());
   }

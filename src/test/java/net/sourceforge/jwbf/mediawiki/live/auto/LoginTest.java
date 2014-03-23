@@ -8,6 +8,7 @@ import java.util.Collection;
 
 import net.sourceforge.jwbf.core.actions.util.ActionException;
 import net.sourceforge.jwbf.mediawiki.BotFactory;
+import net.sourceforge.jwbf.mediawiki.LiveTestFather;
 import net.sourceforge.jwbf.mediawiki.VersionTestClassVerifier;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.actions.login.PostLogin;
@@ -23,7 +24,7 @@ import com.google.common.collect.ImmutableSet;
 
 public class LoginTest extends ParamHelper {
 
-  private Version v;
+  private final Version v;
 
   public LoginTest(Version v) {
     super(v, classVerifier);
@@ -72,8 +73,8 @@ public class LoginTest extends ParamHelper {
    */
   @Test(expected = IllegalArgumentException.class)
   public final void loginUrlformatsFail() {
-
-    String defektUrl = BotFactory.getWikiUrl(v);
+    LiveTestFather.skipIfIsNoIntegTest();
+    String defektUrl = BotFactory.getWikiUrlOrSkip(v);
     int lastSlash = defektUrl.lastIndexOf("/");
     defektUrl = defektUrl.substring(0, lastSlash);
     assertFalse("shuld not end with .php", defektUrl.endsWith(".php"));

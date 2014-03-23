@@ -20,7 +20,7 @@ public class BacklinkTest extends AbstractMediaWikiBotTest {
   public final void backlinksWikipediaDe() {
     String url = getWikipediaDeUrl();
     bot = new MediaWikiBot(url);
-    BacklinkTitles is = new BacklinkTitles(bot, LiveTestFather.getValue("backlinks_article"));
+    BacklinkTitles is = new BacklinkTitles(bot, LiveTestFather.getValueOrSkip("backlinks_article"));
 
     int i = 0;
     while (is.hasNext()) {
@@ -41,7 +41,7 @@ public class BacklinkTest extends AbstractMediaWikiBotTest {
   }
 
   private static int getIntValue(final String key) {
-    String value = LiveTestFather.getValue(key);
+    String value = LiveTestFather.getValueOrSkip(key);
 
     Integer intOrNull = Ints.tryParse(value);
     if (intOrNull == null) {

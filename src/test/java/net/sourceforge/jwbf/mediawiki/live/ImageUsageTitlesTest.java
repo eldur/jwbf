@@ -2,7 +2,7 @@ package net.sourceforge.jwbf.mediawiki.live;
 
 import static net.sourceforge.jwbf.TestHelper.getRandom;
 import static net.sourceforge.jwbf.mediawiki.BotFactory.getMediaWikiBot;
-import static net.sourceforge.jwbf.mediawiki.LiveTestFather.getValue;
+import static net.sourceforge.jwbf.mediawiki.LiveTestFather.getValueOrSkip;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import lombok.extern.slf4j.Slf4j;
@@ -53,7 +53,7 @@ public class ImageUsageTitlesTest extends AbstractMediaWikiBotTest {
   }
 
   private void test() {
-    ImageUsageTitles il = new ImageUsageTitles(bot, "Image:" + getValue("filename"),
+    ImageUsageTitles il = new ImageUsageTitles(bot, "Image:" + getValueOrSkip("filename"),
         MediaWiki.NS_ALL);
 
     boolean notFound = true;
@@ -90,7 +90,7 @@ public class ImageUsageTitlesTest extends AbstractMediaWikiBotTest {
     for (int i = 0; i < limit; i++) {
       name = "TitleWithImg" + i;
       Article a = new Article(bot, name);
-      a.setText("Hello [[Image:" + getValue("filename") + "]] a image " + getRandom(10));
+      a.setText("Hello [[Image:" + getValueOrSkip("filename") + "]] a image " + getRandom(10));
       a.save();
     }
 
