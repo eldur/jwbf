@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<api>
+  <query>
+    <general mainpage="Main Page"
+      base="http://localhost/loki/mediawiki/mw-1-15/index.php/Main_Page"
+      sitename="MW_1_15" generator="MediaWiki 1.15.5" case="first-letter"
+      rights="" lang="en" fallback8bitEncoding="windows-1252" writeapi=""
+      timezone="UTC" timeoffset="0" />
+  </query>
+</api>

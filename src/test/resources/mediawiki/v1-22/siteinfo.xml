@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<api>
+  <query>
+    <general mainpage="Main Page"
+      base="http://localhost/loki/mediawiki/mw-1-22/index.php/Main_Page"
+      sitename="MW_1_22" logo="/loki/mediawiki/mw-1-22/skins/common/images/wiki.png"
+      generator="MediaWiki 1.22.0" phpversion="5.3.10-1ubuntu3.10"
+      phpsapi="apache2handler" dbtype="mysql" dbversion="5.5.35-0ubuntu0.12.04.2"
+      imagewhitelistenabled="" langconversion="" titleconversion=""
+      linkprefix="" linktrail="/^([a-z]+)(.*)$/sD" case="first-letter"
+      rights="" lang="en" fallback8bitEncoding="windows-1252" writeapi=""
+      timezone="Europe/Berlin" timeoffset="120"
+      articlepath="/loki/mediawiki/mw-1-22/index.php/$1" scriptpath="/loki/mediawiki/mw-1-22"
+      script="/loki/mediawiki/mw-1-22/index.php" variantarticlepath=""
+      server="http://localhost" wikiid="mw_1_22" time="2014-03-30T15:16:28Z"
+      maxuploadsize="104857600">
+      <fallback />
+    </general>
+  </query>
+</api>

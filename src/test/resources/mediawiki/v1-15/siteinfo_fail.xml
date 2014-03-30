@@ -1,0 +1,4 @@
+<?xml version="1.0"?>
+<api>
+  <error code="readapidenied" info="You need read permission to use this module" />
+</api>

@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<api>
+  <query>
+    <general mainpage="Main Page"
+      base="http://localhost/loki/mediawiki/mw-1-19/index.php/Main_Page"
+      sitename="MW_1_19" generator="MediaWiki 1.19.3" phpversion="5.3.10-1ubuntu3.10"
+      phpsapi="apache2handler" dbtype="mysql" dbversion="5.5.35-0ubuntu0.12.04.2"
+      case="first-letter" rights="" lang="en" fallback8bitEncoding="windows-1252"
+      writeapi="" timezone="Europe/Berlin" timeoffset="120"
+      articlepath="/loki/mediawiki/mw-1-19/index.php/$1" scriptpath="/loki/mediawiki/mw-1-19"
+      script="/loki/mediawiki/mw-1-19/index.php" variantarticlepath=""
+      server="http://localhost" wikiid="mw_1_19" time="2014-03-30T15:16:24Z">
+      <fallback />
+    </general>
+  </query>
+</api>

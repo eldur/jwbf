@@ -1,0 +1,241 @@
+<?xml version="1.0"?>
+<api>
+  <query>
+    <general mainpage="Main Page"
+      base="http://localhost/loki/mediawiki/mw-1-21/index.php/Main_Page"
+      sitename="MW_1_21" generator="MediaWiki 1.21.0rc5" phpversion="5.3.10-1ubuntu3.10"
+      phpsapi="apache2handler" dbtype="mysql" dbversion="5.5.35-0ubuntu0.12.04.2"
+      langconversion="" titleconversion="" linkprefix=""
+      linktrail="/^([a-z]+)(.*)$/sD" case="first-letter" rights="" lang="en"
+      fallback8bitEncoding="windows-1252" writeapi="" timezone="Europe/Berlin"
+      timeoffset="120" articlepath="/loki/mediawiki/mw-1-21/index.php/$1"
+      scriptpath="/loki/mediawiki/mw-1-21" script="/loki/mediawiki/mw-1-21/index.php"
+      variantarticlepath="" server="http://localhost" wikiid="mw_1_21"
+      time="2014-03-30T14:37:36Z" maxuploadsize="104857600">
+      <fallback />
+    </general>
+    <namespaces>
+      <ns id="-2" case="first-letter" canonical="Media" xml:space="preserve">Media</ns>
+      <ns id="-1" case="first-letter" canonical="Special" xml:space="preserve">Special</ns>
+      <ns id="0" case="first-letter" content="" xml:space="preserve" />
+      <ns id="1" case="first-letter" subpages="" canonical="Talk"
+        xml:space="preserve">Talk</ns>
+      <ns id="2" case="first-letter" subpages="" canonical="User"
+        xml:space="preserve">User</ns>
+      <ns id="3" case="first-letter" subpages="" canonical="User talk"
+        xml:space="preserve">User talk</ns>
+      <ns id="4" case="first-letter" subpages="" canonical="Project"
+        xml:space="preserve">MW 1 21</ns>
+      <ns id="5" case="first-letter" subpages="" canonical="Project talk"
+        xml:space="preserve">MW 1 21 talk</ns>
+      <ns id="6" case="first-letter" canonical="File" xml:space="preserve">File</ns>
+      <ns id="7" case="first-letter" subpages="" canonical="File talk"
+        xml:space="preserve">File talk</ns>
+      <ns id="8" case="first-letter" subpages="" canonical="MediaWiki"
+        xml:space="preserve">MediaWiki</ns>
+      <ns id="9" case="first-letter" subpages="" canonical="MediaWiki talk"
+        xml:space="preserve">MediaWiki talk</ns>
+      <ns id="10" case="first-letter" canonical="Template" xml:space="preserve">Template</ns>
+      <ns id="11" case="first-letter" subpages="" canonical="Template talk"
+        xml:space="preserve">Template talk</ns>
+      <ns id="12" case="first-letter" subpages="" canonical="Help"
+        xml:space="preserve">Help</ns>
+      <ns id="13" case="first-letter" subpages="" canonical="Help talk"
+        xml:space="preserve">Help talk</ns>
+      <ns id="14" case="first-letter" canonical="Category" xml:space="preserve">Category</ns>
+      <ns id="15" case="first-letter" subpages="" canonical="Category talk"
+        xml:space="preserve">Category talk</ns>
+    </namespaces>
+    <interwikimap>
+      <iw prefix="acronym"
+        url="http://www.acronymfinder.com/af-query.asp?String=exact&amp;Acronym=$1"
+        wikiid="" api="" />
+      <iw prefix="advogato" url="http://www.advogato.org/$1" wikiid=""
+        api="" />
+      <iw prefix="annotationwiki"
+        url="http://www.seedwiki.com/page.cfm?wikiid=368&amp;doc=$1"
+        wikiid="" api="" />
+      <iw prefix="arxiv" url="http://www.arxiv.org/abs/$1" wikiid=""
+        api="" />
+      <iw prefix="c2find" url="http://c2.com/cgi/wiki?FindPage&amp;value=$1"
+        wikiid="" api="" />
+      <iw prefix="cache" url="http://www.google.com/search?q=cache:$1"
+        wikiid="" api="" />
+      <iw prefix="commons" url="http://commons.wikimedia.org/wiki/$1"
+        wikiid="" api="" />
+      <iw prefix="corpknowpedia" url="http://corpknowpedia.org/wiki/index.php/$1"
+        wikiid="" api="" />
+      <iw prefix="dictionary"
+        url="http://www.dict.org/bin/Dict?Database=*&amp;Form=Dict1&amp;Strategy=*&amp;Query=$1"
+        wikiid="" api="" />
+      <iw prefix="disinfopedia" url="http://www.disinfopedia.org/wiki.phtml?title=$1"
+        wikiid="" api="" />
+      <iw prefix="docbook" url="http://wiki.docbook.org/topic/$1"
+        wikiid="" api="" />
+      <iw prefix="doi" url="http://dx.doi.org/$1" wikiid="" api="" />
+      <iw prefix="drumcorpswiki" url="http://www.drumcorpswiki.com/index.php/$1"
+        wikiid="" api="" />
+      <iw prefix="dwjwiki" url="http://www.suberic.net/cgi-bin/dwj/wiki.cgi?$1"
+        wikiid="" api="" />
+      <iw prefix="elibre" url="http://enciclopedia.us.es/index.php/$1"
+        wikiid="" api="" />
+      <iw prefix="emacswiki" url="http://www.emacswiki.org/cgi-bin/wiki.pl?$1"
+        wikiid="" api="" />
+      <iw prefix="foldoc" url="http://foldoc.org/?$1" wikiid="" api="" />
+      <iw prefix="foxwiki" url="http://fox.wikis.com/wc.dll?Wiki~$1"
+        wikiid="" api="" />
+      <iw prefix="freebsdman"
+        url="http://www.FreeBSD.org/cgi/man.cgi?apropos=1&amp;query=$1"
+        wikiid="" api="" />
+      <iw prefix="gej"
+        url="http://www.esperanto.de/cgi-bin/aktivikio/wiki.pl?$1"
+        wikiid="" api="" />
+      <iw prefix="gentoo-wiki" url="http://gentoo-wiki.com/$1"
+        wikiid="" api="" />
+      <iw prefix="google" url="http://www.google.com/search?q=$1"
+        wikiid="" api="" />
+      <iw prefix="googlegroups" url="http://groups.google.com/groups?q=$1"
+        wikiid="" api="" />
+      <iw prefix="hammondwiki" url="http://www.dairiki.org/HammondWiki/$1"
+        wikiid="" api="" />
+      <iw prefix="hewikisource" local=""
+        url="http://he.wikisource.org/wiki/$1" wikiid="" api="" />
+      <iw prefix="hrwiki" url="http://www.hrwiki.org/index.php/$1"
+        wikiid="" api="" />
+      <iw prefix="imdb" url="http://us.imdb.com/Title?$1" wikiid=""
+        api="" />
+      <iw prefix="jargonfile"
+        url="http://sunir.org/apps/meta.pl?wiki=JargonFile&amp;redirect=$1"
+        wikiid="" api="" />
+      <iw prefix="jspwiki" url="http://www.jspwiki.org/wiki/$1"
+        wikiid="" api="" />
+      <iw prefix="keiki" url="http://kei.ki/en/$1" wikiid="" api="" />
+      <iw prefix="kmwiki" url="http://kmwiki.wikispaces.com/$1"
+        wikiid="" api="" />
+      <iw prefix="linuxwiki" url="http://linuxwiki.de/$1" wikiid=""
+        api="" />
+      <iw prefix="lojban" url="http://www.lojban.org/tiki/tiki-index.php?page=$1"
+        wikiid="" api="" />
+      <iw prefix="lqwiki" url="http://wiki.linuxquestions.org/wiki/$1"
+        wikiid="" api="" />
+      <iw prefix="lugkr"
+        url="http://lug-kr.sourceforge.net/cgi-bin/lugwiki.pl?$1"
+        wikiid="" api="" />
+      <iw prefix="mathsongswiki" url="http://SeedWiki.com/page.cfm?wikiid=237&amp;doc=$1"
+        wikiid="" api="" />
+      <iw prefix="meatball" url="http://www.usemod.com/cgi-bin/mb.pl?$1"
+        wikiid="" api="" />
+      <iw prefix="mediawikiwiki" url="http://www.mediawiki.org/wiki/$1"
+        wikiid="" api="" />
+      <iw prefix="mediazilla" local=""
+        url="https://bugzilla.wikimedia.org/$1" wikiid="" api="" />
+      <iw prefix="memoryalpha" url="http://www.memory-alpha.org/en/index.php/$1"
+        wikiid="" api="" />
+      <iw prefix="metawiki" url="http://sunir.org/apps/meta.pl?$1"
+        wikiid="" api="" />
+      <iw prefix="metawikimedia" url="http://meta.wikimedia.org/wiki/$1"
+        wikiid="" api="" />
+      <iw prefix="moinmoin" url="http://purl.net/wiki/moin/$1"
+        wikiid="" api="" />
+      <iw prefix="mozillawiki" url="http://wiki.mozilla.org/index.php/$1"
+        wikiid="" api="" />
+      <iw prefix="mw" url="http://www.mediawiki.org/wiki/$1" wikiid=""
+        api="" />
+      <iw prefix="oeis"
+        url="http://www.research.att.com/cgi-bin/access.cgi/as/njas/sequences/eisA.cgi?Anum=$1"
+        wikiid="" api="" />
+      <iw prefix="openfacts" url="http://openfacts.berlios.de/index.phtml?title=$1"
+        wikiid="" api="" />
+      <iw prefix="openwiki" url="http://openwiki.com/?$1" wikiid=""
+        api="" />
+      <iw prefix="pmeg" url="http://www.bertilow.com/pmeg/$1.php"
+        wikiid="" api="" />
+      <iw prefix="ppr" url="http://c2.com/cgi/wiki?$1" wikiid="" api="" />
+      <iw prefix="pythoninfo" url="http://wiki.python.org/moin/$1"
+        wikiid="" api="" />
+      <iw prefix="rfc" url="http://www.rfc-editor.org/rfc/rfc$1.txt"
+        wikiid="" api="" />
+      <iw prefix="s23wiki" url="http://is-root.de/wiki/index.php/$1"
+        wikiid="" api="" />
+      <iw prefix="seattlewiki" url="http://seattle.wikia.com/wiki/$1"
+        wikiid="" api="" />
+      <iw prefix="seattlewireless" url="http://seattlewireless.net/?$1"
+        wikiid="" api="" />
+      <iw prefix="senseislibrary" url="http://senseis.xmp.net/?$1"
+        wikiid="" api="" />
+      <iw prefix="sourceforge" url="http://sourceforge.net/$1"
+        wikiid="" api="" />
+      <iw prefix="squeak" url="http://wiki.squeak.org/squeak/$1"
+        wikiid="" api="" />
+      <iw prefix="susning" url="http://www.susning.nu/$1" wikiid=""
+        api="" />
+      <iw prefix="svgwiki" url="http://wiki.svg.org/$1" wikiid=""
+        api="" />
+      <iw prefix="tavi" url="http://tavi.sourceforge.net/$1" wikiid=""
+        api="" />
+      <iw prefix="tejo" url="http://www.tejo.org/vikio/$1" wikiid=""
+        api="" />
+      <iw prefix="theopedia" url="http://www.theopedia.com/$1"
+        wikiid="" api="" />
+      <iw prefix="tmbw" url="http://www.tmbw.net/wiki/$1" wikiid=""
+        api="" />
+      <iw prefix="tmnet" url="http://www.technomanifestos.net/?$1"
+        wikiid="" api="" />
+      <iw prefix="tmwiki" url="http://www.EasyTopicMaps.com/?page=$1"
+        wikiid="" api="" />
+      <iw prefix="twiki" url="http://twiki.org/cgi-bin/view/$1"
+        wikiid="" api="" />
+      <iw prefix="uea" url="http://www.tejo.org/uea/$1" wikiid=""
+        api="" />
+      <iw prefix="unreal" url="http://wiki.beyondunreal.com/wiki/$1"
+        wikiid="" api="" />
+      <iw prefix="usemod" url="http://www.usemod.com/cgi-bin/wiki.pl?$1"
+        wikiid="" api="" />
+      <iw prefix="vinismo" url="http://vinismo.com/en/$1" wikiid=""
+        api="" />
+      <iw prefix="webseitzwiki" url="http://webseitz.fluxent.com/wiki/$1"
+        wikiid="" api="" />
+      <iw prefix="why" url="http://clublet.com/c/c/why?$1" wikiid=""
+        api="" />
+      <iw prefix="wiki" url="http://c2.com/cgi/wiki?$1" wikiid=""
+        api="" />
+      <iw prefix="wikia" url="http://www.wikia.com/wiki/$1" wikiid=""
+        api="" />
+      <iw prefix="wikibooks" local="" url="http://en.wikibooks.org/wiki/$1"
+        wikiid="" api="" />
+      <iw prefix="wikicities" url="http://www.wikia.com/wiki/$1"
+        wikiid="" api="" />
+      <iw prefix="wikif1" url="http://www.wikif1.org/$1" wikiid=""
+        api="" />
+      <iw prefix="wikihow" url="http://www.wikihow.com/$1" wikiid=""
+        api="" />
+      <iw prefix="wikimedia" url="http://wikimediafoundation.org/wiki/$1"
+        wikiid="" api="" />
+      <iw prefix="wikinews" local="" url="http://en.wikinews.org/wiki/$1"
+        wikiid="" api="" />
+      <iw prefix="wikinfo" url="http://www.wikinfo.org/index.php/$1"
+        wikiid="" api="" />
+      <iw prefix="wikipedia" local="" url="http://en.wikipedia.org/wiki/$1"
+        wikiid="" api="" />
+      <iw prefix="wikiquote" local="" url="http://en.wikiquote.org/wiki/$1"
+        wikiid="" api="" />
+      <iw prefix="wikisource" local="" url="http://wikisource.org/wiki/$1"
+        wikiid="" api="" />
+      <iw prefix="wikispecies" local=""
+        url="http://species.wikimedia.org/wiki/$1" wikiid="" api="" />
+      <iw prefix="wikitravel" url="http://wikitravel.org/en/$1"
+        wikiid="" api="" />
+      <iw prefix="wikiversity" local=""
+        url="http://en.wikiversity.org/wiki/$1" wikiid="" api="" />
+      <iw prefix="wikt" local="" url="http://en.wiktionary.org/wiki/$1"
+        wikiid="" api="" />
+      <iw prefix="wiktionary" local=""
+        url="http://en.wiktionary.org/wiki/$1" wikiid="" api="" />
+      <iw prefix="wlug" url="http://www.wlug.org.nz/$1" wikiid=""
+        api="" />
+      <iw prefix="zwiki" url="http://zwiki.org/$1" wikiid="" api="" />
+      <iw prefix="zzz wiki" url="http://wiki.zzz.ee/index.php/$1"
+        wikiid="" api="" />
+    </interwikimap>
+  </query>
+</api>
