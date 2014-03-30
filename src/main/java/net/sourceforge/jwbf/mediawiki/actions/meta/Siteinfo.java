@@ -3,7 +3,6 @@ package net.sourceforge.jwbf.mediawiki.actions.meta;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
 
 import net.sourceforge.jwbf.core.actions.Get;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
@@ -106,7 +105,6 @@ public class Siteinfo extends GetVersion {
 
   private void addNamespace(Integer id, String name) {
     namespaces.put(id, name);
-
   }
 
   /**
@@ -114,19 +112,6 @@ public class Siteinfo extends GetVersion {
    */
   public Map<Integer, String> getNamespaces() {
     return Collections.unmodifiableMap(namespaces);
-  }
-
-  /**
-   * @return of
-   */
-  public int[] getNamespacesArray() {
-    Set<Integer> ks = getNamespaces().keySet();
-    int[] x = new int[ks.size()];
-    int i = 0;
-    for (int value : ks) {
-      x[i++] = value;
-    }
-    return x;
   }
 
   private void addInterwiki(String prefix, String name) {

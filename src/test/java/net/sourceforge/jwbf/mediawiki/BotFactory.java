@@ -48,7 +48,7 @@ public class BotFactory {
   }
 
   public static Injector getBotInjector(Version v, boolean login) {
-    final String wikiUrl = getWikiUrlOrSkip(v);
+    final String wikiUrl = getWikiUrl(v, LiveTestFather.getValue("localwikihost"));
     TestHelper.assumeReachable(wikiUrl);
     Injector injector = masterInjector.createChildInjector(new AbstractModule() {
 
@@ -118,9 +118,13 @@ public class BotFactory {
   }
 
   public static String getWikiUrlOrSkip(Version v) {
-    String local = LiveTestFather.getValueOrSkip("localwikihost");
+    String host = LiveTestFather.getValueOrSkip("localwikihost");
+    return getWikiUrl(v, host);
+  }
+
+  private static String getWikiUrl(Version v, String host) {
     String version = "mw-" + v.getNumber().replace(".", "-");
-    return "http://" + local + "/" + version + MediaWiki.URL_INDEX;
+    return "http://" + host + "/" + version + MediaWiki.URL_INDEX;
   }
 
 }

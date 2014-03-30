@@ -12,10 +12,15 @@ public abstract class AbstractMediaWikiBotTest implements Provider<MediaWikiBot>
 
   protected MediaWikiBot bot = null;
 
+  @Override
   public MediaWikiBot get() {
     return bot;
   }
 
+  /**
+   * @deprecated do not use this
+   */
+  @Deprecated
   public static String getWikipediaDeUrl() {
     assumeReachable(WIKIPEDIA_DE);
     return WIKIPEDIA_DE;

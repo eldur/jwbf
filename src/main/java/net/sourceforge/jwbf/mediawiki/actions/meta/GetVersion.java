@@ -33,6 +33,7 @@ import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 
 import org.jdom.Element;
 
+import com.google.common.base.Joiner;
 import com.google.common.collect.Sets;
 
 /**
@@ -71,7 +72,6 @@ public class GetVersion extends MWAction {
   /**
    * Create the request.
    */
-  @SuppressWarnings("deprecation")
   public GetVersion() {
     msg = new ApiRequestBuilder() //
         .action("query") //
@@ -115,10 +115,6 @@ public class GetVersion extends MWAction {
     return theCase;
   }
 
-  /**
-   * @return the
-   * @see Version
-   */
   public Version getVersion() {
     for (String generatorFragment : GENERATOR_EXT) {
       if (getGenerator().contains(generatorFragment)) {
@@ -126,11 +122,7 @@ public class GetVersion extends MWAction {
       }
     }
 
-    Version[] versions = Version.values();
-
-    StringBuilder buffer = new StringBuilder();
-    for (Version version : versions) {
-      buffer.append(version.getNumber()).append(' ');
+    for (Version version : Version.values()) {
       if (getGenerator().contains(version.getNumber())) {
         return version;
       }
@@ -138,7 +130,8 @@ public class GetVersion extends MWAction {
     }
     if (log.isDebugEnabled()) {
       log.debug("\nVersion is UNKNOWN for JWBF (" + JWBF.getVersion(getClass()) + ") : \n\t"
-          + getGenerator() + "\n\t" + "supported versions: " + buffer.toString() + "\n\t"
+          + getGenerator() + "\n\t" + "supported versions: "
+          + Joiner.on(" ").join(Version.values()) + "\n\t"
           + "\n\tUsing settings for actual Wikipedia development version");
     }
     return Version.UNKNOWN;
@@ -182,6 +175,7 @@ public class GetVersion extends MWAction {
   /**
    * {@inheritDoc}
    */
+  @Override
   public HttpAction getNextMessage() {
     return msg;
   }

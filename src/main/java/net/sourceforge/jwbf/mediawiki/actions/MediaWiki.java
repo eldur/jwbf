@@ -73,6 +73,9 @@ public final class MediaWiki {
    * @author Thomas Stock
    */
   public enum Version {
+    /**
+     * TODO add enum value
+     */
     UNKNOWN
     /**
      * Released 2009-06
@@ -118,6 +121,13 @@ public final class MediaWiki {
      */
     public String getNumber() {
       return name().replace("MW", "").replace("_0", "_").replace("_", ".");
+    }
+
+    /**
+     * @return like 1-15
+     */
+    public String getNumberVariation() {
+      return getNumber().replace(".", "-");
     }
 
     private int getIntValue() {
@@ -174,7 +184,6 @@ public final class MediaWiki {
         throw new IllegalStateException(nsfe);
       }
     }
-
   }
 
   private MediaWiki() {

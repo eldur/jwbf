@@ -13,7 +13,6 @@ import net.sourceforge.jwbf.core.actions.util.ActionException;
 import net.sourceforge.jwbf.core.actions.util.ProcessException;
 import net.sourceforge.jwbf.core.bots.HttpBot;
 import net.sourceforge.jwbf.core.bots.WikiBot;
-import net.sourceforge.jwbf.core.bots.util.JwbfException;
 import net.sourceforge.jwbf.core.contentRep.Article;
 import net.sourceforge.jwbf.core.contentRep.ContentAccessable;
 import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
@@ -325,12 +324,33 @@ public class MediaWikiBot implements WikiBot {
     performAction(new PostDelete(this, title, reason));
   }
 
+  /**
+   * TODO reduce visibility
+   * 
+   * @deprecated use {@link #getPerformedAction(ContentProcessable)} instead
+   */
+  @Deprecated
   public synchronized String performAction(ContentProcessable a) {
     if (a.isSelfExecuter()) {
       throw new ActionException("this is a selfexcecuting action, "
           + "please do not perform this action manually");
     }
     return bot().performAction(a);
+  }
+
+  public synchronized <T extends ContentProcessable> T getPerformedAction(T answer) {
+    performAction(answer);
+    return answer;
+  }
+
+  public synchronized <T extends ContentProcessable> T getPerformedAction(Class<T> clazz) {
+    T answer;
+    try {
+      answer = clazz.newInstance();
+      return getPerformedAction(answer);
+    } catch (InstantiationException | IllegalAccessException e) {
+      throw new IllegalStateException(e);
+    }
   }
 
   private HttpBot bot() {
@@ -342,26 +362,15 @@ public class MediaWikiBot implements WikiBot {
   }
 
   /**
-   * @return the
-   * @throws IllegalStateException
-   *           if no version was found.
    * @see #getSiteinfo()
    */
   @Nonnull
-  public Version getVersion() throws IllegalStateException {
+  public Version getVersion() {
     if (version == null || loginChangeVersion) {
-      try {
-        GetVersion gs = new GetVersion();
-        performAction(gs);
-
-        version = gs.getVersion();
-        loginChangeVersion = false;
-      } catch (JwbfException e) {
-        log.error(e.getClass().getName() + e.getLocalizedMessage());
-        throw new IllegalStateException(e.getLocalizedMessage());
-      }
-      log.debug("Version is: " + version.name());
-
+      GetVersion gs = getPerformedAction(new GetVersion());
+      version = gs.getVersion();
+      loginChangeVersion = false;
+      log.debug("Version is: {}", version.name());
     }
     return version;
   }

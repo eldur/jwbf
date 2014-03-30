@@ -60,7 +60,7 @@ public class LiveTestFather {
   }
 
   private LiveTestFather() {
-      data = new TestConfig();
+    data = new TestConfig();
   }
 
   public static boolean executeLiveTests() {
@@ -112,8 +112,16 @@ public class LiveTestFather {
     return data.get(key);
   }
 
+  /**
+   * @deprecated avoid if possible
+   */
+  @Deprecated
   public static String getValueOrSkip(final String key) {
     skipIfIsNoIntegTest();
+    return getValue(key);
+  }
+
+  public static String getValue(final String key) {
     return get().getVal(key);
   }
 

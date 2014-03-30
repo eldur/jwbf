@@ -15,7 +15,14 @@ public class ApiRequestBuilder extends RequestBuilder {
   }
 
   public ApiRequestBuilder formatXml() {
+    // TODO only json or xml
     param("format", "xml");
+    return this;
+  }
+
+  public ApiRequestBuilder formatJson() {
+    // TODO only json or xml
+    param("format", "json");
     return this;
   }
 }

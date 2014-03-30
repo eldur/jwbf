@@ -73,7 +73,7 @@ public class LoginTest extends ParamHelper {
    */
   @Test(expected = IllegalArgumentException.class)
   public final void loginUrlformatsFail() {
-    LiveTestFather.skipIfIsNoIntegTest();
+
     String defektUrl = BotFactory.getWikiUrlOrSkip(v);
     int lastSlash = defektUrl.lastIndexOf("/");
     defektUrl = defektUrl.substring(0, lastSlash);
