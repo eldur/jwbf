@@ -18,9 +18,8 @@
  */
 package net.sourceforge.jwbf.mediawiki.actions.queries;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 
 import lombok.extern.slf4j.Slf4j;
 import net.sourceforge.jwbf.core.actions.Get;
@@ -29,6 +28,8 @@ import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.core.actions.util.ProcessException;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
+
+import com.google.common.collect.Lists;
 
 /**
  * A specialization of {@link CategoryMembers} with contains {@link String}s.
@@ -44,7 +45,7 @@ public class CategoryMembersSimple implements Iterable<String>, Iterator<String>
    * Collection that will contain the result (titles of articles linking to the target) after performing the action has
    * finished.
    */
-  private Collection<String> titleCollection = new ArrayList<String>();
+  private final List<String> titleCollection = Lists.newArrayList();
   private Iterator<String> titleIterator;
 
   /**
@@ -73,21 +74,15 @@ public class CategoryMembersSimple implements Iterable<String>, Iterator<String>
       @Override
       protected void finalizeParse() {
         titleIterator = titleCollection.iterator();
-
       }
 
       @Override
       protected void addCatItem(String title, int pageid, int ns) {
         titleCollection.add(title);
-
       }
 
       @Override
       public String processAllReturningText(String s) {
-
-        if (log.isDebugEnabled()) {
-          log.debug("processAllReturningText");
-        }
         titleCollection.clear();
         String buff = super.processAllReturningText(s);
 
@@ -98,6 +93,9 @@ public class CategoryMembersSimple implements Iterable<String>, Iterator<String>
 
   }
 
+  /**
+   * TODO duplication with CategoryMembersFull
+   */
   private synchronized void prepareCollection() {
 
     if (cm.init || (!titleIterator.hasNext() && cm.hasMoreResults)) {
@@ -110,16 +108,10 @@ public class CategoryMembersSimple implements Iterable<String>, Iterator<String>
       }
       cm.init = false;
       try {
-
         cm.bot.performAction(cm);
         cm.setHasMoreMessages(true);
-        if (log.isDebugEnabled())
-          log.debug("preparing success");
-      } catch (ActionException e) {
-        e.printStackTrace();
-        cm.setHasMoreMessages(false);
-      } catch (ProcessException e) {
-        e.printStackTrace();
+      } catch (ActionException | ProcessException e) {
+        log.warn("", e);
         cm.setHasMoreMessages(false);
       }
 

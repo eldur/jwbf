@@ -140,7 +140,7 @@ public class AllPageTitles extends TitleQuery<String> {
         .formatXml() //
         .param("list", "allpages") //
         .param("apfilterredir", apfilterredir) //
-        .param("aplimit", LIMIT + "") //
+        .param("aplimit", LIMIT) //
     ;
 
     if (!Strings.isNullOrEmpty(from)) {

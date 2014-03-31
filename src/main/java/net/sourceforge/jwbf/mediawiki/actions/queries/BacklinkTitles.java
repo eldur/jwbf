@@ -34,6 +34,7 @@ import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.actions.util.RedirectFilter;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 
+import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 
 /**
@@ -59,7 +60,7 @@ public class BacklinkTitles extends TitleQuery<String> {
   private static final int LIMIT = 50;
 
   /** object creating the requests that are sent to the api. */
-  private RequestCreator requestBuilder = null;
+  private final RequestCreator requestBuilder;
 
   private final String articleName;
 
@@ -82,13 +83,11 @@ public class BacklinkTitles extends TitleQuery<String> {
   public BacklinkTitles(MediaWikiBot bot, String articleName, RedirectFilter redirectFilter,
       int... namespaces) {
     super(bot);
-    assert bot != null;
-    assert articleName != null && redirectFilter != null;
-    this.redirectFilter = redirectFilter;
-    this.namespaces = namespaces;
 
-    this.articleName = articleName;
-    this.bot = bot;
+    this.bot = Preconditions.checkNotNull(bot);
+    this.articleName = Preconditions.checkNotNull(articleName);
+    this.redirectFilter = Preconditions.checkNotNull(redirectFilter);
+    this.namespaces = namespaces;
     requestBuilder = createRequestBuilder(bot.getVersion());
 
   }
@@ -200,7 +199,7 @@ public class BacklinkTitles extends TitleQuery<String> {
         .action("query") //
         .formatXml() //
         .param("list", "backlinks") //
-        .param("bllimit", LIMIT + "") //
+        .param("bllimit", LIMIT) //
     ;
   }
 

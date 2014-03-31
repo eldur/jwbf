@@ -102,7 +102,7 @@ public class RecentchangeTitles extends TitleQuery<String> {
         .action("query") //
         .formatXml() //
         .param("list", "recentchanges") //
-        .param("rclimit", limit + "") //
+        .param("rclimit", limit) //
     ;
     if (namespace != null) {
       requestBuilder.param("rcnamespace", MediaWiki.encode(MWAction.createNsString(namespace)));

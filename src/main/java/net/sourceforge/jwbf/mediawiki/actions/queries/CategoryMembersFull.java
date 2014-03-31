@@ -1,8 +1,7 @@
 package net.sourceforge.jwbf.mediawiki.actions.queries;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 
 import lombok.extern.slf4j.Slf4j;
 import net.sourceforge.jwbf.core.actions.Get;
@@ -12,6 +11,9 @@ import net.sourceforge.jwbf.core.actions.util.ProcessException;
 import net.sourceforge.jwbf.core.bots.util.JwbfException;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 import net.sourceforge.jwbf.mediawiki.contentRep.CategoryItem;
+
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 
 /**
  * A specialization of {@link CategoryMembers} with contains {@link CategoryItem}s.
@@ -27,12 +29,14 @@ public class CategoryMembersFull extends CategoryMembers implements Iterable<Cat
    * Collection that will contain the result (titles of articles linking to the target) after performing the action has
    * finished.
    */
-  private Collection<CategoryItem> titleCollection = new ArrayList<CategoryItem>();
+  private final List<CategoryItem> titleCollection = Lists.newArrayList();
   private Iterator<CategoryItem> titleIterator;
 
-  /**
-   * on any kind of http or version problems on inner problems like a version mismatch
-   */
+  public CategoryMembersFull(MediaWikiBot bot, String categoryName,
+      ImmutableList<Integer> namespaces) {
+    super(bot, categoryName, namespaces);
+  }
+
   public CategoryMembersFull(MediaWikiBot bot, String categoryName, int... namespaces) {
     super(bot, categoryName, namespaces);
   }
@@ -78,9 +82,12 @@ public class CategoryMembersFull extends CategoryMembers implements Iterable<Cat
     }
   }
 
+  /**
+   * TODO duplication with CategoryMembersSimple
+   */
   private void prepareCollection() {
 
-    if (init || (!titleIterator.hasNext() && hasMoreResults)) {
+    if (init || (!hasTitleIteratorNext() && hasMoreResults)) {
       if (init) {
         msg = generateFirstRequest();
       } else {
@@ -88,15 +95,11 @@ public class CategoryMembersFull extends CategoryMembers implements Iterable<Cat
       }
       init = false;
       try {
-
-        bot.performAction(this);
+        CategoryMembersFull performedAction = bot.getPerformedAction(this);
+        // TODO ^^
         setHasMoreMessages(true);
-        log.debug("preparing success");
-      } catch (ActionException e) {
-        e.printStackTrace();
-        setHasMoreMessages(false);
-      } catch (ProcessException e) {
-        e.printStackTrace();
+      } catch (ActionException | ProcessException e) {
+        log.warn("", e);
         setHasMoreMessages(false);
       }
 
@@ -110,9 +113,6 @@ public class CategoryMembersFull extends CategoryMembers implements Iterable<Cat
   public String processAllReturningText(String s) {
     titleCollection.clear();
     String buff = super.processAllReturningText(s);
-
-    if (log.isDebugEnabled())
-      log.debug(titleCollection.toString());
     return buff;
   }
 
@@ -122,7 +122,15 @@ public class CategoryMembersFull extends CategoryMembers implements Iterable<Cat
   @Override
   public boolean hasNext() {
     prepareCollection();
-    return titleIterator.hasNext();
+    return hasTitleIteratorNext();
+  }
+
+  private boolean hasTitleIteratorNext() {
+    if (titleIterator == null) {
+      return false;
+    } else {
+      return titleIterator.hasNext();
+    }
   }
 
   /**

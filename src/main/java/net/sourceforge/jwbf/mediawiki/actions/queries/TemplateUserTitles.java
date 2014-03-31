@@ -86,7 +86,7 @@ public class TemplateUserTitles extends TitleQuery<String> {
         .action("query") //
         .formatXml() //
         .param("list", "embeddedin") //
-        .param("eilimit", LIMIT + "") //
+        .param("eilimit", LIMIT) //
         .param("eititle", MediaWiki.encode(templateName)) //
     ;
 

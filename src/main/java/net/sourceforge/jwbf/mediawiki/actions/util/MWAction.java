@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
+import java.util.List;
 
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
@@ -43,6 +44,9 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
 import org.xml.sax.InputSource;
+
+import com.google.common.base.Joiner;
+import com.google.common.primitives.Ints;
 
 /**
  * @author Thomas Stock
@@ -119,20 +123,11 @@ public abstract class MWAction implements ContentProcessable {
    * @return with numbers seperated by |
    */
   public static String createNsString(int... namespaces) {
+    return createNsString(Ints.asList(namespaces));
+  }
 
-    StringBuffer namespaceString = new StringBuffer();
-    String result = "";
-    if (namespaces != null && namespaces.length != 0) {
-      for (int nsNumber : namespaces) {
-        namespaceString.append(nsNumber + "|");
-      }
-      result = namespaceString.toString();
-      // remove last '|'
-      if (result.endsWith("|")) {
-        result = result.substring(0, result.length() - 1);
-      }
-    }
-    return result;
+  public static String createNsString(List<Integer> asList) {
+    return Joiner.on("|").join(asList);
   }
 
   /**

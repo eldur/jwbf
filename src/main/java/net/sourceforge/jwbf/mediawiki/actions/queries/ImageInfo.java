@@ -94,12 +94,12 @@ public class ImageInfo extends MWAction {
 
     int width = NumberUtils.toInt(map.get(WIDTH));
     if (width > 0) {
-      requestBuilder.param(WIDTH, width + "");
+      requestBuilder.param(WIDTH, width);
     }
 
     int height = NumberUtils.toInt(map.get(HEIGHT));
     if (height > 0) {
-      requestBuilder.param(HEIGHT, height + "");
+      requestBuilder.param(HEIGHT, height);
     }
     if (bot.getVersion().greaterEqThen(Version.MW1_15)) {
       requestBuilder.param("titles", "File:" + MediaWiki.encode(name));

@@ -173,7 +173,7 @@ public class ImageUsageTitles extends TitleQuery<String> {
         .action("query") //
         .formatXml() //
         .param("list", "imageusage") //
-        .param("iulimit", LIMIT + "") //
+        .param("iulimit", LIMIT) //
     ;
   }
 

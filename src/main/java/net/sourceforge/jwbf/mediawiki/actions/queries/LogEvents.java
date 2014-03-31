@@ -124,7 +124,7 @@ public class LogEvents extends MWAction implements Iterator<LogItem>, Iterable<L
         .action("query") //
         .formatXml() //
         .param("list", "logevents") //
-        .param("lelimit", limit + "") //
+        .param("lelimit", limit) //
     ;
     if (logtype.length > 0) {
       StringBuffer logtemp = new StringBuffer();

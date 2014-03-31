@@ -29,6 +29,9 @@ import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.primitives.Ints;
+
 /**
  * A abstract action class using the MediaWiki-api's "list=categorymembers ". For further information see <a href=
  * "http://www.mediawiki.org/wiki/API:Query_-_Lists#categorymembers_.2F_cm">API documentation</a>.
@@ -37,6 +40,14 @@ import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
  */
 @Slf4j
 abstract class CategoryMembers extends MWAction {
+
+  // TODO do not work with patterns
+  private static final Pattern CATEGORY_PATTERN = Pattern
+      .compile("<cm pageid=\"(.*?)\" ns=\"(.*?)\" title=\"(.*?)\" />");
+
+  private static final Pattern CONTINUE_PATTERN = Pattern.compile("<query-continue>.*?" //
+      + "<categorymembers *cmcontinue=\"([^\"]*)\" */>" //
+      + ".*?</query-continue>", Pattern.DOTALL | Pattern.MULTILINE);
 
   /** constant value for the bllimit-parameter. **/
   protected static final int LIMIT = 50;
@@ -54,24 +65,20 @@ abstract class CategoryMembers extends MWAction {
    */
   protected final String categoryName;
 
-  protected RequestGenerator requestBuilder = null;
+  protected final RequestGenerator requestBuilder;
 
-  protected final int[] namespace;
-  private String namespaceStr = "";
+  protected final ImmutableList<Integer> namespace;
+  private final String namespaceStr;
 
-  /**
-   * The private constructor, which is used to create follow-up actions. on version problems
-   */
-  protected CategoryMembers(MediaWikiBot bot, String categoryName, int[] namespace) {
-    this.namespace = namespace.clone();
-    namespaceStr = createNsString(namespace);
-    this.categoryName = categoryName.replace(" ", "_");
-    this.bot = bot;
-    createRequestor();
-
+  protected CategoryMembers(MediaWikiBot bot, String categoryName, int[] namespaces) {
+    this(bot, categoryName, ImmutableList.copyOf(Ints.asList(namespaces)));
   }
 
-  private void createRequestor() {
+  protected CategoryMembers(MediaWikiBot bot, String categoryName, ImmutableList<Integer> namespaces) {
+    this.bot = bot;
+    this.namespace = namespaces;
+    namespaceStr = createNsString(namespaces);
+    this.categoryName = categoryName.replace(" ", "_");
     requestBuilder = new RequestGenerator();
 
   }
@@ -82,7 +89,6 @@ abstract class CategoryMembers extends MWAction {
    * @return a
    */
   protected final Get generateFirstRequest() {
-
     return new Get(requestBuilder.first(categoryName));
   }
 
@@ -93,17 +99,8 @@ abstract class CategoryMembers extends MWAction {
    *          the value for the blcontinue parameter, null for the generation of the initial request
    * @return a
    */
-  protected final Get generateContinueRequest(String cmcontinue) {
-
-    try {
-
-      return new Get(requestBuilder.continiue(cmcontinue));
-
-    } catch (NullPointerException e) {
-      e.printStackTrace();
-    }
-    return null;
-
+  protected Get generateContinueRequest(String cmcontinue) {
+    return new Get(requestBuilder.continiue(cmcontinue));
   }
 
   /**
@@ -129,13 +126,7 @@ abstract class CategoryMembers extends MWAction {
    */
   private void parseHasMore(final String s) {
 
-    // get the blcontinue-value
-
-    Pattern p = Pattern.compile("<query-continue>.*?"
-        + "<categorymembers *cmcontinue=\"([^\"]*)\" */>" + ".*?</query-continue>", Pattern.DOTALL
-        | Pattern.MULTILINE);
-
-    Matcher m = p.matcher(s);
+    Matcher m = CONTINUE_PATTERN.matcher(s);
 
     if (m.find()) {
       nextPageInfo = m.group(1);
@@ -143,8 +134,6 @@ abstract class CategoryMembers extends MWAction {
     } else {
       hasMoreResults = false;
     }
-    if (log.isDebugEnabled())
-      log.debug("has more = " + hasMoreResults);
 
   }
 
@@ -156,16 +145,10 @@ abstract class CategoryMembers extends MWAction {
    */
   private final void parseArticleTitles(String s) {
 
-    // get the backlink titles and add them all to the titleCollection
-
-    Pattern p = Pattern.compile("<cm pageid=\"(.*?)\" ns=\"(.*?)\" title=\"(.*?)\" />");
-
-    Matcher m = p.matcher(s);
+    Matcher m = CATEGORY_PATTERN.matcher(s);
 
     while (m.find()) {
-
       addCatItem(m.group(3), Integer.parseInt(m.group(1)), Integer.parseInt(m.group(2)));
-
     }
     finalizeParse();
   }
@@ -183,13 +166,12 @@ abstract class CategoryMembers extends MWAction {
     }
 
     String continiue(String cmcontinue) {
-      RequestBuilder requestBuilder = newRequestBuilder();
-
-      requestBuilder.param("cmcontinue", MediaWiki.encode(cmcontinue));
-      requestBuilder.param(CMTITLE, "Category:" + MediaWiki.encode(categoryName));
-      // TODO: do not add Category: - instead, change other methods' descs (e.g.
-      // in MediaWikiBot)
-      return requestBuilder.build();
+      return newRequestBuilder() //
+          .param("cmcontinue", MediaWiki.encode(cmcontinue)) //
+          .param(CMTITLE, "Category:" + MediaWiki.encode(categoryName)) //
+          // TODO: do not add Category: - instead, change other methods' descs (e.g.
+          // in MediaWikiBot)
+          .build();
     }
 
     private RequestBuilder newRequestBuilder() {
@@ -198,21 +180,18 @@ abstract class CategoryMembers extends MWAction {
         requestBuilder.param("cmnamespace", MediaWiki.encode(namespaceStr));
       }
 
-      requestBuilder //
+      return requestBuilder //
           .action("query") //
           .formatXml() //
           .param("list", "categorymembers") //
-          .param("cmlimit", LIMIT + "") //
+          .param("cmlimit", LIMIT) //
       ;
-      return requestBuilder;
     }
 
     String first(String categoryName) {
-
-      RequestBuilder requestBuilder = newRequestBuilder();
-      requestBuilder.param(CMTITLE, "Category:" + MediaWiki.encode(categoryName));
-
-      return requestBuilder.build();
+      return newRequestBuilder() //
+          .param(CMTITLE, "Category:" + MediaWiki.encode(categoryName)) //
+          .build();
     }
 
   }
