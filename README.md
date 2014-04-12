@@ -3,6 +3,7 @@
 The Java Wiki Bot Framework is a library to maintain Wikis like Wikipedia based on MediaWiki.
 
 ## Quick Start
+### Java
 ```java
   public static void main(String[] args) {
     MediaWikiBot wikiBot = new MediaWikiBot("http://en.wikipedia.org/w/");
@@ -18,6 +19,7 @@ The Java Wiki Bot Framework is a library to maintain Wikis like Wikipedia based 
     // ...
   }
 ```
+### Scala
 ```scala
 object WikiReader extends App {
   val wikiBot = new MediaWikiBot("http://en.wikipedia.org/w/")
@@ -52,9 +54,9 @@ If you are working with Wikimedia sites, set an informative User-Agent header,
 <dependency>
     <groupId>net.sourceforge</groupId>
     <artifactId>jwbf</artifactId>
-    <version>2.0.0</version>
+    <version>3.0.0-SNAPSHOT</version>
 </dependency>
 ```
 ```scala
-libraryDependencies += "net.sourceforge" % "jwbf" % "2.0.0"
+libraryDependencies += "net.sourceforge" % "jwbf" % "3.0.0-SNAPSHOT"
 ```
