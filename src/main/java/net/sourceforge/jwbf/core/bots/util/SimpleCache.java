@@ -35,6 +35,7 @@ public class SimpleCache implements CacheHandler {
   /**
    * {@inheritDoc}
    */
+  @Override
   public boolean containsKey(String title) {
     maintain(title);
     File f = new File(folder, getChecksum(title) + ext);
@@ -74,6 +75,7 @@ public class SimpleCache implements CacheHandler {
   /**
    * {@inheritDoc}
    */
+  @Override
   public SimpleArticle get(String title) {
     if (containsKey(title))
       return read(title);
@@ -83,6 +85,7 @@ public class SimpleCache implements CacheHandler {
   /**
    * {@inheritDoc}
    */
+  @Override
   public void put(SimpleArticle sa) {
 
     write2File(new CachArticle(sa));

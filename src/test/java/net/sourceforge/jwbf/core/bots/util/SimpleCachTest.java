@@ -37,6 +37,7 @@ public class SimpleCachTest {
     public CacheBot() {
 
       Answer<SimpleArticle> answer = new Answer<SimpleArticle>() {
+        @Override
         public SimpleArticle answer(InvocationOnMock iom) {
 
           return new SimpleArticle();
@@ -46,6 +47,7 @@ public class SimpleCachTest {
       Mockito.when(bot.readData(Mockito.anyString(), Mockito.anyInt())).thenAnswer(answer);
     }
 
+    @Override
     public SimpleArticle readData(final String name, final int properties) {
       SimpleArticle cache = mapCache.getIfPresent(name + properties);
       if (cache != null) {

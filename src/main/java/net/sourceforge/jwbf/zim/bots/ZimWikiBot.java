@@ -61,11 +61,13 @@ public class ZimWikiBot implements WikiBot {
     this.rootFolder = rootFolder;
   }
 
+  @Override
   public void login(String user, String passwd) {
     throw new ActionException("login is not supported because this is a desktopwiki");
 
   }
 
+  @Override
   public void delete(String title) {
     // TODO Auto-generated method stub
 
@@ -84,6 +86,7 @@ public class ZimWikiBot implements WikiBot {
    * Set up a simple text paarser some simple formating routines are supplied -> bold letters and images are translated
    * from zimWiki to mediaWiki
    */
+  @Override
   public SimpleArticle readData(String name, int properties) {
     File f = new File(getRootFolder(), name + ZIMEXT);
     SimpleArticle sa = new SimpleArticle();
@@ -135,6 +138,7 @@ public class ZimWikiBot implements WikiBot {
     return sa;
   }
 
+  @Override
   public void writeContent(SimpleArticle sa) {
     // TODO Auto-generated method stub
 
@@ -144,13 +148,16 @@ public class ZimWikiBot implements WikiBot {
     return rootFolder;
   }
 
+  @Override
   public Userinfo getUserinfo() {
     return new Userinfo() {
 
+      @Override
       public String getUsername() {
         return System.getProperty("user.name");
       }
 
+      @Override
       public Set<String> getRights() {
         Set<String> v = Sets.newHashSet();
         if (rootFolder.canRead()) {
@@ -162,16 +169,19 @@ public class ZimWikiBot implements WikiBot {
         return v;
       }
 
+      @Override
       public Set<String> getGroups() {
         return Sets.newHashSet();
       }
     };
   }
 
+  @Override
   public String getWikiType() {
     return "Zim";
   }
 
+  @Override
   public SimpleArticle readData(String name) {
     return readData(name, DEFAULT);
   }

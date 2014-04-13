@@ -37,6 +37,7 @@ public class Article implements ArticleMeta, ContentSetable {
   /**
    * {@inheritDoc}
    */
+  @Override
   public String getText() {
     if (isReload(TEXT_RELOAD)) {
       setReload(TEXT_RELOAD);
@@ -52,6 +53,7 @@ public class Article implements ArticleMeta, ContentSetable {
   /**
    * {@inheritDoc}
    */
+  @Override
   public void setText(String text) {
     setReload(TEXT_RELOAD);
     sa.setText(text);
@@ -60,6 +62,7 @@ public class Article implements ArticleMeta, ContentSetable {
   /**
    * {@inheritDoc}
    */
+  @Override
   public String getRevisionId() {
 
     if (isReload(REVISION_ID_RELOAD)) {
@@ -73,6 +76,7 @@ public class Article implements ArticleMeta, ContentSetable {
     return sa.getRevisionId();
   }
 
+  @Override
   public String getEditor() {
     if (isReload(EDITOR_RELOAD)) {
       setReload(EDITOR_RELOAD);
@@ -85,11 +89,13 @@ public class Article implements ArticleMeta, ContentSetable {
     return sa.getEditor();
   }
 
+  @Override
   public void setEditor(String editor) {
     setReload(EDITOR_RELOAD);
     sa.setEditor(editor);
   }
 
+  @Override
   public String getEditSummary() {
     if (isReload(EDIT_SUM_RELOAD)) {
       setReload(EDIT_SUM_RELOAD);
@@ -103,11 +109,13 @@ public class Article implements ArticleMeta, ContentSetable {
     return sa.getEditSummary();
   }
 
+  @Override
   public void setEditSummary(String s) {
     setReload(EDIT_SUM_RELOAD);
     sa.setEditSummary(s);
   }
 
+  @Override
   public boolean isMinorEdit() {
     if (isReload(MINOR_EDIT_RELOAD)) {
       setReload(MINOR_EDIT_RELOAD);
@@ -204,6 +212,7 @@ public class Article implements ArticleMeta, ContentSetable {
   /**
    * {@inheritDoc}
    */
+  @Override
   public String getTitle() {
     // TODO is here a reload mechanism required ?
     return sa.getTitle();
@@ -212,6 +221,7 @@ public class Article implements ArticleMeta, ContentSetable {
   /**
    * @return the edittimestamp in UTC
    */
+  @Override
   public Date getEditTimestamp() {
     if (isReload(EDIT_DATE_RELOAD)) {
       setReload(EDIT_DATE_RELOAD);
@@ -229,6 +239,7 @@ public class Article implements ArticleMeta, ContentSetable {
    * 
    * @deprecated see inheritDoc
    */
+  @Override
   @Deprecated
   public boolean isRedirect() {
     return sa.isRedirect();
@@ -237,6 +248,7 @@ public class Article implements ArticleMeta, ContentSetable {
   /**
    * {@inheritDoc}
    */
+  @Override
   public void addText(String text) {
     setText(getText() + text);
 
@@ -245,6 +257,7 @@ public class Article implements ArticleMeta, ContentSetable {
   /**
    * {@inheritDoc}
    */
+  @Override
   public void addTextnl(String text) {
     setText(getText() + "\n" + text);
 
@@ -253,6 +266,7 @@ public class Article implements ArticleMeta, ContentSetable {
   /**
    * {@inheritDoc}
    */
+  @Override
   public void setMinorEdit(boolean minor) {
     sa.setMinorEdit(minor);
 
@@ -261,6 +275,7 @@ public class Article implements ArticleMeta, ContentSetable {
   /**
    * {@inheritDoc}
    */
+  @Override
   public void setTitle(String title) {
     sa.setTitle(title);
 

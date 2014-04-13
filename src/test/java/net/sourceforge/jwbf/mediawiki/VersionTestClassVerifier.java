@@ -64,6 +64,7 @@ public class VersionTestClassVerifier extends Verifier {
 
     versions = Iterables.filter(versions, new Predicate<Version>() {
 
+      @Override
       public boolean apply(@Nullable Version version) {
         return !testedKeys.contains(version);
       }
@@ -139,6 +140,7 @@ public class VersionTestClassVerifier extends Verifier {
     List<Entry<String, Version>> entrySet = Lists.newArrayList(elements);
     Collections.sort(entrySet, new Comparator<Entry<String, Version>>() {
 
+      @Override
       public int compare(Entry<String, Version> o1, Entry<String, Version> o2) {
         return o1.getKey().compareTo(o2.getKey());
       }

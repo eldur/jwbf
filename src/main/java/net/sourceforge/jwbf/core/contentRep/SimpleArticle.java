@@ -120,6 +120,7 @@ public class SimpleArticle implements ArticleMeta, Serializable, Cloneable, Cont
   /**
    * {@inheritDoc}
    */
+  @Override
   public String getEditSummary() {
     return editSummary;
   }
@@ -128,6 +129,7 @@ public class SimpleArticle implements ArticleMeta, Serializable, Cloneable, Cont
    * (non-Javadoc)
    * @see net.sourceforge.jwbf.core.contentRep.ContentSetable#setEditSummary(java .lang.String)
    */
+  @Override
   public void setEditSummary(final String s) {
     editSummary = s;
   }
@@ -135,6 +137,7 @@ public class SimpleArticle implements ArticleMeta, Serializable, Cloneable, Cont
   /**
    * {@inheritDoc}
    */
+  @Override
   public boolean isMinorEdit() {
     return minorEdit;
   }
@@ -143,6 +146,7 @@ public class SimpleArticle implements ArticleMeta, Serializable, Cloneable, Cont
    * (non-Javadoc)
    * @see net.sourceforge.jwbf.core.contentRep.ContentSetable#setMinorEdit(boolean)
    */
+  @Override
   public void setMinorEdit(final boolean minor) {
     minorEdit = minor;
   }
@@ -159,6 +163,7 @@ public class SimpleArticle implements ArticleMeta, Serializable, Cloneable, Cont
   /**
    * {@inheritDoc}
    */
+  @Override
   public String getTitle() {
     return title;
   }
@@ -177,6 +182,7 @@ public class SimpleArticle implements ArticleMeta, Serializable, Cloneable, Cont
    * (non-Javadoc)
    * @see net.sourceforge.jwbf.core.contentRep.ContentSetable#setTitle(java.lang. String)
    */
+  @Override
   public void setTitle(final String title) {
     this.title = title;
   }
@@ -184,6 +190,7 @@ public class SimpleArticle implements ArticleMeta, Serializable, Cloneable, Cont
   /**
    * {@inheritDoc}
    */
+  @Override
   public String getText() {
     return text;
   }
@@ -192,6 +199,7 @@ public class SimpleArticle implements ArticleMeta, Serializable, Cloneable, Cont
    * (non-Javadoc)
    * @see net.sourceforge.jwbf.core.contentRep.ContentSetable#setText(java.lang.String )
    */
+  @Override
   public void setText(final String text) {
     this.text = text;
   }
@@ -200,6 +208,7 @@ public class SimpleArticle implements ArticleMeta, Serializable, Cloneable, Cont
    * (non-Javadoc)
    * @see net.sourceforge.jwbf.core.contentRep.ContentSetable#addText(java.lang.String )
    */
+  @Override
   public void addText(final String text) {
     setText(getText() + text);
   }
@@ -208,6 +217,7 @@ public class SimpleArticle implements ArticleMeta, Serializable, Cloneable, Cont
    * (non-Javadoc)
    * @see net.sourceforge.jwbf.core.contentRep.ContentSetable#addTextnl(java.lang .String)
    */
+  @Override
   public void addTextnl(final String text) {
     setText(getText() + "\n" + text);
 
@@ -216,6 +226,7 @@ public class SimpleArticle implements ArticleMeta, Serializable, Cloneable, Cont
   /**
    * {@inheritDoc}
    */
+  @Override
   public String getEditor() {
     return editor;
   }
@@ -224,6 +235,7 @@ public class SimpleArticle implements ArticleMeta, Serializable, Cloneable, Cont
    * (non-Javadoc)
    * @see net.sourceforge.jwbf.core.contentRep.ContentSetable#setEditor(java.lang .String)
    */
+  @Override
   public void setEditor(final String editor) {
     this.editor = editor;
   }
@@ -237,6 +249,7 @@ public class SimpleArticle implements ArticleMeta, Serializable, Cloneable, Cont
    * 
    * @deprecated see inheritDoc
    */
+  @Override
   @Deprecated
   public boolean isRedirect() {
     if (redirectPattern.matcher(text).matches()) {
@@ -249,6 +262,7 @@ public class SimpleArticle implements ArticleMeta, Serializable, Cloneable, Cont
   /**
    * @return the edittimestamp in UTC
    */
+  @Override
   public Date getEditTimestamp() {
     return editTimestamp;
   }
@@ -331,6 +345,7 @@ public class SimpleArticle implements ArticleMeta, Serializable, Cloneable, Cont
   /**
    * {@inheritDoc}
    */
+  @Override
   public String getRevisionId() {
     return revId;
   }

@@ -209,6 +209,7 @@ public class BacklinkTitles extends TitleQuery<String> {
     /**
      * {@inheritDoc}
      */
+    @Override
     public Get newInitialRequest(String articleName, RedirectFilter redirectFilter, int[] namespace) {
       RequestBuilder requestBuilder = newRequestBuilder() //
           .param("bltitle", MediaWiki.encode(articleName)) //
@@ -223,6 +224,7 @@ public class BacklinkTitles extends TitleQuery<String> {
     /**
      * {@inheritDoc}
      */
+    @Override
     public Get newContinueRequest(String articleName, String blcontinue) {
       return newRequestBuilder() //
           .param("blcontinue", MediaWiki.encode(blcontinue)) //
@@ -237,6 +239,7 @@ public class BacklinkTitles extends TitleQuery<String> {
     /**
      * {@inheritDoc}
      */
+    @Override
     public Get newInitialRequest(String articleName, RedirectFilter redirectFilter, int[] namespace) {
       RequestBuilder requestBuilder = newRequestBuilder() //
           .param("bltitle", MediaWiki.encode(articleName)) //
@@ -251,6 +254,7 @@ public class BacklinkTitles extends TitleQuery<String> {
     /**
      * {@inheritDoc}
      */
+    @Override
     public Get newContinueRequest(String articleName, String blcontinue) {
       return newRequestBuilder() //
           .param("blcontinue", MediaWiki.encode(blcontinue)) //

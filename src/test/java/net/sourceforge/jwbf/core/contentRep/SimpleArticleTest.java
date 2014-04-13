@@ -85,22 +85,27 @@ public class SimpleArticleTest {
   public void testNoNullpointer() {
     ContentAccessable ca = new ContentAccessable() {
 
+      @Override
       public boolean isMinorEdit() {
         return false;
       }
 
+      @Override
       public String getText() {
         return null;
       }
 
+      @Override
       public String getTitle() {
         return null;
       }
 
+      @Override
       public String getEditor() {
         return null;
       }
 
+      @Override
       public String getEditSummary() {
         return null;
       }
@@ -129,22 +134,27 @@ public class SimpleArticleTest {
   public void testNoNullpointer1() {
     ContentAccessable ca = new ContentAccessable() {
 
+      @Override
       public boolean isMinorEdit() {
         return false;
       }
 
+      @Override
       public String getText() {
         return "test";
       }
 
+      @Override
       public String getTitle() {
         return "MyTest";
       }
 
+      @Override
       public String getEditor() {
         return null;
       }
 
+      @Override
       public String getEditSummary() {
         return null;
       }

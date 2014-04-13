@@ -129,6 +129,7 @@ public class PostLogin extends MWAction {
   /**
    * {@inheritDoc}
    */
+  @Override
   public HttpAction getNextMessage() {
     return msg;
   }

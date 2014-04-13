@@ -52,6 +52,7 @@ public class GetRendering extends MWAction {
   /**
    * {@inheritDoc}
    */
+  @Override
   public HttpAction getNextMessage() {
     return msg;
   }

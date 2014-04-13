@@ -41,6 +41,7 @@ public class TracWikiBot extends HttpBot implements WikiBot {
 
   }
 
+  @Override
   public void login(String user, String passwd) {
     throw new IllegalStateException("Login is not supported");
 
@@ -62,26 +63,32 @@ public class TracWikiBot extends HttpBot implements WikiBot {
     return new Article(this, ac.getArticle());
   }
 
+  @Override
   public SimpleArticle readData(String name, int properties) {
     throw new IllegalStateException();
   }
 
+  @Override
   public Userinfo getUserinfo() {
     throw new IllegalStateException();
   }
 
+  @Override
   public String getWikiType() {
     throw new IllegalStateException();
   }
 
+  @Override
   public SimpleArticle readData(String name) {
     throw new IllegalStateException();
   }
 
+  @Override
   public void writeContent(SimpleArticle sa) {
     throw new IllegalStateException();
   }
 
+  @Override
   public void delete(String title) {
     throw new IllegalStateException();
 

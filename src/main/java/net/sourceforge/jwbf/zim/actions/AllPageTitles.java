@@ -53,6 +53,7 @@ public class AllPageTitles implements Iterable<String>, Iterator<String> {
     File dir = zim.getRootFolder();
     File[] fileList = dir.listFiles(new FilenameFilter() {
 
+      @Override
       public boolean accept(File dir, String name) {
         if (name.endsWith(".txt"))
           return true;
@@ -83,18 +84,22 @@ public class AllPageTitles implements Iterable<String>, Iterator<String> {
     allIt = all.iterator();
   }
 
+  @Override
   public Iterator<String> iterator() {
     return this;
   }
 
+  @Override
   public boolean hasNext() {
     return allIt.hasNext();
   }
 
+  @Override
   public String next() {
     return allIt.next();
   }
 
+  @Override
   public void remove() {
     allIt.remove();
 

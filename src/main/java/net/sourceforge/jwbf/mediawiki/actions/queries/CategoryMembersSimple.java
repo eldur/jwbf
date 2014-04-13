@@ -65,6 +65,7 @@ public class CategoryMembersSimple implements Iterable<String>, Iterator<String>
   public CategoryMembersSimple(MediaWikiBot bot, String categoryName, int... namespaces) {
     cm = new CategoryMembers(bot, categoryName, namespaces) {
 
+      @Override
       public HttpAction getNextMessage() {
         return msg;
       }
@@ -125,20 +126,24 @@ public class CategoryMembersSimple implements Iterable<String>, Iterator<String>
     }
   }
 
+  @Override
   public Iterator<String> iterator() {
     return this;
   }
 
+  @Override
   public boolean hasNext() {
     prepareCollection();
     return titleIterator.hasNext();
   }
 
+  @Override
   public String next() {
     prepareCollection();
     return titleIterator.next();
   }
 
+  @Override
   public void remove() {
     titleIterator.remove();
 

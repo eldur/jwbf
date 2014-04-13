@@ -47,16 +47,19 @@ public class InyokaWikiBot extends HttpBot implements WikiBot {
 
   }
 
+  @Override
   public void login(String user, String passwd) {
     throw new ActionException("Login is not supported");
 
   }
 
+  @Override
   public void writeContent(SimpleArticle sa) {
     throw new ActionException("Writing is not supported");
 
   }
 
+  @Override
   public void delete(String title) {
     throw new ActionException("Deleting is not supported");
 
@@ -66,25 +69,30 @@ public class InyokaWikiBot extends HttpBot implements WikiBot {
     return new Article(this, readData(name, properties));
   }
 
+  @Override
   public SimpleArticle readData(String name, int properties) {
     GetRevision ac = new GetRevision(name);
     performAction(ac);
     return ac.getArticle();
   }
 
+  @Override
   public Userinfo getUserinfo() {
     // TODO incomplete
     return new Userinfo() {
 
+      @Override
       public String getUsername() {
         return "unknown";
       }
 
+      @Override
       public Set<String> getRights() {
         // TODO Auto-generated method stub
         return null;
       }
 
+      @Override
       public Set<String> getGroups() {
         // TODO Auto-generated method stub
         return null;
@@ -92,6 +100,7 @@ public class InyokaWikiBot extends HttpBot implements WikiBot {
     };
   }
 
+  @Override
   public String getWikiType() {
     // TODO Auto-generated method stub
     return null;
@@ -102,6 +111,7 @@ public class InyokaWikiBot extends HttpBot implements WikiBot {
     return false;
   }
 
+  @Override
   public SimpleArticle readData(String name) {
     return readData(name, DEFAULT);
   }

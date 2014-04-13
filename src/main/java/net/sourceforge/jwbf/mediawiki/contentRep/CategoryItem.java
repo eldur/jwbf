@@ -34,6 +34,7 @@ public class CategoryItem {
   /**
    * @return representation of the category member
    */
+  @Override
   public String toString() {
     return title;
   }

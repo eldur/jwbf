@@ -41,6 +41,7 @@ public interface ContentProcessable extends ReturningTextProcessor {
    * @deprecated better encapsulate action if no external execution shuld be avalibal.
    * @return true if
    */
+  @Deprecated
   boolean isSelfExecuter();
 
 }

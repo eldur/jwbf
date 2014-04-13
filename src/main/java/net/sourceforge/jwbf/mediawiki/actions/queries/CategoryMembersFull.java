@@ -53,6 +53,7 @@ public class CategoryMembersFull extends CategoryMembers implements Iterable<Cat
   /**
    * {@inheritDoc}
    */
+  @Override
   public HttpAction getNextMessage() {
     return msg;
   }
@@ -60,6 +61,7 @@ public class CategoryMembersFull extends CategoryMembers implements Iterable<Cat
   /**
    * {@inheritDoc}
    */
+  @Override
   public Iterator<CategoryItem> iterator() {
     return this;
   }
@@ -117,6 +119,7 @@ public class CategoryMembersFull extends CategoryMembers implements Iterable<Cat
   /**
    * {@inheritDoc}
    */
+  @Override
   public boolean hasNext() {
     prepareCollection();
     return titleIterator.hasNext();
@@ -125,6 +128,7 @@ public class CategoryMembersFull extends CategoryMembers implements Iterable<Cat
   /**
    * {@inheritDoc}
    */
+  @Override
   public CategoryItem next() {
     prepareCollection();
     return titleIterator.next();
@@ -133,6 +137,7 @@ public class CategoryMembersFull extends CategoryMembers implements Iterable<Cat
   /**
    * {@inheritDoc}
    */
+  @Override
   public void remove() {
     titleIterator.remove();
 

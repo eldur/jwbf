@@ -66,6 +66,7 @@ public class GetRevision implements ContentProcessable {
 
   }
 
+  @Override
   public String processReturningText(String s, HttpAction hm) {
     if (hm == contentGet) {
       sa.setText(s);
@@ -137,12 +138,14 @@ public class GetRevision implements ContentProcessable {
     return sa;
   }
 
+  @Override
   public boolean hasMoreMessages() {
     if (first || second || third)
       return true;
     return false;
   }
 
+  @Override
   public HttpAction getNextMessage() {
     if (first) {
       first = false;
@@ -160,6 +163,7 @@ public class GetRevision implements ContentProcessable {
   /**
    * {@inheritDoc}
    */
+  @Override
   public boolean isSelfExecuter() {
     return false;
   }

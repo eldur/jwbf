@@ -81,7 +81,8 @@ public class LoginTest extends AbstractMediaWikiBotTest {
     String liveUrl = getValueOrSkip("login_wikipedia1_url");
     assumeReachable(liveUrl);
     bot = new MediaWikiBot(liveUrl);
-    bot.login(getValueOrSkip("login_wikipedia1_user_valid"), getValueOrSkip("login_wikipedia1_pass_valid"));
+    bot.login(getValueOrSkip("login_wikipedia1_user_valid"),
+        getValueOrSkip("login_wikipedia1_pass_valid"));
     assertTrue(bot.isLoggedIn());
   }
 
@@ -96,7 +97,8 @@ public class LoginTest extends AbstractMediaWikiBotTest {
     liveUrl = liveUrl.substring(0, lastSlash + 1);
     assumeReachable(liveUrl);
     bot = new MediaWikiBot(liveUrl);
-    bot.login(getValueOrSkip("login_wikipedia1_user_valid"), getValueOrSkip("login_wikipedia1_pass_valid"));
+    bot.login(getValueOrSkip("login_wikipedia1_user_valid"),
+        getValueOrSkip("login_wikipedia1_pass_valid"));
     assertTrue(bot.isLoggedIn());
   }
 
