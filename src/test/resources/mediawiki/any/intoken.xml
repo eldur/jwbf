@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<api>
+  <query>
+    <pages>
+      <page pageid="964" ns="0" title="42" contentmodel="wikitext"
+        pagelanguage="labs" touched="2014-04-24T19:17:49Z" lastrevid="2592"
+        counter="" length="4" new="" starttimestamp="2014-04-24T19:18:21Z"
+        edittoken="e0691d5329779f0c01b1b286cd44a278+\" />
+    </pages>
+  </query>
+</api>

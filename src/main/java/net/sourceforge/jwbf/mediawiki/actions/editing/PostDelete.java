@@ -46,7 +46,7 @@ public class PostDelete extends MWAction {
    * Constructs a new <code>PostDelete</code> action.
    */
   public PostDelete(MediaWikiBot bot, String title) {
-    token = new GetApiToken(GetApiToken.Intoken.DELETE, title, bot.getVersion(), bot.getUserinfo());
+    token = new GetApiToken(GetApiToken.Intoken.DELETE, title);
     this.title = title;
     if (title == null || title.length() == 0) {
       throw new IllegalArgumentException("The argument 'title' must not be null or empty");
@@ -80,10 +80,6 @@ public class PostDelete extends MWAction {
    */
   private HttpAction getSecondRequest() {
     Post msg = null;
-    if (token.getToken() == null || token.getToken().length() == 0) {
-      throw new IllegalArgumentException("The argument 'token' must not be \""
-          + String.valueOf(token.getToken()) + "\"");
-    }
     if (log.isTraceEnabled()) {
       log.trace("enter PostDelete.generateDeleteRequest(String)");
     }

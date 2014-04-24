@@ -70,7 +70,7 @@ public class MovePage extends MWAction {
    */
   public MovePage(MediaWikiBot bot, String oldtitle, String newtitle, String reason,
       boolean withsubpages, boolean noredirect) {
-    token = new GetApiToken(GetApiToken.Intoken.MOVE, oldtitle, bot.getVersion(), bot.getUserinfo());
+    token = new GetApiToken(GetApiToken.Intoken.MOVE, oldtitle);
     this.oldtitle = oldtitle;
     this.newtitle = newtitle;
     this.reason = reason;
@@ -99,11 +99,7 @@ public class MovePage extends MWAction {
    * @return the delete action
    */
   private HttpAction getSecondRequest() {
-    HttpAction msg = null;
-    if (token.getToken() == null || token.getToken().length() == 0) {
-      throw new IllegalArgumentException("The argument 'token' must not be \""
-          + String.valueOf(token.getToken()) + "\"");
-    }
+
     if (log.isTraceEnabled()) {
       log.trace("enter MovePage.generateMoveRequest(String)");
     }
@@ -137,9 +133,7 @@ public class MovePage extends MWAction {
     if (log.isDebugEnabled()) {
       log.debug("move url: \"" + uS + "\"");
     }
-    msg = new Post(uS);
-
-    return msg;
+    return new Post(uS);
   }
 
   /**

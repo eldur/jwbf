@@ -28,7 +28,7 @@ import com.google.common.collect.Sets;
 public class PostModifyContentTest {
 
   private static final String editFailMsg = "editing is not allowed";
-  private PostModifyContent action;
+  private PostModifyContent testee;
   private MediaWikiBot bot;
   private Userinfo userinfo;
   private static final ImmutableSet<String> rights = of(Userinfo.RIGHT_WRITEAPI,
@@ -44,35 +44,42 @@ public class PostModifyContentTest {
     when(bot.getUserinfo()).thenReturn(userinfo);
     simpleArticle = new SimpleArticle();
     simpleArticle.setTitle("Test");
-    action = new PostModifyContent(bot, simpleArticle);
+    testee = new PostModifyContent(bot, simpleArticle) {
+      @Override
+      GetApiToken newTokenRequest() {
+        GetApiToken mockToken = mock(GetApiToken.class);
+        when(mockToken.getToken()).thenReturn("!testToken");
+        return mockToken;
+      }
+    };
   }
 
   @Test
   public void testProcessReturningText() {
-    action.processAllReturningText("error");
+    testee.processAllReturningText("error");
   }
 
   @Test
   public void testIsIntersectionEmpty() {
-    assertTrue(action.isIntersectionEmpty(null, null));
+    assertTrue(testee.isIntersectionEmpty(null, null));
     Set<String> a = Sets.newHashSet();
     Set<String> b = Sets.newHashSet();
-    assertFalse(action.isIntersectionEmpty(a, null));
-    assertFalse(action.isIntersectionEmpty(null, b));
+    assertFalse(testee.isIntersectionEmpty(a, null));
+    assertFalse(testee.isIntersectionEmpty(null, b));
     assertTrue(a.containsAll(b));
-    assertTrue(action.isIntersectionEmpty(a, b));
-    assertTrue(action.isIntersectionEmpty(b, a));
+    assertTrue(testee.isIntersectionEmpty(a, b));
+    assertTrue(testee.isIntersectionEmpty(b, a));
 
     b.add("a");
-    assertTrue(action.isIntersectionEmpty(a, b));
+    assertTrue(testee.isIntersectionEmpty(a, b));
     b.add("c");
-    assertTrue(action.isIntersectionEmpty(a, b));
-    assertTrue(action.isIntersectionEmpty(b, a));
+    assertTrue(testee.isIntersectionEmpty(a, b));
+    assertTrue(testee.isIntersectionEmpty(b, a));
     a.add("a");
     a.add("b");
 
-    assertFalse(action.isIntersectionEmpty(a, b));
-    assertFalse(action.isIntersectionEmpty(b, a));
+    assertFalse(testee.isIntersectionEmpty(a, b));
+    assertFalse(testee.isIntersectionEmpty(b, a));
     assertTrue(a.size() > 1);
     assertTrue(b.size() > 1);
   }
@@ -99,8 +106,8 @@ public class PostModifyContentTest {
 
   private Map<String, Object> getParams() {
     when(userinfo.getRights()).thenReturn(rights);
-    action.getNextMessage();
-    Post message = (Post) action.getNextMessage();
+    testee.getNextMessage();
+    Post message = (Post) testee.getNextMessage();
     Map<String, Object> params = message.getParams();
     return params;
   }
@@ -108,10 +115,10 @@ public class PostModifyContentTest {
   @Test
   public void testGetNextMessageFailConsumeMessages() {
     when(userinfo.getRights()).thenReturn(rights);
-    action.getNextMessage();
-    action.getNextMessage();
+    testee.getNextMessage();
+    testee.getNextMessage();
     try {
-      action.getNextMessage();
+      testee.getNextMessage();
       fail();
     } catch (IllegalStateException e) {
       assertEquals("this action has only two messages", e.getMessage());
@@ -121,7 +128,7 @@ public class PostModifyContentTest {
   @Test
   public void testGetNextMessageFailNoEditing() {
     try {
-      action.getNextMessage();
+      testee.getNextMessage();
       fail();
     } catch (VersionException e) {
       assertEquals(editFailMsg, e.getMessage());
@@ -132,7 +139,7 @@ public class PostModifyContentTest {
   public void testGetNextMessageFailNoEditingRights() {
     when(userinfo.getRights()).thenReturn(of(Userinfo.RIGHT_EDIT));
     try {
-      action.getNextMessage();
+      testee.getNextMessage();
       fail();
     } catch (VersionException e) {
       assertEquals(editFailMsg, e.getMessage());
@@ -144,7 +151,7 @@ public class PostModifyContentTest {
     when(userinfo.getRights()).thenReturn(of(Userinfo.RIGHT_WRITEAPI));
     when(bot.isEditApi()).thenReturn(Boolean.FALSE);
     try {
-      action.getNextMessage();
+      testee.getNextMessage();
       fail();
     } catch (VersionException e) {
       assertEquals(editFailMsg, e.getMessage());

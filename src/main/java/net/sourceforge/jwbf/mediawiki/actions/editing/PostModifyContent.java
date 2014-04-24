@@ -52,7 +52,7 @@ public class PostModifyContent extends MWAction {
   private final MediaWikiBot bot;
   private GetApiToken apiReq = null;
   private HttpAction apiGet = null;
-  private Post postModify = null;
+  private Post editRequest = null;
   static final String PARAM_MINOR = "minor";
   static final String PARAM_MINOR_NOT = "notminor";
   static final String PARAM_BOTEDIT = "bot";
@@ -73,45 +73,53 @@ public class PostModifyContent extends MWAction {
 
     Userinfo userinfo = bot.getUserinfo();
     Set<String> rights = userinfo.getRights();
-    boolean canWrite = (rights.contains(Userinfo.RIGHT_EDIT) && rights
-        .contains(Userinfo.RIGHT_WRITEAPI));
+    boolean canWrite = rights.contains(Userinfo.RIGHT_EDIT)
+        && rights.contains(Userinfo.RIGHT_WRITEAPI);
+
     if (!(bot.isEditApi() && canWrite)) {
       throw new VersionException("editing is not allowed");
     }
     if (first) {
       first = false;
-      apiReq = new GetApiToken(GetApiToken.Intoken.EDIT, a.getTitle(), bot.getVersion(), userinfo);
+      apiReq = newTokenRequest();
       apiGet = apiReq.getNextMessage();
       return apiGet;
     } else if (second) {
 
-      postModify = new ApiRequestBuilder() //
+      editRequest = new ApiRequestBuilder() //
           .action("edit") //
           .formatXml() //
           .param("title", MediaWiki.encode(a.getTitle())) //
           .buildPost() //
-          .param("summary", a.getEditSummary()) //
-          .param("text", a.getText()) //
+          .postParam("summary", a.getEditSummary()) //
+          .postParam("text", a.getText()) //
       ;
       Set<String> groups = userinfo.getGroups();
       if (!isIntersectionEmpty(groups, MediaWiki.BOT_GROUPS)) {
-        postModify.addParam(PARAM_BOTEDIT, "");
+        editRequest.postParam(PARAM_BOTEDIT, "");
       }
 
       // postModify.addParam("watch", "unknown")
       if (a.isMinorEdit()) {
-        postModify.addParam(PARAM_MINOR, "");
+        editRequest.postParam(PARAM_MINOR, "");
       } else {
-        postModify.addParam(PARAM_MINOR_NOT, "");
+        editRequest.postParam(PARAM_MINOR_NOT, "");
       }
-      postModify.addParam("token", apiReq.getToken());
+      editRequest.postParam("token", apiReq.getToken());
 
       second = false;
 
-      return postModify;
+      return editRequest;
     } else {
       throw new IllegalStateException("this action has only two messages");
     }
+  }
+
+  /**
+   * TODO only for testing
+   */
+  GetApiToken newTokenRequest() {
+    return new GetApiToken(GetApiToken.Intoken.EDIT, a.getTitle());
   }
 
   /**
@@ -130,7 +138,7 @@ public class PostModifyContent extends MWAction {
     String request = hm.getRequest();
     if (request.equals(apiGet.getRequest())) {
       apiReq.processReturningText(xml, hm);
-    } else if (request.equals(postModify.getRequest())) {
+    } else if (request.equals(editRequest.getRequest())) {
       getRootElement(xml);
     } else {
       log.trace(xml);

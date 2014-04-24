@@ -1,14 +1,19 @@
 package net.sourceforge.jwbf.mediawiki.actions.editing;
 
+import javax.annotation.Nonnull;
+
 import lombok.extern.slf4j.Slf4j;
 import net.sourceforge.jwbf.core.actions.Get;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.extractXml.Element;
-import net.sourceforge.jwbf.core.contentRep.Userinfo;
 import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
-import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
-import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
+import net.sourceforge.jwbf.mediawiki.actions.util.DequeMWAction;
+
+import com.google.common.base.Function;
+import com.google.common.base.Optional;
+import com.google.common.base.Preconditions;
+import com.google.common.collect.ImmutableMap;
 
 /**
  * Action class using the MediaWiki-<a href="http://www.mediawiki.org/wiki/API:Changing_wiki_content" >Editing-API</a>. <br />
@@ -18,7 +23,8 @@ import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
  * @author Thomas Stock
  */
 @Slf4j
-public final class GetApiToken extends MWAction {
+public class GetApiToken extends DequeMWAction {
+
   /** Types that need a token. See API field intoken. */
   // TODO this does not feel the elegant way.
   // Probably put complete request URIs into this enum objects
@@ -27,13 +33,23 @@ public final class GetApiToken extends MWAction {
     DELETE, EDIT, MOVE, PROTECT, EMAIL, BLOCK, UNBLOCK, IMPORT
   }
 
-  private String token = "";
+  private static final ImmutableMap<Intoken, Function<Element, String>> TOKEN_FUNCTIONS = ImmutableMap
+      .<Intoken, Function<Element, String>> builder() //
+      .put(Intoken.DELETE, tokenFunctionOf("deletetoken")) //
+      .put(Intoken.EDIT, tokenFunctionOf("edittoken")) //
+      .put(Intoken.MOVE, tokenFunctionOf("movetoken")) //
+      .put(Intoken.PROTECT, tokenFunctionOf("protecttoken")) //
+      .put(Intoken.EMAIL, tokenFunctionOf("emailtoken")) //
+      .put(Intoken.BLOCK, tokenFunctionOf("blocktoken")) //
+      .put(Intoken.UNBLOCK, tokenFunctionOf("unblocktoken")) //
+      .put(Intoken.IMPORT, tokenFunctionOf("IMPORT")) //
+      .build();
 
-  private boolean first = true;
+  private Optional<String> token = Optional.absent();
 
-  private Intoken intoken = null;
+  private final Intoken intoken;
 
-  private Get msg;
+  private final HttpAction msg;
 
   /**
    * Constructs a new <code>GetToken</code> action.
@@ -42,12 +58,11 @@ public final class GetApiToken extends MWAction {
    *          type to get the token for
    * @param title
    *          title of the article to generate the token for
-   * @param ui
-   *          user info object if this action is not supported of the MediaWiki version connected to
    */
-  public GetApiToken(Intoken intoken, String title, Version v, Userinfo ui) {
+  public GetApiToken(Intoken intoken, String title) {
+    super(generateTokenRequest(intoken, title));
     this.intoken = intoken;
-    generateTokenRequest(intoken, title);
+    msg = actions.getFirst(); // XXX realy nesessary?
 
   }
 
@@ -59,11 +74,9 @@ public final class GetApiToken extends MWAction {
    * @param title
    *          title of the article to generate the token for
    */
-  private void generateTokenRequest(Intoken intoken, String title) {
-    if (log.isTraceEnabled()) {
-      log.trace("enter GetToken.generateTokenRequest()");
-    }
-    msg = new ApiRequestBuilder() //
+  private static Get generateTokenRequest(Intoken intoken, String title) {
+    log.trace("enter GetToken.generateTokenRequest()");
+    return new ApiRequestBuilder() //
         .action("query") //
         .formatXml() //
         .param("prop", "info") //
@@ -78,8 +91,13 @@ public final class GetApiToken extends MWAction {
    * 
    * @return the requested token
    */
+  @Nonnull
   protected String getToken() {
-    return token;
+    if (token.isPresent()) {
+      return token.get();
+    } else {
+      throw new IllegalArgumentException("The argument 'token' is missing");
+    }
   }
 
   /**
@@ -88,14 +106,17 @@ public final class GetApiToken extends MWAction {
   @Override
   public String processReturningText(String s, HttpAction hm) {
     if (hm.getRequest().equals(msg.getRequest())) {
-      if (log.isTraceEnabled()) {
-        log.trace("enter GetToken.processAllReturningText(String)");
-      }
-      if (log.isDebugEnabled()) {
-        log.debug("Got returning text: \"" + s + "\"");
-      }
+      log.trace("enter GetToken.processAllReturningText(String)");
+      log.debug("Got returning text: \"{}\"", s);
       try {
-        process(getRootElement(s));
+        Element elem = getRootElement(s).getChild("query").getChild("pages").getChild("page");
+        // TODO check for null
+        token = Optional.fromNullable(elem).transform(TOKEN_FUNCTIONS.get(intoken));
+        // TODO check intoken from tokenfunc for null
+
+        if (log.isDebugEnabled()) {
+          log.debug("token = {} for: {}", token, msg.getRequest());
+        }
         // TODO check catch
       } catch (IllegalArgumentException e) {
         if (s.startsWith("unknown_action:")) {
@@ -109,69 +130,16 @@ public final class GetApiToken extends MWAction {
     return "";
   }
 
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public HttpAction getNextMessage() {
-    if (first) {
-      first = false;
-      if (log.isTraceEnabled()) {
-        log.trace("enter getApiToken");
+  private static Function<Element, String> tokenFunctionOf(final String key) {
+    return new Function<Element, String>() {
+
+      @Override
+      public String apply(Element element) {
+        Element elementNonNull = Preconditions.checkNotNull(element);
+        return Preconditions.checkNotNull(elementNonNull.getAttributeValue(key),
+            "no attribute found for key: " + key);
       }
-      return msg;
-    }
-    return null;
-
+    };
   }
 
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public boolean hasMoreMessages() {
-    return first;
-  }
-
-  private void process(Element rootElement) {
-    try {
-      Element elem = rootElement.getChild("query").getChild("pages").getChild("page");
-
-      // process reply for token request
-      switch (intoken) {
-      case DELETE:
-        token = elem.getAttributeValue("deletetoken");
-        break;
-      case EDIT:
-        token = elem.getAttributeValue("edittoken");
-        break;
-      case MOVE:
-        token = elem.getAttributeValue("movetoken");
-        break;
-      case PROTECT:
-        token = elem.getAttributeValue("protecttoken");
-        break;
-      case EMAIL:
-        token = elem.getAttributeValue("emailtoken");
-        break;
-      case BLOCK:
-        token = elem.getAttributeValue("blocktoken");
-        break;
-      case UNBLOCK:
-        token = elem.getAttributeValue("unblocktoken");
-        break;
-      case IMPORT:
-        token = elem.getAttributeValue("importtoken");
-        break;
-      default:
-        throw new IllegalArgumentException();
-      }
-    } catch (RuntimeException e) {
-      throw new RuntimeException("Unknow reply. This is not a token.", e);
-    }
-
-    if (log.isDebugEnabled()) {
-      log.debug("found token =" + token + "\n" + "for: " + msg.getRequest() + "\n");
-    }
-  }
 }

@@ -70,18 +70,18 @@ public class PostLogin extends MWAction {
 
   private Post getLoginMsg(final String username, final String pw, final String domain,
       final String token) {
-    Post pm = new ApiRequestBuilder() //
+    Post loginRequest = new ApiRequestBuilder() //
         .action("login") //
         .formatXml() //
         .buildPost();
-    pm.addParam("lgname", username);
-    pm.addParam("lgpassword", pw);
+    loginRequest.postParam("lgname", username);
+    loginRequest.postParam("lgpassword", pw);
     if (domain != null)
-      pm.addParam("lgdomain", domain);
+      loginRequest.postParam("lgdomain", domain);
     if (token != null) {
-      pm.addParam("lgtoken", token);
+      loginRequest.postParam("lgtoken", token);
     }
-    return pm;
+    return loginRequest;
   }
 
   /**
@@ -130,6 +130,7 @@ public class PostLogin extends MWAction {
 
   /*
    * (non-Javadoc)
+   * 
    * @see net.sourceforge.jwbf.mediawiki.actions.util.MWAction#hasMoreMessages()
    */
   @Override

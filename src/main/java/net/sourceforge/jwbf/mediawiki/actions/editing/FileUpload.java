@@ -128,20 +128,20 @@ public class FileUpload extends MWAction {
       actions.add(g);
 
       log.info("WRITE: " + a.getTitle());
-      Post post = new RequestBuilder(MediaWiki.URL_INDEX) //
+      Post uploadRequest = new RequestBuilder(MediaWiki.URL_INDEX) //
           .param("title", "Special:Upload") //
-          .buildPost();
-
-      post.addParam("wpDestFile", a.getTitle());
-      post.addParam("wpIgnoreWarning", "true");
-      post.addParam("wpSourceType", "file");
-      post.addParam("wpUpload", "Upload file");
-      post.addParam("wpUploadFile", a.getFile());
+          .buildPost() //
+          .postParam("wpDestFile", a.getTitle()) //
+          .postParam("wpIgnoreWarning", "true") //
+          .postParam("wpSourceType", "file") //
+          .postParam("wpUpload", "Upload file") //
+          .postParam("wpUploadFile", a.getFile()) //
+      ;
       if (!Strings.isNullOrEmpty(a.getText())) {
-        post.addParam("wpUploadDescription", a.getText());
+        uploadRequest.postParam("wpUploadDescription", a.getText());
       }
 
-      actions.add(post);
+      actions.add(uploadRequest);
       return actions;
     }
 
@@ -176,8 +176,7 @@ public class FileUpload extends MWAction {
 
     @Override
     public Deque<HttpAction> getActions() {
-      getApiToken = new GetApiToken(Intoken.EDIT, simpleFile.getFilename(), bot.getVersion(),
-          bot.getUserinfo());
+      getApiToken = new GetApiToken(Intoken.EDIT, simpleFile.getFilename());
       actions.add(getApiToken.getNextMessage());
       return actions;
     }
@@ -194,8 +193,9 @@ public class FileUpload extends MWAction {
             .param("token", MediaWiki.encode(token)) //
             .param("filename", MediaWiki.encode(simpleFile.getTitle())) //
             .param("ignorewarnings", "true") //
-            .buildPost();
-        upload.addParam("file", simpleFile.getFile());
+            .buildPost() //
+            .postParam("file", simpleFile.getFile()) //
+        ;
         actions.add(upload);
       }
       // file upload requires enabled uploads, upload rights and filesystem permisions
