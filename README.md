@@ -34,6 +34,18 @@ object WikiReader extends App {
 }
 ```
 
+## Working with Wikimedia
+If you are working with Wikimedia sites, set an informative User-Agent header,
+ because [all Wikimedia sites require a HTTP User-Agent header for all requests.](http://meta.wikimedia.org/wiki/User-Agent_policy)
+
+```java
+    HttpActionClient hac = HttpActionClient.builder() //
+        .withUrl("http://en.wikipedia.org/w/") //
+        .withUserAgent("User name/your email/jwbf/...") //
+        .build();
+    MediaWikiBot wikiBot = new MediaWikiBot(hac);
+```
+
 ## Dependency
 ```xml
 <dependency>
