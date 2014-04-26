@@ -27,6 +27,7 @@ import net.sourceforge.jwbf.mediawiki.actions.queries.AllPageTitles;
 import net.sourceforge.jwbf.mediawiki.actions.util.RedirectFilter;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -35,29 +36,16 @@ import org.junit.Test;
 public class AllPagesTest extends AbstractMediaWikiBotTest {
 
   /**
-   * Test category read. Test category must have more then 50 members.
+   * TODO move to integation tests
    */
+  @Ignore
   @Test
   public final void allPagesWikipediaDe() {
     String url = getWikipediaDeUrl();
     bot = new MediaWikiBot(url);
-    doTest();
-  }
-
-  @Test
-  public final void allPagesTitle0() {
-    String url = getWikipediaDeUrl(); // TODO replace with a local test
-    bot = new MediaWikiBot(url);
-    AllPageTitles all = new AllPageTitles(bot, null, null, RedirectFilter.all, MediaWiki.NS_ALL);
-    for (String title : all) {
-      title.getClass();
-      break;
-    }
-  }
-
-  private void doTest() {
     AllPageTitles gat = new AllPageTitles(bot, null, null, RedirectFilter.all, MediaWiki.NS_MAIN);
-
+    // TODO write a test where query-continue is an html/xml entity like &amp;
+    // TODO write a test where query-continue is a json special char like \"
     Iterator<String> is = gat.iterator();
     int i = 0;
     while (is.hasNext()) {
@@ -69,7 +57,6 @@ public class AllPagesTest extends AbstractMediaWikiBotTest {
     }
 
     assertTrue("i is: " + i, i > 50);
-
   }
 
 }
