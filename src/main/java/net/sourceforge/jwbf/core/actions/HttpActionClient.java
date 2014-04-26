@@ -26,6 +26,7 @@ import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.util.concurrent.TimeUnit;
 
 import javax.annotation.Nonnull;
 
@@ -46,8 +47,10 @@ import org.apache.http.entity.ContentType;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.impl.client.HttpClientBuilder;
 
+import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
+import com.google.common.util.concurrent.RateLimiter;
 
 /**
  * The main interaction class.
@@ -67,6 +70,8 @@ public class HttpActionClient {
 
   private int prevHash;
 
+  private final Optional<RateLimiter> rateLimiter;
+
   private final URL url;
 
   public HttpActionClient(final URL url) {
@@ -82,6 +87,7 @@ public class HttpActionClient {
     this.url = url;
     path = pathOf(url);
     host = newHost(url);
+    rateLimiter = Optional.absent();
     this.client = clientBuilder.build();
   }
 
@@ -89,6 +95,12 @@ public class HttpActionClient {
     this.url = Preconditions.checkNotNull(builder.url, "no url is defined");
     host = newHost(builder.url);
     path = pathOf(builder.url);
+    if (builder.requestsPerSecond > 0) {
+      rateLimiter = Optional.of(RateLimiter.create(builder.requestsPerSecond));
+    } else {
+      rateLimiter = Optional.absent();
+    }
+
     this.client = builder.client;
   }
 
@@ -225,6 +237,9 @@ public class HttpActionClient {
   private HttpResponse execute(HttpRequestBase requestBase) {
     HttpResponse res = null;
     try {
+      if (rateLimiter.isPresent()) {
+        rateLimiter.get().acquire();
+      }
       res = client.execute(requestBase);
     } catch (IOException e) {
       throw new IllegalStateException(e);
@@ -301,6 +316,7 @@ public class HttpActionClient {
 
   public static class Builder {
 
+    private double requestsPerSecond = -1;
     private HttpClient client;
     private URL url;
     private String userAgent;
@@ -340,6 +356,12 @@ public class HttpActionClient {
 
     public Builder withUrl(String url) {
       return withUrl(JWBF.newURL(url));
+    }
+
+    public Builder withRequestsPerUnit(double requestsPer, TimeUnit unit) {
+      long seconds = TimeUnit.SECONDS.convert(1, unit);
+      this.requestsPerSecond = requestsPer / seconds;
+      return this;
     }
   }
 

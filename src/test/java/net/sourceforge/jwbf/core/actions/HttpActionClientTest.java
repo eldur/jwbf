@@ -8,17 +8,32 @@ import static com.google.common.net.HttpHeaders.HOST;
 import static com.google.common.net.HttpHeaders.USER_AGENT;
 import static net.sourceforge.jwbf.JettyServer.entry;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+import java.util.concurrent.TimeUnit;
+
 import net.sourceforge.jwbf.JettyServer;
 import net.sourceforge.jwbf.core.RequestBuilder;
 
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.junit.Test;
 
+import com.google.common.base.Function;
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableList.Builder;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Range;
 
 public class HttpActionClientTest {
 
+  private static final Function<String, Long> TO_LONG = new Function<String, Long>() {
+
+    @Override
+    public Long apply(String input) {
+      return Long.valueOf(input.trim());
+    }
+  };
   private HttpActionClient testee;
 
   @Test
@@ -115,7 +130,7 @@ public class HttpActionClientTest {
           .build();
 
       // WHEN
-      String result = a.get().trim();
+      String result = Iterables.getOnlyElement(a.get()).trim();
 
       // THEN
       ImmutableList<String> expected = ImmutableList.<String> builder()
@@ -132,6 +147,66 @@ public class HttpActionClientTest {
     } finally {
       server.stopSilent();
     }
+  }
+
+  @Test
+  public void testThrottler() {
+    JettyServer server = new JettyServer();
+    try {
+      // GIVEN
+      server.setHandler(JettyServer.dateHandler());
+      server.startSilent();
+
+      Get get = RequestBuilder.of("/").buildGet();
+
+      HttpActionClient hac = HttpActionClient.builder() //
+          .withUrl(server.getTestUrl()) //
+          .withRequestsPerUnit(2, TimeUnit.SECONDS) //
+          .build() //
+      ;
+
+      ResponseHandler<String> a = ContentProcessableBuilder //
+          .create(hac) //
+          .withActions(get, get, get, get, get, get) //
+          .build();
+
+      // WHEN
+      ImmutableList<String> result = a.get();
+
+      Iterable<Long> ints = Iterables.transform(result, TO_LONG);
+      ImmutableList<Long> deltas = toRanges(ints);
+
+      // THEN
+      ImmutableList<Range<Long>> expected = ImmutableList.<Range<Long>> builder() //
+          .add(Range.closed(0l, 600l)) //
+          .add(Range.closed(0l, 600l)) //
+          .add(Range.closed(0l, 600l)) //
+          .add(Range.closed(400l, 900l)) //
+          .add(Range.closed(400l, 900l)) //
+          .build();
+
+      int n = 0;
+      for (Range<Long> range : expected) {
+        int index = n++;
+        Long value = deltas.get(index);
+        assertTrue("range(" + index + "): " + range + " val: " + value, range.contains(value));
+      }
+
+    } finally {
+      server.stopSilent();
+    }
+  }
+
+  private ImmutableList<Long> toRanges(Iterable<Long> ints) {
+    ImmutableList<Long> intList = ImmutableList.copyOf(ints);
+    Builder<Long> builder = ImmutableList.<Long> builder();
+    for (int i = 0; i < intList.size() - 1; i++) {
+      Long a = intList.get(0 + i);
+      Long b = intList.get(1 + i);
+      Long delta = b - a;
+      builder.add(delta);
+    }
+    return builder.build();
   }
 
 }

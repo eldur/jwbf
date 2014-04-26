@@ -1,24 +1,28 @@
 package net.sourceforge.jwbf.core.actions;
 
 import java.util.Deque;
+import java.util.List;
 
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
+
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 
 public abstract class ResponseHandler<T> implements ContentProcessable {
 
   private final Deque<HttpAction> actions;
 
-  protected String latestResponse = "";
+  protected List<String> responeses = Lists.newArrayList();
 
   protected ResponseHandler(Deque<HttpAction> actions) {
     this.actions = actions;
   }
 
-  public abstract T get();
+  public abstract ImmutableList<T> get();
 
   @Override
   public String processReturningText(String s, HttpAction action) {
-    latestResponse = s;
+    responeses.add(s);
 
     return null;
   }

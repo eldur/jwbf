@@ -12,6 +12,7 @@ import org.eclipse.jetty.server.NetworkConnector;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.ContextHandler;
+import org.joda.time.DateTime;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableListMultimap;
@@ -124,5 +125,37 @@ public class JettyServer extends Server {
 
   public String getTestUrl() {
     return "http://localhost:" + getPort() + "/";
+  }
+
+  public static ContextHandler echoHandler() {
+    return new ContextHandler() {
+      @Override
+      public void doHandle(String arg0, Request request, HttpServletRequest req,
+          HttpServletResponse response) throws IOException, ServletException {
+
+        PrintWriter writer = response.getWriter();
+        writer.print(request.getQueryString());
+        response.setStatus(HttpServletResponse.SC_OK);
+        request.setHandled(true);
+      }
+
+    };
+  }
+
+  public static ContextHandler dateHandler() {
+    return new ContextHandler() {
+      @Override
+      public void doHandle(String arg0, Request request, HttpServletRequest req,
+          HttpServletResponse response) throws IOException, ServletException {
+
+        PrintWriter writer = response.getWriter();
+        DateTime now = DateTime.now();
+
+        writer.print(now.getMillis());
+        response.setStatus(HttpServletResponse.SC_OK);
+        request.setHandled(true);
+      }
+
+    };
   }
 }

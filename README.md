@@ -42,6 +42,7 @@ If you are working with Wikimedia sites, set an informative User-Agent header,
     HttpActionClient hac = HttpActionClient.builder() //
         .withUrl("http://en.wikipedia.org/w/") //
         .withUserAgent("User name/your email/jwbf/...") //
+        .withRequestsPerUnit(1, TimeUnit.SECONDS) //
         .build();
     MediaWikiBot wikiBot = new MediaWikiBot(hac);
 ```

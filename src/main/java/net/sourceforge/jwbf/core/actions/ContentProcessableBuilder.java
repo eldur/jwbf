@@ -21,9 +21,10 @@ public class ContentProcessableBuilder {
     return new ResponseHandler<T>(actionQueue) {
 
       @Override
-      public T get() {
-        String performAction = hac.performAction(this);
-        return (T) latestResponse;
+      public ImmutableList<T> get() {
+        hac.performAction(this);
+        // TODO transform respones to T
+        return (ImmutableList<T>) ImmutableList.copyOf(responeses);
       }
     };
   }
