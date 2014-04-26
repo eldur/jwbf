@@ -5,13 +5,11 @@ import net.sourceforge.jwbf.core.RequestBuilder;
 import net.sourceforge.jwbf.core.actions.Post;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.core.actions.util.ProcessException;
+import net.sourceforge.jwbf.extractXml.Element;
 import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
-
-import org.jdom.Document;
-import org.jdom.Element;
 
 /**
  * Action class using the MediaWiki-API's <a href="http://www.mediawiki.org/wiki/API:Edit_-_Delete">"action=delete"</a>.
@@ -144,7 +142,7 @@ public class PostDelete extends MWAction {
   }
 
   /**
-   * Determines if the given XML {@link Document} contains an error message which then would printed by the logger.
+   * Determines if the given XML Document contains an error message which then would printed by the logger.
    */
   @Override
   protected Element getErrorElement(Element rootElement) {

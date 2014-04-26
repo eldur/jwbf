@@ -25,13 +25,12 @@ import lombok.extern.slf4j.Slf4j;
 import net.sourceforge.jwbf.core.actions.Get;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
+import net.sourceforge.jwbf.extractXml.Element;
 import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.actions.util.ApiException;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
-
-import org.jdom.Element;
 
 /**
  * Reads the content of a given article.
@@ -178,7 +177,7 @@ public class GetRevision extends MWAction {
           }
         }
         if ((properties & FLAGS) > 0) {
-          if (element.getAttribute("minor") != null) {
+          if (element.hasAttribute("minor")) {
             sa.setMinorEdit(true);
           } else {
             sa.setMinorEdit(false);

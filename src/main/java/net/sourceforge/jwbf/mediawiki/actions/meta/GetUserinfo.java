@@ -7,11 +7,10 @@ import lombok.extern.slf4j.Slf4j;
 import net.sourceforge.jwbf.core.actions.Get;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.core.contentRep.Userinfo;
+import net.sourceforge.jwbf.extractXml.Element;
 import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
-
-import org.jdom.Element;
 
 import com.google.common.collect.Sets;
 
@@ -92,14 +91,14 @@ public class GetUserinfo extends MWAction implements Userinfo {
       } else if (element.getQualifiedName().equalsIgnoreCase("groups")) {
         Iterator<Element> git = element.getChildren("g").iterator();
         while (git.hasNext()) {
-          String gel = git.next().getTextTrim();
+          String gel = git.next().getText();
           groups.add(gel);
         }
       } else if (element.getQualifiedName().equalsIgnoreCase("rights")) {
 
         Iterator<Element> rit = element.getChildren("r").iterator();
         while (rit.hasNext()) {
-          String rel = rit.next().getTextTrim();
+          String rel = rit.next().getText();
 
           rights.add(rel);
         }

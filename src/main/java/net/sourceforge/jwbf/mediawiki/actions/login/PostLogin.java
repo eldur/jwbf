@@ -19,19 +19,15 @@
  */
 package net.sourceforge.jwbf.mediawiki.actions.login;
 
-import java.util.HashMap;
-
-import lombok.val;
 import lombok.extern.slf4j.Slf4j;
 import net.sourceforge.jwbf.core.actions.Post;
 import net.sourceforge.jwbf.core.actions.util.ActionException;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.core.actions.util.ProcessException;
+import net.sourceforge.jwbf.extractXml.Element;
 import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.contentRep.LoginData;
-
-import org.jdom.Element;
 
 /**
  * @author Thomas Stock
@@ -109,8 +105,6 @@ public class PostLogin extends MWAction {
     Element loginEl = startElement.getChild("login");
     String result = loginEl.getAttributeValue("result");
     if (result.equalsIgnoreCase(success)) {
-      val properties = new HashMap<String, String>();
-      properties.put("userId", loginEl.getAttribute("lguserid").toString());
       login.setup(loginEl.getAttributeValue("lgusername"), true);
     } else if (result.equalsIgnoreCase(needToken) && reTryLimit) {
       msg = getLoginMsg(username, pw, domain, loginEl.getAttributeValue("token"));

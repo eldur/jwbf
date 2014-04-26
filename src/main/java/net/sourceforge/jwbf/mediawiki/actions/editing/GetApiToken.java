@@ -3,13 +3,12 @@ package net.sourceforge.jwbf.mediawiki.actions.editing;
 import lombok.extern.slf4j.Slf4j;
 import net.sourceforge.jwbf.core.actions.Get;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
+import net.sourceforge.jwbf.extractXml.Element;
 import net.sourceforge.jwbf.core.contentRep.Userinfo;
 import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
-
-import org.jdom.Element;
 
 /**
  * Action class using the MediaWiki-<a href="http://www.mediawiki.org/wiki/API:Changing_wiki_content" >Editing-API</a>. <br />

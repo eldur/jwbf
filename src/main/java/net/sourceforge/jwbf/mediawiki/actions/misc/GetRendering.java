@@ -7,12 +7,11 @@ import net.sourceforge.jwbf.core.actions.Get;
 import net.sourceforge.jwbf.core.actions.util.ActionException;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.core.actions.util.ProcessException;
+import net.sourceforge.jwbf.extractXml.Element;
 import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
-
-import org.jdom.Element;
 
 /**
  * Implements function to render wikitext on remote <a href=
@@ -62,7 +61,7 @@ public class GetRendering extends MWAction {
    */
   @Override
   public String processAllReturningText(String s) {
-    html = findElement("text", s).getTextTrim();
+    html = findElement("text", s).getText();
     html = html.replace("\n", "");
     int last = html.lastIndexOf("<!--");
     html = html.substring(0, last);

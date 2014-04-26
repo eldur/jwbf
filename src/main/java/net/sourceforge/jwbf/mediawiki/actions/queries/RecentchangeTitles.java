@@ -25,12 +25,11 @@ import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
 import net.sourceforge.jwbf.core.RequestBuilder;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
+import net.sourceforge.jwbf.extractXml.Element;
 import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
-
-import org.jdom.Element;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
@@ -173,7 +172,7 @@ public class RecentchangeTitles extends TitleQuery<String> {
           titleCollection.add(MediaWiki.decode(element.getAttributeValue("title")));
         }
 
-        nextPageInfo = element.getAttribute("timestamp").getValue();
+        nextPageInfo = element.getAttributeValue("timestamp");
         find++;
       } else {
         findContent(element);

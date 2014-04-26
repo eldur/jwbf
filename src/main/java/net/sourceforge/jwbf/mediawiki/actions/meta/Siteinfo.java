@@ -6,10 +6,9 @@ import java.util.Map;
 
 import net.sourceforge.jwbf.core.actions.Get;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
+import net.sourceforge.jwbf.extractXml.Element;
 import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
-
-import org.jdom.Element;
 
 import com.google.common.collect.Maps;
 
@@ -92,7 +91,7 @@ public class Siteinfo extends GetVersion {
         addNamespace(id, name);
 
       } else if (element.getQualifiedName().equalsIgnoreCase("iw")) {
-        if (element.getAttribute("prefix") != null) {
+        if (element.hasAttribute("prefix")) {
           String prefix = element.getAttributeValue("prefix");
           String name = element.getAttributeValue("url");
           addInterwiki(prefix, name);

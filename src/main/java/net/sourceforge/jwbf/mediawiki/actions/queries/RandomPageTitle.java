@@ -3,6 +3,7 @@ package net.sourceforge.jwbf.mediawiki.actions.queries;
 import lombok.extern.slf4j.Slf4j;
 import net.sourceforge.jwbf.core.actions.Get;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
+import net.sourceforge.jwbf.extractXml.XmlConverter;
 import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
@@ -46,7 +47,7 @@ public class RandomPageTitle extends MWAction {
    */
   @Override
   public String processAllReturningText(String s) {
-    String title = evaluateXpath(s, "/api/query/random/page/@title");
+    String title = XmlConverter.evaluateXpath(s, "/api/query/random/page/@title");
     log.debug("Title: " + title);
     return title;
   }

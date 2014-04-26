@@ -5,13 +5,11 @@ import net.sourceforge.jwbf.core.RequestBuilder;
 import net.sourceforge.jwbf.core.actions.Post;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.core.actions.util.ProcessException;
+import net.sourceforge.jwbf.extractXml.Element;
 import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
-
-import org.jdom.Document;
-import org.jdom.Element;
 
 import com.google.common.base.Strings;
 
@@ -169,9 +167,6 @@ public class MovePage extends MWAction {
     return "";
   }
 
-  /**
-   * Processing the XML {@link Document} returned from the MediaWiki API.
-   */
   private void process(Element rootElement) {
     Element elem = rootElement.getChild("move");
     if (elem != null) {
