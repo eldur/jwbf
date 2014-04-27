@@ -12,15 +12,11 @@ import java.util.Collection;
 import lombok.extern.slf4j.Slf4j;
 import net.sourceforge.jwbf.GAssert;
 import net.sourceforge.jwbf.mediawiki.ConfKey;
-import net.sourceforge.jwbf.mediawiki.VersionTestClassVerifier;
+import net.sourceforge.jwbf.mediawiki.MocoIntegTest;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
-import net.sourceforge.jwbf.mediawiki.live.auto.MocoIntegTest;
 import net.sourceforge.jwbf.mediawiki.live.auto.ParamHelper;
 
-import org.junit.ClassRule;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.Verifier;
 import org.junit.runners.Parameterized.Parameters;
 
 import com.github.dreamhead.moco.RequestMatcher;
@@ -28,13 +24,6 @@ import com.google.common.collect.ImmutableMap;
 
 @Slf4j
 public class GetVersionIntegTest extends MocoIntegTest {
-
-  @ClassRule
-  public static VersionTestClassVerifier classVerifier = new VersionTestClassVerifier(
-      GetVersion.class, Siteinfo.class);
-
-  @Rule
-  public Verifier successRegister = classVerifier.getSuccessRegister(this);
 
   @Parameters(name = "{0}")
   public static Collection<?> stableWikis() {

@@ -1,7 +1,4 @@
-package net.sourceforge.jwbf.mediawiki.live.auto;
-
-import static com.github.dreamhead.moco.Moco.httpserver;
-import static com.github.dreamhead.moco.Runner.runner;
+package net.sourceforge.jwbf.mediawiki;
 
 import java.io.File;
 import java.util.Arrays;
@@ -11,21 +8,17 @@ import java.util.Map.Entry;
 
 import javax.inject.Provider;
 
+import net.sourceforge.jwbf.AbstractIntegTest;
 import net.sourceforge.jwbf.JWBF;
-import net.sourceforge.jwbf.mediawiki.BotFactory;
-import net.sourceforge.jwbf.mediawiki.ConfKey;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
-import com.github.dreamhead.moco.HttpServer;
 import com.github.dreamhead.moco.Moco;
-import com.github.dreamhead.moco.Runner;
 import com.github.dreamhead.moco.resource.ContentResource;
 import com.google.common.base.Function;
 import com.google.common.base.Preconditions;
@@ -39,12 +32,9 @@ import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 
 @RunWith(Parameterized.class)
-public abstract class MocoIntegTest implements Provider<MediaWikiBot> {
+public abstract class MocoIntegTest extends AbstractIntegTest implements Provider<MediaWikiBot> {
 
   private final Version version;
-  private Runner runner;
-  private int port;
-  protected HttpServer server;
   private MediaWikiBot bot;
 
   private final Config conf = ConfigFactory.load("mediawiki.conf");
@@ -93,10 +83,6 @@ public abstract class MocoIntegTest implements Provider<MediaWikiBot> {
 
   @Before
   public void setup() {
-    server = httpserver(); // Moco.log()
-    runner = runner(server);
-    runner.start();
-    port = server.port();
     bot(new MediaWikiBot(host()));
   }
 
@@ -125,17 +111,8 @@ public abstract class MocoIntegTest implements Provider<MediaWikiBot> {
     }
   }
 
-  protected String host() {
-    return "http://localhost:" + port + "/";
-  }
-
   public Version version() {
     return version;
-  }
-
-  @After
-  public void tearDown() {
-    runner.stop();
   }
 
   public ImmutableMap<String, String> emptyStringMap() {
