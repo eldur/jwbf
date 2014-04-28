@@ -2,6 +2,7 @@ package net.sourceforge.jwbf;
 
 import org.junit.Assert;
 
+import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
 
 public class GAssert {
@@ -10,8 +11,8 @@ public class GAssert {
     try {
       Assert.assertEquals(expected, actual);
     } catch (AssertionError e) {
-      Assert.assertEquals(expected.toString(), actual.toString());
-
+      Joiner newlineJoiner = Joiner.on("\n");
+      Assert.assertEquals(newlineJoiner.join(expected), newlineJoiner.join(actual));
       throw e;
     }
   }
