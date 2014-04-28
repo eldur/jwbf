@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<api>
+  <query-continue>
+    <embeddedin eicontinue="10|Babel|39725" />
+  </query-continue>
+  <query>
+    <embeddedin>
+      <ei pageid="37163" ns="2" title="User:Yargo" />
+      <ei pageid="37212" ns="2" title="User:Joakim Ziegler" />
+      <ei pageid="37505" ns="2" title="User:Snorre" />
+      <ei pageid="38383" ns="2" title="User:LA2" />
+      <ei pageid="38384" ns="2" title="User:Codeczero" />
+    </embeddedin>
+  </query>
+</api>

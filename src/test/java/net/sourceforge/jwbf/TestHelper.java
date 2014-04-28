@@ -1,5 +1,6 @@
 package net.sourceforge.jwbf;
 
+import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -11,9 +12,12 @@ import lombok.extern.slf4j.Slf4j;
 
 import org.junit.Assume;
 
+import com.google.common.base.Charsets;
+import com.google.common.base.Throwables;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
+import com.google.common.io.Resources;
 
 @Slf4j
 public class TestHelper {
@@ -89,6 +93,18 @@ public class TestHelper {
       assumeReachable(new URL(url));
     } catch (MalformedURLException e) {
       throw new IllegalArgumentException(e);
+    }
+  }
+
+  public static String anyWikiResponse(String filename) {
+    return textOf("mediawiki/any/" + filename);
+  }
+
+  private static String textOf(String filename) {
+    try {
+      return Resources.toString(Resources.getResource(filename), Charsets.UTF_8);
+    } catch (IOException e) {
+      throw Throwables.propagate(e);
     }
   }
 

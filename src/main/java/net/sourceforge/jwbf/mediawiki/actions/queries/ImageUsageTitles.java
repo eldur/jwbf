@@ -33,6 +33,7 @@ import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 
 import com.google.common.base.Strings;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 
 /**
@@ -127,20 +128,17 @@ public class ImageUsageTitles extends TitleQuery<String> {
    *          text for parsing
    */
   @Override
-  protected Collection<String> parseArticleTitles(String s) {
-
-    return handler.parseArticleTitles(s);
+  protected ImmutableList<String> parseArticleTitles(String s) {
+    return ImmutableList.copyOf(handler.parseArticleTitles(s));
 
   }
 
   @Override
   protected HttpAction prepareCollection() {
-
-    if (getNextPageInfo().length() <= 0) {
-      return generateRequest(imageName, MWAction.createNsString(namespaces), null);
-    } else {
-
+    if (hasNextPageInfo()) {
       return generateRequest(imageName, null, getNextPageInfo());
+    } else {
+      return generateRequest(imageName, MWAction.createNsString(namespaces), null);
     }
 
   }

@@ -19,8 +19,6 @@
  */
 package net.sourceforge.jwbf.mediawiki.actions.queries;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -33,6 +31,7 @@ import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 
 import com.google.common.base.Strings;
+import com.google.common.collect.ImmutableList;
 
 /**
  * action class using the MediaWiki-api's "list=embeddedin" that is used to find all articles which use a template.
@@ -44,14 +43,13 @@ import com.google.common.base.Strings;
 @Slf4j
 public class TemplateUserTitles extends TitleQuery<String> {
 
+  // TODO do not work with patterns
+  private static final Pattern TEMPLATE_USAGE_PATTERN = Pattern
+      .compile("<ei pageid=\".*?\" ns=\".*?\" title=\"(.*?)\" />");
+
   /** constant value for the eilimit-parameter. **/
   private static final int LIMIT = 50;
   private final MediaWikiBot bot;
-  /**
-   * Collection that will contain the result (titles of articles using the template) after performing the action has
-   * finished.
-   */
-  private final Collection<String> titleCollection = new ArrayList<String>();
 
   private final String templateName;
   private final int[] namespaces;
@@ -80,8 +78,8 @@ public class TemplateUserTitles extends TitleQuery<String> {
    * @param eicontinue
    *          the value for the eicontinue parameter, null for the generation of the initial request
    */
-  private HttpAction generateRequest(String templateName, String namespace, String eicontinue) {
-
+  private HttpAction generateRequest(String templateName, int[] namespaces, String eicontinue) {
+    String namespacesValue = MWAction.createNsString(namespaces);
     RequestBuilder requestBuilder = new ApiRequestBuilder() //
         .action("query") //
         .formatXml() //
@@ -90,8 +88,8 @@ public class TemplateUserTitles extends TitleQuery<String> {
         .param("eititle", MediaWiki.encode(templateName)) //
     ;
 
-    if (!Strings.isNullOrEmpty(namespace)) {
-      requestBuilder.param("einamespace", MediaWiki.encode(namespace));
+    if (!Strings.isNullOrEmpty(namespacesValue)) {
+      requestBuilder.param("einamespace", MediaWiki.encode(namespacesValue));
     }
     if (eicontinue != null) {
       requestBuilder.param("eicontinue", MediaWiki.encode(eicontinue));
@@ -99,21 +97,6 @@ public class TemplateUserTitles extends TitleQuery<String> {
 
     return requestBuilder.buildGet();
 
-  }
-
-  /**
-   * deals with the MediaWiki api's response by parsing the provided text.
-   * 
-   * @param s
-   *          the answer to the most recently generated MediaWiki-request
-   * @return empty string
-   */
-  @Override
-  public String processAllReturningText(final String s) {
-    parseArticleTitles(s);
-    parseHasMore(s);
-    titleIterator = titleCollection.iterator();
-    return "";
   }
 
   /**
@@ -150,28 +133,23 @@ public class TemplateUserTitles extends TitleQuery<String> {
    *          text for parsing
    */
   @Override
-  protected Collection<String> parseArticleTitles(String s) {
+  protected ImmutableList<String> parseArticleTitles(String s) {
 
-    // get the backlink titles and add them all to the titleCollection
-
-    Pattern p = Pattern.compile("<ei pageid=\".*?\" ns=\".*?\" title=\"(.*?)\" />");
-
-    Matcher m = p.matcher(s);
-
+    Matcher m = TEMPLATE_USAGE_PATTERN.matcher(s);
+    ImmutableList.Builder<String> titleCollection = ImmutableList.<String> builder();
     while (m.find()) {
       titleCollection.add(m.group(1));
     }
 
-    return titleCollection;
+    return titleCollection.build();
   }
 
   @Override
   protected HttpAction prepareCollection() {
-
-    if (getNextPageInfo().length() <= 0) {
-      return generateRequest(templateName, MWAction.createNsString(namespaces), null);
+    if (hasNextPageInfo()) {
+      return generateRequest(templateName, namespaces, getNextPageInfo());
     } else {
-      return generateRequest(templateName, MWAction.createNsString(namespaces), getNextPageInfo());
+      return generateRequest(templateName, namespaces, null);
     }
 
   }

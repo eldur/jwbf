@@ -19,7 +19,6 @@
  */
 package net.sourceforge.jwbf.mediawiki.actions.queries;
 
-import java.util.Collection;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -34,7 +33,7 @@ import net.sourceforge.jwbf.mediawiki.actions.util.RedirectFilter;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 
 import com.google.common.base.Strings;
-import com.google.common.collect.Lists;
+import com.google.common.collect.ImmutableList;
 
 /**
  * Action class using the MediaWiki-api's "list=allpages".
@@ -163,20 +162,20 @@ public class AllPageTitles extends TitleQuery<String> {
    * @return a
    */
   @Override
-  protected Collection<String> parseArticleTitles(String s) {
+  protected ImmutableList<String> parseArticleTitles(String s) {
     if (log.isTraceEnabled()) {
       log.trace("enter GetAllPagetitles.parseArticleTitles(String)");
     }
-    Collection<String> c = Lists.newArrayList();
+    ImmutableList.Builder<String> titles = ImmutableList.<String> builder();
     Matcher m = ARTICLE_TITLES_PATTERN.matcher(s);
     while (m.find()) {
       String title = MediaWiki.decode(m.group(1));
       if (log.isDebugEnabled()) {
         log.debug("Found article title: \"" + title + "\"");
       }
-      c.add(title);
+      titles.add(title);
     }
-    return c;
+    return titles.build();
   }
 
   /**

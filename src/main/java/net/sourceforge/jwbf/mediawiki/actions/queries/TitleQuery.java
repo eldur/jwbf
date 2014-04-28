@@ -1,6 +1,5 @@
 package net.sourceforge.jwbf.mediawiki.actions.queries;
 
-import java.util.Collection;
 import java.util.Iterator;
 
 import lombok.extern.slf4j.Slf4j;
@@ -8,7 +7,10 @@ import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 
-import com.google.common.collect.Lists;
+import com.google.common.annotations.Beta;
+import com.google.common.base.Optional;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
 
 /**
  * Abstract class which is superclass of all titleiterations, represented by the sufix "Titles".
@@ -18,17 +20,30 @@ import com.google.common.collect.Lists;
  *          of
  */
 @Slf4j
-public abstract class TitleQuery<T> extends MWAction implements Iterable<T>, Iterator<T> {
+abstract class TitleQuery<T> extends MWAction implements Iterable<T>, Iterator<T> {
 
-  protected Iterator<T> titleIterator;
+  static final String UOE_MESSAGE = "title query uses inner response handling";
+  private Iterator<T> titleIterator;
   private final InnerAction inner;
   private final MediaWikiBot bot;
+  private ImmutableList<T> oldTitlesForLogging = ImmutableList.of();
 
   /** Information necessary to get the next api page. */
-  protected String nextPageInfo = "";
+  private Optional<String> nextPageInfo = Optional.absent();
+
+  protected final String setNextPageInfo(String nextPageInfo) {
+    // TODO Optional.absentIfEmpty
+    this.nextPageInfo = Optional.fromNullable(nextPageInfo);
+    return nextPageInfo;
+  }
 
   protected final String getNextPageInfo() {
-    return nextPageInfo;
+    return nextPageInfo.get();
+  }
+
+  protected boolean hasNextPageInfo() {
+    // TODO remove empty check (see #setNextPageInfo)
+    return nextPageInfo.isPresent() && nextPageInfo.get().length() > 0;
   }
 
   protected TitleQuery(MediaWikiBot bot) {
@@ -41,8 +56,18 @@ public abstract class TitleQuery<T> extends MWAction implements Iterable<T>, Ite
   }
 
   @Override
-  public HttpAction getNextMessage() {
+  public final HttpAction getNextMessage() {
     throw new UnsupportedOperationException();
+  }
+
+  @Beta
+  public Iterable<T> lazy() {
+    return this;
+  }
+
+  @Beta
+  public ImmutableList<T> getCopyOf(int count) {
+    return ImmutableList.copyOf(Iterables.limit(lazy(), count));
   }
 
   /**
@@ -50,7 +75,7 @@ public abstract class TitleQuery<T> extends MWAction implements Iterable<T>, Ite
    */
   @Override
   @SuppressWarnings("unchecked")
-  public Iterator<T> iterator() {
+  public final Iterator<T> iterator() {
     try {
       return (Iterator<T>) clone();
     } catch (CloneNotSupportedException e) {
@@ -58,6 +83,16 @@ public abstract class TitleQuery<T> extends MWAction implements Iterable<T>, Ite
       e.printStackTrace();
       return null;
     }
+  }
+
+  @Override
+  public final String processReturningText(final String s, final HttpAction hm) {
+    throw new UnsupportedOperationException(UOE_MESSAGE);
+  }
+
+  @Override
+  public final String processAllReturningText(final String s) {
+    throw new UnsupportedOperationException(UOE_MESSAGE);
   }
 
   /**
@@ -88,13 +123,9 @@ public abstract class TitleQuery<T> extends MWAction implements Iterable<T>, Ite
 
   protected abstract HttpAction prepareCollection();
 
-  private boolean hasNextPage() {
-    return nextPageInfo != null && nextPageInfo.length() > 0;
-  }
-
   private void doCollection() {
 
-    if (inner.init || (!titleIterator.hasNext() && hasNextPage())) {
+    if (inner.init || (!titleIterator.hasNext() && hasNextPageInfo())) {
       inner.init = false;
       inner.setHasMoreMessages(true);
       inner.msg = prepareCollection();
@@ -102,7 +133,7 @@ public abstract class TitleQuery<T> extends MWAction implements Iterable<T>, Ite
     }
   }
 
-  protected abstract Collection<T> parseArticleTitles(String s);
+  protected abstract ImmutableList<T> parseArticleTitles(String s);
 
   protected abstract String parseHasMore(final String s);
 
@@ -115,10 +146,6 @@ public abstract class TitleQuery<T> extends MWAction implements Iterable<T>, Ite
 
     private HttpAction msg;
     private boolean init = true;
-
-    protected void setMessage(HttpAction msg) {
-      this.msg = msg;
-    }
 
     /**
      * {@inheritDoc}
@@ -133,12 +160,17 @@ public abstract class TitleQuery<T> extends MWAction implements Iterable<T>, Ite
      */
     @Override
     public String processAllReturningText(final String s) {
-      Collection<T> knownResults = Lists.newArrayList();
+      ImmutableList<T> newTitles = parseArticleTitles(s);
+      if (log.isWarnEnabled()) {
+        if (oldTitlesForLogging.equals(newTitles)) {
+          log.warn("previous response has same payload");
+          // namespaces or same edits in recentchanges
+        }
+      }
+      oldTitlesForLogging = newTitles;
+      setNextPageInfo(parseHasMore(s));
 
-      knownResults.addAll(parseArticleTitles(s));
-      nextPageInfo = parseHasMore(s);
-
-      titleIterator = knownResults.iterator();
+      titleIterator = oldTitlesForLogging.iterator();
       return "";
     }
 

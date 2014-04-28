@@ -18,9 +18,8 @@
  */
 package net.sourceforge.jwbf.mediawiki.actions.queries;
 
-import java.util.Collection;
 import java.util.Iterator;
-import java.util.Set;
+import java.util.List;
 
 import lombok.extern.slf4j.Slf4j;
 import net.sourceforge.jwbf.core.RequestBuilder;
@@ -31,8 +30,8 @@ import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 
 /**
  * Gets a list of pages recently changed, ordered by modification timestamp. Parameters: rcfrom (paging timestamp), rcto
@@ -45,46 +44,11 @@ import com.google.common.collect.Sets;
 public class RecentchangeTitles extends TitleQuery<String> {
 
   /** value for the bllimit-parameter. **/
-  private static final int limit = 10;
-
-  private int find = 1;
+  private static final int limit = 50;
 
   private final MediaWikiBot bot;
 
   private final int[] namespaces;
-
-  /**
-   * Collection that will contain the result (titles of articles linking to the target) after performing the action has
-   * finished.
-   */
-  private final Collection<String> titleCollection = Lists.newArrayList();
-  private final boolean uniqChanges;
-
-  private class RecentInnerAction extends InnerAction {
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String processAllReturningText(final String s) {
-
-      titleCollection.clear();
-      parseArticleTitles(s);
-
-      if (log.isDebugEnabled()) {
-        log.debug("found: " + titleCollection);
-      }
-      if (uniqChanges) {
-        Set<String> set = Sets.newHashSet();
-        set.addAll(titleCollection);
-        titleCollection.clear();
-        titleCollection.addAll(set);
-      }
-      titleIterator = titleCollection.iterator();
-
-      return "";
-    }
-  }
 
   /**
    * generates the next MediaWiki-request (GetMethod) and adds it to msgs.
@@ -115,27 +79,16 @@ public class RecentchangeTitles extends TitleQuery<String> {
   }
 
   private HttpAction generateRequest(int[] namespace) {
-
     return generateRequest(namespace, "");
-
   }
 
   /**
    *
    */
   public RecentchangeTitles(MediaWikiBot bot, int... ns) {
-    this(bot, false, ns);
-
-  }
-
-  /**
-   *
-   */
-  public RecentchangeTitles(MediaWikiBot bot, boolean uniqChanges, int... ns) {
     super(bot);
     namespaces = ns;
     this.bot = bot;
-    this.uniqChanges = uniqChanges;
 
   }
 
@@ -144,7 +97,6 @@ public class RecentchangeTitles extends TitleQuery<String> {
    */
   public RecentchangeTitles(MediaWikiBot bot) {
     this(bot, MediaWiki.NS_ALL);
-
   }
 
   /**
@@ -154,28 +106,25 @@ public class RecentchangeTitles extends TitleQuery<String> {
    *          text for parsing
    */
   @Override
-  protected Collection<String> parseArticleTitles(String s) {
+  protected ImmutableList<String> parseArticleTitles(String s) {
     Element root = getRootElement(s);
-    findContent(root);
-    return titleCollection;
+    List<String> titleCollection = Lists.newArrayList();
+    findContent(root, titleCollection);
+    return ImmutableList.copyOf(titleCollection);
 
   }
 
   @SuppressWarnings("unchecked")
-  private void findContent(final Element root) {
+  private void findContent(final Element root, List<String> titleCollection) {
 
     Iterator<Element> el = root.getChildren().iterator();
     while (el.hasNext()) {
       Element element = el.next();
       if (element.getQualifiedName().equalsIgnoreCase("rc")) {
-        if (find < limit) {
-          titleCollection.add(MediaWiki.decode(element.getAttributeValue("title")));
-        }
-
-        nextPageInfo = element.getAttributeValue("timestamp");
-        find++;
+        titleCollection.add(MediaWiki.decode(element.getAttributeValue("title")));
+        setNextPageInfo(element.getAttributeValue("timestamp"));
       } else {
-        findContent(element);
+        findContent(element, titleCollection);
       }
 
     }
@@ -183,28 +132,22 @@ public class RecentchangeTitles extends TitleQuery<String> {
 
   @Override
   protected HttpAction prepareCollection() {
-    find = 1;
-    if (getNextPageInfo().length() <= 0) {
-      return generateRequest(namespaces);
-    } else {
+    if (hasNextPageInfo()) {
       return generateRequest(namespaces, getNextPageInfo());
+    } else {
+      return generateRequest(namespaces);
     }
 
   }
 
   @Override
   protected Object clone() throws CloneNotSupportedException {
-    return new RecentchangeTitles(bot, uniqChanges, namespaces);
+    return new RecentchangeTitles(bot, namespaces);
   }
 
   @Override
   protected String parseHasMore(String s) {
     return "";
-  }
-
-  @Override
-  protected InnerAction getInnerAction() {
-    return new RecentInnerAction();
   }
 
 }

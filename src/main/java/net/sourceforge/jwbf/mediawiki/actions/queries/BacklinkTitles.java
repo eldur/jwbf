@@ -19,7 +19,6 @@
  */
 package net.sourceforge.jwbf.mediawiki.actions.queries;
 
-import java.util.Collection;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -35,7 +34,7 @@ import net.sourceforge.jwbf.mediawiki.actions.util.RedirectFilter;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 
 import com.google.common.base.Preconditions;
-import com.google.common.collect.Lists;
+import com.google.common.collect.ImmutableList;
 
 /**
  * action class using the MediaWiki-api's "list=backlinks".
@@ -134,10 +133,10 @@ public class BacklinkTitles extends TitleQuery<String> {
    *          text for parsing
    */
   @Override
-  protected Collection<String> parseArticleTitles(String s) {
+  protected ImmutableList<String> parseArticleTitles(String s) {
 
     // get the other backlink titles and add them all to the titleCollection
-    Collection<String> titleCollection = Lists.newArrayList();
+    ImmutableList.Builder<String> titleCollection = ImmutableList.<String> builder();
 
     Pattern p = Pattern
         .compile("<bl pageid=\".*?\" ns=\".*?\" title=\"([^\"]*)\" (redirect=\"\" )?/>");
@@ -148,7 +147,7 @@ public class BacklinkTitles extends TitleQuery<String> {
       titleCollection.add(m.group(1));
 
     }
-    return titleCollection;
+    return titleCollection.build();
 
   }
 
@@ -264,7 +263,7 @@ public class BacklinkTitles extends TitleQuery<String> {
 
   @Override
   protected HttpAction prepareCollection() {
-    if (getNextPageInfo().length() > 0) {
+    if (hasNextPageInfo()) {
       return requestBuilder.newContinueRequest(articleName, getNextPageInfo());
     } else {
       return requestBuilder.newInitialRequest(articleName, redirectFilter, namespaces);

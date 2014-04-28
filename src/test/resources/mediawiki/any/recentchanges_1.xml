@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<api>
+  <query-continue>
+    <recentchanges rccontinue="20140428164258|651902885" />
+  </query-continue>
+  <query>
+    <recentchanges>
+      <rc type="edit" ns="0" title="List of tallest buildings in Pakistan"
+        pageid="6923903" revid="606199674" old_revid="606199465" rcid="651902891"
+        timestamp="2014-04-28T16:43:00Z" />
+      <rc type="edit" ns="0" title="Grace Stoermer" pageid="39222520"
+        revid="606199673" old_revid="559976727" rcid="651902890"
+        timestamp="2014-04-28T16:43:00Z" />
+      <rc type="edit" ns="0" title="Corpus Christi Catholic College"
+        pageid="16142564" revid="606199672" old_revid="606199553" rcid="651902889"
+        timestamp="2014-04-28T16:43:00Z" />
+      <rc type="edit" ns="0" title="Submarine Squadron 4" pageid="3184781"
+        revid="606199671" old_revid="606106294" rcid="651902888"
+        timestamp="2014-04-28T16:43:00Z" />
+      <rc type="edit" ns="0" title="Jonathan Lee Riches" pageid="13538837"
+        revid="606199669" old_revid="604563374" rcid="651902886"
+        timestamp="2014-04-28T16:42:58Z" />
+    </recentchanges>
+  </query>
+</api>

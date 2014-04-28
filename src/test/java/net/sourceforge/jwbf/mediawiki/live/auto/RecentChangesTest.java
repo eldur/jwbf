@@ -2,7 +2,6 @@ package net.sourceforge.jwbf.mediawiki.live.auto;
 
 import static net.sourceforge.jwbf.TestHelper.getRandom;
 import static net.sourceforge.jwbf.mediawiki.LiveTestFather.getSpecialChars;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Collection;
@@ -29,7 +28,6 @@ import org.junit.Test;
 import org.junit.rules.Verifier;
 import org.junit.runners.Parameterized.Parameters;
 
-import com.google.common.base.Joiner;
 import com.google.common.base.Stopwatch;
 import com.google.common.collect.Lists;
 
@@ -152,16 +150,7 @@ public class RecentChangesTest extends ParamHelper {
     }
     assertTrue("shuld be empty but is : " + vi, vi.isEmpty());
     assertTrue("i is: " + i, i > COUNT - 1);
-    if (false) {
-      // TODO use api or better filter
-      rc = new RecentchangeTitles(bot, true);
-      titles = rc.iterator();
-      List<String> uniqTitle = Lists.newArrayList();
-      for (int j = 0; j <= COUNT; j++) {
-        uniqTitle.add(titles.next());
-      }
-      assertEquals("", Joiner.on("\n").join(uniqTitle));
-    }
+
   }
 
   private final Pattern changePattern = Pattern.compile("%Change ([0-9]+)");
