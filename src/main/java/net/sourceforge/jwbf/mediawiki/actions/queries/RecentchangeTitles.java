@@ -25,6 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.sourceforge.jwbf.core.RequestBuilder;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.extractXml.Element;
+import net.sourceforge.jwbf.extractXml.XmlConverter;
 import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
@@ -107,14 +108,13 @@ public class RecentchangeTitles extends TitleQuery<String> {
    */
   @Override
   protected ImmutableList<String> parseArticleTitles(String s) {
-    Element root = getRootElement(s);
+    Element root = XmlConverter.getRootElement(s);
     List<String> titleCollection = Lists.newArrayList();
     findContent(root, titleCollection);
     return ImmutableList.copyOf(titleCollection);
 
   }
 
-  @SuppressWarnings("unchecked")
   private void findContent(final Element root, List<String> titleCollection) {
 
     Iterator<Element> el = root.getChildren().iterator();

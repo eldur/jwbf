@@ -20,11 +20,10 @@ import com.google.common.collect.Iterables;
  *          of
  */
 @Slf4j
-abstract class TitleQuery<T> extends MWAction implements Iterable<T>, Iterator<T> {
+abstract class TitleQuery<T> implements Iterable<T>, Iterator<T> {
 
-  static final String UOE_MESSAGE = "title query uses inner response handling";
   private Iterator<T> titleIterator;
-  private final InnerAction inner;
+  private final TitleQueryAction inner;
   private final MediaWikiBot bot;
   private ImmutableList<T> oldTitlesForLogging = ImmutableList.of();
 
@@ -51,13 +50,8 @@ abstract class TitleQuery<T> extends MWAction implements Iterable<T>, Iterator<T
     inner = getInnerAction();
   }
 
-  protected InnerAction getInnerAction() {
-    return new InnerAction();
-  }
-
-  @Override
-  public final HttpAction getNextMessage() {
-    throw new UnsupportedOperationException();
+  protected TitleQueryAction getInnerAction() {
+    return new TitleQueryAction();
   }
 
   @Beta
@@ -83,16 +77,6 @@ abstract class TitleQuery<T> extends MWAction implements Iterable<T>, Iterator<T
       e.printStackTrace();
       return null;
     }
-  }
-
-  @Override
-  public final String processReturningText(final String s, final HttpAction hm) {
-    throw new UnsupportedOperationException(UOE_MESSAGE);
-  }
-
-  @Override
-  public final String processAllReturningText(final String s) {
-    throw new UnsupportedOperationException(UOE_MESSAGE);
   }
 
   /**
@@ -142,7 +126,7 @@ abstract class TitleQuery<T> extends MWAction implements Iterable<T>, Iterator<T
    * 
    * @author Thomas Stock
    */
-  public class InnerAction extends MWAction {
+  class TitleQueryAction extends MWAction {
 
     private HttpAction msg;
     private boolean init = true;
