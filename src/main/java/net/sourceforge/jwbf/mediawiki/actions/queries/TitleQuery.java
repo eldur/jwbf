@@ -3,6 +3,7 @@ package net.sourceforge.jwbf.mediawiki.actions.queries;
 import java.util.Iterator;
 
 import lombok.extern.slf4j.Slf4j;
+import net.sourceforge.jwbf.core.Optionals;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
@@ -31,8 +32,7 @@ abstract class TitleQuery<T> implements Iterable<T>, Iterator<T> {
   private Optional<String> nextPageInfo = Optional.absent();
 
   protected final String setNextPageInfo(String nextPageInfo) {
-    // TODO Optional.absentIfEmpty
-    this.nextPageInfo = Optional.fromNullable(nextPageInfo);
+    this.nextPageInfo = Optionals.absentIfEmpty(nextPageInfo);
     return nextPageInfo;
   }
 
@@ -41,8 +41,7 @@ abstract class TitleQuery<T> implements Iterable<T>, Iterator<T> {
   }
 
   protected boolean hasNextPageInfo() {
-    // TODO remove empty check (see #setNextPageInfo)
-    return nextPageInfo.isPresent() && nextPageInfo.get().length() > 0;
+    return nextPageInfo.isPresent();
   }
 
   protected TitleQuery(MediaWikiBot bot) {
