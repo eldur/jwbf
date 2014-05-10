@@ -1,6 +1,5 @@
 package net.sourceforge.jwbf.mediawiki.actions.queries;
 
-import static com.github.dreamhead.moco.Moco.and;
 import static com.github.dreamhead.moco.Moco.by;
 import static com.github.dreamhead.moco.Moco.eq;
 import static com.github.dreamhead.moco.Moco.query;
@@ -13,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.sourceforge.jwbf.AbstractIntegTest;
 import net.sourceforge.jwbf.GAssert;
 import net.sourceforge.jwbf.TestHelper;
+import net.sourceforge.jwbf.mediawiki.RequestMatcherBuilder;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 
@@ -25,34 +25,25 @@ import com.google.common.collect.ImmutableSet;
 @Slf4j
 public class TemplateUserTitlesIntegTest extends AbstractIntegTest {
 
-  RequestMatcher embeddedinTwo = AbstractIntegTest.onlyOnce(and(by(uri("/api.php")), //
-      eq(query("eicontinue"), "10|Babel|37163"), //
-      eq(query("action"), "query"), //
-      eq(query("format"), "xml"), //
-      eq(query("eilimit"), "50"), //
-      eq(query("einamespace"), "2"), //
-      eq(query("eititle"), "Template:Babel"), //
-      eq(query("list"), "embeddedin") //
-      ));
+  RequestMatcherBuilder newBaseMatcher() {
+    return new RequestMatcherBuilder() //
+        .with(by(uri("/api.php"))) //
+        .with(eq(query("action"), "query")) //
+        .with(eq(query("eilimit"), "50")) //
+        .with(eq(query("einamespace"), "2")) //
+        .with(eq(query("eititle"), "Template:Babel")) //
+        .with(eq(query("format"), "xml")) //
+        .with(eq(query("list"), "embeddedin") //
+        );
+  }
 
-  RequestMatcher embeddedinThree = AbstractIntegTest.onlyOnce(and(by(uri("/api.php")), //
-      eq(query("eicontinue"), "10|Babel|39725"), //
-      eq(query("action"), "query"), //
-      eq(query("format"), "xml"), //
-      eq(query("eilimit"), "50"), //
-      eq(query("einamespace"), "2"), //
-      eq(query("eititle"), "Template:Babel"), //
-      eq(query("list"), "embeddedin") //
-      ));
-
-  RequestMatcher embeddedinOne = AbstractIntegTest.onlyOnce(and(by(uri("/api.php")), //
-      eq(query("action"), "query"), //
-      eq(query("format"), "xml"), //
-      eq(query("eilimit"), "50"), //
-      eq(query("einamespace"), "2"), //
-      eq(query("eititle"), "Template:Babel"), //
-      eq(query("list"), "embeddedin") //
-      ));
+  RequestMatcher embeddedinTwo = newBaseMatcher() //
+      .with(eq(query("eicontinue"), "10|Babel|37163")) //
+      .build();
+  RequestMatcher embeddedinThree = newBaseMatcher() //
+      .with(eq(query("eicontinue"), "10|Babel|39725")). //
+      build();
+  RequestMatcher embeddedinOne = newBaseMatcher().build();
 
   @Test
   public void test() {
