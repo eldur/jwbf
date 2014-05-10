@@ -194,9 +194,7 @@ public final class MediaWiki {
     return CHARSET;
   }
 
-  /**
-   * @return encoded s
-   */
+  // TODO rename
   public static String encode(String s) {
     try {
       return URLEncoder.encode(s, MediaWiki.CHARSET);
@@ -205,9 +203,7 @@ public final class MediaWiki {
     }
   }
 
-  /**
-   * @return decoded s
-   */
+  // TODO rename
   public static String decode(final String s) {
     String out = HTMLEntities.unhtmlentities(s);
     out = HTMLEntities.unhtmlQuotes(out);

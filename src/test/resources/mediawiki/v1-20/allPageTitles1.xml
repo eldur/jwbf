@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<api>
+  <query>
+    <allpages>
+      <p pageid="348" ns="0" title="%" />
+    </allpages>
+  </query>
+  <query-continue>
+    <allpages apcontinue="%Change_0" />
+  </query-continue>
+</api>

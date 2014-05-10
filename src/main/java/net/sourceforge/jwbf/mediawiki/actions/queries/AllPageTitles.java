@@ -32,6 +32,7 @@ import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.actions.util.RedirectFilter;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 
+import com.google.common.base.Optional;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 
@@ -103,7 +104,6 @@ public class AllPageTitles extends TitleQuery<String> {
     this.prefix = prefix;
     this.namespaces = namespaces;
     this.from = from;
-    // generateRequest(from, prefix, rf, namespaces);
 
   }
 
@@ -121,29 +121,18 @@ public class AllPageTitles extends TitleQuery<String> {
    *          parameter is omitted
    * @return a
    */
-  private Get generateRequest(String from, String prefix, RedirectFilter rf, String namespace) {
-    if (log.isTraceEnabled()) {
-      log.trace("enter GetAllPagetitles.generateRequest" + "(String,String,boolean,boolean,String)");
-    }
-
-    String apfilterredir;
-    if (rf == RedirectFilter.all) {
-      apfilterredir = "all";
-    } else if (rf == RedirectFilter.redirects) {
-      apfilterredir = "redirects";
-    } else {
-      apfilterredir = "nonredirects";
-    }
+  private Get generateRequest(Optional<String> from, String prefix, RedirectFilter rf,
+      String namespace) {
     RequestBuilder requestBuilder = new ApiRequestBuilder() //
         .action("query") //
         .formatXml() //
         .param("list", "allpages") //
-        .param("apfilterredir", apfilterredir) //
+        .param("apfilterredir", findRedirectFilterValue(rf)) //
         .param("aplimit", LIMIT) //
     ;
 
-    if (!Strings.isNullOrEmpty(from)) {
-      requestBuilder.param("apfrom", MediaWiki.encode(from));
+    if (from.isPresent()) {
+      requestBuilder.param("apfrom", MediaWiki.encode(from.get()));
     }
     if (!Strings.isNullOrEmpty(prefix)) {
       requestBuilder.param("apprefix", MediaWiki.encode(prefix));
@@ -152,6 +141,16 @@ public class AllPageTitles extends TitleQuery<String> {
       requestBuilder.param("apnamespace", MediaWiki.encode(namespace));
     }
     return requestBuilder.buildGet();
+  }
+
+  private String findRedirectFilterValue(RedirectFilter rf) {
+    if (rf == RedirectFilter.all) {
+      return "all";
+    } else if (rf == RedirectFilter.redirects) {
+      return "redirects";
+    } else {
+      return "nonredirects";
+    }
   }
 
   /**
@@ -163,16 +162,11 @@ public class AllPageTitles extends TitleQuery<String> {
    */
   @Override
   protected ImmutableList<String> parseArticleTitles(String s) {
-    if (log.isTraceEnabled()) {
-      log.trace("enter GetAllPagetitles.parseArticleTitles(String)");
-    }
     ImmutableList.Builder<String> titles = ImmutableList.<String> builder();
     Matcher m = ARTICLE_TITLES_PATTERN.matcher(s);
     while (m.find()) {
       String title = MediaWiki.decode(m.group(1));
-      if (log.isDebugEnabled()) {
-        log.debug("Found article title: \"" + title + "\"");
-      }
+      log.debug("Found article title: \"{}\"", title);
       titles.add(title);
     }
     return titles.build();
@@ -188,9 +182,7 @@ public class AllPageTitles extends TitleQuery<String> {
    */
   @Override
   protected String parseHasMore(final String s) {
-    if (log.isTraceEnabled()) {
-      log.trace("enter GetAllPagetitles.parseHasMore(String)");
-    }
+
     Pattern hasMorePattern = null;
     switch (bot.getVersion()) {
     case MW1_15:
@@ -219,8 +211,7 @@ public class AllPageTitles extends TitleQuery<String> {
    */
   @Override
   protected HttpAction prepareCollection() {
-
-    return generateRequest(getNextPageInfo(), prefix, rf, namespaces);
+    return generateRequest(nextPageInfoOpt(), prefix, rf, namespaces);
 
   }
 

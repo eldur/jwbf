@@ -34,8 +34,8 @@ public class SiteInfoIntegTest extends MocoIntegTest {
     super(v);
   }
 
-  RequestMatcher siteinfo = and(by(uri("/api.php")), eq(query("action"), "query"),
-      eq(query("format"), "xml"), eq(query("meta"), "siteinfo"));
+  public static final RequestMatcher siteinfo = and(by(uri("/api.php")),
+      eq(query("action"), "query"), eq(query("format"), "xml"), eq(query("meta"), "siteinfo"));
 
   @Test
   public void doTest() {

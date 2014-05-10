@@ -37,7 +37,11 @@ abstract class TitleQuery<T> implements Iterable<T>, Iterator<T> {
   }
 
   protected final String getNextPageInfo() {
-    return nextPageInfo.get();
+    return nextPageInfoOpt().get();
+  }
+
+  protected final Optional<String> nextPageInfoOpt() {
+    return nextPageInfo;
   }
 
   protected boolean hasNextPageInfo() {
