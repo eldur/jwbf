@@ -28,6 +28,7 @@ import net.sourceforge.jwbf.core.actions.Get;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
+import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.actions.util.RedirectFilter;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
@@ -62,7 +63,7 @@ public class AllPageTitles extends TitleQuery<String> {
    * Information given in the constructor, necessary for creating next action.
    */
   private final String prefix;
-  private final String namespaces;
+  private final int[] namespaces;
 
   private final MediaWikiBot bot;
 
@@ -86,17 +87,6 @@ public class AllPageTitles extends TitleQuery<String> {
    */
   public AllPageTitles(MediaWikiBot bot, String from, String prefix, RedirectFilter rf,
       int... namespaces) {
-    this(bot, from, prefix, rf, MWAction.createNsString(namespaces));
-
-  }
-
-  public AllPageTitles(MediaWikiBot bot, int... namespaces) {
-    this(bot, null, null, RedirectFilter.nonredirects, namespaces);
-
-  }
-
-  protected AllPageTitles(MediaWikiBot bot, String from, String prefix, RedirectFilter rf,
-      String namespaces) {
     super(bot);
 
     this.bot = bot;
@@ -104,7 +94,10 @@ public class AllPageTitles extends TitleQuery<String> {
     this.prefix = prefix;
     this.namespaces = namespaces;
     this.from = from;
+  }
 
+  public AllPageTitles(MediaWikiBot bot, int... namespaces) {
+    this(bot, null, null, RedirectFilter.nonredirects, namespaces);
   }
 
   /**
@@ -121,7 +114,7 @@ public class AllPageTitles extends TitleQuery<String> {
    *          parameter is omitted
    * @return a
    */
-  private Get generateRequest(Optional<String> from, String prefix, RedirectFilter rf,
+  protected Get generateRequest(Optional<String> from, String prefix, RedirectFilter rf,
       String namespace) {
     RequestBuilder requestBuilder = new ApiRequestBuilder() //
         .action("query") //
@@ -143,7 +136,7 @@ public class AllPageTitles extends TitleQuery<String> {
     return requestBuilder.buildGet();
   }
 
-  private String findRedirectFilterValue(RedirectFilter rf) {
+  protected String findRedirectFilterValue(RedirectFilter rf) {
     if (rf == RedirectFilter.all) {
       return "all";
     } else if (rf == RedirectFilter.redirects) {
@@ -184,7 +177,7 @@ public class AllPageTitles extends TitleQuery<String> {
   protected String parseHasMore(final String s) {
 
     Pattern hasMorePattern = null;
-    switch (bot.getVersion()) {
+    switch (botVersion()) {
     case MW1_15:
     case MW1_16:
     case MW1_17:
@@ -206,12 +199,18 @@ public class AllPageTitles extends TitleQuery<String> {
     }
   }
 
+  private Version botVersion() {
+    Version version = bot.getVersion();
+    return Optional.fromNullable(version) //
+        .or(Version.UNKNOWN);
+  }
+
   /**
    * {@inheritDoc}
    */
   @Override
   protected HttpAction prepareCollection() {
-    return generateRequest(nextPageInfoOpt(), prefix, rf, namespaces);
+    return generateRequest(nextPageInfoOpt(), prefix, rf, MWAction.createNsString(namespaces));
 
   }
 

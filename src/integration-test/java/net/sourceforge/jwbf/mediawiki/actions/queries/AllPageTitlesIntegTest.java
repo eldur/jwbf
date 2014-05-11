@@ -4,6 +4,7 @@ import static com.github.dreamhead.moco.Moco.by;
 import static com.github.dreamhead.moco.Moco.eq;
 import static com.github.dreamhead.moco.Moco.query;
 import static com.github.dreamhead.moco.Moco.uri;
+import static org.junit.Assert.fail;
 
 import java.util.Collection;
 
@@ -72,6 +73,21 @@ public class AllPageTitlesIntegTest extends MocoIntegTest {
         confOf(ConfKey.ALL_PAGE_2));
     GAssert.assertEquals(expected, actual);
 
+  }
+
+  @Test
+  public void doFail() {
+
+    // GIVEN
+    // nothing
+    try {
+      // WHEN
+      new AllPageTitles(bot()).getCopyOf(2);
+      fail();
+    } catch (IllegalStateException e) {
+      // THEN
+      GAssert.assertStartsWith("invalid status: HTTP", e.getMessage());
+    }
   }
 
 }
