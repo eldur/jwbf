@@ -56,8 +56,7 @@ public class RecentChangesTest extends ParamHelper {
 
   @Before
   public void before() {
-    watch = new Stopwatch();
-    watch.start();
+    watch = Stopwatch.createStarted();
   }
 
   @After

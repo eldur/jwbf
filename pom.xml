@@ -103,7 +103,7 @@
       <plugin>
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
-        <version>0.7.0.201403182114</version>
+        <version>0.7.1.201405082137</version>
         <executions>
           <execution>
             <goals>
@@ -252,17 +252,17 @@
     <dependency>
       <groupId>org.apache.httpcomponents</groupId>
       <artifactId>httpclient</artifactId>
-      <version>4.3.2</version>
+      <version>4.3.3</version>
     </dependency>
     <dependency>
       <groupId>org.apache.httpcomponents</groupId>
       <artifactId>fluent-hc</artifactId>
-      <version>4.3.2</version>
+      <version>4.3.3</version>
     </dependency>
     <dependency>
       <groupId>org.apache.httpcomponents</groupId>
       <artifactId>httpmime</artifactId>
-      <version>4.3.2</version>
+      <version>4.3.3</version>
     </dependency>
     <dependency>
       <groupId>commons-lang</groupId>
@@ -282,7 +282,7 @@
     <dependency>
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
-      <version>16.0.1</version>
+      <version>17.0</version>
     </dependency>
     <dependency>
       <groupId>junit</groupId>
@@ -317,7 +317,7 @@
     <dependency>
       <groupId>com.typesafe</groupId>
       <artifactId>config</artifactId>
-      <version>1.2.0</version>
+      <version>1.2.1</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -329,7 +329,7 @@
       <groupId>org.jacoco</groupId>
       <artifactId>org.jacoco.agent</artifactId>
       <classifier>runtime</classifier>
-      <version>0.7.0.201403182114</version>
+      <version>0.7.1.201405082137</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -341,13 +341,13 @@
     <dependency>
       <groupId>org.eclipse.jetty</groupId>
       <artifactId>jetty-server</artifactId>
-      <version>9.1.3.v20140225</version>
+      <version>9.2.0.M1</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.eclipse.jetty</groupId>
       <artifactId>jetty-servlet</artifactId>
-      <version>9.1.3.v20140225</version>
+      <version>9.2.0.M1</version>
       <scope>test</scope>
     </dependency>
     <dependency>

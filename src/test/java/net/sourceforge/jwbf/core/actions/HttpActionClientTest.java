@@ -97,7 +97,7 @@ public class HttpActionClientTest {
           .add(entry(ACCEPT_ENCODING, "gzip,deflate")) //
           .add(entry(CONNECTION, "keep-alive")) //
           .add(entry(HOST, "localhost:????")) //
-          .add(entry(USER_AGENT, "Apache-HttpClient/4.3.2 (java 1.5)")) //
+          .add(entry(USER_AGENT, "Apache-HttpClient/4.3.3 (java 1.5)")) //
           .build();
 
       assertEquals(Joiner.on("\n").join(expected), new String(bs).trim());
