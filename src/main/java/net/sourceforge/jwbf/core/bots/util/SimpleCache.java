@@ -146,9 +146,7 @@ public class SimpleCache implements CacheHandler {
 
       return sa;
 
-    } catch (IOException e) {
-      e.printStackTrace();
-    } catch (ClassNotFoundException e) {
+    } catch (IOException | ClassNotFoundException e) {
       e.printStackTrace();
     } finally {
       try {

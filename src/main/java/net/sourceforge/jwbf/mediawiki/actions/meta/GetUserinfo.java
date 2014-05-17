@@ -1,6 +1,5 @@
 package net.sourceforge.jwbf.mediawiki.actions.meta;
 
-import java.util.Iterator;
 import java.util.Set;
 
 import com.google.common.collect.Sets;
@@ -81,25 +80,20 @@ public class GetUserinfo extends MWAction implements Userinfo {
   @SuppressWarnings("unchecked")
   protected void findContent(final Element root) {
 
-    Iterator<Element> el = root.getChildren().iterator();
-
-    while (el.hasNext()) {
-      Element element = el.next();
+    for (Element element : root.getChildren()) {
       // blockinfo|hasmsg|groups|rights <- MW 11
       if (element.getQualifiedName().equalsIgnoreCase("userinfo")) {
         username = element.getAttributeValue("name");
 
       } else if (element.getQualifiedName().equalsIgnoreCase("groups")) {
-        Iterator<Element> git = element.getChildren("g").iterator();
-        while (git.hasNext()) {
-          String gel = git.next().getText();
+        for (Element element1 : element.getChildren("g")) {
+          String gel = element1.getText();
           groups.add(gel);
         }
       } else if (element.getQualifiedName().equalsIgnoreCase("rights")) {
 
-        Iterator<Element> rit = element.getChildren("r").iterator();
-        while (rit.hasNext()) {
-          String rel = rit.next().getText();
+        for (Element element1 : element.getChildren("r")) {
+          String rel = element1.getText();
 
           rights.add(rel);
         }

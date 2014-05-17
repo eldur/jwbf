@@ -197,9 +197,9 @@ public class HttpActionClientTest {
 
   private ImmutableList<Long> toRanges(Iterable<Long> ints) {
     ImmutableList<Long> intList = ImmutableList.copyOf(ints);
-    Builder<Long> builder = ImmutableList.<Long>builder();
+    Builder<Long> builder = ImmutableList.builder();
     for (int i = 0; i < intList.size() - 1; i++) {
-      Long a = intList.get(0 + i);
+      Long a = intList.get(i);
       Long b = intList.get(1 + i);
       Long delta = b - a;
       builder.add(delta);

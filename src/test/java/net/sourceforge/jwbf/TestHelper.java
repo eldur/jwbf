@@ -40,7 +40,7 @@ public class TestHelper {
   }
 
   public static String getRandom(int length, int begin, int end) {
-    StringBuffer out = new StringBuffer();
+    StringBuilder out = new StringBuilder();
     int charNum = 0;
     int count = 1;
     while (count <= length) {

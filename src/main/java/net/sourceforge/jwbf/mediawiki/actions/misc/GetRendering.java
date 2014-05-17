@@ -1,6 +1,5 @@
 package net.sourceforge.jwbf.mediawiki.actions.misc;
 
-import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 import net.sourceforge.jwbf.core.actions.Get;
@@ -12,6 +11,8 @@ import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Implements function to render wikitext on remote <a href=
@@ -20,6 +21,8 @@ import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
  * @author Thomas Stock
  */
 public class GetRendering extends MWAction {
+
+  private static final Logger log = LoggerFactory.getLogger(GetRendering.class);
 
   private final Get msg;
   private String html = "";
@@ -75,11 +78,7 @@ public class GetRendering extends MWAction {
 
   private Element findContent(final Element e, final String name) {
     Element found = null;
-    @SuppressWarnings("unchecked")
-    Iterator<Element> el = e.getChildren().iterator();
-    while (el.hasNext()) {
-      Element element = el.next();
-
+    for (Element element : e.getChildren()) {
       if (element.getQualifiedName().equalsIgnoreCase(name)) {
         return element;
 
@@ -99,10 +98,8 @@ public class GetRendering extends MWAction {
       isSelfEx = false;
       bot.performAction(this);
 
-    } catch (ActionException e) {
-      e.printStackTrace();
-    } catch (ProcessException e) {
-      e.printStackTrace();
+    } catch (ActionException | ProcessException e) {
+      log.warn("", e);
     } finally {
       isSelfEx = true;
     }

@@ -150,12 +150,12 @@ final class HTMLEntities {
   /**
    * Map to convert extended characters in html entities.
    */
-  private static final Hashtable<Integer, String> HTMLENTITIES_MAP = new Hashtable<Integer, String>();
+  private static final Hashtable<Integer, String> HTMLENTITIES_MAP = new Hashtable<>();
 
   /**
    * Map to convert html entities in exteden characters.
    */
-  private static final Hashtable<String, Integer> UNHTMLENTITIES_MAP = new Hashtable<String, Integer>();
+  private static final Hashtable<String, Integer> UNHTMLENTITIES_MAP = new Hashtable<>();
 
   // ==============================================================================
   // METHODS
@@ -173,10 +173,10 @@ final class HTMLEntities {
    */
   private static void initializeEntitiesTables() {
     // initialize html translation maps
-    for (int i = 0; i < HTML_ENTITIES_TABLE.length; ++i) {
-      HTMLENTITIES_MAP.put((Integer) HTML_ENTITIES_TABLE[i][1], (String) HTML_ENTITIES_TABLE[i][0]);
-      UNHTMLENTITIES_MAP.put((String) HTML_ENTITIES_TABLE[i][0],
-          (Integer) HTML_ENTITIES_TABLE[i][1]);
+    for (Object[] aHTML_ENTITIES_TABLE : HTML_ENTITIES_TABLE) {
+      HTMLENTITIES_MAP.put((Integer) aHTML_ENTITIES_TABLE[1], (String) aHTML_ENTITIES_TABLE[0]);
+      UNHTMLENTITIES_MAP.put((String) aHTML_ENTITIES_TABLE[0],
+          (Integer) aHTML_ENTITIES_TABLE[1]);
     }
   }
 
@@ -194,7 +194,7 @@ final class HTMLEntities {
       initializeEntitiesTables();
     }
 
-    StringBuffer buf = new StringBuffer();
+    StringBuilder buf = new StringBuilder();
 
     for (int i = 0; i < str.length(); ++i) {
       char ch = str.charAt(i);

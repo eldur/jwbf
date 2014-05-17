@@ -1,9 +1,9 @@
 package net.sourceforge.jwbf.mediawiki.actions.meta;
 
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.Map;
 
+import com.google.common.base.Joiner;
 import com.google.common.collect.Maps;
 import net.sourceforge.jwbf.core.actions.Get;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
@@ -52,11 +52,7 @@ public class Siteinfo extends GetVersion {
    * @param types the, see {@link #GENERAL}, {@link #INTERWIKIMAP}, ...
    */
   public Siteinfo(String... types) {
-    StringBuffer x = new StringBuffer();
-    for (int i = 0; i < types.length; i++) {
-      x.append(types[i] + "|");
-    }
-    String result = x.substring(0, x.length() - 1);
+    String result = Joiner.on("|").join(types);
     msg = new ApiRequestBuilder() //
         .action("query") //
         .formatXml() //
@@ -78,9 +74,7 @@ public class Siteinfo extends GetVersion {
   @SuppressWarnings("unchecked")
   protected void findContent(final Element root) {
     super.findContent(root);
-    Iterator<Element> el = root.getChildren().iterator();
-    while (el.hasNext()) {
-      Element element = el.next();
+    for (Element element : root.getChildren()) {
       if (element.getQualifiedName().equalsIgnoreCase("ns")) {
         Integer id = Integer.parseInt(element.getAttributeValue("id"));
         String name = element.getText();

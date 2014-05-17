@@ -19,7 +19,6 @@
 package net.sourceforge.jwbf.mediawiki.actions.editing;
 
 import java.text.ParseException;
-import java.util.Iterator;
 
 import net.sourceforge.jwbf.core.actions.Get;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
@@ -165,10 +164,7 @@ public class GetRevision extends MWAction {
 
   private void findContent(final Element root) {
 
-    @SuppressWarnings("unchecked")
-    Iterator<Element> el = root.getChildren().iterator();
-    while (el.hasNext()) {
-      Element element = el.next();
+    for (Element element : root.getChildren()) {
       if (element.getQualifiedName().equalsIgnoreCase("rev")) {
 
         try {

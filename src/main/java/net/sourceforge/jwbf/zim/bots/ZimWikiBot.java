@@ -89,8 +89,7 @@ public class ZimWikiBot implements WikiBot {
     File f = new File(getRootFolder(), name + ZIMEXT);
     SimpleArticle sa = new SimpleArticle();
     sa.setTitle(name);
-    StringBuffer text = new StringBuffer();
-    // create a file reader
+    StringBuilder text = new StringBuilder();
     BufferedReader myInput = null;
     try {
       myInput = new BufferedReader(new FileReader(f));
@@ -98,7 +97,6 @@ public class ZimWikiBot implements WikiBot {
       String line = "";
       String cont = "";
 
-      // if we are reading content, than
       while ((line = myInput.readLine()) != null) {
 
         // omit the headline

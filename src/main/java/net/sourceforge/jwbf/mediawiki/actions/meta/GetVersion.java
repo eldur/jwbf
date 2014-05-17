@@ -19,7 +19,6 @@
 
 package net.sourceforge.jwbf.mediawiki.actions.meta;
 
-import java.util.Iterator;
 import java.util.Set;
 
 import com.google.common.base.Joiner;
@@ -156,9 +155,7 @@ public class GetVersion extends MWAction {
   @SuppressWarnings("unchecked")
   protected void findContent(final Element root) {
 
-    Iterator<Element> el = root.getChildren().iterator();
-    while (el.hasNext()) {
-      Element element = el.next();
+    for (Element element : root.getChildren()) {
       if (element.getQualifiedName().equalsIgnoreCase("general")) {
 
         mainpage = element.getAttributeValue("mainpage");

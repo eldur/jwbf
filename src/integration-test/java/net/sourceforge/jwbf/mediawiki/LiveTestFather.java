@@ -145,8 +145,6 @@ public class LiveTestFather {
       synchronized (this) {
         try {
           properties.storeToXML(new FileOutputStream(filename), "");
-        } catch (FileNotFoundException e) {
-          throw new IllegalStateException(e);
         } catch (IOException e) {
           throw new IllegalStateException(e);
         }

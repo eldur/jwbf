@@ -74,9 +74,7 @@ public class XmlConverter {
           = new ByteArrayInputStream(s.getBytes(MediaWiki.getCharset()));
       InputSource contenido = new InputSource(byteStream);
       return titleParser.evaluate(contenido);
-    } catch (XPathExpressionException e) {
-      throw new IllegalArgumentException(e);
-    } catch (UnsupportedEncodingException e) {
+    } catch (XPathExpressionException | UnsupportedEncodingException e) {
       throw new IllegalArgumentException(e);
     }
   }

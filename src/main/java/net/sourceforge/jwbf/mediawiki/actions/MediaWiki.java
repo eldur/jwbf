@@ -146,6 +146,7 @@ public final class MediaWiki {
     public static Version getLatest() {
       if (last == UNKNOWN) {
         Version[] as = valuesStable();
+        // TODO find first with guava
         for (int i = 0; i < as.length; i++) {
           if (as[i].getIntValue() > last.getIntValue()) {
             last = as[i];
@@ -167,14 +168,14 @@ public final class MediaWiki {
      */
     public static Version[] valuesStable() {
       List<Version> resultVersions = Lists.newArrayList();
-
+      // TODO filter
       for (Version version : Version.values()) {
         boolean isDeprecated = getField(version).isAnnotationPresent(Deprecated.class);
         if (!(version.equals(DEVELOPMENT) || version.equals(UNKNOWN) || isDeprecated)) {
           resultVersions.add(version);
         }
       }
-      return resultVersions.toArray(new Version[0]);
+      return resultVersions.toArray(new Version[resultVersions.size()]);
     }
 
     protected static Field getField(Version version) {

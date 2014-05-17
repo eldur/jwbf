@@ -29,7 +29,6 @@ import java.awt.image.BufferedImage;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -245,8 +244,6 @@ public class UploadAndImageInfoTest extends ParamHelper {
         }
         lcount = lin.read(lbuffer);
       }
-    } catch (FileNotFoundException e) {
-      throw new IllegalStateException(e);
     } catch (IOException e) {
       throw new IllegalStateException(e);
     } finally {

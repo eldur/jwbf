@@ -5,7 +5,6 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.Map;
 
 import com.google.common.base.Preconditions;
@@ -157,9 +156,7 @@ public class ImageInfo extends MWAction {
   @SuppressWarnings("unchecked")
   private void findContent(final Element root) {
 
-    Iterator<Element> el = root.getChildren().iterator();
-    while (el.hasNext()) {
-      Element element = el.next();
+    for (Element element : root.getChildren()) {
       if (element.getQualifiedName().equalsIgnoreCase("ii")) {
         urlOfImage = element.getAttributeValue("url");
 

@@ -1,7 +1,6 @@
 package net.sourceforge.jwbf.mediawiki.bots;
 
 import java.net.URL;
-import java.util.Iterator;
 import java.util.List;
 
 import com.google.common.collect.Lists;
@@ -35,9 +34,7 @@ public class MediaWikiThreadBot extends MediaWikiBot {
   }
 
   public void start() {
-    Iterator<Thread> ti = rv.iterator();
-    while (ti.hasNext()) {
-      Thread thread = ti.next();
+    for (Thread thread : rv) {
       if (!thread.isAlive()) {
         thread.start();
       }

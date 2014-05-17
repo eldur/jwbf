@@ -18,7 +18,6 @@
  */
 package net.sourceforge.jwbf.mediawiki.actions.queries;
 
-import java.util.Iterator;
 import java.util.List;
 
 import com.google.common.collect.ImmutableList;
@@ -117,9 +116,7 @@ public class RecentchangeTitles extends TitleQuery<String> {
 
   private void findContent(final Element root, List<String> titleCollection) {
 
-    Iterator<Element> el = root.getChildren().iterator();
-    while (el.hasNext()) {
-      Element element = el.next();
+    for (Element element : root.getChildren()) {
       if (element.getQualifiedName().equalsIgnoreCase("rc")) {
         titleCollection.add(MediaWiki.decode(element.getAttributeValue("title")));
         setNextPageInfo(element.getAttributeValue("timestamp"));

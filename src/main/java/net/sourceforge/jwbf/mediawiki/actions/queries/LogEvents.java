@@ -23,6 +23,7 @@ import java.util.Iterator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import net.sourceforge.jwbf.core.RequestBuilder;
 import net.sourceforge.jwbf.core.actions.Get;
@@ -55,7 +56,7 @@ public class LogEvents extends MWAction implements Iterator<LogItem>, Iterable<L
   public static final String DELETE = "delete";
   public static final String UPLOAD = "upload";
   public static final String MOVE = "move";
-  public static final String IMPORT = "mport";
+  public static final String IMPORT = "import";
   public static final String PATROL = "patrol";
   public static final String MERGE = "merge";
 
@@ -119,11 +120,7 @@ public class LogEvents extends MWAction implements Iterator<LogItem>, Iterable<L
         .param("lelimit", limit) //
         ;
     if (logtype.length > 0) {
-      StringBuffer logtemp = new StringBuffer();
-      for (int i = 0; i < logtype.length; i++) {
-        logtemp.append(logtype[i] + "|");
-      }
-      requestBuilder.param("letype", logtemp.substring(0, logtemp.length() - 1));
+      requestBuilder.param("letype", Joiner.on("|").join(logtype));
     }
 
     return requestBuilder.buildGet();
@@ -187,9 +184,7 @@ public class LogEvents extends MWAction implements Iterator<LogItem>, Iterable<L
   @SuppressWarnings("unchecked")
   private void findContent(final Element root) {
 
-    Iterator<Element> el = root.getChildren().iterator();
-    while (el.hasNext()) {
-      Element element = el.next();
+    for (Element element : root.getChildren()) {
       if (element.getQualifiedName().equalsIgnoreCase("item")) {
 
         LogItem l = new LogItem();
