@@ -7,27 +7,27 @@ import static org.junit.Assert.fail;
 
 import java.util.Collection;
 
-import lombok.extern.slf4j.Slf4j;
+import com.google.common.collect.Lists;
 import net.sourceforge.jwbf.core.contentRep.Article;
 import net.sourceforge.jwbf.mediawiki.VersionTestClassVerifier;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.actions.queries.TemplateUserTitles;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
-
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Verifier;
 import org.junit.runners.Parameterized.Parameters;
-
-import com.google.common.collect.Lists;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Thomas Stock
  */
-@Slf4j
 public class TemplateUserTitlesTest extends ParamHelper {
+
+  private static final Logger log = LoggerFactory.getLogger(TemplateUserTitlesTest.class);
 
   private static final String TESTPATTERNNAME = "Template:ATesT";
 

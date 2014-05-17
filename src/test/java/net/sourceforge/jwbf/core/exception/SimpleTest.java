@@ -8,7 +8,6 @@ import java.io.StringWriter;
 
 import net.sourceforge.jwbf.JWBF;
 import net.sourceforge.jwbf.core.actions.util.ActionException;
-
 import org.junit.Test;
 
 /**

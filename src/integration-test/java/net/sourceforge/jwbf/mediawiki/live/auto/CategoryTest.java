@@ -24,7 +24,7 @@ import static org.junit.Assert.fail;
 import java.util.Collection;
 import java.util.Iterator;
 
-import lombok.extern.slf4j.Slf4j;
+import com.google.common.collect.Lists;
 import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
 import net.sourceforge.jwbf.mediawiki.VersionTestClassVerifier;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
@@ -32,17 +32,17 @@ import net.sourceforge.jwbf.mediawiki.actions.queries.CategoryMembersFull;
 import net.sourceforge.jwbf.mediawiki.actions.queries.CategoryMembersSimple;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 import net.sourceforge.jwbf.mediawiki.contentRep.CategoryItem;
-
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Verifier;
 import org.junit.runners.Parameterized.Parameters;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.google.common.collect.Lists;
-
-@Slf4j
 public class CategoryTest extends ParamHelper {
+
+  private static final Logger log = LoggerFactory.getLogger(CategoryTest.class);
 
   @ClassRule
   public static VersionTestClassVerifier classVerifier = new VersionTestClassVerifier(

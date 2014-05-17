@@ -37,9 +37,9 @@ public interface ContentProcessable extends ReturningTextProcessor {
 
   /**
    * Use this in self maintaining lists for e.g., to prevent user to perform this action manually.
-   * 
-   * @deprecated better encapsulate action if no external execution shuld be avalibal.
+   *
    * @return true if
+   * @deprecated better encapsulate action if no external execution shuld be avalibal.
    */
   @Deprecated
   boolean isSelfExecuter();

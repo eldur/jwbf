@@ -16,7 +16,6 @@ import net.sourceforge.jwbf.mediawiki.actions.editing.GetApiToken;
 import net.sourceforge.jwbf.mediawiki.actions.editing.GetRevision;
 import net.sourceforge.jwbf.mediawiki.actions.editing.PostModifyContent;
 import net.sourceforge.jwbf.mediawiki.actions.util.ApiException;
-
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;

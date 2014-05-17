@@ -1,6 +1,5 @@
 package net.sourceforge.jwbf.mediawiki.actions.editing;
 
-import lombok.extern.slf4j.Slf4j;
 import net.sourceforge.jwbf.core.RequestBuilder;
 import net.sourceforge.jwbf.core.actions.Post;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
@@ -10,19 +9,17 @@ import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Action class using the MediaWiki-API's <a href="http://www.mediawiki.org/wiki/API:Edit_-_Delete">"action=delete"</a>.
- * <p>
  * To allow your bot to delete articles in your MediaWiki add the following line to your MediaWiki's LocalSettings.php:<br>
- * 
  * <pre>
  * $wgEnableWriteAPI = true;
  * $wgGroupPermissions['bot']['delete'] = true;
  * </pre>
- * <p>
  * Delete an article with
- * 
  * <pre>
  * String name = ...
  * MediaWikiBot bot = ...
@@ -30,11 +27,12 @@ import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
  * Userinfo ui = bot.getUserinfo();
  * bot.performAction(new PostDelete(name, si, ui));
  * </pre>
- * 
+ *
  * @author Max Gensthaler
  */
-@Slf4j
 public class PostDelete extends MWAction {
+
+  private static final Logger log = LoggerFactory.getLogger(PostDelete.class);
 
   private final String title;
   private String reason;
@@ -62,13 +60,10 @@ public class PostDelete extends MWAction {
 
   /**
    * Constructs a new <code>PostDelete</code> action.
-   * 
-   * @param bot
-   *          MediaWikiBot
-   * @param title
-   *          the title of the page to delete
-   * @param reason
-   *          reason for the deletion (may be null) in case of a precessing exception in case of an action exception
+   *
+   * @param bot    MediaWikiBot
+   * @param title  the title of the page to delete
+   * @param reason reason for the deletion (may be null) in case of a precessing exception in case of an action exception
    */
   public PostDelete(MediaWikiBot bot, String title, String reason) {
     this(bot, title);
@@ -88,7 +83,7 @@ public class PostDelete extends MWAction {
         .formatXml() //
         .param("title", MediaWiki.encode(title)) //
         .param("token", MediaWiki.encode(token.getToken())) //
-    ;
+        ;
 
     if (reason != null) {
       requestBuilder.param("reason", MediaWiki.encode(reason));

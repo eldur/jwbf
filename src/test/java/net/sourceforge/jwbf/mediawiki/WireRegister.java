@@ -1,18 +1,18 @@
 package net.sourceforge.jwbf.mediawiki;
 
-import java.util.Map;
-
 import javax.annotation.CheckForNull;
 import javax.inject.Singleton;
-
-import lombok.extern.slf4j.Slf4j;
-import net.sourceforge.jwbf.core.actions.util.HttpAction;
+import java.util.Map;
 
 import com.google.common.collect.Maps;
+import net.sourceforge.jwbf.core.actions.util.HttpAction;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Singleton
-@Slf4j
 class WireRegister extends Thread {
+
+  private static final Logger log = LoggerFactory.getLogger(WireRegister.class);
 
   private Map<HttpAction, String> cache = Maps.newHashMap();
 

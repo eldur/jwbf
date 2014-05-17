@@ -3,9 +3,8 @@ package net.sourceforge.jwbf.mediawiki.actions.util;
 import java.util.Arrays;
 import java.util.Deque;
 
-import net.sourceforge.jwbf.core.actions.util.HttpAction;
-
 import com.google.common.collect.Queues;
+import net.sourceforge.jwbf.core.actions.util.HttpAction;
 
 public abstract class DequeMWAction extends MWAction {
 

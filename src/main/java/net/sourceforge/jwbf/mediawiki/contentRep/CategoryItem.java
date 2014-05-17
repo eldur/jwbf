@@ -22,7 +22,7 @@ import net.sourceforge.jwbf.mediawiki.actions.queries.CategoryMembersFull;
 
 /**
  * This class helps to get detail information about category items and was returned by {@link CategoryMembersFull}.
- * 
+ *
  * @author Thomas Stock
  */
 public class CategoryItem {
@@ -47,8 +47,7 @@ public class CategoryItem {
   }
 
   /**
-   * @param title
-   *          the
+   * @param title the
    */
   public void setTitle(String title) {
     this.title = title;
@@ -62,8 +61,7 @@ public class CategoryItem {
   }
 
   /**
-   * @param namespace
-   *          the
+   * @param namespace the
    */
   public void setNamespace(int namespace) {
     this.namespace = namespace;

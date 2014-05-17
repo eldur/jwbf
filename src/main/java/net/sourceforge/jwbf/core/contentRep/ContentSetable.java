@@ -3,44 +3,37 @@ package net.sourceforge.jwbf.core.contentRep;
 public interface ContentSetable {
 
   /**
-   * @param s
-   *          the
+   * @param s the
    */
   void setEditSummary(final String s);
 
   /**
-   * @param minor
-   *          the
+   * @param minor the
    */
   void setMinorEdit(final boolean minor);
 
   /**
-   * @param title
-   *          the label, like "Main Page"
+   * @param title the label, like "Main Page"
    */
   void setTitle(final String title);
 
   /**
-   * @param text
-   *          the content of the article
+   * @param text the content of the article
    */
   void setText(final String text);
 
   /**
-   * @param text
-   *          to add to content of the article
+   * @param text to add to content of the article
    */
   void addText(final String text);
 
   /**
-   * @param text
-   *          to add to content of the article
+   * @param text to add to content of the article
    */
   void addTextnl(final String text);
 
   /**
-   * @param editor
-   *          the
+   * @param editor the
    */
   void setEditor(final String editor);
 

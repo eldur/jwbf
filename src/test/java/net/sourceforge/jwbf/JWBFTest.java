@@ -12,19 +12,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
+import java.util.Map;
 import java.util.jar.Attributes;
 import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
 import java.util.jar.Manifest;
-
-import lombok.val;
-import net.sourceforge.jwbf.JWBF.ContainerEntry;
-import net.sourceforge.jwbf.core.actions.HttpActionClient;
-import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
-
-import org.junit.Before;
-import org.junit.Test;
 
 import com.google.common.base.Function;
 import com.google.common.base.Joiner;
@@ -34,6 +28,11 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Ordering;
+import net.sourceforge.jwbf.JWBF.ContainerEntry;
+import net.sourceforge.jwbf.core.actions.HttpActionClient;
+import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
+import org.junit.Before;
+import org.junit.Test;
 
 public class JWBFTest {
 
@@ -45,65 +44,65 @@ public class JWBFTest {
   @Test
   public void testInit_invalidFile() {
     // GIVEN
-    val url = JWBF.newURL("file:///a");
-    val packageName = "";
+    URL url = JWBF.newURL("file:///a");
+    String packageName = "";
 
     // WHEN
-    val result = JWBF.init(packageName, url);
+    Map<String, String> result = JWBF.init(packageName, url);
 
     // THEN
-    val expected = ImmutableMap.of();
+    Map<String, String> expected = ImmutableMap.of();
     assertEquals(expected, result);
   }
 
   @Test
   public void testInit_bundle() {
     // GIVEN
-    val url = JWBF.newURLWithoutHandler("bundle:///a");
-    val packageName = "";
+    URL url = JWBF.newURLWithoutHandler("bundle:///a");
+    String packageName = "";
 
     // WHEN
-    val result = JWBF.init(packageName, url);
+    Map<String, String> result = JWBF.init(packageName, url);
 
     // THEN
-    val expected = ImmutableMap.of();
+    Map<String, String> expected = ImmutableMap.of();
     assertEquals(expected, result);
   }
 
   @Test
   public void testInit_whatEver() {
     // GIVEN
-    val url = JWBF.newURLWithoutHandler("whatEver:///a");
-    val packageName = "";
+    URL url = JWBF.newURLWithoutHandler("whatEver:///a");
+    String packageName = "";
 
     // WHEN
-    val result = JWBF.init(packageName, url);
+    Map<String, String> result = JWBF.init(packageName, url);
 
     // THEN
-    val expected = ImmutableMap.of();
+    Map<String, String> expected = ImmutableMap.of();
     assertEquals(expected, result);
   }
 
   @Test
   public void testInit_jar() {
     // GIVEN
-    val url = JWBF.newURL("jar:file:/home/noOne/lib/jwbf.jar!/net/sourceforge/jwbf");
-    val packageName = "net/sourceforge/jwbf";
+    URL url = JWBF.newURL("jar:file:/home/noOne/lib/jwbf.jar!/net/sourceforge/jwbf");
+    String packageName = "net/sourceforge/jwbf";
 
     // WHEN
-    val result = JWBF.init(packageName, url);
+    Map<String, String> result = JWBF.init(packageName, url);
 
     // THEN
-    val expected = ImmutableMap.of();
+    Map<String, String> expected = ImmutableMap.of();
     assertEquals(expected, result);
   }
 
   @Test
   public void testInit_realFile() throws Exception {
     // GIVEN
-    val targetDir = getTargetDir();
-    val tempDirectory = Files.createTempDirectory(targetDir.toPath(), "manifest-test");
-    val manifestFile = new File(tempDirectory.toFile(), "MANIFEST.MF");
+    File targetDir = getTargetDir();
+    Path tempDirectory = Files.createTempDirectory(targetDir.toPath(), "manifest-test");
+    File manifestFile = new File(tempDirectory.toFile(), "MANIFEST.MF");
     String expectedVersion = "999.0.0-SNAPSHOT-${buildNumber}";
     String expectedTitle = "jwbf";
     byte[] bytes = Joiner.on("\n").join("Manifest-Version: 1.0", //
@@ -120,13 +119,13 @@ public class JWBFTest {
       first = new File(first, fileName);
     }
     first.mkdirs();
-    val packageName = name.replace(".", "/");
-    val url = tempDirectory.toUri().toURL();
+    String packageName = name.replace(".", "/");
+    URL url = tempDirectory.toUri().toURL();
     // WHEN
-    val result = JWBF.init(packageName, url);
+    Map<String, String> result = JWBF.init(packageName, url);
 
     // THEN
-    val expected = ImmutableMap.<String, String> builder() //
+    Map<String, String> expected = ImmutableMap.<String, String>builder() //
         .put(expectedTitle + "-mediawiki", expectedVersion) //
         .build();
     assertEquals(expected, result);
@@ -134,7 +133,7 @@ public class JWBFTest {
   }
 
   private File getTargetDir() {
-    val targetDir = new File("target");
+    File targetDir = new File("target");
     if (!(targetDir.exists() && targetDir.isDirectory())) {
       fail("no target dir found");
     }
@@ -144,7 +143,7 @@ public class JWBFTest {
   @Test
   public void testGetVersions() {
     // GIVEN
-    JWBF.cache = ImmutableMap.<String, String> builder() //
+    JWBF.cache = ImmutableMap.<String, String>builder() //
         .put("jwbf-generic-mediawiki", JWBF.DEVEL) //
         .build();
 
@@ -158,7 +157,7 @@ public class JWBFTest {
   @Test
   public void testGetPartId() {
     // GIVEN
-    JWBF.cache = ImmutableMap.<String, String> builder() //
+    JWBF.cache = ImmutableMap.<String, String>builder() //
         .put("jwbf-generic-mediawiki", "anyVersion") //
         .build();
 
@@ -172,7 +171,7 @@ public class JWBFTest {
   @Test
   public void testGetPartId_core() {
     // GIVEN
-    JWBF.cache = ImmutableMap.<String, String> builder() //
+    JWBF.cache = ImmutableMap.<String, String>builder() //
         .put("jwbf-generic-core", "anyVersion") //
         .build();
     // WHEN
@@ -198,14 +197,14 @@ public class JWBFTest {
         new ContainerEntry("net/sourceforge/jwbf/trac/actions/GetRevision.class", false), //
         new ContainerEntry("net/sourceforge/jwbf/mediawiki/actions/queries/BacklinkTitles$1.class",
             false) //
-        );
+    );
     String packageName = "net/sourceforge/jwbf";
 
     // WHEN
-    val result = JWBF.makeVersionMap(packageName, null, elements);
+    Map<String, String> result = JWBF.makeVersionMap(packageName, null, elements);
 
     // THEN
-    val expected = ImmutableMap.<String, String> builder() //
+    Map<String, String> expected = ImmutableMap.<String, String>builder() //
         .put("jwbf-generic-mediawiki", "DEVEL") //
         .put("jwbf-generic-trac", "DEVEL") //
         .build();
@@ -223,7 +222,7 @@ public class JWBFTest {
   public void testGetVersions_unknown() {
 
     // WHEN
-    val jwbfVersion = JWBF.getVersion(this.getClass());
+    String jwbfVersion = JWBF.getVersion(this.getClass());
 
     // THEN
     assertEquals("Version unknown", jwbfVersion);
@@ -233,8 +232,8 @@ public class JWBFTest {
   public void testJarToEntries() throws Exception {
 
     // GIVEN
-    val targetDir = getTargetDir();
-    val tempDirectory = Files.createTempDirectory(targetDir.toPath(), "jarfile-test");
+    File targetDir = getTargetDir();
+    Path tempDirectory = Files.createTempDirectory(targetDir.toPath(), "jarfile-test");
 
     File jarFile = new File(tempDirectory.toFile(), "a.jar");
     File inputDir = new File(tempDirectory.toFile(), "jarContent");
@@ -245,7 +244,7 @@ public class JWBFTest {
     String jarFileName = jarFile.getAbsolutePath();
 
     // WHEN
-    val result = JWBF.jarToEntries(jarFileName);
+    List<ContainerEntry> result = JWBF.jarToEntries(jarFileName);
 
     Function<ContainerEntry, ContainerEntry> function = new Function<ContainerEntry, ContainerEntry>() {
 
@@ -258,9 +257,9 @@ public class JWBFTest {
       }
     };
     // THEN
-    val mutated = Ordering.usingToString().immutableSortedCopy(Lists.transform(result, function));
+    List<ContainerEntry> mutated = Ordering.usingToString().immutableSortedCopy(Lists.transform(result, function));
 
-    val expected = ImmutableList.<ContainerEntry> builder() //
+    List<ContainerEntry> expected = ImmutableList.<ContainerEntry>builder() //
         .add(new ContainerEntry("META-INF/MANIFEST.MF", false)) //
         .add(new ContainerEntry("target/jarfile-test/jarContent/", true)) //
         .add(new ContainerEntry("target/jarfile-test/jarContent/test/", true)) //

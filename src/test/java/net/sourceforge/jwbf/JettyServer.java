@@ -1,18 +1,11 @@
 package net.sourceforge.jwbf;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.Collections;
-
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.eclipse.jetty.server.NetworkConnector;
-import org.eclipse.jetty.server.Request;
-import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.server.handler.ContextHandler;
-import org.joda.time.DateTime;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Collections;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableListMultimap;
@@ -21,6 +14,11 @@ import com.google.common.collect.Maps.EntryTransformer;
 import com.google.common.collect.Multimaps;
 import com.google.common.collect.Ordering;
 import com.google.common.net.HttpHeaders;
+import org.eclipse.jetty.server.NetworkConnector;
+import org.eclipse.jetty.server.Request;
+import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.handler.ContextHandler;
+import org.joda.time.DateTime;
 
 public class JettyServer extends Server {
 
@@ -54,7 +52,7 @@ public class JettyServer extends Server {
 
   static ImmutableMultimap<String, String> headersOf(Request request) {
     ImmutableListMultimap.Builder<String, String> builder = ImmutableListMultimap
-        .<String, String> builder();
+        .<String, String>builder();
     for (String name : Collections.list(request.getHeaderNames())) {
       for (String headerValue : Collections.list(request.getHeaders(name))) {
         builder.put(name, headerValue);
@@ -79,7 +77,7 @@ public class JettyServer extends Server {
         }
       }
     };
-    return ImmutableListMultimap.<String, String> builder() //
+    return ImmutableListMultimap.<String, String>builder() //
         .putAll(Multimaps.transformEntries(in, transformer)) //
         .orderKeysBy(Ordering.natural()) //
         .build();

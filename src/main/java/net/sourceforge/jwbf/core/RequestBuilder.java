@@ -3,9 +3,6 @@ package net.sourceforge.jwbf.core;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import net.sourceforge.jwbf.core.actions.Get;
-import net.sourceforge.jwbf.core.actions.Post;
-
 import com.google.common.base.Function;
 import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
@@ -15,6 +12,8 @@ import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Ordering;
+import net.sourceforge.jwbf.core.actions.Get;
+import net.sourceforge.jwbf.core.actions.Post;
 
 public class RequestBuilder {
 
@@ -65,7 +64,7 @@ public class RequestBuilder {
       ImmutableList<String> values = FluentIterable.from(params.entries()) //
           .transform(TO_KEY_VALUE_PAIR) //
           .toSortedList(Ordering.natural()) //
-      ;
+          ;
 
       paramString = "?" + Joiner.on("&").join(values);
     }

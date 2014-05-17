@@ -1,8 +1,7 @@
 package net.sourceforge.jwbf.extractXml;
 
-import java.util.List;
-
 import javax.annotation.Nullable;
+import java.util.List;
 
 import com.google.common.base.Function;
 import com.google.common.collect.ImmutableList;

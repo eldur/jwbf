@@ -25,14 +25,13 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Set;
 
+import com.google.common.collect.Sets;
 import net.sourceforge.jwbf.core.actions.util.ActionException;
 import net.sourceforge.jwbf.core.bots.WikiBot;
 import net.sourceforge.jwbf.core.bots.util.CacheHandler;
 import net.sourceforge.jwbf.core.contentRep.Article;
 import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
 import net.sourceforge.jwbf.core.contentRep.Userinfo;
-
-import com.google.common.collect.Sets;
 
 /**
  * @author Martin Koch
@@ -46,9 +45,8 @@ public class ZimWikiBot implements WikiBot {
 
   /**
    * Constructor for a ZIM wiki-bot.
-   * 
-   * @param zimRootFolder
-   *          this is the folder on your local machine
+   *
+   * @param zimRootFolder this is the folder on your local machine
    */
 
   public ZimWikiBot(String zimRootFolder) {

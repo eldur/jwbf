@@ -21,7 +21,6 @@ package net.sourceforge.jwbf.mediawiki.actions.editing;
 import java.text.ParseException;
 import java.util.Iterator;
 
-import lombok.extern.slf4j.Slf4j;
 import net.sourceforge.jwbf.core.actions.Get;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
@@ -31,14 +30,17 @@ import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.actions.util.ApiException;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Reads the content of a given article.
- * 
+ *
  * @author Thomas Stock
  */
-@Slf4j
 public class GetRevision extends MWAction {
+
+  private static final Logger log = LoggerFactory.getLogger(GetRevision.class);
 
   private final SimpleArticle sa;
 

@@ -26,7 +26,7 @@ import java.util.regex.Pattern;
 
 /**
  * This is a simple content helper class that implements the EditContentAccesable interface, plus setter methods.
- * 
+ *
  * @author Thomas Stock
  */
 public class SimpleArticle implements ArticleMeta, Serializable, Cloneable, ContentSetable {
@@ -97,10 +97,8 @@ public class SimpleArticle implements ArticleMeta, Serializable, Cloneable, Cont
   }
 
   /**
-   * @param text
-   *          of article
-   * @param title
-   *          of article
+   * @param text  of article
+   * @param title of article
    * @deprecated use {@link #SimpleArticle(String)} and {@link #setText(String)} instead.
    */
   @Deprecated
@@ -110,8 +108,7 @@ public class SimpleArticle implements ArticleMeta, Serializable, Cloneable, Cont
   }
 
   /**
-   * @param title
-   *          of article
+   * @param title of article
    */
   public SimpleArticle(final String title) {
     this.title = title;
@@ -169,8 +166,7 @@ public class SimpleArticle implements ArticleMeta, Serializable, Cloneable, Cont
   }
 
   /**
-   * @param label
-   *          the label, like "Main Page"
+   * @param label the label, like "Main Page"
    * @deprecated use {@link #setTitle(String)} instead
    */
   @Deprecated
@@ -246,7 +242,7 @@ public class SimpleArticle implements ArticleMeta, Serializable, Cloneable, Cont
 
   /**
    * {@inheritDoc}
-   * 
+   *
    * @deprecated see inheritDoc
    */
   @Override
@@ -268,10 +264,8 @@ public class SimpleArticle implements ArticleMeta, Serializable, Cloneable, Cont
   }
 
   /**
-   * @param editTimestamp
-   *          set
-   * @throws ParseException
-   *           if date unparseable
+   * @param editTimestamp set
+   * @throws ParseException if date unparseable
    */
   public void setEditTimestamp(String editTimestamp) throws ParseException {
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
@@ -284,8 +278,7 @@ public class SimpleArticle implements ArticleMeta, Serializable, Cloneable, Cont
   }
 
   /**
-   * @param d
-   *          the
+   * @param d the
    */
   public void setEditTimestamp(Date d) {
     editTimestamp = d;
@@ -351,8 +344,7 @@ public class SimpleArticle implements ArticleMeta, Serializable, Cloneable, Cont
   }
 
   /**
-   * @param revId
-   *          the
+   * @param revId the
    */
   public void setRevisionId(String revId) {
     this.revId = revId;

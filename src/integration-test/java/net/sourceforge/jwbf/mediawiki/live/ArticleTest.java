@@ -14,7 +14,8 @@ import static org.mockito.Mockito.verify;
 import java.util.Collection;
 import java.util.Date;
 
-import lombok.extern.slf4j.Slf4j;
+import com.google.common.collect.Lists;
+import com.google.inject.Injector;
 import net.sourceforge.jwbf.core.contentRep.Article;
 import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
 import net.sourceforge.jwbf.mediawiki.BotFactory;
@@ -26,16 +27,15 @@ import net.sourceforge.jwbf.mediawiki.actions.login.PostLogin;
 import net.sourceforge.jwbf.mediawiki.actions.meta.GetVersion;
 import net.sourceforge.jwbf.mediawiki.actions.util.VersionException;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
-
 import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mockito;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.google.common.collect.Lists;
-import com.google.inject.Injector;
-
-@Slf4j
 public class ArticleTest {
+
+  private static final Logger log = LoggerFactory.getLogger(ArticleTest.class);
 
   private Collection<MediaWikiBot> getTestBots() {
     Collection<MediaWikiBot> bots = Lists.newArrayList();
@@ -76,21 +76,15 @@ public class ArticleTest {
 
         Article b = new Article(bot, title); // create new article b
         assertEquals(a.getTitle(), b.getTitle()); // compare title, must work --
-                                                  // see constructor
-        assertEquals("text compair fails ", a.getText(), b.getText()); // force
-                                                                       // bot to
-                                                                       // load
-                                                                       // this
-                                                                       // from
-                                                                       // wiki
+        // see constructor
+        assertEquals("text compair fails ", a.getText(), b.getText());
+        // ^^ forces bot to load this from wiki
         assertEquals(user, b.getEditor());
         if (i > 1) {
           assertEquals(editSum, b.getEditSummary());
         }
-        assertEquals(saveDate.getTime(), b.getEditTimestamp().getTime(), 5000); // max.
-                                                                                // 5
-                                                                                // seconds
-                                                                                // delta
+        assertEquals(saveDate.getTime(), b.getEditTimestamp().getTime(), 5000);
+        // ^^ max. 5 seconds delta
 
       }
       a.delete(); // clean up
@@ -121,13 +115,13 @@ public class ArticleTest {
       assertEquals(a.getTitle(), b.getTitle());
       assertEquals(a.getText(), b.getText());
       assertEquals(a.isMinorEdit(), b.isMinorEdit()); // because false is
-                                                      // default value
+      // default value
       assertEquals(user, b.getEditor());
       assertEquals(editSum, b.getEditSummary());
       assertEquals(saveDate.getTime(), b.getEditTimestamp().getTime(), 5000); // max.
-                                                                              // 5
-                                                                              // seconds
-                                                                              // delta
+      // 5
+      // seconds
+      // delta
 
       a.setMinorEdit(true);
       a.save(); // do nothing because no content change

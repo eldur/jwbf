@@ -3,7 +3,7 @@ package net.sourceforge.jwbf.mediawiki.actions.meta;
 import java.util.Iterator;
 import java.util.Set;
 
-import lombok.extern.slf4j.Slf4j;
+import com.google.common.collect.Sets;
 import net.sourceforge.jwbf.core.actions.Get;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.core.contentRep.Userinfo;
@@ -11,14 +11,15 @@ import net.sourceforge.jwbf.extractXml.Element;
 import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
-
-import com.google.common.collect.Sets;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Thomas Stock
  */
-@Slf4j
 public class GetUserinfo extends MWAction implements Userinfo {
+
+  private static final Logger log = LoggerFactory.getLogger(GetUserinfo.class);
 
   private String username = "";
   private final Set<String> rights = Sets.newHashSet();

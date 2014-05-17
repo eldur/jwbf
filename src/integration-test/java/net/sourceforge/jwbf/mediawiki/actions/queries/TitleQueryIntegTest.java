@@ -6,18 +6,17 @@ import static com.github.dreamhead.moco.Moco.eq;
 import static com.github.dreamhead.moco.Moco.query;
 import static com.github.dreamhead.moco.Moco.uri;
 import static org.junit.Assert.fail;
+
+import com.github.dreamhead.moco.RequestMatcher;
+import com.google.common.base.Supplier;
+import com.google.common.collect.ImmutableList;
 import net.sourceforge.jwbf.AbstractIntegTest;
 import net.sourceforge.jwbf.GAssert;
 import net.sourceforge.jwbf.Logging;
 import net.sourceforge.jwbf.TestHelper;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
-
 import org.junit.Test;
-
-import com.github.dreamhead.moco.RequestMatcher;
-import com.google.common.base.Supplier;
-import com.google.common.collect.ImmutableList;
 
 public class TitleQueryIntegTest extends AbstractIntegTest {
 
@@ -29,7 +28,7 @@ public class TitleQueryIntegTest extends AbstractIntegTest {
       eq(query("einamespace"), "2"), //
       eq(query("eititle"), "Template:Babel"), //
       eq(query("list"), "embeddedin") //
-      ));
+  ));
 
   static RequestMatcher embeddedinOne() {
     return AbstractIntegTest.onlyOnce(and(by(uri("/api.php")), //
@@ -39,7 +38,7 @@ public class TitleQueryIntegTest extends AbstractIntegTest {
         eq(query("einamespace"), "2"), //
         eq(query("eititle"), "Template:Babel"), //
         eq(query("list"), "embeddedin") //
-        ));
+    ));
   }
 
   @Test

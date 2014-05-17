@@ -23,7 +23,9 @@ import java.util.Collection;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import lombok.extern.slf4j.Slf4j;
+import com.google.common.base.Strings;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 import net.sourceforge.jwbf.core.RequestBuilder;
 import net.sourceforge.jwbf.core.actions.Get;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
@@ -31,22 +33,23 @@ import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
-
-import com.google.common.base.Strings;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * action class using the MediaWiki-api's "list=imagelinks" and later imageUsage.
- * 
+ *
  * @author Tobias Knerr
  * @author Thomas Stock
  * @since MediaWiki 1.9.0
  */
-@Slf4j
 public class ImageUsageTitles extends TitleQuery<String> {
 
-  /** constant value for the illimit-parameter. **/
+  private static final Logger log = LoggerFactory.getLogger(ImageUsageTitles.class);
+
+  /**
+   * constant value for the illimit-parameter. *
+   */
   private static final int LIMIT = 50;
 
   private final MediaWikiBot bot;
@@ -85,14 +88,11 @@ public class ImageUsageTitles extends TitleQuery<String> {
 
   /**
    * generates the next MediaWiki-request (GetMethod) and adds it to msgs.
-   * 
-   * @param imageName
-   *          the title of the image, not null
-   * @param namespace
-   *          the namespace(s) that will be searched for links, as a string of numbers separated by '|'; if null, this
-   *          parameter is omitted
-   * @param ilcontinue
-   *          the value for the ilcontinue parameter, null for the generation of the initial request
+   *
+   * @param imageName  the title of the image, not null
+   * @param namespace  the namespace(s) that will be searched for links, as a string of numbers separated by '|'; if null, this
+   *                   parameter is omitted
+   * @param ilcontinue the value for the ilcontinue parameter, null for the generation of the initial request
    * @return a
    */
   private Get generateRequest(String imageName, String namespace, String ilcontinue) {
@@ -110,9 +110,8 @@ public class ImageUsageTitles extends TitleQuery<String> {
   /**
    * gets the information about a follow-up page from a provided api response. If there is one, a new request is added
    * to msgs by calling generateRequest.
-   * 
-   * @param s
-   *          text for parsing
+   *
+   * @param s text for parsing
    */
   @Override
   protected String parseHasMore(final String s) {
@@ -123,9 +122,8 @@ public class ImageUsageTitles extends TitleQuery<String> {
 
   /**
    * picks the article name from a MediaWiki api response.
-   * 
-   * @param s
-   *          text for parsing
+   *
+   * @param s text for parsing
    */
   @Override
   protected ImmutableList<String> parseArticleTitles(String s) {
@@ -172,7 +170,7 @@ public class ImageUsageTitles extends TitleQuery<String> {
         .formatXml() //
         .param("list", "imageusage") //
         .param("iulimit", LIMIT) //
-    ;
+        ;
   }
 
   private class DefaultHandler extends VersionHandler {

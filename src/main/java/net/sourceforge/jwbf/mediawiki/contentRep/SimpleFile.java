@@ -25,22 +25,20 @@ import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
 /**
  * This is a simple content helper class that implements the EditContentAccesable interface, plus setter methods. The
  * field Text from SimpleArticle can be used as a description for the file.
- * 
+ *
  * @author Justus Bisser
  */
 public class SimpleFile extends SimpleArticle {
 
   /**
-	 *
-	 */
+   *
+   */
   private static final long serialVersionUID = 90640839252699902L;
   private File filename;
 
   /**
-   * @param label
-   *          new filename
-   * @param filename
-   *          local filename
+   * @param label    new filename
+   * @param filename local filename
    */
   public SimpleFile(final String label, String filename) {
     setText("");
@@ -49,10 +47,8 @@ public class SimpleFile extends SimpleArticle {
   }
 
   /**
-   * @param label
-   *          new filename
-   * @param filename
-   *          local filename
+   * @param label    new filename
+   * @param filename local filename
    */
   public SimpleFile(final String label, File filename) {
     setText("");
@@ -61,8 +57,7 @@ public class SimpleFile extends SimpleArticle {
   }
 
   /**
-   * @param filename
-   *          local filename
+   * @param filename local filename
    */
   public SimpleFile(File filename) {
     setText("");
@@ -71,8 +66,7 @@ public class SimpleFile extends SimpleArticle {
   }
 
   /**
-   * @param filename
-   *          local filename
+   * @param filename local filename
    */
   public SimpleFile(String filename) {
     setText("");

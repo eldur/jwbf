@@ -1,9 +1,9 @@
 package net.sourceforge.jwbf.mediawiki;
 
 import static org.junit.Assert.assertEquals;
+
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
-
 import org.junit.Test;
 
 public class NsTest {

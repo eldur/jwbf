@@ -3,7 +3,8 @@ package net.sourceforge.jwbf.mediawiki.actions.queries;
 import java.util.Iterator;
 import java.util.List;
 
-import lombok.extern.slf4j.Slf4j;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 import net.sourceforge.jwbf.core.actions.Get;
 import net.sourceforge.jwbf.core.actions.util.ActionException;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
@@ -11,18 +12,18 @@ import net.sourceforge.jwbf.core.actions.util.ProcessException;
 import net.sourceforge.jwbf.core.bots.util.JwbfException;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 import net.sourceforge.jwbf.mediawiki.contentRep.CategoryItem;
-
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A specialization of {@link CategoryMembers} with contains {@link CategoryItem}s.
- * 
+ *
  * @author Thomas Stock
  */
-@Slf4j
 public class CategoryMembersFull extends CategoryMembers implements Iterable<CategoryItem>,
     Iterator<CategoryItem> {
+
+  private static final Logger log = LoggerFactory.getLogger(CategoryMembersFull.class);
 
   private Get msg;
   /**

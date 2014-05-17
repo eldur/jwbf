@@ -5,7 +5,6 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.Collection;
 
-import lombok.extern.slf4j.Slf4j;
 import net.sourceforge.jwbf.core.contentRep.ContentAccessable;
 import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
 import net.sourceforge.jwbf.mediawiki.BotFactory;
@@ -15,16 +14,18 @@ import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.actions.editing.PostDelete;
 import net.sourceforge.jwbf.mediawiki.actions.queries.AllPageTitles;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
-
 import org.junit.ClassRule;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Verifier;
 import org.junit.runners.Parameterized.Parameters;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-@Slf4j
 public class DeleteTest extends ParamHelper {
+
+  private static final Logger log = LoggerFactory.getLogger(DeleteTest.class);
   private static final String DELETE_PREFIX = "Delete";
   private static final int COUNT = 1;
 
@@ -68,7 +69,7 @@ public class DeleteTest extends ParamHelper {
 
       assertTrue(
           "textlength of Delete " + i + " is greater then 0 (" + ca.getText().length() + ")", ca
-              .getText().length() == 0);
+          .getText().length() == 0);
 
     }
   }

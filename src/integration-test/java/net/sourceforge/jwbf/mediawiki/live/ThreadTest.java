@@ -3,12 +3,12 @@ package net.sourceforge.jwbf.mediawiki.live;
 import static net.sourceforge.jwbf.TestHelper.getRandomAlpha;
 import static net.sourceforge.jwbf.mediawiki.BotFactory.getMediaWikiBot;
 import static org.junit.Assert.assertTrue;
+
 import net.sourceforge.jwbf.core.bots.WikiBot;
 import net.sourceforge.jwbf.core.bots.util.JwbfException;
 import net.sourceforge.jwbf.core.contentRep.Article;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
-
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;

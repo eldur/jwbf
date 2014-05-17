@@ -9,17 +9,15 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.List;
 
+import com.github.dreamhead.moco.RequestMatcher;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import net.sourceforge.jwbf.AbstractIntegTest;
 import net.sourceforge.jwbf.GAssert;
 import net.sourceforge.jwbf.TestHelper;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
-
 import org.junit.Test;
-
-import com.github.dreamhead.moco.RequestMatcher;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
 
 public class RecentchangeTitlesIntegTest extends AbstractIntegTest {
 
@@ -28,7 +26,7 @@ public class RecentchangeTitlesIntegTest extends AbstractIntegTest {
       eq(query("format"), "xml"), //
       eq(query("rclimit"), "50"), //
       eq(query("rcnamespace"), "0") //
-      ));
+  ));
 
   @Test
   public void test() {

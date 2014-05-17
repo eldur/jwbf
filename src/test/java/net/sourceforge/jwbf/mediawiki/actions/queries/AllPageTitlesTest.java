@@ -1,19 +1,18 @@
 package net.sourceforge.jwbf.mediawiki.actions.queries;
 
 import static org.junit.Assert.assertEquals;
+
+import com.google.common.base.Optional;
 import net.sourceforge.jwbf.core.actions.Get;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.actions.util.RedirectFilter;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-
-import com.google.common.base.Optional;
 
 @RunWith(MockitoJUnitRunner.class)
 public class AllPageTitlesTest {

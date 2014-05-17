@@ -12,18 +12,16 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.concurrent.TimeUnit;
 
-import net.sourceforge.jwbf.JettyServer;
-import net.sourceforge.jwbf.core.RequestBuilder;
-
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.junit.Test;
-
 import com.google.common.base.Function;
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Range;
+import net.sourceforge.jwbf.JettyServer;
+import net.sourceforge.jwbf.core.RequestBuilder;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.junit.Test;
 
 public class HttpActionClientTest {
 
@@ -95,7 +93,7 @@ public class HttpActionClientTest {
       byte[] bs = testee.get(new Get(url));
 
       // THEN
-      ImmutableList<String> expected = ImmutableList.<String> builder()
+      ImmutableList<String> expected = ImmutableList.<String>builder()
           .add(entry(ACCEPT_ENCODING, "gzip,deflate")) //
           .add(entry(CONNECTION, "keep-alive")) //
           .add(entry(HOST, "localhost:????")) //
@@ -123,7 +121,7 @@ public class HttpActionClientTest {
           .withUrl(server.getTestUrl()) //
           .withUserAgent("none") //
           .build() //
-      ;
+          ;
       ResponseHandler<String> a = ContentProcessableBuilder //
           .create(hac) //
           .withActions(post) //
@@ -133,7 +131,7 @@ public class HttpActionClientTest {
       String result = Iterables.getOnlyElement(a.get()).trim();
 
       // THEN
-      ImmutableList<String> expected = ImmutableList.<String> builder()
+      ImmutableList<String> expected = ImmutableList.<String>builder()
           .add(entry(ACCEPT_ENCODING, "gzip,deflate")) //
           .add(entry(CONNECTION, "keep-alive")) //
           .add(entry(CONTENT_LENGTH, "???")) //
@@ -163,7 +161,7 @@ public class HttpActionClientTest {
           .withUrl(server.getTestUrl()) //
           .withRequestsPerUnit(2, TimeUnit.SECONDS) //
           .build() //
-      ;
+          ;
 
       ResponseHandler<String> a = ContentProcessableBuilder //
           .create(hac) //
@@ -177,7 +175,7 @@ public class HttpActionClientTest {
       ImmutableList<Long> deltas = toRanges(ints);
 
       // THEN
-      ImmutableList<Range<Long>> expected = ImmutableList.<Range<Long>> builder() //
+      ImmutableList<Range<Long>> expected = ImmutableList.<Range<Long>>builder() //
           .add(Range.closed(0l, 600l)) //
           .add(Range.closed(0l, 600l)) //
           .add(Range.closed(0l, 600l)) //
@@ -199,7 +197,7 @@ public class HttpActionClientTest {
 
   private ImmutableList<Long> toRanges(Iterable<Long> ints) {
     ImmutableList<Long> intList = ImmutableList.copyOf(ints);
-    Builder<Long> builder = ImmutableList.<Long> builder();
+    Builder<Long> builder = ImmutableList.<Long>builder();
     for (int i = 0; i < intList.size() - 1; i++) {
       Long a = intList.get(0 + i);
       Long b = intList.get(1 + i);

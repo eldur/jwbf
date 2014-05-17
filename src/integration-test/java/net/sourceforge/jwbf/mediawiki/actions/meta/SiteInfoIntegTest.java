@@ -10,20 +10,20 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.Collection;
 
-import lombok.extern.slf4j.Slf4j;
+import com.github.dreamhead.moco.RequestMatcher;
 import net.sourceforge.jwbf.GAssert;
 import net.sourceforge.jwbf.mediawiki.ConfKey;
 import net.sourceforge.jwbf.mediawiki.MocoIntegTest;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.live.auto.ParamHelper;
-
 import org.junit.Test;
 import org.junit.runners.Parameterized.Parameters;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.github.dreamhead.moco.RequestMatcher;
-
-@Slf4j
 public class SiteInfoIntegTest extends MocoIntegTest {
+
+  private static final Logger log = LoggerFactory.getLogger(SiteInfoIntegTest.class);
 
   @Parameters(name = "{0}")
   public static Collection<?> stableWikis() {

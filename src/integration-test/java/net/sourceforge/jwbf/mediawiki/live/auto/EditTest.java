@@ -9,7 +9,6 @@ import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
 import net.sourceforge.jwbf.mediawiki.VersionTestClassVerifier;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.actions.editing.PostModifyContent;
-
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;

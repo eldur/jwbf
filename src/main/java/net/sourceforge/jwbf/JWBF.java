@@ -39,8 +39,6 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 
-import lombok.val;
-
 /**
  * @author Thomas Stock
  */
@@ -67,9 +65,9 @@ public final class JWBF {
   }
 
   private static Map<String, String> lazyVersion() {
-    val clazz = JWBF.class;
-    val packageName = packageNameOf(clazz);
-    val url = urlOf(clazz, packageName);
+    Class<?> clazz = JWBF.class;
+    String packageName = packageNameOf(clazz);
+    URL url = urlOf(clazz, packageName);
     synchronized (JWBF.class) {
       if (cache == null) {
         synchronized (JWBF.class) {
@@ -81,7 +79,7 @@ public final class JWBF {
   }
 
   static Map<String, String> init(String packageName, URL url) {
-    val lowerCaseUrl = urlExtract(url).toLowerCase();
+    String lowerCaseUrl = urlExtract(url).toLowerCase();
     if (lowerCaseUrl.startsWith(JAR_FILE_INDEX)) {
       return jarManifestLookup(packageName, url);
     } else if (lowerCaseUrl.startsWith(FILE_INDEX)) {
@@ -110,7 +108,7 @@ public final class JWBF {
 
   private static Map<String, String> jarManifestLookup(String packageName, URL url) {
     int jarEnd = urlExtract(url).indexOf("!" + SEPARATOR_CHAR);
-    val jarFileName = urlExtract(url).substring(JAR_FILE_INDEX.length(), jarEnd);
+    String jarFileName = urlExtract(url).substring(JAR_FILE_INDEX.length(), jarEnd);
     Manifest manifest = findManifest(jarFileName);
     List<ContainerEntry> elements = jarToEntries(jarFileName);
     return makeVersionMap(packageName, manifest, elements);
@@ -183,8 +181,7 @@ public final class JWBF {
   }
 
   /**
-   * @param clazz
-   *          of the module
+   * @param clazz of the module
    * @return the version
    */
   public static String getVersion(Class<?> clazz) {
@@ -192,8 +189,7 @@ public final class JWBF {
   }
 
   /**
-   * @param clazz
-   *          of the module
+   * @param clazz of the module
    * @return the version
    */
   public static String getPartId(Class<?> clazz) {
@@ -255,7 +251,7 @@ public final class JWBF {
     if (manifest == null) {
       return logAndReturn(fallback);
     }
-    val result = manifest.getMainAttributes().getValue(manifestKey);
+    String result = manifest.getMainAttributes().getValue(manifestKey);
     if (result == null) {
       return logAndReturn(fallback);
     }
@@ -265,7 +261,7 @@ public final class JWBF {
   private static String logAndReturn(String fallback) {
     if (errorInfo) {
       errorInfo = false;
-      val msg = "E: no MANIFEST.MF found, please create it.";
+      String msg = "E: no MANIFEST.MF found, please create it.";
       System.err.println(msg);
     }
     return fallback;
@@ -301,9 +297,9 @@ public final class JWBF {
     if (fileName == null) {
       return null;
     }
-    val file = new File(fileName);
-    val manifestFileName = "MANIFEST.MF";
-    val manifestFile = new File(file, manifestFileName);
+    File file = new File(fileName);
+    String manifestFileName = "MANIFEST.MF";
+    File manifestFile = new File(file, manifestFileName);
     if (manifestFile.exists()) {
       return newURL(FILE_INDEX + file + File.separatorChar + manifestFileName);
     } else {
@@ -346,10 +342,10 @@ public final class JWBF {
       } else if (obj == this) {
         return true;
       } else if (obj instanceof ContainerEntry) {
-        val that = (ContainerEntry) obj;
+        ContainerEntry that = (ContainerEntry) obj;
         return Objects.equals(this.name, that.name) && //
             Objects.equals(this.directory, that.directory) //
-        ;
+            ;
       } else {
         return false;
       }

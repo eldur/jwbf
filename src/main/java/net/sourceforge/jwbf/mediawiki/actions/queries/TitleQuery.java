@@ -2,33 +2,35 @@ package net.sourceforge.jwbf.mediawiki.actions.queries;
 
 import java.util.Iterator;
 
-import lombok.extern.slf4j.Slf4j;
-import net.sourceforge.jwbf.core.Optionals;
-import net.sourceforge.jwbf.core.actions.util.HttpAction;
-import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
-import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
-
 import com.google.common.annotations.Beta;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
+import net.sourceforge.jwbf.core.Optionals;
+import net.sourceforge.jwbf.core.actions.util.HttpAction;
+import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
+import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Abstract class which is superclass of all titleiterations, represented by the sufix "Titles".
- * 
+ *
+ * @param <T> of
  * @author Thomas Stock
- * @param <T>
- *          of
  */
-@Slf4j
 abstract class TitleQuery<T> implements Iterable<T>, Iterator<T> {
+
+  private static final Logger log = LoggerFactory.getLogger(TitleQuery.class);
 
   private Iterator<T> titleIterator;
   private final TitleQueryAction inner;
   private final MediaWikiBot bot;
   private ImmutableList<T> oldTitlesForLogging = ImmutableList.of();
 
-  /** Information necessary to get the next api page. */
+  /**
+   * Information necessary to get the next api page.
+   */
   private Optional<String> nextPageInfo = Optional.absent();
 
   protected final String setNextPageInfo(String nextPageInfo) {
@@ -126,7 +128,7 @@ abstract class TitleQuery<T> implements Iterable<T>, Iterator<T> {
 
   /**
    * Inner helper class for this type.
-   * 
+   *
    * @author Thomas Stock
    */
   class TitleQueryAction extends MWAction {

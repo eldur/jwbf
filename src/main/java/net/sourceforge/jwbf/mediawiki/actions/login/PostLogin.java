@@ -19,7 +19,6 @@
  */
 package net.sourceforge.jwbf.mediawiki.actions.login;
 
-import lombok.extern.slf4j.Slf4j;
 import net.sourceforge.jwbf.core.actions.Post;
 import net.sourceforge.jwbf.core.actions.util.ActionException;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
@@ -28,12 +27,15 @@ import net.sourceforge.jwbf.extractXml.Element;
 import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.contentRep.LoginData;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Thomas Stock
  */
-@Slf4j
 public class PostLogin extends MWAction {
+
+  private static final Logger log = LoggerFactory.getLogger(PostLogin.class);
 
   private Post msg;
 
@@ -49,14 +51,10 @@ public class PostLogin extends MWAction {
   private final String domain;
 
   /**
-   * @param username
-   *          the
-   * @param pw
-   *          password
-   * @param domain
-   *          a
-   * @param login
-   *          a
+   * @param username the
+   * @param pw       password
+   * @param domain   a
+   * @param login    a
    */
   public PostLogin(final String username, final String pw, final String domain, LoginData login) {
     super();
@@ -97,8 +95,7 @@ public class PostLogin extends MWAction {
   }
 
   /**
-   * @param startElement
-   *          the, where the search begins
+   * @param startElement the, where the search begins
    */
   private void findContent(final Element startElement) {
 

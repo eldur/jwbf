@@ -12,14 +12,13 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
-import org.junit.Test;
-
 import com.google.common.base.Charsets;
 import com.google.common.base.Predicate;
 import com.google.common.base.Strings;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.io.Resources;
+import org.junit.Test;
 
 public class PostPackageTest {
 

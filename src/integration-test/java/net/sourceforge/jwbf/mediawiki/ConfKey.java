@@ -9,7 +9,7 @@ public enum ConfKey {
   ;
 
   private static final ImmutableMap<ConfKey, String> KEY_MAP = ImmutableMap
-      .<ConfKey, String> builder() //
+      .<ConfKey, String>builder() //
       .put(SITEINFO, "siteinfo") //
       .put(INTERWIKI, "interwiki") //
       .put(SITENAME, "sitename") //
@@ -20,7 +20,7 @@ public enum ConfKey {
       .put(ALL_PAGE_1, "allpage1") //
       .put(ALL_PAGE_0, "allpage0") //
       .build() //
-  ;
+      ;
 
   public static String toString(ConfKey key) {
     return Preconditions.checkNotNull(KEY_MAP.get(key));

@@ -24,16 +24,18 @@ import static net.sourceforge.jwbf.mediawiki.BotFactory.getWikiPass;
 import static net.sourceforge.jwbf.mediawiki.BotFactory.getWikiUser;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import lombok.extern.slf4j.Slf4j;
+
 import net.sourceforge.jwbf.core.contentRep.Article;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
-
 import org.junit.Ignore;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-@Slf4j
 public class SiteinfoTest extends AbstractMediaWikiBotTest {
+
+  private static final Logger log = LoggerFactory.getLogger(SiteinfoTest.class);
 
   /**
    * Test get siteinfo on Wikipedia DE.
@@ -48,7 +50,6 @@ public class SiteinfoTest extends AbstractMediaWikiBotTest {
 
   /**
    * Test get siteinfo on a MW. Prepare a the wiki, that the siteinfopage is only readable if user is logged in.
-   * 
    * <pre>
    * $wgGroupPermissions['*']['read'] = false;
    * </pre>

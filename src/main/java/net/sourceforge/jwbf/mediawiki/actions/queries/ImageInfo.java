@@ -1,5 +1,6 @@
 package net.sourceforge.jwbf.mediawiki.actions.queries;
 
+import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
@@ -7,9 +8,8 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.Map;
 
-import javax.imageio.ImageIO;
-
-import lombok.extern.slf4j.Slf4j;
+import com.google.common.base.Preconditions;
+import com.google.common.collect.Maps;
 import net.sourceforge.jwbf.JWBF;
 import net.sourceforge.jwbf.core.RequestBuilder;
 import net.sourceforge.jwbf.core.actions.Get;
@@ -21,19 +21,18 @@ import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
-
 import org.apache.commons.lang.math.NumberUtils;
-
-import com.google.common.base.Preconditions;
-import com.google.common.collect.Maps;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Action to receive the full address of an image. Like "Img.gif" to "http://wikihost.tld/w/images/x/y/Img.gif".
- * 
+ *
  * @author Thomas Stock
  */
-@Slf4j
 public class ImageInfo extends MWAction {
+
+  private static final Logger log = LoggerFactory.getLogger(ImageInfo.class);
   private static final Map<String, String> EMPTY_STRING_MAP = Collections.emptyMap();
 
   public static final String WIDTH = "iiurlwidth";
@@ -49,9 +48,8 @@ public class ImageInfo extends MWAction {
 
   /**
    * Get an absolute url to an image.
-   * 
-   * @param name
-   *          of, like "Test.gif"
+   *
+   * @param name of, like "Test.gif"
    */
   public ImageInfo(MediaWikiBot bot, String name) {
     this(bot, name, EMPTY_STRING_MAP);
@@ -90,7 +88,7 @@ public class ImageInfo extends MWAction {
         .formatXml() //
         .param("iiprop", "url") //
         .param("prop", "imageinfo") //
-    ;
+        ;
 
     int width = NumberUtils.toInt(map.get(WIDTH));
     if (width > 0) {
@@ -134,7 +132,7 @@ public class ImageInfo extends MWAction {
 
   /**
    * {@inheritDoc}
-   * 
+   *
    * @deprecated see super
    */
   @Deprecated

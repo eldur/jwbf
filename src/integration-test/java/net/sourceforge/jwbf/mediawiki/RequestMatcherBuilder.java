@@ -1,10 +1,9 @@
 package net.sourceforge.jwbf.mediawiki;
 
-import net.sourceforge.jwbf.AbstractIntegTest;
-
 import com.github.dreamhead.moco.RequestMatcher;
 import com.github.dreamhead.moco.matcher.AndRequestMatcher;
 import com.google.common.collect.ImmutableList;
+import net.sourceforge.jwbf.AbstractIntegTest;
 
 public class RequestMatcherBuilder {
 

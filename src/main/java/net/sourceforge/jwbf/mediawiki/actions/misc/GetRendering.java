@@ -16,7 +16,7 @@ import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 /**
  * Implements function to render wikitext on remote <a href=
  * "http://www.mediawiki.org/wiki/API:Expanding_templates_and_rendering#parse" >parse</a>.
- * 
+ *
  * @author Thomas Stock
  */
 public class GetRendering extends MWAction {
@@ -39,7 +39,7 @@ public class GetRendering extends MWAction {
 
   /**
    * {@inheritDoc}
-   * 
+   *
    * @deprecated see super
    */
   @Deprecated

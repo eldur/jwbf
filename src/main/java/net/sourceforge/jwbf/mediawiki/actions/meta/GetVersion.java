@@ -22,7 +22,8 @@ package net.sourceforge.jwbf.mediawiki.actions.meta;
 import java.util.Iterator;
 import java.util.Set;
 
-import lombok.extern.slf4j.Slf4j;
+import com.google.common.base.Joiner;
+import com.google.common.collect.Sets;
 import net.sourceforge.jwbf.JWBF;
 import net.sourceforge.jwbf.core.actions.Get;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
@@ -31,17 +32,17 @@ import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
-
-import com.google.common.base.Joiner;
-import com.google.common.collect.Sets;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Basic action to receive {@link Version}.
- * 
+ *
  * @author Thomas Stock
  */
-@Slf4j
 public class GetVersion extends MWAction {
+
+  private static final Logger log = LoggerFactory.getLogger(GetVersion.class);
 
   private final Get msg;
   private String generator = "";
@@ -51,14 +52,14 @@ public class GetVersion extends MWAction {
   private String mainpage = "";
 
   public static final Set<String> GENERATOR_EXT = Sets.newHashSet();
+
   static {
     GENERATOR_EXT.add("alpha");
     GENERATOR_EXT.add("wmf");
   }
 
   /**
-   * Create and submit the request to the Wiki. Do not use
-   * {@link MediaWikiBot#performAction(net.sourceforge.jwbf.actions.ContentProcessable)}
+   * Create and submit the request to the Wiki.
    */
   public GetVersion(MediaWikiBot bot) {
     this();
@@ -68,6 +69,7 @@ public class GetVersion extends MWAction {
   /*
    * In this case the superconstructor with no value is allowed, because the versionrequest is mandatory
    */
+
   /**
    * Create the request.
    */

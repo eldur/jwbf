@@ -2,6 +2,8 @@ package net.sourceforge.jwbf.mediawiki;
 
 import static org.junit.Assert.assertEquals;
 
+import javax.annotation.Nullable;
+import javax.inject.Provider;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -12,27 +14,24 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.annotation.Nullable;
-import javax.inject.Provider;
-
-import lombok.extern.slf4j.Slf4j;
-import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
-import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
-
-import org.junit.Assert;
-import org.junit.Assume;
-import org.junit.rules.Verifier;
-import org.junit.runner.Description;
-import org.junit.runners.model.Statement;
-
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
+import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
+import org.junit.Assert;
+import org.junit.Assume;
+import org.junit.rules.Verifier;
+import org.junit.runner.Description;
+import org.junit.runners.model.Statement;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-@Slf4j
 public class VersionTestClassVerifier extends Verifier {
+
+  private static final Logger log = LoggerFactory.getLogger(VersionTestClassVerifier.class);
 
   private final Class<?>[] clazz;
 

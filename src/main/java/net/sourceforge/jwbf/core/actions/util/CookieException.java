@@ -24,13 +24,12 @@ package net.sourceforge.jwbf.core.actions.util;
 public class CookieException extends ActionException {
 
   /**
-	 * 
-	 */
+   *
+   */
   private static final long serialVersionUID = 1L;
 
   /**
-   * @param arg0
-   *          exception text
+   * @param arg0 exception text
    */
 
   public CookieException(String arg0) {

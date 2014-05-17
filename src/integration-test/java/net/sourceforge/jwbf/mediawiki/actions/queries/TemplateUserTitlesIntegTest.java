@@ -8,22 +8,22 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.List;
 
-import lombok.extern.slf4j.Slf4j;
+import com.github.dreamhead.moco.RequestMatcher;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import net.sourceforge.jwbf.AbstractIntegTest;
 import net.sourceforge.jwbf.GAssert;
 import net.sourceforge.jwbf.TestHelper;
 import net.sourceforge.jwbf.mediawiki.RequestMatcherBuilder;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
-
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.github.dreamhead.moco.RequestMatcher;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
-
-@Slf4j
 public class TemplateUserTitlesIntegTest extends AbstractIntegTest {
+
+  private static final Logger log = LoggerFactory.getLogger(TemplateUserTitlesIntegTest.class);
 
   RequestMatcherBuilder newBaseMatcher() {
     return new RequestMatcherBuilder() //
@@ -41,8 +41,8 @@ public class TemplateUserTitlesIntegTest extends AbstractIntegTest {
       .with(eq(query("eicontinue"), "10|Babel|37163")) //
       .build();
   RequestMatcher embeddedinThree = newBaseMatcher() //
-      .with(eq(query("eicontinue"), "10|Babel|39725")). //
-      build();
+      .with(eq(query("eicontinue"), "10|Babel|39725")) //
+      .build();
   RequestMatcher embeddedinOne = newBaseMatcher().build();
 
   @Test

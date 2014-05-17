@@ -1,14 +1,13 @@
 package net.sourceforge.jwbf.core.actions;
 
-import net.sourceforge.jwbf.core.actions.util.HttpAction;
-
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
+import net.sourceforge.jwbf.core.actions.util.HttpAction;
 
 public class Post implements HttpAction {
 
   private final String req;
-  private final Builder<String, Object> params = ImmutableMap.<String, Object> builder();
+  private final Builder<String, Object> params = ImmutableMap.<String, Object>builder();
   private final String charset;
 
   public Post(String req, String charset) {

@@ -3,10 +3,9 @@ package net.sourceforge.jwbf.core.actions;
 import java.util.Deque;
 import java.util.List;
 
-import net.sourceforge.jwbf.core.actions.util.HttpAction;
-
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
+import net.sourceforge.jwbf.core.actions.util.HttpAction;
 
 public abstract class ResponseHandler<T> implements ContentProcessable {
 

@@ -19,6 +19,7 @@
 
 package net.sourceforge.jwbf.core.actions;
 
+import javax.annotation.Nonnull;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -28,12 +29,12 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.concurrent.TimeUnit;
 
-import javax.annotation.Nonnull;
-
-import lombok.extern.slf4j.Slf4j;
+import com.google.common.base.Optional;
+import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
+import com.google.common.util.concurrent.RateLimiter;
 import net.sourceforge.jwbf.JWBF;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
-
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -46,20 +47,17 @@ import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.impl.client.HttpClientBuilder;
-
-import com.google.common.base.Optional;
-import com.google.common.base.Preconditions;
-import com.google.common.base.Strings;
-import com.google.common.util.concurrent.RateLimiter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The main interaction class.
- * 
+ *
  * @author Thomas Stock
  */
-@Slf4j
 public class HttpActionClient {
 
+  private static final Logger log = LoggerFactory.getLogger(HttpActionClient.class);
   private static final String USER_AGENT = "JWBF " + JWBF.getVersion(HttpActionClient.class);
 
   private final HttpClient client;
@@ -79,8 +77,7 @@ public class HttpActionClient {
   }
 
   /**
-   * @param url
-   *          like "http://host/of/wiki/"
+   * @param url like "http://host/of/wiki/"
    */
   public HttpActionClient(final HttpClientBuilder clientBuilder, final URL url) {
 
@@ -219,8 +216,8 @@ public class HttpActionClient {
     StringBuilder sb = new StringBuilder();
     Charset charSet = Charset.forName(ha.getCharset());
     try ( //
-    InputStreamReader inputStreamReader = new InputStreamReader(res.getEntity().getContent(),
-        charSet); //
+        InputStreamReader inputStreamReader = new InputStreamReader(res.getEntity().getContent(),
+            charSet); //
         BufferedReader br = new BufferedReader(inputStreamReader); //
     ) {
 

@@ -20,7 +20,9 @@ package net.sourceforge.jwbf.mediawiki.actions.editing;
 
 import java.util.Set;
 
-import lombok.extern.slf4j.Slf4j;
+import com.google.common.base.Strings;
+import com.google.common.collect.Sets;
+import com.google.common.collect.Sets.SetView;
 import net.sourceforge.jwbf.core.actions.Post;
 import net.sourceforge.jwbf.core.actions.util.ActionException;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
@@ -32,18 +34,17 @@ import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.actions.util.VersionException;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
-
-import com.google.common.base.Strings;
-import com.google.common.collect.Sets;
-import com.google.common.collect.Sets.SetView;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Writes an article.
- * 
+ *
  * @author Thomas Stock
  */
-@Slf4j
 public class PostModifyContent extends MWAction {
+
+  private static final Logger log = LoggerFactory.getLogger(PostModifyContent.class);
 
   private boolean first = true;
   private boolean second = true;

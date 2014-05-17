@@ -1,22 +1,11 @@
 package net.sourceforge.jwbf.mediawiki;
 
+import javax.inject.Provider;
 import java.io.File;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Map.Entry;
-
-import javax.inject.Provider;
-
-import net.sourceforge.jwbf.AbstractIntegTest;
-import net.sourceforge.jwbf.JWBF;
-import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
-import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
-import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
-
-import org.junit.Before;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
 
 import com.github.dreamhead.moco.Moco;
 import com.github.dreamhead.moco.resource.ContentResource;
@@ -30,6 +19,14 @@ import com.google.common.collect.Ordering;
 import com.google.common.io.Resources;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
+import net.sourceforge.jwbf.AbstractIntegTest;
+import net.sourceforge.jwbf.JWBF;
+import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
+import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
+import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
+import org.junit.Before;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
 
 @RunWith(Parameterized.class)
 public abstract class MocoIntegTest extends AbstractIntegTest implements Provider<MediaWikiBot> {
@@ -116,7 +113,7 @@ public abstract class MocoIntegTest extends AbstractIntegTest implements Provide
   }
 
   public ImmutableMap<String, String> emptyStringMap() {
-    return ImmutableMap.<String, String> of();
+    return ImmutableMap.<String, String>of();
   }
 
   protected ImmutableList<String> splittedConfigOfString(ConfKey key,
@@ -145,7 +142,7 @@ public abstract class MocoIntegTest extends AbstractIntegTest implements Provide
   }
 
   protected ImmutableList<String> splittedConfigOfString(ConfKey key) {
-    return splittedConfigOfString(key, ImmutableMap.<String, String> of());
+    return splittedConfigOfString(key, ImmutableMap.<String, String>of());
   }
 
   private static final Function<Entry<? extends Object, String>, String> function = new Function<Map.Entry<? extends Object, String>, String>() {
@@ -161,6 +158,6 @@ public abstract class MocoIntegTest extends AbstractIntegTest implements Provide
     return FluentIterable.from(stringList.entrySet()) //
         .transform(function) //
         .toSortedList(Ordering.natural()) //
-    ;
+        ;
   }
 }

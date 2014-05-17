@@ -4,7 +4,7 @@ import java.util.Set;
 
 /**
  * Information about the current user.
- * 
+ *
  * @author Thomas Stock
  */
 public interface Userinfo {

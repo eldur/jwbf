@@ -21,7 +21,6 @@ package net.sourceforge.jwbf.mediawiki.live;
 import net.sourceforge.jwbf.core.actions.util.ActionException;
 import net.sourceforge.jwbf.mediawiki.actions.misc.GetRendering;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
-
 import org.junit.Ignore;
 import org.junit.Test;
 

@@ -22,20 +22,22 @@ import java.text.ParseException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import lombok.extern.slf4j.Slf4j;
 import net.sourceforge.jwbf.core.actions.ContentProcessable;
 import net.sourceforge.jwbf.core.actions.Get;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.core.actions.util.ProcessException;
 import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Reads the content of a given article.
- * 
+ *
  * @author Thomas Stock
  */
-@Slf4j
 public class GetRevision implements ContentProcessable {
+
+  private static final Logger log = LoggerFactory.getLogger(GetRevision.class);
 
   private final SimpleArticle sa;
 

@@ -2,10 +2,9 @@ package net.sourceforge.jwbf.core.actions;
 
 import java.util.Deque;
 
-import net.sourceforge.jwbf.core.actions.util.HttpAction;
-
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Queues;
+import net.sourceforge.jwbf.core.actions.util.HttpAction;
 
 public class ContentProcessableBuilder {
 

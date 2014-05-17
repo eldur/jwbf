@@ -8,6 +8,8 @@ import static org.junit.Assert.fail;
 
 import java.util.Collection;
 
+import com.github.dreamhead.moco.RequestMatcher;
+import com.google.common.collect.ImmutableList;
 import net.sourceforge.jwbf.GAssert;
 import net.sourceforge.jwbf.mediawiki.ConfKey;
 import net.sourceforge.jwbf.mediawiki.MocoIntegTest;
@@ -15,12 +17,8 @@ import net.sourceforge.jwbf.mediawiki.RequestMatcherBuilder;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.actions.meta.SiteInfoIntegTest;
 import net.sourceforge.jwbf.mediawiki.live.auto.ParamHelper;
-
 import org.junit.Test;
 import org.junit.runners.Parameterized.Parameters;
-
-import com.github.dreamhead.moco.RequestMatcher;
-import com.google.common.collect.ImmutableList;
 
 public class AllPageTitlesIntegTest extends MocoIntegTest {
 
@@ -40,7 +38,7 @@ public class AllPageTitlesIntegTest extends MocoIntegTest {
         .with(eq(query("format"), "xml")) //
         .with(eq(query("list"), "allpages")) //
         .with(eq(query("aplimit"), "50")) //
-    ;
+        ;
   }
 
   RequestMatcher allpages0 = newBaseMatcher().build();

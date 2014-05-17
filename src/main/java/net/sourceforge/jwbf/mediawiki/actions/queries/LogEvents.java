@@ -23,7 +23,7 @@ import java.util.Iterator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import lombok.extern.slf4j.Slf4j;
+import com.google.common.collect.Lists;
 import net.sourceforge.jwbf.core.RequestBuilder;
 import net.sourceforge.jwbf.core.actions.Get;
 import net.sourceforge.jwbf.core.actions.util.ActionException;
@@ -34,21 +34,20 @@ import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 import net.sourceforge.jwbf.mediawiki.contentRep.LogItem;
-
-import com.google.common.collect.Lists;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * List log events, filtered by time range, event type, user type, or the page it applies to. Ordered by event
  * timestamp. Parameters: letype (flt), lefrom (paging timestamp), leto (flt), ledirection (dflt=older), leuser (flt),
  * letitle (flt), lelimit (dflt=10, max=500/5000) api.php ? action=query & list=logevents - List last 10 events of any
  * type TODO This is a semi-complete extension point
- * 
+ *
  * @author Thomas Stock
  */
-@Slf4j
 public class LogEvents extends MWAction implements Iterator<LogItem>, Iterable<LogItem> {
 
-  /** value for the bllimit-parameter. * */
+  private static final Logger log = LoggerFactory.getLogger(LogEvents.class);
 
   public static final String BLOCK = "block";
   public static final String PROTECT = "protect";
@@ -79,37 +78,31 @@ public class LogEvents extends MWAction implements Iterator<LogItem>, Iterable<L
 
   /**
    * information necessary to get the next api page.
-   * 
-   * @param type
-   *          of like {@link #MOVE}
+   *
+   * @param type of like {@link #MOVE}
    */
   public LogEvents(MediaWikiBot bot, String type) {
     this(bot, new String[] { type });
   }
 
   /**
-   * @param type
-   *          of like {@link #MOVE}
+   * @param type of like {@link #MOVE}
    */
   public LogEvents(MediaWikiBot bot, String[] type) {
     this(bot, 50, type.clone());
   }
 
   /**
-   * @param limit
-   *          of events
-   * @param type
-   *          of like {@link #MOVE}
+   * @param limit of events
+   * @param type  of like {@link #MOVE}
    */
   public LogEvents(MediaWikiBot bot, int limit, String type) {
     this(bot, limit, new String[] { type });
   }
 
   /**
-   * @param limit
-   *          of events
-   * @param type
-   *          of like {@link #MOVE}
+   * @param limit of events
+   * @param type  of like {@link #MOVE}
    */
   public LogEvents(MediaWikiBot bot, int limit, String[] type) {
     this.bot = bot;
@@ -124,7 +117,7 @@ public class LogEvents extends MWAction implements Iterator<LogItem>, Iterable<L
         .formatXml() //
         .param("list", "logevents") //
         .param("lelimit", limit) //
-    ;
+        ;
     if (logtype.length > 0) {
       StringBuffer logtemp = new StringBuffer();
       for (int i = 0; i < logtype.length; i++) {
@@ -156,9 +149,8 @@ public class LogEvents extends MWAction implements Iterator<LogItem>, Iterable<L
 
   /**
    * picks the article name from a MediaWiki api response.
-   * 
-   * @param xml
-   *          text for parsing
+   *
+   * @param xml text for parsing
    */
   private void parseArticleTitles(String xml) {
 
@@ -170,9 +162,8 @@ public class LogEvents extends MWAction implements Iterator<LogItem>, Iterable<L
   /**
    * gets the information about a follow-up page from a provided api response. If there is one, a new request is added
    * to msgs by calling generateRequest.
-   * 
-   * @param s
-   *          text for parsing
+   *
+   * @param s text for parsing
    */
   private void parseHasMore(final String s) {
 
@@ -296,7 +287,7 @@ public class LogEvents extends MWAction implements Iterator<LogItem>, Iterable<L
 
   /**
    * {@inheritDoc}
-   * 
+   *
    * @deprecated see super
    */
   @Deprecated

@@ -17,7 +17,7 @@
  * 
  */
 /**
- * 
+ *
  */
 package net.sourceforge.jwbf.core.bots.util;
 

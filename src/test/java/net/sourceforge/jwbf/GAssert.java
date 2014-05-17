@@ -1,9 +1,8 @@
 package net.sourceforge.jwbf;
 
-import org.junit.Assert;
-
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
+import org.junit.Assert;
 
 public class GAssert {
 

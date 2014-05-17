@@ -2,30 +2,33 @@ package net.sourceforge.jwbf.mediawiki.actions.editing;
 
 import javax.annotation.Nonnull;
 
-import lombok.extern.slf4j.Slf4j;
+import com.google.common.base.Function;
+import com.google.common.base.Optional;
+import com.google.common.base.Preconditions;
+import com.google.common.collect.ImmutableMap;
 import net.sourceforge.jwbf.core.actions.Get;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.extractXml.Element;
 import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.util.DequeMWAction;
-
-import com.google.common.base.Function;
-import com.google.common.base.Optional;
-import com.google.common.base.Preconditions;
-import com.google.common.collect.ImmutableMap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Action class using the MediaWiki-<a href="http://www.mediawiki.org/wiki/API:Changing_wiki_content" >Editing-API</a>. <br />
  * Its job is to get the token for some actions like delete or edit.
- * 
+ *
  * @author Max Gensthaler
  * @author Thomas Stock
  */
-@Slf4j
 public class GetApiToken extends DequeMWAction {
 
-  /** Types that need a token. See API field intoken. */
+  private static final Logger log = LoggerFactory.getLogger(GetApiToken.class);
+
+  /**
+   * Types that need a token. See API field intoken.
+   */
   // TODO this does not feel the elegant way.
   // Probably put complete request URIs into this enum objects
   // to support different URIs for different actions.
@@ -34,7 +37,7 @@ public class GetApiToken extends DequeMWAction {
   }
 
   private static final ImmutableMap<Intoken, Function<Element, String>> TOKEN_FUNCTIONS = ImmutableMap
-      .<Intoken, Function<Element, String>> builder() //
+      .<Intoken, Function<Element, String>>builder() //
       .put(Intoken.DELETE, tokenFunctionOf("deletetoken")) //
       .put(Intoken.EDIT, tokenFunctionOf("edittoken")) //
       .put(Intoken.MOVE, tokenFunctionOf("movetoken")) //
@@ -53,11 +56,9 @@ public class GetApiToken extends DequeMWAction {
 
   /**
    * Constructs a new <code>GetToken</code> action.
-   * 
-   * @param intoken
-   *          type to get the token for
-   * @param title
-   *          title of the article to generate the token for
+   *
+   * @param intoken type to get the token for
+   * @param title   title of the article to generate the token for
    */
   public GetApiToken(Intoken intoken, String title) {
     super(generateTokenRequest(intoken, title));
@@ -68,11 +69,9 @@ public class GetApiToken extends DequeMWAction {
 
   /**
    * Generates the next MediaWiki API token and adds it to <code>msgs</code>.
-   * 
-   * @param intoken
-   *          type to get the token for
-   * @param title
-   *          title of the article to generate the token for
+   *
+   * @param intoken type to get the token for
+   * @param title   title of the article to generate the token for
    */
   private static Get generateTokenRequest(Intoken intoken, String title) {
     log.trace("enter GetToken.generateTokenRequest()");
@@ -88,7 +87,7 @@ public class GetApiToken extends DequeMWAction {
 
   /**
    * Returns the requested token after parsing the result from MediaWiki.
-   * 
+   *
    * @return the requested token
    */
   @Nonnull

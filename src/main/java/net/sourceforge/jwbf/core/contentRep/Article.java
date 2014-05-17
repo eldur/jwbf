@@ -129,10 +129,8 @@ public class Article implements ArticleMeta, ContentSetable {
   }
 
   /**
-   * @param bot
-   *          the
-   * @param title
-   *          of
+   * @param bot   the
+   * @param title of
    */
   public Article(WikiBot bot, String title) {
     this.bot = bot;
@@ -140,10 +138,8 @@ public class Article implements ArticleMeta, ContentSetable {
   }
 
   /**
-   * @param bot
-   *          the
-   * @param sa
-   *          the
+   * @param bot the
+   * @param sa  the
    */
   public Article(WikiBot bot, SimpleArticle sa) {
     this.sa = sa;
@@ -192,8 +188,8 @@ public class Article implements ArticleMeta, ContentSetable {
   }
 
   /**
-   * @deprecated do not use this TODO why?
    * @return true if
+   * @deprecated do not use this TODO why?
    */
   @Deprecated
   public boolean isEmpty() {
@@ -201,8 +197,8 @@ public class Article implements ArticleMeta, ContentSetable {
   }
 
   /**
-   * @deprecated do not use this
    * @return the
+   * @deprecated do not use this
    */
   @Deprecated
   public WikiBot getBot() {
@@ -236,7 +232,7 @@ public class Article implements ArticleMeta, ContentSetable {
 
   /**
    * {@inheritDoc}
-   * 
+   *
    * @deprecated see inheritDoc
    */
   @Override

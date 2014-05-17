@@ -12,13 +12,14 @@ import java.util.Map;
 import java.util.zip.CRC32;
 import java.util.zip.Checksum;
 
-import lombok.extern.slf4j.Slf4j;
-import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
-
 import com.google.common.collect.Maps;
+import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-@Slf4j
 public class SimpleCache implements CacheHandler {
+
+  private static final Logger log = LoggerFactory.getLogger(SimpleCache.class);
 
   private final File folder;
   private final String ext = ".txt";

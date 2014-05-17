@@ -8,19 +8,19 @@ import java.util.Random;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
-import lombok.extern.slf4j.Slf4j;
-
-import org.junit.Assume;
-
 import com.google.common.base.Charsets;
 import com.google.common.base.Throwables;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.common.io.Resources;
+import org.junit.Assume;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-@Slf4j
 public class TestHelper {
+
+  private static final Logger log = LoggerFactory.getLogger(TestHelper.class);
 
   private static Random wheel = new Random();
 

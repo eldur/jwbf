@@ -10,7 +10,7 @@ import java.util.Hashtable;
  * Project homepage: <a href="http://htmlentities.sourceforge.net"
  * target="_blank">http://htmlentities.sourceforge.net</a> <br/>
  * License: http://www.gnu.org/copyleft/lesser.html LGPL
- * 
+ *
  * @author Nicola Asuni [www.tecnick.com].
  * @version 1.0.004
  */
@@ -182,9 +182,8 @@ final class HTMLEntities {
 
   /**
    * Convert HTML entities to special and extended unicode characters equivalents.
-   * 
-   * @param str
-   *          input string
+   *
+   * @param str input string
    * @return formatted string
    * @see #htmlentities(String)
    */
@@ -237,9 +236,8 @@ final class HTMLEntities {
 
   /**
    * Replace single quotes HTML entities with equivalent character.
-   * 
-   * @param str
-   *          the input string
+   *
+   * @param str the input string
    * @return string with replaced single quotes
    */
   private static String unhtmlSingleQuotes(String str) {
@@ -248,9 +246,8 @@ final class HTMLEntities {
 
   /**
    * Replace single quotes HTML entities with equivalent character.
-   * 
-   * @param str
-   *          the input string
+   *
+   * @param str the input string
    * @return string with replaced single quotes
    */
   private static String unhtmlDoubleQuotes(String str) {
@@ -259,9 +256,8 @@ final class HTMLEntities {
 
   /**
    * Replace single and double quotes HTML entities with equivalent characters.
-   * 
-   * @param str
-   *          the input string
+   *
+   * @param str the input string
    * @return string with replaced quotes
    */
   public static String unhtmlQuotes(String str) {

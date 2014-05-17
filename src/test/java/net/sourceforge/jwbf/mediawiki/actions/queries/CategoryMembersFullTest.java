@@ -8,16 +8,14 @@ import static org.mockito.Mockito.mock;
 
 import java.util.Iterator;
 
+import com.google.common.collect.ImmutableList;
 import net.sourceforge.jwbf.GAssert;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 import net.sourceforge.jwbf.mediawiki.contentRep.CategoryItem;
-
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
-
-import com.google.common.collect.ImmutableList;
 
 public class CategoryMembersFullTest {
 
@@ -33,7 +31,7 @@ public class CategoryMembersFullTest {
     // THEN
     assertEquals(bot, testee.bot);
     assertEquals("Test_It", testee.categoryName);
-    GAssert.assertEquals(ImmutableList.<Integer> of(), testee.namespace);
+    GAssert.assertEquals(ImmutableList.<Integer>of(), testee.namespace);
     assertFalse(testee.iterator().hasNext());
 
   }

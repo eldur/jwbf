@@ -22,7 +22,8 @@ import java.util.Deque;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import lombok.extern.slf4j.Slf4j;
+import com.google.common.base.Strings;
+import com.google.common.collect.Queues;
 import net.sourceforge.jwbf.core.RequestBuilder;
 import net.sourceforge.jwbf.core.actions.Get;
 import net.sourceforge.jwbf.core.actions.Post;
@@ -34,27 +35,24 @@ import net.sourceforge.jwbf.mediawiki.actions.editing.GetApiToken.Intoken;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 import net.sourceforge.jwbf.mediawiki.contentRep.SimpleFile;
-
-import com.google.common.base.Strings;
-import com.google.common.collect.Queues;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
- * <p>
- * To allow your bot to upload media in your MediaWiki. Add at least the following line to your MediaWiki's
+ * * To allow your bot to upload media in your MediaWiki. Add at least the following line to your MediaWiki's
  * LocalSettings.php:<br>
- * 
  * <pre>
  * $wgEnableUploads = true;
  * </pre>
- * 
  * For more details see also <a href="http://www.mediawiki.org/wiki/Help:Configuration_settings#Uploads" >Upload
  * Config</a>
- * 
+ *
  * @author Justus Bisser
  * @author Thomas Stock
  */
-@Slf4j
 public class FileUpload extends MWAction {
+
+  private static final Logger log = LoggerFactory.getLogger(FileUpload.class);
 
   private final Deque<HttpAction> actions;
   private UploadAction actionHandler;
@@ -136,7 +134,7 @@ public class FileUpload extends MWAction {
           .postParam("wpSourceType", "file") //
           .postParam("wpUpload", "Upload file") //
           .postParam("wpUploadFile", a.getFile()) //
-      ;
+          ;
       if (!Strings.isNullOrEmpty(a.getText())) {
         uploadRequest.postParam("wpUploadDescription", a.getText());
       }
@@ -195,7 +193,7 @@ public class FileUpload extends MWAction {
             .param("ignorewarnings", "true") //
             .buildPost() //
             .postParam("file", simpleFile.getFile()) //
-        ;
+            ;
         actions.add(upload);
       }
       // file upload requires enabled uploads, upload rights and filesystem permisions

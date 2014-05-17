@@ -1,11 +1,12 @@
 package net.sourceforge.jwbf.mediawiki;
 
-import java.net.URL;
-
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.net.URL;
 
-import lombok.extern.slf4j.Slf4j;
+import com.google.inject.AbstractModule;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 import net.sourceforge.jwbf.JWBF;
 import net.sourceforge.jwbf.TestHelper;
 import net.sourceforge.jwbf.core.actions.HttpActionClient;
@@ -15,12 +16,9 @@ import net.sourceforge.jwbf.core.bots.HttpBot;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
-
 import org.mockito.Mockito;
-
-import com.google.inject.AbstractModule;
-import com.google.inject.Guice;
-import com.google.inject.Injector;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class BotFactory {
 
@@ -67,7 +65,6 @@ public class BotFactory {
     return injector;
   }
 
-  @Slf4j
   @Singleton
   private static class CacheHttpBot extends HttpBot {
 
@@ -77,8 +74,9 @@ public class BotFactory {
     }
   }
 
-  @Slf4j
   public static class CacheActionClient extends HttpActionClient {
+
+    private static final Logger log = LoggerFactory.getLogger(CacheActionClient.class);
 
     public CacheActionClient(String url, WireRegister wireRegister) {
       super(JWBF.newURL(url));

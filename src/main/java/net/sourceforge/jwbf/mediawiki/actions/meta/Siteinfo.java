@@ -4,17 +4,16 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.Map;
 
+import com.google.common.collect.Maps;
 import net.sourceforge.jwbf.core.actions.Get;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.extractXml.Element;
 import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
 
-import com.google.common.collect.Maps;
-
 /**
  * Gets details from the given MediaWiki installation like installed version.
- * 
+ *
  * @author Thomas Stock
  * @see Siteinfo
  */
@@ -25,18 +24,15 @@ public class Siteinfo extends GetVersion {
   private final Map<String, String> interwiki = Maps.newHashMap();
 
   public static final String GENERAL = "general";
-  public static final String NAMESPACES = "namespaces"; // : A list of all
-                                                        // namespaces
+  public static final String NAMESPACES = "namespaces";
+  // : A list of all namespaces
   // # namespacealiases: A list of all namespace aliases
   // # specialpagealiases: A list of all special page aliases
   // # magicwords: A list of magic words and their aliases
   // # statistics: Site statistics à la Special:Statistics
 
-  public static final String INTERWIKIMAP = "interwikimap"; // : A list of all
-                                                            // interwiki
-                                                            // prefixes and
-                                                            // where they go
-
+  public static final String INTERWIKIMAP = "interwikimap";
+  // : A list of all interwiki prefixes and where they go
   // # dbrepllag: Get information about the database server with the highest
   // replication lag
   // # usergroups: A list of all user groups and their permissions
@@ -44,6 +40,7 @@ public class Siteinfo extends GetVersion {
   // # fileextensions: A list of file extensions allowed to be uploaded
   // # rightsinfo: Get information about the license governing the wiki's
   // content
+
   /**
    * inits with parameters {@link #GENERAL}, {@link #NAMESPACES}, {@link #INTERWIKIMAP}.
    */
@@ -52,8 +49,7 @@ public class Siteinfo extends GetVersion {
   }
 
   /**
-   * @param types
-   *          the, see {@link #GENERAL}, {@link #INTERWIKIMAP}, ...
+   * @param types the, see {@link #GENERAL}, {@link #INTERWIKIMAP}, ...
    */
   public Siteinfo(String... types) {
     StringBuffer x = new StringBuffer();

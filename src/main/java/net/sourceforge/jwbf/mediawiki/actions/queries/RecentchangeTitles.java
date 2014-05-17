@@ -21,7 +21,8 @@ package net.sourceforge.jwbf.mediawiki.actions.queries;
 import java.util.Iterator;
 import java.util.List;
 
-import lombok.extern.slf4j.Slf4j;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 import net.sourceforge.jwbf.core.RequestBuilder;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.extractXml.Element;
@@ -30,21 +31,23 @@ import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
-
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Gets a list of pages recently changed, ordered by modification timestamp. Parameters: rcfrom (paging timestamp), rcto
  * (flt), rcnamespace (flt), rcminor (flt), rcusertype (dflt=not|bot), rcdirection (dflt=older), rclimit (dflt=10,
  * max=500/5000) F api.php ? action=query & list=recentchanges - List last 10 changes
- * 
+ *
  * @author Thomas Stock
  */
-@Slf4j
 public class RecentchangeTitles extends TitleQuery<String> {
 
-  /** value for the bllimit-parameter. **/
+  private static final Logger log = LoggerFactory.getLogger(RecentchangeTitles.class);
+
+  /**
+   * value for the bllimit-parameter. *
+   */
   private static final int limit = 50;
 
   private final MediaWikiBot bot;
@@ -53,12 +56,10 @@ public class RecentchangeTitles extends TitleQuery<String> {
 
   /**
    * generates the next MediaWiki-request (GetMethod) and adds it to msgs.
-   * 
-   * @param namespace
-   *          the namespace(s) that will be searched for links, as a string of numbers separated by '|'; if null, this
-   *          parameter is omitted
-   * @param rcstart
-   *          timestamp
+   *
+   * @param namespace the namespace(s) that will be searched for links, as a string of numbers separated by '|'; if null, this
+   *                  parameter is omitted
+   * @param rcstart   timestamp
    */
   private HttpAction generateRequest(int[] namespace, String rcstart) {
 
@@ -67,7 +68,7 @@ public class RecentchangeTitles extends TitleQuery<String> {
         .formatXml() //
         .param("list", "recentchanges") //
         .param("rclimit", limit) //
-    ;
+        ;
     if (namespace != null) {
       requestBuilder.param("rcnamespace", MediaWiki.encode(MWAction.createNsString(namespace)));
     }
@@ -102,9 +103,8 @@ public class RecentchangeTitles extends TitleQuery<String> {
 
   /**
    * picks the article name from a MediaWiki api response.
-   * 
-   * @param s
-   *          text for parsing
+   *
+   * @param s text for parsing
    */
   @Override
   protected ImmutableList<String> parseArticleTitles(String s) {

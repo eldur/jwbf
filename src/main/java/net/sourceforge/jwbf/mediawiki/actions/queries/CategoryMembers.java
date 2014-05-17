@@ -21,25 +21,26 @@ package net.sourceforge.jwbf.mediawiki.actions.queries;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import lombok.extern.slf4j.Slf4j;
+import com.google.common.collect.ImmutableList;
+import com.google.common.primitives.Ints;
 import net.sourceforge.jwbf.core.RequestBuilder;
 import net.sourceforge.jwbf.core.actions.Get;
 import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
-
-import com.google.common.collect.ImmutableList;
-import com.google.common.primitives.Ints;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A abstract action class using the MediaWiki-api's "list=categorymembers ". For further information see <a href=
  * "http://www.mediawiki.org/wiki/API:Query_-_Lists#categorymembers_.2F_cm">API documentation</a>.
- * 
+ *
  * @author Thomas Stock
  */
-@Slf4j
 abstract class CategoryMembers extends MWAction {
+
+  private static final Logger log = LoggerFactory.getLogger(CategoryMembers.class);
 
   // TODO do not work with patterns
   private static final Pattern CATEGORY_PATTERN = Pattern
@@ -49,7 +50,9 @@ abstract class CategoryMembers extends MWAction {
       + "<categorymembers *cmcontinue=\"([^\"]*)\" */>" //
       + ".*?</query-continue>", Pattern.DOTALL | Pattern.MULTILINE);
 
-  /** constant value for the bllimit-parameter. **/
+  /**
+   * constant value for the bllimit-parameter. *
+   */
   protected static final int LIMIT = 50;
 
   protected final MediaWikiBot bot;
@@ -85,7 +88,7 @@ abstract class CategoryMembers extends MWAction {
 
   /**
    * generates the next MediaWiki-request (GetMethod) and adds it to msgs.
-   * 
+   *
    * @return a
    */
   protected final Get generateFirstRequest() {
@@ -94,9 +97,8 @@ abstract class CategoryMembers extends MWAction {
 
   /**
    * generates the next MediaWiki-request (GetMethod) and adds it to msgs.
-   * 
-   * @param cmcontinue
-   *          the value for the blcontinue parameter, null for the generation of the initial request
+   *
+   * @param cmcontinue the value for the blcontinue parameter, null for the generation of the initial request
    * @return a
    */
   protected Get generateContinueRequest(String cmcontinue) {
@@ -105,9 +107,8 @@ abstract class CategoryMembers extends MWAction {
 
   /**
    * deals with the MediaWiki api's response by parsing the provided text.
-   * 
-   * @param s
-   *          the answer to the most recently generated MediaWiki-request
+   *
+   * @param s the answer to the most recently generated MediaWiki-request
    * @return empty string
    */
   @Override
@@ -120,9 +121,8 @@ abstract class CategoryMembers extends MWAction {
   /**
    * gets the information about a follow-up page from a provided api response. If there is one, a new request is added
    * to msgs by calling generateRequest.
-   * 
-   * @param s
-   *          text for parsing
+   *
+   * @param s text for parsing
    */
   private void parseHasMore(final String s) {
 
@@ -139,9 +139,8 @@ abstract class CategoryMembers extends MWAction {
 
   /**
    * picks the article name from a MediaWiki api response.
-   * 
-   * @param s
-   *          text for parsing
+   *
+   * @param s text for parsing
    */
   private final void parseArticleTitles(String s) {
 
@@ -169,8 +168,8 @@ abstract class CategoryMembers extends MWAction {
       return newRequestBuilder() //
           .param("cmcontinue", MediaWiki.encode(cmcontinue)) //
           .param(CMTITLE, "Category:" + MediaWiki.encode(categoryName)) //
-          // TODO: do not add Category: - instead, change other methods' descs (e.g.
-          // in MediaWikiBot)
+              // TODO: do not add Category: - instead, change other methods' descs (e.g.
+              // in MediaWikiBot)
           .build();
     }
 
@@ -185,7 +184,7 @@ abstract class CategoryMembers extends MWAction {
           .formatXml() //
           .param("list", "categorymembers") //
           .param("cmlimit", LIMIT) //
-      ;
+          ;
     }
 
     String first(String categoryName) {

@@ -14,8 +14,8 @@ import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
 class CachArticle extends SimpleArticle implements Serializable {
 
   /**
-	 *
-	 */
+   *
+   */
   private static final long serialVersionUID = -8061809995421543211L;
   private Date d;
 

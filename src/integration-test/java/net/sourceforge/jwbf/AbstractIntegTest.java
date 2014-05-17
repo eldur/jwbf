@@ -5,9 +5,6 @@ import static com.github.dreamhead.moco.Runner.runner;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.junit.After;
-import org.junit.Before;
-
 import com.github.dreamhead.moco.HttpRequest;
 import com.github.dreamhead.moco.HttpServer;
 import com.github.dreamhead.moco.MocoConfig;
@@ -16,6 +13,8 @@ import com.github.dreamhead.moco.Runner;
 import com.github.dreamhead.moco.matcher.AndRequestMatcher;
 import com.github.dreamhead.moco.matcher.CompositeRequestMatcher;
 import com.google.common.collect.ImmutableList;
+import org.junit.After;
+import org.junit.Before;
 
 public abstract class AbstractIntegTest {
 

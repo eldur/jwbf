@@ -1,20 +1,20 @@
 package net.sourceforge.jwbf.mediawiki.live;
 
-import lombok.extern.slf4j.Slf4j;
+import com.google.common.primitives.Ints;
 import net.sourceforge.jwbf.mediawiki.LiveTestFather;
 import net.sourceforge.jwbf.mediawiki.actions.queries.BacklinkTitles;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
-
 import org.junit.Assert;
 import org.junit.Test;
-
-import com.google.common.primitives.Ints;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Thomas Stock
  */
-@Slf4j
 public class BacklinkTest extends AbstractMediaWikiBotTest {
+
+  private static final Logger log = LoggerFactory.getLogger(BacklinkTest.class);
 
   @Test
   public final void backlinksWikipediaDe() {

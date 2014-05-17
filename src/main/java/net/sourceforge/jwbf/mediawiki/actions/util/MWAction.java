@@ -18,25 +18,25 @@
  */
 package net.sourceforge.jwbf.mediawiki.actions.util;
 
-import java.util.List;
-
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
+import java.util.List;
 
-import lombok.extern.slf4j.Slf4j;
+import com.google.common.base.Joiner;
+import com.google.common.primitives.Ints;
 import net.sourceforge.jwbf.core.actions.ContentProcessable;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.extractXml.Element;
 import net.sourceforge.jwbf.extractXml.XmlConverter;
-
-import com.google.common.base.Joiner;
-import com.google.common.primitives.Ints;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Thomas Stock
  */
-@Slf4j
 public abstract class MWAction implements ContentProcessable {
+
+  private static final Logger log = LoggerFactory.getLogger(MWAction.class);
 
   /**
    * @deprecated remove
@@ -78,11 +78,9 @@ public abstract class MWAction implements ContentProcessable {
 
   /**
    * Deals with the MediaWiki API's response by parsing the provided text.
-   * 
-   * @param s
-   *          the answer to the most recently generated MediaWiki API request
-   * @param hm
-   *          the requestor message
+   *
+   * @param s  the answer to the most recently generated MediaWiki API request
+   * @param hm the requestor message
    * @return the returning text on processing problems
    */
   @Override
@@ -91,8 +89,7 @@ public abstract class MWAction implements ContentProcessable {
   }
 
   /**
-   * @param s
-   *          the returning text
+   * @param s the returning text
    * @return the returning text never
    */
   public String processAllReturningText(final String s) {
@@ -101,9 +98,8 @@ public abstract class MWAction implements ContentProcessable {
 
   /**
    * helper method generating a namespace string as required by the MW-api.
-   * 
-   * @param namespaces
-   *          namespace as
+   *
+   * @param namespaces namespace as
    * @return with numbers seperated by |
    */
   public static String createNsString(int... namespaces) {
@@ -116,7 +112,7 @@ public abstract class MWAction implements ContentProcessable {
 
   /**
    * {@inheritDoc}
-   * 
+   *
    * @deprecated see interface
    */
   @Override
@@ -137,9 +133,8 @@ public abstract class MWAction implements ContentProcessable {
 
   /**
    * Determines if the given XML Document contains an error message which then would printed by the logger.
-   * 
-   * @param rootElement
-   *          XML <code>Document</code>
+   *
+   * @param rootElement XML <code>Document</code>
    * @return error element
    */
   @CheckForNull

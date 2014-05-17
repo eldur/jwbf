@@ -21,23 +21,24 @@ package net.sourceforge.jwbf.mediawiki.actions.queries;
 import java.util.Iterator;
 import java.util.List;
 
-import lombok.extern.slf4j.Slf4j;
+import com.google.common.collect.Lists;
 import net.sourceforge.jwbf.core.actions.Get;
 import net.sourceforge.jwbf.core.actions.util.ActionException;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.core.actions.util.ProcessException;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
-
-import com.google.common.collect.Lists;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A specialization of {@link CategoryMembers} with contains {@link String}s.
- * 
+ *
  * @author Thomas Stock
  */
-@Slf4j
 public class CategoryMembersSimple implements Iterable<String>, Iterator<String> {
+
+  private static final Logger log = LoggerFactory.getLogger(CategoryMembersSimple.class);
 
   private Get msg;
   private final CategoryMembers cm;
@@ -49,8 +50,7 @@ public class CategoryMembersSimple implements Iterable<String>, Iterator<String>
   private Iterator<String> titleIterator;
 
   /**
-   * @param categoryName
-   *          like "Buildings" or "Chemical elements" without prefix "Category:" in {@link MediaWiki#NS_MAIN}
+   * @param categoryName like "Buildings" or "Chemical elements" without prefix "Category:" in {@link MediaWiki#NS_MAIN}
    */
   public CategoryMembersSimple(MediaWikiBot bot, String categoryName) {
     this(bot, categoryName, MediaWiki.NS_MAIN);
@@ -58,10 +58,8 @@ public class CategoryMembersSimple implements Iterable<String>, Iterator<String>
   }
 
   /**
-   * @param categoryName
-   *          like "Buildings" or "Chemical elements" without prefix "Category:"
-   * @param namespaces
-   *          for search
+   * @param categoryName like "Buildings" or "Chemical elements" without prefix "Category:"
+   * @param namespaces   for search
    */
   public CategoryMembersSimple(MediaWikiBot bot, String categoryName, int... namespaces) {
     cm = new CategoryMembers(bot, categoryName, namespaces) {
@@ -101,7 +99,7 @@ public class CategoryMembersSimple implements Iterable<String>, Iterator<String>
     if (cm.init || (!titleIterator.hasNext() && cm.hasMoreResults)) {
       if (cm.init) {
         cm.setHasMoreMessages(true); // FIXME check if other action should have
-                                     // this too
+        // this too
         msg = cm.generateFirstRequest();
       } else {
         msg = cm.generateContinueRequest(cm.nextPageInfo);

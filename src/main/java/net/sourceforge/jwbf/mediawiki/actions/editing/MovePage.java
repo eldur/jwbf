@@ -1,6 +1,6 @@
 package net.sourceforge.jwbf.mediawiki.actions.editing;
 
-import lombok.extern.slf4j.Slf4j;
+import com.google.common.base.Strings;
 import net.sourceforge.jwbf.core.RequestBuilder;
 import net.sourceforge.jwbf.core.actions.Post;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
@@ -10,14 +10,12 @@ import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
-
-import com.google.common.base.Strings;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Action class using the MediaWiki-API's <a href="http://www.mediawiki.org/wiki/API:Edit_-_Move">"action=move"</a>.
- * <p>
  * To allow your bot to move articles in your MediaWiki add the following line to your MediaWiki's LocalSettings.php:<br>
- * 
  * <pre>
  * $wgEnableWriteAPI = true;
  * $wgGroupPermissions['bot']['move'] = true;
@@ -25,24 +23,22 @@ import com.google.common.base.Strings;
  * $wgGroupPermissions['bot']['move-subpages'] = true;       // optional
  * $wgGroupPermissions['bot']['move-rootuserpages'] = true;  // optional
  * </pre>
- * <p>
  * Move an article with
- * 
  * <pre>
  * String oldtitle = ...
  * String newtitle = ...
  * String reason = ...
  * Boolean withsubpages = ...
  * Boolean noredirect = ...
- * 
  * MediaWikiBot bot = ...
  * bot.performAction(new MovePage(bot, oldtitle, newtitle, reason, withsubpages, noredirect));
  * </pre>
- * 
+ *
  * @author Christoph Giesel
  */
-@Slf4j
 public class MovePage extends MWAction {
+
+  private static final Logger log = LoggerFactory.getLogger(MovePage.class);
 
   private final String oldtitle;
   private final String newtitle;
@@ -54,19 +50,13 @@ public class MovePage extends MWAction {
 
   /**
    * Constructs a new <code>MovePage</code> action.
-   * 
-   * @param bot
-   *          the MediaWikiBot
-   * @param oldtitle
-   *          title to move
-   * @param newtitle
-   *          new title
-   * @param reason
-   *          reason why to move
-   * @param withsubpages
-   *          if <b>TRUE</b> also move the subpages
-   * @param noredirect
-   *          if <b>TRUE</b> create no redirects
+   *
+   * @param bot          the MediaWikiBot
+   * @param oldtitle     title to move
+   * @param newtitle     new title
+   * @param reason       reason why to move
+   * @param withsubpages if <b>TRUE</b> also move the subpages
+   * @param noredirect   if <b>TRUE</b> create no redirects
    */
   public MovePage(MediaWikiBot bot, String oldtitle, String newtitle, String reason,
       boolean withsubpages, boolean noredirect) {
@@ -111,7 +101,7 @@ public class MovePage extends MWAction {
         .param("to", MediaWiki.encode(newtitle)) //
         .param("token", MediaWiki.encode(token.getToken())) //
         .param("movetalk", "") // XXX
-    ;
+        ;
 
     if (withsubpages) {
       requestBuilder //

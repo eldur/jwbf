@@ -1,12 +1,11 @@
 package net.sourceforge.jwbf.mediawiki.bots;
 
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import java.net.URL;
 import java.util.Set;
 
-import javax.annotation.Nonnull;
-import javax.inject.Inject;
-
-import lombok.extern.slf4j.Slf4j;
+import com.google.common.collect.ImmutableSet;
 import net.sourceforge.jwbf.core.actions.ContentProcessable;
 import net.sourceforge.jwbf.core.actions.HttpActionClient;
 import net.sourceforge.jwbf.core.actions.util.ActionException;
@@ -14,7 +13,6 @@ import net.sourceforge.jwbf.core.actions.util.ProcessException;
 import net.sourceforge.jwbf.core.bots.HttpBot;
 import net.sourceforge.jwbf.core.bots.WikiBot;
 import net.sourceforge.jwbf.core.contentRep.Article;
-import net.sourceforge.jwbf.core.contentRep.ContentAccessable;
 import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
 import net.sourceforge.jwbf.core.contentRep.Userinfo;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
@@ -28,39 +26,36 @@ import net.sourceforge.jwbf.mediawiki.actions.meta.GetVersion;
 import net.sourceforge.jwbf.mediawiki.actions.meta.Siteinfo;
 import net.sourceforge.jwbf.mediawiki.actions.util.VersionException;
 import net.sourceforge.jwbf.mediawiki.contentRep.LoginData;
-
-import com.google.common.collect.ImmutableSet;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class helps you to interact with each <a href="http://www.mediawiki.org" target="_blank">MediaWiki</a>. This
  * class offers a <b>basic set</b> of methods which are defined in the package net.sourceforge.jwbf.actions.mw.* How to
  * use:
- * 
  * <pre>
  * MediaWikiBot b = new MediaWikiBot(&quot;http://yourwiki.org&quot;);
  * b.login(&quot;Username&quot;, &quot;Password&quot;);
  * System.out.println(b.readContent(&quot;Main Page&quot;).getText());
  * </pre>
- * 
  * <b>How to find the correct wikiurl</b>
  * <p>
  * The correct wikiurl is sometimes not easy to find, because some wikiadmis uses url rewriting rules. In this cases the
  * correct url is the one, which gives you access to <code>api.php</code>. E.g. Compare
- * 
  * <pre>
  * http://www.mediawiki.org/wiki/api.php
  * http://www.mediawiki.org/w/api.php
  * </pre>
- * 
  * Thus the correct wikiurl is: <code>http://www.mediawiki.org/w/</code>
  * </p>
- * 
+ *
  * @author Thomas Stock
  * @author Tobias Knerr
  * @author Justus Bisser
  */
-@Slf4j
 public class MediaWikiBot implements WikiBot {
+
+  private static final Logger log = LoggerFactory.getLogger(MediaWikiBot.class);
 
   private LoginData login = null;
 
@@ -93,8 +88,7 @@ public class MediaWikiBot implements WikiBot {
   }
 
   /**
-   * @param u
-   *          wikihosturl like "http://www.mediawiki.org/w/"
+   * @param u wikihosturl like "http://www.mediawiki.org/w/"
    */
   public MediaWikiBot(final URL u) {
     this(HttpActionClient.of(u));
@@ -106,10 +100,8 @@ public class MediaWikiBot implements WikiBot {
   }
 
   /**
-   * @param url
-   *          wikihosturl like "http://www.mediawiki.org/w/"
-   * @throws IllegalArgumentException
-   *           if param url does not represent a well-formed url
+   * @param url wikihosturl like "http://www.mediawiki.org/w/"
+   * @throws IllegalArgumentException if param url does not represent a well-formed url
    */
 
   public MediaWikiBot(final String url) {
@@ -121,10 +113,8 @@ public class MediaWikiBot implements WikiBot {
   }
 
   /**
-   * @param url
-   *          wikihosturl like "http://www.mediawiki.org/w/"
-   * @param testHostReachable
-   *          if true, test if host reachable
+   * @param url               wikihosturl like "http://www.mediawiki.org/w/"
+   * @param testHostReachable if true, test if host reachable
    */
   public MediaWikiBot(URL url, boolean testHostReachable) {
     bot = new HttpBot(client);
@@ -135,13 +125,10 @@ public class MediaWikiBot implements WikiBot {
 
   /**
    * Performs a Login.
-   * 
-   * @param username
-   *          the username
-   * @param passwd
-   *          the password
-   * @param domain
-   *          login domain (Special for LDAPAuth extention to authenticate against LDAP users)
+   *
+   * @param username the username
+   * @param passwd   the password
+   * @param domain   login domain (Special for LDAPAuth extention to authenticate against LDAP users)
    * @see PostLogin
    */
   public void login(final String username, final String passwd, final String domain) {
@@ -158,12 +145,10 @@ public class MediaWikiBot implements WikiBot {
 
   /**
    * Performs a Login. Actual old cookie login works right, because is pending on
-   * {@link #writeContent(ContentAccessable)}
-   * 
-   * @param username
-   *          the username
-   * @param passwd
-   *          the password
+   * {@link #writeContent(net.sourceforge.jwbf.core.contentRep.SimpleArticle)}
+   *
+   * @param username the username
+   * @param passwd   the password
    * @see PostLogin
    */
   @Override
@@ -173,10 +158,8 @@ public class MediaWikiBot implements WikiBot {
   }
 
   /**
-   * @param name
-   *          of article in a mediawiki like "Main Page"
-   * @param properties
-   *          {@link GetRevision}
+   * @param name       of article in a mediawiki like "Main Page"
+   * @param properties {@link GetRevision}
    * @return a content representation of requested article, never null
    * @see GetRevision
    */
@@ -208,8 +191,7 @@ public class MediaWikiBot implements WikiBot {
   }
 
   /**
-   * @param name
-   *          of article in a mediawiki like "Main Page"
+   * @param name of article in a mediawiki like "Main Page"
    * @return a content representation of requested article, never null
    * @see GetRevision
    */
@@ -326,7 +308,7 @@ public class MediaWikiBot implements WikiBot {
 
   /**
    * TODO reduce visibility
-   * 
+   *
    * @deprecated use {@link #getPerformedAction(ContentProcessable)} instead
    */
   @Deprecated
@@ -402,8 +384,7 @@ public class MediaWikiBot implements WikiBot {
   }
 
   /**
-   * @param useEditApi
-   *          Set to false, to force editing without the API.
+   * @param useEditApi Set to false, to force editing without the API.
    */
   public final void useEditApi(boolean useEditApi) {
     this.useEditApi = useEditApi;

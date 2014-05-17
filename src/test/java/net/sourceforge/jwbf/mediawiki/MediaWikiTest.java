@@ -6,7 +6,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
-
 import org.junit.Test;
 
 public class MediaWikiTest {

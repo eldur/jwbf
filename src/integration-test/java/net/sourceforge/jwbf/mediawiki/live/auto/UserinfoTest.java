@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package net.sourceforge.jwbf.mediawiki.live.auto;
 
@@ -14,7 +14,6 @@ import net.sourceforge.jwbf.mediawiki.VersionTestClassVerifier;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.actions.meta.GetUserinfo;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
-
 import org.junit.Assert;
 import org.junit.ClassRule;
 import org.junit.Ignore;

@@ -1,28 +1,28 @@
 package net.sourceforge.jwbf.extractXml;
 
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathExpression;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathExpression;
-import javax.xml.xpath.XPathExpressionException;
-import javax.xml.xpath.XPathFactory;
-
-import lombok.extern.slf4j.Slf4j;
 import net.sourceforge.jwbf.core.actions.util.ActionException;
 import net.sourceforge.jwbf.core.actions.util.ProcessException;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
-
 import org.jdom.Document;
 import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xml.sax.InputSource;
 
-@Slf4j
 public class XmlConverter {
+
+  private static final Logger log = LoggerFactory.getLogger(XmlConverter.class);
 
   public static Element getRootElementWithError(String xml) {
     SAXBuilder builder = new SAXBuilder();
@@ -71,7 +71,7 @@ public class XmlConverter {
     try {
       XPathExpression titleParser = parser.compile(xpath);
       ByteArrayInputStream byteStream //
-      = new ByteArrayInputStream(s.getBytes(MediaWiki.getCharset()));
+          = new ByteArrayInputStream(s.getBytes(MediaWiki.getCharset()));
       InputSource contenido = new InputSource(byteStream);
       return titleParser.evaluate(contenido);
     } catch (XPathExpressionException e) {

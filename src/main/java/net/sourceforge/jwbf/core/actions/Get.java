@@ -10,10 +10,8 @@ public class Get implements HttpAction {
   private final String charset;
 
   /**
-   * @param req
-   *          like index.html?parm=value
-   * @param charset
-   *          like utf-8
+   * @param req     like index.html?parm=value
+   * @param charset like utf-8
    */
   public Get(String req, String charset) {
     this.req = req;

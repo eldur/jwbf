@@ -30,22 +30,21 @@ import java.util.InvalidPropertiesFormatException;
 import java.util.Properties;
 import java.util.TimeZone;
 
-import lombok.val;
-import lombok.extern.slf4j.Slf4j;
-
-import org.junit.Assume;
-
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.io.Files;
+import org.junit.Assume;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Thomas Stock
  */
-@Slf4j
 public class LiveTestFather {
 
   private final SimpleMap data;
+
+  private static final Logger log = LoggerFactory.getLogger(LiveTestFather.class);
 
   private static final Collection<String> specialChars = Lists.newArrayList();
 
@@ -64,7 +63,7 @@ public class LiveTestFather {
   }
 
   public static boolean executeLiveTests() {
-    val workWithDisk = optSysProperty("noLiveTests", false, true);
+    boolean workWithDisk = optSysProperty("noLiveTests", false, true);
     if (workWithDisk) {
       throw new IllegalArgumentException("do not uses this toggle - use \"-DwithLiveTests\"");
     }
@@ -73,11 +72,11 @@ public class LiveTestFather {
   }
 
   private static boolean optSysProperty(String name, boolean defaultValue, boolean emptyValue) {
-    val stringValue = System.getProperty(name, defaultValue + "");
+    String stringValue = System.getProperty(name, defaultValue + "");
     if ("".equals(stringValue)) {
       return emptyValue;
     }
-    val booleanValue = Boolean.valueOf(stringValue).booleanValue();
+    boolean booleanValue = Boolean.valueOf(stringValue).booleanValue();
     return booleanValue;
   }
 
@@ -94,9 +93,9 @@ public class LiveTestFather {
    * @return the current UTC
    */
   public static Date getCurrentUTC() {
-    val currentDate = System.currentTimeMillis();
-    val tz = TimeZone.getDefault();
-    val localCal = Calendar.getInstance(tz);
+    long currentDate = System.currentTimeMillis();
+    TimeZone tz = TimeZone.getDefault();
+    Calendar localCal = Calendar.getInstance(tz);
     localCal.setTimeInMillis(currentDate - tz.getOffset(currentDate));
 
     return new Date(localCal.getTimeInMillis());
@@ -104,7 +103,7 @@ public class LiveTestFather {
   }
 
   private String getVal(String key) {
-    val value = data.get(key);
+    String value = data.get(key);
     if (Strings.isNullOrEmpty(value)) {
       data.put(key, " ");
       log.warn("EMPTY value for " + key);
@@ -209,7 +208,7 @@ public class LiveTestFather {
 
     @Override
     public String put(String key, String value) {
-      val result = (String) properties.put(key, value);
+      String result = (String) properties.put(key, value);
       write(filename);
       return result;
     }

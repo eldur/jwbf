@@ -26,7 +26,7 @@ import net.sourceforge.jwbf.core.bots.util.JwbfException;
 public class ActionException extends JwbfException {
 
   /**
-   * 
+   *
    */
   private static final long serialVersionUID = 1L;
 

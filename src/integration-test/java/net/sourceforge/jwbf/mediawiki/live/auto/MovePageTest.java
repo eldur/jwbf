@@ -12,7 +12,6 @@ import net.sourceforge.jwbf.core.contentRep.Article;
 import net.sourceforge.jwbf.mediawiki.VersionTestClassVerifier;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.actions.editing.MovePage;
-
 import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Rule;

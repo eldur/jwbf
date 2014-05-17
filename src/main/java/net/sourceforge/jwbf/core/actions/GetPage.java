@@ -22,7 +22,7 @@ import net.sourceforge.jwbf.core.actions.util.HttpAction;
 
 /**
  * Simple method to get plain HTML or XML data e.g. from custom specialpages or xml newsfeeds or something else.
- * 
+ *
  * @author Thomas Stock
  */
 public class GetPage implements ContentProcessable {
@@ -32,18 +32,15 @@ public class GetPage implements ContentProcessable {
   private String text = "";
 
   /**
-   * @param u
-   *          like "/index.php?title=Special:Recentchanges&feed=rss"
-   * @param charset
-   *          like "uft-8"
+   * @param u       like "/index.php?title=Special:Recentchanges&feed=rss"
+   * @param charset like "uft-8"
    */
   public GetPage(String u, String charset) {
     msg = new Get(u, charset);
   }
 
   /**
-   * @param u
-   *          like "/index.php?title=Special:Recentchanges&feed=rss"
+   * @param u like "/index.php?title=Special:Recentchanges&feed=rss"
    */
   public GetPage(String u) {
     this(u, "utf-8");
@@ -60,8 +57,8 @@ public class GetPage implements ContentProcessable {
   }
 
   /**
-   * @see ContentProcessable#getNextMessage()
    * @return a
+   * @see ContentProcessable#getNextMessage()
    */
   @Override
   public HttpAction getNextMessage() {
@@ -69,12 +66,10 @@ public class GetPage implements ContentProcessable {
   }
 
   /**
-   * @see ContentProcessable#processReturningText(String, HttpAction)
-   * @param s
-   *          the returning text
-   * @param hm
-   *          the on any problems with inner browser
+   * @param s  the returning text
+   * @param hm the on any problems with inner browser
    * @return the returning text
+   * @see ContentProcessable#processReturningText(String, HttpAction)
    */
   @Override
   public String processReturningText(String s, HttpAction hm) {

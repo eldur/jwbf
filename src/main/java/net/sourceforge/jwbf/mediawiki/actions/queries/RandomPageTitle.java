@@ -1,20 +1,22 @@
 package net.sourceforge.jwbf.mediawiki.actions.queries;
 
-import lombok.extern.slf4j.Slf4j;
 import net.sourceforge.jwbf.core.actions.Get;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.extractXml.XmlConverter;
 import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Action to receive the title of a random page TODO write a test that shows compatibility with all these versions
- * 
+ *
  * @author Juan Ignacio Cidre
  */
-@Slf4j
 public class RandomPageTitle extends MWAction {
+
+  private static final Logger log = LoggerFactory.getLogger(RandomPageTitle.class);
 
   private final Get msg;
   private final MediaWikiBot bot;

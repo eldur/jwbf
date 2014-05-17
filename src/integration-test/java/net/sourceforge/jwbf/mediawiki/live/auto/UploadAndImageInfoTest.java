@@ -24,6 +24,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -37,9 +38,6 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.Collection;
 
-import javax.imageio.ImageIO;
-
-import lombok.extern.slf4j.Slf4j;
 import net.sourceforge.jwbf.core.actions.util.ProcessException;
 import net.sourceforge.jwbf.mediawiki.VersionTestClassVerifier;
 import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
@@ -47,19 +45,21 @@ import net.sourceforge.jwbf.mediawiki.actions.editing.FileUpload;
 import net.sourceforge.jwbf.mediawiki.actions.queries.ImageInfo;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 import net.sourceforge.jwbf.mediawiki.contentRep.SimpleFile;
-
 import org.junit.Assert;
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Verifier;
 import org.junit.runners.Parameterized.Parameters;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Thomas Stock
  */
-@Slf4j
 public class UploadAndImageInfoTest extends ParamHelper {
+
+  private static final Logger log = LoggerFactory.getLogger(UploadAndImageInfoTest.class);
 
   @ClassRule
   public static VersionTestClassVerifier classVerifier = new VersionTestClassVerifier(
@@ -141,8 +141,8 @@ public class UploadAndImageInfoTest extends ParamHelper {
     urlSizeVar = new ImageInfo(bot, sf.getTitle() //
         , new String[][] { //
         { ImageInfo.HEIGHT, newHeight + "" } //
-            , { ImageInfo.WIDTH, newWidth + "" } //
-        }).getUrl();
+        , { ImageInfo.WIDTH, newWidth + "" } //
+    }).getUrl();
     File file = new File(validFile);
     assertFile(url, file);
     assertImageDimension(url, upWidth, upHeight);
