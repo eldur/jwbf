@@ -7,7 +7,7 @@ import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.core.actions.util.ProcessException;
 import net.sourceforge.jwbf.extractXml.Element;
 import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
-import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
+import net.sourceforge.jwbf.mediawiki.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 import org.slf4j.Logger;
@@ -97,9 +97,9 @@ public class MovePage extends MWAction {
     RequestBuilder requestBuilder = new ApiRequestBuilder() //
         .action("move") //
         .formatXml() //
-        .param("from", MediaWiki.encode(oldtitle)) //
-        .param("to", MediaWiki.encode(newtitle)) //
-        .param("token", MediaWiki.encode(token.getToken())) //
+        .param("from", MediaWiki.urlEncode(oldtitle)) //
+        .param("to", MediaWiki.urlEncode(newtitle)) //
+        .param("token", MediaWiki.urlEncode(token.getToken())) //
         .param("movetalk", "") // XXX
         ;
 
@@ -115,7 +115,7 @@ public class MovePage extends MWAction {
     }
     if (!Strings.isNullOrEmpty(reason)) {
       requestBuilder //
-          .param("reason", MediaWiki.encode(reason)) //
+          .param("reason", MediaWiki.urlEncode(reason)) //
       ;
     }
 

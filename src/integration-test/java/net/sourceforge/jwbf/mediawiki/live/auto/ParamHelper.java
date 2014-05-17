@@ -2,10 +2,11 @@ package net.sourceforge.jwbf.mediawiki.live.auto;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 import net.sourceforge.jwbf.mediawiki.BotFactory;
 import net.sourceforge.jwbf.mediawiki.VersionTestClassVerifier;
-import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
+import net.sourceforge.jwbf.mediawiki.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.live.AbstractMediaWikiBotTest;
 import org.junit.Assert;
 import org.junit.internal.AssumptionViolatedException;
@@ -25,14 +26,13 @@ public abstract class ParamHelper extends AbstractMediaWikiBotTest {
     Assert.assertEquals(v, bot.getVersion());
   }
 
-  public static Collection<?> prepare(Version... versions) {
+  public static Collection<?> prepare(List<Version> versions) {
 
-    Object[][] objects = new Object[versions.length][1];
-    for (int i = 0; i < versions.length; i++) {
-      objects[i][0] = versions[i];
-
+    Object[][] objects = new Object[versions.size()][1];
+    int i = 0;
+    for (Version version : versions) {
+      objects[i++][0] = version;
     }
-
     return Arrays.asList(objects);
   }
 }

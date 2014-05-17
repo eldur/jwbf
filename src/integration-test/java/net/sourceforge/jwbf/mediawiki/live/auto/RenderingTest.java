@@ -3,7 +3,7 @@ package net.sourceforge.jwbf.mediawiki.live.auto;
 import java.util.Collection;
 
 import net.sourceforge.jwbf.mediawiki.VersionTestClassVerifier;
-import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
+import net.sourceforge.jwbf.mediawiki.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.actions.misc.GetRendering;
 import org.junit.Assert;
 import org.junit.ClassRule;

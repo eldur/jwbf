@@ -29,8 +29,8 @@ import net.sourceforge.jwbf.core.RequestBuilder;
 import net.sourceforge.jwbf.core.actions.Get;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
-import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
-import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
+import net.sourceforge.jwbf.mediawiki.MediaWiki;
+import net.sourceforge.jwbf.mediawiki.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.actions.util.RedirectFilter;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
@@ -122,13 +122,13 @@ public class AllPageTitles extends TitleQuery<String> {
         ;
 
     if (from.isPresent()) {
-      requestBuilder.param("apfrom", MediaWiki.encode(from.get()));
+      requestBuilder.param("apfrom", MediaWiki.urlEncode(from.get()));
     }
     if (!Strings.isNullOrEmpty(prefix)) {
-      requestBuilder.param("apprefix", MediaWiki.encode(prefix));
+      requestBuilder.param("apprefix", MediaWiki.urlEncode(prefix));
     }
     if (!Strings.isNullOrEmpty(namespace)) {
-      requestBuilder.param("apnamespace", MediaWiki.encode(namespace));
+      requestBuilder.param("apnamespace", MediaWiki.urlEncode(namespace));
     }
     return requestBuilder.buildGet();
   }
@@ -154,7 +154,7 @@ public class AllPageTitles extends TitleQuery<String> {
     ImmutableList.Builder<String> titles = ImmutableList.<String>builder();
     Matcher m = ARTICLE_TITLES_PATTERN.matcher(s);
     while (m.find()) {
-      String title = MediaWiki.decode(m.group(1));
+      String title = MediaWiki.htmlUnescape(m.group(1));
       log.debug("Found article title: \"{}\"", title);
       titles.add(title);
     }

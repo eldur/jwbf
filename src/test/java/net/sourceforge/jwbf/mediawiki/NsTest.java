@@ -2,7 +2,6 @@ package net.sourceforge.jwbf.mediawiki;
 
 import static org.junit.Assert.assertEquals;
 
-import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import org.junit.Test;
 
@@ -21,10 +20,10 @@ public class NsTest {
 
     String s = "&#039;";
     String t = "'";
-    assertEquals(t, MediaWiki.decode(s));
+    assertEquals(t, MediaWiki.htmlUnescape(s));
     s = "&quot;";
     t = "\"";
-    assertEquals(t, MediaWiki.decode(s));
+    assertEquals(t, MediaWiki.htmlUnescape(s));
   }
 
 }

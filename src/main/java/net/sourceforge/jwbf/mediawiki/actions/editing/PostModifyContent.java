@@ -30,7 +30,7 @@ import net.sourceforge.jwbf.core.contentRep.ContentAccessable;
 import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
 import net.sourceforge.jwbf.core.contentRep.Userinfo;
 import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
-import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
+import net.sourceforge.jwbf.mediawiki.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.actions.util.VersionException;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
@@ -90,7 +90,7 @@ public class PostModifyContent extends MWAction {
       editRequest = new ApiRequestBuilder() //
           .action("edit") //
           .formatXml() //
-          .param("title", MediaWiki.encode(a.getTitle())) //
+          .param("title", MediaWiki.urlEncode(a.getTitle())) //
           .buildPost() //
           .postParam("summary", a.getEditSummary()) //
           .postParam("text", a.getText()) //

@@ -16,23 +16,33 @@
  * Contributors:
  * Carlos Valenzuela
  */
-package net.sourceforge.jwbf.mediawiki.actions;
+package net.sourceforge.jwbf.mediawiki;
 
+import javax.annotation.Nullable;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
-import java.util.List;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Set;
 
+import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Predicate;
+import com.google.common.collect.FluentIterable;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Lists;
+import com.google.common.collect.Iterables;
+import org.apache.commons.lang.StringEscapeUtils;
 
 /**
  * @author Thomas Stock
  */
 public final class MediaWiki {
 
-  static final String CHARSET = "UTF-8";
+  static final Charset CHARSET = StandardCharsets.UTF_8;
 
   public static final String URL_API = "/api.php";
   public static final String URL_INDEX = "/index.php";
@@ -78,6 +88,11 @@ public final class MediaWiki {
      */
     UNKNOWN
     /**
+     *
+     */
+    , @Deprecated
+    MW1_14
+    /**
      * Released 2009-06
      */
     , MW1_15
@@ -114,7 +129,22 @@ public final class MediaWiki {
      */
     , DEVELOPMENT;
 
-    private static Version last = UNKNOWN;
+    private static final ImmutableList<Version> STABLE_VERSIONS = FluentIterable //
+        .from(Arrays.asList(Version.values())) //
+        .filter(new Predicate<Version>() {
+          @Override
+          public boolean apply(@Nullable Version version) {
+            return isStableVersion(version);
+          }
+        }) //
+        .toSortedList(new Comparator<Version>() {
+          @Override
+          public int compare(Version o1, Version o2) {
+            return Integer.valueOf(o1.getIntValue()).compareTo(Integer.valueOf(o2.getIntValue()));
+          }
+        });
+
+    private static final Version LATEST_VERSION = Iterables.getLast(valuesStable());
 
     /**
      * @return a, like 1.15
@@ -133,9 +163,10 @@ public final class MediaWiki {
     private int getIntValue() {
       try {
         return Integer.parseInt(getNumber().replace(".", ""));
-      } catch (Exception e) {
-        if (this == DEVELOPMENT)
+      } catch (NumberFormatException e) {
+        if (this == DEVELOPMENT) {
           return Integer.MAX_VALUE;
+        }
         return -1;
       }
     }
@@ -144,46 +175,39 @@ public final class MediaWiki {
      * @return the latest version
      */
     public static Version getLatest() {
-      if (last == UNKNOWN) {
-        Version[] as = valuesStable();
-        // TODO find first with guava
-        for (int i = 0; i < as.length; i++) {
-          if (as[i].getIntValue() > last.getIntValue()) {
-            last = as[i];
-          }
-        }
-      }
-      return last;
+      return LATEST_VERSION;
+    }
+
+    @VisibleForTesting
+    public static boolean isStableVersion(Version version) {
+      boolean isDeprecated = getField(version).isAnnotationPresent(Deprecated.class);
+      return !(version.equals(DEVELOPMENT) || version.equals(UNKNOWN) || isDeprecated);
     }
 
     /**
      * @return true if
      */
     public boolean greaterEqThen(Version v) {
-      return (v.getIntValue() <= getIntValue());
+      return v.getIntValue() <= getIntValue();
     }
 
     /**
      * @return all known stable MW Versions
      */
-    public static Version[] valuesStable() {
-      List<Version> resultVersions = Lists.newArrayList();
-      // TODO filter
-      for (Version version : Version.values()) {
-        boolean isDeprecated = getField(version).isAnnotationPresent(Deprecated.class);
-        if (!(version.equals(DEVELOPMENT) || version.equals(UNKNOWN) || isDeprecated)) {
-          resultVersions.add(version);
-        }
-      }
-      return resultVersions.toArray(new Version[resultVersions.size()]);
+    public static ImmutableList<Version> valuesStable() {
+      return STABLE_VERSIONS;
     }
 
-    protected static Field getField(Version version) {
-      try {
-        return version.getClass().getField(version.name());
-      } catch (NoSuchFieldException nsfe) {
-        throw new IllegalStateException(nsfe);
-      }
+    static Field getField(Version version) {
+      return getFieldUnchecked(Version.class, version.name());
+    }
+  }
+
+  static Field getFieldUnchecked(Class<?> clazz, String fieldName) {
+    try {
+      return clazz.getField(fieldName);
+    } catch (NoSuchFieldException nsfe) {
+      throw new IllegalArgumentException(nsfe);
     }
   }
 
@@ -192,22 +216,34 @@ public final class MediaWiki {
   }
 
   public static String getCharset() {
-    return CHARSET;
+    return CHARSET.displayName();
   }
 
-  // TODO rename
-  public static String encode(String s) {
+  public static String urlEncode(String s) {
+    return urlEncodeUnchecked(s, MediaWiki.getCharset());
+  }
+
+  static String urlEncodeUnchecked(String s, String charset) {
     try {
-      return URLEncoder.encode(s, MediaWiki.CHARSET);
+      return URLEncoder.encode(s, charset);
     } catch (UnsupportedEncodingException e) {
-      throw new RuntimeException(e);
+      throw new IllegalArgumentException(e);
     }
   }
 
-  // TODO rename
-  public static String decode(final String s) {
-    String out = HTMLEntities.unhtmlentities(s);
-    out = HTMLEntities.unhtmlQuotes(out);
-    return out;
+  public static String urlDecode(String s) {
+    return urlDecodeUnchecked(s, MediaWiki.getCharset());
+  }
+
+  static String urlDecodeUnchecked(String s, String charset) {
+    try {
+      return URLDecoder.decode(s, charset);
+    } catch (UnsupportedEncodingException e) {
+      throw new IllegalArgumentException(e);
+    }
+  }
+
+  public static String htmlUnescape(final String s) {
+    return StringEscapeUtils.unescapeHtml(s);
   }
 }

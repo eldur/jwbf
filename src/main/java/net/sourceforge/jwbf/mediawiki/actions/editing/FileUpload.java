@@ -30,7 +30,7 @@ import net.sourceforge.jwbf.core.actions.Post;
 import net.sourceforge.jwbf.core.actions.util.ActionException;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
-import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
+import net.sourceforge.jwbf.mediawiki.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.editing.GetApiToken.Intoken;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
@@ -120,7 +120,7 @@ public class FileUpload extends MWAction {
     public Deque<HttpAction> getActions() {
       Deque<HttpAction> actions = Queues.newArrayDeque();
       Get g = new RequestBuilder(MediaWiki.URL_INDEX) //
-          .param("title", MediaWiki.encode(a.getTitle())) //
+          .param("title", MediaWiki.urlEncode(a.getTitle())) //
           .param("action", "edit") //
           .buildGet();
       actions.add(g);
@@ -150,7 +150,7 @@ public class FileUpload extends MWAction {
         Matcher m = errFinder.matcher(xml);
         String lastP = "";
         while (m.find()) {
-          lastP = MediaWiki.decode(m.group(1));
+          lastP = MediaWiki.htmlUnescape(m.group(1));
           log.error("Upload failed: " + lastP);
         }
 
@@ -188,8 +188,8 @@ public class FileUpload extends MWAction {
         Post upload = new ApiRequestBuilder() //
             .action("upload") //
             .formatXml() //
-            .param("token", MediaWiki.encode(token)) //
-            .param("filename", MediaWiki.encode(simpleFile.getTitle())) //
+            .param("token", MediaWiki.urlEncode(token)) //
+            .param("filename", MediaWiki.urlEncode(simpleFile.getTitle())) //
             .param("ignorewarnings", "true") //
             .buildPost() //
             .postParam("file", simpleFile.getFile()) //

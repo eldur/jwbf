@@ -19,7 +19,7 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
+import net.sourceforge.jwbf.mediawiki.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 import org.junit.Assert;
 import org.junit.Assume;
@@ -56,8 +56,7 @@ public class VersionTestClassVerifier extends Verifier {
   private Collection<Version> getUsedVersions() {
 
     assumeNoIgnoredVersions();
-    Version[] stableVersions = Version.valuesStable();
-    Iterable<Version> versions = Lists.newArrayList(stableVersions);
+    Iterable<Version> versions = Version.valuesStable();
 
     final Set<Version> testedKeys = Sets.newHashSet(testedVersions.values());
 

@@ -10,7 +10,7 @@ import net.sourceforge.jwbf.core.actions.Get;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.extractXml.Element;
 import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
-import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
+import net.sourceforge.jwbf.mediawiki.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.util.DequeMWAction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -80,7 +80,7 @@ public class GetApiToken extends DequeMWAction {
         .formatXml() //
         .param("prop", "info") //
         .param("intoken", intoken.toString().toLowerCase()) //
-        .param("titles", MediaWiki.encode(title)) //
+        .param("titles", MediaWiki.urlEncode(title)) //
         .buildGet();
 
   }

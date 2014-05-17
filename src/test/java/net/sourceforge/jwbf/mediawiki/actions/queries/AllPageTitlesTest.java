@@ -4,7 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import com.google.common.base.Optional;
 import net.sourceforge.jwbf.core.actions.Get;
-import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
+import net.sourceforge.jwbf.mediawiki.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.actions.util.RedirectFilter;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;

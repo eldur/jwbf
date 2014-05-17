@@ -5,7 +5,7 @@ import static org.junit.Assert.assertNotNull;
 import java.util.Collection;
 
 import net.sourceforge.jwbf.mediawiki.VersionTestClassVerifier;
-import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
+import net.sourceforge.jwbf.mediawiki.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.actions.queries.RandomPageTitle;
 import org.junit.ClassRule;
 import org.junit.Rule;

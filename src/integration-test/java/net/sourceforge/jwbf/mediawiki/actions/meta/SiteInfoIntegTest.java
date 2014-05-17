@@ -14,7 +14,7 @@ import com.github.dreamhead.moco.RequestMatcher;
 import net.sourceforge.jwbf.GAssert;
 import net.sourceforge.jwbf.mediawiki.ConfKey;
 import net.sourceforge.jwbf.mediawiki.MocoIntegTest;
-import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
+import net.sourceforge.jwbf.mediawiki.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.live.auto.ParamHelper;
 import org.junit.Test;
 import org.junit.runners.Parameterized.Parameters;

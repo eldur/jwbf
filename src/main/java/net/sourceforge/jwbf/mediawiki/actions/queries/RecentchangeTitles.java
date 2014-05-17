@@ -27,7 +27,7 @@ import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.extractXml.Element;
 import net.sourceforge.jwbf.extractXml.XmlConverter;
 import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
-import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
+import net.sourceforge.jwbf.mediawiki.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 import org.slf4j.Logger;
@@ -69,7 +69,7 @@ public class RecentchangeTitles extends TitleQuery<String> {
         .param("rclimit", limit) //
         ;
     if (namespace != null) {
-      requestBuilder.param("rcnamespace", MediaWiki.encode(MWAction.createNsString(namespace)));
+      requestBuilder.param("rcnamespace", MediaWiki.urlEncode(MWAction.createNsString(namespace)));
     }
     if (rcstart.length() > 0) {
       requestBuilder.param("rcstart", rcstart);
@@ -118,7 +118,7 @@ public class RecentchangeTitles extends TitleQuery<String> {
 
     for (Element element : root.getChildren()) {
       if (element.getQualifiedName().equalsIgnoreCase("rc")) {
-        titleCollection.add(MediaWiki.decode(element.getAttributeValue("title")));
+        titleCollection.add(MediaWiki.htmlUnescape(element.getAttributeValue("title")));
         setNextPageInfo(element.getAttributeValue("timestamp"));
       } else {
         findContent(element, titleCollection);

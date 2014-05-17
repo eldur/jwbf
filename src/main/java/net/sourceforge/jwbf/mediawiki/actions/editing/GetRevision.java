@@ -25,8 +25,8 @@ import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
 import net.sourceforge.jwbf.extractXml.Element;
 import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
-import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
-import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
+import net.sourceforge.jwbf.mediawiki.MediaWiki;
+import net.sourceforge.jwbf.mediawiki.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.actions.util.ApiException;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import org.slf4j.Logger;
@@ -75,7 +75,7 @@ public class GetRevision extends MWAction {
         .action("query") //
         .formatXml() //
         .param("prop", "revisions") //
-        .param("titles", MediaWiki.encode(articlename)) //
+        .param("titles", MediaWiki.urlEncode(articlename)) //
         .param("rvprop", getDataProperties(properties) + getReversion(properties)) //
         .param("rvlimit", "1") //
         .buildGet();
@@ -129,7 +129,7 @@ public class GetRevision extends MWAction {
     }
 
     if (properties.length() > 0) {
-      return MediaWiki.encode(properties.substring(0, properties.length() - 1));
+      return MediaWiki.urlEncode(properties.substring(0, properties.length() - 1));
     }
 
     return "";

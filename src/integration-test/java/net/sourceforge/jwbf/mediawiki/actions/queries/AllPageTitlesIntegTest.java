@@ -14,7 +14,7 @@ import net.sourceforge.jwbf.GAssert;
 import net.sourceforge.jwbf.mediawiki.ConfKey;
 import net.sourceforge.jwbf.mediawiki.MocoIntegTest;
 import net.sourceforge.jwbf.mediawiki.RequestMatcherBuilder;
-import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
+import net.sourceforge.jwbf.mediawiki.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.actions.meta.SiteInfoIntegTest;
 import net.sourceforge.jwbf.mediawiki.live.auto.ParamHelper;
 import org.junit.Test;

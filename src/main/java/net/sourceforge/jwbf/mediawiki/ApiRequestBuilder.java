@@ -1,7 +1,6 @@
 package net.sourceforge.jwbf.mediawiki;
 
 import net.sourceforge.jwbf.core.RequestBuilder;
-import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
 
 public class ApiRequestBuilder extends RequestBuilder {
 

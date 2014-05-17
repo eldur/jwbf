@@ -26,7 +26,7 @@ import com.google.common.primitives.Ints;
 import net.sourceforge.jwbf.core.RequestBuilder;
 import net.sourceforge.jwbf.core.actions.Get;
 import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
-import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
+import net.sourceforge.jwbf.mediawiki.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 import org.slf4j.Logger;
@@ -166,8 +166,8 @@ abstract class CategoryMembers extends MWAction {
 
     String continiue(String cmcontinue) {
       return newRequestBuilder() //
-          .param("cmcontinue", MediaWiki.encode(cmcontinue)) //
-          .param(CMTITLE, "Category:" + MediaWiki.encode(categoryName)) //
+          .param("cmcontinue", MediaWiki.urlEncode(cmcontinue)) //
+          .param(CMTITLE, "Category:" + MediaWiki.urlEncode(categoryName)) //
               // TODO: do not add Category: - instead, change other methods' descs (e.g.
               // in MediaWikiBot)
           .build();
@@ -176,7 +176,7 @@ abstract class CategoryMembers extends MWAction {
     private RequestBuilder newRequestBuilder() {
       ApiRequestBuilder requestBuilder = new ApiRequestBuilder();
       if (namespaceStr.length() > 0) {
-        requestBuilder.param("cmnamespace", MediaWiki.encode(namespaceStr));
+        requestBuilder.param("cmnamespace", MediaWiki.urlEncode(namespaceStr));
       }
 
       return requestBuilder //
@@ -189,7 +189,7 @@ abstract class CategoryMembers extends MWAction {
 
     String first(String categoryName) {
       return newRequestBuilder() //
-          .param(CMTITLE, "Category:" + MediaWiki.encode(categoryName)) //
+          .param(CMTITLE, "Category:" + MediaWiki.urlEncode(categoryName)) //
           .build();
     }
 

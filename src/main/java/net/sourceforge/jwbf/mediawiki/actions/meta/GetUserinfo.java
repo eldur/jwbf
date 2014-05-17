@@ -8,7 +8,7 @@ import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.core.contentRep.Userinfo;
 import net.sourceforge.jwbf.extractXml.Element;
 import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
-import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
+import net.sourceforge.jwbf.mediawiki.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,7 +27,7 @@ public class GetUserinfo extends MWAction implements Userinfo {
 
   public GetUserinfo() {
     String properties = MediaWiki
-        .encode("blockinfo|hasmsg|groups|rights|options|editcount|ratelimits");
+        .urlEncode("blockinfo|hasmsg|groups|rights|options|editcount|ratelimits");
     msg = new ApiRequestBuilder() //
         .action("query") //
         .formatXml() //

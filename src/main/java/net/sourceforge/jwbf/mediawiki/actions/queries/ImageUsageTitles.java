@@ -30,7 +30,7 @@ import net.sourceforge.jwbf.core.RequestBuilder;
 import net.sourceforge.jwbf.core.actions.Get;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
-import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
+import net.sourceforge.jwbf.mediawiki.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 import org.slf4j.Logger;
@@ -178,8 +178,8 @@ public class ImageUsageTitles extends TitleQuery<String> {
     @Override
     public Get generateContinueRequest(String imageName, String namespace, String ilcontinue) {
       RequestBuilder requestBuilder = newRequestBuilder();
-      requestBuilder.param("iucontinue", MediaWiki.encode(ilcontinue));
-      requestBuilder.param("iutitle", MediaWiki.encode(imageName));
+      requestBuilder.param("iucontinue", MediaWiki.urlEncode(ilcontinue));
+      requestBuilder.param("iutitle", MediaWiki.urlEncode(imageName));
 
       return requestBuilder.buildGet();
     }
@@ -187,10 +187,10 @@ public class ImageUsageTitles extends TitleQuery<String> {
     @Override
     public Get generateRequest(String imageName, String namespace) {
       RequestBuilder requestBuilder = newRequestBuilder();
-      requestBuilder.param("iutitle", MediaWiki.encode(imageName));
+      requestBuilder.param("iutitle", MediaWiki.urlEncode(imageName));
 
       if (!Strings.isNullOrEmpty(namespace)) {
-        requestBuilder.param("iunamespace", MediaWiki.encode(namespace));
+        requestBuilder.param("iunamespace", MediaWiki.urlEncode(namespace));
       }
       return requestBuilder.buildGet();
 
@@ -238,17 +238,17 @@ public class ImageUsageTitles extends TitleQuery<String> {
     @Override
     public Get generateContinueRequest(String imageName, String namespace, String ilcontinue) {
       RequestBuilder requestBuilder = newRequestBuilder();
-      requestBuilder.param("iucontinue", MediaWiki.encode(ilcontinue));
+      requestBuilder.param("iucontinue", MediaWiki.urlEncode(ilcontinue));
       return requestBuilder.buildGet();
     }
 
     @Override
     public Get generateRequest(String imageName, String namespace) {
       RequestBuilder requestBuilder = newRequestBuilder();
-      requestBuilder.param("iutitle", MediaWiki.encode(imageName));
+      requestBuilder.param("iutitle", MediaWiki.urlEncode(imageName));
 
       if (!Strings.isNullOrEmpty(namespace)) {
-        requestBuilder.param("iunamespace", MediaWiki.encode(namespace));
+        requestBuilder.param("iunamespace", MediaWiki.urlEncode(namespace));
       }
       return requestBuilder.buildGet();
 

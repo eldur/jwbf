@@ -6,7 +6,7 @@ import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.core.actions.util.ProcessException;
 import net.sourceforge.jwbf.extractXml.Element;
 import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
-import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
+import net.sourceforge.jwbf.mediawiki.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 import org.slf4j.Logger;
@@ -81,12 +81,12 @@ public class PostDelete extends MWAction {
     RequestBuilder requestBuilder = new ApiRequestBuilder() //
         .action("delete") //
         .formatXml() //
-        .param("title", MediaWiki.encode(title)) //
-        .param("token", MediaWiki.encode(token.getToken())) //
+        .param("title", MediaWiki.urlEncode(title)) //
+        .param("token", MediaWiki.urlEncode(token.getToken())) //
         ;
 
     if (reason != null) {
-      requestBuilder.param("reason", MediaWiki.encode(reason));
+      requestBuilder.param("reason", MediaWiki.urlEncode(reason));
     }
     msg = requestBuilder.buildPost();
     log.debug("delete url: \"{}\"", msg.getRequest());

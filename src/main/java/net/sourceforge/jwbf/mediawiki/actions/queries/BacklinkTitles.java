@@ -28,8 +28,8 @@ import net.sourceforge.jwbf.core.RequestBuilder;
 import net.sourceforge.jwbf.core.actions.Get;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
-import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
-import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
+import net.sourceforge.jwbf.mediawiki.MediaWiki;
+import net.sourceforge.jwbf.mediawiki.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.actions.util.RedirectFilter;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
@@ -211,11 +211,11 @@ public class BacklinkTitles extends TitleQuery<String> {
     @Override
     public Get newInitialRequest(String articleName, RedirectFilter redirectFilter, int[] namespace) {
       RequestBuilder requestBuilder = newRequestBuilder() //
-          .param("bltitle", MediaWiki.encode(articleName)) //
-          .param("blfilterredir", MediaWiki.encode(redirectFilter.toString())) //
+          .param("bltitle", MediaWiki.urlEncode(articleName)) //
+          .param("blfilterredir", MediaWiki.urlEncode(redirectFilter.toString())) //
           ;
       if (namespace != null) {
-        requestBuilder.param("blnamespace", MediaWiki.encode(MWAction.createNsString(namespace)));
+        requestBuilder.param("blnamespace", MediaWiki.urlEncode(MWAction.createNsString(namespace)));
       }
       return requestBuilder.buildGet();
     }
@@ -226,8 +226,8 @@ public class BacklinkTitles extends TitleQuery<String> {
     @Override
     public Get newContinueRequest(String articleName, String blcontinue) {
       return newRequestBuilder() //
-          .param("blcontinue", MediaWiki.encode(blcontinue)) //
-          .param("bltitle", MediaWiki.encode(articleName)) //
+          .param("blcontinue", MediaWiki.urlEncode(blcontinue)) //
+          .param("bltitle", MediaWiki.urlEncode(articleName)) //
           .buildGet();
     }
 
@@ -243,11 +243,11 @@ public class BacklinkTitles extends TitleQuery<String> {
     @Override
     public Get newInitialRequest(String articleName, RedirectFilter redirectFilter, int[] namespace) {
       RequestBuilder requestBuilder = newRequestBuilder() //
-          .param("bltitle", MediaWiki.encode(articleName)) //
-          .param("blfilterredir", MediaWiki.encode(redirectFilter.toString())) //
+          .param("bltitle", MediaWiki.urlEncode(articleName)) //
+          .param("blfilterredir", MediaWiki.urlEncode(redirectFilter.toString())) //
           ;
       if (namespace != null) {
-        requestBuilder.param("blnamespace", MediaWiki.encode(MWAction.createNsString(namespace)));
+        requestBuilder.param("blnamespace", MediaWiki.urlEncode(MWAction.createNsString(namespace)));
       }
       return requestBuilder.buildGet();
     }
@@ -258,7 +258,7 @@ public class BacklinkTitles extends TitleQuery<String> {
     @Override
     public Get newContinueRequest(String articleName, String blcontinue) {
       return newRequestBuilder() //
-          .param("blcontinue", MediaWiki.encode(blcontinue)) //
+          .param("blcontinue", MediaWiki.urlEncode(blcontinue)) //
           .buildGet();
     }
 

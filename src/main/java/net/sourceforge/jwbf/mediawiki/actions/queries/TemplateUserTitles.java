@@ -27,7 +27,7 @@ import com.google.common.collect.ImmutableList;
 import net.sourceforge.jwbf.core.RequestBuilder;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
-import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
+import net.sourceforge.jwbf.mediawiki.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 import org.slf4j.Logger;
@@ -85,14 +85,14 @@ public class TemplateUserTitles extends TitleQuery<String> {
         .formatXml() //
         .param("list", "embeddedin") //
         .param("eilimit", LIMIT) //
-        .param("eititle", MediaWiki.encode(templateName)) //
+        .param("eititle", MediaWiki.urlEncode(templateName)) //
         ;
 
     if (!Strings.isNullOrEmpty(namespacesValue)) {
-      requestBuilder.param("einamespace", MediaWiki.encode(namespacesValue));
+      requestBuilder.param("einamespace", MediaWiki.urlEncode(namespacesValue));
     }
     if (eicontinue != null) {
-      requestBuilder.param("eicontinue", MediaWiki.encode(eicontinue));
+      requestBuilder.param("eicontinue", MediaWiki.urlEncode(eicontinue));
     }
 
     return requestBuilder.buildGet();

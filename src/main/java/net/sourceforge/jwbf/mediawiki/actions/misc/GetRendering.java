@@ -8,7 +8,7 @@ import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.core.actions.util.ProcessException;
 import net.sourceforge.jwbf.extractXml.Element;
 import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
-import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
+import net.sourceforge.jwbf.mediawiki.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 import org.slf4j.Logger;
@@ -34,7 +34,7 @@ public class GetRendering extends MWAction {
     msg = new ApiRequestBuilder() //
         .action("parse") //
         .formatXml() //
-        .param("text", MediaWiki.encode(wikitext)) //
+        .param("text", MediaWiki.urlEncode(wikitext)) //
         .param("title", "API") //
         .buildGet();
 

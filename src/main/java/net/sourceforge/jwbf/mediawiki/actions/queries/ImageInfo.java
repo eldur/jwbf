@@ -16,11 +16,10 @@ import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.core.actions.util.ProcessException;
 import net.sourceforge.jwbf.extractXml.Element;
 import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
-import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
-import net.sourceforge.jwbf.mediawiki.actions.MediaWiki.Version;
+import net.sourceforge.jwbf.mediawiki.MediaWiki;
+import net.sourceforge.jwbf.mediawiki.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
-import org.apache.commons.lang.math.NumberUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -89,19 +88,19 @@ public class ImageInfo extends MWAction {
         .param("prop", "imageinfo") //
         ;
 
-    int width = NumberUtils.toInt(map.get(WIDTH));
+    int width = Integer.parseInt(map.get(WIDTH));
     if (width > 0) {
       requestBuilder.param(WIDTH, width);
     }
 
-    int height = NumberUtils.toInt(map.get(HEIGHT));
+    int height = Integer.parseInt(map.get(HEIGHT));
     if (height > 0) {
       requestBuilder.param(HEIGHT, height);
     }
     if (bot.getVersion().greaterEqThen(Version.MW1_15)) {
-      requestBuilder.param("titles", "File:" + MediaWiki.encode(name));
+      requestBuilder.param("titles", "File:" + MediaWiki.urlEncode(name));
     } else {
-      requestBuilder.param("titles", "Image:" + MediaWiki.encode(name));
+      requestBuilder.param("titles", "Image:" + MediaWiki.urlEncode(name));
     }
     msg = requestBuilder.buildGet();
   }

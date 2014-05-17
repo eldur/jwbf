@@ -9,7 +9,7 @@ import net.sourceforge.jwbf.core.actions.Get;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.extractXml.Element;
 import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
-import net.sourceforge.jwbf.mediawiki.actions.MediaWiki;
+import net.sourceforge.jwbf.mediawiki.MediaWiki;
 
 /**
  * Gets details from the given MediaWiki installation like installed version.
@@ -57,7 +57,7 @@ public class Siteinfo extends GetVersion {
         .action("query") //
         .formatXml() //
         .param("meta", "siteinfo") //
-        .param("siprop", MediaWiki.encode(result)) //
+        .param("siprop", MediaWiki.urlEncode(result)) //
         .buildGet();
 
   }
