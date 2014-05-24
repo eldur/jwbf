@@ -9,9 +9,9 @@ import java.util.Collection;
 
 import com.google.common.collect.Lists;
 import net.sourceforge.jwbf.core.contentRep.Article;
-import net.sourceforge.jwbf.mediawiki.VersionTestClassVerifier;
 import net.sourceforge.jwbf.mediawiki.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.MediaWiki.Version;
+import net.sourceforge.jwbf.mediawiki.VersionTestClassVerifier;
 import net.sourceforge.jwbf.mediawiki.actions.queries.TemplateUserTitles;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 import org.junit.ClassRule;

@@ -5,8 +5,8 @@ import java.util.Collection;
 import java.util.List;
 
 import net.sourceforge.jwbf.mediawiki.BotFactory;
-import net.sourceforge.jwbf.mediawiki.VersionTestClassVerifier;
 import net.sourceforge.jwbf.mediawiki.MediaWiki.Version;
+import net.sourceforge.jwbf.mediawiki.VersionTestClassVerifier;
 import net.sourceforge.jwbf.mediawiki.live.AbstractMediaWikiBotTest;
 import org.junit.Assert;
 import org.junit.internal.AssumptionViolatedException;

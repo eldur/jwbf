@@ -10,8 +10,8 @@ import static net.sourceforge.jwbf.mediawiki.BotFactory.getWikiUser;
 import java.util.Collection;
 
 import net.sourceforge.jwbf.core.contentRep.Userinfo;
-import net.sourceforge.jwbf.mediawiki.VersionTestClassVerifier;
 import net.sourceforge.jwbf.mediawiki.MediaWiki.Version;
+import net.sourceforge.jwbf.mediawiki.VersionTestClassVerifier;
 import net.sourceforge.jwbf.mediawiki.actions.meta.GetUserinfo;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 import org.junit.Assert;

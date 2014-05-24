@@ -6,8 +6,8 @@ import static org.junit.Assert.assertTrue;
 import java.util.Collection;
 
 import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
-import net.sourceforge.jwbf.mediawiki.VersionTestClassVerifier;
 import net.sourceforge.jwbf.mediawiki.MediaWiki.Version;
+import net.sourceforge.jwbf.mediawiki.VersionTestClassVerifier;
 import net.sourceforge.jwbf.mediawiki.actions.editing.PostModifyContent;
 import org.junit.ClassRule;
 import org.junit.Rule;

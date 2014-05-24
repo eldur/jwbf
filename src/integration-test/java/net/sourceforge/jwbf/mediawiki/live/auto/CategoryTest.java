@@ -26,8 +26,8 @@ import java.util.Iterator;
 
 import com.google.common.collect.Lists;
 import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
-import net.sourceforge.jwbf.mediawiki.VersionTestClassVerifier;
 import net.sourceforge.jwbf.mediawiki.MediaWiki.Version;
+import net.sourceforge.jwbf.mediawiki.VersionTestClassVerifier;
 import net.sourceforge.jwbf.mediawiki.actions.queries.CategoryMembersFull;
 import net.sourceforge.jwbf.mediawiki.actions.queries.CategoryMembersSimple;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
