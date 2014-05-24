@@ -9,6 +9,9 @@ import static com.google.common.net.HttpHeaders.USER_AGENT;
 import static net.sourceforge.jwbf.JettyServer.entry;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.util.concurrent.TimeUnit;
 
@@ -18,8 +21,12 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Range;
+import net.sourceforge.jwbf.GAssert;
+import net.sourceforge.jwbf.JWBF;
 import net.sourceforge.jwbf.JettyServer;
 import net.sourceforge.jwbf.core.RequestBuilder;
+import net.sourceforge.jwbf.core.actions.util.HttpAction;
+import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.junit.Test;
 
@@ -33,6 +40,13 @@ public class HttpActionClientTest {
     }
   };
   private HttpActionClient testee;
+
+  public static final ReturningTextProcessor MOCK_HANDLER = new ReturningTextProcessor() {
+    @Override
+    public String processReturningText(String s, HttpAction action) {
+      throw new UnsupportedOperationException();
+    }
+  };
 
   @Test
   public void testHostUrl() {
@@ -145,6 +159,45 @@ public class HttpActionClientTest {
     } finally {
       server.stopSilent();
     }
+  }
+
+  @Test
+  public void testDebug() {
+    // GIVEN
+    testee = HttpActionClient.of("http://localhost/");
+    HttpAction action = new Get("a");
+    HttpUriRequest request = mock(HttpUriRequest.class);
+    when(request.getURI()).thenReturn(JWBF.toUri("http://localhost/wiki/api.php"));
+
+    // WHEN
+    ImmutableList<String> result = ImmutableList.copyOf((String[]) testee.debug(request, action, MOCK_HANDLER));
+
+    // THEN
+    ImmutableList<String> expected = ImmutableList.<String>builder() //
+        .add("(GET net.sourceforge.jwbf.core.actions.HttpActionClientTest$2)") //
+        .add("http://localhost/wiki") //
+        .add("a") //
+        .build();
+    GAssert.assertEquals(expected, result);
+  }
+
+  @Test
+  public void testDebug_withMockAction() {
+    // GIVEN
+    testee = HttpActionClient.of("http://localhost/");
+    ReturningTextProcessor responseHandler = mock(ReturningTextProcessor.class);
+    HttpAction action = mock(HttpAction.class);
+    HttpUriRequest request = mock(HttpUriRequest.class);
+    when(request.getURI()).thenReturn(JWBF.toUri("http://localhost/wiki/api.php"));
+    try {
+      // WHEN
+      testee.debug(request, action, responseHandler);
+      fail();
+    } catch (IllegalStateException e) {
+      // THEN
+      GAssert.assertStartsWith("unknown type: ", e.getMessage());
+    }
+
   }
 
   @Test

@@ -29,6 +29,7 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.concurrent.TimeUnit;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
@@ -257,7 +258,8 @@ public class HttpActionClient {
     return get(authgets, null, get).getBytes();
   }
 
-  private Object[] debug(HttpUriRequest request, HttpAction ha, ReturningTextProcessor cp) {
+  @VisibleForTesting
+  Object[] debug(HttpUriRequest request, HttpAction ha, ReturningTextProcessor cp) {
     if (cp != null) {
       final String continueing = debugContinueingMsg(cp);
       final String path = debugRequestPathOf(request);
@@ -270,7 +272,7 @@ public class HttpActionClient {
   private String debugRequestPathOf(HttpUriRequest request) {
     String requestString = request.getURI().toString();
     int lastSlash = requestString.lastIndexOf("/");
-    requestString = host.toURI() + requestString.substring(0, lastSlash);
+    requestString = requestString.substring(0, lastSlash);
     return requestString;
   }
 
@@ -287,13 +289,14 @@ public class HttpActionClient {
   }
 
   private String debugTypeOf(HttpAction ha, ReturningTextProcessor cp, final String continueing) {
-    final String suffix = cp.getClass().getSimpleName() + ")" + continueing;
+    String className = cp.getClass().getName();
+    final String suffix = className + ")" + continueing;
     if (ha instanceof Post) {
       return "(POST " + suffix;
     } else if (ha instanceof Get) {
       return "(GET " + suffix;
     } else {
-      throw new IllegalStateException();
+      throw new IllegalStateException("unknown type: " + ha.getClass().getCanonicalName());
     }
   }
 
