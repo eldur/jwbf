@@ -1,16 +1,22 @@
 package net.sourceforge.jwbf.core.actions;
 
+import com.google.common.base.Supplier;
+import com.google.common.base.Suppliers;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 
 public class Post implements HttpAction {
 
-  private final String req;
+  private final Supplier<String> req;
   private final Builder<String, Object> params = ImmutableMap.<String, Object>builder();
   private final String charset;
 
   public Post(String req, String charset) {
+    this(Suppliers.ofInstance(req), charset);
+  }
+
+  public Post(Supplier<String> req, String charset) {
     this.req = req;
     this.charset = charset;
   }
@@ -19,6 +25,10 @@ public class Post implements HttpAction {
    * Use utf-8 as default charset
    */
   public Post(String url) {
+    this(Suppliers.ofInstance(url));
+  }
+
+  public Post(Supplier<String> url) {
     this(url, "utf-8");
   }
 
@@ -41,7 +51,7 @@ public class Post implements HttpAction {
 
   @Override
   public String getRequest() {
-    return req;
+    return req.get();
   }
 
   @Override

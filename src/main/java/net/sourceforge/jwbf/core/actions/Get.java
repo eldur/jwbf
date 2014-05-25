@@ -2,11 +2,13 @@ package net.sourceforge.jwbf.core.actions;
 
 import java.util.Objects;
 
+import com.google.common.base.Supplier;
+import com.google.common.base.Suppliers;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 
 public class Get implements HttpAction {
 
-  private final String req;
+  private final Supplier<String> req;
   private final String charset;
 
   /**
@@ -14,6 +16,10 @@ public class Get implements HttpAction {
    * @param charset like utf-8
    */
   public Get(String req, String charset) {
+    this(Suppliers.ofInstance(req), charset);
+  }
+
+  public Get(Supplier<String> req, String charset) {
     this.req = req;
     this.charset = charset;
   }
@@ -22,6 +28,10 @@ public class Get implements HttpAction {
    * Use utf-8 as default charset.
    */
   public Get(String url) {
+    this(Suppliers.ofInstance(url));
+  }
+
+  public Get(Supplier<String> url) {
     this(url, "utf-8");
   }
 
@@ -30,7 +40,7 @@ public class Get implements HttpAction {
    */
   @Override
   public String getRequest() {
-    return req;
+    return req.get();
   }
 
   /**
