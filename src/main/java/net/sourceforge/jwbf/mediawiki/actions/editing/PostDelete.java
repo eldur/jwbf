@@ -4,7 +4,7 @@ import net.sourceforge.jwbf.core.RequestBuilder;
 import net.sourceforge.jwbf.core.actions.Post;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.core.actions.util.ProcessException;
-import net.sourceforge.jwbf.extractXml.Element;
+import net.sourceforge.jwbf.mapper.XmlElement;
 import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
 import net.sourceforge.jwbf.mediawiki.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
@@ -113,7 +113,7 @@ public class PostDelete extends MWAction {
         log.debug("Got returning text: \"" + s + "\"");
       }
       try {
-        Element doc = getRootElementWithError(s);
+        XmlElement doc = getRootElementWithError(s);
         if (getErrorElement(doc) == null) {
           process(doc);
         }
@@ -136,8 +136,8 @@ public class PostDelete extends MWAction {
    * Determines if the given XML Document contains an error message which then would printed by the logger.
    */
   @Override
-  protected Element getErrorElement(Element rootElement) {
-    Element containsError = super.getErrorElement(rootElement);
+  protected XmlElement getErrorElement(XmlElement rootXmlElement) {
+    XmlElement containsError = super.getErrorElement(rootXmlElement);
     if (containsError != null) {
       log.warn(containsError.getAttributeValue("info"));
       if (containsError.getAttributeValue("code").equals("inpermissiondenied")) {
@@ -148,8 +148,8 @@ public class PostDelete extends MWAction {
     return containsError;
   }
 
-  private void process(Element rootElement) {
-    Element elem = rootElement.getChild("delete");
+  private void process(XmlElement rootXmlElement) {
+    XmlElement elem = rootXmlElement.getChild("delete");
     if (elem != null) {
       // process reply for delete request
       if (log.isInfoEnabled()) {

@@ -14,7 +14,7 @@ import net.sourceforge.jwbf.core.RequestBuilder;
 import net.sourceforge.jwbf.core.actions.Get;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.core.actions.util.ProcessException;
-import net.sourceforge.jwbf.extractXml.Element;
+import net.sourceforge.jwbf.mapper.XmlElement;
 import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
 import net.sourceforge.jwbf.mediawiki.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.MediaWiki.Version;
@@ -162,22 +162,22 @@ public class ImageInfo extends MWAction {
   }
 
   @SuppressWarnings("unchecked")
-  private void findContent(final Element root) {
+  private void findContent(final XmlElement root) {
 
-    for (Element element : root.getChildren()) {
-      if (element.getQualifiedName().equalsIgnoreCase("ii")) {
-        urlOfImage = element.getAttributeValue("url");
+    for (XmlElement xmlElement : root.getChildren()) {
+      if (xmlElement.getQualifiedName().equalsIgnoreCase("ii")) {
+        urlOfImage = xmlElement.getAttributeValue("url");
 
         return;
       } else {
-        findContent(element);
+        findContent(xmlElement);
       }
     }
 
   }
 
   private void findUrlOfImage(String s) {
-    Element root = getRootElementWithError(s);
+    XmlElement root = getRootElementWithError(s);
     findContent(root);
     if (urlOfImage.length() < 1) {
       throw new ProcessException("Could not find this image " + s);

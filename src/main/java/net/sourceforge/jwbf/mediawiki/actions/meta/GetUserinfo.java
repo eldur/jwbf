@@ -6,7 +6,7 @@ import com.google.common.collect.Sets;
 import net.sourceforge.jwbf.core.actions.Get;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.core.contentRep.Userinfo;
-import net.sourceforge.jwbf.extractXml.Element;
+import net.sourceforge.jwbf.mapper.XmlElement;
 import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
 import net.sourceforge.jwbf.mediawiki.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
@@ -40,7 +40,7 @@ public class GetUserinfo extends MWAction implements Userinfo {
     log.debug(xml);
     rights.clear();
     groups.clear();
-    Element root = getRootElement(xml);
+    XmlElement root = getRootElement(xml);
     findContent(root);
   }
 
@@ -78,27 +78,27 @@ public class GetUserinfo extends MWAction implements Userinfo {
   }
 
   @SuppressWarnings("unchecked")
-  protected void findContent(final Element root) {
+  protected void findContent(final XmlElement root) {
 
-    for (Element element : root.getChildren()) {
+    for (XmlElement xmlElement : root.getChildren()) {
       // blockinfo|hasmsg|groups|rights <- MW 11
-      if (element.getQualifiedName().equalsIgnoreCase("userinfo")) {
-        username = element.getAttributeValue("name");
+      if (xmlElement.getQualifiedName().equalsIgnoreCase("userinfo")) {
+        username = xmlElement.getAttributeValue("name");
 
-      } else if (element.getQualifiedName().equalsIgnoreCase("groups")) {
-        for (Element element1 : element.getChildren("g")) {
-          String gel = element1.getText();
+      } else if (xmlElement.getQualifiedName().equalsIgnoreCase("groups")) {
+        for (XmlElement xmlElement1 : xmlElement.getChildren("g")) {
+          String gel = xmlElement1.getText();
           groups.add(gel);
         }
-      } else if (element.getQualifiedName().equalsIgnoreCase("rights")) {
+      } else if (xmlElement.getQualifiedName().equalsIgnoreCase("rights")) {
 
-        for (Element element1 : element.getChildren("r")) {
-          String rel = element1.getText();
+        for (XmlElement xmlElement1 : xmlElement.getChildren("r")) {
+          String rel = xmlElement1.getText();
 
           rights.add(rel);
         }
       }
-      findContent(element);
+      findContent(xmlElement);
 
     }
 

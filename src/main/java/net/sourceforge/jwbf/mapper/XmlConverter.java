@@ -1,4 +1,4 @@
-package net.sourceforge.jwbf.extractXml;
+package net.sourceforge.jwbf.mapper;
 
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathExpression;
@@ -24,7 +24,7 @@ public class XmlConverter {
 
   private static final Logger log = LoggerFactory.getLogger(XmlConverter.class);
 
-  public static Element getRootElementWithError(String xml) {
+  public static XmlElement getRootElementWithError(String xml) {
     SAXBuilder builder = new SAXBuilder();
     org.jdom.Element root = null;
     try {
@@ -42,20 +42,20 @@ public class XmlConverter {
     if (root == null) {
       throw new ActionException("no root element found");
     }
-    return new Element(root);
+    return new XmlElement(root);
   }
 
-  public static Element getErrorElement(Element rootElement) {
-    Element elem = rootElement.getChild("error");
+  public static XmlElement getErrorElement(XmlElement rootXmlElement) {
+    XmlElement elem = rootXmlElement.getChild("error");
     if (elem != null) {
       log.error(elem.getAttributeValue("code") + ": " + elem.getAttributeValue("info"));
     }
     return elem;
   }
 
-  public static Element getRootElement(String xml) {
-    Element rootElement = getRootElementWithError(xml);
-    Element elem = getErrorElement(rootElement);
+  public static XmlElement getRootElement(String xml) {
+    XmlElement rootXmlElement = getRootElementWithError(xml);
+    XmlElement elem = getErrorElement(rootXmlElement);
     if (elem != null) {
       String xmlError = xml;
       if (xmlError.length() > 700) {
@@ -63,7 +63,7 @@ public class XmlConverter {
       }
       throw new ProcessException(xmlError);
     }
-    return rootElement;
+    return rootXmlElement;
   }
 
   public static String evaluateXpath(String s, String xpath) {

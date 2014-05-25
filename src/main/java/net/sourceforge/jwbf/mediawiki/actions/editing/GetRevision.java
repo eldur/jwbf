@@ -23,7 +23,7 @@ import java.text.ParseException;
 import net.sourceforge.jwbf.core.actions.Get;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
-import net.sourceforge.jwbf.extractXml.Element;
+import net.sourceforge.jwbf.mapper.XmlElement;
 import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
 import net.sourceforge.jwbf.mediawiki.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.MediaWiki.Version;
@@ -148,8 +148,8 @@ public class GetRevision extends MWAction {
   }
 
   private void parse(final String xml) {
-    Element root = getRootElementWithError(xml);
-    Element error = getErrorElement(root);
+    XmlElement root = getRootElementWithError(xml);
+    XmlElement error = getErrorElement(root);
     if (error != null) {
       throw new ApiException(error.getAttributeValue("code") //
           , error.getAttributeValue("info"));
@@ -162,55 +162,55 @@ public class GetRevision extends MWAction {
     return sa;
   }
 
-  private void findContent(final Element root) {
+  private void findContent(final XmlElement root) {
 
-    for (Element element : root.getChildren()) {
-      if (element.getQualifiedName().equalsIgnoreCase("rev")) {
+    for (XmlElement xmlElement : root.getChildren()) {
+      if (xmlElement.getQualifiedName().equalsIgnoreCase("rev")) {
 
         try {
-          sa.setText(element.getText());
+          sa.setText(xmlElement.getText());
         } catch (NullPointerException e) {
           if (log.isDebugEnabled()) {
             log.debug("no text found");
           }
         }
         if ((properties & FLAGS) > 0) {
-          if (element.hasAttribute("minor")) {
+          if (xmlElement.hasAttribute("minor")) {
             sa.setMinorEdit(true);
           } else {
             sa.setMinorEdit(false);
           }
         }
 
-        sa.setRevisionId(getAttrValueOf(element, "revid"));
-        sa.setEditSummary(getAttrValueOf(element, "comment"));
-        sa.setEditor(getAttrValueOf(element, "user"));
+        sa.setRevisionId(getAttrValueOf(xmlElement, "revid"));
+        sa.setEditSummary(getAttrValueOf(xmlElement, "comment"));
+        sa.setEditor(getAttrValueOf(xmlElement, "user"));
 
         if ((properties & TIMESTAMP) > 0) {
 
           try {
-            sa.setEditTimestamp(getAttrValueOf(element, "timestamp"));
+            sa.setEditTimestamp(getAttrValueOf(xmlElement, "timestamp"));
           } catch (ParseException e) {
             log.debug("timestamp could not be parsed");
           }
         }
 
       } else {
-        findContent(element);
+        findContent(xmlElement);
       }
 
     }
 
   }
 
-  private String getAttrValueOf(Element element, String key) {
-    return getAttrValueOf(element, key, "");
+  private String getAttrValueOf(XmlElement xmlElement, String key) {
+    return getAttrValueOf(xmlElement, key, "");
   }
 
-  private String getAttrValueOf(Element element, String key, String otherwise) {
+  private String getAttrValueOf(XmlElement xmlElement, String key, String otherwise) {
     String value = null;
 
-    value = element.getAttributeValue(key);
+    value = xmlElement.getAttributeValue(key);
     if (value == null) {
       log.trace("no value for {}", key);
       return otherwise;

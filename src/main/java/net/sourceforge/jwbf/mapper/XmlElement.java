@@ -1,4 +1,4 @@
-package net.sourceforge.jwbf.extractXml;
+package net.sourceforge.jwbf.mapper;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -7,11 +7,11 @@ import com.google.common.base.Function;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 
-public class Element {
+public class XmlElement {
 
   private final org.jdom.Element element;
 
-  Element(org.jdom.Element element) {
+  XmlElement(org.jdom.Element element) {
     this.element = element;
   }
 
@@ -23,36 +23,36 @@ public class Element {
     return element.getAttributeValue(name);
   }
 
-  public Element getChild(String name) {
+  public XmlElement getChild(String name) {
     org.jdom.Element child = element.getChild(name);
     if (child == null) {
       return null;
     } else {
-      return new Element(child);
+      return new XmlElement(child);
     }
   }
 
-  private ImmutableList<Element> toElements(List<org.jdom.Element> list) {
+  private ImmutableList<XmlElement> toElements(List<org.jdom.Element> list) {
     return ImmutableList.copyOf(Iterables.transform(list, TO_ELEMENT));
   }
 
-  private static final Function<org.jdom.Element, Element> TO_ELEMENT = new Function<org.jdom.Element, Element>() {
+  private static final Function<org.jdom.Element, XmlElement> TO_ELEMENT = new Function<org.jdom.Element, XmlElement>() {
 
     @Override
-    public Element apply(@Nullable org.jdom.Element input) {
+    public XmlElement apply(@Nullable org.jdom.Element input) {
       if (input == null) {
         return null;
       } else {
-        return new Element(input);
+        return new XmlElement(input);
       }
     }
   };
 
-  public List<Element> getChildren() {
+  public List<XmlElement> getChildren() {
     return toElements(element.getChildren());
   }
 
-  public List<Element> getChildren(String name) {
+  public List<XmlElement> getChildren(String name) {
     return toElements(element.getChildren(name));
   }
 

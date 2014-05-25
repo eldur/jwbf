@@ -24,8 +24,8 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import net.sourceforge.jwbf.core.RequestBuilder;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
-import net.sourceforge.jwbf.extractXml.Element;
-import net.sourceforge.jwbf.extractXml.XmlConverter;
+import net.sourceforge.jwbf.mapper.XmlElement;
+import net.sourceforge.jwbf.mapper.XmlConverter;
 import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
 import net.sourceforge.jwbf.mediawiki.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
@@ -107,21 +107,21 @@ public class RecentchangeTitles extends TitleQuery<String> {
    */
   @Override
   protected ImmutableList<String> parseArticleTitles(String s) {
-    Element root = XmlConverter.getRootElement(s);
+    XmlElement root = XmlConverter.getRootElement(s);
     List<String> titleCollection = Lists.newArrayList();
     findContent(root, titleCollection);
     return ImmutableList.copyOf(titleCollection);
 
   }
 
-  private void findContent(final Element root, List<String> titleCollection) {
+  private void findContent(final XmlElement root, List<String> titleCollection) {
 
-    for (Element element : root.getChildren()) {
-      if (element.getQualifiedName().equalsIgnoreCase("rc")) {
-        titleCollection.add(MediaWiki.htmlUnescape(element.getAttributeValue("title")));
-        setNextPageInfo(element.getAttributeValue("timestamp"));
+    for (XmlElement xmlElement : root.getChildren()) {
+      if (xmlElement.getQualifiedName().equalsIgnoreCase("rc")) {
+        titleCollection.add(MediaWiki.htmlUnescape(xmlElement.getAttributeValue("title")));
+        setNextPageInfo(xmlElement.getAttributeValue("timestamp"));
       } else {
-        findContent(element, titleCollection);
+        findContent(xmlElement, titleCollection);
       }
 
     }

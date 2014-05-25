@@ -30,7 +30,7 @@ import net.sourceforge.jwbf.core.actions.Get;
 import net.sourceforge.jwbf.core.actions.util.ActionException;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.core.actions.util.ProcessException;
-import net.sourceforge.jwbf.extractXml.Element;
+import net.sourceforge.jwbf.mapper.XmlElement;
 import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
@@ -151,7 +151,7 @@ public class LogEvents extends MWAction implements Iterator<LogItem>, Iterable<L
    */
   private void parseArticleTitles(String xml) {
 
-    Element root = getRootElement(xml);
+    XmlElement root = getRootElement(xml);
     findContent(root);
 
   }
@@ -182,19 +182,19 @@ public class LogEvents extends MWAction implements Iterator<LogItem>, Iterable<L
   }
 
   @SuppressWarnings("unchecked")
-  private void findContent(final Element root) {
+  private void findContent(final XmlElement root) {
 
-    for (Element element : root.getChildren()) {
-      if (element.getQualifiedName().equalsIgnoreCase("item")) {
+    for (XmlElement xmlElement : root.getChildren()) {
+      if (xmlElement.getQualifiedName().equalsIgnoreCase("item")) {
 
         LogItem l = new LogItem();
-        l.setTitle(element.getAttributeValue("title"));
-        l.setType(element.getAttributeValue("type"));
-        l.setUser(element.getAttributeValue("user"));
+        l.setTitle(xmlElement.getAttributeValue("title"));
+        l.setType(xmlElement.getAttributeValue("type"));
+        l.setUser(xmlElement.getAttributeValue("user"));
         logCollection.add(l);
 
       } else {
-        findContent(element);
+        findContent(xmlElement);
       }
 
     }

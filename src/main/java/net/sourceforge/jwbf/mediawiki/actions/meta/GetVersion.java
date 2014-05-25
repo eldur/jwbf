@@ -26,7 +26,7 @@ import com.google.common.collect.Sets;
 import net.sourceforge.jwbf.JWBF;
 import net.sourceforge.jwbf.core.actions.Get;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
-import net.sourceforge.jwbf.extractXml.Element;
+import net.sourceforge.jwbf.mapper.XmlElement;
 import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
 import net.sourceforge.jwbf.mediawiki.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
@@ -81,7 +81,7 @@ public class GetVersion extends MWAction {
   }
 
   private void parse(final String xml) {
-    Element root = getRootElementWithError(xml);
+    XmlElement root = getRootElementWithError(xml);
     findContent(root);
   }
 
@@ -153,19 +153,19 @@ public class GetVersion extends MWAction {
   }
 
   @SuppressWarnings("unchecked")
-  protected void findContent(final Element root) {
+  protected void findContent(final XmlElement root) {
 
-    for (Element element : root.getChildren()) {
-      if (element.getQualifiedName().equalsIgnoreCase("general")) {
+    for (XmlElement xmlElement : root.getChildren()) {
+      if (xmlElement.getQualifiedName().equalsIgnoreCase("general")) {
 
-        mainpage = element.getAttributeValue("mainpage");
-        base = element.getAttributeValue("base");
-        sitename = element.getAttributeValue("sitename");
-        generator = element.getAttributeValue("generator");
-        theCase = element.getAttributeValue("case");
+        mainpage = xmlElement.getAttributeValue("mainpage");
+        base = xmlElement.getAttributeValue("base");
+        sitename = xmlElement.getAttributeValue("sitename");
+        generator = xmlElement.getAttributeValue("generator");
+        theCase = xmlElement.getAttributeValue("case");
       } else {
         // FIXME recursion is bad
-        findContent(element);
+        findContent(xmlElement);
       }
     }
   }

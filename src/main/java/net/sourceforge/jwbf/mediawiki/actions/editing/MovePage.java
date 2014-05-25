@@ -5,7 +5,7 @@ import net.sourceforge.jwbf.core.RequestBuilder;
 import net.sourceforge.jwbf.core.actions.Post;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.core.actions.util.ProcessException;
-import net.sourceforge.jwbf.extractXml.Element;
+import net.sourceforge.jwbf.mapper.XmlElement;
 import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
 import net.sourceforge.jwbf.mediawiki.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
@@ -151,8 +151,8 @@ public class MovePage extends MWAction {
     return "";
   }
 
-  private void process(Element rootElement) {
-    Element elem = rootElement.getChild("move");
+  private void process(XmlElement rootXmlElement) {
+    XmlElement elem = rootXmlElement.getChild("move");
     if (elem != null) {
       // process reply for delete request
       if (log.isInfoEnabled()) {

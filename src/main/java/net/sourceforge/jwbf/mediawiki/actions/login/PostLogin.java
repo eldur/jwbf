@@ -23,7 +23,7 @@ import net.sourceforge.jwbf.core.actions.Post;
 import net.sourceforge.jwbf.core.actions.util.ActionException;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.core.actions.util.ProcessException;
-import net.sourceforge.jwbf.extractXml.Element;
+import net.sourceforge.jwbf.mapper.XmlElement;
 import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.contentRep.LoginData;
@@ -88,18 +88,18 @@ public class PostLogin extends MWAction {
   @Override
   public String processAllReturningText(final String s) {
 
-    Element root = getRootElement(s);
+    XmlElement root = getRootElement(s);
     findContent(root);
 
     return s;
   }
 
   /**
-   * @param startElement the, where the search begins
+   * @param startXmlElement the, where the search begins
    */
-  private void findContent(final Element startElement) {
+  private void findContent(final XmlElement startXmlElement) {
 
-    Element loginEl = startElement.getChild("login");
+    XmlElement loginEl = startXmlElement.getChild("login");
     String result = loginEl.getAttributeValue("result");
     if (result.equalsIgnoreCase(success)) {
       login.setup(loginEl.getAttributeValue("lgusername"), true);

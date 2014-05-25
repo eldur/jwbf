@@ -8,7 +8,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableMap;
 import net.sourceforge.jwbf.core.actions.Get;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
-import net.sourceforge.jwbf.extractXml.Element;
+import net.sourceforge.jwbf.mapper.XmlElement;
 import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
 import net.sourceforge.jwbf.mediawiki.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.util.DequeMWAction;
@@ -36,8 +36,8 @@ public class GetApiToken extends DequeMWAction {
     DELETE, EDIT, MOVE, PROTECT, EMAIL, BLOCK, UNBLOCK, IMPORT
   }
 
-  private static final ImmutableMap<Intoken, Function<Element, String>> TOKEN_FUNCTIONS = ImmutableMap
-      .<Intoken, Function<Element, String>>builder() //
+  private static final ImmutableMap<Intoken, Function<XmlElement, String>> TOKEN_FUNCTIONS = ImmutableMap
+      .<Intoken, Function<XmlElement, String>>builder() //
       .put(Intoken.DELETE, tokenFunctionOf("deletetoken")) //
       .put(Intoken.EDIT, tokenFunctionOf("edittoken")) //
       .put(Intoken.MOVE, tokenFunctionOf("movetoken")) //
@@ -108,7 +108,7 @@ public class GetApiToken extends DequeMWAction {
       log.trace("enter GetToken.processAllReturningText(String)");
       log.debug("Got returning text: \"{}\"", s);
       try {
-        Element elem = getRootElement(s).getChild("query").getChild("pages").getChild("page");
+        XmlElement elem = getRootElement(s).getChild("query").getChild("pages").getChild("page");
         // TODO check for null
         token = Optional.fromNullable(elem).transform(TOKEN_FUNCTIONS.get(intoken));
         // TODO check intoken from tokenfunc for null
@@ -129,13 +129,13 @@ public class GetApiToken extends DequeMWAction {
     return "";
   }
 
-  private static Function<Element, String> tokenFunctionOf(final String key) {
-    return new Function<Element, String>() {
+  private static Function<XmlElement, String> tokenFunctionOf(final String key) {
+    return new Function<XmlElement, String>() {
 
       @Override
-      public String apply(Element element) {
-        Element elementNonNull = Preconditions.checkNotNull(element);
-        return Preconditions.checkNotNull(elementNonNull.getAttributeValue(key),
+      public String apply(XmlElement xmlElement) {
+        XmlElement xmlElementNonNull = Preconditions.checkNotNull(xmlElement);
+        return Preconditions.checkNotNull(xmlElementNonNull.getAttributeValue(key),
             "no attribute found for key: " + key);
       }
     };

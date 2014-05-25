@@ -6,7 +6,7 @@ import net.sourceforge.jwbf.core.actions.Get;
 import net.sourceforge.jwbf.core.actions.util.ActionException;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.core.actions.util.ProcessException;
-import net.sourceforge.jwbf.extractXml.Element;
+import net.sourceforge.jwbf.mapper.XmlElement;
 import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
 import net.sourceforge.jwbf.mediawiki.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
@@ -71,19 +71,19 @@ public class GetRendering extends MWAction {
     return "";
   }
 
-  protected Element findElement(String elementName, String xml) {
-    Element root = getRootElement(xml);
+  protected XmlElement findElement(String elementName, String xml) {
+    XmlElement root = getRootElement(xml);
     return findContent(root, elementName);
   }
 
-  private Element findContent(final Element e, final String name) {
-    Element found = null;
-    for (Element element : e.getChildren()) {
-      if (element.getQualifiedName().equalsIgnoreCase(name)) {
-        return element;
+  private XmlElement findContent(final XmlElement e, final String name) {
+    XmlElement found = null;
+    for (XmlElement xmlElement : e.getChildren()) {
+      if (xmlElement.getQualifiedName().equalsIgnoreCase(name)) {
+        return xmlElement;
 
       } else {
-        found = findContent(element, name);
+        found = findContent(xmlElement, name);
       }
 
     }

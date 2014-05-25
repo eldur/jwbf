@@ -7,7 +7,7 @@ import com.google.common.base.Joiner;
 import com.google.common.collect.Maps;
 import net.sourceforge.jwbf.core.actions.Get;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
-import net.sourceforge.jwbf.extractXml.Element;
+import net.sourceforge.jwbf.mapper.XmlElement;
 import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
 import net.sourceforge.jwbf.mediawiki.MediaWiki;
 
@@ -72,22 +72,22 @@ public class Siteinfo extends GetVersion {
 
   @Override
   @SuppressWarnings("unchecked")
-  protected void findContent(final Element root) {
+  protected void findContent(final XmlElement root) {
     super.findContent(root);
-    for (Element element : root.getChildren()) {
-      if (element.getQualifiedName().equalsIgnoreCase("ns")) {
-        Integer id = Integer.parseInt(element.getAttributeValue("id"));
-        String name = element.getText();
+    for (XmlElement xmlElement : root.getChildren()) {
+      if (xmlElement.getQualifiedName().equalsIgnoreCase("ns")) {
+        Integer id = Integer.parseInt(xmlElement.getAttributeValue("id"));
+        String name = xmlElement.getText();
         addNamespace(id, name);
 
-      } else if (element.getQualifiedName().equalsIgnoreCase("iw")) {
-        if (element.hasAttribute("prefix")) {
-          String prefix = element.getAttributeValue("prefix");
-          String name = element.getAttributeValue("url");
+      } else if (xmlElement.getQualifiedName().equalsIgnoreCase("iw")) {
+        if (xmlElement.hasAttribute("prefix")) {
+          String prefix = xmlElement.getAttributeValue("prefix");
+          String name = xmlElement.getAttributeValue("url");
           addInterwiki(prefix, name);
         }
       } else {
-        findContent(element);
+        findContent(xmlElement);
       }
     }
   }

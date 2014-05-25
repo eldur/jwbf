@@ -26,8 +26,8 @@ import com.google.common.base.Joiner;
 import com.google.common.primitives.Ints;
 import net.sourceforge.jwbf.core.actions.ContentProcessable;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
-import net.sourceforge.jwbf.extractXml.Element;
-import net.sourceforge.jwbf.extractXml.XmlConverter;
+import net.sourceforge.jwbf.mapper.XmlElement;
+import net.sourceforge.jwbf.mapper.XmlConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -122,24 +122,24 @@ public abstract class MWAction implements ContentProcessable {
   }
 
   @Nonnull
-  protected Element getRootElement(final String xml) {
+  protected XmlElement getRootElement(final String xml) {
     return XmlConverter.getRootElement(xml);
   }
 
   @Nonnull
-  protected Element getRootElementWithError(final String xml) {
+  protected XmlElement getRootElementWithError(final String xml) {
     return XmlConverter.getRootElementWithError(xml);
   }
 
   /**
    * Determines if the given XML Document contains an error message which then would printed by the logger.
    *
-   * @param rootElement XML <code>Document</code>
+   * @param rootXmlElement XML <code>Document</code>
    * @return error element
    */
   @CheckForNull
-  protected Element getErrorElement(Element rootElement) {
-    return XmlConverter.getErrorElement(rootElement);
+  protected XmlElement getErrorElement(XmlElement rootXmlElement) {
+    return XmlConverter.getErrorElement(rootXmlElement);
   }
 
   /**
