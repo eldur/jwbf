@@ -88,12 +88,12 @@ public class ImageInfo extends MWAction {
         .param("prop", "imageinfo") //
         ;
 
-    int width = Integer.parseInt(map.get(WIDTH));
+    int width = intOrZero(map.get(WIDTH));
     if (width > 0) {
       requestBuilder.param(WIDTH, width);
     }
 
-    int height = Integer.parseInt(map.get(HEIGHT));
+    int height = intOrZero(map.get(HEIGHT));
     if (height > 0) {
       requestBuilder.param(HEIGHT, height);
     }
@@ -103,6 +103,15 @@ public class ImageInfo extends MWAction {
       requestBuilder.param("titles", "Image:" + MediaWiki.urlEncode(name));
     }
     msg = requestBuilder.buildGet();
+  }
+
+  private int intOrZero(String string) {
+    try {
+      return Integer.parseInt(string);
+    } catch (NumberFormatException e) {
+      log.warn("\"{}\" is not a number", string);
+      return 0;
+    }
   }
 
   /**
