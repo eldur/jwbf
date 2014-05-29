@@ -6,10 +6,9 @@ import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.Reader;
-import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 
+import com.google.common.base.Charsets;
 import net.sourceforge.jwbf.core.actions.util.ActionException;
 import net.sourceforge.jwbf.core.actions.util.ProcessException;
 import net.sourceforge.jwbf.mediawiki.MediaWiki;
@@ -28,8 +27,7 @@ public class XmlConverter {
     SAXBuilder builder = new SAXBuilder();
     org.jdom.Element root = null;
     try {
-      Reader i = new StringReader(xml);
-      Document doc = builder.build(new InputSource(i));
+      Document doc = builder.build(new ByteArrayInputStream(xml.getBytes(Charsets.UTF_8)));
 
       root = doc.getRootElement();
 

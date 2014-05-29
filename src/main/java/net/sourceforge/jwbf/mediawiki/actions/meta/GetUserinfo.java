@@ -2,6 +2,7 @@ package net.sourceforge.jwbf.mediawiki.actions.meta;
 
 import java.util.Set;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import net.sourceforge.jwbf.core.actions.Get;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
@@ -57,16 +58,16 @@ public class GetUserinfo extends MWAction implements Userinfo {
    * {@inheritDoc}
    */
   @Override
-  public Set<String> getRights() {
-    return rights;
+  public ImmutableSet<String> getRights() {
+    return ImmutableSet.copyOf(rights);
   }
 
   /**
    * {@inheritDoc}
    */
   @Override
-  public Set<String> getGroups() {
-    return groups;
+  public ImmutableSet<String> getGroups() {
+    return ImmutableSet.copyOf(groups);
   }
 
   /**
@@ -77,31 +78,25 @@ public class GetUserinfo extends MWAction implements Userinfo {
     return username;
   }
 
-  @SuppressWarnings("unchecked")
   protected void findContent(final XmlElement root) {
-
     for (XmlElement xmlElement : root.getChildren()) {
-      // blockinfo|hasmsg|groups|rights <- MW 11
-      if (xmlElement.getQualifiedName().equalsIgnoreCase("userinfo")) {
+      if (hasName(xmlElement, "userinfo")) {
         username = xmlElement.getAttributeValue("name");
-
-      } else if (xmlElement.getQualifiedName().equalsIgnoreCase("groups")) {
-        for (XmlElement xmlElement1 : xmlElement.getChildren("g")) {
-          String gel = xmlElement1.getText();
-          groups.add(gel);
+      } else if (hasName(xmlElement, "groups")) {
+        for (XmlElement groupElement : xmlElement.getChildren("g")) {
+          groups.add(groupElement.getText());
         }
-      } else if (xmlElement.getQualifiedName().equalsIgnoreCase("rights")) {
-
-        for (XmlElement xmlElement1 : xmlElement.getChildren("r")) {
-          String rel = xmlElement1.getText();
-
-          rights.add(rel);
+      } else if (hasName(xmlElement, "rights")) {
+        for (XmlElement rightElement : xmlElement.getChildren("r")) {
+          rights.add(rightElement.getText());
         }
       }
       findContent(xmlElement);
-
     }
+  }
 
+  private boolean hasName(XmlElement xmlElement, String elementName) {
+    return xmlElement.getQualifiedName().equals(elementName);
   }
 
   /**

@@ -1,5 +1,7 @@
 package net.sourceforge.jwbf.mediawiki;
 
+import static org.junit.runners.Parameterized.Parameters;
+
 import javax.inject.Provider;
 import java.io.File;
 import java.util.Arrays;
@@ -23,6 +25,7 @@ import net.sourceforge.jwbf.AbstractIntegTest;
 import net.sourceforge.jwbf.JWBF;
 import net.sourceforge.jwbf.mediawiki.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
+import net.sourceforge.jwbf.mediawiki.live.auto.ParamHelper;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -39,6 +42,10 @@ public abstract class MocoIntegTest extends AbstractIntegTest implements Provide
     this.version = version;
   }
 
+  @Parameters(name = "{0}")
+  public static Collection<?> stableWikis() {
+    return ParamHelper.prepare(Version.valuesStable());
+  }
   /**
    * @deprecated
    */
@@ -95,7 +102,7 @@ public abstract class MocoIntegTest extends AbstractIntegTest implements Provide
       String absFileName = file.getAbsolutePath();
       return Moco.file(absFileName);
     } else {
-      return Moco.text("SHOULD FAIL");
+      return Moco.text(getClass().getCanonicalName() + " : SHOULD FAIL : File not found: " + filename);
     }
   }
 

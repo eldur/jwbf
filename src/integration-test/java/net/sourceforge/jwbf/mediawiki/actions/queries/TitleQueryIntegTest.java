@@ -1,10 +1,5 @@
 package net.sourceforge.jwbf.mediawiki.actions.queries;
 
-import static com.github.dreamhead.moco.Moco.and;
-import static com.github.dreamhead.moco.Moco.by;
-import static com.github.dreamhead.moco.Moco.eq;
-import static com.github.dreamhead.moco.Moco.query;
-import static com.github.dreamhead.moco.Moco.uri;
 import static org.junit.Assert.fail;
 
 import com.github.dreamhead.moco.RequestMatcher;
@@ -14,31 +9,32 @@ import net.sourceforge.jwbf.AbstractIntegTest;
 import net.sourceforge.jwbf.GAssert;
 import net.sourceforge.jwbf.Logging;
 import net.sourceforge.jwbf.TestHelper;
+import net.sourceforge.jwbf.mediawiki.ApiMatcherBuilder;
 import net.sourceforge.jwbf.mediawiki.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 import org.junit.Test;
 
 public class TitleQueryIntegTest extends AbstractIntegTest {
 
-  RequestMatcher embeddedinTwo = AbstractIntegTest.onlyOnce(and(by(uri("/api.php")), //
-      eq(query("eicontinue"), "10|Babel|37163"), //
-      eq(query("action"), "query"), //
-      eq(query("format"), "xml"), //
-      eq(query("eilimit"), "50"), //
-      eq(query("einamespace"), "2"), //
-      eq(query("eititle"), "Template:Babel"), //
-      eq(query("list"), "embeddedin") //
-  ));
+  RequestMatcher embeddedinTwo = ApiMatcherBuilder.of() //
+      .param("eicontinue", "10|Babel|37163") //
+      .param("action", "query") //
+      .param("format", "xml") //
+      .param("eilimit", "50") //
+      .param("einamespace", "2") //
+      .param("eititle", "Template:Babel") //
+      .param("list", "embeddedin") //
+      .build();
 
   static RequestMatcher embeddedinOne() {
-    return AbstractIntegTest.onlyOnce(and(by(uri("/api.php")), //
-        eq(query("action"), "query"), //
-        eq(query("format"), "xml"), //
-        eq(query("eilimit"), "50"), //
-        eq(query("einamespace"), "2"), //
-        eq(query("eititle"), "Template:Babel"), //
-        eq(query("list"), "embeddedin") //
-    ));
+    return ApiMatcherBuilder.of() //
+        .param("action", "query") //
+        .param("format", "xml") //
+        .param("eilimit", "50") //
+        .param("einamespace", "2") //
+        .param("eititle", "Template:Babel") //
+        .param("list", "embeddedin") //
+        .build();
   }
 
   @Test

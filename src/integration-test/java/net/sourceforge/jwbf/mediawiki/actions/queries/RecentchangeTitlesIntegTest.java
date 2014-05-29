@@ -1,10 +1,5 @@
 package net.sourceforge.jwbf.mediawiki.actions.queries;
 
-import static com.github.dreamhead.moco.Moco.and;
-import static com.github.dreamhead.moco.Moco.by;
-import static com.github.dreamhead.moco.Moco.eq;
-import static com.github.dreamhead.moco.Moco.query;
-import static com.github.dreamhead.moco.Moco.uri;
 import static org.junit.Assert.assertEquals;
 
 import java.util.List;
@@ -15,18 +10,19 @@ import com.google.common.collect.ImmutableSet;
 import net.sourceforge.jwbf.AbstractIntegTest;
 import net.sourceforge.jwbf.GAssert;
 import net.sourceforge.jwbf.TestHelper;
+import net.sourceforge.jwbf.mediawiki.ApiMatcherBuilder;
 import net.sourceforge.jwbf.mediawiki.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 import org.junit.Test;
 
 public class RecentchangeTitlesIntegTest extends AbstractIntegTest {
 
-  RequestMatcher embeddedinTwo = AbstractIntegTest.onlyOnce(and(by(uri("/api.php")), //
-      eq(query("action"), "query"), //
-      eq(query("format"), "xml"), //
-      eq(query("rclimit"), "50"), //
-      eq(query("rcnamespace"), "0") //
-  ));
+  RequestMatcher embeddedinTwo = ApiMatcherBuilder.of() //
+      .param("action", "query") //
+      .param("format", "xml") //
+      .param("rclimit", "50") //
+      .param("rcnamespace", "0") //
+      .build();
 
   @Test
   public void test() {

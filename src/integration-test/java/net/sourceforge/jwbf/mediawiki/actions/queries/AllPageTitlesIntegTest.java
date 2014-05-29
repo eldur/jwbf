@@ -1,54 +1,40 @@
 package net.sourceforge.jwbf.mediawiki.actions.queries;
 
-import static com.github.dreamhead.moco.Moco.by;
-import static com.github.dreamhead.moco.Moco.eq;
-import static com.github.dreamhead.moco.Moco.query;
-import static com.github.dreamhead.moco.Moco.uri;
 import static org.junit.Assert.fail;
-
-import java.util.Collection;
 
 import com.github.dreamhead.moco.RequestMatcher;
 import com.google.common.collect.ImmutableList;
 import net.sourceforge.jwbf.GAssert;
+import net.sourceforge.jwbf.mediawiki.ApiMatcherBuilder;
 import net.sourceforge.jwbf.mediawiki.ConfKey;
 import net.sourceforge.jwbf.mediawiki.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.MocoIntegTest;
-import net.sourceforge.jwbf.mediawiki.RequestMatcherBuilder;
 import net.sourceforge.jwbf.mediawiki.actions.meta.SiteInfoIntegTest;
-import net.sourceforge.jwbf.mediawiki.live.auto.ParamHelper;
 import org.junit.Test;
-import org.junit.runners.Parameterized.Parameters;
 
 public class AllPageTitlesIntegTest extends MocoIntegTest {
-
-  @Parameters(name = "{0}")
-  public static Collection<?> stableWikis() {
-    return ParamHelper.prepare(Version.valuesStable());
-  }
 
   public AllPageTitlesIntegTest(Version v) {
     super(v);
   }
 
-  RequestMatcherBuilder newBaseMatcher() {
-    return new RequestMatcherBuilder() //
-        .with(by(uri("/api.php"))) //
-        .with(eq(query("apfilterredir"), "nonredirects")) //
-        .with(eq(query("format"), "xml")) //
-        .with(eq(query("list"), "allpages")) //
-        .with(eq(query("aplimit"), "50")) //
+  ApiMatcherBuilder newBaseMatcher() {
+    return ApiMatcherBuilder.of() //
+        .param("apfilterredir", "nonredirects") //
+        .param("format", "xml") //
+        .param("list", "allpages") //
+        .param("aplimit", "50") //
         ;
   }
 
   RequestMatcher allpages0 = newBaseMatcher().build();
 
   RequestMatcher allpages1 = newBaseMatcher() //
-      .with(eq(query("apfrom"), confOf(ConfKey.ALL_PAGE_CONT_1))) //
+      .param("apfrom", confOf(ConfKey.ALL_PAGE_CONT_1)) //
       .build();
 
   RequestMatcher allpages2 = newBaseMatcher() //
-      .with(eq(query("apfrom"), confOf(ConfKey.ALL_PAGE_CONT_2))) //
+      .param("apfrom", confOf(ConfKey.ALL_PAGE_CONT_2)) //
       .build();
 
   @Test

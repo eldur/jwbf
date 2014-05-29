@@ -3,15 +3,27 @@ package net.sourceforge.jwbf;
 import static org.junit.Assert.fail;
 
 import javax.annotation.Nullable;
+import java.util.Set;
 
 import com.google.common.base.Function;
 import com.google.common.base.Joiner;
+import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Ordering;
 import org.junit.Assert;
 
 public class GAssert {
 
   public static final int MINIMUM_LENGTH = 1;
+
+  private static ImmutableList<?> sortedCopy(Set<?> actual) {
+    return FluentIterable.from(actual).toSortedList(Ordering.usingToString());
+  }
+
+
+  public static void assertEquals(ImmutableList<String> expected, Set<String> actual) {
+    assertEquals(expected, sortedCopy(actual));
+  }
 
   public static void assertEquals(ImmutableList<?> expected, ImmutableList<?> actual) {
     try {

@@ -1,0 +1,75 @@
+<?xml version="1.0"?>
+<api>
+  <query>
+    <userinfo id="1" name="Admin" editcount="7920">
+      <groups>
+        <g>*</g>
+        <g>user</g>
+        <g>autoconfirmed</g>
+        <g>bureaucrat</g>
+        <g>sysop</g>
+      </groups>
+      <rights>
+        <r>userrights</r>
+        <r>noratelimit</r>
+        <r>block</r>
+        <r>createaccount</r>
+        <r>delete</r>
+        <r>bigdelete</r>
+        <r>deletedhistory</r>
+        <r>deletedtext</r>
+        <r>undelete</r>
+        <r>editinterface</r>
+        <r>editusercss</r>
+        <r>edituserjs</r>
+        <r>import</r>
+        <r>importupload</r>
+        <r>move</r>
+        <r>move-subpages</r>
+        <r>move-rootuserpages</r>
+        <r>patrol</r>
+        <r>autopatrol</r>
+        <r>protect</r>
+        <r>proxyunbannable</r>
+        <r>rollback</r>
+        <r>upload</r>
+        <r>reupload</r>
+        <r>reupload-shared</r>
+        <r>unwatchedpages</r>
+        <r>autoconfirmed</r>
+        <r>upload_by_url</r>
+        <r>ipblock-exempt</r>
+        <r>blockemail</r>
+        <r>markbotedits</r>
+        <r>apihighlimits</r>
+        <r>browsearchive</r>
+        <r>movefile</r>
+        <r>unblockself</r>
+        <r>suppressredirect</r>
+        <r>createpage</r>
+        <r>createtalk</r>
+        <r>writeapi</r>
+        <r>read</r>
+        <r>edit</r>
+        <r>minoredit</r>
+        <r>purge</r>
+        <r>sendemail</r>
+      </rights>
+      <options ccmeonemails="0" cols="80" date="default" diffonly="0" disablemail="0" disablesuggest="0"
+               editfont="default" editondblclick="0" editsection="1" editsectiononrightclick="0" enotifminoredits="0"
+               enotifrevealaddr="0" enotifusertalkpages="1" enotifwatchlistpages="0" extendwatchlist="0"
+               externaldiff="0" externaleditor="0" fancysig="0" forceeditsummary="0" gender="unknown" hideminor="0"
+               hidepatrolled="0" highlightbroken="1" imagesize="2" justify="0" math="1" minordefault="0"
+               newpageshidepatrolled="0" nocache="0" noconvertlink="0" norollbackdiff="0" numberheadings="0"
+               previewonfirst="0" previewontop="1" quickbar="5" rcdays="7" rclimit="50" rememberpassword="0" rows="25"
+               searchlimit="20" showhiddencats="0" showjumplinks="1" shownumberswatching="1" showtoc="1" showtoolbar="1"
+               skin="vector" stubthreshold="0" thumbsize="2" underline="2" uselivepreview="0" usenewrc="0"
+               watchcreations="0" watchdefault="0" watchdeletion="0" watchlistdays="3" watchlisthideanons="0"
+               watchlisthidebots="0" watchlisthideliu="0" watchlisthideminor="0" watchlisthideown="0"
+               watchlisthidepatrolled="0" watchmoves="0" wllimit="250" variant="en" language="en" searchNs0="1"
+               searchNs1="" searchNs2="" searchNs3="" searchNs4="" searchNs5="" searchNs6="" searchNs7="" searchNs8=""
+               searchNs9="" searchNs10="" searchNs11="" searchNs12="" searchNs13="" searchNs14="" searchNs15=""/>
+      <ratelimits/>
+    </userinfo>
+  </query>
+</api>
