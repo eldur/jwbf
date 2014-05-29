@@ -24,7 +24,6 @@ import net.sourceforge.jwbf.mediawiki.actions.login.PostLogin;
 import net.sourceforge.jwbf.mediawiki.actions.meta.GetUserinfo;
 import net.sourceforge.jwbf.mediawiki.actions.meta.GetVersion;
 import net.sourceforge.jwbf.mediawiki.actions.meta.Siteinfo;
-import net.sourceforge.jwbf.mediawiki.actions.util.VersionException;
 import net.sourceforge.jwbf.mediawiki.contentRep.LoginData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -217,8 +216,9 @@ public class MediaWikiBot implements WikiBot {
     }
 
     performAction(new PostModifyContent(this, simpleArticle));
-    if (simpleArticle.getText().trim().length() < 1)
+    if (simpleArticle.getText().trim().length() < 1) {
       throw new RuntimeException("Content is empty, still written");
+    }
   }
 
   /**
@@ -238,55 +238,9 @@ public class MediaWikiBot implements WikiBot {
    */
   @Override
   public Userinfo getUserinfo() {
-    log.debug("get userinfo");
     if (ui == null || loginChangeUserInfo) {
-      GetUserinfo a;
-      try {
-        a = new GetUserinfo();
-
-        performAction(a);
-        ui = a;
-        loginChangeUserInfo = false;
-      } catch (VersionException e) {
-        if (login != null && login.getUserName().length() > 0) {
-          ui = new Userinfo() {
-
-            @Override
-            public String getUsername() {
-              return login.getUserName();
-            }
-
-            @Override
-            public Set<String> getRights() {
-              return emptySet;
-            }
-
-            @Override
-            public Set<String> getGroups() {
-              return emptySet;
-            }
-          };
-        } else {
-          ui = new Userinfo() {
-
-            @Override
-            public String getUsername() {
-              return "unknown";
-            }
-
-            @Override
-            public Set<String> getRights() {
-              return emptySet;
-            }
-
-            @Override
-            public Set<String> getGroups() {
-              return emptySet;
-            }
-          };
-        }
-      }
-
+      ui = getPerformedAction(GetUserinfo.class);
+      loginChangeUserInfo = false;
     }
     return ui;
   }
