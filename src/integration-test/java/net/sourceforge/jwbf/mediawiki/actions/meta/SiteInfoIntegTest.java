@@ -1,15 +1,11 @@
 package net.sourceforge.jwbf.mediawiki.actions.meta;
 
-import static com.github.dreamhead.moco.Moco.and;
-import static com.github.dreamhead.moco.Moco.by;
-import static com.github.dreamhead.moco.Moco.eq;
-import static com.github.dreamhead.moco.Moco.query;
-import static com.github.dreamhead.moco.Moco.uri;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import com.github.dreamhead.moco.RequestMatcher;
 import net.sourceforge.jwbf.GAssert;
+import net.sourceforge.jwbf.mediawiki.ApiMatcherBuilder;
 import net.sourceforge.jwbf.mediawiki.ConfKey;
 import net.sourceforge.jwbf.mediawiki.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.MocoIntegTest;
@@ -25,14 +21,27 @@ public class SiteInfoIntegTest extends MocoIntegTest {
     super(v);
   }
 
-  public static final RequestMatcher siteinfo = and(by(uri("/api.php")),
-      eq(query("action"), "query"), eq(query("format"), "xml"), eq(query("meta"), "siteinfo"));
+  public static ApiMatcherBuilder newSiteInfoMatcherBuilder() {
+    return ApiMatcherBuilder.of() //
+        .param("action", "query") //
+        .param("meta", "siteinfo") //
+        .param("format", "xml") //
+        ;
+  }
+
+  public static RequestMatcher newSiteinfoWithProperties() {
+    return SiteInfoIntegTest.newSiteInfoMatcherBuilder() //
+        .param("siprop", "general|namespaces|interwikimap") //
+        .build();
+  }
 
   @Test
   public void doTest() {
     // GIVEN
     // TODO json?
-    server.request(siteinfo).response(mwFileOf(version(), "siteinfo_detail.xml"));
+    server.request(newSiteInfoMatcherBuilder().build()).response(mwFileOf(version(), "siteinfo.xml"));
+    server.request(newSiteinfoWithProperties()).response(mwFileOf(version(), "siteinfo_detail.xml"));
+
     // WHEN
     GetVersion gv = bot().getPerformedAction(GetVersion.class);
 

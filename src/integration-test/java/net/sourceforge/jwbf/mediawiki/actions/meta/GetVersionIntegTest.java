@@ -1,13 +1,7 @@
 package net.sourceforge.jwbf.mediawiki.actions.meta;
 
-import static com.github.dreamhead.moco.Moco.and;
-import static com.github.dreamhead.moco.Moco.by;
-import static com.github.dreamhead.moco.Moco.eq;
-import static com.github.dreamhead.moco.Moco.query;
-import static com.github.dreamhead.moco.Moco.uri;
 import static org.junit.Assert.assertEquals;
 
-import com.github.dreamhead.moco.RequestMatcher;
 import com.google.common.collect.ImmutableMap;
 import net.sourceforge.jwbf.GAssert;
 import net.sourceforge.jwbf.mediawiki.ConfKey;
@@ -25,14 +19,6 @@ public class GetVersionIntegTest extends MocoIntegTest {
     super(v);
   }
 
-  private final RequestMatcher siteinfo = and(by(uri("/api.php")),
-      eq(query("siprop"), "general|namespaces|interwikimap"), eq(query("action"), "query"),
-      eq(query("format"), "xml"), eq(query("meta"), "siteinfo"));
-
-  // /api.php?action=query&format=xml&meta=siteinfo
-  private final RequestMatcher siteinfoShort = and(by(uri("/api.php")),
-      eq(query("action"), "query"), eq(query("format"), "xml"), eq(query("meta"), "siteinfo"));
-
   private final ImmutableMap<String, String> title() {
     return ImmutableMap.of("title", "MW " + version().getNumber().replace(".", " "));
   }
@@ -40,14 +26,14 @@ public class GetVersionIntegTest extends MocoIntegTest {
   @Test
   public void testSiteInfo() {
     // GIVEN
-    // /api.php?action=query&format=xml&meta=siteinfo
-    server.request(siteinfo).response(mwFileOf(version(), "siteinfo_detail.xml"));
+    // /api.php?action=query&format=xml&meta=siteinfoWithProperties
+    server.request(SiteInfoIntegTest.newSiteinfoWithProperties()) //
+        .response(mwFileOf(version(), "siteinfo_detail.xml"));
 
     // WHEN
     Siteinfo si = bot().getPerformedAction(Siteinfo.class);
 
     // THEN
-
     GAssert.assertEquals(splittedConfigOfString(ConfKey.SITEINFO, title()),
         toSortedList(si.getNamespaces()));
     GAssert.assertEquals(splittedConfigOfString(ConfKey.INTERWIKI),
@@ -57,7 +43,8 @@ public class GetVersionIntegTest extends MocoIntegTest {
   @Test
   public void testSiteInfo_withError() {
     // GIVEN
-    server.request(siteinfo).response(mwFileOf(version(), "siteinfo_fail.xml"));
+    server.request(SiteInfoIntegTest.newSiteinfoWithProperties()) //
+        .response(mwFileOf(version(), "siteinfo_fail.xml"));
 
     // WHEN
     Siteinfo si = bot().getPerformedAction(Siteinfo.class);
@@ -70,7 +57,7 @@ public class GetVersionIntegTest extends MocoIntegTest {
   @Test
   public void testVersion() {
     // GIVEN
-    server.request(siteinfoShort).response(mwFileOf(version(), "siteinfo.xml"));
+    server.request(SiteInfoIntegTest.newSiteInfoMatcherBuilder().build()).response(mwFileOf(version(), "siteinfo.xml"));
 
     // WHEN
     Version responseVersion = bot().getVersion();
@@ -84,7 +71,8 @@ public class GetVersionIntegTest extends MocoIntegTest {
   public void testVersionDetails() {
 
     // GIVEN
-    server.request(siteinfoShort).response(mwFileOf(version(), "siteinfo.xml"));
+    server.request(SiteInfoIntegTest.newSiteInfoMatcherBuilder().build()) //
+        .response(mwFileOf(version(), "siteinfo.xml"));
 
     // WHEN
     GetVersion gv = bot().getPerformedAction(GetVersion.class);

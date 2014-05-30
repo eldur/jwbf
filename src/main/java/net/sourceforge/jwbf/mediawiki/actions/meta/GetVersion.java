@@ -30,7 +30,6 @@ import net.sourceforge.jwbf.mapper.XmlElement;
 import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
 import net.sourceforge.jwbf.mediawiki.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
-import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -55,14 +54,6 @@ public class GetVersion extends MWAction {
   static {
     GENERATOR_EXT.add("alpha");
     GENERATOR_EXT.add("wmf");
-  }
-
-  /**
-   * Create and submit the request to the Wiki.
-   */
-  public GetVersion(MediaWikiBot bot) {
-    this();
-    bot.performAction(this);
   }
 
   /*

@@ -42,7 +42,8 @@ public class AllPageTitlesIntegTest extends MocoIntegTest {
 
     // GIVEN
     // TODO json?
-    server.request(SiteInfoIntegTest.siteinfo).response(mwFileOf(version(), "siteinfo_detail.xml"));
+    server.request(SiteInfoIntegTest.newSiteInfoMatcherBuilder().build()) //
+        .response(mwFileOf(version(), "siteinfo_detail.xml"));
     server.request(allpages2).response(mwFileOf(version(), "allPageTitles2.xml"));
     server.request(allpages1).response(mwFileOf(version(), "allPageTitles1.xml"));
     server.request(allpages0).response(mwFileOf(version(), "allPageTitles0.xml"));
@@ -56,12 +57,10 @@ public class AllPageTitlesIntegTest extends MocoIntegTest {
         confOf(ConfKey.ALL_PAGE_1), //
         confOf(ConfKey.ALL_PAGE_2));
     GAssert.assertEquals(expected, actual);
-
   }
 
   @Test
   public void doFail() {
-
     // GIVEN
     // nothing
     try {
