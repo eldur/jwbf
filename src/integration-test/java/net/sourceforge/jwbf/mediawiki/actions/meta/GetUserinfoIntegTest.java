@@ -16,16 +16,18 @@ public class GetUserinfoIntegTest extends MocoIntegTest {
     super(version);
   }
 
-  RequestMatcher userInfo = ApiMatcherBuilder.of() //
-      .param("format", "xml") //
-      .param("meta", "userinfo") //
-      .param("uiprop", "blockinfo|hasmsg|groups|rights|options|editcount|ratelimits") //
-      .build();
+  public static final RequestMatcher newUserInfoMatcher() {
+    return ApiMatcherBuilder.of() //
+        .param("format", "xml") //
+        .param("meta", "userinfo") //
+        .param("uiprop", "blockinfo|hasmsg|groups|rights|options|editcount|ratelimits") //
+        .build();
+  }
 
   @Test
   public void test() {
     // GIVEN
-    server.request(userInfo).response(mwFileOf(version(), "userinfo.xml"));
+    server.request(newUserInfoMatcher()).response(mwFileOf(version(), "userinfo.xml"));
     GetUserinfo testee = new GetUserinfo();
 
     // WHEN

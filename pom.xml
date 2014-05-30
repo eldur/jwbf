@@ -377,22 +377,6 @@
           <quiet>true</quiet>
         </configuration>
       </plugin>
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>taglist-maven-plugin</artifactId>
-        <version>2.4</version>
-        <configuration>
-          <tags>
-            <tag>TODO</tag>
-            <tag>FIXME</tag>
-            <tag>REFACTOR</tag>
-            <tag>@deprecated</tag>
-          </tags>
-        </configuration>
-      </plugin>
     </plugins>
   </reporting>
-  <properties>
-    <maven.test.jvmargs>-Dfile.encoding=US-ASCII</maven.test.jvmargs>
-  </properties>
 </project>

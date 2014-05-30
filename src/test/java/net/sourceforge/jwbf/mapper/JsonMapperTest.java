@@ -71,7 +71,6 @@ public class JsonMapperTest {
     return content;
   }
 
-
   private static class SiteInfoData {
 
     private final String mainpage;

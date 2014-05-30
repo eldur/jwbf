@@ -1,5 +1,6 @@
 package net.sourceforge.jwbf.core;
 
+import static net.sourceforge.jwbf.core.RequestBuilder.HashCodeEqualsMemoizingSupplier;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
@@ -79,7 +80,8 @@ public class RequestBuilderTest {
   @Test(expected = IllegalStateException.class)
   public void testMemoizer_only_compare_with_same_type() {
     // GIVEN
-    RequestBuilder.HashCodeEqualsMemoizingSupplier<String> a = new RequestBuilder.HashCodeEqualsMemoizingSupplier<>(Suppliers.ofInstance("A"));
+    Supplier<String> supplier = Suppliers.ofInstance("A");
+    HashCodeEqualsMemoizingSupplier<String> a = new HashCodeEqualsMemoizingSupplier<>(supplier);
 
     // WHEN // THEN
     a.equals(new Object());

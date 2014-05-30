@@ -53,8 +53,9 @@ public class PostPackageTest {
         }
 
       } finally {
-        if (in != null)
+        if (in != null) {
           in.close();
+        }
       }
     }
   }
