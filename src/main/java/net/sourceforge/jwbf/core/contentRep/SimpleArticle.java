@@ -290,33 +290,44 @@ public class SimpleArticle implements ArticleMeta, Serializable, Cloneable, Cont
    */
   @Override
   public boolean equals(Object obj) {
-    if (this == obj)
+    if (this == obj) {
       return true;
-    if (obj == null)
+    }
+    if (obj == null) {
       return false;
-    if (!(obj instanceof SimpleArticle))
+    }
+    if (!(obj instanceof SimpleArticle)) {
       return false;
+    }
     SimpleArticle other = (SimpleArticle) obj;
     if (editTimestamp == null) {
-      if (other.editTimestamp != null)
+      if (other.editTimestamp != null) {
         return false;
-    } else if (!editTimestamp.equals(other.editTimestamp))
+      }
+    } else if (!editTimestamp.equals(other.editTimestamp)) {
       return false;
+    }
     if (revId == null) {
-      if (other.revId != null)
+      if (other.revId != null) {
         return false;
-    } else if (!revId.equals(other.revId))
+      }
+    } else if (!revId.equals(other.revId)) {
       return false;
+    }
     if (text == null) {
-      if (other.text != null)
+      if (other.text != null) {
         return false;
-    } else if (!text.equals(other.text))
+      }
+    } else if (!text.equals(other.text)) {
       return false;
+    }
     if (title == null) {
-      if (other.title != null)
+      if (other.title != null) {
         return false;
-    } else if (!title.equals(other.title))
+      }
+    } else if (!title.equals(other.title)) {
       return false;
+    }
     return true;
   }
 

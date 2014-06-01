@@ -52,7 +52,7 @@ public class AllPageTitles extends TitleQuery<String> {
    */
   private static final Pattern HAS_MORE_PATTERN = Pattern.compile(
       "<query-continue>.*?<allpages *apfrom=\"([^\"]*)\" */>.*?</query-continue>", Pattern.DOTALL
-      | Pattern.MULTILINE);
+          | Pattern.MULTILINE);
   private static final Pattern HAS_MORE_PATTERN_20 = Pattern.compile(
       "<query-continue>.*?<allpages *apcontinue=\"([^\"]*)\" */>.*?</query-continue>",
       Pattern.DOTALL | Pattern.MULTILINE);

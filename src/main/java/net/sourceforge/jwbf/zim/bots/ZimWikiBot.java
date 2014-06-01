@@ -124,8 +124,9 @@ public class ZimWikiBot implements WikiBot {
       throw new RuntimeException(e);
     } finally {
       try {
-        if (myInput != null)
+        if (myInput != null) {
           myInput.close();
+        }
       } catch (IOException e) {
         throw new RuntimeException(e);
       }

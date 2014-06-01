@@ -46,6 +46,7 @@ public abstract class MocoIntegTest extends AbstractIntegTest implements Provide
   public static Collection<?> stableWikis() {
     return ParamHelper.prepare(Version.valuesStable());
   }
+
   /**
    * @deprecated
    */

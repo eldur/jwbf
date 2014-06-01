@@ -74,8 +74,9 @@ public class PostLogin extends MWAction {
         .buildPost();
     loginRequest.postParam("lgname", username);
     loginRequest.postParam("lgpassword", pw);
-    if (domain != null)
+    if (domain != null) {
       loginRequest.postParam("lgdomain", domain);
+    }
     if (token != null) {
       loginRequest.postParam("lgtoken", token);
     }
@@ -127,7 +128,7 @@ public class PostLogin extends MWAction {
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see net.sourceforge.jwbf.mediawiki.actions.util.MWAction#hasMoreMessages()
    */
   @Override

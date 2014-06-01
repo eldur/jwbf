@@ -26,8 +26,8 @@ import com.google.common.base.Joiner;
 import com.google.common.primitives.Ints;
 import net.sourceforge.jwbf.core.actions.ContentProcessable;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
-import net.sourceforge.jwbf.mapper.XmlElement;
 import net.sourceforge.jwbf.mapper.XmlConverter;
+import net.sourceforge.jwbf.mapper.XmlElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

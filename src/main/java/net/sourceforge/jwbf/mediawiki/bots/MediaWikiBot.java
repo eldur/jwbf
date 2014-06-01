@@ -73,7 +73,7 @@ public class MediaWikiBot implements WikiBot {
   /**
    * These chars are not allowed in article names.
    */
-  public static final char[] INVALID_LABEL_CHARS = "[]{}<>|".toCharArray();
+  public static final char[] INVALID_LABEL_CHARS = "[]{}<>|" .toCharArray();
   private static final int DEFAULT_READ_PROPERTIES = GetRevision.CONTENT | GetRevision.COMMENT
       | GetRevision.USER | GetRevision.TIMESTAMP | GetRevision.IDS | GetRevision.FLAGS;
 

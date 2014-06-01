@@ -60,18 +60,23 @@ class CachArticle extends SimpleArticle implements Serializable {
    */
   @Override
   public boolean equals(Object obj) {
-    if (this == obj)
+    if (this == obj) {
       return true;
-    if (!super.equals(obj))
+    }
+    if (!super.equals(obj)) {
       return false;
-    if (!(obj instanceof CachArticle))
+    }
+    if (!(obj instanceof CachArticle)) {
       return false;
+    }
     CachArticle other = (CachArticle) obj;
     if (d == null) {
-      if (other.d != null)
+      if (other.d != null) {
         return false;
-    } else if (!d.equals(other.d))
+      }
+    } else if (!d.equals(other.d)) {
       return false;
+    }
     return true;
   }
 

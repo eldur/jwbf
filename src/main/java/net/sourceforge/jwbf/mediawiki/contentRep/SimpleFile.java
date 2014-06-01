@@ -106,18 +106,23 @@ public class SimpleFile extends SimpleArticle {
    */
   @Override
   public boolean equals(Object obj) {
-    if (this == obj)
+    if (this == obj) {
       return true;
-    if (!super.equals(obj))
+    }
+    if (!super.equals(obj)) {
       return false;
-    if (!(obj instanceof SimpleFile))
+    }
+    if (!(obj instanceof SimpleFile)) {
       return false;
+    }
     SimpleFile other = (SimpleFile) obj;
     if (filename == null) {
-      if (other.filename != null)
+      if (other.filename != null) {
         return false;
-    } else if (!filename.equals(other.filename))
+      }
+    } else if (!filename.equals(other.filename)) {
       return false;
+    }
     return true;
   }
 

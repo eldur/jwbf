@@ -78,8 +78,9 @@ public class SimpleCache implements CacheHandler {
    */
   @Override
   public SimpleArticle get(String title) {
-    if (containsKey(title))
+    if (containsKey(title)) {
       return read(title);
+    }
     return new SimpleArticle(title);
   }
 

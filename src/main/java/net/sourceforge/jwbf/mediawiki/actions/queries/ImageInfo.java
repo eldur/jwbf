@@ -71,8 +71,9 @@ public class ImageInfo extends MWAction {
         if (param.length == 2) {
           String key = param[0];
           String value = param[1];
-          if (key != null && value != null)
+          if (key != null && value != null) {
             map.put(key, value);
+          }
         }
       }
     }

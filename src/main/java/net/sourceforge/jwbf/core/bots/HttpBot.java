@@ -21,7 +21,6 @@ package net.sourceforge.jwbf.core.bots;
 import java.net.URL;
 
 import net.sourceforge.jwbf.core.actions.ContentProcessable;
-import net.sourceforge.jwbf.core.actions.Get;
 import net.sourceforge.jwbf.core.actions.GetPage;
 import net.sourceforge.jwbf.core.actions.HttpActionClient;
 import net.sourceforge.jwbf.core.actions.HttpActionClient.Builder;

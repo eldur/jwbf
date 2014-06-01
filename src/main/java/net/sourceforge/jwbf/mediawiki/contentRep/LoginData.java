@@ -46,8 +46,9 @@ public class LoginData {
   public void setup(String userName, boolean isLoggedIn, Map<String, String> properties) {
     this.userName = userName;
     this.isLoggedIn = isLoggedIn;
-    if (properties != null)
+    if (properties != null) {
       this.properties.putAll(properties);
+    }
   }
 
   public boolean isLoggedIn() {

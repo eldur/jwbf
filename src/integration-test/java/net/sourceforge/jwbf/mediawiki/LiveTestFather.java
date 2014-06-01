@@ -73,7 +73,7 @@ public class LiveTestFather {
 
   private static boolean optSysProperty(String name, boolean defaultValue, boolean emptyValue) {
     String stringValue = System.getProperty(name, defaultValue + "");
-    if ("".equals(stringValue)) {
+    if (Strings.isNullOrEmpty(stringValue)) {
       return emptyValue;
     }
     boolean booleanValue = Boolean.valueOf(stringValue).booleanValue();

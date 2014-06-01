@@ -69,7 +69,7 @@ public class DeleteTest extends ParamHelper {
 
       assertTrue(
           "textlength of Delete " + i + " is greater then 0 (" + ca.getText().length() + ")", ca
-          .getText().length() == 0);
+              .getText().length() == 0);
 
     }
   }

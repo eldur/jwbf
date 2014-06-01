@@ -1,20 +1,20 @@
 /*
  * Copyright 2007 Thomas Stock.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under
  * the License.
- * 
+ *
  * Contributors:
- * 
+ *
  */
 package net.sourceforge.jwbf.mediawiki.live.auto;
 
@@ -216,8 +216,9 @@ public class UploadAndImageInfoTest extends ParamHelper {
     assert left.exists();
     assert right.exists();
 
-    if (left.length() != right.length())
+    if (left.length() != right.length()) {
       return false;
+    }
     FileInputStream rin = null;
     FileInputStream lin = null;
     try {
@@ -239,8 +240,9 @@ public class UploadAndImageInfoTest extends ParamHelper {
         }
 
         for (int byteIndex = 0; byteIndex < lcount; byteIndex++) {
-          if (lbuffer[byteIndex] != rbuffer[byteIndex])
+          if (lbuffer[byteIndex] != rbuffer[byteIndex]) {
             return false;
+          }
         }
         lcount = lin.read(lbuffer);
       }
@@ -248,10 +250,12 @@ public class UploadAndImageInfoTest extends ParamHelper {
       throw new IllegalStateException(e);
     } finally {
       try {
-        if (lin != null)
+        if (lin != null) {
           lin.close();
-        if (rin != null)
+        }
+        if (rin != null) {
           rin.close();
+        }
       } catch (IOException e) {
         throw new IllegalStateException(e);
       }
