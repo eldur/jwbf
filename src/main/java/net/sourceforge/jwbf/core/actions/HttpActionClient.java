@@ -156,17 +156,21 @@ public class HttpActionClient {
     return requestString;
   }
 
+  String post(Post post) {
+    return post(new HttpPost(post.getRequest()), null, post);
+  }
+
   private String post(HttpRequestBase requestBase //
       , ReturningTextProcessor contentProcessable, HttpAction ha) {
-    Post p = (Post) ha;
+    Post post = (Post) ha;
     MultipartEntityBuilder entityBuilder = MultipartEntityBuilder.create();
-    for (String key : p.getParams().keySet()) {
-      Object content = p.getParams().get(key);
+    for (String key : post.getParams().keySet()) {
+      Object content = post.getParams().get(key);
       if (content != null) {
         if (content instanceof String) {
-          Charset charset = Charset.forName(p.getCharset());
+          Charset charset = Charset.forName(post.getCharset());
           String text = (String) content;
-          entityBuilder.addTextBody(key, text, ContentType.create("xml/text", charset));
+          entityBuilder.addTextBody(key, text, ContentType.create("*/*", charset));
         } else if (content instanceof File) {
           File file = (File) content;
           entityBuilder.addBinaryBody(key, file);
@@ -176,7 +180,16 @@ public class HttpActionClient {
     ((HttpPost) requestBase).setEntity(entityBuilder.build());
 
     return executeAndProcess(requestBase, contentProcessable, ha);
+  }
 
+  @Nonnull
+  public String get(Get get) {
+    return get(new HttpGet(get.getRequest()), null, get);
+  }
+
+  @Nonnull
+  private String get(HttpRequestBase requestBase, ReturningTextProcessor cp, HttpAction ha) {
+    return executeAndProcess(requestBase, cp, ha);
   }
 
   protected void consume(HttpResponse res) {
@@ -185,11 +198,6 @@ public class HttpActionClient {
     } catch (IOException e) {
       throw new IllegalStateException(e);
     }
-  }
-
-  @Nonnull
-  private String get(HttpRequestBase requestBase, ReturningTextProcessor cp, HttpAction ha) {
-    return executeAndProcess(requestBase, cp, ha);
   }
 
   private String executeAndProcess(HttpRequestBase requestBase, ReturningTextProcessor cp,
@@ -250,12 +258,6 @@ public class HttpActionClient {
           + requestBase.getURI());
     }
     return res;
-  }
-
-  @Nonnull
-  public byte[] get(Get get) {
-    HttpGet authgets = new HttpGet(get.getRequest());
-    return get(authgets, null, get).getBytes();
   }
 
   @VisibleForTesting

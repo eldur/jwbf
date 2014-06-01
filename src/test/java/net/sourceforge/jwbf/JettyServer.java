@@ -1,18 +1,23 @@
 package net.sourceforge.jwbf;
 
+import javax.annotation.Nullable;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Collections;
+import java.util.List;
 
 import com.google.common.base.Joiner;
+import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableListMultimap;
 import com.google.common.collect.ImmutableMultimap;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Maps.EntryTransformer;
 import com.google.common.collect.Multimaps;
 import com.google.common.collect.Ordering;
+import com.google.common.io.CharStreams;
 import com.google.common.net.HttpHeaders;
 import org.eclipse.jetty.server.NetworkConnector;
 import org.eclipse.jetty.server.Request;
@@ -133,6 +138,14 @@ public class JettyServer extends Server {
 
         PrintWriter writer = response.getWriter();
         writer.print(request.getQueryString());
+        writer.print('\n');
+        List<String> lines = CharStreams.readLines(req.getReader());
+        writer.print(Joiner.on("\n").join(Iterables.filter(lines, new Predicate<String>() {
+          @Override
+          public boolean apply(@Nullable String input) {
+            return !input.startsWith("--");
+          }
+        })));
         response.setStatus(HttpServletResponse.SC_OK);
         request.setHandled(true);
       }

@@ -23,18 +23,14 @@ import static net.sourceforge.jwbf.mediawiki.LiveTestFather.getValueOrSkip;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import java.nio.charset.Charset;
 import java.util.Random;
 
-import net.sourceforge.jwbf.core.contentRep.Article;
 import net.sourceforge.jwbf.core.contentRep.ArticleMeta;
 import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
 import net.sourceforge.jwbf.mediawiki.BotFactory;
 import net.sourceforge.jwbf.mediawiki.MediaWiki.Version;
-import net.sourceforge.jwbf.mediawiki.actions.editing.GetRevision;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -47,7 +43,6 @@ public class EditCustomWikiContentTest {
 
   @Before
   public void setUp() {
-
     bot = BotFactory.getMediaWikiBot(Version.getLatest(), true);
   }
 
@@ -107,76 +102,10 @@ public class EditCustomWikiContentTest {
     assertEquals(summary, sa.getEditSummary());
     assertEquals(bot.getUserinfo().getUsername(), sa.getEditor());
     assertEquals(true, sa.isMinorEdit());
-
-  }
-
-  /**
-   * Test utf-8 read on english Mediawiki.
-   */
-  @Test
-  public final void contentModifySimpleUtf8Get() {
-    String utf8value = "öäüÖÄÜß";
-    String title = getValueOrSkip("test_live_article");
-    SimpleArticle sa;
-    sa = new SimpleArticle(title);
-    sa.setText(utf8value);
-    bot.writeContent(sa);
-
-    sa = bot.getArticle(title, GetRevision.CONTENT).getSimpleArticle();
-
-    assertEquals(utf8value, sa.getText());
-  }
-
-  /**
-   * Test utf-8 read on english Mediawiki. -Dfile.encoding=ASCII FIXME do not check this via system property
-   */
-  @Test
-  public final void contentModifyIPAUtf8Get() {
-    String original = System.getProperty("file.encoding");
-    try {
-      String encoding = "US-ASCII";
-      System.setProperty("file.encoding", encoding);
-      assertEquals(encoding, System.getProperty("file.encoding"));
-      assertEquals(encoding, Charset.defaultCharset().name());
-      String utf8 = "츠 ᅳ פעילות הבינאáßçकखी國際ɕɕkɕoːɐ̯eːaɕɐɑɒæɑ̃ɕʌbɓʙβcɕçɕɕçɕɔɔɕɕ𐎄";
-      String utf8value = "\uCE20 \u1173 \u05E4\u05E2\u05D9\u05DC\u05D5\u05EA \u05D4\u05D1\u05D9\u05E0\u05D0\u00E1\u00DF\u00E7\u0915\u0916\u0940\u570B\u969B\u0255\u0255k\u0255o\u02D0\u0250\u032Fe\u02D0a\u0255\u0250\u0251\u0252\u00E6\u0251\u0303\u0255\u028Cb\u0253\u0299\u03B2c\u0255\u00E7\u0255\u0255\u00E7\u0255\u0254\u0254\u0255\u0255\uD800\uDF84";
-      assertEquals(utf8value, utf8);
-      String title = getValueOrSkip("test_live_article");
-      SimpleArticle sa;
-      sa = new SimpleArticle(title);
-      sa.setText(utf8value);
-      bot.writeContent(sa);
-      doWait();
-      sa = bot.getArticle(title).getSimpleArticle();
-
-      assertEquals(utf8value, sa.getText());
-    } finally {
-      System.setProperty("file.encoding", original);
-    }
-  }
-
-  /**
-   * Test utf-8 read on english Mediawiki.
-   */
-  @Test
-  public final void contentModifyComplexUtf8Get() {
-    String utf8value = "öä 品 üÖÄÜß り新しく作成したりできます Л" + "ин 瓦茲القواميس والمراجع";
-
-    String title = getValueOrSkip("test_live_article");
-    SimpleArticle sa;
-    sa = new SimpleArticle(title);
-    sa.setText(utf8value);
-    bot.writeContent(sa);
-    doWait();
-    sa = bot.getArticle(title).getSimpleArticle();
-
-    assertEquals(utf8value, sa.getText());
-    assertTrue(sa.getEditTimestamp() != null);
   }
 
   @Test
   public final void getTimestamp() {
-
     String label = getValueOrSkip("test_live_article");
     ArticleMeta sa;
 
@@ -185,38 +114,4 @@ public class EditCustomWikiContentTest {
     assertTrue(sa.getEditTimestamp().getTime() > 1000);
   }
 
-  /**
-   * Test utf-8 read on english Mediawiki.
-   */
-  @Ignore("too old")
-  @Test
-  public final void contentModifyOnOtherWiki() {
-    MediaWikiBot bot = new MediaWikiBot(getValueOrSkip("demoWiki_url"));
-    bot.useEditApi(false);
-    bot.login(getValueOrSkip("demoWiki_user"), getValueOrSkip("demoWiki_pass"));
-
-    Article a = new Article(bot, getValueOrSkip("demoWiki_article"));
-
-    a.addText(getRandom(5) + "\nK");
-    a.save();
-
-    Article b = new Article(bot, getValueOrSkip("demoWiki_article"));
-
-    assertEquals(a.getText(), b.getText());
-  }
-
-  private void doWait() {
-    doWait(1);
-  }
-
-  private void doWait(int milis) {
-    synchronized (this) {
-
-      try {
-        wait(milis);
-      } catch (InterruptedException e) {
-        e.printStackTrace();
-      }
-    }
-  }
 }

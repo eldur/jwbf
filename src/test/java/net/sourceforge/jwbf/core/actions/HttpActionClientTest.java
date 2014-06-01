@@ -80,10 +80,47 @@ public class HttpActionClientTest {
       testee = HttpActionClient.of(url);
 
       // WHEN
-      byte[] bs = testee.get(new Get(url));
+      String bs = testee.get(new Get(url));
 
       // THEN
-      assertEquals(text, new String(bs));
+      assertEquals(text, bs);
+
+    } finally {
+      server.stopSilent();
+    }
+  }
+
+  @Test
+  public void testPostEncoding() {
+    JettyServer server = new JettyServer();
+    try {
+      // GIVEN
+      server.setHandler(JettyServer.echoHandler());
+      server.startSilent();
+      String url = "http://localhost:" + server.getPort();
+      testee = HttpActionClient.of(url);
+      String utf8Data = "츠 ᅳ פעילות הבינאáßçकखी國際ɕɕkɕoːɐ̯eːaɕɐɑɒæɑ̃ɕʌbɓʙβcɕçɕɕçɕɔɔɕɕöäü\u200B";
+      String utf8RawData = "\uCE20 \u1173 \u05E4\u05E2\u05D9\u05DC\u05D5\u05EA \u05D4\u05D1\u05D9\u05E0\u05D0\u00E1\u00DF\u00E7\u0915\u0916\u0940\u570B\u969B\u0255\u0255k\u0255o\u02D0\u0250\u032Fe\u02D0a\u0255\u0250\u0251\u0252\u00E6\u0251\u0303\u0255\u028Cb\u0253\u0299\u03B2c\u0255\u00E7\u0255\u0255\u00E7\u0255\u0254\u0254\u0255\u0255\u00F6\u00E4\u00FC\u200B";
+      assertEquals(utf8RawData, utf8Data);
+      Post post = RequestBuilder.of(url) //
+          .param("b", "c").buildPost() //
+          .postParam("a", utf8Data);
+
+      // WHEN
+      String bs = testee.post(post);
+
+      // THEN
+      ImmutableList<String> result = ImmutableList.<String>builder()
+          .add("b=c") //
+          .add("Content-Disposition: form-data; name=\"a\"") //
+          .add("Content-Type: */*; charset=UTF-8") //
+          .add("Content-Transfer-Encoding: 8bit") //
+          .add("") //
+          .add(utf8RawData) //
+          .add("")
+          .build();
+
+      GAssert.assertEquals(result, GAssert.toList(bs));
 
     } finally {
       server.stopSilent();
@@ -104,7 +141,7 @@ public class HttpActionClientTest {
           .build();
 
       // WHEN
-      byte[] bs = testee.get(new Get(url));
+      String bs = testee.get(new Get(url));
 
       // THEN
       ImmutableList<String> expected = ImmutableList.<String>builder()
@@ -114,7 +151,7 @@ public class HttpActionClientTest {
           .add(entry(USER_AGENT, "Apache-HttpClient/4.3.3 (java 1.5)")) //
           .build();
 
-      assertEquals(Joiner.on("\n").join(expected), new String(bs).trim());
+      assertEquals(Joiner.on("\n").join(expected), bs.trim());
 
     } finally {
       server.stopSilent();
