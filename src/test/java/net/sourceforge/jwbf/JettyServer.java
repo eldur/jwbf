@@ -1,14 +1,18 @@
 package net.sourceforge.jwbf;
 
 import javax.annotation.Nullable;
+import javax.servlet.MultipartConfigElement;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Part;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Collections;
 import java.util.List;
 
+import com.google.common.base.Function;
 import com.google.common.base.Joiner;
 import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableListMultimap;
@@ -130,27 +134,51 @@ public class JettyServer extends Server {
     return "http://localhost:" + getPort() + "/";
   }
 
-  public static ContextHandler echoHandler() {
-    return new ContextHandler() {
-      @Override
-      public void doHandle(String arg0, Request request, HttpServletRequest req,
-          HttpServletResponse response) throws IOException, ServletException {
+  @MultipartConfig
+  private static class EchoHandler extends ContextHandler {
 
-        PrintWriter writer = response.getWriter();
-        writer.print(request.getQueryString());
-        writer.print('\n');
+    private static final MultipartConfigElement MULTI_PART_CONFIG = new MultipartConfigElement(
+        System.getProperty("java.io.tmpdir"));
+
+    @Override
+    public void doHandle(String arg0, Request request, HttpServletRequest req,
+        HttpServletResponse response) throws IOException, ServletException {
+
+      PrintWriter writer = response.getWriter();
+      writer.print(request.getQueryString());
+      Joiner joiner = Joiner.on("\n").useForNull("NULL");
+
+      writer.println();
+      // FIXME change multiparthandling
+      if (false && request.getContentType() != null && request.getContentType().startsWith("multipart/form-data")) {
+        req.setAttribute(Request.__MULTIPART_CONFIG_ELEMENT, MULTI_PART_CONFIG);
+        writer.println(joiner.join(Iterables.transform(req.getParts(), new Function<Part, String>() {
+          @Nullable
+          @Override
+          public String
+          apply(@Nullable Part input) {
+            return input.getName();
+          }
+        })));
+      } else {
         List<String> lines = CharStreams.readLines(req.getReader());
-        writer.print(Joiner.on("\n").join(Iterables.filter(lines, new Predicate<String>() {
+        writer.print(joiner.join(Iterables.filter(lines, new Predicate<String>() {
           @Override
           public boolean apply(@Nullable String input) {
             return !input.startsWith("--");
           }
         })));
-        response.setStatus(HttpServletResponse.SC_OK);
-        request.setHandled(true);
       }
+      response.setStatus(HttpServletResponse.SC_OK);
+      request.setHandled(true);
+    }
 
-    };
+  }
+
+  ;
+
+  public static ContextHandler echoHandler() {
+    return new EchoHandler();
   }
 
   public static ContextHandler dateHandler() {

@@ -9,9 +9,9 @@ import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import java.util.Map;
 import java.util.Set;
 
+import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import net.sourceforge.jwbf.core.actions.Post;
@@ -85,28 +85,28 @@ public class PostModifyContentTest {
   @Test
   public void testGetNextMessageMinorEdit() {
     simpleArticle.setMinorEdit(true);
-    Map<String, Object> params = getParams();
+    ImmutableMultimap<String, Object> params = getParams();
     assertNotNull(params.get(PostModifyContent.PARAM_MINOR));
   }
 
   @Test
   public void testGetNextMessageNoMinorEdit() {
-    Map<String, Object> params = getParams();
+    ImmutableMultimap<String, Object> params = getParams();
     assertNotNull(params.get(PostModifyContent.PARAM_MINOR_NOT));
   }
 
   @Test
   public void testGetNextMessageBotEdit() {
     when(userinfo.getGroups()).thenReturn(of("bot", "user"));
-    Map<String, Object> params = getParams();
+    ImmutableMultimap<String, Object> params = getParams();
     assertNotNull(params.get(PostModifyContent.PARAM_BOTEDIT));
   }
 
-  private Map<String, Object> getParams() {
+  private ImmutableMultimap<String, Object> getParams() {
     when(userinfo.getRights()).thenReturn(rights);
     testee.getNextMessage();
     Post message = (Post) testee.getNextMessage();
-    Map<String, Object> params = message.getParams();
+    ImmutableMultimap<String, Object> params = message.getParams();
     return params;
   }
 

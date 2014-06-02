@@ -17,8 +17,8 @@ public class RequestBuilderTest {
     assertEquals("/a?b=c", new RequestBuilder("/a") //
         .param("b", "c") //
         .build());
-    assertEquals("/a?b=c", new RequestBuilder("/a") //
-        .param("b", "c") //
+    assertEquals("/a?b=c&b=e", new RequestBuilder("/a") //
+        .param("b", "e") //
         .param("b", "c") //
         .build());
     assertEquals("/a?b=c&q=None", new RequestBuilder("/a") //
@@ -74,6 +74,94 @@ public class RequestBuilderTest {
     assertEquals("/a?a=OOO", result.getRequest());
     lazyValMemo = "bbb";
     assertEquals("/a?a=OOO", result.getRequest());
+  }
+
+  @Test
+  public void testRegenerateNewBuilderGet() {
+    // GIVEN
+    Get get = RequestBuilder.of("/index.html") //
+        .param("a", "b") //
+        .buildGet();
+
+    // WHEN
+    RequestBuilder builder = get.toBuilder();
+    Get newGet = builder.buildGet();
+
+    // THEN
+    assertEquals("/index.html?a=b UTF-8", get.toString());
+    assertEquals(get, newGet);
+  }
+
+  @Test
+  public void testRegenerateNewBuilderPost() {
+    // GIVEN
+    Post post = RequestBuilder.of("/index.html") //
+        .param("a", "b") //
+        .buildPost();
+
+    // WHEN
+    RequestBuilder builder = post.toBuilder();
+    Post newPost = builder.buildPost();
+
+    // THEN
+    assertEquals(post, newPost);
+  }
+
+  @Test
+  public void testRegenerateNewBuilderPostWithParams() {
+    // GIVEN
+    Post post = RequestBuilder.of("/index.html") //
+        .param("a", "b") //
+        .postParam("c", "d") //
+        .buildPost() //
+        ;
+
+    // WHEN
+    RequestBuilder builder = post.toBuilder();
+    Post newPost = builder.buildPost();
+
+    // THEN
+    assertEquals("/index.html?a=b UTF-8 {c=[d]}", post.toString());
+    assertEquals(post, newPost);
+
+    assertEquals("/index.html?a=b&c=e UTF-8 {c=[d]}", builder.param("c", "e").buildPost().toString());
+  }
+
+  @Test
+  public void testRegenerateNewBuilderPostWithOtherParams() {
+    // GIVEN
+    Post post = RequestBuilder.of("/index.php") //
+        .param("c", "d") //
+        .postParam("e", "f") //
+        .buildPost() //
+        ;
+
+    // WHEN
+    RequestBuilder builder = post.toBuilder();
+    Post newPost = builder.buildPost();
+
+    // THEN
+    assertEquals("/index.php?c=d UTF-8 {e=[f]}", post.toString());
+    assertEquals(post, newPost);
+  }
+
+  @Test
+  public void testBuildPostWithParams() {
+    // GIVEN
+    Post post = RequestBuilder.of("/index.html") //
+        .param("a", "b") //
+        .buildPost() //
+        .postParam("c", "d") //
+        ;
+
+    Post post2 = RequestBuilder.of("/index.html") //
+        .param("a", "b") //
+        .postParam("c", "d") //
+        .buildPost() //
+        ;
+
+    // WHEN / THEN
+    assertEquals(post, post2);
   }
 
   @Test(expected = IllegalStateException.class)

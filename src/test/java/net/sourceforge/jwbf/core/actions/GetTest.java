@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import org.junit.Test;
 
@@ -42,7 +43,16 @@ public class GetTest {
 
   @Test
   public void testToString() {
+    assertEquals("http://localhost/wiki/ UTF-8", new Get("http://localhost/wiki/").toString());
+  }
 
-    assertEquals("http://localhost/wiki/ utf-8", new Get("http://localhost/wiki/").toString());
+  @Test
+  public void testToBuilderFailed() {
+    try {
+      new Get("a").toBuilder();
+      fail();
+    } catch (UnsupportedOperationException e) {
+      assertEquals("only supported when type was created with a builder", e.getMessage());
+    }
   }
 }

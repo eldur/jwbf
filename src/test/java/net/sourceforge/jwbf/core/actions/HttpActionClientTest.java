@@ -13,6 +13,7 @@ import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import com.google.common.base.Function;
@@ -102,8 +103,10 @@ public class HttpActionClientTest {
       String utf8RawData = "\uCE20 \u1173 \u05E4\u05E2\u05D9\u05DC\u05D5\u05EA \u05D4\u05D1\u05D9\u05E0\u05D0\u00E1\u00DF\u00E7\u0915\u0916\u0940\u570B\u969B\u0255\u0255k\u0255o\u02D0\u0250\u032Fe\u02D0a\u0255\u0250\u0251\u0252\u00E6\u0251\u0303\u0255\u028Cb\u0253\u0299\u03B2c\u0255\u00E7\u0255\u0255\u00E7\u0255\u0254\u0254\u0255\u0255\u00F6\u00E4\u00FC\u200B";
       assertEquals(utf8RawData, utf8Data);
       Post post = RequestBuilder.of(url) //
-          .param("b", "c").buildPost() //
-          .postParam("a", utf8Data);
+          .param("b", "c") //
+          .postParam("a", utf8Data) //
+          .buildPost() //
+          ;
 
       // WHEN
       String bs = testee.post(post);
@@ -111,11 +114,7 @@ public class HttpActionClientTest {
       // THEN
       ImmutableList<String> result = ImmutableList.<String>builder()
           .add("b=c") //
-          .add("Content-Disposition: form-data; name=\"a\"") //
-          .add("Content-Type: */*; charset=UTF-8") //
-          .add("Content-Transfer-Encoding: 8bit") //
-          .add("") //
-          .add(utf8RawData) //
+          .addAll(multipartOf("a", utf8RawData)) //
           .add("")
           .build();
 
@@ -124,6 +123,52 @@ public class HttpActionClientTest {
     } finally {
       server.stopSilent();
     }
+  }
+
+  @Test
+  public void testParameterArrays() {
+    JettyServer server = new JettyServer();
+    try {
+      // GIVEN
+      server.setHandler(JettyServer.echoHandler());
+      server.startSilent();
+      String url = "http://localhost:" + server.getPort();
+      testee = HttpActionClient.of(url);
+      Post post = RequestBuilder.of(url) //
+          .param("b", "c") //
+          .param("b", "e")
+          .postParam("b", "c")
+          .postParam("b", "e")
+          .buildPost() //
+          .postParam("a", "b");
+
+      // WHEN
+      String bs = testee.post(post);
+
+      // THEN
+      ImmutableList<String> result = ImmutableList.<String>builder()
+          .add("b=c&b=e") // b = [c, e]
+          .addAll(multipartOf("b", "c")) //
+          .addAll(multipartOf("b", "e")) //
+          .addAll(multipartOf("a", "b")) //
+          .add("") //
+          .build();
+
+      GAssert.assertEquals(result, GAssert.toList(bs));
+
+    } finally {
+      server.stopSilent();
+    }
+  }
+
+  private List<String> multipartOf(String key, String value) {
+    return ImmutableList.<String>builder()
+        .add("Content-Disposition: form-data; name=\"" + key + "\"") //
+        .add("Content-Type: */*; charset=UTF-8") //
+        .add("Content-Transfer-Encoding: 8bit") //
+        .add("") //
+        .add(value) //
+        .build();
   }
 
   @Test

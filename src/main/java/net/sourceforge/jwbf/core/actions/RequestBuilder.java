@@ -1,33 +1,19 @@
 package net.sourceforge.jwbf.core.actions;
 
 import java.io.Serializable;
-import java.util.Map;
-import java.util.Map.Entry;
 
-import com.google.common.base.Function;
-import com.google.common.base.Joiner;
+import com.google.common.base.Charsets;
+import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.FluentIterable;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Multimap;
-import com.google.common.collect.Ordering;
+import com.google.common.collect.ImmutableMultimap;
 
 public class RequestBuilder {
 
-  private static final Function<Entry<String, Supplier<String>>, String> TO_KEY_VALUE_PAIR = //
-      new Function<Map.Entry<String, Supplier<String>>, String>() {
-
-        @Override
-        public String apply(Entry<String, Supplier<String>> input) {
-          Entry<String, Supplier<String>> nonNullIn = Preconditions.checkNotNull(input);
-          return nonNullIn.getKey() + "=" + nonNullIn.getValue().get();
-        }
-      };
-  private final Multimap<String, Supplier<String>> params = ArrayListMultimap.create();
+  private final ImmutableMultimap.Builder<String, Supplier<String>> params = ImmutableMultimap.builder();
+  private final ImmutableMultimap.Builder<String, Supplier<Object>> postParams = ImmutableMultimap.builder();
   private final String path;
 
   public RequestBuilder(String path) {
@@ -40,15 +26,34 @@ public class RequestBuilder {
   }
 
   public RequestBuilder param(String key, Supplier<String> stringSupplier) {
+    return applyKeyValueTo(key, stringSupplier, params);
+  }
+
+  private <T> RequestBuilder applyKeyValueTo(String key, Supplier<T> stringSupplier,
+      ImmutableMultimap.Builder<String, Supplier<T>> toParams) {
     if (!Strings.isNullOrEmpty(key)) {
       Preconditions.checkNotNull(stringSupplier);
 
-      Supplier<String> memoize = new HashCodeEqualsMemoizingSupplier<>(stringSupplier);
-      if (!params.containsEntry(key, memoize)) {
-        params.put(key, memoize);
+      Supplier<T> memoize = new HashCodeEqualsMemoizingSupplier<>(stringSupplier);
+      if (!toParams.build().containsEntry(key, memoize)) {
+        toParams.put(key, memoize);
       }
     }
     return this;
+  }
+
+  RequestBuilder postParams(ImmutableMultimap.Builder<String, Supplier<Object>> all) {
+    postParams.putAll(all.build());
+    return this;
+  }
+
+  RequestBuilder params(ImmutableMultimap.Builder<String, Supplier<String>> params) {
+    this.params.putAll(params.build());
+    return this;
+  }
+
+  public RequestBuilder postParam(String key, Object value) {
+    return applyKeyValueTo(key, Suppliers.ofInstance(value), postParams);
   }
 
   public RequestBuilder param(String key, String value) {
@@ -62,34 +67,19 @@ public class RequestBuilder {
   }
 
   public Post buildPost() {
-    return new Post(lazy());
+    return new Post(lazy(), Charsets.UTF_8, Optional.of(lazy()));
   }
 
   public Get buildGet() {
     return new Get(lazy());
   }
 
-  Supplier<String> lazy() {
-    return new Supplier<String>() {
-      @Override
-      public String get() {
-        return build();
-      }
-    };
+  ParamJoiner lazy() {
+    return new ParamJoiner(path, params, postParams);
   }
 
   public String build() {
-
-    String paramString = "";
-    if (!params.isEmpty()) {
-      ImmutableList<String> values = FluentIterable.from(params.entries()) //
-          .transform(TO_KEY_VALUE_PAIR) //
-          .toSortedList(Ordering.natural()) //
-          ;
-
-      paramString = "?" + Joiner.on("&").join(values);
-    }
-    return path + paramString;
+    return lazy().get();
   }
 
   public static RequestBuilder of(String path) {
@@ -131,7 +121,7 @@ public class RequestBuilder {
       if (obj instanceof HashCodeEqualsMemoizingSupplier) {
         return delegate.equals(((HashCodeEqualsMemoizingSupplier) obj).delegate);
       } else {
-        throw new IllegalStateException();
+        throw new IllegalStateException(obj.getClass().getCanonicalName());
       }
     }
   }

@@ -27,12 +27,15 @@ import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.util.Collection;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
+import com.google.common.collect.ImmutableMultimap;
 import com.google.common.util.concurrent.RateLimiter;
 import net.sourceforge.jwbf.JWBF;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
@@ -161,16 +164,22 @@ public class HttpActionClient {
       , ReturningTextProcessor contentProcessable, HttpAction ha) {
     Post post = (Post) ha;
     MultipartEntityBuilder entityBuilder = MultipartEntityBuilder.create();
-    for (String key : post.getParams().keySet()) {
-      Object content = post.getParams().get(key);
-      if (content != null) {
-        if (content instanceof String) {
-          Charset charset = Charset.forName(post.getCharset());
-          String text = (String) content;
-          entityBuilder.addTextBody(key, text, ContentType.create("*/*", charset));
-        } else if (content instanceof File) {
-          File file = (File) content;
-          entityBuilder.addBinaryBody(key, file);
+    ImmutableMultimap<String, Object> postParams = post.getParams();
+    for (Map.Entry<String, Collection<Object>> entry : postParams.asMap().entrySet()) {
+      String key = entry.getKey();
+      for (Object content : entry.getValue()) {
+        if (content != null) {
+          if (content instanceof String) {
+            Charset charset = Charset.forName(post.getCharset());
+            String text = (String) content;
+            entityBuilder.addTextBody(key, text, ContentType.create("*/*", charset));
+          } else if (content instanceof File) {
+            File file = (File) content;
+            entityBuilder.addBinaryBody(key, file);
+          } else {
+            String canonicalName = content.getClass().getCanonicalName();
+            throw new UnsupportedOperationException("No Handler found for " + canonicalName);
+          }
         }
       }
     }
