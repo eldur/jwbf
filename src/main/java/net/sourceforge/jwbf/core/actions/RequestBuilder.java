@@ -1,4 +1,4 @@
-package net.sourceforge.jwbf.core;
+package net.sourceforge.jwbf.core.actions;
 
 import java.io.Serializable;
 import java.util.Map;
@@ -15,8 +15,6 @@ import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Ordering;
-import net.sourceforge.jwbf.core.actions.Get;
-import net.sourceforge.jwbf.core.actions.Post;
 
 public class RequestBuilder {
 

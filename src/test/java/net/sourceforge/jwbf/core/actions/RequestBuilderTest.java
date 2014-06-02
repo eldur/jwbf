@@ -1,12 +1,11 @@
-package net.sourceforge.jwbf.core;
+package net.sourceforge.jwbf.core.actions;
 
-import static net.sourceforge.jwbf.core.RequestBuilder.HashCodeEqualsMemoizingSupplier;
+import static net.sourceforge.jwbf.core.actions.RequestBuilder.HashCodeEqualsMemoizingSupplier;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
-import net.sourceforge.jwbf.core.actions.Get;
 import org.junit.Test;
 
 public class RequestBuilderTest {

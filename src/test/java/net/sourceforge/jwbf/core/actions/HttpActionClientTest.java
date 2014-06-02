@@ -24,7 +24,6 @@ import com.google.common.collect.Range;
 import net.sourceforge.jwbf.GAssert;
 import net.sourceforge.jwbf.JWBF;
 import net.sourceforge.jwbf.JettyServer;
-import net.sourceforge.jwbf.core.RequestBuilder;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.HttpClientBuilder;
