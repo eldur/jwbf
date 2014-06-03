@@ -67,8 +67,6 @@ public class HttpActionClient {
 
   private final HttpHost host;
 
-  private int prevHash;
-
   private final Optional<RateLimiter> rateLimiter;
 
   private final URL url;
@@ -81,7 +79,6 @@ public class HttpActionClient {
    * @param url like "http://host/of/wiki/"
    */
   public HttpActionClient(final HttpClientBuilder clientBuilder, final URL url) {
-
     this.url = url;
     path = pathOf(url);
     host = newHost(url);
@@ -241,7 +238,7 @@ public class HttpActionClient {
   }
 
   private HttpResponse execute(HttpRequestBase requestBase) {
-    HttpResponse res = null;
+    HttpResponse res;
     try {
       if (rateLimiter.isPresent()) {
         rateLimiter.get().acquire();
@@ -263,9 +260,8 @@ public class HttpActionClient {
   @VisibleForTesting
   Object[] debug(HttpUriRequest request, HttpAction ha, ReturningTextProcessor cp) {
     if (cp != null) {
-      final String continueing = debugContinueingMsg(cp);
       final String path = debugRequestPathOf(request);
-      final String type = debugTypeOf(ha, cp, continueing);
+      final String type = debugTypeOf(ha, cp);
       return new String[] { type, path, ha.getRequest() };
     }
     return new String[0];
@@ -278,21 +274,9 @@ public class HttpActionClient {
     return requestString;
   }
 
-  private String debugContinueingMsg(ReturningTextProcessor cp) {
-    final String continueing;
-    // FIXME internal state mutating on debug WTF
-    if (prevHash == cp.hashCode()) {
-      continueing = " [continuing req]";
-    } else {
-      continueing = "";
-    }
-    prevHash = cp.hashCode();
-    return continueing;
-  }
-
-  private String debugTypeOf(HttpAction ha, ReturningTextProcessor cp, final String continueing) {
+  private String debugTypeOf(HttpAction ha, ReturningTextProcessor cp) {
     String className = cp.getClass().getName();
-    final String suffix = className + ")" + continueing;
+    final String suffix = className + ")";
     if (ha instanceof Post) {
       return "(POST " + suffix;
     } else if (ha instanceof Get) {
