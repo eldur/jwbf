@@ -68,8 +68,7 @@ public class GetVersion extends MWAction {
   }
 
   private void parse(final String xml) {
-    XmlElement root = getRootElementWithError(xml);
-    findContent(root);
+    findContent(getRootElementWithError(xml));
   }
 
   /**

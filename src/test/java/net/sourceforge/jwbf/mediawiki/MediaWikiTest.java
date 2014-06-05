@@ -93,6 +93,7 @@ public class MediaWikiTest {
         .add(MediaWiki.Version.MW1_20) //
         .add(MediaWiki.Version.MW1_21) //
         .add(MediaWiki.Version.MW1_22) //
+        .add(MediaWiki.Version.MW1_23) //
         .build();
 
     GAssert.assertEquals(expected, versions);
@@ -113,7 +114,7 @@ public class MediaWikiTest {
     MediaWiki.Version latest = MediaWiki.Version.getLatest();
 
     // THEN
-    assertEquals(MediaWiki.Version.MW1_22, latest);
+    assertEquals(MediaWiki.Version.MW1_23, latest);
   }
 
   @Test

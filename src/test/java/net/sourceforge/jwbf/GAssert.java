@@ -10,6 +10,7 @@ import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Ordering;
 import org.junit.Assert;
 
@@ -23,6 +24,13 @@ public class GAssert {
 
   public static ImmutableList<String> toList(String bs) {
     return ImmutableList.copyOf(Splitter.on("\n").split(bs));
+  }
+
+  public static void assertEquals(ImmutableMap<?, ?> expected,
+      ImmutableMap<?, ?> actual) {
+    ImmutableList<?> expectedTuples = sortedCopy(expected.entrySet());
+    ImmutableList<?> actualTuples = sortedCopy(actual.entrySet());
+    assertEquals(expectedTuples, actualTuples);
   }
 
   public static void assertEquals(ImmutableList<String> expected, Set<String> actual) {

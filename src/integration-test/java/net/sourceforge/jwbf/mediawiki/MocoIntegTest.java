@@ -47,6 +47,14 @@ public abstract class MocoIntegTest extends AbstractIntegTest implements Provide
     return ParamHelper.prepare(Version.valuesStable());
   }
 
+  protected void livebot() {
+    livebot(true);
+  }
+
+  protected void livebot(boolean login) {
+    bot(BotFactory.getIntegMediaWikiBot(version(), login));
+  }
+
   /**
    * @deprecated
    */
@@ -120,8 +128,8 @@ public abstract class MocoIntegTest extends AbstractIntegTest implements Provide
     return version;
   }
 
-  public ImmutableMap<String, String> emptyStringMap() {
-    return ImmutableMap.<String, String>of();
+  public static ImmutableMap<String, String> emptyStringMap() {
+    return ImmutableMap.of();
   }
 
   protected ImmutableList<String> splittedConfigOfString(ConfKey key,

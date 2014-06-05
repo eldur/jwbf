@@ -65,17 +65,20 @@ public class SiteinfoTest extends AbstractMediaWikiBotTest {
   }
 
   @Test
-  @Ignore // FIXME mediawikirelease is now at 1.23
   public final void siteInfoLastVersion() {
+    // GIVEN
     String liveUrl = "http://www.mediawiki.org/w/api.php";
     assumeReachable(liveUrl);
-    Version v = Version.getLatest();
     String versionInfoTemplate = "Template:MW stable release number";
     MediaWikiBot bot = new MediaWikiBot(liveUrl);
 
+    // WHEN
     Article a = new Article(bot, versionInfoTemplate);
-    assertTrue(a.getText() + " should contains " + v.getNumber(),
-        a.getText().contains(v.getNumber()));
+
+    // THEN
+    Version latestVersion = Version.getLatest();
+    assertTrue(a.getText() + " should contains " + latestVersion.getNumber(),
+        a.getText().contains(latestVersion.getNumber()));
   }
 
 }

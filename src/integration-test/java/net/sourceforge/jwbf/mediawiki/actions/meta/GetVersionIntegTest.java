@@ -31,7 +31,7 @@ public class GetVersionIntegTest extends MocoIntegTest {
         .response(mwFileOf(version(), "siteinfo_detail.xml"));
 
     // WHEN
-    Siteinfo si = bot().getPerformedAction(Siteinfo.class);
+    Siteinfo si = bot().getSiteinfo();
 
     // THEN
     GAssert.assertEquals(splittedConfigOfString(ConfKey.SITEINFO, title()),
@@ -50,8 +50,8 @@ public class GetVersionIntegTest extends MocoIntegTest {
     Siteinfo si = bot().getPerformedAction(Siteinfo.class);
 
     // THEN
-    assertEquals(emptyStringMap().toString(), si.getInterwikis().toString()); // XXX
-    assertEquals(emptyStringMap().toString(), si.getNamespaces().toString()); // XXX
+    GAssert.assertEquals(emptyStringMap(), si.getInterwikis());
+    GAssert.assertEquals(emptyStringMap(), si.getNamespaces());
   }
 
   @Test
@@ -85,7 +85,6 @@ public class GetVersionIntegTest extends MocoIntegTest {
     assertEquals("first-letter", gv.getCase());
     GAssert.assertStartsWith("MediaWiki " + version().getNumber(), gv.getGenerator());
     assertEquals(confOf(ConfKey.SITENAME), gv.getSitename());
-
     assertEquals(confOf(ConfKey.MAINPAGE), gv.getMainpage());
 
   }

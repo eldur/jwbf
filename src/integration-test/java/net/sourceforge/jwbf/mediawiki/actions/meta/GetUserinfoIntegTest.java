@@ -16,7 +16,7 @@ public class GetUserinfoIntegTest extends MocoIntegTest {
     super(version);
   }
 
-  public static final RequestMatcher newUserInfoMatcher() {
+  public static RequestMatcher newUserInfoMatcher() {
     return ApiMatcherBuilder.of() //
         .param("format", "xml") //
         .param("meta", "userinfo") //

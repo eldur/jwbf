@@ -24,6 +24,7 @@ import java.util.List;
 
 import com.google.common.base.Joiner;
 import com.google.common.primitives.Ints;
+import net.sourceforge.jwbf.core.Optionals;
 import net.sourceforge.jwbf.core.actions.ContentProcessable;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.mapper.XmlConverter;
@@ -128,7 +129,7 @@ public abstract class MWAction implements ContentProcessable {
 
   @Nonnull
   protected XmlElement getRootElementWithError(final String xml) {
-    return XmlConverter.getRootElementWithError(xml).get();
+    return Optionals.getOrThrow(XmlConverter.getRootElementWithError(xml), "Invalid XML: " + xml);
   }
 
   /**

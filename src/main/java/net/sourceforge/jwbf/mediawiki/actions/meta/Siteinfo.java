@@ -1,9 +1,9 @@
 package net.sourceforge.jwbf.mediawiki.actions.meta;
 
-import java.util.Collections;
 import java.util.Map;
 
 import com.google.common.base.Joiner;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import net.sourceforge.jwbf.core.actions.Get;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
@@ -99,8 +99,8 @@ public class Siteinfo extends GetVersion {
   /**
    * @return of
    */
-  public Map<Integer, String> getNamespaces() {
-    return Collections.unmodifiableMap(namespaces);
+  public ImmutableMap<Integer, String> getNamespaces() {
+    return ImmutableMap.copyOf(namespaces);
   }
 
   private void addInterwiki(String prefix, String name) {
@@ -110,8 +110,8 @@ public class Siteinfo extends GetVersion {
   /**
    * @return of
    */
-  public Map<String, String> getInterwikis() {
-    return Collections.unmodifiableMap(interwiki);
+  public ImmutableMap<String, String> getInterwikis() {
+    return ImmutableMap.copyOf(interwiki);
   }
 
 }

@@ -292,7 +292,7 @@ public class MediaWikiBot implements WikiBot {
   @Nonnull
   public Version getVersion() {
     if (version == null || loginChangeVersion) {
-      GetVersion gs = getPerformedAction(new GetVersion());
+      GetVersion gs = getPerformedAction(GetVersion.class);
       version = gs.getVersion();
       loginChangeVersion = false;
       log.debug("Version is: {}", version.name());
@@ -306,6 +306,7 @@ public class MediaWikiBot implements WikiBot {
    */
   @Nonnull
   public Siteinfo getSiteinfo() {
+    // TODO cache value see getVersion
     return getPerformedAction(Siteinfo.class);
   }
 

@@ -4,13 +4,14 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import org.junit.ComparisonFailure;
 import org.junit.Test;
 
 public class GAssertTest {
 
   @Test
-  public void testAssertEquals() {
+  public void testAssertEquals_list() {
     // GIVEN
     ImmutableList<String> expected = ImmutableList.of("a");
     ImmutableList<String> actual = ImmutableList.of("a");
@@ -20,7 +21,7 @@ public class GAssertTest {
   }
 
   @Test
-  public void testAssertEquals_fail() {
+  public void testAssertEquals_list_fail() {
     // GIVEN
     ImmutableList<String> expected = ImmutableList.of("a");
     ImmutableList<String> actual = ImmutableList.of("b");
@@ -32,6 +33,48 @@ public class GAssertTest {
     } catch (ComparisonFailure e) {
       // THEN
       assertEquals("expected:<[a]> but was:<[b]>", e.getMessage());
+    }
+  }
+
+  @Test
+  public void testAssertEquals_map() {
+    // GIVEN
+    ImmutableMap<String, String> expected = ImmutableMap.of("a", "a");
+    ImmutableMap<String, String> actual = ImmutableMap.of("a", "a");
+
+    // WHEN / THEN
+    GAssert.assertEquals(expected, actual);
+  }
+
+  @Test
+  public void testAssertEquals_map_key_fail() {
+    // GIVEN
+    ImmutableMap<String, String> expected = ImmutableMap.of("a","a");
+    ImmutableMap<String, String> actual = ImmutableMap.of("b", "b");
+
+    try {
+      // WHEN
+      GAssert.assertEquals(expected, actual);
+      fail();
+    } catch (ComparisonFailure e) {
+      // THEN
+      assertEquals("expected:<[a=a]> but was:<[b=b]>", e.getMessage());
+    }
+  }
+
+  @Test
+  public void testAssertEquals_map_value_fail() {
+    // GIVEN
+    ImmutableMap<String, String> expected = ImmutableMap.of("a","a");
+    ImmutableMap<String, String> actual = ImmutableMap.of("a", "b");
+
+    try {
+      // WHEN
+      GAssert.assertEquals(expected, actual);
+      fail();
+    } catch (ComparisonFailure e) {
+      // THEN
+      assertEquals("expected:<a=[a]> but was:<a=[b]>", e.getMessage());
     }
   }
 
