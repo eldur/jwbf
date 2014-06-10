@@ -11,24 +11,44 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import com.google.common.base.Charsets;
 import com.google.common.base.Function;
 import com.google.common.base.Joiner;
+import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Range;
+import com.google.common.io.ByteSource;
 import net.sourceforge.jwbf.GAssert;
 import net.sourceforge.jwbf.JWBF;
 import net.sourceforge.jwbf.JettyServer;
+import net.sourceforge.jwbf.Logging;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 public class HttpActionClientTest {
 
@@ -52,6 +72,38 @@ public class HttpActionClientTest {
   public void testHostUrl() {
     // GIVEN
     testee = HttpActionClient.of("http://localhost/");
+
+    // WHEN/THEN
+    assertEquals("http://localhost", testee.getHostUrl());
+    assertEquals("http://localhost/", testee.getUrl());
+  }
+
+  @Test
+  public void testHostUrlType() {
+    // GIVEN
+    testee = HttpActionClient.of(JWBF.newURL("http://localhost/"));
+
+    // WHEN/THEN
+    assertEquals("http://localhost", testee.getHostUrl());
+    assertEquals("http://localhost/", testee.getUrl());
+  }
+
+  @Test
+  public void testHostUrlTypeConstructor() {
+    // GIVEN
+    testee = new HttpActionClient(JWBF.newURL("http://localhost/"));
+
+    // WHEN/THEN
+    assertEquals("http://localhost", testee.getHostUrl());
+    assertEquals("http://localhost/", testee.getUrl());
+  }
+
+  @Test
+  public void testHostUrlWithApacheConstructor() {
+    // GIVEN
+    HttpClientBuilder httpClientBuilder = HttpClientBuilder.create();
+    URL url = JWBF.newURL("http://localhost/");
+    testee = new HttpActionClient(httpClientBuilder, url);
 
     // WHEN/THEN
     assertEquals("http://localhost", testee.getHostUrl());
@@ -179,8 +231,9 @@ public class HttpActionClientTest {
       server.setHandler(JettyServer.headerMapHandler());
       server.startSilent();
       String url = server.getTestUrl();
+      CloseableHttpClient httpClient = HttpClientBuilder.create().build();
       testee = HttpActionClient.builder() //
-          .withClient(HttpClientBuilder.create().build()) //
+          .withClient(httpClient) //
           .withUrl(url) //
           .build();
 
@@ -200,6 +253,16 @@ public class HttpActionClientTest {
     } finally {
       server.stopSilent();
     }
+  }
+
+  @Test
+  public void testMissingUseragent() {
+    Supplier<ImmutableList<String>> logLinesSupplier = Logging.newLogLinesSupplier();
+    HttpActionClient.builder() //
+        .withClient(HttpClientBuilder.create().build()) //
+        .withUrl("http://localhost/") //
+        .build();
+    GAssert.assertEquals(ImmutableList.<String>of("[WARN] a useragent must be set in your client"), logLinesSupplier.get());
   }
 
   @Test
@@ -341,4 +404,171 @@ public class HttpActionClientTest {
     return builder.build();
   }
 
+  @Test
+  public void testWriteToString() throws IOException {
+    // GIVEN
+    String text = "a";
+
+    // WHEN
+    String result = whenWriteToString(text);
+
+    // THEN
+    assertEquals("a\n", result);
+  }
+
+  @Test
+  public void testWriteToStringMultiline() throws IOException {
+    // GIVEN
+    String text = "a\r\nb";
+
+    // WHEN
+    String result = whenWriteToString(text);
+
+    // THEN
+    assertEquals("a\nb\n", result);
+  }
+
+  private String whenWriteToString(String text) throws IOException {
+    testee = HttpActionClient.of("http://localhost/");
+    HttpAction action = mock(HttpAction.class);
+    when(action.getCharset()).thenReturn("UTF-8");
+    HttpResponse response = mock(HttpResponse.class);
+    HttpEntity httpEntity = mock(HttpEntity.class);
+    InputStream inputStream = ByteSource.wrap(text.getBytes()).openStream();
+    when(httpEntity.getContent()).thenReturn(inputStream);
+    when(response.getEntity()).thenReturn(httpEntity);
+
+    return testee.writeToString(action, response);
+  }
+
+  @Test
+  public void testWriteToString_withException() throws IOException {
+    // GIVEN
+    testee = HttpActionClient.of("http://localhost/");
+    HttpAction action = mock(HttpAction.class);
+    when(action.getCharset()).thenReturn("UTF-8");
+    HttpResponse response = mock(HttpResponse.class);
+    HttpEntity httpEntity = mock(HttpEntity.class);
+
+    when(httpEntity.getContent()).thenThrow(IOException.class);
+    when(response.getEntity()).thenReturn(httpEntity);
+
+    try {
+      // WHEN
+      testee.writeToString(action, response);
+      fail();
+    } catch (IllegalStateException e) {
+      // THEN
+      assertEquals("java.io.IOException", e.getMessage());
+    }
+  }
+
+  @Test
+  public void testProcessAction() {
+    // GIVEN
+    testee = HttpActionClient.of("http://localhost/");
+
+    try {
+      // WHEN
+      HttpAction action = mock(HttpAction.class);
+      testee.processAction(action, null);
+      fail();
+    } catch (IllegalArgumentException e) {
+      // THEN
+      assertEquals("httpAction should be GET or POST", e.getMessage());
+    }
+  }
+
+  @Test
+  public void testConsume() {
+    // GIVEN
+    testee = HttpActionClient.of("http://localhost/");
+    HttpResponse response = mock(HttpResponse.class);
+    when(response.getEntity()).thenThrow(IOException.class);
+
+    try {
+      // WHEN
+      testee.consume(response);
+      fail();
+    } catch (IllegalStateException e) {
+      // THEN
+      assertEquals("java.io.IOException", e.getMessage());
+    }
+  }
+
+  @Test
+  public void testExecute() throws IOException {
+    // GIVEN
+    HttpClient failClient = mock(HttpClient.class);
+    when(failClient.execute(Mockito.isA(HttpUriRequest.class))).thenThrow(IOException.class);
+    testee = HttpActionClient.builder().withUrl("http://localhost/") //
+        .withClient(failClient).build();
+    HttpRequestBase requestBase = mock(HttpRequestBase.class);
+
+    try {
+      // WHEN
+      testee.execute(requestBase);
+      fail();
+    } catch (IllegalStateException e) {
+      // THEN
+      assertEquals("java.io.IOException", e.getMessage());
+    }
+  }
+
+  @Test
+  public void testApplyToEntityBuilder_filterNullElements() {
+    // GIVEN
+    testee = HttpActionClient.of("http://localhost/");
+
+    String key = "a";
+    Collection<Object> values = new ArrayList<>();
+    values.add(null);
+    Charset charset = Charsets.UTF_8;
+    MultipartEntityBuilder builder = mock(MultipartEntityBuilder.class);
+
+    // WHEN
+    testee.applyToEntityBuilder(key, values, charset, builder);
+
+    // THEN
+    verifyNoMoreInteractions(builder);
+  }
+
+
+  @Test
+  public void testApplyToEntityBuilder_withFile() {
+    // GIVEN
+    testee = HttpActionClient.of("http://localhost/");
+
+    String key = "a";
+    File file = new File(".");
+    Collection<Object> values = ImmutableList.<Object>of(file);
+    Charset charset = Charsets.UTF_8;
+    MultipartEntityBuilder builder = mock(MultipartEntityBuilder.class);
+
+    // WHEN
+    testee.applyToEntityBuilder(key, values, charset, builder);
+
+    // THEN
+    verify(builder).addBinaryBody(key, file);
+  }
+
+  @Test
+  public void testApplyToEntityBuilder_fail() {
+    // GIVEN
+    testee = HttpActionClient.of("http://localhost/");
+
+    String key = "a";
+    Collection<Object> values = ImmutableList.<Object>of(new Object());
+    Charset charset = Charsets.UTF_8;
+    MultipartEntityBuilder builder = mock(MultipartEntityBuilder.class);
+
+    // WHEN
+    try {
+      testee.applyToEntityBuilder(key, values, charset, builder);
+      fail();
+    } catch (UnsupportedOperationException e) {
+      // THEN
+      assertEquals("No Handler found for java.lang.Object", e.getMessage());
+    }
+  }
 }

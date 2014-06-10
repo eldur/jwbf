@@ -23,6 +23,7 @@ import javax.annotation.Nonnull;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URL;
@@ -32,10 +33,14 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Joiner;
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
+import com.google.common.base.Predicates;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMultimap;
+import com.google.common.collect.Iterables;
+import com.google.common.io.CharStreams;
 import com.google.common.util.concurrent.RateLimiter;
 import net.sourceforge.jwbf.JWBF;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
@@ -125,11 +130,11 @@ public class HttpActionClient {
       HttpAction httpAction = contentProcessable.getNextMessage();
       ReturningTextProcessor answerParser = contentProcessable;
       out = processAction(httpAction, answerParser);
-
     }
     return out;
   }
 
+  @VisibleForTesting
   protected String processAction(HttpAction httpAction, ReturningTextProcessor answerParser) {
     final String requestString = makeRequestString(httpAction);
     log.debug(requestString);
@@ -160,32 +165,35 @@ public class HttpActionClient {
     return post(new HttpPost(post.getRequest()), null, post);
   }
 
-  private String post(HttpRequestBase requestBase //
+  @VisibleForTesting
+  String post(HttpRequestBase requestBase //
       , ReturningTextProcessor contentProcessable, HttpAction ha) {
     Post post = (Post) ha;
+    Charset charset = Charset.forName(post.getCharset());
     MultipartEntityBuilder entityBuilder = MultipartEntityBuilder.create();
     ImmutableMultimap<String, Object> postParams = post.getParams();
     for (Map.Entry<String, Collection<Object>> entry : postParams.asMap().entrySet()) {
-      String key = entry.getKey();
-      for (Object content : entry.getValue()) {
-        if (content != null) {
-          if (content instanceof String) {
-            Charset charset = Charset.forName(post.getCharset());
-            String text = (String) content;
-            entityBuilder.addTextBody(key, text, ContentType.create("*/*", charset));
-          } else if (content instanceof File) {
-            File file = (File) content;
-            entityBuilder.addBinaryBody(key, file);
-          } else {
-            String canonicalName = content.getClass().getCanonicalName();
-            throw new UnsupportedOperationException("No Handler found for " + canonicalName);
-          }
-        }
-      }
+      applyToEntityBuilder(entry.getKey(), entry.getValue(), charset, entityBuilder);
     }
     ((HttpPost) requestBase).setEntity(entityBuilder.build());
 
     return executeAndProcess(requestBase, contentProcessable, ha);
+  }
+
+  @VisibleForTesting
+  void applyToEntityBuilder(String key, Collection<Object> values, Charset charset, MultipartEntityBuilder entityBuilder) {
+    for (Object content : Iterables.filter(values, Predicates.notNull())) {
+      if (content instanceof String) {
+        String text = (String) content;
+        entityBuilder.addTextBody(key, text, ContentType.create("*/*", charset));
+      } else if (content instanceof File) {
+        File file = (File) content;
+        entityBuilder.addBinaryBody(key, file);
+      } else {
+        String canonicalName = content.getClass().getCanonicalName();
+        throw new UnsupportedOperationException("No Handler found for " + canonicalName);
+      }
+    }
   }
 
   @Nonnull
@@ -198,6 +206,7 @@ public class HttpActionClient {
     return executeAndProcess(requestBase, cp, ha);
   }
 
+  @VisibleForTesting
   protected void consume(HttpResponse res) {
     try {
       res.getEntity().getContent().close();
@@ -227,26 +236,28 @@ public class HttpActionClient {
   }
 
   @Nonnull
-  private String writeToString(HttpAction ha, HttpResponse res) {
-    StringBuilder sb = new StringBuilder();
+  @VisibleForTesting
+  String writeToString(HttpAction ha, HttpResponse res) {
     Charset charSet = Charset.forName(ha.getCharset());
+
     try ( //
-        InputStreamReader inputStreamReader = new InputStreamReader(res.getEntity().getContent(),
+        InputStream content = res.getEntity().getContent();
+        InputStreamReader inputStreamReader = new InputStreamReader(content,
             charSet); //
         BufferedReader br = new BufferedReader(inputStreamReader); //
     ) {
-
-      String line;
-      while ((line = br.readLine()) != null) {
-        sb.append(line).append("\n");
-      }
+      return toString(br);
     } catch (IOException e) {
       throw new IllegalStateException(e);
     }
-    return sb.toString();
   }
 
-  private HttpResponse execute(HttpRequestBase requestBase) {
+  private String toString(BufferedReader br) throws IOException {
+    return Joiner.on("\n").join(CharStreams.readLines(br)) + "\n"; // TODO remove trailing newline
+  }
+
+  @VisibleForTesting
+  HttpResponse execute(HttpRequestBase requestBase) {
     HttpResponse res;
     try {
       if (rateLimiter.isPresent()) {
@@ -322,19 +333,16 @@ public class HttpActionClient {
     }
 
     public HttpActionClient build() {
-      HttpClientBuilder httpClientBuilder = HttpClientBuilder.create();
       if (client == null) {
         if (Strings.isNullOrEmpty(userAgent)) {
           userAgent = USER_AGENT;
         }
+        HttpClientBuilder httpClientBuilder = HttpClientBuilder.create();
         httpClientBuilder.setUserAgent(userAgent);
         withClient(httpClientBuilder.build());
 
       } else {
-        if (userAgent != null) {
-          String msg = "useragent must be setted in your client";
-          throw new IllegalArgumentException(msg);
-        }
+        log.warn("a useragent must be set in your client");
       }
       return new HttpActionClient(this);
     }
