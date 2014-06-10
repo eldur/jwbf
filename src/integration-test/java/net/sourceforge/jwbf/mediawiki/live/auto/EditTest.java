@@ -39,7 +39,7 @@ public class EditTest extends ParamHelper {
     sa.setText(getRandom(5));
     PostModifyContent pmc = new PostModifyContent(bot, sa);
 
-    bot.performAction(pmc);
+    bot.getPerformedAction(pmc);
     assertTrue("i is: ", 50 > 3); // FIXME WTF
 
   }

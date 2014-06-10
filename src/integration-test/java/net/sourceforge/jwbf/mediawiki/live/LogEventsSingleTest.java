@@ -1,6 +1,8 @@
 package net.sourceforge.jwbf.mediawiki.live;
 
 import static net.sourceforge.jwbf.TestHelper.assumeReachable;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import net.sourceforge.jwbf.core.actions.util.ActionException;
 import net.sourceforge.jwbf.mediawiki.actions.queries.LogEvents;
@@ -13,16 +15,17 @@ import org.junit.Test;
  */
 public class LogEventsSingleTest extends AbstractMediaWikiBotTest {
 
-  /**
-   * Test category read. Test category must have more then 50 members.
-   */
-  @Test(expected = ActionException.class)
+  @Test
   public final void logEventsPerformManual() {
-
     String liveUrl = getWikipediaDeUrl();
     bot = new MediaWikiBot(liveUrl);
     LogEvents le = new LogEvents(bot, LogEvents.DELETE);
-    bot.performAction(le);
+    try {
+      bot.getPerformedAction(le);
+      fail();
+    } catch (ActionException e) {
+      assertEquals("this is a selfexcecuting action, please do not perform this action manually", e.getMessage());
+    }
   }
 
   @Test

@@ -106,7 +106,7 @@ public class CategoryMembersSimple implements Iterable<String>, Iterator<String>
       }
       cm.init = false;
       try {
-        cm.bot.performAction(cm);
+        cm.bot.getPerformedAction(cm);
         cm.setHasMoreMessages(true);
       } catch (ActionException | ProcessException e) {
         log.warn("", e);

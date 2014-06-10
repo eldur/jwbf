@@ -118,7 +118,7 @@ abstract class TitleQuery<T> implements Iterable<T>, Iterator<T> {
       inner.init = false;
       inner.setHasMoreMessages(true);
       inner.msg = prepareCollection();
-      bot.performAction(inner);
+      bot.getPerformedAction(inner);
     }
   }
 

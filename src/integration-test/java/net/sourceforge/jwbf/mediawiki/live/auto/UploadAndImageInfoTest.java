@@ -124,7 +124,7 @@ public class UploadAndImageInfoTest extends ParamHelper {
     int upHeight = img.getHeight();
     FileUpload up = new FileUpload(sf, bot);
 
-    bot.performAction(up);
+    bot.getPerformedAction(up);
     URL url = null;
     URL urlSizeVar = null;
     // TODO bad values, try others

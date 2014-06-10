@@ -25,8 +25,8 @@ import java.util.regex.Pattern;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
-import net.sourceforge.jwbf.core.actions.RequestBuilder;
 import net.sourceforge.jwbf.core.actions.Get;
+import net.sourceforge.jwbf.core.actions.RequestBuilder;
 import net.sourceforge.jwbf.core.actions.util.ActionException;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.core.actions.util.ProcessException;
@@ -211,7 +211,7 @@ public class LogEvents extends MWAction implements Iterator<LogItem>, Iterable<L
       init = false;
       try {
         selvEx = false; // TODO not good
-        bot.performAction(this);
+        bot.getPerformedAction(this);
         selvEx = true; // TODO not good
         setHasMoreMessages(true);
         log.debug("preparing success");

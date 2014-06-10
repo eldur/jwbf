@@ -56,11 +56,11 @@ public class SiteInfoIntegTest extends MocoIntegTest {
     assertEquals(confOf(ConfKey.MAINPAGE), gv.getMainpage());
 
     Siteinfo si = bot().getPerformedAction(Siteinfo.class);
-    log.info(si.getInterwikis().toString());
+    log.debug(si.getInterwikis().toString());
     assertTrue("shuld have interwikis", si.getInterwikis().size() > 5);
 
     assertEquals(confOf(ConfKey.MAINPAGE), gv.getMainpage());
-    log.info(si.getNamespaces().toString());
+    log.debug(si.getNamespaces().toString());
     assertTrue("shuld have namespaces", si.getNamespaces().size() > 15);
 
   }

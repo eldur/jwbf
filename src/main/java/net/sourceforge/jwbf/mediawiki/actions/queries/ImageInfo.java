@@ -10,8 +10,8 @@ import java.util.Map;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Maps;
 import net.sourceforge.jwbf.JWBF;
-import net.sourceforge.jwbf.core.actions.RequestBuilder;
 import net.sourceforge.jwbf.core.actions.Get;
+import net.sourceforge.jwbf.core.actions.RequestBuilder;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.core.actions.util.ProcessException;
 import net.sourceforge.jwbf.mapper.XmlElement;
@@ -125,7 +125,7 @@ public class ImageInfo extends MWAction {
   public URL getUrl() {
     try {
       selfEx = false;
-      bot.performAction(this);
+      bot.getPerformedAction(this);
     } catch (ProcessException e) {
       String exceptionMsg = "no url for image with name \"" + name + "\"";
       throw new ProcessException(exceptionMsg);

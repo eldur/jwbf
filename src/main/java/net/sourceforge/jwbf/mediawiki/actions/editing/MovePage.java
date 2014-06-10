@@ -1,8 +1,8 @@
 package net.sourceforge.jwbf.mediawiki.actions.editing;
 
 import com.google.common.base.Strings;
-import net.sourceforge.jwbf.core.actions.RequestBuilder;
 import net.sourceforge.jwbf.core.actions.Post;
+import net.sourceforge.jwbf.core.actions.RequestBuilder;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.core.actions.util.ProcessException;
 import net.sourceforge.jwbf.mapper.XmlElement;

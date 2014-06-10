@@ -3,9 +3,7 @@ package net.sourceforge.jwbf.mediawiki.bots;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.net.URL;
-import java.util.Set;
 
-import com.google.common.collect.ImmutableSet;
 import net.sourceforge.jwbf.core.actions.ContentProcessable;
 import net.sourceforge.jwbf.core.actions.HttpActionClient;
 import net.sourceforge.jwbf.core.actions.util.ActionException;
@@ -73,11 +71,9 @@ public class MediaWikiBot implements WikiBot {
   /**
    * These chars are not allowed in article names.
    */
-  public static final char[] INVALID_LABEL_CHARS = "[]{}<>|" .toCharArray();
+  public static final char[] INVALID_LABEL_CHARS = "[]{}<>|".toCharArray();
   private static final int DEFAULT_READ_PROPERTIES = GetRevision.CONTENT | GetRevision.COMMENT
       | GetRevision.USER | GetRevision.TIMESTAMP | GetRevision.IDS | GetRevision.FLAGS;
-
-  private static final Set<String> emptySet = ImmutableSet.of();
 
   /**
    * use this constructor, if you want to work with IoC.
@@ -132,7 +128,7 @@ public class MediaWikiBot implements WikiBot {
    */
   public void login(final String username, final String passwd, final String domain) {
     LoginData login = new LoginData();
-    performAction(new PostLogin(username, passwd, domain, login));
+    getPerformedAction(new PostLogin(username, passwd, domain, login));
 
     this.login = login;
     loginChangeUserInfo = true;
@@ -152,7 +148,6 @@ public class MediaWikiBot implements WikiBot {
    */
   @Override
   public void login(final String username, final String passwd) {
-
     login(username, passwd, null);
   }
 
@@ -171,13 +166,7 @@ public class MediaWikiBot implements WikiBot {
    */
   @Override
   public synchronized SimpleArticle readData(final String name, final int properties) {
-
-    GetRevision ac = new GetRevision(getVersion(), name, properties);
-
-    performAction(ac);
-
-    return ac.getArticle();
-
+    return getPerformedAction(new GetRevision(getVersion(), name, properties)).getArticle();
   }
 
   /**
@@ -185,7 +174,6 @@ public class MediaWikiBot implements WikiBot {
    */
   @Override
   public SimpleArticle readData(String name) {
-
     return readData(name, DEFAULT_READ_PROPERTIES);
   }
 
@@ -196,7 +184,6 @@ public class MediaWikiBot implements WikiBot {
    */
   public synchronized Article getArticle(final String name) {
     return getArticle(name, DEFAULT_READ_PROPERTIES);
-
   }
 
   /**
@@ -215,7 +202,7 @@ public class MediaWikiBot implements WikiBot {
       }
     }
 
-    performAction(new PostModifyContent(this, simpleArticle));
+    getPerformedAction(new PostModifyContent(this, simpleArticle));
     if (simpleArticle.getText().trim().length() < 1) {
       throw new RuntimeException("Content is empty, still written");
     }
@@ -225,12 +212,7 @@ public class MediaWikiBot implements WikiBot {
    * @return true if
    */
   public final boolean isLoggedIn() {
-
-    if (login != null) {
-      return login.isLoggedIn();
-    }
-    return false;
-
+    return login != null && login.isLoggedIn();
   }
 
   /**
@@ -250,14 +232,14 @@ public class MediaWikiBot implements WikiBot {
    */
   @Override
   public void delete(String title) {
-    performAction(new PostDelete(this, title));
+    getPerformedAction(new PostDelete(this, title));
   }
 
   /**
    * deletes an article with a reason
    */
   public void delete(String title, String reason) {
-    performAction(new PostDelete(this, title, reason));
+    getPerformedAction(new PostDelete(this, title, reason));
   }
 
   /**
@@ -321,7 +303,7 @@ public class MediaWikiBot implements WikiBot {
     Siteinfo gs = null;
     try {
       gs = new Siteinfo();
-      performAction(gs);
+      getPerformedAction(gs);
     } catch (ProcessException e) {
       log.error("{}", e);
     }

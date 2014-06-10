@@ -50,14 +50,14 @@ public class MovePageTest extends ParamHelper {
     String randomText = TestHelper.getRandomAlpha(23);
     a.setText(randomText);
     a.save();
-    bot.performAction(new MovePage(bot, oldPage, newPage, "no reason", false, true));
+    bot.getPerformedAction(new MovePage(bot, oldPage, newPage, "no reason", false, true));
     Article b = bot.getArticle(newPage);
     assertFalse(b.getText().startsWith("#"));
     assertEquals(randomText, b.getText());
     randomText = TestHelper.getRandomAlpha(23);
     b.setText(randomText);
     b.save();
-    bot.performAction(new MovePage(bot, newPage, lastPage, "no reason", false, false));
+    bot.getPerformedAction(new MovePage(bot, newPage, lastPage, "no reason", false, false));
     Article c = bot.getArticle(lastPage);
     assertEquals(randomText, c.getText());
     b = bot.getArticle(newPage);

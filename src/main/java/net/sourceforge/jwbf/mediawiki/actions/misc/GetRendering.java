@@ -96,7 +96,7 @@ public class GetRendering extends MWAction {
   private void update() {
     try {
       isSelfEx = false;
-      bot.performAction(this);
+      bot.getPerformedAction(this);
 
     } catch (ActionException | ProcessException e) {
       log.warn("", e);

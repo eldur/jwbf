@@ -18,6 +18,8 @@
  */
 package net.sourceforge.jwbf.mediawiki.live;
 
+import static org.junit.Assert.assertEquals;
+
 import net.sourceforge.jwbf.core.actions.util.ActionException;
 import net.sourceforge.jwbf.mediawiki.actions.misc.GetRendering;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
@@ -37,12 +39,16 @@ public class RenderingTest extends AbstractMediaWikiBotTest {
     // doTest(bot);
   }
 
-  @Test(expected = ActionException.class)
-  public final void getRenderingPerformManual() {
+  @Test
+  public final void testGetRenderingPerformManual() {
     String liveUrl = getWikipediaDeUrl();
     bot = new MediaWikiBot(liveUrl);
     GetRendering r = new GetRendering(bot, "bert");
-    bot.performAction(r);
+    try {
+      bot.getPerformedAction(r);
+    } catch (ActionException e) {
+      assertEquals("this is a selfexcecuting action, please do not perform this action manually", e.getMessage());
+    }
   }
 
 }

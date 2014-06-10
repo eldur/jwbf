@@ -1,12 +1,14 @@
 <configuration>
-  
+
   <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
     <layout class="ch.qos.logback.classic.PatternLayout">
       <Pattern>%date [%thread] %-5level %logger{25} - %msg%n</Pattern>
     </layout>
   </appender>
 
+  <logger name="org.eclipse.jetty" level="WARN" />
+
   <root level="info">
     <appender-ref ref="console" />
-  </root>  
+  </root>
 </configuration>
