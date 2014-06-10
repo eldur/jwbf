@@ -18,11 +18,11 @@ public class Get extends HttpBase implements HttpAction {
    * @param req     like index.html?parm=value
    * @param charset like utf-8
    */
-  public Get(String req, String charset) {
+  Get(String req, String charset) {
     this(Suppliers.ofInstance(req), charset);
   }
 
-  public Get(Supplier<String> req, String charset) {
+  Get(Supplier<String> req, String charset) {
     this(req, Charset.forName(charset), Optional.<ParamJoiner>absent());
   }
 

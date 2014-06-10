@@ -24,7 +24,9 @@ import net.sourceforge.jwbf.core.actions.util.HttpAction;
  * Simple method to get plain HTML or XML data e.g. from custom specialpages or xml newsfeeds or something else.
  *
  * @author Thomas Stock
+ * @deprecated do not use this class; please create a custom mapper for your response.
  */
+@Deprecated
 public class GetPage implements ContentProcessable {
 
   private final HttpAction msg;
@@ -32,18 +34,10 @@ public class GetPage implements ContentProcessable {
   private String text = "";
 
   /**
-   * @param u       like "/index.php?title=Special:Recentchanges&feed=rss"
-   * @param charset like "uft-8"
+   * @param url like "/index.php?title=Special:Recentchanges&feed=rss"
    */
-  public GetPage(String u, String charset) {
-    msg = new Get(u, charset);
-  }
-
-  /**
-   * @param u like "/index.php?title=Special:Recentchanges&feed=rss"
-   */
-  public GetPage(String u) {
-    this(u, "utf-8");
+  public GetPage(String url) {
+    msg = RequestBuilder.of(url).buildGet();
   }
 
   /**

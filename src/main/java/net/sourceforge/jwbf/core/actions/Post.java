@@ -28,10 +28,18 @@ public class Post extends HttpBase implements HttpAction {
   private final Charset charset;
   private final Optional<ParamJoiner> joiner;
 
+  /**
+   * @deprecated use net.sourceforge.jwbf.core.actions.RequestBuilder
+   */
+  @Deprecated
   public Post(String req, String charset) {
     this(Suppliers.ofInstance(req), charset);
   }
 
+  /**
+   * @deprecated use net.sourceforge.jwbf.core.actions.RequestBuilder
+   */
+  @Deprecated
   public Post(Supplier<String> req, String charset) {
     this(req, Charset.forName(charset), Optional.<ParamJoiner>absent());
   }
