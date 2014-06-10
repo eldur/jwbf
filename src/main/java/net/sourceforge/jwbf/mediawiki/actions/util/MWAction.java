@@ -128,7 +128,7 @@ public abstract class MWAction implements ContentProcessable {
 
   @Nonnull
   protected XmlElement getRootElementWithError(final String xml) {
-    return XmlConverter.getRootElementWithError(xml);
+    return XmlConverter.getRootElementWithError(xml).get();
   }
 
   /**
@@ -139,7 +139,7 @@ public abstract class MWAction implements ContentProcessable {
    */
   @CheckForNull
   protected XmlElement getErrorElement(XmlElement rootXmlElement) {
-    return XmlConverter.getErrorElement(rootXmlElement);
+    return rootXmlElement.getErrorElement().orNull();
   }
 
   /**

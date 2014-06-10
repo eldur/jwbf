@@ -86,6 +86,6 @@ public class LogEventsTest extends ParamHelper {
         break;
       }
     }
-    assertTrue("should be greater then 50 but is " + i, i > LIMIT);
+    assertTrue("should be greater then " + LIMIT + " but is " + i, i > LIMIT);
   }
 }

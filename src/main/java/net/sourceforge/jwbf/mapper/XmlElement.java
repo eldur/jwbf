@@ -4,10 +4,13 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 import com.google.common.base.Function;
+import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 
 public class XmlElement {
+
+  static XmlElement NULL_XML = new XmlElement(null);
 
   private final org.jdom.Element element;
 
@@ -69,4 +72,7 @@ public class XmlElement {
     return element.getText();
   }
 
+  public Optional<XmlElement> getErrorElement() {
+    return Optional.fromNullable(XmlConverter.getErrorElement(this));
+  }
 }

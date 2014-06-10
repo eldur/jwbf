@@ -7,7 +7,6 @@ import static org.junit.Assert.fail;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
@@ -290,8 +289,7 @@ public class JWBFTest {
     addFile(source, target);
   }
 
-  private void addFile(File source, JarOutputStream target) throws IOException,
-      FileNotFoundException {
+  private void addFile(File source, JarOutputStream target) throws IOException {
     JarEntry entry = makeEntry(source);
     target.putNextEntry(entry);
 

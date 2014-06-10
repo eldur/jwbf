@@ -288,7 +288,7 @@ public final class JWBF {
     try {
       return new Manifest(manifestUrl.openStream());
     } catch (IOException e) {
-      e.printStackTrace();
+      System.err.println("no manifest found at " + manifestUrl);
       return null;
     }
   }
