@@ -28,7 +28,6 @@ import java.util.Set;
 import com.google.common.collect.Sets;
 import net.sourceforge.jwbf.core.actions.util.ActionException;
 import net.sourceforge.jwbf.core.bots.WikiBot;
-import net.sourceforge.jwbf.core.bots.util.CacheHandler;
 import net.sourceforge.jwbf.core.contentRep.Article;
 import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
 import net.sourceforge.jwbf.core.contentRep.Userinfo;
@@ -182,19 +181,5 @@ public class ZimWikiBot implements WikiBot {
   public SimpleArticle readData(String name) {
     return readData(name, DEFAULT);
   }
-
-  public boolean hasCacheHandler() {
-    // TODO Auto-generated method stub
-    return false;
-  }
-
-  public void setCacheHandler(CacheHandler ch) {
-    // TODO Auto-generated method stub
-
-  }
-
-  // public String getMWFolder() {
-  // return mwFolder;
-  // }
 
 }

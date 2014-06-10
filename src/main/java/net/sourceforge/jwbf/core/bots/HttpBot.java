@@ -56,19 +56,18 @@ public class HttpBot {
     return actionClient.performAction(a);
   }
 
-  /**
-   * Simple method to get plain HTML or XML data e.g. from custom specialpages or xml newsfeeds.
-   *
-   * @param u url like index.php?title=Main_Page
-   * @return HTML content
-   */
   public static String getPage(final HttpActionClient client) {
-
     GetPage gp = new GetPage(client.getUrl());
     new HttpBot(client).performAction(gp);
     return gp.getText();
   }
 
+  /**
+   * Simple method to get plain HTML or XML data e.g. from custom specialpages or xml newsfeeds.
+   *
+   * @param url like index.php?title=Main_Page
+   * @return HTML content
+   */
   public static String getPage(String url) {
     return getPage(HttpActionClient.of(url));
   }
