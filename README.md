@@ -19,6 +19,11 @@ The Java Wiki Bot Framework is a library to maintain Wikis like Wikipedia based 
     // ...
   }
 ```
+
+More Java examples e.g. for queries can be found at
+ [Unit-](https://github.com/eldur/jwbf/tree/master/src/test/java/net/sourceforge/jwbf) and
+ [Integrationtestpackages](https://github.com/eldur/jwbf/tree/master/src/integration-test/java/net/sourceforge/jwbf).
+
 ### Scala
 ```scala
 object WikiReader extends App {
@@ -41,12 +46,12 @@ If you are working with Wikimedia sites, set an informative User-Agent header,
  because [all Wikimedia sites require a HTTP User-Agent header for all requests.](http://meta.wikimedia.org/wiki/User-Agent_policy)
 
 ```java
-    HttpActionClient hac = HttpActionClient.builder() //
+    HttpActionClient client = HttpActionClient.builder() //
         .withUrl("http://en.wikipedia.org/w/") //
         .withUserAgent("User name/your email/jwbf/...") //
         .withRequestsPerUnit(10, TimeUnit.MINUTES) //
         .build();
-    MediaWikiBot wikiBot = new MediaWikiBot(hac);
+    MediaWikiBot wikiBot = new MediaWikiBot(client);
 ```
 
 ## Dependency
@@ -60,3 +65,25 @@ If you are working with Wikimedia sites, set an informative User-Agent header,
 ```scala
 libraryDependencies += "net.sourceforge" % "jwbf" % "3.0.0-SNAPSHOT"
 ```
+
+* SNAPSHOTS: [oss.sonatype.org](https://oss.sonatype.org/content/groups/public/net/sourceforge/jwbf/)
+* RELEASES: [maven central](http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22net.sourceforge%22%20AND%20a%3A%22jwbf%22)
+
+## See also
+* [en.Wikipedia Creating a Bot](http://en.wikipedia.org/wiki/Wikipedia:Creating_a_bot#Java)
+* [fr.Wikipedia Créer un bot](http://fr.wikipedia.org/wiki/Wikip%C3%A9dia:Cr%C3%A9er_un_bot#Java)
+* [de.Wikipedia Bots](http://de.wikipedia.org/wiki/Wikipedia:Bots#Ressourcen)
+* [Mediawiki API](http://www.mediawiki.org/wiki/API:Client_code)
+
+## Design goals - Product Vision
+* incomplete by definition (Framework)
+* Handle base tasks like: login, cookies, encoding, token management, edit, query, ...
+* Unit- and Integration tested
+* no checked exceptions
+* immutable types
+* fluent interfaces
+* replace xml with json
+* ready for java 8
+
+## System requirements
+* JRE 1.7
