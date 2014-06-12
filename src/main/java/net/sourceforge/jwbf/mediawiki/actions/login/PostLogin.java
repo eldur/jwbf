@@ -54,11 +54,10 @@ public class PostLogin extends MWAction {
    * @param username the
    * @param pw       password
    * @param domain   a
-   * @param login    a
    */
-  public PostLogin(final String username, final String pw, final String domain, LoginData login) {
+  public PostLogin(final String username, final String pw, final String domain) {
     super();
-    this.login = login;
+    this.login = new LoginData();
     this.username = username;
     this.pw = pw;
     this.domain = domain;
@@ -88,7 +87,6 @@ public class PostLogin extends MWAction {
    */
   @Override
   public String processAllReturningText(final String s) {
-
     XmlElement root = getRootElement(s);
     findContent(root);
 
@@ -138,4 +136,8 @@ public class PostLogin extends MWAction {
     return temp;
   }
 
+  public LoginData getLoginData() {
+    // TODO change to immutable
+    return login;
+  }
 }

@@ -4,10 +4,11 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.net.URL;
 
+import com.google.common.base.Optional;
+import com.google.common.base.Preconditions;
 import net.sourceforge.jwbf.core.actions.ContentProcessable;
 import net.sourceforge.jwbf.core.actions.HttpActionClient;
 import net.sourceforge.jwbf.core.actions.util.ActionException;
-import net.sourceforge.jwbf.core.actions.util.ProcessException;
 import net.sourceforge.jwbf.core.bots.HttpBot;
 import net.sourceforge.jwbf.core.bots.WikiBot;
 import net.sourceforge.jwbf.core.contentRep.Article;
@@ -127,10 +128,8 @@ public class MediaWikiBot implements WikiBot {
    * @see PostLogin
    */
   public void login(final String username, final String passwd, final String domain) {
-    LoginData login = new LoginData();
-    getPerformedAction(new PostLogin(username, passwd, domain, login));
 
-    this.login = login;
+    this.login = getPerformedAction(new PostLogin(username, passwd, domain)).getLoginData();
     loginChangeUserInfo = true;
     if (getVersion() == Version.UNKNOWN) {
       loginChangeVersion = true;
@@ -195,17 +194,22 @@ public class MediaWikiBot implements WikiBot {
       throw new ActionException("Please login first");
     }
 
-    for (char invChar : INVALID_LABEL_CHARS) { // FIXME Replace with a REGEX
-      if (simpleArticle.getTitle().contains(invChar + "")) {
-        throw new ActionException("Invalid character in label\"" + simpleArticle.getTitle()
-            + "\" : \"" + invChar + "\"");
-      }
-    }
+    SimpleArticle nonNullArticle = Preconditions.checkNotNull(simpleArticle, "content must not be null");
+    checkTitle(nonNullArticle.getTitle());
 
     getPerformedAction(new PostModifyContent(this, simpleArticle));
-    if (simpleArticle.getText().trim().length() < 1) {
+    if (nonNullArticle.getText().trim().length() < 1) {
       throw new RuntimeException("Content is empty, still written");
     }
+  }
+
+  static Optional<String> checkTitle(String title) {
+    for (char invChar : INVALID_LABEL_CHARS) {
+      if (title.contains(invChar + "")) {
+        throw new ActionException("Invalid character \"" + invChar + "\" in label \"" + title + "\"");
+      }
+    }
+    return Optional.of(title);
   }
 
   /**
@@ -299,17 +303,7 @@ public class MediaWikiBot implements WikiBot {
    */
   @Nonnull
   public Siteinfo getSiteinfo() {
-
-    Siteinfo gs = null;
-    try {
-      gs = new Siteinfo();
-      getPerformedAction(gs);
-    } catch (ProcessException e) {
-      log.error("{}", e);
-    }
-
-    return gs;
-
+    return getPerformedAction(Siteinfo.class);
   }
 
   /**
@@ -331,7 +325,7 @@ public class MediaWikiBot implements WikiBot {
    */
   @Override
   public final String getWikiType() {
-    return MediaWiki.class.getName() + " " + getVersion();
+    return MediaWiki.class.getSimpleName() + " " + getVersion();
   }
 
 }
