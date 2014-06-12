@@ -6,6 +6,7 @@ import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 
+import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.IOException;
 import java.util.Map;
@@ -40,10 +41,42 @@ public class JsonMapperTest {
     assertEquals("Main Page", siteInfoData.getMainpage());
   }
 
+  @Test
+  public void testNullInput() {
+    try {
+      // GIVEN / WHEN
+      testee.get(null, SiteInfoData.class);
+    } catch (NullPointerException npe) {
+      // THEN
+      assertEquals("do not convert null", npe.getMessage());
+    }
+  }
+
+  @Test
+  public void testNullResponse() {
+    // GIVEN
+    JsonMapper.ToJsonFunction nullFunction = new JsonMapper.ToJsonFunction() {
+
+      @Nonnull
+      @Override
+      public Object toJson(@Nonnull String jsonString, Class<?> clazz) {
+        return null;
+      }
+    };
+    testee = new JsonMapper(nullFunction);
+    try {
+      // WHEN
+      testee.get("any", SiteInfoData.class);
+    } catch (NullPointerException npe) {
+      // THEN
+      assertEquals("a json mapping must not return null", npe.getMessage());
+    }
+  }
+
   @Test(expected = IllegalArgumentException.class)
   public void testGet_withException() {
     // GIVEN
-    testee = new JsonMapper() {
+    JsonMapper.JacksonToJsonFunction testee = new JsonMapper.JacksonToJsonFunction() {
       @Override
       ObjectMapper newObjectMapper() {
         ObjectMapper mock = mock(ObjectMapper.class);
@@ -57,7 +90,7 @@ public class JsonMapperTest {
     };
 
     // WHEN / THEN
-    testee.get("", Object.class);
+    testee.toJson("", Object.class);
     fail();
   }
 

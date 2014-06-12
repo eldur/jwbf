@@ -2,7 +2,6 @@ package net.sourceforge.jwbf;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Random;
 import java.util.concurrent.ExecutionException;
@@ -87,13 +86,15 @@ public class TestHelper {
 
   }
 
-  public static void assumeReachable(String url) {
-    try {
-      Assume.assumeFalse(url.trim().isEmpty());
-      assumeReachable(new URL(url));
-    } catch (MalformedURLException e) {
-      throw new IllegalArgumentException(e);
+  public static void assumeReachable(String... urls) {
+    for (String url : urls) {
+      assumeReachable(url);
     }
+  }
+
+  public static void assumeReachable(String url) {
+    Assume.assumeFalse(url.trim().isEmpty());
+    assumeReachable(JWBF.newURL(url));
   }
 
   public static String anyWikiResponse(String filename) {
