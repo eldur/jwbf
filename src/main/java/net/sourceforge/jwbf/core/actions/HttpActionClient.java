@@ -32,6 +32,7 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import com.google.common.annotations.Beta;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Joiner;
 import com.google.common.base.Optional;
@@ -132,6 +133,15 @@ public class HttpActionClient {
       out = processAction(httpAction, answerParser);
     }
     return out;
+  }
+
+  @Beta
+  @Nonnull
+  public synchronized void performAction(ActionHandler actionHandler) {
+    while (actionHandler.hasMoreActions()) {
+      HttpAction httpAction = actionHandler.popAction();
+      processAction(httpAction, new ResponseHandler(actionHandler));
+    }
   }
 
   @VisibleForTesting
@@ -378,6 +388,22 @@ public class HttpActionClient {
 
   public static Builder builder() {
     return new Builder();
+  }
+
+  private static class ResponseHandler implements ReturningTextProcessor {
+
+    private final ActionHandler actionHandler;
+
+    public ResponseHandler(ActionHandler actionHandler) {
+
+      this.actionHandler = actionHandler;
+    }
+
+    @Override
+    public String processReturningText(String s, HttpAction action) {
+      actionHandler.processReturningText(s, action);
+      return "";
+    }
   }
 
 }

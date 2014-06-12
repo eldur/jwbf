@@ -81,9 +81,9 @@ public class CategoryMembersSimple implements Iterable<String>, Iterator<String>
       }
 
       @Override
-      public String processAllReturningText(String s) {
+      public String processReturningText(String s, HttpAction action) {
         titleCollection.clear();
-        String buff = super.processAllReturningText(s);
+        String buff = super.processReturningText(s, action);
 
         titleIterator = titleCollection.iterator();
         return buff;

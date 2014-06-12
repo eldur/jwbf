@@ -14,6 +14,7 @@ import java.util.Set;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
+import net.sourceforge.jwbf.core.actions.ParamTuple;
 import net.sourceforge.jwbf.core.actions.Post;
 import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
 import net.sourceforge.jwbf.core.contentRep.Userinfo;
@@ -46,7 +47,9 @@ public class PostModifyContentTest {
       @Override
       GetApiToken newTokenRequest() {
         GetApiToken mockToken = mock(GetApiToken.class);
-        when(mockToken.getToken()).thenReturn("!testToken");
+        GetApiToken.TokenResponse token = mock(GetApiToken.TokenResponse.class);
+        when(token.urlEncodedToken()).thenReturn(new ParamTuple<String>("token", "!testToken"));
+        when(mockToken.get()).thenReturn(token);
         return mockToken;
       }
     };
@@ -86,20 +89,20 @@ public class PostModifyContentTest {
   public void testGetNextMessageMinorEdit() {
     simpleArticle.setMinorEdit(true);
     ImmutableMultimap<String, Object> params = getParams();
-    assertNotNull(params.get(PostModifyContent.PARAM_MINOR));
+    assertEquals("{summary=[], text=[], minor=[], token=[!testToken]}", params.toString());
   }
 
   @Test
   public void testGetNextMessageNoMinorEdit() {
     ImmutableMultimap<String, Object> params = getParams();
-    assertNotNull(params.get(PostModifyContent.PARAM_MINOR_NOT));
+    assertEquals("{summary=[], text=[], notminor=[], token=[!testToken]}", params.toString());
   }
 
   @Test
   public void testGetNextMessageBotEdit() {
     when(userinfo.getGroups()).thenReturn(of("bot", "user"));
     ImmutableMultimap<String, Object> params = getParams();
-    assertNotNull(params.get(PostModifyContent.PARAM_BOTEDIT));
+    assertEquals("{summary=[], text=[], bot=[], notminor=[], token=[!testToken]}", params.toString());
   }
 
   private ImmutableMultimap<String, Object> getParams() {

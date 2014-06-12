@@ -18,4 +18,11 @@ public class Optionals {
     }
   }
 
+  public static <T> T getOrThrow(Optional<T> token, String exceptionMessage) {
+    if (token.isPresent()) {
+      return token.get();
+    } else {
+      throw new IllegalArgumentException(exceptionMessage);
+    }
+  }
 }

@@ -24,6 +24,7 @@ import com.google.common.base.Strings;
 import com.google.common.collect.Sets;
 import com.google.common.collect.Sets.SetView;
 import net.sourceforge.jwbf.core.actions.Post;
+import net.sourceforge.jwbf.core.actions.RequestBuilder;
 import net.sourceforge.jwbf.core.actions.util.ActionException;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.core.contentRep.ContentAccessable;
@@ -51,7 +52,7 @@ public class PostModifyContent extends MWAction {
 
   private final ContentAccessable a;
   private final MediaWikiBot bot;
-  private GetApiToken apiReq = null;
+  private GetApiToken editTokeAction = null;
   private HttpAction apiGet = null;
   private Post editRequest = null;
   static final String PARAM_MINOR = "minor";
@@ -82,35 +83,34 @@ public class PostModifyContent extends MWAction {
     }
     if (first) {
       first = false;
-      apiReq = newTokenRequest();
-      apiGet = apiReq.getNextMessage();
+      editTokeAction = newTokenRequest();
+      apiGet = editTokeAction.popAction();
       return apiGet;
     } else if (second) {
 
-      editRequest = new ApiRequestBuilder() //
+      RequestBuilder builder = new ApiRequestBuilder() //
           .action("edit") //
           .formatXml() //
           .param("title", MediaWiki.urlEncode(a.getTitle())) //
-          .buildPost() //
+
           .postParam("summary", a.getEditSummary()) //
           .postParam("text", a.getText()) //
       ;
       Set<String> groups = userinfo.getGroups();
       if (!isIntersectionEmpty(groups, MediaWiki.BOT_GROUPS)) {
-        editRequest.postParam(PARAM_BOTEDIT, "");
+        builder.postParam(PARAM_BOTEDIT, "");
       }
 
       // postModify.addParam("watch", "unknown")
       if (a.isMinorEdit()) {
-        editRequest.postParam(PARAM_MINOR, "");
+        builder.postParam(PARAM_MINOR, "");
       } else {
-        editRequest.postParam(PARAM_MINOR_NOT, "");
+        builder.postParam(PARAM_MINOR_NOT, "");
       }
-      editRequest.postParam("token", apiReq.getToken());
-
+      builder.postParam(editTokeAction.get().urlEncodedToken());
       second = false;
 
-      return editRequest;
+      return editRequest = builder.buildPost();
     } else {
       throw new IllegalStateException("this action has only two messages");
     }
@@ -138,7 +138,7 @@ public class PostModifyContent extends MWAction {
   public String processReturningText(String xml, HttpAction hm) {
     String request = hm.getRequest();
     if (request.equals(apiGet.getRequest())) {
-      apiReq.processReturningText(xml, hm);
+      editTokeAction.processReturningText(xml, hm);
     } else if (request.equals(editRequest.getRequest())) {
       getRootElement(xml);
     } else {

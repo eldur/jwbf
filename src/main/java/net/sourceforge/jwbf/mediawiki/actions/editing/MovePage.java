@@ -100,7 +100,7 @@ public class MovePage extends MWAction {
         .formatXml() //
         .param("from", MediaWiki.urlEncode(oldtitle)) //
         .param("to", MediaWiki.urlEncode(newtitle)) //
-        .param("token", MediaWiki.urlEncode(token.getToken())) //
+        .param(token.get().urlEncodedToken()) //
         .param("movetalk", "") // XXX
         ;
 
@@ -171,9 +171,9 @@ public class MovePage extends MWAction {
    */
   @Override
   public HttpAction getNextMessage() {
-    if (token.hasMoreMessages()) {
+    if (token.hasMoreActions()) {
       setHasMoreMessages(true);
-      return token.getNextMessage();
+      return token.popAction();
     }
     return getSecondRequest();
   }

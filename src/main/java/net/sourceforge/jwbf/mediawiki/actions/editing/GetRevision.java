@@ -63,11 +63,6 @@ public class GetRevision extends MWAction {
    * TODO follow redirects. TODO change constructor fild ordering; bot
    */
   public GetRevision(Version v, final String articlename, final int properties) {
-    // if (!bot.getUserinfo().getRights().contains("read")) {
-    // throw new
-    // ActionException("reading is not permited, make sure that this account is able to read");
-    // } FIXME check if
-
     this.properties = properties;
     sa = new SimpleArticle();
     sa.setTitle(articlename);
@@ -158,7 +153,6 @@ public class GetRevision extends MWAction {
   }
 
   public SimpleArticle getArticle() {
-
     return sa;
   }
 
@@ -208,9 +202,7 @@ public class GetRevision extends MWAction {
   }
 
   private String getAttrValueOf(XmlElement xmlElement, String key, String otherwise) {
-    String value = null;
-
-    value = xmlElement.getAttributeValue(key);
+    String value  = xmlElement.getAttributeValue(key);
     if (value == null) {
       log.trace("no value for {}", key);
       return otherwise;

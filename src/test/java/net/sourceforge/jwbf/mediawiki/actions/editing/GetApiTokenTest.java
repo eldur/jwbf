@@ -2,11 +2,11 @@ package net.sourceforge.jwbf.mediawiki.actions.editing;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import net.sourceforge.jwbf.TestHelper;
+import net.sourceforge.jwbf.core.actions.ParamTuple;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.mediawiki.actions.editing.GetApiToken.Intoken;
 import org.junit.Test;
@@ -22,10 +22,11 @@ public class GetApiTokenTest {
     String xml = TestHelper.anyWikiResponse("intoken.xml");
 
     // WHEN
-    testee.processReturningText(xml, testee.getNextMessage());
+    testee.processReturningText(xml, testee.popAction());
 
     // THEN
-    assertEquals("e0691d5329779f0c01b1b286cd44a278+\\", testee.getToken());
+    ParamTuple<String> token = new ParamTuple("token", "e0691d5329779f0c01b1b286cd44a278%2B%5C");
+    assertEquals(token, testee.get().urlEncodedToken());
 
   }
 
@@ -37,7 +38,7 @@ public class GetApiTokenTest {
 
     // WHEN
     try {
-      testee.processReturningText(xml, testee.getNextMessage());
+      testee.processReturningText(xml, testee.popAction());
       fail();
     } catch (NullPointerException e) {
       // THEN
@@ -53,7 +54,7 @@ public class GetApiTokenTest {
 
     try {
       // WHEN
-      testee.getToken();
+      testee.get().urlEncodedToken();
       fail();
 
     } catch (IllegalArgumentException e) {
@@ -69,14 +70,14 @@ public class GetApiTokenTest {
     testee = new GetApiToken(Intoken.MOVE, title);
 
     // WHEN
-    assertTrue(testee.hasMoreMessages());
-    HttpAction first = testee.getNextMessage();
+    assertTrue(testee.hasMoreActions());
+    HttpAction first = testee.popAction();
 
     // THEN
-    assertFalse(testee.hasMoreMessages());
+    assertFalse(testee.hasMoreActions());
     assertEquals("/api.php?action=query&format=xml&intoken=move&prop=info&titles=" + title,
         first.getRequest());
-    assertNull(testee.getNextMessage());
+
   }
 
 }

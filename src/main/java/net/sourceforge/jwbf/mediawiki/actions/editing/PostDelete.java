@@ -38,14 +38,14 @@ public class PostDelete extends MWAction {
   private final String title;
   private String reason;
 
-  private final GetApiToken token;
+  private final GetApiToken tokenAction;
   private boolean delToken = true;
 
   /**
    * Constructs a new <code>PostDelete</code> action.
    */
   public PostDelete(MediaWikiBot bot, String title) {
-    token = new GetApiToken(GetApiToken.Intoken.DELETE, title);
+    tokenAction = new GetApiToken(GetApiToken.Intoken.DELETE, title);
     this.title = title;
     if (title == null || title.length() == 0) {
       throw new IllegalArgumentException("The argument 'title' must not be null or empty");
@@ -84,7 +84,7 @@ public class PostDelete extends MWAction {
         .action("delete") //
         .formatXml() //
         .param("title", MediaWiki.urlEncode(title)) //
-        .param("token", MediaWiki.urlEncode(token.getToken())) //
+        .param(tokenAction.get().urlEncodedToken()) //
         ;
 
     if (reason != null) {
@@ -104,7 +104,7 @@ public class PostDelete extends MWAction {
     super.processReturningText(s, hm);
 
     if (delToken) {
-      token.processReturningText(s, hm);
+      tokenAction.processReturningText(s, hm);
       delToken = false;
     } else {
 
@@ -169,9 +169,9 @@ public class PostDelete extends MWAction {
    */
   @Override
   public HttpAction getNextMessage() {
-    if (token.hasMoreMessages()) {
+    if (tokenAction.hasMoreActions()) {
       setHasMoreMessages(true);
-      return token.getNextMessage();
+      return tokenAction.popAction();
     }
     return getSecondRequest();
   }

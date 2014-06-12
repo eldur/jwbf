@@ -165,7 +165,7 @@ public class FileUpload extends MWAction {
     private final Deque<HttpAction> actions = Queues.newArrayDeque();
     private final MediaWikiBot bot;
     private final SimpleFile simpleFile;
-    private GetApiToken getApiToken;
+    private GetApiToken uploadTokenAction;
 
     public ApiUpload(MediaWikiBot bot, SimpleFile simpleFile) {
       this.bot = bot;
@@ -174,27 +174,26 @@ public class FileUpload extends MWAction {
 
     @Override
     public Deque<HttpAction> getActions() {
-      getApiToken = new GetApiToken(Intoken.EDIT, simpleFile.getFilename());
-      actions.add(getApiToken.getNextMessage());
+      uploadTokenAction = new GetApiToken(Intoken.EDIT, simpleFile.getFilename());
+      actions.add(uploadTokenAction.popAction());
       return actions;
     }
 
     @Override
     public String handleResponse(String xml, HttpAction hm) {
-      if (getApiToken != null) {
-        getApiToken.processReturningText(xml, hm);
-        String token = getApiToken.getToken();
-        getApiToken = null;
+      if (uploadTokenAction != null) {
+        uploadTokenAction.processReturningText(xml, hm);
         Post upload = new ApiRequestBuilder() //
             .action("upload") //
             .formatXml() //
-            .param("token", MediaWiki.urlEncode(token)) //
+            .param(uploadTokenAction.get().urlEncodedToken()) //
             .param("filename", MediaWiki.urlEncode(simpleFile.getTitle())) //
-            .param("ignorewarnings", "true") //
+            .param("ignorewarnings", true) //
             .buildPost() //
             .postParam("file", simpleFile.getFile()) //
             ;
         actions.add(upload);
+        uploadTokenAction = null; // XXX
       }
       // file upload requires enabled uploads, upload rights and filesystem permisions
       return xml;

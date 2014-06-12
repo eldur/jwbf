@@ -4,9 +4,10 @@ import java.util.Arrays;
 import java.util.Deque;
 
 import com.google.common.collect.Queues;
+import net.sourceforge.jwbf.core.actions.ActionHandler;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 
-public abstract class DequeMWAction extends MWAction {
+public abstract class DequeMWAction<T> implements ActionHandler {
 
   protected Deque<HttpAction> actions;
 
@@ -15,13 +16,14 @@ public abstract class DequeMWAction extends MWAction {
   }
 
   @Override
-  public HttpAction getNextMessage() {
-    return actions.pollFirst();
+  public HttpAction popAction() {
+    return actions.pop();
   }
 
   @Override
-  public boolean hasMoreMessages() {
+  public boolean hasMoreActions() {
     return !actions.isEmpty();
   }
 
+  public abstract T get();
 }

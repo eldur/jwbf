@@ -92,8 +92,7 @@ public class CategoryMembersFullTest {
 
       @Override
       public CategoryMembersFull answer(InvocationOnMock invocation) throws Throwable {
-
-        testee.processAllReturningText(text);
+        testee.processReturningText(text, null);
         return value;
       }
     };

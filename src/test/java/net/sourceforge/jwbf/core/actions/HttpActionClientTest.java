@@ -571,4 +571,29 @@ public class HttpActionClientTest {
       assertEquals("No Handler found for java.lang.Object", e.getMessage());
     }
   }
+
+  @Test
+  public void testPerformAction() {
+    JettyServer server = new JettyServer();
+    try {
+      // GIVEN
+      server.setHandler(JettyServer.dateHandler());
+      server.startSilent();
+      testee = HttpActionClient.of(server.getTestUrl());
+      ActionHandler actionHandler = mock(ActionHandler.class);
+      when(actionHandler.hasMoreActions()).thenReturn(Boolean.TRUE, Boolean.FALSE);
+      Get get = new RequestBuilder("/").buildGet();
+      when(actionHandler.popAction()).thenReturn(get);
+
+      // WHEN
+      testee.performAction(actionHandler);
+
+      // THEN
+      Mockito.verify(actionHandler)
+          .processReturningText(Mockito.isA(String.class), Mockito.eq(get));
+    } finally {
+      server.stopSilent();
+    }
+
+  }
 }

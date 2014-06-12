@@ -48,7 +48,7 @@ public class Get extends HttpBase implements HttpAction {
    */
   @Override
   public String getRequest() {
-    return req.get();
+    return getRequestAndFixAllSuppliers();
   }
 
   /**
@@ -61,12 +61,19 @@ public class Get extends HttpBase implements HttpAction {
 
   @Override
   public String toString() {
-    return getRequest() + " " + getCharset();
+    return getRequestAndFixAllSuppliers() + " " + getCharset();
   }
 
   @Override
   public int hashCode() {
     return Objects.hash(getRequest(), getCharset());
+  }
+
+  /**
+   * if you look at the content, you can't change it anymore.
+   */
+  private String getRequestAndFixAllSuppliers() {
+    return req.get();
   }
 
   @Override
@@ -77,8 +84,10 @@ public class Get extends HttpBase implements HttpAction {
       return true;
     } else if (obj instanceof Get) {
       Get that = (Get) obj;
-      return Objects.equals(this.getRequest(), that.getRequest()) //
-          && Objects.equals(this.getCharset(), that.getCharset());
+      return
+          Objects.equals(this.getRequestAndFixAllSuppliers(), that.getRequestAndFixAllSuppliers())
+              //
+              && Objects.equals(this.getCharset(), that.getCharset());
     } else {
       return false;
     }

@@ -124,11 +124,6 @@ public class PostLogin extends MWAction {
     return msg;
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see net.sourceforge.jwbf.mediawiki.actions.util.MWAction#hasMoreMessages()
-   */
   @Override
   public boolean hasMoreMessages() {
     boolean temp = super.hasMoreMessages() || reTry;

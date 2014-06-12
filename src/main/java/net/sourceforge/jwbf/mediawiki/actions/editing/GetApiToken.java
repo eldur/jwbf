@@ -6,8 +6,11 @@ import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableMap;
+import net.sourceforge.jwbf.core.Optionals;
 import net.sourceforge.jwbf.core.actions.Get;
+import net.sourceforge.jwbf.core.actions.ParamTuple;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
+import net.sourceforge.jwbf.mapper.XmlConverter;
 import net.sourceforge.jwbf.mapper.XmlElement;
 import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
 import net.sourceforge.jwbf.mediawiki.MediaWiki;
@@ -22,12 +25,34 @@ import org.slf4j.LoggerFactory;
  * @author Thomas Stock
  * @see <a href="http://www.mediawiki.org/wiki/API:Changing_wiki_content" >Editing-API</a>
  */
-public class GetApiToken extends DequeMWAction {
+public class GetApiToken extends DequeMWAction<GetApiToken.TokenResponse> {
+
+  @Override
+  public TokenResponse get() {
+    return new TokenResponse() {
+
+      /**
+       * Returns the requested urlEncodedToken after parsing the result from MediaWiki.
+       *
+       * @return the requested urlEncodedToken
+       */
+      @Nonnull
+      public ParamTuple urlEncodedToken() {
+        String token = MediaWiki.urlEncode(
+            Optionals.getOrThrow(GetApiToken.this.token, "The argument 'token' is missing"));
+        return new ParamTuple("token", token);
+      }
+    };
+  }
+
+  public static interface TokenResponse {
+    ParamTuple<String> urlEncodedToken();
+  }
 
   private static final Logger log = LoggerFactory.getLogger(GetApiToken.class);
 
   /**
-   * Types that need a token. See API field intoken.
+   * Types that need a urlEncodedToken. See API field intoken.
    */
   // TODO this does not feel the elegant way.
   // Probably put complete request URIs into this enum objects
@@ -68,10 +93,10 @@ public class GetApiToken extends DequeMWAction {
   }
 
   /**
-   * Generates the next MediaWiki API token and adds it to <code>msgs</code>.
+   * Generates the next MediaWiki API urlEncodedToken and adds it to <code>msgs</code>.
    *
-   * @param intoken type to get the token for
-   * @param title   title of the article to generate the token for
+   * @param intoken type to get the urlEncodedToken for
+   * @param title   title of the article to generate the urlEncodedToken for
    */
   private static Get generateTokenRequest(Intoken intoken, String title) {
     log.trace("enter GetToken.generateTokenRequest()");
@@ -86,35 +111,22 @@ public class GetApiToken extends DequeMWAction {
   }
 
   /**
-   * Returns the requested token after parsing the result from MediaWiki.
-   *
-   * @return the requested token
-   */
-  @Nonnull
-  protected String getToken() {
-    if (token.isPresent()) {
-      return token.get();
-    } else {
-      throw new IllegalArgumentException("The argument 'token' is missing");
-    }
-  }
-
-  /**
    * {@inheritDoc}
    */
   @Override
-  public String processReturningText(String s, HttpAction hm) {
+  public void processReturningText(String s, HttpAction hm) {
     if (hm.getRequest().equals(msg.getRequest())) {
       log.trace("enter GetToken.processAllReturningText(String)");
       log.debug("Got returning text: \"{}\"", s);
       try {
-        XmlElement elem = getRootElement(s).getChild("query").getChild("pages").getChild("page");
+        XmlElement elem =
+            XmlConverter.getRootElement(s).getChild("query").getChild("pages").getChild("page");
         // TODO check for null
         token = Optional.fromNullable(elem).transform(TOKEN_FUNCTIONS.get(intoken));
         // TODO check intoken from tokenfunc for null
 
         if (log.isDebugEnabled()) {
-          log.debug("token = {} for: {}", token, msg.getRequest());
+          log.debug("urlEncodedToken = {} for: {}", token, msg.getRequest());
         }
         // TODO check catch
       } catch (IllegalArgumentException e) {
@@ -126,7 +138,6 @@ public class GetApiToken extends DequeMWAction {
         }
       }
     }
-    return "";
   }
 
   private static Function<XmlElement, String> tokenFunctionOf(final String key) {

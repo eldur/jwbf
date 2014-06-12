@@ -31,14 +31,19 @@ public class RequestBuilder {
     return applyKeyValueTo(key, stringSupplier, params);
   }
 
-  private <T> RequestBuilder applyKeyValueTo(String key, Supplier<T> stringSupplier,
+  public RequestBuilder param(ParamTuple paramTuple) {
+    return param(paramTuple.key, paramTuple.valueSupplier);
+  }
+
+  private <T> RequestBuilder applyKeyValueTo(String key, Supplier<?>
+      stringSupplier,
       ImmutableMultimap.Builder<String, Supplier<T>> toParams) {
     if (!Strings.isNullOrEmpty(key)) {
       Preconditions.checkNotNull(stringSupplier);
 
-      Supplier<T> memoize = new HashCodeEqualsMemoizingSupplier<>(stringSupplier);
+      Supplier<?> memoize = new HashCodeEqualsMemoizingSupplier<>(stringSupplier);
       if (!toParams.build().containsEntry(key, memoize)) {
-        toParams.put(key, memoize);
+        toParams.put(key, (Supplier<T>) memoize);
       }
     }
     return this;
@@ -56,6 +61,15 @@ public class RequestBuilder {
 
   public RequestBuilder postParam(String key, Object value) {
     return applyKeyValueTo(key, Suppliers.ofInstance(value), postParams);
+  }
+
+  public RequestBuilder postParam(ParamTuple<?> paramTuple) {
+    Supplier<? extends Object> val =  paramTuple.valueSupplier;
+    return applyKeyValueTo(paramTuple.key, val, postParams);
+  }
+
+  public RequestBuilder param(String key, boolean value) {
+    return param(key, Boolean.toString(value));
   }
 
   public RequestBuilder param(String key, String value) {

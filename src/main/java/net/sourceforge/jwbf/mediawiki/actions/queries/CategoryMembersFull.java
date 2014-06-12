@@ -111,10 +111,9 @@ public class CategoryMembersFull extends CategoryMembers
    * {@inheritDoc}
    */
   @Override
-  public String processAllReturningText(String s) {
+  public String processReturningText(String s, HttpAction action) {
     titleCollection.clear();
-    String buff = super.processAllReturningText(s);
-    return buff;
+    return super.processReturningText(s, action);
   }
 
   /**
