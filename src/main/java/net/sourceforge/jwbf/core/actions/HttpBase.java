@@ -14,7 +14,8 @@ abstract class HttpBase {
     if (joiner.isPresent()) {
       return joiner.get().toBuilder();
     } else {
-      throw new UnsupportedOperationException("only supported when type was created with a builder");
+      throw new UnsupportedOperationException(
+          "only supported when type was created with a builder");
     }
   }
 }

@@ -103,7 +103,8 @@ public abstract class MocoIntegTest extends AbstractIntegTest implements Provide
       String absFileName = file.getAbsolutePath();
       return Moco.file(absFileName);
     } else {
-      return Moco.text(getClass().getCanonicalName() + " : SHOULD FAIL : File not found: " + filename);
+      return Moco
+          .text(getClass().getCanonicalName() + " : SHOULD FAIL : File not found: " + filename);
     }
   }
 
@@ -139,8 +140,8 @@ public abstract class MocoIntegTest extends AbstractIntegTest implements Provide
             for (Entry<String, String> entry : replacements.entrySet()) {
               String key = String.format("${%s}", entry.getKey());
               if (input.contains(key)) {
-                return input.replaceFirst(String.format("\\$\\{%s\\}", entry.getKey()),
-                    entry.getValue());
+                return input
+                    .replaceFirst(String.format("\\$\\{%s\\}", entry.getKey()), entry.getValue());
               }
             }
             return input;
@@ -152,14 +153,15 @@ public abstract class MocoIntegTest extends AbstractIntegTest implements Provide
     return splittedConfigOfString(key, ImmutableMap.<String, String>of());
   }
 
-  private static final Function<Entry<? extends Object, String>, String> function = new Function<Map.Entry<? extends Object, String>, String>() {
+  private static final Function<Entry<? extends Object, String>, String> function =
+      new Function<Map.Entry<? extends Object, String>, String>() {
 
-    @Override
-    public String apply(Entry<? extends Object, String> input) {
-      Entry<? extends Object, String> in = Preconditions.checkNotNull(input);
-      return in.getKey() + "=" + in.getValue();
-    }
-  };
+        @Override
+        public String apply(Entry<? extends Object, String> input) {
+          Entry<? extends Object, String> in = Preconditions.checkNotNull(input);
+          return in.getKey() + "=" + in.getValue();
+        }
+      };
 
   protected ImmutableList<String> toSortedList(Map<? extends Object, String> stringList) {
     return FluentIterable.from(stringList.entrySet()) //

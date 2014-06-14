@@ -15,8 +15,8 @@ import org.junit.runners.Parameterized.Parameters;
 public class RenderingTest extends ParamHelper {
 
   @ClassRule
-  public static VersionTestClassVerifier classVerifier = new VersionTestClassVerifier(
-      GetRendering.class);
+  public static VersionTestClassVerifier classVerifier =
+      new VersionTestClassVerifier(GetRendering.class);
 
   @Rule
   public Verifier successRegister = classVerifier.getSuccessRegister(this);

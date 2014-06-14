@@ -22,8 +22,8 @@ import org.junit.runners.Parameterized.Parameters;
 public class MovePageTest extends ParamHelper {
 
   @ClassRule
-  public static VersionTestClassVerifier classVerifier = new VersionTestClassVerifier(
-      MovePage.class);
+  public static VersionTestClassVerifier classVerifier =
+      new VersionTestClassVerifier(MovePage.class);
 
   @Rule
   public Verifier successRegister = classVerifier.getSuccessRegister(this);

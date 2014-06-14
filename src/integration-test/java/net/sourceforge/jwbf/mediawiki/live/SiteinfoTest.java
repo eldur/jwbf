@@ -49,7 +49,8 @@ public class SiteinfoTest extends AbstractMediaWikiBotTest {
   }
 
   /**
-   * Test get siteinfo on a MW. Prepare a the wiki, that the siteinfopage is only readable if user is logged in.
+   * Test get siteinfo on a MW. Prepare a the wiki, that the siteinfopage is only readable if user
+   * is logged in.
    * <pre>
    * $wgGroupPermissions['*']['read'] = false;
    * </pre>

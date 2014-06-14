@@ -29,8 +29,8 @@ public class PostModifyContentTest {
   private PostModifyContent testee;
   private MediaWikiBot bot;
   private Userinfo userinfo;
-  private static final ImmutableSet<String> rights = of(Userinfo.RIGHT_WRITEAPI,
-      Userinfo.RIGHT_EDIT);
+  private static final ImmutableSet<String> rights =
+      of(Userinfo.RIGHT_WRITEAPI, Userinfo.RIGHT_EDIT);
   private SimpleArticle simpleArticle;
 
   @Before

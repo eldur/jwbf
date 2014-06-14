@@ -41,8 +41,8 @@ public class CategoryMembersFullTest {
     // GIVEN
     MediaWikiBot bot = Mockito.mock(MediaWikiBot.class);
     IllegalStateException exception = new IllegalStateException();
-    Mockito.when(bot.getPerformedAction(Mockito.any(CategoryMembersFull.class))).thenThrow(
-        exception);
+    Mockito.when(bot.getPerformedAction(Mockito.any(CategoryMembersFull.class)))
+        .thenThrow(exception);
     String categoryName = "Test It";
 
     // WHEN
@@ -67,8 +67,8 @@ public class CategoryMembersFullTest {
     final CategoryMembersFull value = mock(CategoryMembersFull.class);
     // XXX strage testdata
     String category = "<cm pageid=\"2\" ns=\"1\" title=\"a\" />";
-    String withMore = "<query-continue><categorymembers cmcontinue=\"5\" /></query-continue>"
-        + category;
+    String withMore =
+        "<query-continue><categorymembers cmcontinue=\"5\" /></query-continue>" + category;
     Mockito.when(bot.getPerformedAction(Mockito.any(CategoryMembersFull.class)))
         .thenAnswer(categoryWith(testee, value, withMore))
         .thenAnswer(categoryWith(testee, value, category));

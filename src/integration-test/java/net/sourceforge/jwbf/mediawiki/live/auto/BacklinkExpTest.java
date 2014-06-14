@@ -26,8 +26,8 @@ public class BacklinkExpTest extends ParamHelper {
   private static final Logger log = LoggerFactory.getLogger(BacklinkExpTest.class);
 
   @ClassRule
-  public static VersionTestClassVerifier classVerifier = new VersionTestClassVerifier(
-      BacklinkTitles.class);
+  public static VersionTestClassVerifier classVerifier =
+      new VersionTestClassVerifier(BacklinkTitles.class);
 
   @Rule
   public Verifier successRegister = classVerifier.getSuccessRegister(this);
@@ -69,8 +69,8 @@ public class BacklinkExpTest extends ParamHelper {
 
   private void doTest(RedirectFilter rf) {
 
-    BacklinkTitles gbt = new BacklinkTitles(bot, BACKLINKS, rf, MediaWiki.NS_MAIN,
-        MediaWiki.NS_CATEGORY);
+    BacklinkTitles gbt =
+        new BacklinkTitles(bot, BACKLINKS, rf, MediaWiki.NS_MAIN, MediaWiki.NS_CATEGORY);
 
     List<String> vx = Lists.newArrayList();
     Iterator<String> is = gbt.iterator();

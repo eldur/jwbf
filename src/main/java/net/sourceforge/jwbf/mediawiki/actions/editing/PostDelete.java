@@ -13,8 +13,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Action class using the MediaWiki-API's <a href="http://www.mediawiki.org/wiki/API:Edit_-_Delete">"action=delete"</a>.
- * To allow your bot to delete articles in your MediaWiki add the following line to your MediaWiki's LocalSettings.php:<br>
+ * Action class using the MediaWiki-API's to allow your bot to delete articles in your MediaWiki add
+ * the following line to your MediaWiki's  LocalSettings.php:<br>
  * <pre>
  * $wgEnableWriteAPI = true;
  * $wgGroupPermissions['bot']['delete'] = true;
@@ -29,6 +29,7 @@ import org.slf4j.LoggerFactory;
  * </pre>
  *
  * @author Max Gensthaler
+ * @see <a href="http://www.mediawiki.org/wiki/API:Edit_-_Delete">"action=delete"</a>
  */
 public class PostDelete extends MWAction {
 
@@ -51,9 +52,9 @@ public class PostDelete extends MWAction {
     }
 
     if (!bot.getUserinfo().getRights().contains("delete")) {
-      throw new ProcessException("The given user doesn't have the rights to delete. "
-          + "Add '$wgGroupPermissions['bot']['delete'] = true;' "
-          + "to your MediaWiki's LocalSettings.php might solve this problem.");
+      throw new ProcessException("The given user doesn't have the rights to delete. " +
+          "Add '$wgGroupPermissions['bot']['delete'] = true;' " +
+          "to your MediaWiki's LocalSettings.php might solve this problem.");
     }
 
   }
@@ -63,7 +64,8 @@ public class PostDelete extends MWAction {
    *
    * @param bot    MediaWikiBot
    * @param title  the title of the page to delete
-   * @param reason reason for the deletion (may be null) in case of a precessing exception in case of an action exception
+   * @param reason reason for the deletion (may be null) in case of a precessing exception in case
+   *               of an action exception
    */
   public PostDelete(MediaWikiBot bot, String title, String reason) {
     this(bot, title);
@@ -120,8 +122,8 @@ public class PostDelete extends MWAction {
       } catch (IllegalArgumentException e) {
         String msg = e.getMessage();
         if (s.startsWith("unknown_action:")) {
-          msg = "unknown_action; Adding '$wgEnableWriteAPI = true;' to your MediaWiki's "
-              + "LocalSettings.php might remove this problem.";
+          msg = "unknown_action; Adding '$wgEnableWriteAPI = true;' to your MediaWiki's " +
+              "LocalSettings.php might remove this problem.";
         }
         log.error(msg, e);
         throw new ProcessException(msg, e);
@@ -133,7 +135,8 @@ public class PostDelete extends MWAction {
   }
 
   /**
-   * Determines if the given XML Document contains an error message which then would printed by the logger.
+   * Determines if the given XML Document contains an error message which then would printed by the
+   * logger.
    */
   @Override
   protected XmlElement getErrorElement(XmlElement rootXmlElement) {
@@ -141,8 +144,8 @@ public class PostDelete extends MWAction {
     if (containsError != null) {
       log.warn(containsError.getAttributeValue("info"));
       if (containsError.getAttributeValue("code").equals("inpermissiondenied")) {
-        log.error("Adding '$wgGroupPermissions['bot']['delete'] = true;'"
-            + " to your MediaWiki's LocalSettings.php might remove this problem.");
+        log.error("Adding '$wgGroupPermissions['bot']['delete'] = true;'" +
+            " to your MediaWiki's LocalSettings.php might remove this problem.");
       }
     }
     return containsError;
@@ -153,8 +156,8 @@ public class PostDelete extends MWAction {
     if (elem != null) {
       // process reply for delete request
       if (log.isInfoEnabled()) {
-        log.info("Deleted article '" + elem.getAttributeValue("title") + "'" + " with reason '"
-            + elem.getAttributeValue("reason") + "'");
+        log.info("Deleted article '" + elem.getAttributeValue("title") + "'" + " with reason '" +
+            elem.getAttributeValue("reason") + "'");
       }
     } else {
       log.error("Unknow reply. This is not a reply for a delete action.");

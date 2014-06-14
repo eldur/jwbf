@@ -61,8 +61,8 @@ public class UploadAndImageInfoTest extends ParamHelper {
   private static final Logger log = LoggerFactory.getLogger(UploadAndImageInfoTest.class);
 
   @ClassRule
-  public static VersionTestClassVerifier classVerifier = new VersionTestClassVerifier(
-      FileUpload.class, ImageInfo.class);
+  public static VersionTestClassVerifier classVerifier =
+      new VersionTestClassVerifier(FileUpload.class, ImageInfo.class);
 
   @Rule
   public Verifier successRegister = classVerifier.getSuccessRegister(this);
@@ -134,8 +134,8 @@ public class UploadAndImageInfoTest extends ParamHelper {
 
       url = new ImageInfo(bot, sf.getTitle()).getUrl();
     } catch (ProcessException e) {
-      throw new ProcessException(e.getLocalizedMessage()
-          + "; \n is upload enabled? $wgEnableUploads = true;");
+      throw new ProcessException(
+          e.getLocalizedMessage() + "; \n is upload enabled? $wgEnableUploads = true;");
     }
     urlSizeVar = new ImageInfo(bot, sf.getTitle() //
         , new String[][] { //

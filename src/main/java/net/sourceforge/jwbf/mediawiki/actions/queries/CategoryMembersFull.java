@@ -20,15 +20,15 @@ import org.slf4j.LoggerFactory;
  *
  * @author Thomas Stock
  */
-public class CategoryMembersFull extends CategoryMembers implements Iterable<CategoryItem>,
-    Iterator<CategoryItem> {
+public class CategoryMembersFull extends CategoryMembers
+    implements Iterable<CategoryItem>, Iterator<CategoryItem> {
 
   private static final Logger log = LoggerFactory.getLogger(CategoryMembersFull.class);
 
   private Get msg;
   /**
-   * Collection that will contain the result (titles of articles linking to the target) after performing the action has
-   * finished.
+   * Collection that will contain the result (titles of articles linking to the target) after
+   * performing the action has finished.
    */
   private final List<CategoryItem> titleCollection = Lists.newArrayList();
   private Iterator<CategoryItem> titleIterator;

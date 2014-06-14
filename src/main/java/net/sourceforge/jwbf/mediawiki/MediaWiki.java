@@ -65,9 +65,9 @@ public final class MediaWiki {
   public static final int NS_CATEGORY_TALK = 15;
 
   public static final int[] NS_ALL = { //
-      NS_MAIN, NS_MAIN_TALK, NS_USER, NS_USER_TALK, NS_META, NS_META_TALK, NS_IMAGES, NS_IMAGES_TALK,
-      NS_MEDIAWIKI, NS_MEDIAWIKI_TALK, NS_TEMPLATE, NS_TEMPLATE_TALK, NS_HELP, NS_HELP_TALK,
-      NS_CATEGORY, NS_CATEGORY_TALK //
+      NS_MAIN, NS_MAIN_TALK, NS_USER, NS_USER_TALK, NS_META, NS_META_TALK, NS_IMAGES,
+      NS_IMAGES_TALK, NS_MEDIAWIKI, NS_MEDIAWIKI_TALK, NS_TEMPLATE, NS_TEMPLATE_TALK, NS_HELP,
+      NS_HELP_TALK, NS_CATEGORY, NS_CATEGORY_TALK //
   };
 
   public static final Set<String> BOT_GROUPS;
@@ -90,8 +90,7 @@ public final class MediaWiki {
     /**
      *
      */
-    , @Deprecated
-    MW1_14
+    , @Deprecated MW1_14
     /**
      * Released 2009-06
      */

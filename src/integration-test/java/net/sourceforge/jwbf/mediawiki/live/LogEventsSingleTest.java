@@ -24,7 +24,8 @@ public class LogEventsSingleTest extends AbstractMediaWikiBotTest {
       bot.getPerformedAction(le);
       fail();
     } catch (ActionException e) {
-      assertEquals("this is a selfexcecuting action, please do not perform this action manually", e.getMessage());
+      assertEquals("this is a selfexcecuting action, please do not perform this action manually",
+          e.getMessage());
     }
   }
 

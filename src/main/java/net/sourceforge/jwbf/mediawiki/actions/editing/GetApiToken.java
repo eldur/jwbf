@@ -16,11 +16,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Action class using the MediaWiki-<a href="http://www.mediawiki.org/wiki/API:Changing_wiki_content" >Editing-API</a>. <br />
- * Its job is to get the token for some actions like delete or edit.
+ * This class get the token for some actions like delete or edit.
  *
  * @author Max Gensthaler
  * @author Thomas Stock
+ * @see <a href="http://www.mediawiki.org/wiki/API:Changing_wiki_content" >Editing-API</a>
  */
 public class GetApiToken extends DequeMWAction {
 
@@ -36,17 +36,17 @@ public class GetApiToken extends DequeMWAction {
     DELETE, EDIT, MOVE, PROTECT, EMAIL, BLOCK, UNBLOCK, IMPORT
   }
 
-  private static final ImmutableMap<Intoken, Function<XmlElement, String>> TOKEN_FUNCTIONS = ImmutableMap
-      .<Intoken, Function<XmlElement, String>>builder() //
-      .put(Intoken.DELETE, tokenFunctionOf("deletetoken")) //
-      .put(Intoken.EDIT, tokenFunctionOf("edittoken")) //
-      .put(Intoken.MOVE, tokenFunctionOf("movetoken")) //
-      .put(Intoken.PROTECT, tokenFunctionOf("protecttoken")) //
-      .put(Intoken.EMAIL, tokenFunctionOf("emailtoken")) //
-      .put(Intoken.BLOCK, tokenFunctionOf("blocktoken")) //
-      .put(Intoken.UNBLOCK, tokenFunctionOf("unblocktoken")) //
-      .put(Intoken.IMPORT, tokenFunctionOf("IMPORT")) //
-      .build();
+  private static final ImmutableMap<Intoken, Function<XmlElement, String>> TOKEN_FUNCTIONS =
+      ImmutableMap.<Intoken, Function<XmlElement, String>>builder() //
+          .put(Intoken.DELETE, tokenFunctionOf("deletetoken")) //
+          .put(Intoken.EDIT, tokenFunctionOf("edittoken")) //
+          .put(Intoken.MOVE, tokenFunctionOf("movetoken")) //
+          .put(Intoken.PROTECT, tokenFunctionOf("protecttoken")) //
+          .put(Intoken.EMAIL, tokenFunctionOf("emailtoken")) //
+          .put(Intoken.BLOCK, tokenFunctionOf("blocktoken")) //
+          .put(Intoken.UNBLOCK, tokenFunctionOf("unblocktoken")) //
+          .put(Intoken.IMPORT, tokenFunctionOf("IMPORT")) //
+          .build();
 
   private Optional<String> token = Optional.absent();
 
@@ -119,8 +119,8 @@ public class GetApiToken extends DequeMWAction {
         // TODO check catch
       } catch (IllegalArgumentException e) {
         if (s.startsWith("unknown_action:")) {
-          log.error("Adding '$wgEnableWriteAPI = true;' "
-              + "to your MediaWiki's LocalSettings.php might remove this problem.", e);
+          log.error("Adding '$wgEnableWriteAPI = true;' " +
+              "to your MediaWiki's LocalSettings.php might remove this problem.", e);
         } else {
           log.error(e.getMessage(), e);
         }

@@ -34,9 +34,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Gets a list of pages recently changed, ordered by modification timestamp. Parameters: rcfrom (paging timestamp), rcto
- * (flt), rcnamespace (flt), rcminor (flt), rcusertype (dflt=not|bot), rcdirection (dflt=older), rclimit (dflt=10,
- * max=500/5000) F api.php ? action=query & list=recentchanges - List last 10 changes
+ * Gets a list of pages recently changed, ordered by modification timestamp. Parameters: rcfrom
+ * (paging timestamp), rcto (flt), rcnamespace (flt), rcminor (flt), rcusertype (dflt=not|bot),
+ * rcdirection (dflt=older), rclimit (dflt=10, max=500/5000) F api.php ? action=query &
+ * list=recentchanges - List last 10 changes
  *
  * @author Thomas Stock
  */
@@ -56,8 +57,8 @@ public class RecentchangeTitles extends TitleQuery<String> {
   /**
    * generates the next MediaWiki-request (GetMethod) and adds it to msgs.
    *
-   * @param namespace the namespace(s) that will be searched for links, as a string of numbers separated by '|'; if null, this
-   *                  parameter is omitted
+   * @param namespace the namespace(s) that will be searched for links, as a string of numbers
+   *                  separated by '|'; if null, this parameter is omitted
    * @param rcstart   timestamp
    */
   private HttpAction generateRequest(int[] namespace, String rcstart) {

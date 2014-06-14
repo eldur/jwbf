@@ -21,8 +21,8 @@ package net.sourceforge.jwbf.core.actions.util;
 import net.sourceforge.jwbf.core.bots.util.JwbfException;
 
 /**
- * This exception can be used in children of a wikiaction to handle exceptions in these actions, like access to content
- * or mismatching patterns e.g.
+ * This exception can be used in children of a wikiaction to handle exceptions in these actions,
+ * like access to content or mismatching patterns e.g.
  *
  * @author Thomas Stock
  */

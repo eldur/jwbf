@@ -21,7 +21,8 @@ package net.sourceforge.jwbf.mediawiki.contentRep;
 import net.sourceforge.jwbf.mediawiki.actions.queries.CategoryMembersFull;
 
 /**
- * This class helps to get detail information about category items and was returned by {@link CategoryMembersFull}.
+ * This class helps to get detail information about category items and was returned by {@link
+ * CategoryMembersFull}.
  *
  * @author Thomas Stock
  */

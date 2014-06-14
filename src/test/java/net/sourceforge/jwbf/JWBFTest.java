@@ -245,18 +245,21 @@ public class JWBFTest {
     // WHEN
     List<ContainerEntry> result = JWBF.jarToEntries(jarFileName);
 
-    Function<ContainerEntry, ContainerEntry> function = new Function<ContainerEntry, ContainerEntry>() {
+    Function<ContainerEntry, ContainerEntry> function =
+        new Function<ContainerEntry, ContainerEntry>() {
 
-      @Override
-      public ContainerEntry apply(ContainerEntry input) {
-        if (input == null) {
-          return null;
-        }
-        return new ContainerEntry(input.getName().replaceAll("[0-9]+", ""), input.isDirectory());
-      }
-    };
+          @Override
+          public ContainerEntry apply(ContainerEntry input) {
+            if (input == null) {
+              return null;
+            }
+            return new ContainerEntry(input.getName().replaceAll("[0-9]+", ""),
+                input.isDirectory());
+          }
+        };
     // THEN
-    List<ContainerEntry> mutated = Ordering.usingToString().immutableSortedCopy(Lists.transform(result, function));
+    List<ContainerEntry> mutated =
+        Ordering.usingToString().immutableSortedCopy(Lists.transform(result, function));
 
     List<ContainerEntry> expected = ImmutableList.<ContainerEntry>builder() //
         .add(new ContainerEntry("META-INF/MANIFEST.MF", false)) //

@@ -130,7 +130,8 @@ public class LoginTest extends AbstractMediaWikiBotTest {
   }
 
   /**
-   * Test invalid installation of MW. TODO change exception test, should fail if no route to test host
+   * Test invalid installation of MW. TODO change exception test, should fail if no route to test
+   * host
    */
   @Test
   public final void installationDefunct() throws Exception {
@@ -173,10 +174,9 @@ public class LoginTest extends AbstractMediaWikiBotTest {
       resp.getEntity().consumeContent();
     }
 
-    httpClient.getCredentialsProvider().setCredentials(
-        new AuthScope(u.getHost(), port),
-        new UsernamePasswordCredentials(BotFactory.getWikiUser(latest), BotFactory
-            .getWikiPass(latest)));
+    httpClient.getCredentialsProvider().setCredentials(new AuthScope(u.getHost(), port),
+        new UsernamePasswordCredentials(BotFactory.getWikiUser(latest),
+            BotFactory.getWikiPass(latest)));
 
     HttpClientBuilder clientBuilder = HttpClientBuilder.create();
     HttpActionClient sslFakeClient = new HttpActionClient(clientBuilder, u);
@@ -186,8 +186,8 @@ public class LoginTest extends AbstractMediaWikiBotTest {
     assertTrue(bot.isLoggedIn());
   }
 
-  private AbstractHttpClient getSSLFakeHttpClient() throws NoSuchAlgorithmException,
-      KeyManagementException {
+  private AbstractHttpClient getSSLFakeHttpClient()
+      throws NoSuchAlgorithmException, KeyManagementException {
     SSLContext sslContext = SSLContext.getInstance("SSL");
     sslContext.init(null, new TrustManager[] { new X509TrustManager() {
       @Override

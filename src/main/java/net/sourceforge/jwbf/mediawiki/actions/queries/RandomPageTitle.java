@@ -10,7 +10,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Action to receive the title of a random page TODO write a test that shows compatibility with all these versions
+ * Action to receive the title of a random page TODO write a test that shows compatibility with all
+ * these versions
  *
  * @author Juan Ignacio Cidre
  */
@@ -22,7 +23,8 @@ public class RandomPageTitle extends MWAction {
   private final MediaWikiBot bot;
 
   /**
-   * Creates the class. Defines the invocation to MediaWiki that is needed in order to get a random page
+   * Creates the class. Defines the invocation to MediaWiki that is needed in order to get a random
+   * page
    */
   public RandomPageTitle(MediaWikiBot bot) {
     this.bot = bot;

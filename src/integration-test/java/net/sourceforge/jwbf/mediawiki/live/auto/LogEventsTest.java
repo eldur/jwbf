@@ -25,8 +25,8 @@ public class LogEventsTest extends ParamHelper {
   private static final Logger log = LoggerFactory.getLogger(LogEventsTest.class);
 
   @ClassRule
-  public static VersionTestClassVerifier classVerifier = new VersionTestClassVerifier(
-      LogEvents.class);
+  public static VersionTestClassVerifier classVerifier =
+      new VersionTestClassVerifier(LogEvents.class);
 
   @Rule
   public Verifier successRegister = classVerifier.getSuccessRegister(this);
@@ -67,8 +67,7 @@ public class LogEventsTest extends ParamHelper {
 
     int i = 0;
     boolean notEnough = true;
-    for (@SuppressWarnings("unused")
-    LogItem logItem : le) {
+    for (@SuppressWarnings("unused") LogItem logItem : le) {
       i++;
       if (i > LIMIT) {
         notEnough = false;

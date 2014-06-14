@@ -15,10 +15,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Implements function to render wikitext on remote <a href=
- * "http://www.mediawiki.org/wiki/API:Expanding_templates_and_rendering#parse" >parse</a>.
+ * Implements function to render wikitext on remote.
  *
  * @author Thomas Stock
+ * @see <a href="http://www.mediawiki.org/wiki/API:Expanding_templates_and_rendering#parse">
+ * API:Parsing wikitext</a>
  */
 public class GetRendering extends MWAction {
 

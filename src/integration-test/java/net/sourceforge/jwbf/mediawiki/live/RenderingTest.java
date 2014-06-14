@@ -47,7 +47,8 @@ public class RenderingTest extends AbstractMediaWikiBotTest {
     try {
       bot.getPerformedAction(r);
     } catch (ActionException e) {
-      assertEquals("this is a selfexcecuting action, please do not perform this action manually", e.getMessage());
+      assertEquals("this is a selfexcecuting action, please do not perform this action manually",
+          e.getMessage());
     }
   }
 

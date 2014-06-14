@@ -42,8 +42,8 @@ public class HttpActionClientIntegTest extends AbstractIntegTest {
             // .. next we get a param like useCompression=gzip ..
             // see https://bugzilla.wikimedia.org/show_bug.cgi?id=64508
         .buildGet();
-    ResponseHandler<String> getResponse = ContentProcessableBuilder.create(testee)
-        .withActions(search).build();
+    ResponseHandler<String> getResponse =
+        ContentProcessableBuilder.create(testee).withActions(search).build();
     // WHEN
 
     testee.performAction(getResponse);

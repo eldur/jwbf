@@ -25,8 +25,8 @@ import org.junit.runners.Parameterized.Parameters;
 public class AllPagesExpTest extends ParamHelper {
 
   @ClassRule
-  public static VersionTestClassVerifier classVerifier = new VersionTestClassVerifier(
-      AllPageTitles.class);
+  public static VersionTestClassVerifier classVerifier =
+      new VersionTestClassVerifier(AllPageTitles.class);
 
   @Rule
   public Verifier successRegister = classVerifier.getSuccessRegister(this);
@@ -42,8 +42,8 @@ public class AllPagesExpTest extends ParamHelper {
 
   @Test
   public void doTest() {
-    AllPageTitles allPages = new AllPageTitles(bot, null, null, RedirectFilter.all,
-        MediaWiki.NS_MAIN);
+    AllPageTitles allPages =
+        new AllPageTitles(bot, null, null, RedirectFilter.all, MediaWiki.NS_MAIN);
 
     SimpleArticle sa;
     String testText = TestHelper.getRandom(255);

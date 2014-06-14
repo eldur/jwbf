@@ -124,7 +124,8 @@ public class RequestBuilderTest {
     assertEquals("/index.html?a=b UTF-8 {c=[d]}", post.toString());
     assertEquals(post, newPost);
 
-    assertEquals("/index.html?a=b&c=e UTF-8 {c=[d]}", builder.param("c", "e").buildPost().toString());
+    assertEquals("/index.html?a=b&c=e UTF-8 {c=[d]}",
+        builder.param("c", "e").buildPost().toString());
   }
 
   @Test

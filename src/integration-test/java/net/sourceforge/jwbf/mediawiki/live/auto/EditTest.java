@@ -18,8 +18,8 @@ import org.junit.runners.Parameterized.Parameters;
 public class EditTest extends ParamHelper {
 
   @ClassRule
-  public static VersionTestClassVerifier classVerifier = new VersionTestClassVerifier(
-      PostModifyContent.class);
+  public static VersionTestClassVerifier classVerifier =
+      new VersionTestClassVerifier(PostModifyContent.class);
 
   @Rule
   public Verifier successRegister = classVerifier.getSuccessRegister(this);

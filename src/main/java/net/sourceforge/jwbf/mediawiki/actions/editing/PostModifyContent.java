@@ -74,8 +74,8 @@ public class PostModifyContent extends MWAction {
 
     Userinfo userinfo = bot.getUserinfo();
     Set<String> rights = userinfo.getRights();
-    boolean canWrite = rights.contains(Userinfo.RIGHT_EDIT)
-        && rights.contains(Userinfo.RIGHT_WRITEAPI);
+    boolean canWrite =
+        rights.contains(Userinfo.RIGHT_EDIT) && rights.contains(Userinfo.RIGHT_WRITEAPI);
 
     if (!(bot.isEditApi() && canWrite)) {
       throw new VersionException("editing is not allowed");

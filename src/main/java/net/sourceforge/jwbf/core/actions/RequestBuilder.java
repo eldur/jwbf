@@ -12,8 +12,10 @@ import com.google.common.collect.ImmutableMultimap;
 
 public class RequestBuilder {
 
-  private final ImmutableMultimap.Builder<String, Supplier<String>> params = ImmutableMultimap.builder();
-  private final ImmutableMultimap.Builder<String, Supplier<Object>> postParams = ImmutableMultimap.builder();
+  private final ImmutableMultimap.Builder<String, Supplier<String>> params =
+      ImmutableMultimap.builder();
+  private final ImmutableMultimap.Builder<String, Supplier<Object>> postParams =
+      ImmutableMultimap.builder();
   private final String path;
 
   public RequestBuilder(String path) {

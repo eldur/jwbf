@@ -14,8 +14,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Action class using the MediaWiki-API's <a href="http://www.mediawiki.org/wiki/API:Edit_-_Move">"action=move"</a>.
- * To allow your bot to move articles in your MediaWiki add the following line to your MediaWiki's LocalSettings.php:<br>
+ * Action class using the MediaWiki-API's to allow your bot to move articles in your MediaWiki add
+ * the following line to your MediaWiki's LocalSettings.php:<br>
  * <pre>
  * $wgEnableWriteAPI = true;
  * $wgGroupPermissions['bot']['move'] = true;
@@ -35,6 +35,7 @@ import org.slf4j.LoggerFactory;
  * </pre>
  *
  * @author Christoph Giesel
+ * @see <a href="http://www.mediawiki.org/wiki/API:Edit_-_Move">"action=move"</a>
  */
 public class MovePage extends MWAction {
 
@@ -73,15 +74,15 @@ public class MovePage extends MWAction {
     }
 
     if (!bot.getUserinfo().getRights().contains("move")) {
-      throw new ProcessException("The given user doesn't have the rights to move. "
-          + "Add '$wgGroupPermissions['bot']['move'] = true;' "
-          + "to your MediaWiki's LocalSettings.php might solve this problem.");
+      throw new ProcessException("The given user doesn't have the rights to move. " +
+          "Add '$wgGroupPermissions['bot']['move'] = true;' " +
+          "to your MediaWiki's LocalSettings.php might solve this problem.");
     }
 
     if (withsubpages && !bot.getUserinfo().getRights().contains("move-subpages")) {
-      throw new ProcessException("The given user doesn't have the rights to move subpages. "
-          + "Add '$wgGroupPermissions['bot']['move-subpages'] = true;' "
-          + "to your MediaWiki's LocalSettings.php might solve this problem.");
+      throw new ProcessException("The given user doesn't have the rights to move subpages. " +
+          "Add '$wgGroupPermissions['bot']['move-subpages'] = true;' " +
+          "to your MediaWiki's LocalSettings.php might solve this problem.");
     }
   }
 
@@ -156,9 +157,9 @@ public class MovePage extends MWAction {
     if (elem != null) {
       // process reply for delete request
       if (log.isInfoEnabled()) {
-        log.info("Moved article '" + elem.getAttributeValue("from") + "' to '"
-            + elem.getAttributeValue("to") + "'" + " with reason '"
-            + elem.getAttributeValue("reason") + "'");
+        log.info("Moved article '" + elem.getAttributeValue("from") + "' to '" +
+            elem.getAttributeValue("to") + "'" +
+            " with reason '" + elem.getAttributeValue("reason") + "'");
       }
     } else {
       log.error("Unknow reply. This is not a reply for a delete action.");

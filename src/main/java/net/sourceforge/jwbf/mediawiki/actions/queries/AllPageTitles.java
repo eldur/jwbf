@@ -50,14 +50,14 @@ public class AllPageTitles extends TitleQuery<String> {
   /**
    * Pattern to parse returned page, @see {@link #parseHasMore(String)}.
    */
-  private static final Pattern HAS_MORE_PATTERN = Pattern.compile(
-      "<query-continue>.*?<allpages *apfrom=\"([^\"]*)\" */>.*?</query-continue>", Pattern.DOTALL
-          | Pattern.MULTILINE);
-  private static final Pattern HAS_MORE_PATTERN_20 = Pattern.compile(
-      "<query-continue>.*?<allpages *apcontinue=\"([^\"]*)\" */>.*?</query-continue>",
+  private static final Pattern HAS_MORE_PATTERN = Pattern.compile( //
+      "<query-continue>.*?<allpages *apfrom=\"([^\"]*)\" */>.*?</query-continue>",
       Pattern.DOTALL | Pattern.MULTILINE);
-  private static final Pattern ARTICLE_TITLES_PATTERN = Pattern
-      .compile("<p pageid=\".*?\" ns=\".*?\" title=\"(.*?)\" />");
+  private static final Pattern HAS_MORE_PATTERN_20 = Pattern.compile( //
+      "<query-continue>.*?<allpages *apcontinue=\"" //
+          + "([^\"]*)\" */>.*?</query-continue>", Pattern.DOTALL | Pattern.MULTILINE);
+  private static final Pattern ARTICLE_TITLES_PATTERN = Pattern.compile( //
+      "<p pageid=\".*?\" ns=\".*?\" title=\"(.*?)\" />");
   /** Pattern to parse returned page, @see {@link #parseArticleTitles(String)} */
   /**
    * Constant value for the aplimit-parameter. *
@@ -77,14 +77,16 @@ public class AllPageTitles extends TitleQuery<String> {
   private final RedirectFilter rf;
 
   /**
-   * The public constructor. It will have an MediaWiki-request generated, which is then added to msgs. When it is
-   * answered, the method processAllReturningText will be called (from outside this class).
+   * The public constructor. It will have an MediaWiki-request generated, which is then added to
+   * msgs. When it is answered, the method processAllReturningText will be called (from outside this
+   * class).
    *
    * @param from       page title to start from, may be null
    * @param prefix     restricts search to titles that begin with this value, may be null
    * @param rf         include redirects in the list
-   * @param namespaces the namespace(s) that will be searched for links, as a string of numbers separated by '|'; if null, this
-   *                   parameter is omitted TODO are multible namespaces allowed?
+   * @param namespaces the namespace(s) that will be searched for links, as a string of numbers
+   *                   separated by '|'; if null, this parameter is omitted TODO are multible
+   *                   namespaces allowed?
    */
   public AllPageTitles(MediaWikiBot bot, String from, String prefix, RedirectFilter rf,
       int... namespaces) {
@@ -107,8 +109,8 @@ public class AllPageTitles extends TitleQuery<String> {
    * @param from      page title to start from, may be null
    * @param prefix    restricts search to titles that begin with this value, may be null
    * @param rf        include redirects in the list
-   * @param namespace the namespace(s) that will be searched for links, as a string of numbers separated by '|'; if null, this
-   *                  parameter is omitted
+   * @param namespace the namespace(s) that will be searched for links, as a string of numbers
+   *                  separated by '|'; if null, this parameter is omitted
    * @return a
    */
   protected Get generateRequest(Optional<String> from, String prefix, RedirectFilter rf,
@@ -162,8 +164,8 @@ public class AllPageTitles extends TitleQuery<String> {
   }
 
   /**
-   * Gets the information about a follow-up page from a provided api response. If there is one, a new request is added
-   * to msgs by calling generateRequest. If no exists, the string is empty.
+   * Gets the information about a follow-up page from a provided api response. If there is one, a
+   * new request is added to msgs by calling generateRequest. If no exists, the string is empty.
    *
    * @param s text for parsing
    * @return the

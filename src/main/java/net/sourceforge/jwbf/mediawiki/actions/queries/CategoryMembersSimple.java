@@ -43,14 +43,15 @@ public class CategoryMembersSimple implements Iterable<String>, Iterator<String>
   private Get msg;
   private final CategoryMembers cm;
   /**
-   * Collection that will contain the result (titles of articles linking to the target) after performing the action has
-   * finished.
+   * Collection that will contain the result (titles of articles linking to the target) after
+   * performing the action has finished.
    */
   private final List<String> titleCollection = Lists.newArrayList();
   private Iterator<String> titleIterator;
 
   /**
-   * @param categoryName like "Buildings" or "Chemical elements" without prefix "Category:" in {@link MediaWiki#NS_MAIN}
+   * @param categoryName like "Buildings" or "Chemical elements" without prefix "Category:" in
+   *                     {@link MediaWiki#NS_MAIN}
    */
   public CategoryMembersSimple(MediaWikiBot bot, String categoryName) {
     this(bot, categoryName, MediaWiki.NS_MAIN);

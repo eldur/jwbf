@@ -181,7 +181,8 @@ public class HttpActionClient {
   }
 
   @VisibleForTesting
-  void applyToEntityBuilder(String key, Collection<Object> values, Charset charset, MultipartEntityBuilder entityBuilder) {
+  void applyToEntityBuilder(String key, Collection<Object> values, Charset charset,
+      MultipartEntityBuilder entityBuilder) {
     for (Object content : Iterables.filter(values, Predicates.notNull())) {
       if (content instanceof String) {
         String text = (String) content;
@@ -242,8 +243,7 @@ public class HttpActionClient {
 
     try ( //
         InputStream content = res.getEntity().getContent();
-        InputStreamReader inputStreamReader = new InputStreamReader(content,
-            charSet); //
+        InputStreamReader inputStreamReader = new InputStreamReader(content, charSet); //
         BufferedReader br = new BufferedReader(inputStreamReader); //
     ) {
       return toString(br);
@@ -271,8 +271,8 @@ public class HttpActionClient {
     int code = statusLine.getStatusCode();
     if (code >= HttpStatus.SC_BAD_REQUEST) {
       consume(res);
-      throw new IllegalStateException("invalid status: " + statusLine + "; for "
-          + requestBase.getURI());
+      throw new IllegalStateException(
+          "invalid status: " + statusLine + "; for " + requestBase.getURI());
     }
     return res;
   }

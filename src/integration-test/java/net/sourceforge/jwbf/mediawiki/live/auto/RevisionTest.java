@@ -28,8 +28,8 @@ import org.junit.runners.Parameterized.Parameters;
 public class RevisionTest extends ParamHelper {
 
   @ClassRule
-  public static VersionTestClassVerifier classVerifier = new VersionTestClassVerifier(
-      GetRevision.class, PostModifyContent.class, GetApiToken.class);
+  public static VersionTestClassVerifier classVerifier =
+      new VersionTestClassVerifier(GetRevision.class, PostModifyContent.class, GetApiToken.class);
 
   @Rule
   public Verifier successRegister = classVerifier.getSuccessRegister(this);

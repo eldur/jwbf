@@ -167,9 +167,9 @@ public class ArticleTest {
       verify(actionClient, times(7)).performAction(Mockito.isA(GetRevision.class));
       fail();
     } catch (IllegalArgumentException iae) {
-      assertEquals("do not convert an net.sourceforge.jwbf.core.contentRep.Article"
-          + " to a net.sourceforge.jwbf.core.contentRep.SimpleArticle,"
-          + " because its very expensive", iae.getMessage());
+      assertEquals("do not convert an net.sourceforge.jwbf.core.contentRep.Article" +
+          " to a net.sourceforge.jwbf.core.contentRep.SimpleArticle, because its very expensive",
+          iae.getMessage());
     }
   }
 

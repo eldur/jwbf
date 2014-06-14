@@ -152,7 +152,12 @@ public class HttpActionClientTest {
       String url = "http://localhost:" + server.getPort();
       testee = HttpActionClient.of(url);
       String utf8Data = "츠 ᅳ פעילות הבינאáßçकखी國際ɕɕkɕoːɐ̯eːaɕɐɑɒæɑ̃ɕʌbɓʙβcɕçɕɕçɕɔɔɕɕöäü\u200B";
-      String utf8RawData = "\uCE20 \u1173 \u05E4\u05E2\u05D9\u05DC\u05D5\u05EA \u05D4\u05D1\u05D9\u05E0\u05D0\u00E1\u00DF\u00E7\u0915\u0916\u0940\u570B\u969B\u0255\u0255k\u0255o\u02D0\u0250\u032Fe\u02D0a\u0255\u0250\u0251\u0252\u00E6\u0251\u0303\u0255\u028Cb\u0253\u0299\u03B2c\u0255\u00E7\u0255\u0255\u00E7\u0255\u0254\u0254\u0255\u0255\u00F6\u00E4\u00FC\u200B";
+      String utf8RawData =
+          "\uCE20 \u1173 \u05E4\u05E2\u05D9\u05DC\u05D5\u05EA \u05D4\u05D1\u05D9\u05E0" +
+              "\u05D0\u00E1\u00DF\u00E7\u0915\u0916\u0940\u570B\u969B\u0255\u0255k\u0255o" +
+              "\u02D0\u0250\u032Fe\u02D0a\u0255\u0250\u0251\u0252\u00E6\u0251\u0303\u0255" +
+              "\u028Cb\u0253\u0299\u03B2c\u0255\u00E7\u0255\u0255\u00E7\u0255\u0254\u0254" +
+              "\u0255\u0255\u00F6\u00E4\u00FC\u200B";
       assertEquals(utf8RawData, utf8Data);
       Post post = RequestBuilder.of(url) //
           .param("b", "c") //
@@ -164,11 +169,9 @@ public class HttpActionClientTest {
       String bs = testee.post(post);
 
       // THEN
-      ImmutableList<String> result = ImmutableList.<String>builder()
-          .add("b=c") //
+      ImmutableList<String> result = ImmutableList.<String>builder().add("b=c") //
           .addAll(multipartOf("a", utf8RawData)) //
-          .add("")
-          .build();
+          .add("").build();
 
       GAssert.assertEquals(result, GAssert.toList(bs));
 
@@ -188,18 +191,14 @@ public class HttpActionClientTest {
       testee = HttpActionClient.of(url);
       Post post = RequestBuilder.of(url) //
           .param("b", "c") //
-          .param("b", "e")
-          .postParam("b", "c")
-          .postParam("b", "e")
-          .buildPost() //
+          .param("b", "e").postParam("b", "c").postParam("b", "e").buildPost() //
           .postParam("a", "b");
 
       // WHEN
       String bs = testee.post(post);
 
       // THEN
-      ImmutableList<String> result = ImmutableList.<String>builder()
-          .add("b=c&b=e") // b = [c, e]
+      ImmutableList<String> result = ImmutableList.<String>builder().add("b=c&b=e") // b = [c, e]
           .addAll(multipartOf("b", "c")) //
           .addAll(multipartOf("b", "e")) //
           .addAll(multipartOf("a", "b")) //
@@ -214,8 +213,8 @@ public class HttpActionClientTest {
   }
 
   private List<String> multipartOf(String key, String value) {
-    return ImmutableList.<String>builder()
-        .add("Content-Disposition: form-data; name=\"" + key + "\"") //
+    return ImmutableList.<String>builder().add(
+        "Content-Disposition: form-data; name=\"" + key + "\"") //
         .add("Content-Type: */*; charset=UTF-8") //
         .add("Content-Transfer-Encoding: 8bit") //
         .add("") //
@@ -241,12 +240,12 @@ public class HttpActionClientTest {
       String bs = testee.get(new Get(url));
 
       // THEN
-      ImmutableList<String> expected = ImmutableList.<String>builder()
-          .add(entry(ACCEPT_ENCODING, "gzip,deflate")) //
-          .add(entry(CONNECTION, "keep-alive")) //
-          .add(entry(HOST, "localhost:????")) //
-          .add(entry(USER_AGENT, "Apache-HttpClient/4.3.4 (java 1.5)")) //
-          .build();
+      ImmutableList<String> expected =
+          ImmutableList.<String>builder().add(entry(ACCEPT_ENCODING, "gzip,deflate")) //
+              .add(entry(CONNECTION, "keep-alive")) //
+              .add(entry(HOST, "localhost:????")) //
+              .add(entry(USER_AGENT, "Apache-HttpClient/4.3.4 (java 1.5)")) //
+              .build();
 
       assertEquals(Joiner.on("\n").join(expected), bs.trim());
 
@@ -262,7 +261,8 @@ public class HttpActionClientTest {
         .withClient(HttpClientBuilder.create().build()) //
         .withUrl("http://localhost/") //
         .build();
-    GAssert.assertEquals(ImmutableList.<String>of("[WARN] a useragent must be set in your client"), logLinesSupplier.get());
+    GAssert.assertEquals(ImmutableList.<String>of("[WARN] a useragent must be set in your client"),
+        logLinesSupplier.get());
   }
 
   @Test
@@ -289,14 +289,14 @@ public class HttpActionClientTest {
       String result = Iterables.getOnlyElement(a.get()).trim();
 
       // THEN
-      ImmutableList<String> expected = ImmutableList.<String>builder()
-          .add(entry(ACCEPT_ENCODING, "gzip,deflate")) //
-          .add(entry(CONNECTION, "keep-alive")) //
-          .add(entry(CONTENT_LENGTH, "???")) //
-          .add(entry(CONTENT_TYPE, "multipart/form-data; boundary=????")) //
-          .add(entry(HOST, "localhost:????")) //
-          .add(entry(USER_AGENT, "none")) //
-          .build();
+      ImmutableList<String> expected =
+          ImmutableList.<String>builder().add(entry(ACCEPT_ENCODING, "gzip,deflate")) //
+              .add(entry(CONNECTION, "keep-alive")) //
+              .add(entry(CONTENT_LENGTH, "???")) //
+              .add(entry(CONTENT_TYPE, "multipart/form-data; boundary=????")) //
+              .add(entry(HOST, "localhost:????")) //
+              .add(entry(USER_AGENT, "none")) //
+              .build();
 
       assertEquals(Joiner.on("\n").join(expected), result);
 
@@ -314,7 +314,8 @@ public class HttpActionClientTest {
     when(request.getURI()).thenReturn(JWBF.toUri("http://localhost/wiki/api.php"));
 
     // WHEN
-    ImmutableList<String> result = ImmutableList.copyOf((String[]) testee.debug(request, action, MOCK_HANDLER));
+    ImmutableList<String> result =
+        ImmutableList.copyOf((String[]) testee.debug(request, action, MOCK_HANDLER));
 
     // THEN
     ImmutableList<String> expected = ImmutableList.<String>builder() //
@@ -532,7 +533,6 @@ public class HttpActionClientTest {
     // THEN
     verifyNoMoreInteractions(builder);
   }
-
 
   @Test
   public void testApplyToEntityBuilder_withFile() {

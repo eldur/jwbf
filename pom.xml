@@ -78,7 +78,8 @@
             </goals>
             <configuration>
               <configLocation>checkstyle.xml</configLocation>
-              <logViolationsToConsole>true</logViolationsToConsole>
+              <failsOnError>true</failsOnError>
+              <consoleOutput>true</consoleOutput>
               <propertyExpansion>baseDir=${basedir}</propertyExpansion>
             </configuration>
           </execution>

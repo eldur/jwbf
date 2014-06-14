@@ -28,24 +28,22 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * This class helps you to interact with each <a href="http://www.mediawiki.org" target="_blank">MediaWiki</a>. This
- * class offers a <b>basic set</b> of methods which are defined in the package net.sourceforge.jwbf.actions.mw.* How to
- * use:
+ * This class helps you to interact with each <a href="http://www.mediawiki.org"
+ * target="_blank">MediaWiki</a>. This class offers a <b>basic set</b> of methods which are defined
+ * in the package net.sourceforge.jwbf.actions.mw.* How to use:
  * <pre>
  * MediaWikiBot b = new MediaWikiBot(&quot;http://yourwiki.org&quot;);
  * b.login(&quot;Username&quot;, &quot;Password&quot;);
  * System.out.println(b.readContent(&quot;Main Page&quot;).getText());
  * </pre>
- * <b>How to find the correct wikiurl</b>
- * <p>
- * The correct wikiurl is sometimes not easy to find, because some wikiadmis uses url rewriting rules. In this cases the
- * correct url is the one, which gives you access to <code>api.php</code>. E.g. Compare
+ * <b>How to find the correct wikiurl</b> <p> The correct wikiurl is sometimes not easy to find,
+ * because some wikiadmis uses url rewriting rules. In this cases the correct url is the one, which
+ * gives you access to <code>api.php</code>. E.g. Compare
  * <pre>
  * http://www.mediawiki.org/wiki/api.php
  * http://www.mediawiki.org/w/api.php
  * </pre>
- * Thus the correct wikiurl is: <code>http://www.mediawiki.org/w/</code>
- * </p>
+ * Thus the correct wikiurl is: <code>http://www.mediawiki.org/w/</code> </p>
  *
  * @author Thomas Stock
  * @author Tobias Knerr
@@ -73,8 +71,10 @@ public class MediaWikiBot implements WikiBot {
    * These chars are not allowed in article names.
    */
   public static final char[] INVALID_LABEL_CHARS = "[]{}<>|".toCharArray();
-  private static final int DEFAULT_READ_PROPERTIES = GetRevision.CONTENT | GetRevision.COMMENT
-      | GetRevision.USER | GetRevision.TIMESTAMP | GetRevision.IDS | GetRevision.FLAGS;
+  private static final int DEFAULT_READ_PROPERTIES =
+      GetRevision.CONTENT | GetRevision.COMMENT | GetRevision.USER | GetRevision.TIMESTAMP |
+          GetRevision.IDS |
+          GetRevision.FLAGS;
 
   /**
    * use this constructor, if you want to work with IoC.
@@ -124,7 +124,8 @@ public class MediaWikiBot implements WikiBot {
    *
    * @param username the username
    * @param passwd   the password
-   * @param domain   login domain (Special for LDAPAuth extention to authenticate against LDAP users)
+   * @param domain   login domain (Special for LDAPAuth extention to authenticate against LDAP
+   *                 users)
    * @see PostLogin
    */
   public void login(final String username, final String passwd, final String domain) {
@@ -138,8 +139,8 @@ public class MediaWikiBot implements WikiBot {
   }
 
   /**
-   * Performs a Login. Actual old cookie login works right, because is pending on
-   * {@link #writeContent(net.sourceforge.jwbf.core.contentRep.SimpleArticle)}
+   * Performs a Login. Actual old cookie login works right, because is pending on {@link
+   * #writeContent(net.sourceforge.jwbf.core.contentRep.SimpleArticle)}
    *
    * @param username the username
    * @param passwd   the password
@@ -194,7 +195,8 @@ public class MediaWikiBot implements WikiBot {
       throw new ActionException("Please login first");
     }
 
-    SimpleArticle nonNullArticle = Preconditions.checkNotNull(simpleArticle, "content must not be null");
+    SimpleArticle nonNullArticle =
+        Preconditions.checkNotNull(simpleArticle, "content must not be null");
     checkTitle(nonNullArticle.getTitle());
 
     getPerformedAction(new PostModifyContent(this, simpleArticle));
@@ -206,7 +208,8 @@ public class MediaWikiBot implements WikiBot {
   static Optional<String> checkTitle(String title) {
     for (char invChar : INVALID_LABEL_CHARS) {
       if (title.contains(invChar + "")) {
-        throw new ActionException("Invalid character \"" + invChar + "\" in label \"" + title + "\"");
+        throw new ActionException(
+            "Invalid character \"" + invChar + "\" in label \"" + title + "\"");
       }
     }
     return Optional.of(title);
@@ -254,8 +257,8 @@ public class MediaWikiBot implements WikiBot {
   @Deprecated
   public synchronized String performAction(ContentProcessable a) {
     if (a.isSelfExecuter()) {
-      throw new ActionException("this is a selfexcecuting action, "
-          + "please do not perform this action manually");
+      throw new ActionException(
+          "this is a selfexcecuting action, " + "please do not perform this action manually");
     }
     return bot().performAction(a);
   }
@@ -277,8 +280,8 @@ public class MediaWikiBot implements WikiBot {
 
   private HttpBot bot() {
     if (bot == null) {
-      throw new IllegalStateException("please use another constructor or inject "
-          + HttpBot.class.getCanonicalName());
+      throw new IllegalStateException(
+          "please use another constructor or inject " + HttpBot.class.getCanonicalName());
     }
     return bot;
   }

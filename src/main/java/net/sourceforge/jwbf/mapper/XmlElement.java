@@ -39,17 +39,18 @@ public class XmlElement {
     return ImmutableList.copyOf(Iterables.transform(list, TO_ELEMENT));
   }
 
-  private static final Function<org.jdom.Element, XmlElement> TO_ELEMENT = new Function<org.jdom.Element, XmlElement>() {
+  private static final Function<org.jdom.Element, XmlElement> TO_ELEMENT =
+      new Function<org.jdom.Element, XmlElement>() {
 
-    @Override
-    public XmlElement apply(@Nullable org.jdom.Element input) {
-      if (input == null) {
-        return null;
-      } else {
-        return new XmlElement(input);
-      }
-    }
-  };
+        @Override
+        public XmlElement apply(@Nullable org.jdom.Element input) {
+          if (input == null) {
+            return null;
+          } else {
+            return new XmlElement(input);
+          }
+        }
+      };
 
   public List<XmlElement> getChildren() {
     return toElements(element.getChildren());

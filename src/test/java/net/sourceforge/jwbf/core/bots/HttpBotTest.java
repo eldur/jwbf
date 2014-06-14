@@ -100,12 +100,12 @@ public class HttpBotTest {
   }
 
   private String userAgentHeaderOf(String userAgent) {
-    ImmutableList<String> expected = ImmutableList.<String>builder()
-        .add(entry(ACCEPT_ENCODING, "gzip,deflate")) //
-        .add(entry(CONNECTION, "keep-alive")) //
-        .add(entry(HOST, "localhost:????")) //
-        .add(entry(USER_AGENT, userAgent)) //
-        .build();
+    ImmutableList<String> expected =
+        ImmutableList.<String>builder().add(entry(ACCEPT_ENCODING, "gzip,deflate")) //
+            .add(entry(CONNECTION, "keep-alive")) //
+            .add(entry(HOST, "localhost:????")) //
+            .add(entry(USER_AGENT, userAgent)) //
+            .build();
 
     return Joiner.on("\n").join(expected) + "\n";
   }

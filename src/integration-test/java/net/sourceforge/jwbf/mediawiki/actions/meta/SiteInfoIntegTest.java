@@ -39,15 +39,18 @@ public class SiteInfoIntegTest extends MocoIntegTest {
   public void doTest() {
     // GIVEN
     // TODO json?
-    server.request(newSiteInfoMatcherBuilder().build()).response(mwFileOf(version(), "siteinfo.xml"));
-    server.request(newSiteinfoWithProperties()).response(mwFileOf(version(), "siteinfo_detail.xml"));
+    server.request(newSiteInfoMatcherBuilder().build())
+        .response(mwFileOf(version(), "siteinfo.xml"));
+    server.request(newSiteinfoWithProperties())
+        .response(mwFileOf(version(), "siteinfo_detail.xml"));
 
     // WHEN
     GetVersion gv = bot().getPerformedAction(GetVersion.class);
 
     // THEN
-    assertEquals("http://localhost/loki/mediawiki/mw-" + version().getNumberVariation()
-        + "/index.php/" + confOf(ConfKey.MAINPAGE).replace(" ", "_"), gv.getBase()); // XXX
+    assertEquals(
+        "http://localhost/loki/mediawiki/mw-" + version().getNumberVariation() + "/index.php/" +
+            confOf(ConfKey.MAINPAGE).replace(" ", "_"), gv.getBase()); // XXX
 
     assertEquals("first-letter", gv.getCase());
     GAssert.assertStartsWith("MediaWiki " + version().getNumber() + ".", gv.getGenerator());

@@ -60,8 +60,8 @@ public class JettyServer extends Server {
   }
 
   static ImmutableMultimap<String, String> headersOf(Request request) {
-    ImmutableListMultimap.Builder<String, String> builder = ImmutableListMultimap
-        .<String, String>builder();
+    ImmutableListMultimap.Builder<String, String> builder =
+        ImmutableListMultimap.<String, String>builder();
     for (String name : Collections.list(request.getHeaderNames())) {
       for (String headerValue : Collections.list(request.getHeaders(name))) {
         builder.put(name, headerValue);
@@ -71,21 +71,22 @@ public class JettyServer extends Server {
   }
 
   static ImmutableMultimap<String, String> filterLocalhost(ImmutableMultimap<String, String> in) {
-    EntryTransformer<String, String, String> transformer = new EntryTransformer<String, String, String>() {
+    EntryTransformer<String, String, String> transformer =
+        new EntryTransformer<String, String, String>() {
 
-      @Override
-      public String transformEntry(String key, String value) {
-        if (key.equals(HttpHeaders.HOST)) {
-          return value.replaceAll("localhost:[0-9]+", "localhost:????");
-        } else if (key.equals(HttpHeaders.CONTENT_TYPE)) {
-          return value.replaceAll("(boundary=)(.*)", "$1????");
-        } else if (key.equals(HttpHeaders.CONTENT_LENGTH)) {
-          return "???";
-        } else {
-          return value;
-        }
-      }
-    };
+          @Override
+          public String transformEntry(String key, String value) {
+            if (key.equals(HttpHeaders.HOST)) {
+              return value.replaceAll("localhost:[0-9]+", "localhost:????");
+            } else if (key.equals(HttpHeaders.CONTENT_TYPE)) {
+              return value.replaceAll("(boundary=)(.*)", "$1????");
+            } else if (key.equals(HttpHeaders.CONTENT_LENGTH)) {
+              return "???";
+            } else {
+              return value;
+            }
+          }
+        };
     return ImmutableListMultimap.<String, String>builder() //
         .putAll(Multimaps.transformEntries(in, transformer)) //
         .orderKeysBy(Ordering.natural()) //
@@ -137,8 +138,8 @@ public class JettyServer extends Server {
   @MultipartConfig
   private static class EchoHandler extends ContextHandler {
 
-    private static final MultipartConfigElement MULTI_PART_CONFIG = new MultipartConfigElement(
-        System.getProperty("java.io.tmpdir"));
+    private static final MultipartConfigElement MULTI_PART_CONFIG =
+        new MultipartConfigElement(System.getProperty("java.io.tmpdir"));
 
     @Override
     public void doHandle(String arg0, Request request, HttpServletRequest req,
@@ -150,16 +151,17 @@ public class JettyServer extends Server {
 
       writer.println();
       // FIXME change multiparthandling
-      if (false && request.getContentType() != null && request.getContentType().startsWith("multipart/form-data")) {
+      if (false && request.getContentType() != null &&
+          request.getContentType().startsWith("multipart/form-data")) {
         req.setAttribute(Request.__MULTIPART_CONFIG_ELEMENT, MULTI_PART_CONFIG);
-        writer.println(joiner.join(Iterables.transform(req.getParts(), new Function<Part, String>() {
-          @Nullable
-          @Override
-          public String
-          apply(@Nullable Part input) {
-            return input.getName();
-          }
-        })));
+        writer
+            .println(joiner.join(Iterables.transform(req.getParts(), new Function<Part, String>() {
+              @Nullable
+              @Override
+              public String apply(@Nullable Part input) {
+                return input.getName();
+              }
+            })));
       } else {
         List<String> lines = CharStreams.readLines(req.getReader());
         writer.print(joiner.join(Iterables.filter(lines, new Predicate<String>() {

@@ -17,8 +17,8 @@ public class Logging {
         .getLogger(ch.qos.logback.classic.Logger.ROOT_LOGGER_NAME);
 
     final ListAppender<ILoggingEvent> mockAppender = new ListAppender<>();
-    LoggerContext iLoggerFactory = (ch.qos.logback.classic.LoggerContext) LoggerFactory
-        .getILoggerFactory();
+    LoggerContext iLoggerFactory =
+        (ch.qos.logback.classic.LoggerContext) LoggerFactory.getILoggerFactory();
 
     mockAppender.setContext(iLoggerFactory);
     mockAppender.start();

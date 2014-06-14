@@ -126,8 +126,8 @@ public class GetRevision implements ContentProcessable {
   }
 
   private void parseVersion(String s) {
-    Pattern p = Pattern.compile("action=diff&amp;version=([0-9]*)", Pattern.DOTALL
-        | Pattern.MULTILINE);
+    Pattern p =
+        Pattern.compile("action=diff&amp;version=([0-9]*)", Pattern.DOTALL | Pattern.MULTILINE);
 
     Matcher m = p.matcher(s);
 

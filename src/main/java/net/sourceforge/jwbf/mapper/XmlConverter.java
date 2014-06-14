@@ -26,17 +26,18 @@ import org.xml.sax.InputSource;
 public class XmlConverter {
 
   private static final Logger log = LoggerFactory.getLogger(XmlConverter.class);
-  private static final Function<XmlElement, XmlElement> GET_ERROR = new Function<XmlElement, XmlElement>() {
-    @Nullable
-    @Override
-    public XmlElement apply(@Nullable XmlElement input) {
-      XmlElement errorElement = getErrorElement(input);
-      if (errorElement == null) {
-        return XmlElement.NULL_XML;
-      }
-      return errorElement;
-    }
-  };
+  private static final Function<XmlElement, XmlElement> GET_ERROR =
+      new Function<XmlElement, XmlElement>() {
+        @Nullable
+        @Override
+        public XmlElement apply(@Nullable XmlElement input) {
+          XmlElement errorElement = getErrorElement(input);
+          if (errorElement == null) {
+            return XmlElement.NULL_XML;
+          }
+          return errorElement;
+        }
+      };
 
   public static Optional<XmlElement> getRootElementWithError(String xml) {
     Optional<String> xmlStringOpt = Optionals.absentIfEmpty(xml);

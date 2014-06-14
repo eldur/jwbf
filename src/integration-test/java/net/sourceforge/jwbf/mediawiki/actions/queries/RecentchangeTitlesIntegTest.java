@@ -36,9 +36,9 @@ public class RecentchangeTitlesIntegTest extends AbstractIntegTest {
     List<String> resultList = testee.getCopyOf(15); // query-continue is not implemented
 
     // THEN
-    ImmutableList<String> expected = ImmutableList.of("List of tallest buildings in Pakistan",
-        "Grace Stoermer", "Corpus Christi Catholic College", "Submarine Squadron 4",
-        "Jonathan Lee Riches");
+    ImmutableList<String> expected = ImmutableList
+        .of("List of tallest buildings in Pakistan", "Grace Stoermer",
+            "Corpus Christi Catholic College", "Submarine Squadron 4", "Jonathan Lee Riches");
     GAssert.assertEquals(expected, ImmutableList.copyOf(resultList));
     assertEquals(resultList.size(), ImmutableSet.copyOf(resultList).size());
 

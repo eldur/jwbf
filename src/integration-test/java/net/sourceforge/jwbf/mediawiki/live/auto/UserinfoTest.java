@@ -35,8 +35,8 @@ public class UserinfoTest extends ParamHelper {
   }
 
   @ClassRule
-  public static VersionTestClassVerifier classVerifier = new VersionTestClassVerifier(
-      GetUserinfo.class);
+  public static VersionTestClassVerifier classVerifier =
+      new VersionTestClassVerifier(GetUserinfo.class);
 
   @Rule
   public Verifier successRegister = classVerifier.getSuccessRegister(this);

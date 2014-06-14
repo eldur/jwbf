@@ -16,8 +16,8 @@ import org.junit.runners.Parameterized.Parameters;
 public class RandomPageTitleTest extends ParamHelper {
 
   @ClassRule
-  public static VersionTestClassVerifier classVerifier = new VersionTestClassVerifier(
-      RandomPageTitle.class);
+  public static VersionTestClassVerifier classVerifier =
+      new VersionTestClassVerifier(RandomPageTitle.class);
 
   @Rule
   public Verifier successRegister = classVerifier.getSuccessRegister(this);

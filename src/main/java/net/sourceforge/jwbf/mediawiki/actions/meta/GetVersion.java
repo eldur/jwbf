@@ -56,10 +56,6 @@ public class GetVersion extends MWAction {
     GENERATOR_EXT.add("wmf");
   }
 
-  /*
-   * In this case the superconstructor with no value is allowed, because the versionrequest is mandatory
-   */
-
   /**
    * Create the request.
    */
@@ -120,10 +116,10 @@ public class GetVersion extends MWAction {
 
     }
     if (log.isDebugEnabled()) {
-      log.debug("\nVersion is UNKNOWN for JWBF (" + JWBF.getVersion(getClass()) + ") : \n\t"
-          + getGenerator() + "\n\t" + "supported versions: "
-          + Joiner.on(" ").join(Version.values()) + "\n\t"
-          + "\n\tUsing settings for actual Wikipedia development version");
+      log.debug("\nVersion is UNKNOWN for JWBF (" + JWBF.getVersion(getClass()) + ") : \n\t" +
+          getGenerator() + "\n\t" +
+          "supported versions: " + Joiner.on(" ").join(Version.values()) + "\n\t" +
+          "\n\tUsing settings for actual Wikipedia development version");
     }
     return Version.UNKNOWN;
 

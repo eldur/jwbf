@@ -33,18 +33,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * A abstract action class using the MediaWiki-api's "list=categorymembers ". For further information see <a href=
- * "http://www.mediawiki.org/wiki/API:Query_-_Lists#categorymembers_.2F_cm">API documentation</a>.
+ * A abstract action class using the MediaWiki-api's "list=categorymembers ".
  *
  * @author Thomas Stock
+ * @see <a href= "http://www.mediawiki.org/wiki/API:Query_-_Lists#categorymembers_.2F_cm">API
+ * documentation</a>
  */
 abstract class CategoryMembers extends MWAction {
 
   private static final Logger log = LoggerFactory.getLogger(CategoryMembers.class);
 
   // TODO do not work with patterns
-  private static final Pattern CATEGORY_PATTERN = Pattern
-      .compile("<cm pageid=\"(.*?)\" ns=\"(.*?)\" title=\"(.*?)\" />");
+  private static final Pattern CATEGORY_PATTERN =
+      Pattern.compile("<cm pageid=\"(.*?)\" ns=\"(.*?)\" title=\"(.*?)\" />");
 
   private static final Pattern CONTINUE_PATTERN = Pattern.compile("<query-continue>.*?" //
       + "<categorymembers *cmcontinue=\"([^\"]*)\" */>" //
@@ -77,7 +78,8 @@ abstract class CategoryMembers extends MWAction {
     this(bot, categoryName, ImmutableList.copyOf(Ints.asList(namespaces)));
   }
 
-  protected CategoryMembers(MediaWikiBot bot, String categoryName, ImmutableList<Integer> namespaces) {
+  protected CategoryMembers(MediaWikiBot bot, String categoryName,
+      ImmutableList<Integer> namespaces) {
     this.bot = bot;
     this.namespace = namespaces;
     namespaceStr = createNsString(namespaces);
@@ -98,7 +100,8 @@ abstract class CategoryMembers extends MWAction {
   /**
    * generates the next MediaWiki-request (GetMethod) and adds it to msgs.
    *
-   * @param cmcontinue the value for the blcontinue parameter, null for the generation of the initial request
+   * @param cmcontinue the value for the blcontinue parameter, null for the generation of the
+   *                   initial request
    * @return a
    */
   protected Get generateContinueRequest(String cmcontinue) {
@@ -119,8 +122,8 @@ abstract class CategoryMembers extends MWAction {
   }
 
   /**
-   * gets the information about a follow-up page from a provided api response. If there is one, a new request is added
-   * to msgs by calling generateRequest.
+   * gets the information about a follow-up page from a provided api response. If there is one, a
+   * new request is added to msgs by calling generateRequest.
    *
    * @param s text for parsing
    */

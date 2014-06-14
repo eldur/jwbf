@@ -24,7 +24,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Action to receive the full address of an image. Like "Img.gif" to "http://wikihost.tld/w/images/x/y/Img.gif".
+ * Action to receive the full address of an image. Like "Img.gif" to
+ * "http://wikihost.tld/w/images/x/y/Img.gif".
  *
  * @author Thomas Stock
  */

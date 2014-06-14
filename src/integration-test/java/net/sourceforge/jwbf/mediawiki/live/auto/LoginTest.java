@@ -34,8 +34,8 @@ public class LoginTest extends ParamHelper {
   }
 
   @ClassRule
-  public static VersionTestClassVerifier classVerifier = new VersionTestClassVerifier(
-      PostLogin.class);
+  public static VersionTestClassVerifier classVerifier =
+      new VersionTestClassVerifier(PostLogin.class);
 
   @Rule
   public Verifier successRegister = classVerifier.getSuccessRegister(this);

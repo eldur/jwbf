@@ -39,16 +39,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * * To allow your bot to upload media in your MediaWiki. Add at least the following line to your MediaWiki's
- * LocalSettings.php:<br>
+ * * To allow your bot to upload media in your MediaWiki. Add at least the following line to your
+ * MediaWiki's LocalSettings.php:<br>
  * <pre>
  * $wgEnableUploads = true;
  * </pre>
- * For more details see also <a href="http://www.mediawiki.org/wiki/Help:Configuration_settings#Uploads" >Upload
- * Config</a>
  *
  * @author Justus Bisser
  * @author Thomas Stock
+ * @see <a href="http://www.mediawiki.org/wiki/Help:Configuration_settings#Uploads" >Upload
+ * Config</a>
  */
 public class FileUpload extends MWAction {
 

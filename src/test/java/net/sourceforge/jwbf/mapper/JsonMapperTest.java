@@ -32,7 +32,8 @@ public class JsonMapperTest {
   @Test
   public void testGet() {
     // GIVEN
-    String content = getContent(JWBF.urlToFile(Resources.getResource("mediawiki/v1-22/siteinfo.json")));
+    String content =
+        getContent(JWBF.urlToFile(Resources.getResource("mediawiki/v1-22/siteinfo.json")));
 
     // WHEN
     SiteInfoData siteInfoData = testee.get(content, SiteInfoData.class);

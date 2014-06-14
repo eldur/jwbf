@@ -132,7 +132,8 @@ public abstract class MWAction implements ContentProcessable {
   }
 
   /**
-   * Determines if the given XML Document contains an error message which then would printed by the logger.
+   * Determines if the given XML Document contains an error message which then would printed by the
+   * logger.
    *
    * @param rootXmlElement XML <code>Document</code>
    * @return error element
@@ -143,7 +144,8 @@ public abstract class MWAction implements ContentProcessable {
   }
 
   /**
-   * @deprecated no alternative method is given, because it is not recommended to change the exception handling
+   * @deprecated no alternative method is given, because it is not recommended to change the
+   * exception handling
    */
   @Deprecated
   public static void setExceptionHandler(ExceptionHandler exceptionHandler) {

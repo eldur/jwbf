@@ -36,8 +36,8 @@ public class GetVersionIntegTest extends MocoIntegTest {
     // THEN
     GAssert.assertEquals(splittedConfigOfString(ConfKey.SITEINFO, title()),
         toSortedList(si.getNamespaces()));
-    GAssert.assertEquals(splittedConfigOfString(ConfKey.INTERWIKI),
-        toSortedList(si.getInterwikis()));
+    GAssert
+        .assertEquals(splittedConfigOfString(ConfKey.INTERWIKI), toSortedList(si.getInterwikis()));
   }
 
   @Test
@@ -57,7 +57,8 @@ public class GetVersionIntegTest extends MocoIntegTest {
   @Test
   public void testVersion() {
     // GIVEN
-    server.request(SiteInfoIntegTest.newSiteInfoMatcherBuilder().build()).response(mwFileOf(version(), "siteinfo.xml"));
+    server.request(SiteInfoIntegTest.newSiteInfoMatcherBuilder().build())
+        .response(mwFileOf(version(), "siteinfo.xml"));
 
     // WHEN
     Version responseVersion = bot().getVersion();
@@ -78,8 +79,9 @@ public class GetVersionIntegTest extends MocoIntegTest {
     GetVersion gv = bot().getPerformedAction(GetVersion.class);
 
     // THEN
-    GAssert.assertStartsWith("http://localhost/loki/mediawiki/mw-" + version().getNumberVariation()
-        + "/index.php/", gv.getBase()); // XXX
+    GAssert.assertStartsWith(
+        "http://localhost/loki/mediawiki/mw-" + version().getNumberVariation() + "/index.php/",
+        gv.getBase()); // XXX
     assertEquals("first-letter", gv.getCase());
     GAssert.assertStartsWith("MediaWiki " + version().getNumber(), gv.getGenerator());
     assertEquals(confOf(ConfKey.SITENAME), gv.getSitename());

@@ -36,7 +36,6 @@ public class MediaWikiBotTest {
     client = mock(HttpActionClient.class);
   }
 
-
   @Test
   public void testInitWithBuilder() {
     // GIVEN
@@ -217,7 +216,6 @@ public class MediaWikiBotTest {
     assertEquals("", siteinfo.getMainpage());
   }
 
-
   @Test
   public void testGetWikiType() {
     // GIVEN
@@ -227,11 +225,9 @@ public class MediaWikiBotTest {
     assertEquals("MediaWiki UNKNOWN", testee.getWikiType());
   }
 
-
   private void mockValidLogin(final String username, HttpActionClient mockClient) {
     doAnswer(new Answer<Void>() {
-      public Void answer(InvocationOnMock invocation)
-          throws Throwable {
+      public Void answer(InvocationOnMock invocation) throws Throwable {
         Object[] args = invocation.getArguments();
         if (args[0] instanceof PostLogin) {
           PostLogin out = (PostLogin) args[0];

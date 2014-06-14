@@ -15,13 +15,14 @@ import net.sourceforge.jwbf.core.actions.util.HttpAction;
 
 public class Post extends HttpBase implements HttpAction {
 
-  private static Function<Supplier<Object>, Object> flattenSuppliers = new Function<Supplier<Object>, Object>() {
-    @Nullable
-    @Override
-    public Object apply(@Nullable Supplier<Object> input) {
-      return input.get();
-    }
-  };
+  private static Function<Supplier<Object>, Object> flattenSuppliers =
+      new Function<Supplier<Object>, Object>() {
+        @Nullable
+        @Override
+        public Object apply(@Nullable Supplier<Object> input) {
+          return input.get();
+        }
+      };
 
   private final Supplier<String> req;
   private final ImmutableMultimap.Builder<String, Supplier<Object>> params;
@@ -89,7 +90,8 @@ public class Post extends HttpBase implements HttpAction {
   }
 
   /**
-   * @deprecated use request builder instead, else it is difficult to apply request mutation for server based throttling
+   * @deprecated use request builder instead, else it is difficult to apply request mutation for
+   * server based throttling
    */
   @Deprecated
   public Post postParam(String key, Object value) {

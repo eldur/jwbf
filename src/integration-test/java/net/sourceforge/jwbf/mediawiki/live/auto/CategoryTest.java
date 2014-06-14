@@ -45,8 +45,8 @@ public class CategoryTest extends ParamHelper {
   private static final Logger log = LoggerFactory.getLogger(CategoryTest.class);
 
   @ClassRule
-  public static VersionTestClassVerifier classVerifier = new VersionTestClassVerifier(
-      CategoryMembersFull.class, CategoryMembersSimple.class);
+  public static VersionTestClassVerifier classVerifier =
+      new VersionTestClassVerifier(CategoryMembersFull.class, CategoryMembersSimple.class);
 
   @Rule
   public Verifier successRegister = classVerifier.getSuccessRegister(this);

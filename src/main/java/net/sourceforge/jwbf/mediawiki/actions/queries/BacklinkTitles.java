@@ -46,17 +46,9 @@ import org.slf4j.LoggerFactory;
 public class BacklinkTitles extends TitleQuery<String> {
 
   private static final Logger log = LoggerFactory.getLogger(BacklinkTitles.class);
-  /**
-   * enum that defines the three posibilities of dealing with article lists including both redirects and non-redirects.
-   * <ul>
-   * <li>all: List all pages regardless of their redirect flag</li>
-   * <li>redirects: Only list redirects</li>
-   * <li>nonredirects: Don't list redirects</li>
-   * </ul>
-   */
 
   /**
-   * constant value for the bllimit-parameter. *
+   * constant value for the bllimit-parameter.
    */
   private static final int LIMIT = 50;
 
@@ -72,13 +64,16 @@ public class BacklinkTitles extends TitleQuery<String> {
   private final int[] namespaces;
 
   /**
-   * The public constructor. It will have a MediaWiki-request generated, which is then added to msgs. When it is
-   * answered, the method processAllReturningText will be called (from outside this class).
+   * The public constructor. It will have a MediaWiki-request generated, which is then added to
+   * msgs. When it is answered, the method processAllReturningText will be called (from outside this
+   * class).
    *
    * @param articleName    the title of the article, != null
-   * @param namespaces     the namespace(s) that will be searched for links, as a string of numbers separated by '|'; if null, this
-   *                       parameter is omitted. See for e.g. {@link MediaWiki#NS_ALL}.
-   * @param redirectFilter filter that determines how to handle redirects, must be all for MW versions before 1.11; != null
+   * @param namespaces     the namespace(s) that will be searched for links, as a string of numbers
+   *                       separated by '|'; if null, this parameter is omitted. See for e.g. {@link
+   *                       MediaWiki#NS_ALL}.
+   * @param redirectFilter filter that determines how to handle redirects, must be all for MW
+   *                       versions before 1.11; != null
    */
   public BacklinkTitles(MediaWikiBot bot, String articleName, RedirectFilter redirectFilter,
       int... namespaces) {
@@ -103,8 +98,8 @@ public class BacklinkTitles extends TitleQuery<String> {
   }
 
   /**
-   * gets the information about a follow-up page from a provided api response. If there is one, the information for the
-   * next page parameter is added to the nextPageInfo field.
+   * gets the information about a follow-up page from a provided api response. If there is one, the
+   * information for the next page parameter is added to the nextPageInfo field.
    *
    * @param s text for parsing
    */
@@ -113,8 +108,9 @@ public class BacklinkTitles extends TitleQuery<String> {
     log.trace(s);
     // TODO do not use pattern matching
     // get the blcontinue-value
-    Pattern p = Pattern.compile("<query-continue>.*?" + "<backlinks *blcontinue=\"([^\"]*)\" */>"
-        + ".*?</query-continue>", Pattern.DOTALL | Pattern.MULTILINE);
+    Pattern p = Pattern
+        .compile("<query-continue>.*?<backlinks *blcontinue=\"([^\"]*)\" */>.*?</query-continue>",
+            Pattern.DOTALL | Pattern.MULTILINE);
 
     Matcher m = p.matcher(s);
 
@@ -137,8 +133,8 @@ public class BacklinkTitles extends TitleQuery<String> {
     // get the other backlink titles and add them all to the titleCollection
     ImmutableList.Builder<String> titleCollection = ImmutableList.<String>builder();
 
-    Pattern p = Pattern
-        .compile("<bl pageid=\".*?\" ns=\".*?\" title=\"([^\"]*)\" (redirect=\"\" )?/>");
+    Pattern p =
+        Pattern.compile("<bl pageid=\".*?\" ns=\".*?\" title=\"([^\"]*)\" (redirect=\"\" )?/>");
 
     Matcher m = p.matcher(s);
 
@@ -209,13 +205,15 @@ public class BacklinkTitles extends TitleQuery<String> {
      * {@inheritDoc}
      */
     @Override
-    public Get newInitialRequest(String articleName, RedirectFilter redirectFilter, int[] namespace) {
+    public Get newInitialRequest(String articleName, RedirectFilter redirectFilter,
+        int[] namespace) {
       RequestBuilder requestBuilder = newRequestBuilder() //
           .param("bltitle", MediaWiki.urlEncode(articleName)) //
           .param("blfilterredir", MediaWiki.urlEncode(redirectFilter.toString())) //
           ;
       if (namespace != null) {
-        requestBuilder.param("blnamespace", MediaWiki.urlEncode(MWAction.createNsString(namespace)));
+        requestBuilder
+            .param("blnamespace", MediaWiki.urlEncode(MWAction.createNsString(namespace)));
       }
       return requestBuilder.buildGet();
     }
@@ -241,13 +239,15 @@ public class BacklinkTitles extends TitleQuery<String> {
      * {@inheritDoc}
      */
     @Override
-    public Get newInitialRequest(String articleName, RedirectFilter redirectFilter, int[] namespace) {
+    public Get newInitialRequest(String articleName, RedirectFilter redirectFilter,
+        int[] namespace) {
       RequestBuilder requestBuilder = newRequestBuilder() //
           .param("bltitle", MediaWiki.urlEncode(articleName)) //
           .param("blfilterredir", MediaWiki.urlEncode(redirectFilter.toString())) //
           ;
       if (namespace != null) {
-        requestBuilder.param("blnamespace", MediaWiki.urlEncode(MWAction.createNsString(namespace)));
+        requestBuilder
+            .param("blnamespace", MediaWiki.urlEncode(MWAction.createNsString(namespace)));
       }
       return requestBuilder.buildGet();
     }

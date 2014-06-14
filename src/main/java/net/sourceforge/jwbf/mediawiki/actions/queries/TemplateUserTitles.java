@@ -34,7 +34,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * action class using the MediaWiki-api's "list=embeddedin" that is used to find all articles which use a template.
+ * action class using the MediaWiki-api's "list=embeddedin" that is used to find all articles which
+ * use a template.
  *
  * @author Tobias Knerr
  * @author Thomas Stock
@@ -45,8 +46,8 @@ public class TemplateUserTitles extends TitleQuery<String> {
   private static final Logger log = LoggerFactory.getLogger(TemplateUserTitles.class);
 
   // TODO do not work with patterns
-  private static final Pattern TEMPLATE_USAGE_PATTERN = Pattern
-      .compile("<ei pageid=\".*?\" ns=\".*?\" title=\"(.*?)\" />");
+  private static final Pattern TEMPLATE_USAGE_PATTERN =
+      Pattern.compile("<ei pageid=\".*?\" ns=\".*?\" title=\"(.*?)\" />");
 
   /**
    * constant value for the eilimit-parameter. *
@@ -58,9 +59,10 @@ public class TemplateUserTitles extends TitleQuery<String> {
   private final int[] namespaces;
 
   /**
-   * The public constructor. It will have an MediaWiki-request generated, which is then added to msgs. When it is
-   * answered, the method processAllReturningText will be called (from outside this class). For the parameters, see
-   * {@link TemplateUserTitles#generateRequest(String, int[], String)}
+   * The public constructor. It will have an MediaWiki-request generated, which is then added to
+   * msgs. When it is answered, the method processAllReturningText will be called (from outside this
+   * class). For the parameters, see {@link TemplateUserTitles#generateRequest(String, int[],
+   * String)}
    */
   public TemplateUserTitles(MediaWikiBot bot, String templateName, int... namespaces) {
     super(bot);
@@ -74,9 +76,10 @@ public class TemplateUserTitles extends TitleQuery<String> {
    * generates the next MediaWiki-request (GetMethod) and adds it to msgs.
    *
    * @param templateName the name of the template, not null
-   * @param namespaces   the namespace(s) that will be searched for links, as a string of numbers separated by '|'; if null, this
-   *                     parameter is omitted
-   * @param eicontinue   the value for the eicontinue parameter, null for the generation of the initial request
+   * @param namespaces   the namespace(s) that will be searched for links, as a string of numbers
+   *                     separated by '|'; if null, this parameter is omitted
+   * @param eicontinue   the value for the eicontinue parameter, null for the generation of the
+   *                     initial request
    */
   private HttpAction generateRequest(String templateName, int[] namespaces, String eicontinue) {
     String namespacesValue = MWAction.createNsString(namespaces);
@@ -100,8 +103,8 @@ public class TemplateUserTitles extends TitleQuery<String> {
   }
 
   /**
-   * gets the information about a follow-up page from a provided api response. If there is one, a new request is added
-   * to msgs by calling generateRequest.
+   * gets the information about a follow-up page from a provided api response. If there is one, a
+   * new request is added to msgs by calling generateRequest.
    *
    * @param s text for parsing
    */
@@ -110,8 +113,9 @@ public class TemplateUserTitles extends TitleQuery<String> {
 
     // get the eicontinue-value
 
-    Pattern p = Pattern.compile("<query-continue>.*?" + "<embeddedin *eicontinue=\"([^\"]*)\" */>"
-        + ".*?</query-continue>", Pattern.DOTALL | Pattern.MULTILINE);
+    Pattern p = Pattern.compile(
+        "<query-continue>.*?" + "<embeddedin *eicontinue=\"([^\"]*)\" */>" + ".*?</query-continue>",
+        Pattern.DOTALL | Pattern.MULTILINE);
 
     Matcher m = p.matcher(s);
 
