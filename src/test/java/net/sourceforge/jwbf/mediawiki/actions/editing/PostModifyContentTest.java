@@ -3,7 +3,6 @@ package net.sourceforge.jwbf.mediawiki.actions.editing;
 import static com.google.common.collect.ImmutableSet.of;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
@@ -47,9 +46,9 @@ public class PostModifyContentTest {
       @Override
       GetApiToken newTokenRequest() {
         GetApiToken mockToken = mock(GetApiToken.class);
-        GetApiToken.TokenResponse token = mock(GetApiToken.TokenResponse.class);
-        when(token.urlEncodedToken()).thenReturn(new ParamTuple<String>("token", "!testToken"));
-        when(mockToken.get()).thenReturn(token);
+        GetApiToken.TokenResponse tokenResponse = mock(GetApiToken.TokenResponse.class);
+        when(tokenResponse.token()).thenReturn(new ParamTuple("token", "!testToken"));
+        when(mockToken.get()).thenReturn(tokenResponse);
         return mockToken;
       }
     };

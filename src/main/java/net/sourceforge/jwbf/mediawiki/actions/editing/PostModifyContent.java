@@ -107,7 +107,7 @@ public class PostModifyContent extends MWAction {
       } else {
         builder.postParam(PARAM_MINOR_NOT, "");
       }
-      builder.postParam(editTokeAction.get().urlEncodedToken());
+      builder.postParam(editTokeAction.get().token());
       second = false;
 
       return editRequest = builder.buildPost();

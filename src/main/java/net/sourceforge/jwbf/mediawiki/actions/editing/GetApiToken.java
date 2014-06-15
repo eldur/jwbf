@@ -38,15 +38,23 @@ public class GetApiToken extends DequeMWAction<GetApiToken.TokenResponse> {
        */
       @Nonnull
       public ParamTuple urlEncodedToken() {
-        String token = MediaWiki.urlEncode(
-            Optionals.getOrThrow(GetApiToken.this.token, "The argument 'token' is missing"));
-        return new ParamTuple("token", token);
+        return new ParamTuple("token", MediaWiki.urlEncode(getToken()));
+      }
+
+      private String getToken() {
+        return Optionals.getOrThrow(GetApiToken.this.token, "The argument 'token' is missing");
+      }
+
+      @Nonnull
+      public ParamTuple token() {
+        return new ParamTuple("token", getToken());
       }
     };
   }
 
   public static interface TokenResponse {
     ParamTuple<String> urlEncodedToken();
+    ParamTuple<String> token();
   }
 
   private static final Logger log = LoggerFactory.getLogger(GetApiToken.class);
