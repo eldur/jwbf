@@ -166,14 +166,16 @@ public class HttpActionClientTest {
           ;
 
       // WHEN
-      String bs = testee.post(post);
+      String result = testee.post(post);
 
       // THEN
-      ImmutableList<String> result = ImmutableList.<String>builder().add("b=c") //
+      ImmutableList<String> expected = ImmutableList.<String>builder() //
+          .add("b=c") //
           .addAll(multipartOf("a", utf8RawData)) //
-          .add("").build();
+          .add("") //
+          .build();
 
-      GAssert.assertEquals(result, GAssert.toList(bs));
+      GAssert.assertEquals(expected, GAssert.toList(result));
 
     } finally {
       server.stopSilent();
@@ -195,17 +197,17 @@ public class HttpActionClientTest {
           .postParam("a", "b");
 
       // WHEN
-      String bs = testee.post(post);
+      String result = testee.post(post);
 
       // THEN
-      ImmutableList<String> result = ImmutableList.<String>builder().add("b=c&b=e") // b = [c, e]
+      ImmutableList<String> expected = ImmutableList.<String>builder().add("b=c&b=e") // b = [c, e]
           .addAll(multipartOf("b", "c")) //
           .addAll(multipartOf("b", "e")) //
           .addAll(multipartOf("a", "b")) //
           .add("") //
           .build();
 
-      GAssert.assertEquals(result, GAssert.toList(bs));
+      GAssert.assertEquals(expected, GAssert.toList(result));
 
     } finally {
       server.stopSilent();
@@ -213,8 +215,8 @@ public class HttpActionClientTest {
   }
 
   private List<String> multipartOf(String key, String value) {
-    return ImmutableList.<String>builder().add(
-        "Content-Disposition: form-data; name=\"" + key + "\"") //
+    return ImmutableList.<String>builder() //
+        .add("Content-Disposition: form-data; name=\"" + key + "\"") //
         .add("Content-Type: */*; charset=UTF-8") //
         .add("Content-Transfer-Encoding: 8bit") //
         .add("") //
@@ -237,17 +239,19 @@ public class HttpActionClientTest {
           .build();
 
       // WHEN
-      String bs = testee.get(new Get(url));
+      String result = testee.get(new Get(url));
 
       // THEN
       ImmutableList<String> expected =
-          ImmutableList.<String>builder().add(entry(ACCEPT_ENCODING, "gzip,deflate")) //
+          ImmutableList.<String>builder() //
+              .add(entry(ACCEPT_ENCODING, "gzip,deflate")) //
               .add(entry(CONNECTION, "keep-alive")) //
               .add(entry(HOST, "localhost:????")) //
               .add(entry(USER_AGENT, "Apache-HttpClient/4.3.4 (java 1.5)")) //
+              .add("") //
               .build();
 
-      assertEquals(Joiner.on("\n").join(expected), bs.trim());
+      assertEquals(Joiner.on("\n").join(expected), result);
 
     } finally {
       server.stopSilent();
@@ -257,10 +261,14 @@ public class HttpActionClientTest {
   @Test
   public void testMissingUseragent() {
     Supplier<ImmutableList<String>> logLinesSupplier = Logging.newLogLinesSupplier();
+
+    // GIVEN / WHEN
     HttpActionClient.builder() //
         .withClient(HttpClientBuilder.create().build()) //
         .withUrl("http://localhost/") //
         .build();
+
+    // THEN
     GAssert.assertEquals(ImmutableList.<String>of("[WARN] a useragent must be set in your client"),
         logLinesSupplier.get());
   }
@@ -286,7 +294,7 @@ public class HttpActionClientTest {
           .build();
 
       // WHEN
-      String result = Iterables.getOnlyElement(a.get()).trim();
+      String result = Iterables.getOnlyElement(a.get());
 
       // THEN
       ImmutableList<String> expected =
@@ -296,6 +304,7 @@ public class HttpActionClientTest {
               .add(entry(CONTENT_TYPE, "multipart/form-data; boundary=????")) //
               .add(entry(HOST, "localhost:????")) //
               .add(entry(USER_AGENT, "none")) //
+              .add("") //
               .build();
 
       assertEquals(Joiner.on("\n").join(expected), result);

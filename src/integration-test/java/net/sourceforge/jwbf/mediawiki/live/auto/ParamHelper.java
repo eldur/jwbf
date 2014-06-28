@@ -18,12 +18,13 @@ public abstract class ParamHelper extends AbstractMediaWikiBotTest {
 
   public ParamHelper(Version v, VersionTestClassVerifier verifier) {
     try {
-      bot = BotFactory.getMediaWikiBot(v, true);
-    } catch (AssumptionViolatedException re) {
-      verifier.addIgnoredVersion(v);
-      throw re;
+      version(v);
+      bot(BotFactory.getMediaWikiBot(version(), true));
+    } catch (AssumptionViolatedException assumptionFailed) {
+      verifier.addIgnoredVersion(version());
+      throw assumptionFailed;
     }
-    Assert.assertEquals(v, bot.getVersion());
+    Assert.assertEquals(v, bot().getVersion());
   }
 
   public static Collection<?> prepare(List<Version> versions) {

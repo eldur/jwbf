@@ -19,17 +19,19 @@
 package net.sourceforge.jwbf.mediawiki.live;
 
 import static net.sourceforge.jwbf.TestHelper.getRandom;
-import static net.sourceforge.jwbf.mediawiki.LiveTestFather.getValueOrSkip;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertNotEquals;
 
+import java.util.List;
 import java.util.Random;
 
-import net.sourceforge.jwbf.core.contentRep.ArticleMeta;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
 import net.sourceforge.jwbf.mediawiki.BotFactory;
 import net.sourceforge.jwbf.mediawiki.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -41,44 +43,40 @@ public class EditCustomWikiContentTest {
   private MediaWikiBot bot;
   private Random random = new Random(System.currentTimeMillis());
 
+  private List<String> deleteTitles = Lists.newArrayList();
+
   @Before
   public void setUp() {
     bot = BotFactory.getMediaWikiBot(Version.getLatest(), true);
   }
 
-  /**
-   * Test content modification.
-   */
-  @Test
-  public final void contentModify() {
-    String title = getValueOrSkip("test_live_article");
-    SimpleArticle sa;
-    sa = new SimpleArticle(title);
-    sa.setText(getRandom(64));
-    try {
-      bot.writeContent(sa);
-    } catch (RuntimeException e) {
-      e.printStackTrace();
+  @After
+  public void cleanUp() {
+    for (String title : ImmutableList.copyOf(deleteTitles)) {
+      bot.delete(title);
     }
-    sa = bot.getArticle(title).getSimpleArticle();
-    String text = "test " + (random.nextInt(1000));
-    sa.setText(text);
-    bot.writeContent(sa);
-    assertEquals(text, bot.getArticle(title).getText());
+  }
+
+  private String newTitleWithCleanup(String name) {
+    String newName = this.getClass().getSimpleName() + "-" + name;
+    deleteTitles.add(newName);
+    return newName;
   }
 
   @Test
-  public final void contentModifyWithSpacetitle() {
-    String title = "Delete 1";
-    SimpleArticle sa;
-    sa = new SimpleArticle(title);
-    sa.setText(getRandom(64));
-    bot.writeContent(sa);
-    sa = bot.getArticle(title).getSimpleArticle();
+  public final void contentModifyWithSpaceInTitle() {
+    // GIVEN
+    String title = newTitleWithCleanup("_Delete 1");
+    SimpleArticle sa = new SimpleArticle(title);
     String text = "test " + (random.nextInt(1000));
     sa.setText(text);
+
+    // WHEN
     bot.writeContent(sa);
-    assertEquals(text, bot.getArticle(title).getText());
+    String resultText = bot.getArticle(title).getText();
+
+    // THEN
+    assertEquals(text, resultText);
   }
 
   /**
@@ -86,32 +84,36 @@ public class EditCustomWikiContentTest {
    */
   @Test
   public final void contentModifyDetails() {
-    String title = getValueOrSkip("test_live_article");
+    // GIVEN
+    String title = newTitleWithCleanup("contentModifyDetails");
     String summary = "clear it";
     SimpleArticle t = new SimpleArticle(title);
     t.setText(getRandom(64));
     t.setEditSummary(summary);
     t.setMinorEdit(true);
-    try {
-      bot.writeContent(t);
-    } catch (RuntimeException e) {
-      e.printStackTrace();
-    }
+    assertEquals(SimpleArticle.INIT_DATE, t.getEditTimestamp());
+
+    // WHEN
+    bot.writeContent(t);
     SimpleArticle sa = bot.getArticle(title).getSimpleArticle();
+
+    // THEN
     assertEquals(title, sa.getTitle());
     assertEquals(summary, sa.getEditSummary());
     assertEquals(bot.getUserinfo().getUsername(), sa.getEditor());
+    assertEquals(false, sa.isMinorEdit()); // XXX creation can't be a minor edit
+    assertNotEquals(SimpleArticle.INIT_DATE, sa.getEditTimestamp());
+
+    // GIVEN
+    t.setText(getRandom(64));
+
+    // WHEN
+    bot.writeContent(t);
+    sa = bot.getArticle(title).getSimpleArticle();
+
+    // THEN
     assertEquals(true, sa.isMinorEdit());
-  }
 
-  @Test
-  public final void getTimestamp() {
-    String label = getValueOrSkip("test_live_article");
-    ArticleMeta sa;
-
-    sa = bot.getArticle(label);
-
-    assertTrue(sa.getEditTimestamp().getTime() > 1000);
   }
 
 }
