@@ -76,10 +76,7 @@ public class PostDelete extends MWAction {
    * @return the delete action
    */
   private HttpAction getSecondRequest() {
-    Post msg = null;
-    if (log.isTraceEnabled()) {
-      log.trace("enter PostDelete.generateDeleteRequest(String)");
-    }
+    log.trace("enter PostDelete.generateDeleteRequest(String)");
     RequestBuilder requestBuilder = new ApiRequestBuilder() //
         .action("delete") //
         .formatXml() //
@@ -90,7 +87,7 @@ public class PostDelete extends MWAction {
     if (reason != null) {
       requestBuilder.param("reason", MediaWiki.urlEncode(reason));
     }
-    msg = requestBuilder.buildPost();
+    Post msg = requestBuilder.buildPost();
     log.debug("delete url: \"{}\"", msg.getRequest());
 
     return msg;
@@ -107,13 +104,8 @@ public class PostDelete extends MWAction {
       tokenAction.processReturningText(s, hm);
       delToken = false;
     } else {
-
-      if (log.isTraceEnabled()) {
-        log.trace("enter PostDelete.processAllReturningText(String)");
-      }
-      if (log.isDebugEnabled()) {
-        log.debug("Got returning text: \"" + s + "\"");
-      }
+      log.trace("enter PostDelete.processAllReturningText(String)");
+      log.debug("Got returning text: \"{}\"", s);
       try {
         XmlElement doc = getRootElementWithError(s);
         if (getErrorElement(doc) == null) {
@@ -142,8 +134,8 @@ public class PostDelete extends MWAction {
   protected XmlElement getErrorElement(XmlElement rootXmlElement) {
     XmlElement containsError = super.getErrorElement(rootXmlElement);
     if (containsError != null) {
-      log.warn(containsError.getAttributeValue("info"));
-      if (containsError.getAttributeValue("code").equals("inpermissiondenied")) {
+      log.warn("{}", containsError.getAttributeValue("info"));
+      if ("inpermissiondenied".equals(containsError.getAttributeValue("code"))) {
         log.error("Adding '$wgGroupPermissions['bot']['delete'] = true;'" +
             " to your MediaWiki's LocalSettings.php might remove this problem.");
       }
@@ -155,9 +147,10 @@ public class PostDelete extends MWAction {
     XmlElement elem = rootXmlElement.getChild("delete");
     if (elem != null) {
       // process reply for delete request
-      if (log.isInfoEnabled()) {
-        log.info("Deleted article '" + elem.getAttributeValue("title") + "'" + " with reason '" +
-            elem.getAttributeValue("reason") + "'");
+      if (log.isDebugEnabled()) {
+        String title = elem.getAttributeValue("title");
+        String reason = elem.getAttributeValue("reason");
+        log.debug("Deleted article '{}'  with reason '{}'", title, reason);
       }
     } else {
       log.error("Unknow reply. This is not a reply for a delete action.");
