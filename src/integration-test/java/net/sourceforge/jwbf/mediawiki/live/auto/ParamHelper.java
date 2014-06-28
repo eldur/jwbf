@@ -7,6 +7,7 @@ import java.util.List;
 import net.sourceforge.jwbf.mediawiki.BotFactory;
 import net.sourceforge.jwbf.mediawiki.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.VersionTestClassVerifier;
+import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 import net.sourceforge.jwbf.mediawiki.live.AbstractMediaWikiBotTest;
 import org.junit.Assert;
 import org.junit.internal.AssumptionViolatedException;
@@ -19,12 +20,18 @@ public abstract class ParamHelper extends AbstractMediaWikiBotTest {
   public ParamHelper(Version v, VersionTestClassVerifier verifier) {
     try {
       version(v);
-      bot(BotFactory.getMediaWikiBot(version(), true));
+      MediaWikiBot mediaWikiBot = BotFactory.getMediaWikiBot(version(), true);
+      bot(mediaWikiBot);
     } catch (AssumptionViolatedException assumptionFailed) {
       verifier.addIgnoredVersion(version());
       throw assumptionFailed;
     }
     Assert.assertEquals(v, bot().getVersion());
+  }
+
+  public ParamHelper(MediaWikiBot bot) {
+    version(bot.getVersion());
+    bot(bot);
   }
 
   public static Collection<?> prepare(List<Version> versions) {

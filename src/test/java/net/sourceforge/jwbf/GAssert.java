@@ -33,7 +33,7 @@ public class GAssert {
     assertEquals(expectedTuples, actualTuples);
   }
 
-  public static void assertEquals(ImmutableList<String> expected, Set<String> actual) {
+  public static <T> void assertEquals(ImmutableList<T> expected, Set<T> actual) {
     assertEquals(expected, sortedCopy(actual));
   }
 
