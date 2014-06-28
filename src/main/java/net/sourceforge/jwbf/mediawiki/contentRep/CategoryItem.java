@@ -18,11 +18,23 @@
  */
 package net.sourceforge.jwbf.mediawiki.contentRep;
 
+import javax.annotation.Nullable;
 import java.util.Objects;
 
+import com.google.common.base.Function;
 import com.google.common.base.Preconditions;
 
 public class CategoryItem {
+
+  public static final Function<CategoryItem, String> TO_TITLE_STRING_F =
+      new Function<CategoryItem, String>() {
+        @Nullable
+        @Override
+        public String apply(@Nullable CategoryItem input) {
+          return input.getTitle();
+
+        }
+      };
 
   private final String title;
   private final int namespace;
@@ -36,7 +48,11 @@ public class CategoryItem {
 
   @Override
   public String toString() {
-    return title;
+    return com.google.common.base.Objects.toStringHelper(this) //
+        .add("title", title) //
+        .add("namespace", namespace) //
+        .add("pageid", pageid) //
+        .toString();
   }
 
   public String getTitle() {

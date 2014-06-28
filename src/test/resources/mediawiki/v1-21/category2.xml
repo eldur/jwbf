@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<api>
+  <query-continue>
+    <categorymembers cmcontinue="page|43415445474f5259544553543131|3740" />
+  </query-continue>
+  <query>
+    <categorymembers>
+      <cm pageid="1002" ns="0" title="CategoryTest10" />
+    </categorymembers>
+  </query>
+</api>

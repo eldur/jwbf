@@ -40,7 +40,7 @@ public class AllPageTitlesIntegTest extends MocoIntegTest {
       .build();
 
   @Test
-  public void doTest() {
+  public void test() {
 
     // GIVEN
     // TODO json?

@@ -21,11 +21,13 @@ package net.sourceforge.jwbf.mediawiki.actions.queries;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import com.google.common.primitives.Ints;
 import net.sourceforge.jwbf.core.actions.Get;
 import net.sourceforge.jwbf.core.actions.RequestBuilder;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
+import net.sourceforge.jwbf.mapper.XmlElement;
 import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
 import net.sourceforge.jwbf.mediawiki.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
@@ -146,8 +148,12 @@ abstract class CategoryMembers extends MWAction {
    *
    * @param s text for parsing
    */
-  private final void parseArticleTitles(String s) {
+  private void parseArticleTitles(String s) {
 
+    Optional<XmlElement> errorElement = getRootElementWithError(s).getErrorElement();
+    if (errorElement.isPresent()) {
+      throw new IllegalStateException(errorElement.get().getAttributeValue("info"));
+    }
     Matcher m = CATEGORY_PATTERN.matcher(s);
 
     while (m.find()) {

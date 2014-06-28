@@ -16,14 +16,12 @@
  * Contributors:
  *
  */
-package net.sourceforge.jwbf.mediawiki.live.auto;
+package net.sourceforge.jwbf.mediawiki.actions.queries;
 
 import static org.junit.Assert.assertEquals;
 
-import javax.annotation.Nullable;
 import java.util.Collection;
 
-import com.google.common.base.Function;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
@@ -32,24 +30,23 @@ import net.sourceforge.jwbf.GAssert;
 import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
 import net.sourceforge.jwbf.mediawiki.BotFactory;
 import net.sourceforge.jwbf.mediawiki.MediaWiki.Version;
-import net.sourceforge.jwbf.mediawiki.actions.queries.CategoryMembersFull;
-import net.sourceforge.jwbf.mediawiki.actions.queries.CategoryMembersSimple;
 import net.sourceforge.jwbf.mediawiki.contentRep.CategoryItem;
+import net.sourceforge.jwbf.mediawiki.live.auto.ParamHelper;
 import org.junit.Test;
 import org.junit.runners.Parameterized.Parameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class CategoryTest extends ParamHelper {
+public class CategoryMembersLiveIntegTest extends ParamHelper {
 
-  private static final Logger log = LoggerFactory.getLogger(CategoryTest.class);
+  private static final Logger log = LoggerFactory.getLogger(CategoryMembersLiveIntegTest.class);
 
   @Parameters(name = "{0}")
   public static Collection<?> stableWikis() {
     return ParamHelper.prepare(Version.valuesStable());
   }
 
-  public CategoryTest(Version v) {
+  public CategoryMembersLiveIntegTest(Version v) {
     super(BotFactory.getMediaWikiBot(v, true));
   }
 
@@ -68,14 +65,7 @@ public class CategoryTest extends ParamHelper {
     assertEquals(limitSize, categoryTitles.size());
     GAssert.assertEquals(categoryTitles, //
         FluentIterable.from(categoryItems) //
-            .transform(new Function<CategoryItem, String>() {
-              @Nullable
-              @Override
-              public String apply(@Nullable CategoryItem input) {
-                return input.getTitle();
-
-              }
-            }) //
+            .transform(CategoryItem.TO_TITLE_STRING_F) //
             .toList());
   }
 
@@ -104,7 +94,7 @@ public class CategoryTest extends ParamHelper {
     return categoryTitles;
   }
 
-  private <T> ImmutableList<T> copyWithoutDuplicatesOf(Iterable<T> categoryElements,
+  public static <T> ImmutableList<T> copyWithoutDuplicatesOf(Iterable<T> categoryElements,
       int limitSize) {
     ImmutableList<T> ts = ImmutableList.copyOf(Iterables.limit(categoryElements, limitSize));
     GAssert.assertEquals(ts, Sets.newHashSet(ts));

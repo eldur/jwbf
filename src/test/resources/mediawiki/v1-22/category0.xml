@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<api>
+  <query-continue>
+    <categorymembers cmcontinue="token|to1|" />
+  </query-continue>
+  <query>
+    <categorymembers>
+      <cm pageid="1000" ns="0" title="CategoryTest0" />
+    </categorymembers>
+  </query>
+</api>

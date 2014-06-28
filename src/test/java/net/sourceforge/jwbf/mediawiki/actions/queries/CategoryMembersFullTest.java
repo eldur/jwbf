@@ -65,10 +65,27 @@ public class CategoryMembersFullTest {
     MediaWikiBot bot = mock(MediaWikiBot.class);
     final CategoryMembersFull testee = new CategoryMembersFull(bot, categoryName);
     final CategoryMembersFull value = mock(CategoryMembersFull.class);
-    // XXX strage testdata
-    String category = "<cm pageid=\"2\" ns=\"1\" title=\"a\" />";
-    String withMore =
-        "<query-continue><categorymembers cmcontinue=\"5\" /></query-continue>" + category;
+    String category = "<?xml version=\"1.0\"?>\n"
+        + "<api>\n"
+        + "  <query>\n"
+        + "    <categorymembers>\n"
+        + "      <cm pageid=\"3\" ns=\"1\" title=\"b\" />\n"
+        + "    </categorymembers>\n"
+        + "  </query>\n"
+        + "</api>";
+
+    String withMore = "<?xml version=\"1.0\"?>\n"
+        + "<api>\n"
+        + "  <query-continue>\n"
+        + "    <categorymembers cmcontinue=\"any\" />\n"
+        + "  </query-continue>\n"
+        // ^ TODO old continue
+        + "  <query>\n"
+        + "    <categorymembers>\n"
+        + "      <cm pageid=\"2\" ns=\"1\" title=\"a\" />\n"
+        + "    </categorymembers>\n"
+        + "  </query>\n"
+        + "</api>";
     Mockito.when(bot.getPerformedAction(Mockito.any(CategoryMembersFull.class)))
         .thenAnswer(categoryWith(testee, value, withMore))
         .thenAnswer(categoryWith(testee, value, category));
