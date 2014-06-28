@@ -2,6 +2,7 @@ package net.sourceforge.jwbf.core.actions;
 
 import java.util.Objects;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
@@ -37,5 +38,15 @@ public final class ParamTuple<T> {
   @Override
   public String toString() {
     return "('" + key + "', '" + valueSupplier.get() + "')";
+  }
+
+  @VisibleForTesting
+  public String key() {
+    return key;
+  }
+
+  @VisibleForTesting
+  public String value() {
+    return (String) valueSupplier.get();
   }
 }

@@ -56,8 +56,13 @@ public class AllPageTitles extends TitleQuery<String> {
   private static final Pattern HAS_MORE_PATTERN_20 = Pattern.compile( //
       "<query-continue>.*?<allpages *apcontinue=\"" //
           + "([^\"]*)\" */>.*?</query-continue>", Pattern.DOTALL | Pattern.MULTILINE);
+  private static final Pattern HAS_MORE_PATTERN_21 = Pattern.compile( //
+      "<continue .*apcontinue=\"([^\"]*)\" */>",
+      Pattern.DOTALL | Pattern.MULTILINE);
+
   private static final Pattern ARTICLE_TITLES_PATTERN = Pattern.compile( //
-      "<p pageid=\".*?\" ns=\".*?\" title=\"(.*?)\" />");
+      "<p pageid=\".*?\" ns=\".*?\" title=\"(.*?)\" */>");
+
   /** Pattern to parse returned page, @see {@link #parseArticleTitles(String)} */
   /**
    * Constant value for the aplimit-parameter. *
@@ -117,6 +122,7 @@ public class AllPageTitles extends TitleQuery<String> {
       String namespace) {
     RequestBuilder requestBuilder = new ApiRequestBuilder() //
         .action("query") //
+        .paramNewContinue(bot.getVersion()) //
         .formatXml() //
         .param("list", "allpages") //
         .param("apfilterredir", findRedirectFilterValue(rf)) //
@@ -153,7 +159,7 @@ public class AllPageTitles extends TitleQuery<String> {
    */
   @Override
   protected ImmutableList<String> parseArticleTitles(String s) {
-    ImmutableList.Builder<String> titles = ImmutableList.<String>builder();
+    ImmutableList.Builder<String> titles = ImmutableList.builder();
     Matcher m = ARTICLE_TITLES_PATTERN.matcher(s);
     while (m.find()) {
       String title = MediaWiki.htmlUnescape(m.group(1));
@@ -173,7 +179,7 @@ public class AllPageTitles extends TitleQuery<String> {
   @Override
   protected String parseHasMore(final String s) {
 
-    Pattern hasMorePattern = null;
+    final Pattern hasMorePattern;
     switch (botVersion()) {
     case MW1_15:
     case MW1_16:
@@ -182,9 +188,11 @@ public class AllPageTitles extends TitleQuery<String> {
     case MW1_19:
       hasMorePattern = HAS_MORE_PATTERN;
       break;
-
-    default:
+    case MW1_20:
       hasMorePattern = HAS_MORE_PATTERN_20;
+      break;
+    default:
+      hasMorePattern = HAS_MORE_PATTERN_21;
       break;
     }
 

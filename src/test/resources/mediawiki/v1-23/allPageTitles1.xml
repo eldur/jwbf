@@ -1,11 +1,9 @@
 <?xml version="1.0"?>
 <api>
-  <query-continue>
-    <allpages apcontinue="%Change_0" />
-  </query-continue>
   <query>
     <allpages>
       <p pageid="1775" ns="0" title="%" />
     </allpages>
   </query>
+  <continue continue="-||" apcontinue="%Change_0" />
 </api>

@@ -9,10 +9,16 @@ import java.util.Map;
 
 import com.github.dreamhead.moco.RequestMatcher;
 import com.google.common.collect.ImmutableMap;
+import net.sourceforge.jwbf.core.actions.ParamTuple;
 
 public class ApiMatcherBuilder {
 
   private ImmutableMap.Builder<String, String> params = ImmutableMap.builder();
+
+  public ApiMatcherBuilder param(ParamTuple paramTuple) {
+    params.put(paramTuple.key(), paramTuple.value());
+    return this;
+  }
 
   public ApiMatcherBuilder param(String key, String value) {
     params.put(key, value);
@@ -31,5 +37,13 @@ public class ApiMatcherBuilder {
       apiBuilder.with(eq(query(param.getKey()), param.getValue()));
     }
     return apiBuilder.build();
+  }
+
+  public ApiMatcherBuilder paramNewContinue(MediaWiki.Version version) {
+    if (version.greaterEqThen(MediaWiki.Version.MW1_21)) {
+      ParamTuple paramTuple = new ParamTuple("continue", "-||");
+      param(paramTuple.key(), paramTuple.value());
+    }
+    return this;
   }
 }
