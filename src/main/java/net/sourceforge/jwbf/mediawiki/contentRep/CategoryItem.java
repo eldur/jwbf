@@ -18,65 +18,53 @@
  */
 package net.sourceforge.jwbf.mediawiki.contentRep;
 
-import net.sourceforge.jwbf.mediawiki.actions.queries.CategoryMembersFull;
+import java.util.Objects;
 
-/**
- * This class helps to get detail information about category items and was returned by {@link
- * CategoryMembersFull}.
- *
- * @author Thomas Stock
- */
+import com.google.common.base.Preconditions;
+
 public class CategoryItem {
 
-  private String title = "";
-  private int namespace;
-  private int pageid;
+  private final String title;
+  private final int namespace;
+  private final int pageid;
 
-  /**
-   * @return representation of the category member
-   */
+  public CategoryItem(String title, int namespace, int pageid) {
+    this.title = Preconditions.checkNotNull(title);
+    this.namespace = namespace;
+    this.pageid = pageid;
+  }
+
   @Override
   public String toString() {
     return title;
   }
 
-  /**
-   * @return the
-   */
   public String getTitle() {
     return title;
   }
 
-  /**
-   * @param title the
-   */
-  public void setTitle(String title) {
-    this.title = title;
-  }
-
-  /**
-   * @return the
-   */
   public int getNamespace() {
     return namespace;
   }
 
-  /**
-   * @param namespace the
-   */
-  public void setNamespace(int namespace) {
-    this.namespace = namespace;
-  }
-
-  /**
-   * @return the
-   */
   public int getPageid() {
     return pageid;
   }
 
-  public void setPageid(int pageid) {
-    this.pageid = pageid;
+  @Override
+  public boolean equals(Object obj) {
+    if (obj instanceof CategoryItem) {
+      CategoryItem that = (CategoryItem) obj;
+      return Objects.equals(that.getTitle(), this.getTitle()) //
+          && Objects.equals(that.getPageid(), this.getPageid()) //
+          && Objects.equals(that.getNamespace(), this.getNamespace());
+    } else {
+      return false;
+    }
   }
 
+  @Override
+  public int hashCode() {
+    return Objects.hash(title, pageid, namespace);
+  }
 }

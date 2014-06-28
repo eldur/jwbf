@@ -47,12 +47,7 @@ public class CategoryMembersFull extends CategoryMembers
    */
   @Override
   protected void addCatItem(String title, int pageid, int ns) {
-    CategoryItem ci = new CategoryItem();
-    ci.setTitle(title);
-    ci.setPageid(pageid);
-    ci.setNamespace(ns);
-    titleCollection.add(ci);
-
+    titleCollection.add(new CategoryItem(title, ns, pageid));
   }
 
   /**
