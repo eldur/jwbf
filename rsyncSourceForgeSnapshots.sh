@@ -7,12 +7,12 @@ incl=include-rsync.tmp
 readme=README.md
 cat > $readme << EOF
 # README
- 
-- - - 
+
+- - -
 * **Files in this folder are NOT necessary the latest snapshot**
 * check also <http://jwbf.sf.net> for snapshots and releases
 - - -
-The files in this folder contains all libraries for useing and developing jwbf. 
+The files in this folder contains all libraries for useing and developing jwbf.
 All runtime and test related dependecies are included.
 
 EOF

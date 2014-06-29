@@ -18,7 +18,7 @@ package net.sourceforge.jwbf.trac.live;
 //
 //	/**
 //	 * Setup log4j.
-//	 * 
+//	 *
 //	 * @throws Exception
 //	 *             a
 //	 */
@@ -30,7 +30,7 @@ package net.sourceforge.jwbf.trac.live;
 //
 //	/**
 //	 * Test
-//	 * 
+//	 *
 //	 * @throws Exception
 //	 *             a
 //	 */
@@ -40,10 +40,10 @@ package net.sourceforge.jwbf.trac.live;
 //
 //		doTest(bot);
 //	}
-//	
+//
 //	/**
 //	 * Test
-//	 * 
+//	 *
 //	 * @throws Exception
 //	 *             a
 //	 */
