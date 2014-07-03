@@ -24,6 +24,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.regex.Pattern;
 
+import com.google.common.base.Optional;
+
 /**
  * This is a simple content helper class that implements the EditContentAccesable interface, plus
  * setter methods.
@@ -266,17 +268,22 @@ public class SimpleArticle implements ArticleMeta, Serializable, Cloneable, Cont
     return editTimestamp;
   }
 
-  /**
-   * @param editTimestamp set
-   * @throws ParseException if date unparseable
-   */
-  public void setEditTimestamp(String editTimestamp) throws ParseException {
-    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+  public void setEditTimestamp(String editTimestamp) {
+    Date parsedDate = tryParse(editTimestamp);
+    setEditTimestamp(parsedDate);
+  }
+
+  private Date tryParse(String editTimestamp) {
+    Optional<Date> parsedDate = tryParse(editTimestamp, "yyyy-MM-dd'T'HH:mm:ss'Z'");
+    return parsedDate.or(tryParse(editTimestamp, "MM/dd/yy' 'HH:mm:ss")).get();
+  }
+
+  private Optional<Date> tryParse(String editTimestamp, String datePattern) {
+    SimpleDateFormat sdf = new SimpleDateFormat(datePattern);
     try {
-      setEditTimestamp(sdf.parse(editTimestamp));
+      return Optional.of(sdf.parse(editTimestamp));
     } catch (ParseException e) {
-      sdf = new SimpleDateFormat("MM/dd/yy' 'HH:mm:ss");
-      setEditTimestamp(sdf.parse(editTimestamp));
+      return Optional.absent();
     }
   }
 

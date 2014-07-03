@@ -58,16 +58,15 @@ public class SimpleArticleTest {
 
   @Test
   public void testDateFormat() {
+    // GIVEN
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
-    try {
+    String dateString = "2007-01-08T15:12:55Z";
 
-      String dateString = "2007-01-08T15:12:55Z";
-      article.setEditTimestamp(dateString);
+    // WHEN
+    article.setEditTimestamp(dateString);
 
-      assertEquals(dateString, sdf.format(article.getEditTimestamp()));
-    } catch (ParseException e) {
-      e.printStackTrace();
-    }
+    // THEN
+    assertEquals(dateString, sdf.format(article.getEditTimestamp()));
   }
 
   @Test
@@ -282,7 +281,7 @@ public class SimpleArticleTest {
     try {
       wait(ms);
     } catch (InterruptedException e) {
-      throw new RuntimeException(e);
+      throw new IllegalStateException(e);
     }
   }
 }

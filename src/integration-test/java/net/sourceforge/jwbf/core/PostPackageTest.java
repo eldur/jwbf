@@ -36,12 +36,11 @@ public class PostPackageTest {
 
     for (File jar : files) {
 
-      BufferedReader in = null;
-      try {
-        String text = "";
+      Process p = Runtime.getRuntime().exec("java -jar " + jar.getAbsolutePath() + " JWBF.");
+      try (BufferedReader in = new BufferedReader(new InputStreamReader(p.getInputStream()))) {
+
         StringWriter strOut = new StringWriter();
-        Process p = Runtime.getRuntime().exec("java -jar " + jar.getAbsolutePath() + " JWBF.");
-        in = new BufferedReader(new InputStreamReader(p.getInputStream()));
+        String text = "";
         while ((text = in.readLine()) != null) {
           strOut.write(text);
           strOut.flush();
@@ -50,11 +49,6 @@ public class PostPackageTest {
         if (!Strings.isNullOrEmpty(out)) {
           assertTrue("should contain jwbf, but was: \"" + out + "\" <= " + jar.getAbsolutePath(),
               out.contains("jwbf"));
-        }
-
-      } finally {
-        if (in != null) {
-          in.close();
         }
       }
     }

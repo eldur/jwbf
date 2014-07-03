@@ -78,8 +78,7 @@ abstract class TitleQuery<T> implements Iterable<T>, Iterator<T> {
     try {
       return (Iterator<T>) clone();
     } catch (CloneNotSupportedException e) {
-      log.error("cloning should be supported");
-      e.printStackTrace();
+      log.error("cloning should be supported", e);
       return null;
     }
   }

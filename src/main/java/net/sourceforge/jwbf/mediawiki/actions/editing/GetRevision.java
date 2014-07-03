@@ -18,8 +18,6 @@
  */
 package net.sourceforge.jwbf.mediawiki.actions.editing;
 
-import java.text.ParseException;
-
 import net.sourceforge.jwbf.core.actions.Get;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
@@ -181,18 +179,11 @@ public class GetRevision extends MWAction {
         sa.setEditor(getAttrValueOf(xmlElement, "user"));
 
         if ((properties & TIMESTAMP) > 0) {
-
-          try {
-            sa.setEditTimestamp(getAttrValueOf(xmlElement, "timestamp"));
-          } catch (ParseException e) {
-            log.debug("timestamp could not be parsed");
-          }
+          sa.setEditTimestamp(getAttrValueOf(xmlElement, "timestamp"));
         }
-
       } else {
         findContent(xmlElement);
       }
-
     }
 
   }
@@ -202,7 +193,7 @@ public class GetRevision extends MWAction {
   }
 
   private String getAttrValueOf(XmlElement xmlElement, String key, String otherwise) {
-    String value  = xmlElement.getAttributeValue(key);
+    String value = xmlElement.getAttributeValue(key);
     if (value == null) {
       log.trace("no value for {}", key);
       return otherwise;

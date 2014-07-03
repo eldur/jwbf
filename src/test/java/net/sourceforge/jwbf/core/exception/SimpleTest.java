@@ -19,7 +19,6 @@ public class SimpleTest {
   public void basic1() {
     try {
       NullPointerException npe = new NullPointerException("oh it's null");
-
       throw new ActionException(npe);
     } catch (Exception e) {
       assertEquals(ActionException.class, e.getClass());

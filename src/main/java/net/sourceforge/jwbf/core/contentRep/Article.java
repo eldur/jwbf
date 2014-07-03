@@ -3,7 +3,6 @@ package net.sourceforge.jwbf.core.contentRep;
 import java.util.Date;
 
 import net.sourceforge.jwbf.core.bots.WikiBot;
-import net.sourceforge.jwbf.core.bots.util.JwbfException;
 
 /**
  * @author Thomas Stock
@@ -41,11 +40,7 @@ public class Article implements ArticleMeta, ContentSetable {
   public String getText() {
     if (isReload(TEXT_RELOAD)) {
       setReload(TEXT_RELOAD);
-      try {
-        setText(bot.readData(sa.getTitle()).getText());
-      } catch (JwbfException e) {
-        throw new RuntimeException(e); // XXX check
-      }
+      setText(bot.readData(sa.getTitle()).getText());
     }
     return sa.getText();
   }
@@ -67,11 +62,7 @@ public class Article implements ArticleMeta, ContentSetable {
 
     if (isReload(REVISION_ID_RELOAD)) {
       setReload(REVISION_ID_RELOAD);
-      try {
-        sa.setRevisionId(bot.readData(sa.getTitle()).getRevisionId());
-      } catch (JwbfException e) {
-        throw new RuntimeException(e); // XXX check
-      }
+      sa.setRevisionId(bot.readData(sa.getTitle()).getRevisionId());
     }
     return sa.getRevisionId();
   }
@@ -80,11 +71,7 @@ public class Article implements ArticleMeta, ContentSetable {
   public String getEditor() {
     if (isReload(EDITOR_RELOAD)) {
       setReload(EDITOR_RELOAD);
-      try {
-        setEditor(bot.readData(sa.getTitle()).getEditor());
-      } catch (JwbfException e) {
-        throw new RuntimeException(e); // XXX check
-      }
+      setEditor(bot.readData(sa.getTitle()).getEditor());
     }
     return sa.getEditor();
   }
@@ -99,11 +86,7 @@ public class Article implements ArticleMeta, ContentSetable {
   public String getEditSummary() {
     if (isReload(EDIT_SUM_RELOAD)) {
       setReload(EDIT_SUM_RELOAD);
-      try {
-        setEditSummary(bot.readData(sa.getTitle()).getEditSummary());
-      } catch (JwbfException e) {
-        throw new RuntimeException(e); // XXX check
-      }
+      setEditSummary(bot.readData(sa.getTitle()).getEditSummary());
     }
 
     return sa.getEditSummary();
@@ -119,11 +102,7 @@ public class Article implements ArticleMeta, ContentSetable {
   public boolean isMinorEdit() {
     if (isReload(MINOR_EDIT_RELOAD)) {
       setReload(MINOR_EDIT_RELOAD);
-      try {
-        setMinorEdit(bot.readData(sa.getTitle()).isMinorEdit());
-      } catch (JwbfException e) {
-        throw new RuntimeException(e); // XXX check
-      }
+      setMinorEdit(bot.readData(sa.getTitle()).isMinorEdit());
     }
     return sa.isMinorEdit();
   }
@@ -147,7 +126,8 @@ public class Article implements ArticleMeta, ContentSetable {
   }
 
   /**
-   * @deprecated use {@link #Article(String)} and {@link #setText(String)} instead.
+   * @deprecated use {@link net.sourceforge.jwbf.core.contentRep.Article(java.lang.String)}
+   * and {@link #setText(String)} instead.
    */
   @Deprecated
   public Article(WikiBot bot, String text, String title) {
@@ -221,11 +201,7 @@ public class Article implements ArticleMeta, ContentSetable {
   public Date getEditTimestamp() {
     if (isReload(EDIT_DATE_RELOAD)) {
       setReload(EDIT_DATE_RELOAD);
-      try {
-        sa.setEditTimestamp(bot.readData(sa.getTitle()).getEditTimestamp());
-      } catch (JwbfException e) {
-        throw new RuntimeException(e); // XXX check
-      }
+      sa.setEditTimestamp(bot.readData(sa.getTitle()).getEditTimestamp());
     }
     return sa.getEditTimestamp();
   }
