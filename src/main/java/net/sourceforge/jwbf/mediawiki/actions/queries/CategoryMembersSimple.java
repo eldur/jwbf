@@ -18,16 +18,12 @@
  */
 package net.sourceforge.jwbf.mediawiki.actions.queries;
 
-import java.util.Iterator;
-import java.util.List;
-
-import com.google.common.collect.Lists;
-import net.sourceforge.jwbf.core.actions.Get;
-import net.sourceforge.jwbf.core.actions.util.ActionException;
+import com.google.common.collect.FluentIterable;
+import com.google.common.collect.ImmutableList;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
-import net.sourceforge.jwbf.core.actions.util.ProcessException;
 import net.sourceforge.jwbf.mediawiki.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
+import net.sourceforge.jwbf.mediawiki.contentRep.CategoryItem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,18 +32,11 @@ import org.slf4j.LoggerFactory;
  *
  * @author Thomas Stock
  */
-public class CategoryMembersSimple implements Iterable<String>, Iterator<String> {
+public class CategoryMembersSimple extends TitleQuery<String> {
 
   private static final Logger log = LoggerFactory.getLogger(CategoryMembersSimple.class);
 
-  private Get msg;
   private final CategoryMembers cm;
-  /**
-   * Collection that will contain the result (titles of articles linking to the target) after
-   * performing the action has finished.
-   */
-  private final List<String> titleCollection = Lists.newArrayList();
-  private Iterator<String> titleIterator;
 
   /**
    * @param categoryName like "Buildings" or "Chemical elements" without prefix "Category:" in
@@ -63,81 +52,35 @@ public class CategoryMembersSimple implements Iterable<String>, Iterator<String>
    * @param namespaces   for search
    */
   public CategoryMembersSimple(MediaWikiBot bot, String categoryName, int... namespaces) {
-    cm = new CategoryMembers(bot, categoryName, namespaces) {
-
-      @Override
-      public HttpAction getNextMessage() {
-        return msg;
-      }
-
-      @Override
-      protected void finalizeParse() {
-        titleIterator = titleCollection.iterator();
-      }
-
-      @Override
-      protected void addCatItem(String title, int pageid, int ns) {
-        titleCollection.add(title);
-      }
-
-      @Override
-      public String processReturningText(String s, HttpAction action) {
-        titleCollection.clear();
-        String buff = super.processReturningText(s, action);
-
-        titleIterator = titleCollection.iterator();
-        return buff;
-      }
-    };
-
-  }
-
-  /**
-   * TODO duplication with CategoryMembersFull
-   */
-  private synchronized void prepareCollection() {
-
-    if (cm.init || (!titleIterator.hasNext() && cm.hasMoreResults)) {
-      if (cm.init) {
-        cm.setHasMoreMessages(true); // FIXME check if other action should have
-        // this too
-        msg = cm.generateFirstRequest();
-      } else {
-        msg = cm.generateContinueRequest(cm.nextPageInfo);
-      }
-      cm.init = false;
-      try {
-        cm.bot.getPerformedAction(cm);
-        cm.setHasMoreMessages(true);
-      } catch (ActionException | ProcessException e) {
-        log.warn("", e);
-        cm.setHasMoreMessages(false);
-      }
-
-    }
+    super(bot);
+    cm = new CategoryMembersFull(bot, categoryName, namespaces);
   }
 
   @Override
-  public Iterator<String> iterator() {
-    return this;
+  protected HttpAction prepareCollection() {
+    return cm.prepareCollection();
+  }
+
+  @Override
+  protected ImmutableList<String> parseArticleTitles(String s) {
+    ImmutableList<CategoryItem> categoryItems = cm.parseArticleTitles(s);
+    return FluentIterable.from(categoryItems) //
+        .transform(CategoryItem.TO_TITLE_STRING_F).toList();
+  }
+
+  @Override
+  protected String parseHasMore(String s) {
+    return cm.parseHasMore(s);
   }
 
   @Override
   public boolean hasNext() {
-    prepareCollection();
-    return titleIterator.hasNext();
+    return cm.hasNext();
   }
 
   @Override
   public String next() {
-    prepareCollection();
-    return titleIterator.next();
-  }
-
-  @Override
-  public void remove() {
-    titleIterator.remove();
-
+    return cm.next().getTitle();
   }
 
 }

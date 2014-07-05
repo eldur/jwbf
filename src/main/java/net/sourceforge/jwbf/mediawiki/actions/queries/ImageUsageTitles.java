@@ -179,11 +179,10 @@ public class ImageUsageTitles extends TitleQuery<String> {
 
     @Override
     public Get generateContinueRequest(String imageName, String namespace, String ilcontinue) {
-      RequestBuilder requestBuilder = newRequestBuilder();
-      requestBuilder.param("iucontinue", MediaWiki.urlEncode(ilcontinue));
-      requestBuilder.param("iutitle", MediaWiki.urlEncode(imageName));
-
-      return requestBuilder.buildGet();
+      return newRequestBuilder() //
+          .param("iucontinue", MediaWiki.urlEncode(ilcontinue)) //
+          .param("iutitle", MediaWiki.urlEncode(imageName)) //
+          .buildGet();
     }
 
     @Override

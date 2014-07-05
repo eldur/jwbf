@@ -26,12 +26,13 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.primitives.Ints;
 import net.sourceforge.jwbf.core.actions.Get;
 import net.sourceforge.jwbf.core.actions.RequestBuilder;
-import net.sourceforge.jwbf.core.actions.util.HttpAction;
+import net.sourceforge.jwbf.mapper.XmlConverter;
 import net.sourceforge.jwbf.mapper.XmlElement;
 import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
 import net.sourceforge.jwbf.mediawiki.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
+import net.sourceforge.jwbf.mediawiki.contentRep.CategoryItem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,7 +43,7 @@ import org.slf4j.LoggerFactory;
  * @see <a href= "http://www.mediawiki.org/wiki/API:Query_-_Lists#categorymembers_.2F_cm">API
  * documentation</a>
  */
-abstract class CategoryMembers extends MWAction {
+abstract class CategoryMembers extends TitleQuery<CategoryItem> {
 
   private static final Logger log = LoggerFactory.getLogger(CategoryMembers.class);
 
@@ -83,9 +84,10 @@ abstract class CategoryMembers extends MWAction {
 
   protected CategoryMembers(MediaWikiBot bot, String categoryName,
       ImmutableList<Integer> namespaces) {
+    super(bot);
     this.bot = bot;
     this.namespace = namespaces;
-    namespaceStr = createNsString(namespaces);
+    namespaceStr = MWAction.createNsString(namespaces);
     this.categoryName = categoryName.replace(" ", "_");
     requestBuilder = new RequestGenerator();
 
@@ -112,25 +114,12 @@ abstract class CategoryMembers extends MWAction {
   }
 
   /**
-   * deals with the MediaWiki api's response by parsing the provided text.
-   *
-   * @param s the answer to the most recently generated MediaWiki-request
-   * @return empty string
-   */
-  @Override
-  public String processReturningText(String s, HttpAction action) {
-    parseArticleTitles(s);
-    parseHasMore(s);
-    return "";
-  }
-
-  /**
    * gets the information about a follow-up page from a provided api response. If there is one, a
    * new request is added to msgs by calling generateRequest.
    *
    * @param s text for parsing
    */
-  private void parseHasMore(final String s) {
+  public String parseHasMore(final String s) {
 
     Matcher m = CONTINUE_PATTERN.matcher(s);
 
@@ -140,7 +129,7 @@ abstract class CategoryMembers extends MWAction {
     } else {
       hasMoreResults = false;
     }
-
+    return nextPageInfo;
   }
 
   /**
@@ -148,23 +137,25 @@ abstract class CategoryMembers extends MWAction {
    *
    * @param s text for parsing
    */
-  private void parseArticleTitles(String s) {
+  public ImmutableList<CategoryItem> parseArticleTitles(String s) {
 
-    Optional<XmlElement> errorElement = getRootElementWithError(s).getErrorElement();
+    Optional<XmlElement> rootElementWithError = XmlConverter.getRootElementWithError(s);
+    Optional<XmlElement> errorElement = rootElementWithError.get().getErrorElement();
     if (errorElement.isPresent()) {
       throw new IllegalStateException(errorElement.get().getAttributeValue("info"));
     }
     Matcher m = CATEGORY_PATTERN.matcher(s);
 
+    ImmutableList.Builder<CategoryItem> listBuilder = ImmutableList.builder();
     while (m.find()) {
-      addCatItem(m.group(3), Integer.parseInt(m.group(1)), Integer.parseInt(m.group(2)));
+      String title = m.group(3);
+      int namespace = Integer.parseInt(m.group(2));
+      int pageid = Integer.parseInt(m.group(1));
+      CategoryItem categoryItem = new CategoryItem(title, namespace, pageid);
+      listBuilder.add(categoryItem);
     }
-    finalizeParse();
+    return listBuilder.build();
   }
-
-  protected abstract void finalizeParse();
-
-  protected abstract void addCatItem(String title, int pageid, int ns);
 
   protected class RequestGenerator {
 

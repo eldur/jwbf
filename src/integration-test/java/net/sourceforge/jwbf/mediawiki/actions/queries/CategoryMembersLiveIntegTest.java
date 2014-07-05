@@ -62,6 +62,7 @@ public class CategoryMembersLiveIntegTest extends ParamHelper {
         copyWithoutDuplicatesOf(new CategoryMembersFull(bot(), TESTCATNAME), limitSize);
 
     // THEN
+    assertEquals(limitSize, categoryItems.size());
     assertEquals(limitSize, categoryTitles.size());
     GAssert.assertEquals(categoryTitles, //
         FluentIterable.from(categoryItems) //
@@ -81,17 +82,15 @@ public class CategoryMembersLiveIntegTest extends ParamHelper {
   }
 
   private ImmutableList<String> getOrCreateCategoryTitles(int limitSize) {
-    ImmutableList<String> categoryTitles;
-    CategoryMembersSimple category = new CategoryMembersSimple(bot(), TESTCATNAME);
-    ImmutableList<String> initialCategories = copyWithoutDuplicatesOf(category, limitSize);
+    CategoryMembersSimple categories = new CategoryMembersSimple(bot(), TESTCATNAME);
+    ImmutableList<String> initialCategories = copyWithoutDuplicatesOf(categories.lazy(), limitSize);
     if (initialCategories.size() < limitSize) {
       doPreapare();
-      categoryTitles = copyWithoutDuplicatesOf(new CategoryMembersSimple(bot(), TESTCATNAME),
+      return copyWithoutDuplicatesOf(new CategoryMembersSimple(bot(), TESTCATNAME),
           limitSize);
     } else {
-      categoryTitles = initialCategories;
+      return initialCategories;
     }
-    return categoryTitles;
   }
 
   public static <T> ImmutableList<T> copyWithoutDuplicatesOf(Iterable<T> categoryElements,

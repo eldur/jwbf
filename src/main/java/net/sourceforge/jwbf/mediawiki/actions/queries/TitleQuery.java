@@ -19,11 +19,11 @@ import org.slf4j.LoggerFactory;
  * @param <T> of
  * @author Thomas Stock
  */
-abstract class TitleQuery<T> implements Iterable<T>, Iterator<T> {
+abstract class TitleQuery<T> implements Iterable<T>, Iterator<T>, Cloneable {
 
   private static final Logger log = LoggerFactory.getLogger(TitleQuery.class);
 
-  private Iterator<T> titleIterator;
+  private Iterator<T> titleIterator = ImmutableList.<T>of().iterator();
   private final TitleQueryAction inner;
   private final MediaWikiBot bot;
   private ImmutableList<T> oldTitlesForLogging = ImmutableList.of();
@@ -55,7 +55,7 @@ abstract class TitleQuery<T> implements Iterable<T>, Iterator<T> {
     inner = getInnerAction();
   }
 
-  protected TitleQueryAction getInnerAction() {
+  private TitleQueryAction getInnerAction() {
     return new TitleQueryAction();
   }
 
@@ -87,7 +87,7 @@ abstract class TitleQuery<T> implements Iterable<T>, Iterator<T> {
    * {@inheritDoc}
    */
   @Override
-  public final boolean hasNext() {
+  public boolean hasNext() {
     doCollection();
     return titleIterator.hasNext();
   }
@@ -96,7 +96,7 @@ abstract class TitleQuery<T> implements Iterable<T>, Iterator<T> {
    * {@inheritDoc}
    */
   @Override
-  public final T next() {
+  public T next() {
     doCollection();
     return titleIterator.next();
   }
@@ -105,8 +105,8 @@ abstract class TitleQuery<T> implements Iterable<T>, Iterator<T> {
    * {@inheritDoc}
    */
   @Override
-  public final void remove() {
-    titleIterator.remove();
+  public void remove() {
+    throw new UnsupportedOperationException("do not change this iteration");
   }
 
   protected abstract HttpAction prepareCollection();
@@ -147,18 +147,18 @@ abstract class TitleQuery<T> implements Iterable<T>, Iterator<T> {
      * {@inheritDoc}
      */
     @Override
-    public String processAllReturningText(final String s) {
+    public final String processAllReturningText(final String s) {
       ImmutableList<T> newTitles = parseArticleTitles(s);
+      setNextPageInfo(parseHasMore(s));
       if (log.isWarnEnabled()) {
         if (oldTitlesForLogging.equals(newTitles)) {
           log.warn("previous response has same payload");
           // namespaces or same edits in recentchanges
         }
+        oldTitlesForLogging = newTitles;
       }
-      oldTitlesForLogging = newTitles;
-      setNextPageInfo(parseHasMore(s));
 
-      titleIterator = oldTitlesForLogging.iterator();
+      titleIterator = newTitles.iterator();
       return "";
     }
 

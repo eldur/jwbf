@@ -2,20 +2,13 @@ package net.sourceforge.jwbf.mediawiki.actions.queries;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
-import static org.mockito.Mockito.mock;
-
-import java.util.Iterator;
 
 import com.google.common.collect.ImmutableList;
 import net.sourceforge.jwbf.GAssert;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
-import net.sourceforge.jwbf.mediawiki.contentRep.CategoryItem;
 import org.junit.Test;
 import org.mockito.Mockito;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 
 public class CategoryMembersFullTest {
 
@@ -41,7 +34,7 @@ public class CategoryMembersFullTest {
     // GIVEN
     MediaWikiBot bot = Mockito.mock(MediaWikiBot.class);
     IllegalStateException exception = new IllegalStateException();
-    Mockito.when(bot.getPerformedAction(Mockito.any(CategoryMembersFull.class)))
+    Mockito.when(bot.getPerformedAction(Mockito.any(TitleQuery.TitleQueryAction.class)))
         .thenThrow(exception);
     String categoryName = "Test It";
 
@@ -56,63 +49,6 @@ public class CategoryMembersFullTest {
     } catch (IllegalStateException e) {
       assertEquals(exception, e);
     }
-  }
-
-  @Test
-  public void test() {
-    // GIVEN
-    String categoryName = "Test It";
-    MediaWikiBot bot = mock(MediaWikiBot.class);
-    final CategoryMembersFull testee = new CategoryMembersFull(bot, categoryName);
-    final CategoryMembersFull value = mock(CategoryMembersFull.class);
-    String category = "<?xml version=\"1.0\"?>\n"
-        + "<api>\n"
-        + "  <query>\n"
-        + "    <categorymembers>\n"
-        + "      <cm pageid=\"3\" ns=\"1\" title=\"b\" />\n"
-        + "    </categorymembers>\n"
-        + "  </query>\n"
-        + "</api>";
-
-    String withMore = "<?xml version=\"1.0\"?>\n"
-        + "<api>\n"
-        + "  <query-continue>\n"
-        + "    <categorymembers cmcontinue=\"any\" />\n"
-        + "  </query-continue>\n"
-        // ^ TODO old continue
-        + "  <query>\n"
-        + "    <categorymembers>\n"
-        + "      <cm pageid=\"2\" ns=\"1\" title=\"a\" />\n"
-        + "    </categorymembers>\n"
-        + "  </query>\n"
-        + "</api>";
-    Mockito.when(bot.getPerformedAction(Mockito.any(CategoryMembersFull.class)))
-        .thenAnswer(categoryWith(testee, value, withMore))
-        .thenAnswer(categoryWith(testee, value, category));
-
-    // WHEN/THEN
-    Iterator<CategoryItem> iterator = testee.iterator();
-    assertTrue(iterator.hasNext());
-    CategoryItem next = iterator.next();
-    assertEquals("a", next.getTitle());
-    assertEquals(1, next.getNamespace());
-    assertEquals(2, next.getPageid());
-    assertTrue(iterator.hasNext());
-    iterator.next();
-    assertFalse(iterator.hasNext());
-
-  }
-
-  private Answer<CategoryMembersFull> categoryWith(final CategoryMembersFull testee,
-      final CategoryMembersFull value, final String text) {
-    return new Answer<CategoryMembersFull>() {
-
-      @Override
-      public CategoryMembersFull answer(InvocationOnMock invocation) throws Throwable {
-        testee.processReturningText(text, null);
-        return value;
-      }
-    };
   }
 
 }
