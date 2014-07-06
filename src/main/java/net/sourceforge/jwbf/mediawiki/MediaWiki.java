@@ -94,19 +94,19 @@ public final class MediaWiki {
     /**
      * Released 2009-06
      */
-    , MW1_15
+    , @Deprecated MW1_15
     /**
      * Released 2010-07
      */
-    , MW1_16
+    , @Deprecated MW1_16
     /**
      * Released 2011-06
      */
-    , MW1_17
+    , @Deprecated MW1_17
     /**
      * Released 2011-11
      */
-    , MW1_18
+    , @Deprecated MW1_18
     /**
      * Released 2012-05
      */
@@ -114,11 +114,11 @@ public final class MediaWiki {
     /**
      * Released 2012-11
      */
-    , MW1_20
+    , @Deprecated MW1_20
     /**
      * Released 2013-05-25
      */
-    , MW1_21
+    , @Deprecated MW1_21
     /**
      * Released 2013-12-06
      */

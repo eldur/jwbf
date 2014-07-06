@@ -85,13 +85,7 @@ public class MediaWikiTest {
 
     // THEN
     ImmutableList<MediaWiki.Version> expected = ImmutableList.<MediaWiki.Version>builder() //
-        .add(MediaWiki.Version.MW1_15) //
-        .add(MediaWiki.Version.MW1_16) //
-        .add(MediaWiki.Version.MW1_17) //
-        .add(MediaWiki.Version.MW1_18) //
         .add(MediaWiki.Version.MW1_19) //
-        .add(MediaWiki.Version.MW1_20) //
-        .add(MediaWiki.Version.MW1_21) //
         .add(MediaWiki.Version.MW1_22) //
         .add(MediaWiki.Version.MW1_23) //
         .build();
