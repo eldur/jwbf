@@ -19,14 +19,9 @@
 package net.sourceforge.jwbf.mediawiki.actions.editing;
 
 import java.util.Deque;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-import com.google.common.base.Strings;
 import com.google.common.collect.Queues;
-import net.sourceforge.jwbf.core.actions.Get;
 import net.sourceforge.jwbf.core.actions.Post;
-import net.sourceforge.jwbf.core.actions.RequestBuilder;
 import net.sourceforge.jwbf.core.actions.util.ActionException;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
@@ -68,17 +63,7 @@ public class FileUpload extends MWAction {
     if (!simpleFile.getFile().exists()) {
       throw new IllegalStateException("file not found" + simpleFile.getFile());
     }
-    switch (bot.getVersion()) {
-    case MW1_15:
-    case MW1_16:
-      actionHandler = new NoApiUpload(simpleFile);
-      break;
-
-    default:
-
       actionHandler = new ApiUpload(bot, simpleFile);
-      break;
-    }
     actions = actionHandler.getActions();
 
   }
@@ -108,67 +93,12 @@ public class FileUpload extends MWAction {
     return actionHandler.handleResponse(xml, hm);
   }
 
-  private static class NoApiUpload implements UploadAction {
-
-    private final SimpleFile a;
-
-    public NoApiUpload(SimpleFile simpleFile) {
-      a = simpleFile;
-    }
-
-    @Override
-    public Deque<HttpAction> getActions() {
-      Deque<HttpAction> actions = Queues.newArrayDeque();
-      Get g = new RequestBuilder(MediaWiki.URL_INDEX) //
-          .param("title", MediaWiki.urlEncode(a.getTitle())) //
-          .param("action", "edit") //
-          .buildGet();
-      actions.add(g);
-
-      log.info("WRITE: " + a.getTitle());
-      Post uploadRequest = new RequestBuilder(MediaWiki.URL_INDEX) //
-          .param("title", "Special:Upload") //
-          .buildPost() //
-          .postParam("wpDestFile", a.getTitle()) //
-          .postParam("wpIgnoreWarning", "true") //
-          .postParam("wpSourceType", "file") //
-          .postParam("wpUpload", "Upload file") //
-          .postParam("wpUploadFile", a.getFile()) //
-          ;
-      if (!Strings.isNullOrEmpty(a.getText())) {
-        uploadRequest.postParam("wpUploadDescription", a.getText());
-      }
-
-      actions.add(uploadRequest);
-      return actions;
-    }
-
-    @Override
-    public String handleResponse(String xml, HttpAction hm) {
-      if (xml.contains("error")) {
-        Pattern errFinder = Pattern.compile("<p>(.*?)</p>", Pattern.DOTALL | Pattern.MULTILINE);
-        Matcher m = errFinder.matcher(xml);
-        String lastP = "";
-        while (m.find()) {
-          lastP = MediaWiki.htmlUnescape(m.group(1));
-          log.error("Upload failed: " + lastP);
-        }
-
-        throw new ActionException("Upload failed - " + lastP);
-      }
-      return "";
-    }
-
-  }
-
   private static class ApiUpload implements UploadAction {
     private final Deque<HttpAction> actions = Queues.newArrayDeque();
-    private final MediaWikiBot bot;
     private final SimpleFile simpleFile;
     private GetApiToken uploadTokenAction;
 
     public ApiUpload(MediaWikiBot bot, SimpleFile simpleFile) {
-      this.bot = bot;
       this.simpleFile = simpleFile;
     }
 
@@ -200,7 +130,7 @@ public class FileUpload extends MWAction {
     }
   }
 
-  private static interface UploadAction {
+  private interface UploadAction {
 
     Deque<HttpAction> getActions();
 

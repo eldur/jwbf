@@ -7,15 +7,11 @@ import java.util.Collection;
 
 import net.sourceforge.jwbf.core.contentRep.ContentAccessable;
 import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
-import net.sourceforge.jwbf.mediawiki.BotFactory;
-import net.sourceforge.jwbf.mediawiki.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.VersionTestClassVerifier;
 import net.sourceforge.jwbf.mediawiki.actions.editing.PostDelete;
-import net.sourceforge.jwbf.mediawiki.actions.queries.AllPageTitles;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 import org.junit.ClassRule;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Verifier;
@@ -74,22 +70,9 @@ public class DeleteTest extends ParamHelper {
 
   @Test
   public final void delete() {
-
     prepare(bot);
     delete(bot);
     test(bot);
   }
 
-  @Ignore
-  @Test
-  public void deleteAll() {
-    Version[] all = { Version.MW1_15, Version.MW1_16 };
-    for (Version v : all) {
-      MediaWikiBot bot = BotFactory.getMediaWikiBot(v, true);
-      AllPageTitles aPages = new AllPageTitles(bot, MediaWiki.NS_MAIN);
-      for (String string : aPages) {
-        log.debug(string);
-      }
-    }
-  }
 }

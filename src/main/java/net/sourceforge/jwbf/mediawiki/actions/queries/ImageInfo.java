@@ -17,7 +17,6 @@ import net.sourceforge.jwbf.core.actions.util.ProcessException;
 import net.sourceforge.jwbf.mapper.XmlElement;
 import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
 import net.sourceforge.jwbf.mediawiki.MediaWiki;
-import net.sourceforge.jwbf.mediawiki.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 import org.slf4j.Logger;
@@ -43,7 +42,7 @@ public class ImageInfo extends MWAction {
   private boolean selfEx = true;
   private final Map<String, String> map = Maps.newHashMap();
 
-  final private String name;
+  private final String name;
 
   /**
    * Get an absolute url to an image.
@@ -99,11 +98,7 @@ public class ImageInfo extends MWAction {
     if (height > 0) {
       requestBuilder.param(HEIGHT, height);
     }
-    if (bot.getVersion().greaterEqThen(Version.MW1_15)) {
-      requestBuilder.param("titles", "File:" + MediaWiki.urlEncode(name));
-    } else {
-      requestBuilder.param("titles", "Image:" + MediaWiki.urlEncode(name));
-    }
+    requestBuilder.param("titles", "File:" + MediaWiki.urlEncode(name));
     msg = requestBuilder.buildGet();
   }
 

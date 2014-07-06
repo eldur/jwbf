@@ -94,12 +94,28 @@ public class MediaWikiTest {
 
     ImmutableList<MediaWiki.Version> unstable = ImmutableList.<MediaWiki.Version>builder() //
         .add(MediaWiki.Version.MW1_14) //
+        .add(MediaWiki.Version.MW1_15) //
+        .add(MediaWiki.Version.MW1_16) //
+        .add(MediaWiki.Version.MW1_17) //
+        .add(MediaWiki.Version.MW1_18) //
+        .add(MediaWiki.Version.MW1_20) //
+        .add(MediaWiki.Version.MW1_21) //
         .build();
 
     assertFalse("there should be unstable versions as reference test", unstable.isEmpty());
     Sets.SetView<MediaWiki.Version> intersection = Sets //
         .intersection(ImmutableSet.copyOf(versions), ImmutableSet.copyOf(unstable));
     assertTrue("no unstable versions should be found:\n" + intersection, intersection.isEmpty());
+
+    ImmutableSet<MediaWiki.Version> allVersions = ImmutableSet.copyOf(MediaWiki.Version.values());
+    ImmutableSet<MediaWiki.Version> stableAndUnstableVersions = //
+        ImmutableSet.<MediaWiki.Version>builder() //
+            .addAll(unstable) //
+            .addAll(expected) //
+            .add(MediaWiki.Version.DEVELOPMENT) //
+            .add(MediaWiki.Version.UNKNOWN) //
+            .build();
+    GAssert.assertEquals(allVersions, stableAndUnstableVersions);
   }
 
   @Test

@@ -69,17 +69,7 @@ public class ImageUsageTitles extends TitleQuery<String> {
     this.bot = bot;
     this.imageName = imageName;
     this.namespaces = namespaces;
-    switch (bot.getVersion()) {
-    case MW1_15:
-    case MW1_16:
-      handler = new Mw1_11Handler();
-      break;
-
-    case MW1_17:
-    default:
-      handler = new DefaultHandler();
-      break;
-    }
+    handler = new DefaultHandler();
   }
 
   public ImageUsageTitles(MediaWikiBot bot, String nextPageInfo) {
@@ -183,64 +173,6 @@ public class ImageUsageTitles extends TitleQuery<String> {
           .param("iucontinue", MediaWiki.urlEncode(ilcontinue)) //
           .param("iutitle", MediaWiki.urlEncode(imageName)) //
           .buildGet();
-    }
-
-    @Override
-    public Get generateRequest(String imageName, String namespace) {
-      RequestBuilder requestBuilder = newRequestBuilder();
-      requestBuilder.param("iutitle", MediaWiki.urlEncode(imageName));
-
-      if (!Strings.isNullOrEmpty(namespace)) {
-        requestBuilder.param("iunamespace", MediaWiki.urlEncode(namespace));
-      }
-      return requestBuilder.buildGet();
-
-    }
-
-    @Override
-    public Collection<String> parseArticleTitles(String s) {
-      Collection<String> titleCollection = Lists.newArrayList();
-
-      Pattern p = Pattern.compile("<iu pageid=\".*?\" ns=\".*?\" title=\"(.*?)\" />");
-
-      Matcher m = p.matcher(s);
-
-      while (m.find()) {
-        titleCollection.add(m.group(1));
-      }
-      return titleCollection;
-    }
-
-    @Override
-    public String parseHasMore(String s) {
-
-      Pattern p = Pattern.compile(
-          "<query-continue>.*?" + "<imageusage *iucontinue=\"([^\"]*)\" */>" +
-              ".*?</query-continue>", Pattern.DOTALL | Pattern.MULTILINE);
-
-      Matcher m = p.matcher(s);
-
-      if (m.find()) {
-        return m.group(1);
-      } else {
-        return "";
-      }
-
-    }
-
-  }
-
-  /**
-   * VersionHandler for MW versions 1.10 .. 1.16. This one is identical to the one for 1.17 except
-   * for the iutitle parameter in generateContinueRequest.
-   */
-  private class Mw1_11Handler extends VersionHandler {
-
-    @Override
-    public Get generateContinueRequest(String imageName, String namespace, String ilcontinue) {
-      RequestBuilder requestBuilder = newRequestBuilder();
-      requestBuilder.param("iucontinue", MediaWiki.urlEncode(ilcontinue));
-      return requestBuilder.buildGet();
     }
 
     @Override

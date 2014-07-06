@@ -11,6 +11,7 @@ import com.google.common.base.Splitter;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Ordering;
 import org.junit.Assert;
 
@@ -35,6 +36,10 @@ public class GAssert {
 
   public static <T> void assertEquals(ImmutableList<T> expected, Set<T> actual) {
     assertEquals(expected, sortedCopy(actual));
+  }
+
+  public static <T> void assertEquals(ImmutableSet<T> expected, Set<T> actual) {
+    assertEquals(sortedCopy(expected), sortedCopy(actual));
   }
 
   public static void assertEquals(ImmutableList<?> expected, ImmutableList<?> actual) {

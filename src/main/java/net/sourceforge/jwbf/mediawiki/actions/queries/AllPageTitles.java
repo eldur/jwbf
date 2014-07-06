@@ -53,9 +53,6 @@ public class AllPageTitles extends TitleQuery<String> {
   private static final Pattern HAS_MORE_PATTERN = Pattern.compile( //
       "<query-continue>.*?<allpages *apfrom=\"([^\"]*)\" */>.*?</query-continue>",
       Pattern.DOTALL | Pattern.MULTILINE);
-  private static final Pattern HAS_MORE_PATTERN_20 = Pattern.compile( //
-      "<query-continue>.*?<allpages *apcontinue=\"" //
-          + "([^\"]*)\" */>.*?</query-continue>", Pattern.DOTALL | Pattern.MULTILINE);
   private static final Pattern HAS_MORE_PATTERN_21 = Pattern.compile( //
       "<continue .*apcontinue=\"([^\"]*)\" */>",
       Pattern.DOTALL | Pattern.MULTILINE);
@@ -181,15 +178,8 @@ public class AllPageTitles extends TitleQuery<String> {
 
     final Pattern hasMorePattern;
     switch (botVersion()) {
-    case MW1_15:
-    case MW1_16:
-    case MW1_17:
-    case MW1_18:
     case MW1_19:
       hasMorePattern = HAS_MORE_PATTERN;
-      break;
-    case MW1_20:
-      hasMorePattern = HAS_MORE_PATTERN_20;
       break;
     default:
       hasMorePattern = HAS_MORE_PATTERN_21;

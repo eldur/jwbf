@@ -39,8 +39,8 @@ public class ArticleTest {
 
   private Collection<MediaWikiBot> getTestBots() {
     Collection<MediaWikiBot> bots = Lists.newArrayList();
-    bots.add(getMediaWikiBot(Version.MW1_16, true));
-    bots.add(getMediaWikiBot(Version.MW1_15, true));
+    bots.add(getMediaWikiBot(Version.MW1_19, true));
+    bots.add(getMediaWikiBot(Version.MW1_23, true));
     return bots;
   }
 

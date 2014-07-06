@@ -3,7 +3,6 @@ package net.sourceforge.jwbf.mediawiki.live;
 import static net.sourceforge.jwbf.TestHelper.getRandom;
 import static net.sourceforge.jwbf.mediawiki.BotFactory.getMediaWikiBot;
 import static net.sourceforge.jwbf.mediawiki.LiveTestFather.getValueOrSkip;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import net.sourceforge.jwbf.core.contentRep.Article;
@@ -36,22 +35,11 @@ public class ImageUsageTitlesTest extends AbstractMediaWikiBotTest {
 
   private static final int limit = 55;
 
-  @Test
-  public final void imageUsageMW1x15() throws Exception {
-
-    bot = getMediaWikiBot(Version.MW1_15, true);
-    assertTrue("Wrong Wiki Version " + bot.getVersion(), Version.MW1_15.equals(bot.getVersion()));
-    test();
-
-  }
 
   @Test
-  public final void imageUsageMW1x16() throws Exception {
-
-    bot = getMediaWikiBot(Version.MW1_16, true);
-    assertTrue("Wrong Wiki Version " + bot.getVersion(), Version.MW1_16.equals(bot.getVersion()));
+  public final void imageUsageLatest() throws Exception {
+    bot = getMediaWikiBot(Version.getLatest(), true);
     test();
-
   }
 
   private void test() {

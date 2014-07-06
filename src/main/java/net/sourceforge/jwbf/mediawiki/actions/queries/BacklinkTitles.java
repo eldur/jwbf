@@ -152,18 +152,7 @@ public class BacklinkTitles extends TitleQuery<String> {
    * @param apiVersion for which the request builder is working.
    */
   private RequestCreator createRequestBuilder(Version apiVersion) {
-
-    switch (apiVersion) {
-
-    case MW1_15:
-    case MW1_16:
-      return new RequestCreator1x15();
-
-    default: // MW1_17 and up
-      return new RequestCreator1x17();
-
-    }
-
+    return new RequestCreator1x17();
   }
 
   /**
@@ -226,39 +215,6 @@ public class BacklinkTitles extends TitleQuery<String> {
       return newRequestBuilder() //
           .param("blcontinue", MediaWiki.urlEncode(blcontinue)) //
           .param("bltitle", MediaWiki.urlEncode(articleName)) //
-          .buildGet();
-    }
-
-  }
-
-  /**
-   * request builder for MW versions 1_11 to (at least) 1_13.
-   */
-  private static class RequestCreator1x15 implements RequestCreator {
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Get newInitialRequest(String articleName, RedirectFilter redirectFilter,
-        int[] namespace) {
-      RequestBuilder requestBuilder = newRequestBuilder() //
-          .param("bltitle", MediaWiki.urlEncode(articleName)) //
-          .param("blfilterredir", MediaWiki.urlEncode(redirectFilter.toString())) //
-          ;
-      if (namespace != null) {
-        requestBuilder
-            .param("blnamespace", MediaWiki.urlEncode(MWAction.createNsString(namespace)));
-      }
-      return requestBuilder.buildGet();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Get newContinueRequest(String articleName, String blcontinue) {
-      return newRequestBuilder() //
-          .param("blcontinue", MediaWiki.urlEncode(blcontinue)) //
           .buildGet();
     }
 
