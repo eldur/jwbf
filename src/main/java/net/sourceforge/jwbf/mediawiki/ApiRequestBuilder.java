@@ -19,18 +19,25 @@ public class ApiRequestBuilder extends RequestBuilder {
     return this;
   }
 
+  /**
+   * @deprecated prefer json format
+   */
+  @Deprecated
   public ApiRequestBuilder formatXml() {
-    // TODO only json or xml
     param("format", "xml");
     return this;
   }
 
   public ApiRequestBuilder formatJson() {
-    // TODO only json or xml
     param("format", "json");
     return this;
   }
 
+  /**
+   * https://www.mediawiki.org/wiki/API:Query#Continuing_queries
+   *
+   * @param version Continuing queries this way will only work with MW1_21 or higher
+   */
   public ApiRequestBuilder paramNewContinue(@CheckForNull MediaWiki.Version version) {
     if (version != null && version.greaterEqThen(MediaWiki.Version.MW1_21)) {
       param(NEW_CONTINUE);

@@ -10,6 +10,7 @@ import com.google.common.collect.ImmutableList;
 import net.sourceforge.jwbf.AbstractIntegTest;
 import net.sourceforge.jwbf.GAssert;
 import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
+import net.sourceforge.jwbf.mediawiki.MediaWiki;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -33,7 +34,10 @@ public class HttpActionClientIntegTest extends AbstractIntegTest {
         .withClient(HttpClientBuilder.create().build()) //
         .withUrl("http://www.mediawiki.org/w/") //
         .build();
-    Get search = new ApiRequestBuilder().action("query").formatXml() //
+    Get search = new ApiRequestBuilder() //
+        .paramNewContinue(MediaWiki.Version.getLatest()) //
+        .formatJson() //
+        .action("query") //
         .param("list", "search") //
         .param("srsearch", "wikipedia") //
         .param("limit", "1") //
