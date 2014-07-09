@@ -17,6 +17,10 @@ import org.junit.runners.Parameterized;
 @RunWith(Parameterized.class)
 public abstract class ParamHelper extends AbstractMediaWikiBotTest {
 
+  /**
+   * @deprecated use {@link #ParamHelper(net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot)} instead
+   */
+  @Deprecated
   public ParamHelper(Version v, VersionTestClassVerifier verifier) {
     try {
       version(v);

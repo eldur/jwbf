@@ -1,5 +1,7 @@
 package net.sourceforge.jwbf.mediawiki.actions.queries;
 
+import com.google.common.base.Optional;
+import net.sourceforge.jwbf.core.Optionals;
 import net.sourceforge.jwbf.core.actions.Get;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.mapper.XmlConverter;
@@ -10,8 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Action to receive the title of a random page TODO write a test that shows compatibility with all
- * these versions
+ * Action to receive the title of a random page
  *
  * @author Juan Ignacio Cidre
  */
@@ -21,6 +22,8 @@ public class RandomPageTitle extends MWAction {
 
   private final Get msg;
   private final MediaWikiBot bot;
+
+  private Optional<String> title = Optional.absent();
 
   /**
    * Creates the class. Defines the invocation to MediaWiki that is needed in order to get a random
@@ -43,7 +46,11 @@ public class RandomPageTitle extends MWAction {
    * @return Title of a random page
    */
   public String getTitle() {
-    return bot.performAction(this);
+    if (!title.isPresent()) {
+      // XXX feels bad
+      title = Optional.fromNullable(bot.getPerformedAction(this).getTitle());
+    }
+    return title.get();
   }
 
   /**
@@ -51,9 +58,10 @@ public class RandomPageTitle extends MWAction {
    */
   @Override
   public String processAllReturningText(String s) {
-    String title = XmlConverter.evaluateXpath(s, "/api/query/random/page/@title");
-    log.debug("Title: " + title);
-    return title;
+    String xpathResult = XmlConverter.evaluateXpath(s, "/api/query/random/page/@title");
+    title = Optionals.absentIfEmpty(xpathResult);
+    log.debug("Title: {}", title);
+    return "";
   }
 
   /**

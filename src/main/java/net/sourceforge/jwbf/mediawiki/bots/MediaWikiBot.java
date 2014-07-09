@@ -255,7 +255,7 @@ public class MediaWikiBot implements WikiBot {
    * @deprecated use {@link #getPerformedAction(ContentProcessable)} instead
    */
   @Deprecated
-  public synchronized String performAction(ContentProcessable a) {
+  synchronized String performAction(ContentProcessable a) {
     if (a.isSelfExecuter()) {
       throw new ActionException(
           "this is a selfexcecuting action, " + "please do not perform this action manually");
