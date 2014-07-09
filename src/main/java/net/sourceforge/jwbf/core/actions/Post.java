@@ -27,13 +27,12 @@ public class Post extends HttpBase implements HttpAction {
   private final Supplier<String> req;
   private final ImmutableMultimap.Builder<String, Supplier<Object>> params;
   private final Charset charset;
-  private final Optional<ParamJoiner> joiner;
 
   /**
    * @deprecated use net.sourceforge.jwbf.core.actions.RequestBuilder
    */
   @Deprecated
-  public Post(String req, String charset) {
+  Post(String req, String charset) {
     this(Suppliers.ofInstance(req), charset);
   }
 
@@ -41,7 +40,7 @@ public class Post extends HttpBase implements HttpAction {
    * @deprecated use net.sourceforge.jwbf.core.actions.RequestBuilder
    */
   @Deprecated
-  public Post(Supplier<String> req, String charset) {
+  Post(Supplier<String> req, String charset) {
     this(req, Charset.forName(charset), Optional.<ParamJoiner>absent());
   }
 
@@ -50,7 +49,6 @@ public class Post extends HttpBase implements HttpAction {
     super(joiner);
     this.req = req;
     this.charset = charset;
-    this.joiner = joiner;
     this.params = params;
   }
 
@@ -58,7 +56,6 @@ public class Post extends HttpBase implements HttpAction {
     super(joiner);
     this.req = req;
     this.charset = charset;
-    this.joiner = joiner;
     if (joiner.isPresent()) {
       this.params = joiner.get().postParams();
     } else {
@@ -73,11 +70,11 @@ public class Post extends HttpBase implements HttpAction {
   /**
    * Use utf-8 as default charset
    */
-  public Post(String url) {
+  Post(String url) {
     this(Suppliers.ofInstance(url));
   }
 
-  public Post(Supplier<String> url) {
+  private Post(Supplier<String> url) {
     this(url, Charsets.UTF_8);
   }
 

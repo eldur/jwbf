@@ -35,7 +35,7 @@ public class Get extends HttpBase implements HttpAction {
   /**
    * Use utf-8 as default charset.
    */
-  public Get(String url) {
+  Get(String url) {
     this(Suppliers.ofInstance(url), Charsets.UTF_8, Optional.<ParamJoiner>absent());
   }
 

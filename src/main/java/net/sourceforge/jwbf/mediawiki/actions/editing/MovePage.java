@@ -1,7 +1,6 @@
 package net.sourceforge.jwbf.mediawiki.actions.editing;
 
 import com.google.common.base.Strings;
-import net.sourceforge.jwbf.core.actions.Post;
 import net.sourceforge.jwbf.core.actions.RequestBuilder;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.core.actions.util.ProcessException;
@@ -105,26 +104,16 @@ public class MovePage extends MWAction {
         ;
 
     if (withsubpages) {
-      requestBuilder //
-          .param("movesubpages", "") //
-      ;
+      requestBuilder.param("movesubpages", "");
     }
     if (noredirect) {
-      requestBuilder //
-          .param("noredirect", "") //
-      ;
+      requestBuilder.param("noredirect", "");
     }
     if (!Strings.isNullOrEmpty(reason)) {
-      requestBuilder //
-          .param("reason", MediaWiki.urlEncode(reason)) //
-      ;
+      requestBuilder.param("reason", MediaWiki.urlEncode(reason));
     }
 
-    String uS = requestBuilder.build();
-    if (log.isDebugEnabled()) {
-      log.debug("move url: \"" + uS + "\"");
-    }
-    return new Post(uS);
+    return requestBuilder.buildPost();
   }
 
   /**
@@ -138,13 +127,8 @@ public class MovePage extends MWAction {
       token.processReturningText(s, hm);
       moveToken = false;
     } else {
-
-      if (log.isTraceEnabled()) {
-        log.trace("enter MovePage.processAllReturningText(String)");
-      }
-      if (log.isDebugEnabled()) {
-        log.debug("Got returning text: \"" + s + "\"");
-      }
+      log.trace("enter MovePage.processAllReturningText(String)");
+      log.debug("Got returning text: \"{}\"", s);
       process(getRootElement(s));
       setHasMoreMessages(false);
     }
@@ -155,7 +139,6 @@ public class MovePage extends MWAction {
   private void process(XmlElement rootXmlElement) {
     XmlElement elem = rootXmlElement.getChild("move");
     if (elem != null) {
-      // process reply for delete request
       if (log.isInfoEnabled()) {
         log.info("Moved article '" + elem.getAttributeValue("from") + "' to '" +
             elem.getAttributeValue("to") + "'" +

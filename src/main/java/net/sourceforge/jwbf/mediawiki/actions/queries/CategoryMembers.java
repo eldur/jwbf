@@ -99,7 +99,7 @@ abstract class CategoryMembers extends TitleQuery<CategoryItem> {
    * @return a
    */
   protected final Get generateFirstRequest() {
-    return new Get(requestBuilder.first(categoryName));
+    return requestBuilder.first(categoryName);
   }
 
   /**
@@ -110,7 +110,7 @@ abstract class CategoryMembers extends TitleQuery<CategoryItem> {
    * @return a
    */
   protected Get generateContinueRequest(String cmcontinue) {
-    return new Get(requestBuilder.continiue(cmcontinue));
+    return requestBuilder.continiue(cmcontinue);
   }
 
   /**
@@ -165,13 +165,13 @@ abstract class CategoryMembers extends TitleQuery<CategoryItem> {
 
     }
 
-    String continiue(String cmcontinue) {
+    Get continiue(String cmcontinue) {
       return newRequestBuilder() //
           .param("cmcontinue", MediaWiki.urlEncode(cmcontinue)) //
           .param(CMTITLE, "Category:" + MediaWiki.urlEncode(categoryName)) //
               // TODO: do not add Category: - instead, change other methods' descs (e.g.
               // in MediaWikiBot)
-          .build();
+          .buildGet();
     }
 
     private RequestBuilder newRequestBuilder() {
@@ -188,10 +188,10 @@ abstract class CategoryMembers extends TitleQuery<CategoryItem> {
           ;
     }
 
-    String first(String categoryName) {
+    Get first(String categoryName) {
       return newRequestBuilder() //
           .param(CMTITLE, "Category:" + MediaWiki.urlEncode(categoryName)) //
-          .build();
+          .buildGet();
     }
 
   }
