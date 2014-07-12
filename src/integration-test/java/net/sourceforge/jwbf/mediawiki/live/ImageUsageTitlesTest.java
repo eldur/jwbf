@@ -1,88 +1,77 @@
 package net.sourceforge.jwbf.mediawiki.live;
 
 import static net.sourceforge.jwbf.TestHelper.getRandom;
-import static net.sourceforge.jwbf.mediawiki.BotFactory.getMediaWikiBot;
-import static net.sourceforge.jwbf.mediawiki.LiveTestFather.getValueOrSkip;
-import static org.junit.Assert.fail;
 
+import javax.annotation.Nullable;
+
+import com.google.common.base.Function;
+import com.google.common.collect.ContiguousSet;
+import com.google.common.collect.DiscreteDomain;
+import com.google.common.collect.FluentIterable;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Range;
+import net.sourceforge.jwbf.GAssert;
 import net.sourceforge.jwbf.core.contentRep.Article;
-import net.sourceforge.jwbf.mediawiki.MediaWiki;
+import net.sourceforge.jwbf.mediawiki.BotFactory;
 import net.sourceforge.jwbf.mediawiki.MediaWiki.Version;
-import net.sourceforge.jwbf.mediawiki.VersionTestClassVerifier;
 import net.sourceforge.jwbf.mediawiki.actions.queries.ImageUsageTitles;
-import org.junit.ClassRule;
-import org.junit.Ignore;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.Verifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * @author Thomas Stock
  */
-@Ignore("depends on upload")
 public class ImageUsageTitlesTest extends AbstractMediaWikiBotTest {
 
   private static final Logger log = LoggerFactory.getLogger(ImageUsageTitlesTest.class);
 
-  @ClassRule
-  public static VersionTestClassVerifier classVerifier =
-      new VersionTestClassVerifier(ImageUsageTitles.class);
-
-  @Rule
-  public Verifier successRegister = classVerifier.getSuccessRegister(this);
-
   private static final int limit = 55;
-
+  public static final String IMAGE_NAME = "Image:Any.gif";
 
   @Test
-  public final void imageUsageLatest() throws Exception {
-    bot = getMediaWikiBot(Version.getLatest(), true);
+  public final void imageUsageLatest() {
+    bot(BotFactory.getMediaWikiBot(Version.getLatest(), true));
     test();
   }
 
   private void test() {
-    ImageUsageTitles il =
-        new ImageUsageTitles(bot, "Image:" + getValueOrSkip("filename"), MediaWiki.NS_ALL);
+    // GIVEN
+    ImmutableList<String> expectedTitles = expectedTitles();
 
-    boolean notFound = true;
-    int x = 0;
-    for (String string : il) {
-      log.debug(string);
-      x++;
-      if (x >= limit) {
-        notFound = false;
-        break;
-      }
-    }
-    if (notFound) {
-      prepare();
-    }
-    x = 0;
-    for (String string : il) {
-      log.debug(string);
-      x++;
-      if (x >= limit) {
-        break;
-      }
+    ImmutableList<String> initPageTitles = new ImageUsageTitles(bot(), IMAGE_NAME).getCopyOf(limit);
+    ImmutableList<String> pageTitles;
+    if (initPageTitles.size() < limit) {
+      prepare(expectedTitles);
+      pageTitles = new ImageUsageTitles(bot(), IMAGE_NAME).getCopyOf(limit);
+    } else {
+      pageTitles = initPageTitles;
     }
 
-    if (x < limit) {
-      fail("limit" + x);
-    }
+    // THEN
+    GAssert.assertEquals(expectedTitles, pageTitles);
 
   }
 
-  private void prepare() {
-
-    String name = "";
-    for (int i = 0; i < limit; i++) {
-      name = "TitleWithImg" + i;
+  private void prepare(ImmutableList<String> expectedTitles) {
+    log.info("begin prepare");
+    for (String name : expectedTitles) {
       Article a = new Article(bot, name);
-      a.setText("Hello [[Image:" + getValueOrSkip("filename") + "]] a image " + getRandom(10));
+      a.setText("Hello [[" + IMAGE_NAME + "]] - " + getRandom(10));
       a.save();
     }
-
   }
+
+  private ImmutableList<String> expectedTitles() {
+    Range<Integer> range = Range.closedOpen(0, limit);
+    ImmutableList<Integer> list = ContiguousSet.create(range, DiscreteDomain.integers()).asList();
+    return FluentIterable.from(list).transform(new Function<Integer, String>() {
+      @Nullable
+      @Override
+      public String apply(@Nullable Integer input) {
+        return "TitleWithImg" + input;
+      }
+    }).toList();
+  }
+
 }

@@ -58,6 +58,15 @@ public class ImageUsageTitles extends TitleQuery<String> {
   private final int[] namespaces;
   private final VersionHandler handler;
 
+  @Deprecated
+  private static final Pattern CONTINUE_PATTERN =
+      Pattern.compile("<query-continue>.*?<imageusage *iucontinue=\"([^\"]*)\" */>" +
+          ".*?</query-continue>", Pattern.DOTALL | Pattern.MULTILINE);
+
+  @Deprecated
+  private static final Pattern TITLE_PATTERN =
+      Pattern.compile("<iu pageid=\".*?\" ns=\".*?\" title=\"(.*?)\" />");
+
   /**
    * The public constructor. It will have an MediaWiki-request generated, which is then added to
    * msgs. When it is answered, the method processAllReturningText will be called (from outside this
@@ -74,7 +83,6 @@ public class ImageUsageTitles extends TitleQuery<String> {
 
   public ImageUsageTitles(MediaWikiBot bot, String nextPageInfo) {
     this(bot, nextPageInfo, MediaWiki.NS_ALL);
-
   }
 
   /**
@@ -88,15 +96,11 @@ public class ImageUsageTitles extends TitleQuery<String> {
    * @return a
    */
   private Get generateRequest(String imageName, String namespace, String ilcontinue) {
-
     if (ilcontinue == null) {
       return handler.generateRequest(imageName, namespace);
-
     } else {
       return handler.generateContinueRequest(imageName, namespace, ilcontinue);
-
     }
-
   }
 
   /**
@@ -107,9 +111,7 @@ public class ImageUsageTitles extends TitleQuery<String> {
    */
   @Override
   protected String parseHasMore(final String s) {
-
     return handler.parseHasMore(s);
-
   }
 
   /**
@@ -120,7 +122,6 @@ public class ImageUsageTitles extends TitleQuery<String> {
   @Override
   protected ImmutableList<String> parseArticleTitles(String s) {
     return ImmutableList.copyOf(handler.parseArticleTitles(s));
-
   }
 
   @Override
@@ -130,7 +131,6 @@ public class ImageUsageTitles extends TitleQuery<String> {
     } else {
       return generateRequest(imageName, MWAction.createNsString(namespaces), null);
     }
-
   }
 
   /**
@@ -190,11 +190,7 @@ public class ImageUsageTitles extends TitleQuery<String> {
     @Override
     public Collection<String> parseArticleTitles(String s) {
       Collection<String> titleCollection = Lists.newArrayList();
-
-      Pattern p = Pattern.compile("<iu pageid=\".*?\" ns=\".*?\" title=\"(.*?)\" />");
-
-      Matcher m = p.matcher(s);
-
+      Matcher m = TITLE_PATTERN.matcher(s);
       while (m.find()) {
         titleCollection.add(m.group(1));
       }
@@ -203,13 +199,7 @@ public class ImageUsageTitles extends TitleQuery<String> {
 
     @Override
     public String parseHasMore(String s) {
-
-      Pattern p = Pattern.compile(
-          "<query-continue>.*?" + "<imageusage *iucontinue=\"([^\"]*)\" */>" +
-              ".*?</query-continue>", Pattern.DOTALL | Pattern.MULTILINE);
-
-      Matcher m = p.matcher(s);
-
+      Matcher m = CONTINUE_PATTERN.matcher(s);
       if (m.find()) {
         return m.group(1);
       } else {
