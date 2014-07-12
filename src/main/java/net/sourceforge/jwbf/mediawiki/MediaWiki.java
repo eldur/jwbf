@@ -35,7 +35,7 @@ import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
-import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
 
 /**
  * @author Thomas Stock
@@ -247,6 +247,6 @@ public final class MediaWiki {
   }
 
   public static String htmlUnescape(final String s) {
-    return StringEscapeUtils.unescapeHtml(s);
+    return StringEscapeUtils.unescapeHtml4(s);
   }
 }

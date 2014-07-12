@@ -9,7 +9,7 @@ net.sourceforge:jwbf:jar:3.0.0-SNAPSHOT
 |  \- commons-codec:commons-codec:jar:1.6:compile
 +- org.apache.httpcomponents:fluent-hc:jar:4.3.4:compile
 +- org.apache.httpcomponents:httpmime:jar:4.3.4:compile
-+- commons-lang:commons-lang:jar:2.6:compile
++- org.apache.commons:commons-lang3:jar:3.3.2:compile
 +- org.slf4j:slf4j-api:jar:1.7.7:compile
 +- javax.inject:javax.inject:jar:1:compile
 +- com.google.guava:guava:jar:17.0:compile
