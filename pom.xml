@@ -264,7 +264,7 @@
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-core</artifactId>
-      <version>2.4.1</version>
+      <version>2.4.1.1</version>
     </dependency>
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
@@ -327,7 +327,7 @@
     <dependency>
       <groupId>com.github.dreamhead</groupId>
       <artifactId>moco-core</artifactId>
-      <version>0.9.1</version>
+      <version>0.9.2</version>
       <scope>test</scope>
       <exclusions>
         <exclusion>
@@ -345,7 +345,7 @@
     <dependency>
       <groupId>com.google.code.findbugs</groupId>
       <artifactId>jsr305</artifactId>
-      <version>2.0.3</version>
+      <version>3.0.0</version>
     </dependency>
     <dependency>
       <groupId>org.jacoco</groupId>
