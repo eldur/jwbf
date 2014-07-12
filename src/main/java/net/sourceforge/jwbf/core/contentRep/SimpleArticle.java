@@ -22,6 +22,7 @@ import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Objects;
 import java.util.regex.Pattern;
 
 import com.google.common.base.Optional;
@@ -300,45 +301,16 @@ public class SimpleArticle implements ArticleMeta, Serializable, Cloneable, Cont
    */
   @Override
   public boolean equals(Object obj) {
-    if (this == obj) {
-      return true;
-    }
-    if (obj == null) {
+    if (obj instanceof SimpleArticle) {
+      SimpleArticle that = (SimpleArticle) obj;
+      return Objects.equals(this.editTimestamp, that.editTimestamp) //
+          && Objects.equals(this.revId, that.revId) //
+          && Objects.equals(this.text, that.text) //
+          && Objects.equals(this.title, that.title) //
+          ;
+    } else {
       return false;
     }
-    if (!(obj instanceof SimpleArticle)) {
-      return false;
-    }
-    SimpleArticle other = (SimpleArticle) obj;
-    if (editTimestamp == null) {
-      if (other.editTimestamp != null) {
-        return false;
-      }
-    } else if (!editTimestamp.equals(other.editTimestamp)) {
-      return false;
-    }
-    if (revId == null) {
-      if (other.revId != null) {
-        return false;
-      }
-    } else if (!revId.equals(other.revId)) {
-      return false;
-    }
-    if (text == null) {
-      if (other.text != null) {
-        return false;
-      }
-    } else if (!text.equals(other.text)) {
-      return false;
-    }
-    if (title == null) {
-      if (other.title != null) {
-        return false;
-      }
-    } else if (!title.equals(other.title)) {
-      return false;
-    }
-    return true;
   }
 
   /*
@@ -347,13 +319,7 @@ public class SimpleArticle implements ArticleMeta, Serializable, Cloneable, Cont
    */
   @Override
   public int hashCode() {
-    final int prime = 31;
-    int result = 1;
-    result = prime * result + ((editTimestamp == null) ? 0 : editTimestamp.hashCode());
-    result = prime * result + ((revId == null) ? 0 : revId.hashCode());
-    result = prime * result + ((text == null) ? 0 : text.hashCode());
-    result = prime * result + ((title == null) ? 0 : title.hashCode());
-    return result;
+    return Objects.hash(editTimestamp, revId, text, title);
   }
 
   /**

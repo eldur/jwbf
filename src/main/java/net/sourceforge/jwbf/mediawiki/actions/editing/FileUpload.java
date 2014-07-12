@@ -104,7 +104,7 @@ public class FileUpload extends MWAction {
 
     @Override
     public Deque<HttpAction> getActions() {
-      uploadTokenAction = new GetApiToken(Intoken.EDIT, simpleFile.getFilename());
+      uploadTokenAction = new GetApiToken(Intoken.EDIT, simpleFile.getPath());
       actions.add(uploadTokenAction.popAction());
       return actions;
     }
