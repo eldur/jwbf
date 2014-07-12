@@ -1,5 +1,5 @@
 net.sourceforge:jwbf:jar:3.0.0-SNAPSHOT
-+- org.jdom:jdom:jar:1.1:compile
++- org.jdom:jdom2:jar:2.0.5:compile
 +- com.fasterxml.jackson.core:jackson-core:jar:2.4.1.1:compile
 +- com.fasterxml.jackson.core:jackson-databind:jar:2.4.1.1:compile
 |  \- com.fasterxml.jackson.core:jackson-annotations:jar:2.4.0:compile

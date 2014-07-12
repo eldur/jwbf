@@ -12,9 +12,9 @@ public class XmlElement {
 
   static XmlElement NULL_XML = new XmlElement(null);
 
-  private final org.jdom.Element element;
+  private final org.jdom2.Element element;
 
-  XmlElement(org.jdom.Element element) {
+  XmlElement(org.jdom2.Element element) {
     this.element = element;
   }
 
@@ -27,7 +27,7 @@ public class XmlElement {
   }
 
   public XmlElement getChild(String name) {
-    org.jdom.Element child = element.getChild(name);
+    org.jdom2.Element child = element.getChild(name);
     if (child == null) {
       return null;
     } else {
@@ -35,15 +35,15 @@ public class XmlElement {
     }
   }
 
-  private ImmutableList<XmlElement> toElements(List<org.jdom.Element> list) {
+  private ImmutableList<XmlElement> toElements(List<org.jdom2.Element> list) {
     return ImmutableList.copyOf(Iterables.transform(list, TO_ELEMENT));
   }
 
-  private static final Function<org.jdom.Element, XmlElement> TO_ELEMENT =
-      new Function<org.jdom.Element, XmlElement>() {
+  private static final Function<org.jdom2.Element, XmlElement> TO_ELEMENT =
+      new Function<org.jdom2.Element, XmlElement>() {
 
         @Override
-        public XmlElement apply(@Nullable org.jdom.Element input) {
+        public XmlElement apply(@Nullable org.jdom2.Element input) {
           if (input == null) {
             return null;
           } else {
@@ -61,7 +61,7 @@ public class XmlElement {
   }
 
   public boolean hasAttribute(String name) {
-    org.jdom.Attribute attribute = element.getAttribute(name);
+    org.jdom2.Attribute attribute = element.getAttribute(name);
     if (attribute == null) {
       return false;
     } else {

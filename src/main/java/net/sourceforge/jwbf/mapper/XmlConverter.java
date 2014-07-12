@@ -16,9 +16,9 @@ import net.sourceforge.jwbf.core.Optionals;
 import net.sourceforge.jwbf.core.actions.util.ActionException;
 import net.sourceforge.jwbf.core.actions.util.ProcessException;
 import net.sourceforge.jwbf.mediawiki.MediaWiki;
-import org.jdom.Document;
-import org.jdom.JDOMException;
-import org.jdom.input.SAXBuilder;
+import org.jdom2.Document;
+import org.jdom2.JDOMException;
+import org.jdom2.input.SAXBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.InputSource;
@@ -43,7 +43,7 @@ public class XmlConverter {
     Optional<String> xmlStringOpt = Optionals.absentIfEmpty(xml);
     if (xmlStringOpt.isPresent()) {
       SAXBuilder builder = new SAXBuilder();
-      org.jdom.Element root = null;
+      org.jdom2.Element root;
       try {
         Document doc = builder.build(new ByteArrayInputStream(xml.getBytes(Charsets.UTF_8)));
 
