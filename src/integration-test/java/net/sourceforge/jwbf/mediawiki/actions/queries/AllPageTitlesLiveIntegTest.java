@@ -1,4 +1,4 @@
-package net.sourceforge.jwbf.mediawiki.live.auto;
+package net.sourceforge.jwbf.mediawiki.actions.queries;
 
 import static org.junit.Assert.assertTrue;
 
@@ -12,17 +12,16 @@ import net.sourceforge.jwbf.mediawiki.LiveTestFather;
 import net.sourceforge.jwbf.mediawiki.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.VersionTestClassVerifier;
-import net.sourceforge.jwbf.mediawiki.actions.queries.AllPageTitles;
 import net.sourceforge.jwbf.mediawiki.actions.util.RedirectFilter;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
+import net.sourceforge.jwbf.mediawiki.live.auto.ParamHelper;
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Verifier;
 import org.junit.runners.Parameterized.Parameters;
 
-// TODO move to integ tests
-public class AllPagesExpTest extends ParamHelper {
+public class AllPageTitlesLiveIntegTest extends ParamHelper {
 
   @ClassRule
   public static VersionTestClassVerifier classVerifier =
@@ -36,7 +35,7 @@ public class AllPagesExpTest extends ParamHelper {
     return ParamHelper.prepare(Version.valuesStable());
   }
 
-  public AllPagesExpTest(Version v) {
+  public AllPageTitlesLiveIntegTest(Version v) {
     super(v, classVerifier);
   }
 

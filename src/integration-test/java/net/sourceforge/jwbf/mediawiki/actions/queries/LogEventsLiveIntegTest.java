@@ -1,4 +1,4 @@
-package net.sourceforge.jwbf.mediawiki.live.auto;
+package net.sourceforge.jwbf.mediawiki.actions.queries;
 
 import static net.sourceforge.jwbf.TestHelper.getRandom;
 import static net.sourceforge.jwbf.TestHelper.getRandomAlph;
@@ -9,9 +9,9 @@ import java.util.Collection;
 import net.sourceforge.jwbf.core.contentRep.Article;
 import net.sourceforge.jwbf.mediawiki.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.VersionTestClassVerifier;
-import net.sourceforge.jwbf.mediawiki.actions.queries.LogEvents;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 import net.sourceforge.jwbf.mediawiki.contentRep.LogItem;
+import net.sourceforge.jwbf.mediawiki.live.auto.ParamHelper;
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
@@ -20,9 +20,9 @@ import org.junit.runners.Parameterized.Parameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class LogEventsTest extends ParamHelper {
+public class LogEventsLiveIntegTest extends ParamHelper {
 
-  private static final Logger log = LoggerFactory.getLogger(LogEventsTest.class);
+  private static final Logger log = LoggerFactory.getLogger(LogEventsLiveIntegTest.class);
 
   @ClassRule
   public static VersionTestClassVerifier classVerifier =
@@ -36,7 +36,7 @@ public class LogEventsTest extends ParamHelper {
     return ParamHelper.prepare(Version.valuesStable());
   }
 
-  public LogEventsTest(Version v) {
+  public LogEventsLiveIntegTest(Version v) {
     super(v, classVerifier);
   }
 

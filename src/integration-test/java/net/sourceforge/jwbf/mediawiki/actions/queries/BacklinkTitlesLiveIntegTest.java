@@ -1,4 +1,4 @@
-package net.sourceforge.jwbf.mediawiki.live.auto;
+package net.sourceforge.jwbf.mediawiki.actions.queries;
 
 import static org.junit.Assert.assertTrue;
 
@@ -11,8 +11,8 @@ import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
 import net.sourceforge.jwbf.mediawiki.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.VersionTestClassVerifier;
-import net.sourceforge.jwbf.mediawiki.actions.queries.BacklinkTitles;
 import net.sourceforge.jwbf.mediawiki.actions.util.RedirectFilter;
+import net.sourceforge.jwbf.mediawiki.live.auto.ParamHelper;
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
@@ -21,9 +21,9 @@ import org.junit.runners.Parameterized.Parameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class BacklinkExpTest extends ParamHelper {
+public class BacklinkTitlesLiveIntegTest extends ParamHelper {
 
-  private static final Logger log = LoggerFactory.getLogger(BacklinkExpTest.class);
+  private static final Logger log = LoggerFactory.getLogger(BacklinkTitlesLiveIntegTest.class);
 
   @ClassRule
   public static VersionTestClassVerifier classVerifier =
@@ -40,7 +40,7 @@ public class BacklinkExpTest extends ParamHelper {
     return ParamHelper.prepare(Version.valuesStable());
   }
 
-  public BacklinkExpTest(Version v) {
+  public BacklinkTitlesLiveIntegTest(Version v) {
     super(v, classVerifier);
   }
 

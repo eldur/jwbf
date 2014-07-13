@@ -1,4 +1,4 @@
-package net.sourceforge.jwbf.mediawiki.live;
+package net.sourceforge.jwbf.mediawiki.actions.queries;
 
 import static net.sourceforge.jwbf.TestHelper.getRandom;
 
@@ -14,7 +14,7 @@ import net.sourceforge.jwbf.GAssert;
 import net.sourceforge.jwbf.core.contentRep.Article;
 import net.sourceforge.jwbf.mediawiki.BotFactory;
 import net.sourceforge.jwbf.mediawiki.MediaWiki.Version;
-import net.sourceforge.jwbf.mediawiki.actions.queries.ImageUsageTitles;
+import net.sourceforge.jwbf.mediawiki.live.AbstractMediaWikiBotTest;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,9 +22,9 @@ import org.slf4j.LoggerFactory;
 /**
  * @author Thomas Stock
  */
-public class ImageUsageTitlesTest extends AbstractMediaWikiBotTest {
+public class ImageUsageTitlesLiveIntegTest extends AbstractMediaWikiBotTest {
 
-  private static final Logger log = LoggerFactory.getLogger(ImageUsageTitlesTest.class);
+  private static final Logger log = LoggerFactory.getLogger(ImageUsageTitlesLiveIntegTest.class);
 
   private static final int limit = 55;
   public static final String IMAGE_NAME = "Image:Any.gif";

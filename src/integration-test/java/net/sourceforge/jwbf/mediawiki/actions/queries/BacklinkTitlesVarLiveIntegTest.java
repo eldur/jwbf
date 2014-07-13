@@ -1,9 +1,9 @@
-package net.sourceforge.jwbf.mediawiki.live;
+package net.sourceforge.jwbf.mediawiki.actions.queries;
 
 import com.google.common.primitives.Ints;
 import net.sourceforge.jwbf.mediawiki.LiveTestFather;
-import net.sourceforge.jwbf.mediawiki.actions.queries.BacklinkTitles;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
+import net.sourceforge.jwbf.mediawiki.live.AbstractMediaWikiBotTest;
 import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -12,9 +12,9 @@ import org.slf4j.LoggerFactory;
 /**
  * @author Thomas Stock
  */
-public class BacklinkTest extends AbstractMediaWikiBotTest {
+public class BacklinkTitlesVarLiveIntegTest extends AbstractMediaWikiBotTest {
 
-  private static final Logger log = LoggerFactory.getLogger(BacklinkTest.class);
+  private static final Logger log = LoggerFactory.getLogger(BacklinkTitlesVarLiveIntegTest.class);
 
   @Test
   public final void backlinksWikipediaDe() {

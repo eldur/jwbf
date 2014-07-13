@@ -1,4 +1,4 @@
-package net.sourceforge.jwbf.mediawiki.live.auto;
+package net.sourceforge.jwbf.mediawiki.actions.queries;
 
 import static net.sourceforge.jwbf.TestHelper.getRandom;
 import static org.junit.Assert.assertEquals;
@@ -12,8 +12,8 @@ import net.sourceforge.jwbf.core.contentRep.Article;
 import net.sourceforge.jwbf.mediawiki.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.VersionTestClassVerifier;
-import net.sourceforge.jwbf.mediawiki.actions.queries.TemplateUserTitles;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
+import net.sourceforge.jwbf.mediawiki.live.auto.ParamHelper;
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
@@ -25,9 +25,9 @@ import org.slf4j.LoggerFactory;
 /**
  * @author Thomas Stock
  */
-public class TemplateUserTitlesTest extends ParamHelper {
+public class TemplateUserTitlesLiveIntegTest extends ParamHelper {
 
-  private static final Logger log = LoggerFactory.getLogger(TemplateUserTitlesTest.class);
+  private static final Logger log = LoggerFactory.getLogger(TemplateUserTitlesLiveIntegTest.class);
 
   private static final String TESTPATTERNNAME = "Template:ATesT";
 
@@ -43,7 +43,7 @@ public class TemplateUserTitlesTest extends ParamHelper {
     return ParamHelper.prepare(Version.valuesStable());
   }
 
-  public TemplateUserTitlesTest(Version v) {
+  public TemplateUserTitlesLiveIntegTest(Version v) {
     super(v, classVerifier);
   }
 

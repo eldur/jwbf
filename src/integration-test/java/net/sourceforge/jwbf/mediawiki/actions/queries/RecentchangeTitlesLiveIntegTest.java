@@ -1,4 +1,4 @@
-package net.sourceforge.jwbf.mediawiki.live.auto;
+package net.sourceforge.jwbf.mediawiki.actions.queries;
 
 import static net.sourceforge.jwbf.TestHelper.getRandom;
 import static net.sourceforge.jwbf.mediawiki.LiveTestFather.getSpecialChars;
@@ -18,8 +18,8 @@ import net.sourceforge.jwbf.core.contentRep.Article;
 import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
 import net.sourceforge.jwbf.mediawiki.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.VersionTestClassVerifier;
-import net.sourceforge.jwbf.mediawiki.actions.queries.RecentchangeTitles;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
+import net.sourceforge.jwbf.mediawiki.live.auto.ParamHelper;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.ClassRule;
@@ -30,9 +30,9 @@ import org.junit.runners.Parameterized.Parameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class RecentChangesTest extends ParamHelper {
+public class RecentchangeTitlesLiveIntegTest extends ParamHelper {
 
-  private static final Logger log = LoggerFactory.getLogger(RecentChangesTest.class);
+  private static final Logger log = LoggerFactory.getLogger(RecentchangeTitlesLiveIntegTest.class);
   private static final int COUNT = 3;
   private static final int LIMIT = COUNT * 2;
 
@@ -50,7 +50,7 @@ public class RecentChangesTest extends ParamHelper {
     return ParamHelper.prepare(Version.valuesStable());
   }
 
-  public RecentChangesTest(Version v) {
+  public RecentchangeTitlesLiveIntegTest(Version v) {
     super(v, classVerifier);
   }
 

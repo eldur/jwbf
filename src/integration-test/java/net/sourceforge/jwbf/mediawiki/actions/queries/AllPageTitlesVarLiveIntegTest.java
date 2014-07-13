@@ -16,23 +16,23 @@
  * Contributors:
  *
  */
-package net.sourceforge.jwbf.mediawiki.live;
+package net.sourceforge.jwbf.mediawiki.actions.queries;
 
 import static org.junit.Assert.assertTrue;
 
 import java.util.Iterator;
 
 import net.sourceforge.jwbf.mediawiki.MediaWiki;
-import net.sourceforge.jwbf.mediawiki.actions.queries.AllPageTitles;
 import net.sourceforge.jwbf.mediawiki.actions.util.RedirectFilter;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
+import net.sourceforge.jwbf.mediawiki.live.AbstractMediaWikiBotTest;
 import org.junit.Ignore;
 import org.junit.Test;
 
 /**
  * @author Thomas Stock
  */
-public class AllPagesTest extends AbstractMediaWikiBotTest {
+public class AllPageTitlesVarLiveIntegTest extends AbstractMediaWikiBotTest {
 
   /**
    * TODO move to integation tests
