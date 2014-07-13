@@ -40,10 +40,6 @@ public class ProcessException extends JwbfException {
     super(msg);
   }
 
-  /**
-   * @param message
-   * @param t
-   */
   public ProcessException(String message, Throwable t) {
     super(message, t);
   }

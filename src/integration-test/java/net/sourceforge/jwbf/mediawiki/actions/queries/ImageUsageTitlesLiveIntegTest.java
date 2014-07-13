@@ -2,15 +2,9 @@ package net.sourceforge.jwbf.mediawiki.actions.queries;
 
 import static net.sourceforge.jwbf.TestHelper.getRandom;
 
-import javax.annotation.Nullable;
-
-import com.google.common.base.Function;
-import com.google.common.collect.ContiguousSet;
-import com.google.common.collect.DiscreteDomain;
-import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Range;
 import net.sourceforge.jwbf.GAssert;
+import net.sourceforge.jwbf.TestHelper;
 import net.sourceforge.jwbf.core.contentRep.Article;
 import net.sourceforge.jwbf.mediawiki.BotFactory;
 import net.sourceforge.jwbf.mediawiki.MediaWiki.Version;
@@ -37,7 +31,7 @@ public class ImageUsageTitlesLiveIntegTest extends AbstractMediaWikiBotTest {
 
   private void test() {
     // GIVEN
-    ImmutableList<String> expectedTitles = expectedTitles();
+    ImmutableList<String> expectedTitles = TestHelper.createNames("TitleWithImg", limit);
 
     ImmutableList<String> initPageTitles = new ImageUsageTitles(bot(), IMAGE_NAME).getCopyOf(limit);
     ImmutableList<String> pageTitles;
@@ -60,18 +54,6 @@ public class ImageUsageTitlesLiveIntegTest extends AbstractMediaWikiBotTest {
       a.setText("Hello [[" + IMAGE_NAME + "]] - " + getRandom(10));
       a.save();
     }
-  }
-
-  private ImmutableList<String> expectedTitles() {
-    Range<Integer> range = Range.closedOpen(0, limit);
-    ImmutableList<Integer> list = ContiguousSet.create(range, DiscreteDomain.integers()).asList();
-    return FluentIterable.from(list).transform(new Function<Integer, String>() {
-      @Nullable
-      @Override
-      public String apply(@Nullable Integer input) {
-        return "TitleWithImg" + input;
-      }
-    }).toList();
   }
 
 }

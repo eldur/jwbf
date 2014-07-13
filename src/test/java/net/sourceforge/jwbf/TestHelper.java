@@ -1,5 +1,6 @@
 package net.sourceforge.jwbf;
 
+import javax.annotation.Nullable;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -8,11 +9,18 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 import com.google.common.base.Charsets;
+import com.google.common.base.Function;
 import com.google.common.base.Throwables;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
+import com.google.common.collect.ContiguousSet;
+import com.google.common.collect.DiscreteDomain;
+import com.google.common.collect.FluentIterable;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Range;
 import com.google.common.io.Resources;
+import net.sourceforge.jwbf.mediawiki.MediaWiki;
 import org.junit.Assume;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -97,6 +105,16 @@ public class TestHelper {
     assumeReachable(JWBF.newURL(url));
   }
 
+  public static String mediaWikiFileName(MediaWiki.Version version, String filename) {
+    String number = version.getNumber().replace(".", "-");
+    String prefix = "mediawiki/v" + number + "/";
+    return prefix + filename;
+  }
+
+  public static String wikiResponse(MediaWiki.Version version, String filename) {
+    return textOf(mediaWikiFileName(version, filename));
+  }
+
   public static String anyWikiResponse(String filename) {
     return textOf("mediawiki/any/" + filename);
   }
@@ -107,6 +125,18 @@ public class TestHelper {
     } catch (IOException e) {
       throw Throwables.propagate(e);
     }
+  }
+
+  public static ImmutableList<String> createNames(final String prefix, int limit) {
+    Range<Integer> range = Range.closedOpen(0, limit);
+    ImmutableList<Integer> list = ContiguousSet.create(range, DiscreteDomain.integers()).asList();
+    return FluentIterable.from(list).transform(new Function<Integer, String>() {
+      @Nullable
+      @Override
+      public String apply(@Nullable Integer input) {
+        return prefix + input;
+      }
+    }).toList();
   }
 
 }

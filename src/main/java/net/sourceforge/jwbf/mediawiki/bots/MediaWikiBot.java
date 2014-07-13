@@ -239,14 +239,14 @@ public class MediaWikiBot implements WikiBot {
    */
   @Override
   public void delete(String title) {
-    getPerformedAction(new PostDelete(this, title));
+    getPerformedAction(new PostDelete(getUserinfo(), title));
   }
 
   /**
    * deletes an article with a reason
    */
   public void delete(String title, String reason) {
-    getPerformedAction(new PostDelete(this, title, reason));
+    getPerformedAction(new PostDelete(getUserinfo(), title, reason));
   }
 
   /**

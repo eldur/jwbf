@@ -23,6 +23,7 @@ import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 import net.sourceforge.jwbf.AbstractIntegTest;
 import net.sourceforge.jwbf.JWBF;
+import net.sourceforge.jwbf.TestHelper;
 import net.sourceforge.jwbf.mediawiki.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 import net.sourceforge.jwbf.mediawiki.live.auto.ParamHelper;
@@ -104,15 +105,13 @@ public abstract class MocoIntegTest extends AbstractIntegTest implements Provide
   }
 
   protected ContentResource mwFileOf(MediaWiki.Version version, String filename) {
-    String number = version.getNumber().replace(".", "-");
-    String prefix = "mediawiki/v" + number + "/";
-    File file = fileOf(prefix + filename);
+    File file = fileOf(TestHelper.mediaWikiFileName(version, filename));
     if (file.canRead()) {
       String absFileName = file.getAbsolutePath();
       return Moco.file(absFileName);
     } else {
-      return Moco
-          .text(getClass().getCanonicalName() + " : SHOULD FAIL : File not found: " + filename);
+      return Moco.text(
+          getClass().getCanonicalName() + " : SHOULD FAIL : File not found: " + filename);
     }
   }
 
@@ -148,8 +147,8 @@ public abstract class MocoIntegTest extends AbstractIntegTest implements Provide
             for (Entry<String, String> entry : replacements.entrySet()) {
               String key = String.format("${%s}", entry.getKey());
               if (input.contains(key)) {
-                return input
-                    .replaceFirst(String.format("\\$\\{%s\\}", entry.getKey()), entry.getValue());
+                return input.replaceFirst(String.format("\\$\\{%s\\}", entry.getKey()),
+                    entry.getValue());
               }
             }
             return input;
