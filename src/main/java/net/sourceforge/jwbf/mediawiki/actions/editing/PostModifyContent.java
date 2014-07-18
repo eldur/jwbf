@@ -110,7 +110,8 @@ public class PostModifyContent extends MWAction {
       builder.postParam(editTokeAction.get().token());
       second = false;
 
-      return editRequest = builder.buildPost();
+      editRequest = builder.buildPost();
+      return editRequest;
     } else {
       throw new IllegalStateException("this action has only two messages");
     }

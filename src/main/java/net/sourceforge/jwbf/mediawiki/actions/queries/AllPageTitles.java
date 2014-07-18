@@ -48,17 +48,28 @@ public class AllPageTitles extends TitleQuery<String> {
   private static final Logger log = LoggerFactory.getLogger(AllPageTitles.class);
 
   /**
+   * @deprecated do not parse xml like this
    * Pattern to parse returned page, @see {@link #parseHasMore(String)}.
    */
-  private static final Pattern HAS_MORE_PATTERN = Pattern.compile( //
-      "<query-continue>.*?<allpages *apfrom=\"([^\"]*)\" */>.*?</query-continue>",
-      Pattern.DOTALL | Pattern.MULTILINE);
-  private static final Pattern HAS_MORE_PATTERN_21 = Pattern.compile( //
-      "<continue .*apcontinue=\"([^\"]*)\" */>",
-      Pattern.DOTALL | Pattern.MULTILINE);
+  @Deprecated
+  private static final Pattern HAS_MORE_PATTERN =
+      Pattern.compile("<query-continue>.*?<allpages *apfrom=\"([^\"]*)\" */>.*?</query-continue>",
+          Pattern.DOTALL | Pattern.MULTILINE);
 
-  private static final Pattern ARTICLE_TITLES_PATTERN = Pattern.compile( //
-      "<p pageid=\".*?\" ns=\".*?\" title=\"(.*?)\" */>");
+  /**
+   * @deprecated do not parse xml like this
+   */
+  @Deprecated
+  private static final Pattern HAS_MORE_PATTERN_21 =
+      Pattern.compile("<continue .*apcontinue=\"([^\"]*)\" */>",
+          Pattern.DOTALL | Pattern.MULTILINE);
+
+  /**
+   * @deprecated do not parse xml like this
+   */
+  @Deprecated
+  private static final Pattern ARTICLE_TITLES_PATTERN =
+      Pattern.compile("<p pageid=\".*?\" ns=\".*?\" title=\"(.*?)\" */>");
 
   /** Pattern to parse returned page, @see {@link #parseArticleTitles(String)} */
   /**

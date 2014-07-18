@@ -3,7 +3,11 @@ package net.sourceforge.jwbf.core;
 import com.google.common.base.Optional;
 import com.google.common.base.Strings;
 
-public class Optionals {
+public final class Optionals {
+
+  private Optionals() {
+    // do nothing
+  }
 
   public static Optional<String> absentIfEmpty(String nullableReference) {
     Optional<String> fromNullable = Optional.fromNullable(nullableReference);

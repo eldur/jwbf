@@ -128,9 +128,9 @@ public class Post extends HttpBase implements HttpAction {
       return true;
     } else if (obj instanceof Post) {
       Post that = (Post) obj;
-      return Objects.equals(this.getRequest(), that.getRequest()) //
-          && Objects.equals(this.getCharset(), that.getCharset()) //
-          && Objects.equals(this.getParams(), that.getParams());
+      return Objects.equals(this.getRequest(), that.getRequest()) && //
+           Objects.equals(this.getCharset(), that.getCharset()) && //
+           Objects.equals(this.getParams(), that.getParams());
     } else {
       return false;
     }

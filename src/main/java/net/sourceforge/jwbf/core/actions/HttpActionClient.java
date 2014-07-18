@@ -229,9 +229,9 @@ public class HttpActionClient {
   private String executeAndProcess(HttpRequestBase requestBase, ReturningTextProcessor cp,
       HttpAction ha) {
 
-    log.debug("message {} is: " //
-        + "\n\t hostPath : {} " //
-        + "\n\t queryPath: {}", debug(requestBase, ha, cp));
+    log.debug("message {} is: " + //
+        "\n\t hostPath : {} " + //
+        "\n\t queryPath: {}", debug(requestBase, ha, cp));
     HttpResponse res = execute(requestBase);
 
     final String out = writeToString(ha, res);
@@ -251,7 +251,7 @@ public class HttpActionClient {
   String writeToString(HttpAction ha, HttpResponse res) {
     Charset charSet = Charset.forName(ha.getCharset());
 
-    try ( //
+    try (
         InputStream content = res.getEntity().getContent();
         InputStreamReader inputStreamReader = new InputStreamReader(content, charSet); //
         BufferedReader br = new BufferedReader(inputStreamReader); //

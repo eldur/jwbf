@@ -123,8 +123,8 @@ public class PostDelete extends MWAction {
       String msg = e.getMessage();
       log.error(msg, e);
       if (xml.startsWith("unknown_action:")) {
-        String eMsg = "unknown_action; Adding '$wgEnableWriteAPI = true;' to your MediaWiki's "
-            + "LocalSettings.php might remove this problem.";
+        String eMsg = "unknown_action; Adding '$wgEnableWriteAPI = true;' to your MediaWiki's " + //
+            "LocalSettings.php might remove this problem.";
         throw new ProcessException(eMsg);
       }
       throw new ProcessException(msg, e);
@@ -141,8 +141,8 @@ public class PostDelete extends MWAction {
     if (containsError != null) {
       log.warn("{}", containsError.getAttributeValue("info"));
       if ("inpermissiondenied".equals(containsError.getAttributeValue("code"))) {
-        log.error("Adding '$wgGroupPermissions['bot']['delete'] = true;'"
-            + " to your MediaWiki's LocalSettings.php might remove this problem.");
+        log.error("Adding '$wgGroupPermissions['bot']['delete'] = true;'" + //
+            " to your MediaWiki's LocalSettings.php might remove this problem.");
       }
     }
     return containsError;

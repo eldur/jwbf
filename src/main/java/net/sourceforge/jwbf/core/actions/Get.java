@@ -84,10 +84,9 @@ public class Get extends HttpBase implements HttpAction {
       return true;
     } else if (obj instanceof Get) {
       Get that = (Get) obj;
-      return
-          Objects.equals(this.getRequestAndFixAllSuppliers(), that.getRequestAndFixAllSuppliers())
-              //
-              && Objects.equals(this.getCharset(), that.getCharset());
+      return Objects.equals(this.getRequestAndFixAllSuppliers(), //
+          that.getRequestAndFixAllSuppliers()) && //
+          Objects.equals(this.getCharset(), that.getCharset());
     } else {
       return false;
     }

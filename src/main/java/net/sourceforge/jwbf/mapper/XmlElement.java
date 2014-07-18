@@ -10,7 +10,7 @@ import com.google.common.collect.Iterables;
 
 public class XmlElement {
 
-  static XmlElement NULL_XML = new XmlElement(null);
+  static final XmlElement NULL_XML = new XmlElement(null);
 
   private final org.jdom2.Element element;
 
@@ -62,11 +62,7 @@ public class XmlElement {
 
   public boolean hasAttribute(String name) {
     org.jdom2.Attribute attribute = element.getAttribute(name);
-    if (attribute == null) {
-      return false;
-    } else {
-      return true;
-    }
+    return attribute != null;
   }
 
   public String getText() {

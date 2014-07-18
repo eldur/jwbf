@@ -60,7 +60,7 @@
           </execution>
         </executions>
         <configuration>
-          <output>dependency.tree</output>
+          <outputFile>dependency.tree</outputFile>
         </configuration>
       </plugin>
       <plugin>

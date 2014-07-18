@@ -51,9 +51,9 @@ abstract class CategoryMembers extends TitleQuery<CategoryItem> {
   private static final Pattern CATEGORY_PATTERN =
       Pattern.compile("<cm pageid=\"(.*?)\" ns=\"(.*?)\" title=\"(.*?)\" />");
 
-  private static final Pattern CONTINUE_PATTERN = Pattern.compile("<query-continue>.*?" //
-      + "<categorymembers *cmcontinue=\"([^\"]*)\" */>" //
-      + ".*?</query-continue>", Pattern.DOTALL | Pattern.MULTILINE);
+  private static final Pattern CONTINUE_PATTERN = Pattern.compile("<query-continue>.*?" + //
+      "<categorymembers *cmcontinue=\"([^\"]*)\" */>" + //
+      ".*?</query-continue>", Pattern.DOTALL | Pattern.MULTILINE);
 
   /**
    * constant value for the bllimit-parameter. *

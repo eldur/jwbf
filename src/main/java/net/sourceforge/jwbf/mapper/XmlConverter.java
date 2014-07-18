@@ -23,7 +23,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.InputSource;
 
-public class XmlConverter {
+public final class XmlConverter {
+
+  private XmlConverter() {
+    // do nothing
+  }
 
   private static final Logger log = LoggerFactory.getLogger(XmlConverter.class);
   private static final Function<XmlElement, XmlElement> GET_ERROR =

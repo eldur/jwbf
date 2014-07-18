@@ -52,7 +52,7 @@ public class GetApiToken extends DequeMWAction<GetApiToken.TokenResponse> {
     };
   }
 
-  public static interface TokenResponse {
+  public interface TokenResponse {
     ParamTuple<String> urlEncodedToken();
     ParamTuple<String> token();
   }

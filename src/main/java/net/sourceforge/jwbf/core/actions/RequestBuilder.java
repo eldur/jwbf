@@ -75,9 +75,11 @@ public class RequestBuilder {
   public RequestBuilder param(String key, String value) {
     if (!Strings.isNullOrEmpty(key)) {
       if (Strings.isNullOrEmpty(value)) {
-        value = "None";
+        param(key, Suppliers.ofInstance("None"));
+      } else {
+        param(key, Suppliers.ofInstance(value));
       }
-      param(key, Suppliers.ofInstance(value));
+
     }
     return this;
   }

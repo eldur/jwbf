@@ -303,10 +303,10 @@ public class SimpleArticle implements ArticleMeta, Serializable, Cloneable, Cont
   public boolean equals(Object obj) {
     if (obj instanceof SimpleArticle) {
       SimpleArticle that = (SimpleArticle) obj;
-      return Objects.equals(this.editTimestamp, that.editTimestamp) //
-          && Objects.equals(this.revId, that.revId) //
-          && Objects.equals(this.text, that.text) //
-          && Objects.equals(this.title, that.title) //
+      return Objects.equals(this.editTimestamp, that.editTimestamp) && //
+          Objects.equals(this.revId, that.revId) && //
+          Objects.equals(this.text, that.text) && //
+          Objects.equals(this.title, that.title) //
           ;
     } else {
       return false;

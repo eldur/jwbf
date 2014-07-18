@@ -20,13 +20,13 @@ public class JsonMapper {
 
   public <T> T get(String json, Class<T> clazz) {
     String nonNullJson = Preconditions.checkNotNull(json, "do not convert null");
-    return (T) Preconditions
-        .checkNotNull(transfomer.toJson(nonNullJson, clazz), "a json mapping must not return null");
+    return (T) Preconditions.checkNotNull(transfomer.toJson(nonNullJson, clazz),
+        "a json mapping must not return null");
   }
 
-  public static interface ToJsonFunction {
+  public interface ToJsonFunction {
     @Nonnull
-    public Object toJson(@Nonnull String jsonString, Class<?> clazz);
+    Object toJson(@Nonnull String jsonString, Class<?> clazz);
   }
 
   static class JacksonToJsonFunction implements ToJsonFunction {

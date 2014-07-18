@@ -48,7 +48,7 @@ public class RecentchangeTitles extends TitleQuery<String> {
   /**
    * value for the bllimit-parameter. *
    */
-  private static final int limit = 50;
+  private static final int LIMIT = 50;
 
   private final MediaWikiBot bot;
 
@@ -67,7 +67,7 @@ public class RecentchangeTitles extends TitleQuery<String> {
         .action("query") //
         .formatXml() //
         .param("list", "recentchanges") //
-        .param("rclimit", limit) //
+        .param("rclimit", LIMIT) //
         ;
     if (namespace != null) {
       requestBuilder.param("rcnamespace", MediaWiki.urlEncode(MWAction.createNsString(namespace)));

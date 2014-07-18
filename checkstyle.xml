@@ -1,84 +1,84 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE module PUBLIC "-//Puppy Crawl//DTD Check Configuration 1.3//EN" "http://www.puppycrawl.com/dtds/configuration_1_3.dtd">
+<!DOCTYPE module PUBLIC "-//Puppy Crawl//DTD Check Configuration 1.3//EN"
+        "http://www.puppycrawl.com/dtds/configuration_1_3.dtd">
 
-<!--
-    This configuration file was written by the eclipse-cs plugin configuration editor
--->
-<!--
-    Checkstyle-Configuration: jwbf-check
-    Description: none
--->
 <module name="Checker">
-  <property name="severity" value="warning"/>
+  <property name="severity" value="warning" />
   <module name="TreeWalker">
-    <module name="AvoidStarImport"/>
+    <module name="AvoidStarImport" />
     <module name="UnusedImports">
-      <property name="processJavadoc" value="true"/>
+      <property name="processJavadoc" value="true" />
     </module>
-        <module name="ConstantName"/>
-    <module name="LocalFinalVariableName"/>
-    <module name="LocalVariableName"/>
-    <module name="MemberName"/>
-    <module name="MethodName"/>
-    <module name="PackageName"/>
-    <module name="ParameterName"/>
-    <module name="StaticVariableName"/>
-    <module name="TypeName"/>
+    <module name="ConstantName">
+      <property name="format" value="^(log|[A-Z][A-Z0-9]*(_[A-Z0-9]+)*)$" />
+      <property name="applyToPackage" value="true" />
+      <property name="applyToProtected" value="true" />
+      <property name="applyToPrivate" value="true" />
+    </module>
+    <module name="LocalFinalVariableName" />
+    <module name="LocalVariableName" />
+    <module name="MemberName" />
+    <module name="MethodName" />
+    <module name="PackageName" />
+    <module name="ParameterName" />
+    <module name="StaticVariableName" />
+    <module name="TypeName" />
     <module name="IllegalImport">
-      <property name="severity" value="error"/>
+      <property name="severity" value="error" />
     </module>
-    <module name="RedundantImport"/>
+    <module name="RedundantImport" />
     <module name="LineLength">
-      <property name="max" value="100"/>
-      <property name="tabWidth" value="2"/>
-      <property name="severity" value="error"/>
+      <property name="max" value="100" />
+      <property name="tabWidth" value="2" />
+      <property name="severity" value="error" />
     </module>
-    <module name="MethodLength"/>
-    <module name="ParameterNumber"/>
-    <module name="EmptyForIteratorPad"/>
-    <module name="MethodParamPad"/>
+    <module name="MethodLength" />
+    <module name="ParameterNumber" />
+    <module name="EmptyForIteratorPad" />
+    <module name="MethodParamPad" />
     <module name="NoWhitespaceAfter">
-      <property name="tokens" value="BNOT,DEC,DOT,INC,LNOT,UNARY_MINUS,UNARY_PLUS"/>
+      <property name="tokens" value="BNOT,DEC,DOT,INC,LNOT,UNARY_MINUS,UNARY_PLUS" />
     </module>
-    <module name="NoWhitespaceBefore"/>
     <module name="OperatorWrap">
-      <property name="option" value="eol"/>
+      <property name="option" value="eol" />
     </module>
-    <module name="ParenPad"/>
-    <module name="TypecastParenPad"/>
-    <module name="WhitespaceAfter"/>
-    <module name="WhitespaceAround"/>
-    <module name="ModifierOrder"/>
-    <module name="RedundantModifier"/>
-    <module name="AvoidNestedBlocks"/>
-    <module name="EmptyBlock"/>
-    <module name="LeftCurly"/>
-    <module name="NeedBraces"/>
-    <module name="RightCurly"/>
-    <module name="AvoidInlineConditionals"/>
-    <module name="EmptyStatement"/>
-    <module name="EqualsHashCode"/>
-    <module name="IllegalInstantiation"/>
-    <module name="InnerAssignment"/>
-    <module name="MissingSwitchDefault"/>
+    <module name="ParenPad" />
+    <module name="TypecastParenPad" />
+    <module name="WhitespaceAfter" />
+    <module name="WhitespaceAround" />
+    <module name="ModifierOrder" />
+    <module name="RedundantModifier" />
+    <module name="AvoidNestedBlocks" />
+    <module name="EmptyBlock" />
+    <module name="LeftCurly" />
+    <module name="NeedBraces" />
+    <module name="RightCurly" />
+    <module name="AvoidInlineConditionals" />
+    <module name="EmptyStatement" />
+    <module name="EqualsHashCode" />
+    <module name="IllegalInstantiation" />
+    <module name="InnerAssignment" />
+    <module name="MissingSwitchDefault" />
     <module name="RedundantThrows">
-      <property name="suppressLoadErrors" value="true"/>
+      <property name="suppressLoadErrors" value="true" />
     </module>
-    <module name="SimplifyBooleanExpression"/>
-    <module name="SimplifyBooleanReturn"/>
-    <module name="FinalClass"/>
-    <module name="HideUtilityClassConstructor"/>
-    <module name="InterfaceIsType"/>
-    <module name="VisibilityModifier"/>
-    <module name="ArrayTypeStyle"/>
+    <module name="SimplifyBooleanExpression" />
+    <module name="SimplifyBooleanReturn" />
+    <module name="FinalClass" />
+    <module name="HideUtilityClassConstructor" />
+    <module name="InterfaceIsType" />
+    <module name="VisibilityModifier">
+      <property name="packageAllowed" value="true" />
+    </module>
+    <module name="ArrayTypeStyle" />
     <module name="TodoComment">
-      <property name="severity" value="ignore"/>
-      <metadata name="net.sf.eclipsecs.core.lastEnabledSeverity" value="inherit"/>
+      <property name="severity" value="ignore" />
+      <metadata name="net.sf.eclipsecs.core.lastEnabledSeverity" value="inherit" />
     </module>
-    <module name="UpperEll"/>
+    <module name="UpperEll" />
   </module>
   <module name="RegexpMultiline">
-    <property name="severity" value="error"/>
-    <property name="format" value="\r\n$"/>
+    <property name="severity" value="error" />
+    <property name="format" value="\r\n$" />
   </module>
 </module>
