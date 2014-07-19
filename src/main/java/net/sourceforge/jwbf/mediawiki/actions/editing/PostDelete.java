@@ -127,7 +127,7 @@ public class PostDelete extends MWAction {
             "LocalSettings.php might remove this problem.";
         throw new ProcessException(eMsg);
       }
-      throw new ProcessException(msg, e);
+      throw new ProcessException(msg);
     }
   }
 

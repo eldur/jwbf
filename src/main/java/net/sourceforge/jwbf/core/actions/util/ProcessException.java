@@ -28,27 +28,10 @@ import net.sourceforge.jwbf.core.bots.util.JwbfException;
  */
 public class ProcessException extends JwbfException {
 
-  /**
-   *
-   */
   private static final long serialVersionUID = 1L;
 
-  /**
-   * @param msg exception text
-   */
   public ProcessException(final String msg) {
     super(msg);
-  }
-
-  public ProcessException(String message, Throwable t) {
-    super(message, t);
-  }
-
-  /**
-   * @param t
-   */
-  public ProcessException(Throwable t) {
-    super(t);
   }
 
 }

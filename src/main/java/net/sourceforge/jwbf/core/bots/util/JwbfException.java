@@ -24,6 +24,7 @@ package net.sourceforge.jwbf.core.bots.util;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 
+import com.google.common.annotations.VisibleForTesting;
 import net.sourceforge.jwbf.JWBF;
 
 /**
@@ -46,24 +47,26 @@ public class JwbfException extends RuntimeException {
   }
 
   public Class<?> getExceptionSrcClass() {
-    return getStackTraceClass();
+    return getClassBy(getStackTrace()[0]);
   }
 
-  private Class<?> getStackTraceClass() {
+  private static Class<?> getClassBy(StackTraceElement stackTraceElement) {
+    String className = stackTraceElement.getClassName();
+    return getClassBy(className);
+  }
 
-    ClassLoader loader = getClass().getClassLoader();
+  @VisibleForTesting
+  static Class<?> getClassBy(String className) {
     try {
-      return loader.loadClass(getStackTrace()[0].getClassName());
+      ClassLoader loader = JwbfException.class.getClassLoader();
+      return loader.loadClass(className);
     } catch (ClassNotFoundException e) {
       return Object.class;
     }
-
   }
 
   private String getModulInfo() {
-
-    Class<?> clazz = getStackTraceClass();
-
+    Class<?> clazz = getExceptionSrcClass();
     return "( " + JWBF.getPartId(clazz) + "-" + JWBF.getVersion(clazz) + " )";
   }
 

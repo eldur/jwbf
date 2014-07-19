@@ -1,8 +1,10 @@
 package net.sourceforge.jwbf;
 
 import javax.annotation.Nullable;
+import java.io.File;
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Random;
 import java.util.concurrent.ExecutionException;
@@ -119,9 +121,21 @@ public class TestHelper {
     return textOf("mediawiki/any/" + filename);
   }
 
-  private static String textOf(String filename) {
+  public static String textOf(String filename) {
+    return textOf(Resources.getResource(filename));
+  }
+
+  public static String textOf(File file) {
     try {
-      return Resources.toString(Resources.getResource(filename), Charsets.UTF_8);
+      return textOf(file.toURI().toURL());
+    } catch (MalformedURLException e) {
+      throw new IllegalStateException(e);
+    }
+  }
+
+  public static String textOf(URL url) {
+    try {
+      return Resources.toString(url, Charsets.UTF_8);
     } catch (IOException e) {
       throw Throwables.propagate(e);
     }
