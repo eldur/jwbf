@@ -1,6 +1,7 @@
 # JWBF - JavaWikiBotFramework
 [![Build Status](https://travis-ci.org/eldur/jwbf.svg)](https://travis-ci.org/eldur/jwbf)
 [![Coverage Status](https://img.shields.io/coveralls/eldur/jwbf.svg)](https://coveralls.io/r/eldur/jwbf)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/net.sourceforge/jwbf/badge.svg)](http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22net.sourceforge%22%20AND%20a%3A%22jwbf%22)
 
 The Java Wiki Bot Framework is a library to maintain Wikis like Wikipedia based on MediaWiki.
 
