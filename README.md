@@ -71,12 +71,17 @@ libraryDependencies += "net.sourceforge" % "jwbf" % "3.0.0-SNAPSHOT"
 
 * SNAPSHOTS: [oss.sonatype.org](https://oss.sonatype.org/content/groups/public/net/sourceforge/jwbf/)
 * RELEASES: [maven central](http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22net.sourceforge%22%20AND%20a%3A%22jwbf%22)
+* Javadocs: [@sf.net](http://jwbf.sourceforge.net/doc/) (Version specific docs are located at Maven central)
 
 ## See also
 * [en.Wikipedia Creating a Bot](http://en.wikipedia.org/wiki/Wikipedia:Creating_a_bot#Java)
 * [fr.Wikipedia Créer un bot](http://fr.wikipedia.org/wiki/Wikip%C3%A9dia:Cr%C3%A9er_un_bot#Java)
 * [de.Wikipedia Bots](http://de.wikipedia.org/wiki/Wikipedia:Bots#Ressourcen)
 * [Mediawiki API](http://www.mediawiki.org/wiki/API:Client_code)
+ * [Evaluation](https://www.mediawiki.org/wiki/API:Client_code/Evaluations/Java_Wiki_Bot_Framework_(JWBF))
+* Wikidata-Integration
+ * [Fast forwared test branch](https://github.com/eldur/jwbf/tree/wikidata)
+ * [WikiData-Toolkit](https://github.com/Wikidata/Wikidata-Toolkit/issues/11)
 
 ## Design goals - Product Vision
 * incomplete by definition (Framework)
