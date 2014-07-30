@@ -75,10 +75,10 @@ public class PostModifyContent extends MWAction {
 
     Userinfo userinfo = bot.getUserinfo();
     Set<String> rights = userinfo.getRights();
-    boolean canWrite =
-        rights.contains(Userinfo.RIGHT_EDIT) && rights.contains(Userinfo.RIGHT_WRITEAPI);
+    boolean canWrite = rights.contains(Userinfo.RIGHT_EDIT) && //
+        rights.contains(Userinfo.RIGHT_WRITEAPI);
 
-    if (!(bot.isEditApi() && canWrite)) {
+    if (!canWrite) {
       throw new VersionException("editing is not allowed");
     }
     if (first) {
@@ -95,7 +95,7 @@ public class PostModifyContent extends MWAction {
 
           .postParam("summary", a.getEditSummary()) //
           .postParam("text", a.getText()) //
-      ;
+          ;
       Set<String> groups = userinfo.getGroups();
       if (!isIntersectionEmpty(groups, MediaWiki.BOT_GROUPS)) {
         builder.postParam(PARAM_BOTEDIT, "");

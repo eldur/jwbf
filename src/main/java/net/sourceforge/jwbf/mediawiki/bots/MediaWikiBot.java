@@ -250,8 +250,6 @@ public class MediaWikiBot implements WikiBot {
   }
 
   /**
-   * TODO reduce visibility
-   *
    * @deprecated use {@link #getPerformedAction(ContentProcessable)} instead
    */
   @Deprecated
@@ -264,6 +262,7 @@ public class MediaWikiBot implements WikiBot {
   }
 
   public synchronized <T extends ContentProcessable> T getPerformedAction(T answer) {
+    // TODO transform to throttled
     performAction(answer);
     return answer;
   }
@@ -280,8 +279,8 @@ public class MediaWikiBot implements WikiBot {
 
   private HttpBot bot() {
     if (bot == null) {
-      throw new IllegalStateException(
-          "please use another constructor or inject " + HttpBot.class.getCanonicalName());
+      throw new IllegalStateException("please use another constructor or inject " + //
+          HttpBot.class.getCanonicalName());
     }
     return bot;
   }
@@ -308,20 +307,6 @@ public class MediaWikiBot implements WikiBot {
   public Siteinfo getSiteinfo() {
     // TODO cache value see getVersion
     return getPerformedAction(Siteinfo.class);
-  }
-
-  /**
-   * @return the
-   */
-  public boolean isEditApi() {
-    return useEditApi;
-  }
-
-  /**
-   * @param useEditApi Set to false, to force editing without the API.
-   */
-  public final void useEditApi(boolean useEditApi) {
-    this.useEditApi = useEditApi;
   }
 
   /**

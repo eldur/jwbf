@@ -36,7 +36,6 @@ public class PostModifyContentTest {
   @Before
   public void before() {
     bot = mock(MediaWikiBot.class);
-    when(bot.isEditApi()).thenReturn(Boolean.TRUE);
     when(bot.getVersion()).thenReturn(Version.DEVELOPMENT);
     userinfo = mock(Userinfo.class);
     when(bot.getUserinfo()).thenReturn(userinfo);
@@ -149,7 +148,6 @@ public class PostModifyContentTest {
   @Test
   public void testGetNextMessageFailNoEditingRightsApi() {
     when(userinfo.getRights()).thenReturn(of(Userinfo.RIGHT_WRITEAPI));
-    when(bot.isEditApi()).thenReturn(Boolean.FALSE);
     try {
       testee.getNextMessage();
       fail();
