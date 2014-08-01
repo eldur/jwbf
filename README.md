@@ -6,16 +6,10 @@
 
 The Java Wiki Bot Framework is a library to maintain and collect up-to-date 
 data from [MediaWiki-based wikis](http://www.mediawiki.org) such as Wikipedia.
+It has packages to handle basic tasks (login, cookies, encoding, token 
+management, edits, and queries) so that you can write your wiki bot without 
+being a MediaWiki API expert.
 
-## Design goals
-* Incomplete by definition (a framework, not a bot or API client)
-* Handles basic tasks: login, cookies, encoding, token management, edit, query, ...
-* Unit- and integration-tested
-* No checked exceptions
-* Immutable types
-* Fluent interfaces
-* Replaces XML with JSON
-* Ready for Java 8
 
 ## Developer resources
 * Repositories
@@ -28,8 +22,9 @@ data from [MediaWiki-based wikis](http://www.mediawiki.org) such as Wikipedia.
 ## Java 
 ### Getting started
 If you are new to Java development, you will find it easier to use a program 
-like Maven to automate project builds and manage dependencies for you. To 
-use Maven to start a new project, follow the 
+like Maven to automate project builds and manage dependencies for you. JWBF 
+takes uses Maven to resolve dependencies automatically. To use Maven to start 
+a new project, follow the 
 [Maven in Five Minutes](http://maven.apache.org/guides/getting-started/maven-in-five-minutes.html)
 tutorial. For a more detailed introduction, see Maven's 
 [Getting Started](http://maven.apache.org/guides/getting-started/index.html) 
@@ -60,10 +55,9 @@ downloaded automatically.
 </dependency>
 ```
 
-If you want a different version, find the appropriate `<version>` entry in
-the 
-[Maven metadata file](http://search.maven.org/remotecontent?filepath=net/sourceforge/jwbf/maven-metadata.xml) in the [Maven Central repository](http://search.maven.org/#browse|1359683689).
-
+If you want to use a different release of JWBF, find your desired version in 
+[RELEASES](http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22net.sourceforge%22%20AND%20a%3A%22jwbf%22) 
+and change `<version>` to its listed title.
 
 
 * From [SNAPSHOTS](https://oss.sonatype.org/content/groups/public/net/sourceforge/jwbf/):
@@ -91,8 +85,9 @@ Add this to your `<dependencies>` section:
 </dependency>
 ```
 
-If you want a different version, find the appropriate `<version>` entry in 
-the [Maven metadata file](https://oss.sonatype.org/content/groups/public/net/sourceforge/jwbf/maven-metadata.xml) in the sonatype repository.
+If you want to use a different snapshot of JWBF, find your desired version in 
+[SNAPSHOTS](https://oss.sonatype.org/content/groups/public/net/sourceforge/jwbf/) 
+and change `<version>` to its listed title.
 
 
 ### Sample code
@@ -116,7 +111,7 @@ More Java examples e.g. for queries can be found at
  [unit-](https://github.com/eldur/jwbf/tree/master/src/test/java/net/sourceforge/jwbf) and
  [integration-test packages](https://github.com/eldur/jwbf/tree/master/src/integration-test/java/net/sourceforge/jwbf).
 
-##Scala
+## Scala
 
 ### Dependencies
 ```scala
