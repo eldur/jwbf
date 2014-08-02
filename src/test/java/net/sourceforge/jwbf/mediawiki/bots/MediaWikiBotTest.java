@@ -11,17 +11,20 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.google.common.collect.ImmutableList;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import net.sourceforge.jwbf.GAssert;
 import net.sourceforge.jwbf.JWBF;
 import net.sourceforge.jwbf.JettyServer;
+import net.sourceforge.jwbf.core.actions.ContentProcessable;
 import net.sourceforge.jwbf.core.actions.HttpActionClient;
 import net.sourceforge.jwbf.core.actions.util.ActionException;
 import net.sourceforge.jwbf.core.bots.HttpBot;
 import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
 import net.sourceforge.jwbf.mediawiki.MediaWiki.Version;
+import net.sourceforge.jwbf.mediawiki.actions.editing.GetRevision;
 import net.sourceforge.jwbf.mediawiki.actions.editing.PostModifyContent;
 import net.sourceforge.jwbf.mediawiki.actions.login.PostLogin;
 import net.sourceforge.jwbf.mediawiki.actions.meta.GetVersion;
@@ -263,6 +266,94 @@ public class MediaWikiBotTest {
 
     // WHEN / THEN
     assertEquals("MediaWiki UNKNOWN", testee.getWikiType());
+  }
+
+  @Test
+  public void testReadDataOneTitle() {
+    // GIVEN
+    final String title = "Test";
+    testee = new MediaWikiBot(client) {
+      @Override
+      public <T extends ContentProcessable> T getPerformedAction(T answer) {
+        if (answer instanceof GetRevision) {
+          GetRevision mockAnswer = mock(GetRevision.class);
+          ImmutableList<SimpleArticle> articles = ImmutableList.of(new SimpleArticle(title));
+          when(mockAnswer.asList()).thenReturn(articles);
+          when(mockAnswer.getArticle()).thenCallRealMethod();
+          return (T) mockAnswer;
+        } else if (answer instanceof GetVersion) {
+          return answer;
+        } else {
+          fail(answer.getClass().getCanonicalName());
+          return null;
+        }
+      }
+    };
+
+    // WHEN
+    SimpleArticle result = testee.readData(title);
+
+    // THEN
+    assertEquals(title, result.getTitle());
+  }
+
+  @Test
+  public void testReadDataTwoTitles() {
+    // GIVEN
+    String[] titles = { "Test A", "Test B" };
+    final ImmutableList<SimpleArticle> articles =
+        ImmutableList.of(new SimpleArticle("Test A"), new SimpleArticle("Test B"));
+    testee = new MediaWikiBot(client) {
+      @Override
+      public <T extends ContentProcessable> T getPerformedAction(T answer) {
+        if (answer instanceof GetRevision) {
+          GetRevision mockAnswer = mock(GetRevision.class);
+
+          when(mockAnswer.asList()).thenReturn(articles);
+          return (T) mockAnswer;
+        } else if (answer instanceof GetVersion) {
+          return answer;
+        } else {
+          fail(answer.getClass().getCanonicalName());
+          return null;
+        }
+      }
+    };
+
+    // WHEN
+    ImmutableList<SimpleArticle> result = testee.readData(titles);
+
+    // THEN
+    GAssert.assertEquals(articles, result);
+  }
+
+  @Test
+  public void testReadDataThreeTitles() {
+    // GIVEN
+    final ImmutableList<SimpleArticle> articles = ImmutableList
+        .of(new SimpleArticle("Test A"), new SimpleArticle("Test B"), new SimpleArticle("Test C"));
+    ImmutableList<String> titles = ImmutableList.of("Test A", "Test B", "Test C");
+    testee = new MediaWikiBot(client) {
+      @Override
+      public <T extends ContentProcessable> T getPerformedAction(T answer) {
+        if (answer instanceof GetRevision) {
+          GetRevision mockAnswer = mock(GetRevision.class);
+          when(mockAnswer.asList()).thenReturn(articles);
+          return (T) mockAnswer;
+        } else if (answer instanceof GetVersion) {
+          return answer;
+        } else {
+          fail(answer.getClass().getCanonicalName());
+          return null;
+        }
+      }
+    };
+
+    // WHEN
+    ImmutableList<SimpleArticle> result = testee.readData(titles);
+
+    // THEN
+    GAssert.assertEquals(articles, result);
   }
 
   private void mockValidLogin(final String username, HttpActionClient mockClient) {

@@ -18,6 +18,11 @@
  */
 package net.sourceforge.jwbf.mediawiki.actions.editing;
 
+import java.util.List;
+
+import com.google.common.base.Optional;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
 import net.sourceforge.jwbf.core.actions.Get;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
@@ -39,7 +44,7 @@ public class GetRevision extends MWAction {
 
   private static final Logger log = LoggerFactory.getLogger(GetRevision.class);
 
-  private final SimpleArticle sa;
+  private SimpleArticle sa;
 
   public static final int CONTENT = 1 << 1;
   public static final int TIMESTAMP = 1 << 2;
@@ -60,10 +65,8 @@ public class GetRevision extends MWAction {
   /**
    * TODO follow redirects. TODO change constructor field ordering; bot
    */
-  public GetRevision(Version v, final String articlename, final int properties) {
+  public GetRevision(Version v, String articlename, int properties) {
     this.properties = properties;
-    sa = new SimpleArticle();
-    sa.setTitle(articlename);
     msg = new ApiRequestBuilder() //
         .action("query") //
         .formatXml() //
@@ -72,6 +75,10 @@ public class GetRevision extends MWAction {
         .param("rvprop", getDataProperties(properties) + getReversion(properties)) //
         .param("rvlimit", "1") //
         .buildGet();
+  }
+
+  public GetRevision(ImmutableList<String> names, int properties) {
+    this(null, MediaWiki.pipeJoined(names), properties);
   }
 
   /**
@@ -86,7 +93,6 @@ public class GetRevision extends MWAction {
         } else {
           log.debug("..." + s.substring(50, 150) + "...");
         }
-
       }
 
       parse(s);
@@ -141,39 +147,38 @@ public class GetRevision extends MWAction {
   }
 
   private void parse(final String xml) {
-    findContent(XmlConverter.getChecked(xml));
-  }
 
-  public SimpleArticle getArticle() {
-    return sa;
-  }
-
-  private void findContent(final XmlElement root) {
-
-    for (XmlElement xmlElement : root.getChildren()) {
-      if (xmlElement.getQualifiedName().equalsIgnoreCase("rev")) {
-
-        sa.setText(xmlElement.getText());
+    Optional<XmlElement> childOpt = XmlConverter.getChildOpt(xml, "query", "pages");
+    if (childOpt.isPresent()) {
+      List<XmlElement> pages = childOpt.get().getChildren("page");
+      for (XmlElement page : pages) {
+        sa = new SimpleArticle();
+        sa.setTitle(page.getAttributeValue("title"));
+        XmlElement rev = page.getChild("revisions").getChild("rev");
+        sa.setText(rev.getText());
+        sa.setRevisionId(rev.getAttributeValueOpt("revid").or(""));
+        sa.setEditSummary(rev.getAttributeValueOpt("comment").or(""));
+        sa.setEditor(rev.getAttributeValueOpt("user").or(""));
+        if ((properties & TIMESTAMP) > 0) {
+          sa.setEditTimestamp(rev.getAttributeValueOpt("timestamp").or(""));
+        }
         if ((properties & FLAGS) > 0) {
-          if (xmlElement.hasAttribute("minor")) {
+          if (rev.hasAttribute("minor")) {
             sa.setMinorEdit(true);
           } else {
             sa.setMinorEdit(false);
           }
         }
-
-        sa.setRevisionId(xmlElement.getAttributeValueOpt("revid").or(""));
-        sa.setEditSummary(xmlElement.getAttributeValueOpt("comment").or(""));
-        sa.setEditor(xmlElement.getAttributeValueOpt("user").or(""));
-
-        if ((properties & TIMESTAMP) > 0) {
-          sa.setEditTimestamp(xmlElement.getAttributeValueOpt("timestamp").or(""));
-        }
-      } else {
-        findContent(xmlElement);
       }
     }
+  }
 
+  public SimpleArticle getArticle() {
+    return Iterables.getOnlyElement(asList());
+  }
+
+  public ImmutableList<SimpleArticle> asList() {
+    return ImmutableList.of(sa); // TODO
   }
 
   /**

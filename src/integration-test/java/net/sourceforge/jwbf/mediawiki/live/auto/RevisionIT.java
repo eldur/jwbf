@@ -56,14 +56,7 @@ public class RevisionIT extends ParamHelper {
     sa.setText(testText);
     bot.writeContent(sa);
     // Test parameters
-    bot.getArticle(title, GetRevision.COMMENT);
-    bot.getArticle(title, GetRevision.CONTENT);
-    bot.getArticle(title, GetRevision.FIRST | GetRevision.CONTENT);
-    bot.getArticle(title, GetRevision.IDS | GetRevision.CONTENT);
-    bot.getArticle(title, GetRevision.LAST | GetRevision.CONTENT);
-    bot.getArticle(title, GetRevision.TIMESTAMP | GetRevision.CONTENT);
-    bot.getArticle(title, GetRevision.USER | GetRevision.CONTENT);
-    bot.getArticle(title, GetRevision.FLAGS | GetRevision.CONTENT);
+    bot.getArticle(title, GetRevision.COMMENT); // XXX delete this line
 
     // test with content length > 0
     ArticleMeta a = bot.getArticle(title);
@@ -72,11 +65,10 @@ public class RevisionIT extends ParamHelper {
     assertTrue("should be greater then 0", a.getRevisionId().length() > 0);
 
     // test with content length <= 0
-    testText = "";
-    title = "767676885340589358058903589035";
-    a = bot.getArticle(title);
+    String newTitle = "767676885340589358058903589035";
+    a = bot.getArticle(newTitle);
 
-    assertEquals(testText, a.getText());
+    assertEquals("", a.getText());
 
   }
 

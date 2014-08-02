@@ -102,6 +102,18 @@ public final class MediaWiki {
     BOT_GROUPS = ImmutableSet.of("bot");
   }
 
+  public static String pipeJoined(String... parts) {
+    return pipeJoined(nullSafeCopyOf(parts));
+  }
+
+  public static String pipeJoined(ImmutableList<String> parts) {
+    return pipeJoiner().join(parts);
+  }
+
+  public static Joiner pipeJoiner() {
+    return Joiner.on("|");
+  }
+
   /**
    * Representaion of MediaWiki version.
    *
@@ -319,7 +331,7 @@ public final class MediaWiki {
   }
 
   public static String createNsString(List<Integer> asList) {
-    return Joiner.on("|").join(asList);
+    return MediaWiki.pipeJoiner().join(asList);
   }
 
   public static String urlEncodedNamespace(ImmutableList<Integer> namespaces) {
