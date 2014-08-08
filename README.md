@@ -75,9 +75,9 @@ downloaded automatically.
 
 ```xml
 <dependency>
-    <groupId>net.sourceforge</groupId>
-    <artifactId>jwbf</artifactId>
-    <version>2.0.0</version>
+  <groupId>net.sourceforge</groupId>
+  <artifactId>jwbf</artifactId>
+  <version>2.0.0</version>
 </dependency>
 ```
 
@@ -91,23 +91,23 @@ and change `<version>` to its listed title.
 Add this to your `<repositories>` section:
 
 ```xml
-    <repository>
-        <id>sonatype-nexus-snapshots</id>
-        <name>Sonatype Nexus Snapshots</name>
-        <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
-        <snapshots>
-            <enabled>true</enabled>
-        </snapshots>
-    </repository>
+<repository>
+  <id>sonatype-nexus-snapshots</id>
+  <name>Sonatype Nexus Snapshots</name>
+  <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+  <snapshots>
+    <enabled>true</enabled>
+  </snapshots>
+</repository>
 ```
 
 Add this to your `<dependencies>` section:
 
 ```xml
 <dependency>
-    <groupId>net.sourceforge</groupId>
-    <artifactId>jwbf</artifactId>
-    <version>3.0.0-SNAPSHOT</version>
+  <groupId>net.sourceforge</groupId>
+  <artifactId>jwbf</artifactId>
+  <version>3.0.0-SNAPSHOT</version>
 </dependency>
 ```
 
@@ -131,13 +131,13 @@ If you are working with Wikimedia sites, set an informative User-Agent header,
  because [all Wikimedia sites require a HTTP User-Agent header for all requests](http://meta.wikimedia.org/wiki/User-Agent_policy).
 
 ```java
-    //Creating a new MediaWikiBot with an informative user agent
-    HttpActionClient client = HttpActionClient.builder() //
-        .withUrl("https://en.wikipedia.org/w/") //
-        .withUserAgent("User name/your email/jwbf/...") //
-        .withRequestsPerUnit(10, TimeUnit.MINUTES) //
-        .build();
-    MediaWikiBot wikiBot = new MediaWikiBot(client);
+//Creating a new MediaWikiBot with an informative user agent
+HttpActionClient client = HttpActionClient.builder() //
+  .withUrl("https://en.wikipedia.org/w/") //
+  .withUserAgent("BotName", "1.0", "your Email or Maintainer UserName") //
+  .withRequestsPerUnit(10, TimeUnit.MINUTES) //
+  .build();
+MediaWikiBot wikiBot = new MediaWikiBot(client);
 ```
 
 

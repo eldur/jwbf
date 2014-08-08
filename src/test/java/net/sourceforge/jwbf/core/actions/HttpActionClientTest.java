@@ -242,20 +242,168 @@ public class HttpActionClientTest {
       String result = testee.get(new Get(url));
 
       // THEN
-      ImmutableList<String> expected =
-          ImmutableList.<String>builder() //
-              .add(entry(ACCEPT_ENCODING, "gzip,deflate")) //
-              .add(entry(CONNECTION, "keep-alive")) //
-              .add(entry(HOST, "localhost:????")) //
-              .add(entry(USER_AGENT, "Apache-HttpClient/4.3.4 (java 1.5)")) //
-              .add("") //
-              .build();
+      ImmutableList<String> expected = ImmutableList.<String>builder() //
+          .add(entry(ACCEPT_ENCODING, "gzip,deflate")) //
+          .add(entry(CONNECTION, "keep-alive")) //
+          .add(entry(HOST, "localhost:????")) //
+          .add(entry(USER_AGENT, "Apache-HttpClient/4.3.4 (java 1.5)")) //
+          .add("") //
+          .build();
 
       assertEquals(Joiner.on("\n").join(expected), result);
 
     } finally {
       server.stopSilent();
     }
+  }
+
+  private String userAgentString(String userAgentString) {
+    return userAgentString +
+        "JWBF/" + JWBF.getVersion(HttpActionClient.class) + " " +
+        "Apache-HttpClient/4.3.4 (java 1.5)";
+  }
+
+  @Test
+  public void testGet_headers_customUserAgent() {
+    JettyServer server = new JettyServer();
+    try {
+      // GIVEN
+      server.setHandler(JettyServer.headerMapHandler());
+      server.startSilent();
+      String url = server.getTestUrl();
+      testee = HttpActionClient.builder() //
+          .withUserAgent("āTeštBot", "ač43e3a", "User:WikipediāUserId") //
+          .withUrl(url) //
+          .build();
+
+      // WHEN
+      String result = testee.get(new Get(url));
+
+      // THEN
+      ImmutableList<String> expected = ImmutableList.<String>builder() //
+          .add(entry(ACCEPT_ENCODING, "gzip,deflate")) //
+          .add(entry(CONNECTION, "keep-alive")) //
+          .add(entry(HOST, "localhost:????")) //
+          .add(entry(USER_AGENT, userAgentString("?Te?tBot/a?43e3a (User:Wikipedi?UserId) "))) //
+          .add("") //
+          .build();
+
+      assertEquals(Joiner.on("\n").join(expected), result);
+
+    } finally {
+      server.stopSilent();
+    }
+  }
+
+  @Test
+  public void testUserAgentNameNull() {
+    try {
+      // GIVEN / WHEN
+      HttpActionClient.builder().withUserAgent(null, "", "");
+      fail();
+    } catch (NullPointerException e) {
+      // THEN
+      assertEquals("User-Agent name must not be null", e.getMessage());
+    }
+  }
+
+  @Test
+  public void testUserAgentVersionNull() {
+    try {
+      // GIVEN / WHEN
+      HttpActionClient.builder().withUserAgent("", null, "");
+      fail();
+    } catch (NullPointerException e) {
+      // THEN
+      assertEquals("User-Agent version must not be null", e.getMessage());
+    }
+  }
+
+  @Test
+  public void testUserAgentCommentNull() {
+    try {
+      // GIVEN / WHEN
+      HttpActionClient.builder().withUserAgent("", "", null);
+      fail();
+    } catch (NullPointerException e) {
+      // THEN
+      assertEquals("User-Agent comment must not be null", e.getMessage());
+    }
+  }
+
+  @Test
+  public void testUserAgentString() {
+    // GIVEN / WHEN
+    Supplier<ImmutableList<String>> logLinesSupplier = Logging.newLogLinesSupplier();
+    List<HttpActionClient.UserAgentPart> parts = HttpActionClient.builder() //
+        .withUserAgent("test", "1.0", "written by User:Testuser - testuser@example.org") //
+        .userAgentParts;
+
+    // THEN
+    assertAgentPart("test", "1.0", "written by User:Testuser - testuser@example.org", parts);
+    GAssert.assertEquals(ImmutableList.<String>of(), logLinesSupplier.get());
+
+  }
+
+  @Test
+  public void testUserAgentString_encodingLogging() {
+    // GIVEN / WHEN
+    Supplier<ImmutableList<String>> logLinesSupplier = Logging.newLogLinesSupplier();
+    List<HttpActionClient.UserAgentPart> parts = HttpActionClient.builder() //
+        .withUserAgent("āTeštBot", "ač43e3a", "User:WikipediāUserId") //
+        .userAgentParts;
+
+    // THEN
+    assertAgentPart("?Te?tBot", "a?43e3a", "User:Wikipedi?UserId", parts);
+    GAssert.assertEquals(ImmutableList.<String>of(
+        "[WARN] \"āTeštBot\" was encoded to \"?Te?tBot\"; because only iso8859 is supported",
+        "[WARN] \"ač43e3a\" was encoded to \"a?43e3a\"; because only iso8859 is supported",
+        "[WARN] \"User:WikipediāUserId\" was encoded to \"User:Wikipedi?UserId\"; because only "
+            + "iso8859 is supported"), logLinesSupplier.get());
+  }
+
+  @Test
+  public void testUserAgentString_whitespaceLogging() {
+    // GIVEN / WHEN
+    Supplier<ImmutableList<String>> logLinesSupplier = Logging.newLogLinesSupplier();
+    List<HttpActionClient.UserAgentPart> parts = HttpActionClient.builder() //
+        .withUserAgent(" name\r //with ", " version/\n\n with ", " comment/of (me) ") //
+        .userAgentParts;
+
+    // THEN
+    assertAgentPart("name_with", "version_with", "comment/of me", parts);
+    GAssert.assertEquals(ImmutableList.<String>of(
+        "[WARN] \" name\\r //with \" was changed to \"name_with\"; because of User-Agent "
+            + "name/version rules",
+        "[WARN] \" version/\\n\\n with \" was changed to \"version_with\"; because of User-Agent "
+            + "name/version rules",
+        "[WARN] \" comment/of (me) \" was changed to \"comment/of me\"; because of User-Agent "
+            + "comment rules"), logLinesSupplier.get());
+  }
+
+  @Test
+  public void testUserAgentString_emptyLogging() {
+    // GIVEN / WHEN
+    Supplier<ImmutableList<String>> logLinesSupplier = Logging.newLogLinesSupplier();
+    List<HttpActionClient.UserAgentPart> parts = HttpActionClient.builder() //
+        .withUserAgent(" \t ", " \t ", " \n ") //
+        .userAgentParts;
+
+    // THEN
+    assertAgentPart("Unknown", "Unknown", "", parts);
+    GAssert.assertEquals(ImmutableList.<String>of(
+            "[WARN] \" \\t \" was changed to \"Unknown\"; because of User-Agent name/version rules",
+            "[WARN] \" \\t \" was changed to \"Unknown\"; because of User-Agent name/version rules",
+            "[WARN] \" \\n \" was changed to \"\"; because of User-Agent comment rules"),
+        logLinesSupplier.get());
+  }
+
+  private static void assertAgentPart(String expectedName, String expectedVersion,
+      String expectedComment, List<HttpActionClient.UserAgentPart> actualParts) {
+    HttpActionClient.UserAgentPart onlyElement = Iterables.getOnlyElement(actualParts);
+    assertEquals(expectedName, onlyElement.name);
+    assertEquals(expectedVersion, onlyElement.version);
+    assertEquals(expectedComment, onlyElement.comment);
   }
 
   @Test
@@ -269,7 +417,7 @@ public class HttpActionClientTest {
         .build();
 
     // THEN
-    GAssert.assertEquals(ImmutableList.<String>of("[WARN] a useragent must be set in your client"),
+    GAssert.assertEquals(ImmutableList.<String>of("[WARN] a User-Agent must be set in your client"),
         logLinesSupplier.get());
   }
 
@@ -285,7 +433,6 @@ public class HttpActionClientTest {
 
       HttpActionClient hac = HttpActionClient.builder() //
           .withUrl(server.getTestUrl()) //
-          .withUserAgent("none") //
           .build() //
           ;
       ResponseHandler<String> a = ContentProcessableBuilder //
@@ -303,7 +450,7 @@ public class HttpActionClientTest {
               .add(entry(CONTENT_LENGTH, "???")) //
               .add(entry(CONTENT_TYPE, "multipart/form-data; boundary=????")) //
               .add(entry(HOST, "localhost:????")) //
-              .add(entry(USER_AGENT, "none")) //
+              .add(entry(USER_AGENT, userAgentString("Unknown/Unknown "))) //
               .add("") //
               .build();
 
@@ -577,9 +724,8 @@ public class HttpActionClientTest {
       fail();
     } catch (UnsupportedOperationException e) {
       // THEN
-      assertEquals("No Handler found for java.lang.Object. Only String or File is accepted, " +
-              "because http parameters knows no other types.",
-          e.getMessage());
+      assertEquals("No Handler found for java.lang.Object. Only String or File is accepted, "
+          + "because http parameters knows no other types.", e.getMessage());
     }
   }
 
@@ -600,8 +746,8 @@ public class HttpActionClientTest {
       testee.performAction(actionHandler);
 
       // THEN
-      Mockito.verify(actionHandler)
-          .processReturningText(Mockito.isA(String.class), Mockito.eq(get));
+      Mockito.verify(actionHandler).processReturningText(Mockito.isA(String.class),
+          Mockito.eq(get));
     } finally {
       server.stopSilent();
     }

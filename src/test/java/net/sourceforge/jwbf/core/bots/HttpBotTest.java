@@ -18,6 +18,7 @@ import com.google.common.collect.ImmutableList;
 import net.sourceforge.jwbf.JWBF;
 import net.sourceforge.jwbf.JettyServer;
 import net.sourceforge.jwbf.core.actions.HttpActionClient;
+import org.apache.http.impl.client.HttpClientVersion;
 import org.eclipse.jetty.server.handler.ContextHandler;
 import org.junit.After;
 import org.junit.Test;
@@ -62,7 +63,7 @@ public class HttpBotTest {
     String result = HttpBot.getPage(client);
 
     // THEN
-    assertEquals(userAgentHeaderOf("JWBF " + JWBF.getVersion(getClass())), result);
+    assertEquals(userAgentHeaderOf("Unknown/Unknown "), result);
   }
 
   @Test
@@ -70,11 +71,12 @@ public class HttpBotTest {
     // GIVEN
     startServerWith(headerMapHandler());
     String url = server.getTestUrl();
-    String userAgent = "my user agent";
+    String userAgent = "myUserAgent";
+    String userAgentVersion = "1.0";
 
     HttpActionClient client = HttpActionClient.builder() //
         .withUrl(url) //
-        .withUserAgent(userAgent) //
+        .withUserAgent(userAgent, userAgentVersion) //
         .build();
 
     // WHEN
@@ -82,7 +84,7 @@ public class HttpBotTest {
 
     // THEN
 
-    assertEquals(userAgentHeaderOf(userAgent), result);
+    assertEquals(userAgentHeaderOf(userAgent, userAgentVersion), result);
   }
 
   @Test
@@ -99,12 +101,19 @@ public class HttpBotTest {
     assertEquals(expected, page);
   }
 
-  private String userAgentHeaderOf(String userAgent) {
+  private String userAgentHeaderOf(String userAgentName, String userAgentVersion) {
+    String userAgentString = userAgentName + "/" + userAgentVersion + " ";
+    return userAgentHeaderOf(userAgentString);
+  }
+
+  private String userAgentHeaderOf(String userAgentString) {
     ImmutableList<String> expected =
         ImmutableList.<String>builder().add(entry(ACCEPT_ENCODING, "gzip,deflate")) //
             .add(entry(CONNECTION, "keep-alive")) //
             .add(entry(HOST, "localhost:????")) //
-            .add(entry(USER_AGENT, userAgent)) //
+            .add(entry(USER_AGENT, userAgentString +
+                "JWBF/" + JWBF.getVersion(HttpActionClient.class) + " " +
+                HttpClientVersion.DEFAULT_USER_AGENT)) //
             .build();
 
     return Joiner.on("\n").join(expected) + "\n";

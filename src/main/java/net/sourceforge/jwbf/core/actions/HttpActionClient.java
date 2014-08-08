@@ -20,6 +20,7 @@
 package net.sourceforge.jwbf.core.actions;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -28,12 +29,15 @@ import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import com.google.common.annotations.Beta;
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Function;
 import com.google.common.base.Joiner;
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
@@ -41,9 +45,11 @@ import com.google.common.base.Predicates;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 import com.google.common.io.CharStreams;
 import com.google.common.util.concurrent.RateLimiter;
 import net.sourceforge.jwbf.JWBF;
+import net.sourceforge.jwbf.core.Transform;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
@@ -57,6 +63,7 @@ import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.client.HttpClientVersion;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -68,7 +75,6 @@ import org.slf4j.LoggerFactory;
 public class HttpActionClient {
 
   private static final Logger log = LoggerFactory.getLogger(HttpActionClient.class);
-  private static final String USER_AGENT = "JWBF " + JWBF.getVersion(HttpActionClient.class);
 
   private final HttpClient client;
 
@@ -334,29 +340,66 @@ public class HttpActionClient {
 
   public static class Builder {
 
+    private static final Function<UserAgentPart, String> TO_STRING =
+        new Function<UserAgentPart, String>() {
+          @Nullable
+          @Override
+          public String apply(@Nullable UserAgentPart input) {
+            final String comment;
+            if (!Strings.isNullOrEmpty(input.comment)) {
+              comment = " (" + input.comment + ")";
+            } else {
+              comment = "";
+            }
+            return input.name + "/" + input.version + comment;
+          }
+        };
+
     private double requestsPerSecond = -1;
     private HttpClient client;
     private URL url;
-    private String userAgent;
+    @VisibleForTesting
+    List<UserAgentPart> userAgentParts = Lists.newArrayList();
 
-    public Builder withUserAgent(String userAgent) {
-      this.userAgent = userAgent;
+    public Builder withUserAgent(String userAgentName, String userAgentVersion,
+        String userAgentComment) {
+      String nonNullUserAgentName = Preconditions.checkNotNull(userAgentName,
+          "User-Agent name must not be null");
+      String nonNullUserAgentVersion = Preconditions.checkNotNull(userAgentVersion,
+          "User-Agent version must not be null");
+      String nonNullUserAgentComment = Preconditions.checkNotNull(userAgentComment,
+          "User-Agent comment must not be null");
+      String encodedName = toISO8859(trimAndReplaceWhitespace(nonNullUserAgentName));
+      String encodedVersion = toISO8859(trimAndReplaceWhitespace(nonNullUserAgentVersion));
+      String encodedComment = toISO8859(trimAndRemoveWhitespace(nonNullUserAgentComment));
+      this.userAgentParts.add(new UserAgentPart(encodedName, encodedVersion, encodedComment));
       return this;
+    }
+
+    public Builder withUserAgent(String userAgentName, String userAgentVersion) {
+      return withUserAgent(userAgentName, userAgentVersion, "");
     }
 
     public HttpActionClient build() {
       if (client == null) {
-        if (Strings.isNullOrEmpty(userAgent)) {
-          userAgent = USER_AGENT;
+        if (userAgentParts.isEmpty()) {
+          withUserAgent("Unknown", "Unknown");
         }
+        withUserAgent("JWBF", JWBF.getVersion(HttpActionClient.class));
         HttpClientBuilder httpClientBuilder = HttpClientBuilder.create();
-        httpClientBuilder.setUserAgent(userAgent);
+        httpClientBuilder.setUserAgent(makeUserAgentString(userAgentParts));
         withClient(httpClientBuilder.build());
-
       } else {
-        log.warn("a useragent must be set in your client");
+        log.warn("a User-Agent must be set in your client");
       }
       return new HttpActionClient(this);
+    }
+
+    private static String makeUserAgentString(List<UserAgentPart> userAgentParts) {
+      String userAgent = Joiner.on(" ") //
+          .join(Transform.the(userAgentParts, TO_STRING)) + " " +
+          HttpClientVersion.DEFAULT_USER_AGENT;
+      return userAgent.trim();
     }
 
     public Builder withClient(HttpClient client) {
@@ -378,6 +421,40 @@ public class HttpActionClient {
       this.requestsPerSecond = requestsPer / seconds;
       return this;
     }
+  }
+
+  private static String trimAndRemoveWhitespace(String in) {
+    String changed = in.trim().replaceAll("[\r\n()]+", "");
+    return logIfDifferent(in, changed, "\"{}\" was changed to \"{}\"; because of User-Agent " +
+        "comment rules");
+  }
+
+  private static String trimAndReplaceWhitespace(String in) {
+    String changed = emptyToUnknown(in.trim().replaceAll("[\r\n/]+", "").replaceAll("[ ]+", "_"));
+    return logIfDifferent(in, changed, "\"{}\" was changed to \"{}\"; because of User-Agent " +
+        "name/version rules");
+  }
+
+  private static String toISO8859(String toEncode) {
+    String encoded = new String(StandardCharsets.ISO_8859_1.encode(toEncode).array());
+    return logIfDifferent(toEncode, encoded,
+        "\"{}\" was encoded to \"{}\"; because only iso8859 is supported");
+  }
+
+  private static String emptyToUnknown(String changed) {
+    if (changed.isEmpty()) {
+      return "Unknown";
+    }
+    return changed;
+  }
+
+  private static String logIfDifferent(String original, String changed, String msg) {
+    if (!changed.equals(original)) {
+      String originalWithVisibleWhitespace = original.replaceAll("\n", "\\\\n").replaceAll("\r",
+          "\\\\r").replaceAll("\t", "\\\\t");
+      log.warn(msg, originalWithVisibleWhitespace, changed);
+    }
+    return changed;
   }
 
   public static HttpActionClient of(String url) {
@@ -405,6 +482,19 @@ public class HttpActionClient {
     public String processReturningText(String s, HttpAction action) {
       actionHandler.processReturningText(s, action);
       return "";
+    }
+  }
+
+  @VisibleForTesting
+  static class UserAgentPart {
+    final String name;
+    final String version;
+    final String comment;
+
+    UserAgentPart(String name, String version, String comment) {
+      this.name = Preconditions.checkNotNull(name);
+      this.version = Preconditions.checkNotNull(version);
+      this.comment = Preconditions.checkNotNull(comment);
     }
   }
 
