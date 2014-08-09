@@ -5,6 +5,7 @@ import static org.junit.Assert.fail;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableMultimap;
 import org.junit.ComparisonFailure;
 import org.junit.Test;
 
@@ -37,6 +38,22 @@ public class GAssertTest {
   }
 
   @Test
+  public void testAssertEquals_listTypes_fail() {
+    // GIVEN
+    ImmutableList<String> expected = ImmutableList.of("a");
+    ImmutableList<Integer> actual = ImmutableList.of(4);
+
+    try {
+      // WHEN
+      GAssert.assertEquals(expected, actual);
+      fail();
+    } catch (ComparisonFailure e) {
+      // THEN
+      assertEquals("expected:<[a]> but was:<[4]>", e.getMessage());
+    }
+  }
+
+  @Test
   public void testAssertEquals_map() {
     // GIVEN
     ImmutableMap<String, String> expected = ImmutableMap.of("a", "a");
@@ -49,7 +66,7 @@ public class GAssertTest {
   @Test
   public void testAssertEquals_map_key_fail() {
     // GIVEN
-    ImmutableMap<String, String> expected = ImmutableMap.of("a","a");
+    ImmutableMap<String, String> expected = ImmutableMap.of("a", "a");
     ImmutableMap<String, String> actual = ImmutableMap.of("b", "b");
 
     try {
@@ -63,9 +80,26 @@ public class GAssertTest {
   }
 
   @Test
+  public void testAssertEquals_map_key_type_fail() {
+    // GIVEN
+    ImmutableMap<Integer, String> expected = ImmutableMap.of(4, "a");
+    ImmutableMap<String, String> actual = ImmutableMap.of("b", "b");
+
+    try {
+      // WHEN
+      GAssert.assertEquals(expected, actual);
+      fail();
+    } catch (ComparisonFailure e) {
+      // THEN
+      assertEquals("expected:<{[4 [java.lang.Integer]}={a] [java.lang.String]}>"
+          + " but was:<{[b [java.lang.String]}={b] [java.lang.String]}>", e.getMessage());
+    }
+  }
+
+  @Test
   public void testAssertEquals_map_value_fail() {
     // GIVEN
-    ImmutableMap<String, String> expected = ImmutableMap.of("a","a");
+    ImmutableMap<String, String> expected = ImmutableMap.of("a", "a");
     ImmutableMap<String, String> actual = ImmutableMap.of("a", "b");
 
     try {
@@ -75,6 +109,42 @@ public class GAssertTest {
     } catch (ComparisonFailure e) {
       // THEN
       assertEquals("expected:<a=[a]> but was:<a=[b]>", e.getMessage());
+    }
+  }
+
+  @Test
+  public void testAssertEquals_map_value_types_fail() {
+    // GIVEN
+    ImmutableMap<String, Integer> expected = ImmutableMap.of("a", 4);
+    ImmutableMap<String, String> actual = ImmutableMap.of("a", "b");
+
+    try {
+      // WHEN
+      GAssert.assertEquals(expected, actual);
+      fail();
+    } catch (ComparisonFailure e) {
+      // THEN
+      assertEquals("expected:<...java.lang.String]}={[4 [java.lang.Integer]]}> "
+          + "but was:<...java.lang.String]}={[b [java.lang.String]]}>", e.getMessage());
+    }
+  }
+
+  @Test
+  public void testAssertEquals_multimap_value_types_fail() {
+    // GIVEN
+    ImmutableMultimap<String, Integer> expected = ImmutableMultimap.of("a", 4, "a", 5);
+    ImmutableMultimap<String, String> actual = ImmutableMultimap.of("a", "b", "a", "c");
+
+    try {
+      // WHEN
+      GAssert.assertEquals(expected, actual);
+      fail();
+    } catch (ComparisonFailure e) {
+      // THEN
+      assertEquals("expected:<...java.lang.String]}={[4 [java.lang.Integer]}\n"
+          + "  {5 [java.lang.Integer]]}\n"
+          + "> but was:<...java.lang.String]}={[b [java.lang.String]}\n"
+          + "  {c [java.lang.String]]}\n" + ">", e.getMessage());
     }
   }
 
