@@ -6,6 +6,9 @@ import static org.junit.Assert.fail;
 
 import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
+import com.google.common.collect.ImmutableMultimap;
+import net.sourceforge.jwbf.GAssert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class RequestBuilderTest {
@@ -171,7 +174,6 @@ public class RequestBuilderTest {
     assertEquals(post, newPost);
   }
 
-
   @Test
   public void testBuildPostWithParams() {
     // GIVEN
@@ -189,6 +191,28 @@ public class RequestBuilderTest {
 
     // WHEN / THEN
     assertEquals(post, post2);
+  }
+
+  @Test
+  @Ignore
+  public void testBuildWithParamTuples() {
+    // GIVEN
+    ParamTuple<String> a = new ParamTuple("a", 4);
+    ParamTuple b = new ParamTuple("c", 4);
+
+    // WHEN
+    Post post2 = RequestBuilder.of("/") //
+        //.param(a) // TODO test for both
+        .postParam(b) // TODO - " -
+        .buildPost() //
+        ;
+
+    // THEN
+    assertEquals("/", post2.getRequest());
+
+    ImmutableMultimap<String, Object> params = post2.getParams();
+    ImmutableMultimap<String, Object> expected = ImmutableMultimap.<String, Object>of("c", "4");
+    GAssert.assertEquals(expected, params);
   }
 
   @Test(expected = IllegalStateException.class)

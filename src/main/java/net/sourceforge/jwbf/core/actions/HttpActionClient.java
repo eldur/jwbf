@@ -202,7 +202,9 @@ public class HttpActionClient {
         entityBuilder.addBinaryBody(key, file);
       } else {
         String canonicalName = content.getClass().getCanonicalName();
-        throw new UnsupportedOperationException("No Handler found for " + canonicalName);
+        throw new UnsupportedOperationException("No Handler found for " + canonicalName +
+            ". Only String or File is accepted, " +
+            "because http parameters knows no other types.");
       }
     }
   }

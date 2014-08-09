@@ -6,8 +6,12 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.io.File;
+import java.util.Locale;
+
 import com.google.common.base.Suppliers;
 import com.google.common.collect.ImmutableMultimap;
+import net.sourceforge.jwbf.GAssert;
 import org.junit.Test;
 
 public class PostTest {
@@ -73,6 +77,77 @@ public class PostTest {
     // THEN
     assertEquals(url, request);
     assertEquals(ImmutableMultimap.of("a", "b"), params);
+  }
+
+  @Test
+  public void testWithParamInt() {
+    // GIVEN
+    String url = "http://localhost/";
+
+    // WHEN
+    ImmutableMultimap<String, Object> postWithInt = RequestBuilder.of(url) //
+        .postParam("a", 5) //
+        .buildPost().getParams();
+
+    // THEN
+    GAssert.assertEquals(ImmutableMultimap.of("a", "5"), postWithInt);
+  }
+
+  @Test
+  public void testWithParamDouble0() {
+    // GIVEN
+    String url = "http://localhost/";
+
+    // WHEN
+    ImmutableMultimap<String, Object> postWithDouble = RequestBuilder.of(url) //
+        .postParam("a", 5d, Locale.US, "%1.0f") //
+        .buildPost().getParams();
+
+    // THEN
+    GAssert.assertEquals(ImmutableMultimap.of("a", "5"), postWithDouble);
+  }
+
+  @Test
+  public void testWithParamDouble() {
+    // GIVEN
+    String url = "http://localhost/";
+
+    // WHEN
+    ImmutableMultimap<String, Object> postWithDouble = RequestBuilder.of(url) //
+        .postParam("a", 5.000_00d, Locale.US, "%4.3f") //
+        .buildPost().getParams();
+
+    // THEN
+    GAssert.assertEquals(ImmutableMultimap.of("a", "5.000"), postWithDouble);
+  }
+
+  @Test
+  public void testWithParamDouble1() {
+    // GIVEN
+    String url = "http://localhost/";
+
+    // WHEN
+    ImmutableMultimap<String, Object> postWithDouble = RequestBuilder.of(url) //
+        .postParam("a", 5.000_1d, Locale.GERMANY, "%.4f") //
+        .buildPost().getParams();
+
+    // THEN
+    GAssert.assertEquals(ImmutableMultimap.of("a", "5,0001"), postWithDouble);
+  }
+
+  @Test
+  public void testWithParamFile() {
+    // GIVEN
+    String url = "http://localhost/";
+    File file = new File("test");
+
+    // WHEN
+    ImmutableMultimap<String, Object> postWithInt = RequestBuilder.of(url) //
+        .postParam("a", file) //
+        .buildPost().getParams();
+
+    // THEN
+    GAssert.assertEquals(ImmutableMultimap.of("a", file), postWithInt);
   }
 
   @Test

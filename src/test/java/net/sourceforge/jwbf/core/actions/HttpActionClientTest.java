@@ -577,7 +577,9 @@ public class HttpActionClientTest {
       fail();
     } catch (UnsupportedOperationException e) {
       // THEN
-      assertEquals("No Handler found for java.lang.Object", e.getMessage());
+      assertEquals("No Handler found for java.lang.Object. Only String or File is accepted, " +
+              "because http parameters knows no other types.",
+          e.getMessage());
     }
   }
 

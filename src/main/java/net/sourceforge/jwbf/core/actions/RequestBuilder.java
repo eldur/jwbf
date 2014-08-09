@@ -1,6 +1,8 @@
 package net.sourceforge.jwbf.core.actions;
 
+import java.io.File;
 import java.io.Serializable;
+import java.util.Locale;
 
 import com.google.common.base.Charsets;
 import com.google.common.base.Optional;
@@ -31,12 +33,11 @@ public class RequestBuilder {
     return applyKeyValueTo(key, stringSupplier, params);
   }
 
-  public RequestBuilder param(ParamTuple paramTuple) {
+  public RequestBuilder param(ParamTuple<String> paramTuple) {
     return param(paramTuple.key, paramTuple.valueSupplier);
   }
 
-  private <T> RequestBuilder applyKeyValueTo(String key, Supplier<?>
-      stringSupplier,
+  private <T> RequestBuilder applyKeyValueTo(String key, Supplier<?> stringSupplier,
       ImmutableMultimap.Builder<String, Supplier<T>> toParams) {
     if (!Strings.isNullOrEmpty(key)) {
       Preconditions.checkNotNull(stringSupplier);
@@ -59,12 +60,28 @@ public class RequestBuilder {
     return this;
   }
 
-  public RequestBuilder postParam(String key, Object value) {
+  private RequestBuilder postParam(String key, Object value) {
     return applyKeyValueTo(key, Suppliers.ofInstance(value), postParams);
   }
 
+  public RequestBuilder postParam(String key, String value) {
+    return postParam(key, (Object) value);
+  }
+
+  public RequestBuilder postParam(String key, int value) {
+    return postParam(key, value + "");
+  }
+
+  public RequestBuilder postParam(String key, double value, Locale locale, String format) {
+    return postParam(key, String.format(locale, format, value));
+  }
+
+  public RequestBuilder postParam(String key, File value) {
+    return postParam(key, (Object) value);
+  }
+
   public RequestBuilder postParam(ParamTuple<?> paramTuple) {
-    Supplier<? extends Object> val =  paramTuple.valueSupplier;
+    Supplier<? extends Object> val = paramTuple.valueSupplier;
     return applyKeyValueTo(paramTuple.key, val, postParams);
   }
 
