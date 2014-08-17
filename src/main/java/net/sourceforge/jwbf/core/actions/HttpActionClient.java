@@ -142,7 +142,6 @@ public class HttpActionClient {
   }
 
   @Beta
-  @Nonnull
   public synchronized void performAction(ActionHandler actionHandler) {
     while (actionHandler.hasMoreActions()) {
       HttpAction httpAction = actionHandler.popAction();

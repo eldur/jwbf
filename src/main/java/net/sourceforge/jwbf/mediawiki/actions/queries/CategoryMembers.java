@@ -119,6 +119,7 @@ abstract class CategoryMembers extends TitleQuery<CategoryItem> {
    *
    * @param s text for parsing
    */
+  @Override
   public String parseHasMore(final String s) {
 
     Matcher m = CONTINUE_PATTERN.matcher(s);
@@ -137,6 +138,7 @@ abstract class CategoryMembers extends TitleQuery<CategoryItem> {
    *
    * @param s text for parsing
    */
+  @Override
   public ImmutableList<CategoryItem> parseArticleTitles(String s) {
 
     Optional<XmlElement> rootElementWithError = XmlConverter.getRootElementWithError(s);

@@ -227,6 +227,7 @@ public class MediaWikiBotTest {
 
   private void mockValidLogin(final String username, HttpActionClient mockClient) {
     doAnswer(new Answer<Void>() {
+      @Override
       public Void answer(InvocationOnMock invocation) throws Throwable {
         Object[] args = invocation.getArguments();
         if (args[0] instanceof PostLogin) {

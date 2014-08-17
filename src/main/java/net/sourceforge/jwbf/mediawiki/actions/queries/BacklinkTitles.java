@@ -88,7 +88,7 @@ public class BacklinkTitles extends TitleQuery<String> {
   }
 
   public BacklinkTitles(MediaWikiBot bot, String articleName) {
-    this(bot, articleName, RedirectFilter.all, null);
+    this(bot, articleName, RedirectFilter.all);
 
   }
 
@@ -131,7 +131,7 @@ public class BacklinkTitles extends TitleQuery<String> {
   protected ImmutableList<String> parseArticleTitles(String s) {
 
     // get the other backlink titles and add them all to the titleCollection
-    ImmutableList.Builder<String> titleCollection = ImmutableList.<String>builder();
+    ImmutableList.Builder<String> titleCollection = ImmutableList.builder();
 
     Pattern p =
         Pattern.compile("<bl pageid=\".*?\" ns=\".*?\" title=\"([^\"]*)\" (redirect=\"\" )?/>");

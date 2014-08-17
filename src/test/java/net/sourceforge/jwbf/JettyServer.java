@@ -76,13 +76,14 @@ public class JettyServer extends Server {
 
           @Override
           public String transformEntry(String key, String value) {
-            if (key.equals(HttpHeaders.HOST)) {
+            switch (key) {
+            case HttpHeaders.HOST:
               return value.replaceAll("localhost:[0-9]+", "localhost:????");
-            } else if (key.equals(HttpHeaders.CONTENT_TYPE)) {
+            case HttpHeaders.CONTENT_TYPE:
               return value.replaceAll("(boundary=)(.*)", "$1????");
-            } else if (key.equals(HttpHeaders.CONTENT_LENGTH)) {
+            case HttpHeaders.CONTENT_LENGTH:
               return "???";
-            } else {
+            default:
               return value;
             }
           }

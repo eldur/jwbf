@@ -37,8 +37,9 @@ public class GetApiToken extends DequeMWAction<GetApiToken.TokenResponse> {
        * @return the requested urlEncodedToken
        */
       @Nonnull
-      public ParamTuple urlEncodedToken() {
-        return new ParamTuple("token", MediaWiki.urlEncode(getToken()));
+      @Override
+      public ParamTuple<String> urlEncodedToken() {
+        return new ParamTuple<>("token", MediaWiki.urlEncode(getToken()));
       }
 
       private String getToken() {
@@ -46,8 +47,9 @@ public class GetApiToken extends DequeMWAction<GetApiToken.TokenResponse> {
       }
 
       @Nonnull
-      public ParamTuple token() {
-        return new ParamTuple("token", getToken());
+      @Override
+      public ParamTuple<String> token() {
+        return new ParamTuple<>("token", getToken());
       }
     };
   }

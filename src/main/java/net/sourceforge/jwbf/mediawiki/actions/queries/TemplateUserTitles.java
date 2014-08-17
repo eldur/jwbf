@@ -138,7 +138,7 @@ public class TemplateUserTitles extends TitleQuery<String> {
   protected ImmutableList<String> parseArticleTitles(String s) {
 
     Matcher m = TEMPLATE_USAGE_PATTERN.matcher(s);
-    ImmutableList.Builder<String> titleCollection = ImmutableList.<String>builder();
+    ImmutableList.Builder<String> titleCollection = ImmutableList.builder();
     while (m.find()) {
       titleCollection.add(m.group(1));
     }
