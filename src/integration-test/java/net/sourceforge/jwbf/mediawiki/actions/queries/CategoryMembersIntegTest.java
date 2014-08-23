@@ -8,6 +8,7 @@ import net.sourceforge.jwbf.GAssert;
 import net.sourceforge.jwbf.mediawiki.ApiMatcherBuilder;
 import net.sourceforge.jwbf.mediawiki.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.MocoIntegTest;
+import net.sourceforge.jwbf.mediawiki.actions.util.ApiException;
 import net.sourceforge.jwbf.mediawiki.contentRep.CategoryItem;
 import org.junit.Test;
 
@@ -64,9 +65,9 @@ public class CategoryMembersIntegTest extends MocoIntegTest {
     try {
       CategoryMembersLiveIntegTest.copyWithoutDuplicatesOf(testee, 3);
       fail();
-    } catch (IllegalStateException e) {
+    } catch (ApiException e) {
       // THEN
-      assertEquals("You need read permission to use this module", e.getMessage());
+      assertEquals("You need read permission to use this module", e.getValue());
     }
   }
 

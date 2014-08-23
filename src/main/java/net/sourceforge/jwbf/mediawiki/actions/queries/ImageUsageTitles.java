@@ -59,9 +59,9 @@ public class ImageUsageTitles extends TitleQuery<String> {
   private final VersionHandler handler;
 
   @Deprecated
-  private static final Pattern CONTINUE_PATTERN =
-      Pattern.compile("<query-continue>.*?<imageusage *iucontinue=\"([^\"]*)\" */>" +
-          ".*?</query-continue>", Pattern.DOTALL | Pattern.MULTILINE);
+  private static final Pattern CONTINUE_PATTERN = Pattern.compile(
+      "<query-continue>.*?<imageusage *iucontinue=\"([^\"]*)\" */>" + ".*?</query-continue>",
+      Pattern.DOTALL | Pattern.MULTILINE);
 
   @Deprecated
   private static final Pattern TITLE_PATTERN =

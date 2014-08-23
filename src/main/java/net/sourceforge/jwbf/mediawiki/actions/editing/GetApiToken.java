@@ -56,6 +56,7 @@ public class GetApiToken extends DequeMWAction<GetApiToken.TokenResponse> {
 
   public interface TokenResponse {
     ParamTuple<String> urlEncodedToken();
+
     ParamTuple<String> token();
   }
 
@@ -126,23 +127,18 @@ public class GetApiToken extends DequeMWAction<GetApiToken.TokenResponse> {
   @Override
   public void processReturningText(String s, HttpAction hm) {
     if (hm.getRequest().equals(msg.getRequest())) {
-      log.trace("enter GetToken.processAllReturningText(String)");
       log.debug("Got returning text: \"{}\"", s);
       try {
-        XmlElement elem =
-            XmlConverter.getRootElement(s).getChild("query").getChild("pages").getChild("page");
-        // TODO check for null
+        XmlElement elem = XmlConverter.getChild(s, "query", "pages", "page");
         token = Optional.fromNullable(elem).transform(TOKEN_FUNCTIONS.get(intoken));
         // TODO check intoken from tokenfunc for null
 
-        if (log.isDebugEnabled()) {
-          log.debug("urlEncodedToken = {} for: {}", token, msg.getRequest());
-        }
+        log.debug("urlEncodedToken = {} for: {}", token, msg.getRequest());
         // TODO check catch
       } catch (IllegalArgumentException e) {
         if (s.startsWith("unknown_action:")) {
-          log.error("Adding '$wgEnableWriteAPI = true;' " +
-              "to your MediaWiki's LocalSettings.php might remove this problem.", e);
+          log.error("Adding '$wgEnableWriteAPI = true;' "
+              + "to your MediaWiki's LocalSettings.php might remove this problem.", e);
         } else {
           log.error(e.getMessage(), e);
         }
@@ -156,8 +152,7 @@ public class GetApiToken extends DequeMWAction<GetApiToken.TokenResponse> {
       @Override
       public String apply(XmlElement xmlElement) {
         XmlElement xmlElementNonNull = Preconditions.checkNotNull(xmlElement);
-        return Preconditions.checkNotNull(xmlElementNonNull.getAttributeValue(key),
-            "no attribute found for key: " + key);
+        return xmlElementNonNull.getAttributeValueNonNull(key);
       }
     };
   }

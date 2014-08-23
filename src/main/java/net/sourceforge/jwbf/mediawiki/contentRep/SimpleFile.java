@@ -91,7 +91,7 @@ public class SimpleFile extends SimpleArticle {
    */
   @Override
   public boolean equals(Object obj) {
-    if (obj instanceof  SimpleFile) {
+    if (obj instanceof SimpleFile) {
       SimpleFile that = (SimpleFile) obj;
       return super.equals(that) && Objects.equals(this.file, that.file);
     } else {

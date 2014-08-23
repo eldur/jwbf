@@ -4,7 +4,7 @@ import com.google.common.base.Strings;
 import net.sourceforge.jwbf.core.actions.RequestBuilder;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.core.actions.util.ProcessException;
-import net.sourceforge.jwbf.mapper.XmlElement;
+import net.sourceforge.jwbf.mapper.XmlConverter;
 import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
 import net.sourceforge.jwbf.mediawiki.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
@@ -120,33 +120,17 @@ public class MovePage extends MWAction {
    * {@inheritDoc}
    */
   @Override
-  public String processReturningText(String s, HttpAction hm) {
-    super.processReturningText(s, hm);
-
+  public String processReturningText(String xml, HttpAction hm) {
+    XmlConverter.failOnError(xml);
     if (moveToken) {
-      token.processReturningText(s, hm);
+      token.processReturningText(xml, hm);
       moveToken = false;
     } else {
-      log.trace("enter MovePage.processAllReturningText(String)");
-      log.debug("Got returning text: \"{}\"", s);
-      process(getRootElement(s));
+      log.debug("Got returning text: \"{}\"", xml);
       setHasMoreMessages(false);
     }
 
     return "";
-  }
-
-  private void process(XmlElement rootXmlElement) {
-    XmlElement elem = rootXmlElement.getChild("move");
-    if (elem != null) {
-      if (log.isInfoEnabled()) {
-        log.info("Moved article '" + elem.getAttributeValue("from") + "' to '" +
-            elem.getAttributeValue("to") + "'" +
-            " with reason '" + elem.getAttributeValue("reason") + "'");
-      }
-    } else {
-      log.error("Unknow reply. This is not a reply for a delete action.");
-    }
   }
 
   /**

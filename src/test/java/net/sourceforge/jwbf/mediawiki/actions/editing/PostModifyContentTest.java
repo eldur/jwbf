@@ -100,7 +100,8 @@ public class PostModifyContentTest {
   public void testGetNextMessageBotEdit() {
     when(userinfo.getGroups()).thenReturn(of("bot", "user"));
     ImmutableMultimap<String, Object> params = getParams();
-    assertEquals("{summary=[], text=[], bot=[], notminor=[], token=[!testToken]}", params.toString());
+    assertEquals("{summary=[], text=[], bot=[], notminor=[], token=[!testToken]}",
+        params.toString());
   }
 
   private ImmutableMultimap<String, Object> getParams() {

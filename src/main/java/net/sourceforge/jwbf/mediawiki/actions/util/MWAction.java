@@ -18,17 +18,12 @@
  */
 package net.sourceforge.jwbf.mediawiki.actions.util;
 
-import javax.annotation.CheckForNull;
-import javax.annotation.Nonnull;
 import java.util.List;
 
 import com.google.common.base.Joiner;
 import com.google.common.primitives.Ints;
-import net.sourceforge.jwbf.core.Optionals;
 import net.sourceforge.jwbf.core.actions.ContentProcessable;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
-import net.sourceforge.jwbf.mapper.XmlConverter;
-import net.sourceforge.jwbf.mapper.XmlElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -120,28 +115,6 @@ public abstract class MWAction implements ContentProcessable {
   @Deprecated
   public boolean isSelfExecuter() {
     return false;
-  }
-
-  @Nonnull
-  protected XmlElement getRootElement(final String xml) {
-    return XmlConverter.getRootElement(xml);
-  }
-
-  @Nonnull
-  protected XmlElement getRootElementWithError(final String xml) {
-    return Optionals.getOrThrow(XmlConverter.getRootElementWithError(xml), "Invalid XML: " + xml);
-  }
-
-  /**
-   * Determines if the given XML Document contains an error message which then would printed by the
-   * logger.
-   *
-   * @param rootXmlElement XML <code>Document</code>
-   * @return error element
-   */
-  @CheckForNull
-  protected XmlElement getErrorElement(XmlElement rootXmlElement) {
-    return rootXmlElement.getErrorElement().orNull();
   }
 
   /**

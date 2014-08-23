@@ -21,13 +21,11 @@ package net.sourceforge.jwbf.mediawiki.actions.queries;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import com.google.common.primitives.Ints;
 import net.sourceforge.jwbf.core.actions.Get;
 import net.sourceforge.jwbf.core.actions.RequestBuilder;
 import net.sourceforge.jwbf.mapper.XmlConverter;
-import net.sourceforge.jwbf.mapper.XmlElement;
 import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
 import net.sourceforge.jwbf.mediawiki.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
@@ -136,24 +134,20 @@ abstract class CategoryMembers extends TitleQuery<CategoryItem> {
   /**
    * picks the article name from a MediaWiki api response.
    *
-   * @param s text for parsing
+   * @param xml text for parsing
    */
   @Override
-  public ImmutableList<CategoryItem> parseArticleTitles(String s) {
+  public ImmutableList<CategoryItem> parseArticleTitles(String xml) {
 
-    Optional<XmlElement> rootElementWithError = XmlConverter.getRootElementWithError(s);
-    Optional<XmlElement> errorElement = rootElementWithError.get().getErrorElement();
-    if (errorElement.isPresent()) {
-      throw new IllegalStateException(errorElement.get().getAttributeValue("info"));
-    }
-    Matcher m = CATEGORY_PATTERN.matcher(s);
+    XmlConverter.failOnError(xml);
+    Matcher m = CATEGORY_PATTERN.matcher(xml);
 
     ImmutableList.Builder<CategoryItem> listBuilder = ImmutableList.builder();
     while (m.find()) {
       String title = m.group(3);
       int namespace = Integer.parseInt(m.group(2));
-      int pageid = Integer.parseInt(m.group(1));
-      CategoryItem categoryItem = new CategoryItem(title, namespace, pageid);
+      int pageId = Integer.parseInt(m.group(1));
+      CategoryItem categoryItem = new CategoryItem(title, namespace, pageId);
       listBuilder.add(categoryItem);
     }
     return listBuilder.build();

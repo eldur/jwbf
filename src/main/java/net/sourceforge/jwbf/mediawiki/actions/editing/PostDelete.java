@@ -1,14 +1,17 @@
 package net.sourceforge.jwbf.mediawiki.actions.editing;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Optional;
 import net.sourceforge.jwbf.core.actions.Post;
 import net.sourceforge.jwbf.core.actions.RequestBuilder;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.core.actions.util.ProcessException;
 import net.sourceforge.jwbf.core.contentRep.Userinfo;
+import net.sourceforge.jwbf.mapper.XmlConverter;
 import net.sourceforge.jwbf.mapper.XmlElement;
 import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
 import net.sourceforge.jwbf.mediawiki.MediaWiki;
+import net.sourceforge.jwbf.mediawiki.actions.util.ApiException;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -112,13 +115,26 @@ public class PostDelete extends MWAction {
 
   @VisibleForTesting
   void parseXml(String xml) {
-    log.trace("enter PostDelete.processAllReturningText(String)");
     log.debug("Got returning text: \"{}\"", xml);
     try {
-      XmlElement doc = getRootElementWithError(xml);
-      if (getErrorElement(doc) == null) {
-        process(doc);
+      XmlElement doc = XmlConverter.getRootElementWithError(xml);
+      Optional<ApiException> exceptionOptional = doc.getErrorElement() //
+          .transform(XmlConverter.toApiException());
+      if (exceptionOptional.isPresent()) {
+        ApiException apiException = exceptionOptional.get();
+        String code = apiException.getCode();
+        if ("missingtitle".equals(code)) {
+          log.warn("{}", apiException.getValue());
+          // XXX ignore this error
+        } else if ("inpermissiondenied".equals(code)) {
+          log.error("Adding '$wgGroupPermissions['bot']['delete'] = true;'" + //
+              " to your MediaWiki's LocalSettings.php might remove this problem.");
+          throw apiException;
+        } else {
+          throw apiException;
+        }
       }
+      logDelete(doc);
     } catch (IllegalArgumentException e) {
       String msg = e.getMessage();
       log.error(msg, e);
@@ -131,24 +147,7 @@ public class PostDelete extends MWAction {
     }
   }
 
-  /**
-   * Determines if the given XML Document contains an error message which then would printed by the
-   * logger.
-   */
-  @Override
-  protected XmlElement getErrorElement(XmlElement rootXmlElement) {
-    XmlElement containsError = super.getErrorElement(rootXmlElement);
-    if (containsError != null) {
-      log.warn("{}", containsError.getAttributeValue("info"));
-      if ("inpermissiondenied".equals(containsError.getAttributeValue("code"))) {
-        log.error("Adding '$wgGroupPermissions['bot']['delete'] = true;'" + //
-            " to your MediaWiki's LocalSettings.php might remove this problem.");
-      }
-    }
-    return containsError;
-  }
-
-  private void process(XmlElement rootXmlElement) {
+  private void logDelete(XmlElement rootXmlElement) {
     XmlElement elem = rootXmlElement.getChild("delete");
     if (elem != null) {
       // process reply for delete request

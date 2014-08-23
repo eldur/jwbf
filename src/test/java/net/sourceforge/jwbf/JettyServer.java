@@ -155,7 +155,7 @@ public class JettyServer extends Server {
       if (false && request.getContentType() != null &&
           request.getContentType().startsWith("multipart/form-data")) {
         req.setAttribute(Request.__MULTIPART_CONFIG_ELEMENT, MULTI_PART_CONFIG);
-        writer
+        writer //
             .println(joiner.join(Iterables.transform(req.getParts(), new Function<Part, String>() {
               @Nullable
               @Override

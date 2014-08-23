@@ -30,6 +30,7 @@ import net.sourceforge.jwbf.core.actions.RequestBuilder;
 import net.sourceforge.jwbf.core.actions.util.ActionException;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.core.actions.util.ProcessException;
+import net.sourceforge.jwbf.mapper.XmlConverter;
 import net.sourceforge.jwbf.mapper.XmlElement;
 import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
@@ -152,7 +153,7 @@ public class LogEvents extends MWAction implements Iterator<LogItem>, Iterable<L
    */
   private void parseArticleTitles(String xml) {
 
-    XmlElement root = getRootElement(xml);
+    XmlElement root = XmlConverter.getRootElement(xml);
     findContent(root);
 
   }

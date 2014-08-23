@@ -21,11 +21,11 @@ package net.sourceforge.jwbf.mediawiki.actions.editing;
 import net.sourceforge.jwbf.core.actions.Get;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
+import net.sourceforge.jwbf.mapper.XmlConverter;
 import net.sourceforge.jwbf.mapper.XmlElement;
 import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
 import net.sourceforge.jwbf.mediawiki.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.MediaWiki.Version;
-import net.sourceforge.jwbf.mediawiki.actions.util.ApiException;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -141,13 +141,7 @@ public class GetRevision extends MWAction {
   }
 
   private void parse(final String xml) {
-    XmlElement root = getRootElementWithError(xml);
-    XmlElement error = getErrorElement(root);
-    if (error != null) {
-      throw new ApiException(error.getAttributeValue("code") //
-          , error.getAttributeValue("info"));
-    }
-    findContent(root);
+    findContent(XmlConverter.getChecked(xml));
   }
 
   public SimpleArticle getArticle() {
@@ -174,33 +168,18 @@ public class GetRevision extends MWAction {
           }
         }
 
-        sa.setRevisionId(getAttrValueOf(xmlElement, "revid"));
-        sa.setEditSummary(getAttrValueOf(xmlElement, "comment"));
-        sa.setEditor(getAttrValueOf(xmlElement, "user"));
+        sa.setRevisionId(xmlElement.getAttributeValueOpt("revid").or(""));
+        sa.setEditSummary(xmlElement.getAttributeValueOpt("comment").or(""));
+        sa.setEditor(xmlElement.getAttributeValueOpt("user").or(""));
 
         if ((properties & TIMESTAMP) > 0) {
-          sa.setEditTimestamp(getAttrValueOf(xmlElement, "timestamp"));
+          sa.setEditTimestamp(xmlElement.getAttributeValueOpt("timestamp").or(""));
         }
       } else {
         findContent(xmlElement);
       }
     }
 
-  }
-
-  private String getAttrValueOf(XmlElement xmlElement, String key) {
-    return getAttrValueOf(xmlElement, key, "");
-  }
-
-  private String getAttrValueOf(XmlElement xmlElement, String key, String otherwise) {
-    String value = xmlElement.getAttributeValue(key);
-    if (value == null) {
-      log.trace("no value for {}", key);
-      return otherwise;
-    }
-
-    log.trace("value for {}= \"{}\"", key, value);
-    return value;
   }
 
   /**

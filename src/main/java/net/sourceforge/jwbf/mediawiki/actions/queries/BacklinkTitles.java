@@ -108,9 +108,9 @@ public class BacklinkTitles extends TitleQuery<String> {
     log.trace(s);
     // TODO do not use pattern matching
     // get the blcontinue-value
-    Pattern p = Pattern
-        .compile("<query-continue>.*?<backlinks *blcontinue=\"([^\"]*)\" */>.*?</query-continue>",
-            Pattern.DOTALL | Pattern.MULTILINE);
+    Pattern p = Pattern.compile(
+        "<query-continue>.*?<backlinks *blcontinue=\"([^\"]*)\" */>.*?</query-continue>",
+        Pattern.DOTALL | Pattern.MULTILINE);
 
     Matcher m = p.matcher(s);
 
@@ -201,8 +201,8 @@ public class BacklinkTitles extends TitleQuery<String> {
           .param("blfilterredir", MediaWiki.urlEncode(redirectFilter.toString())) //
           ;
       if (namespace != null) {
-        requestBuilder
-            .param("blnamespace", MediaWiki.urlEncode(MWAction.createNsString(namespace)));
+        requestBuilder.param("blnamespace",
+            MediaWiki.urlEncode(MWAction.createNsString(namespace)));
       }
       return requestBuilder.buildGet();
     }

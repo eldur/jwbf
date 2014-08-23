@@ -23,6 +23,7 @@ import net.sourceforge.jwbf.core.actions.Post;
 import net.sourceforge.jwbf.core.actions.util.ActionException;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.core.actions.util.ProcessException;
+import net.sourceforge.jwbf.mapper.XmlConverter;
 import net.sourceforge.jwbf.mapper.XmlElement;
 import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
@@ -87,7 +88,7 @@ public class PostLogin extends MWAction {
    */
   @Override
   public String processAllReturningText(final String s) {
-    XmlElement root = getRootElement(s);
+    XmlElement root = XmlConverter.getRootElement(s);
     findContent(root);
 
     return s;
@@ -98,12 +99,12 @@ public class PostLogin extends MWAction {
    */
   private void findContent(final XmlElement startXmlElement) {
 
-    XmlElement loginEl = startXmlElement.getChild("login");
-    String result = loginEl.getAttributeValue("result");
+    String result = startXmlElement.getChildAttributeValue("login", "result");
     if (result.equalsIgnoreCase(success)) {
-      login.setup(loginEl.getAttributeValue("lgusername"), true);
+      login.setup(startXmlElement.getChildAttributeValue("login", "lgusername"), true);
     } else if (result.equalsIgnoreCase(needToken) && reTryLimit) {
-      msg = getLoginMsg(username, pw, domain, loginEl.getAttributeValue("token"));
+      msg = getLoginMsg(username, pw, domain,
+          startXmlElement.getChildAttributeValue("login", "token"));
       reTry = true;
       reTryLimit = false;
     } else if (result.equalsIgnoreCase(wrongPass)) {

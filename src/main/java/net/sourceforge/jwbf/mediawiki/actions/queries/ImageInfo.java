@@ -14,6 +14,7 @@ import net.sourceforge.jwbf.core.actions.Get;
 import net.sourceforge.jwbf.core.actions.RequestBuilder;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.core.actions.util.ProcessException;
+import net.sourceforge.jwbf.mapper.XmlConverter;
 import net.sourceforge.jwbf.mapper.XmlElement;
 import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
 import net.sourceforge.jwbf.mediawiki.MediaWiki;
@@ -153,12 +154,11 @@ public class ImageInfo extends MWAction {
    * {@inheritDoc}
    */
   @Override
-  public String processAllReturningText(String s) {
-    findUrlOfImage(s);
+  public String processAllReturningText(String xml) {
+    findUrlOfImage(xml);
     return "";
   }
 
-  @SuppressWarnings("unchecked")
   private void findContent(final XmlElement root) {
 
     for (XmlElement xmlElement : root.getChildren()) {
@@ -174,8 +174,7 @@ public class ImageInfo extends MWAction {
   }
 
   private void findUrlOfImage(String s) {
-    XmlElement root = getRootElementWithError(s);
-    findContent(root);
+    findContent(XmlConverter.getRootElement(s));
     if (urlOfImage.length() < 1) {
       throw new ProcessException("Could not find this image " + s);
     }

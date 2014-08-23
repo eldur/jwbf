@@ -30,6 +30,7 @@ import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.core.contentRep.ContentAccessable;
 import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
 import net.sourceforge.jwbf.core.contentRep.Userinfo;
+import net.sourceforge.jwbf.mapper.XmlConverter;
 import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
 import net.sourceforge.jwbf.mediawiki.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
@@ -141,7 +142,8 @@ public class PostModifyContent extends MWAction {
     if (request.equals(apiGet.getRequest())) {
       editTokeAction.processReturningText(xml, hm);
     } else if (request.equals(editRequest.getRequest())) {
-      getRootElement(xml);
+      // FIXME feels very strage
+      XmlConverter.getRootElement(xml);
     } else {
       log.trace(xml);
       throw new ActionException("unknown response");

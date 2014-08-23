@@ -15,7 +15,6 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Abstract class which is superclass of all titleiterations, represented by the sufix "Titles".
- * <p>
  * TODO check nameing <b>Title</b>Query seems wrong
  *
  * @param <T> of

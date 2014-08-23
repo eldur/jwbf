@@ -362,12 +362,12 @@ public class HttpActionClient {
 
     public Builder withUserAgent(String userAgentName, String userAgentVersion,
         String userAgentComment) {
-      String nonNullUserAgentName = Preconditions.checkNotNull(userAgentName,
-          "User-Agent name must not be null");
-      String nonNullUserAgentVersion = Preconditions.checkNotNull(userAgentVersion,
-          "User-Agent version must not be null");
-      String nonNullUserAgentComment = Preconditions.checkNotNull(userAgentComment,
-          "User-Agent comment must not be null");
+      String nonNullUserAgentName =
+          Preconditions.checkNotNull(userAgentName, "User-Agent name must not be null");
+      String nonNullUserAgentVersion =
+          Preconditions.checkNotNull(userAgentVersion, "User-Agent version must not be null");
+      String nonNullUserAgentComment =
+          Preconditions.checkNotNull(userAgentComment, "User-Agent comment must not be null");
       String encodedName = toISO8859(trimAndReplaceWhitespace(nonNullUserAgentName));
       String encodedVersion = toISO8859(trimAndReplaceWhitespace(nonNullUserAgentVersion));
       String encodedComment = toISO8859(trimAndRemoveWhitespace(nonNullUserAgentComment));
@@ -424,14 +424,14 @@ public class HttpActionClient {
 
   private static String trimAndRemoveWhitespace(String in) {
     String changed = in.trim().replaceAll("[\r\n()]+", "");
-    return logIfDifferent(in, changed, "\"{}\" was changed to \"{}\"; because of User-Agent " +
-        "comment rules");
+    return logIfDifferent(in, changed,
+        "\"{}\" was changed to \"{}\"; because of User-Agent " + "comment rules");
   }
 
   private static String trimAndReplaceWhitespace(String in) {
     String changed = emptyToUnknown(in.trim().replaceAll("[\r\n/]+", "").replaceAll("[ ]+", "_"));
-    return logIfDifferent(in, changed, "\"{}\" was changed to \"{}\"; because of User-Agent " +
-        "name/version rules");
+    return logIfDifferent(in, changed,
+        "\"{}\" was changed to \"{}\"; because of User-Agent " + "name/version rules");
   }
 
   private static String toISO8859(String toEncode) {
@@ -449,8 +449,8 @@ public class HttpActionClient {
 
   private static String logIfDifferent(String original, String changed, String msg) {
     if (!changed.equals(original)) {
-      String originalWithVisibleWhitespace = original.replaceAll("\n", "\\\\n").replaceAll("\r",
-          "\\\\r").replaceAll("\t", "\\\\t");
+      String originalWithVisibleWhitespace =
+          original.replaceAll("\n", "\\\\n").replaceAll("\r", "\\\\r").replaceAll("\t", "\\\\t");
       log.warn(msg, originalWithVisibleWhitespace, changed);
     }
     return changed;

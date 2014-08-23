@@ -26,6 +26,7 @@ import com.google.common.collect.Sets;
 import net.sourceforge.jwbf.JWBF;
 import net.sourceforge.jwbf.core.actions.Get;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
+import net.sourceforge.jwbf.mapper.XmlConverter;
 import net.sourceforge.jwbf.mapper.XmlElement;
 import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
 import net.sourceforge.jwbf.mediawiki.MediaWiki.Version;
@@ -68,7 +69,9 @@ public class GetVersion extends MWAction {
   }
 
   private void parse(final String xml) {
-    findContent(getRootElementWithError(xml));
+    XmlElement rootElement = XmlConverter.getRootElementWithError(xml);
+    // XXX ignore errors here => fallback to unknown version
+    findContent(rootElement);
   }
 
   /**
@@ -138,7 +141,6 @@ public class GetVersion extends MWAction {
     return mainpage;
   }
 
-  @SuppressWarnings("unchecked")
   protected void findContent(final XmlElement root) {
 
     for (XmlElement xmlElement : root.getChildren()) {

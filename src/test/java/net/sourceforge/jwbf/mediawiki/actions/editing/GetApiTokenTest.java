@@ -25,7 +25,8 @@ public class GetApiTokenTest {
     testee.processReturningText(xml, testee.popAction());
 
     // THEN
-    ParamTuple<String> encodedToken = new ParamTuple("token", "e0691d5329779f0c01b1b286cd44a278%2B%5C");
+    ParamTuple<String> encodedToken =
+        new ParamTuple("token", "e0691d5329779f0c01b1b286cd44a278%2B%5C");
     assertEquals(encodedToken, testee.get().urlEncodedToken());
     ParamTuple<String> token = new ParamTuple("token", "e0691d5329779f0c01b1b286cd44a278+\\");
     assertEquals(token, testee.get().token());

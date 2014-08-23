@@ -57,8 +57,8 @@ public class RandomPageTitle extends MWAction {
    * {@inheritDoc}
    */
   @Override
-  public String processAllReturningText(String s) {
-    String xpathResult = XmlConverter.evaluateXpath(s, "/api/query/random/page/@title");
+  public String processAllReturningText(String xml) {
+    String xpathResult = XmlConverter.evaluateXpath(xml, "/api/query/random/page/@title");
     title = Optionals.absentIfEmpty(xpathResult);
     log.debug("Title: {}", title);
     return "";

@@ -1,10 +1,12 @@
 package net.sourceforge.jwbf.mapper;
 
+import javax.annotation.CheckForNull;
 import javax.annotation.Nullable;
 import java.util.List;
 
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
+import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 
@@ -26,6 +28,26 @@ public class XmlElement {
     return element.getAttributeValue(name);
   }
 
+  public Optional<String> getAttributeValueOpt(String name) {
+    return Optional.fromNullable(getAttributeValue(name));
+  }
+
+  public String getAttributeValueNonNull(String name) {
+    return Preconditions.checkNotNull(getAttributeValue(name), //
+        "no attribute found for key: " + name);
+  }
+
+  @Deprecated
+  @CheckForNull
+  public String getChildAttributeValue(String childName, String attributeName) {
+    XmlElement child = getChild(childName);
+    if (child == null) {
+      return null;
+    }
+    return child.getAttributeValue(attributeName);
+  }
+
+  @CheckForNull
   public XmlElement getChild(String name) {
     org.jdom2.Element child = element.getChild(name);
     if (child == null) {

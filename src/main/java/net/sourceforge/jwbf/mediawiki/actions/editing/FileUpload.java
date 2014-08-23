@@ -63,7 +63,7 @@ public class FileUpload extends MWAction {
     if (!simpleFile.getFile().exists()) {
       throw new IllegalStateException("file not found" + simpleFile.getFile());
     }
-      actionHandler = new ApiUpload(bot, simpleFile);
+    actionHandler = new ApiUpload(bot, simpleFile);
     actions = actionHandler.getActions();
 
   }

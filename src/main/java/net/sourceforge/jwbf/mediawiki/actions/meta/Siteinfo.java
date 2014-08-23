@@ -71,7 +71,6 @@ public class Siteinfo extends GetVersion {
   }
 
   @Override
-  @SuppressWarnings("unchecked")
   protected void findContent(final XmlElement root) {
     super.findContent(root);
     for (XmlElement xmlElement : root.getChildren()) {
