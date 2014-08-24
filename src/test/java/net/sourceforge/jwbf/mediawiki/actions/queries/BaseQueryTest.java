@@ -7,10 +7,10 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
-public class TitleQueryTest {
+public class BaseQueryTest {
 
   @Mock(answer = Answers.CALLS_REAL_METHODS)
-  TitleQuery<Object> testee;
+  BaseQuery<Object> testee;
 
   @Test(expected = UnsupportedOperationException.class)
   public void testRemove() {

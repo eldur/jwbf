@@ -41,7 +41,7 @@ import org.slf4j.LoggerFactory;
  * @see <a href= "http://www.mediawiki.org/wiki/API:Query_-_Lists#categorymembers_.2F_cm">API
  * documentation</a>
  */
-abstract class CategoryMembers extends TitleQuery<CategoryItem> {
+abstract class CategoryMembers extends BaseQuery<CategoryItem> {
 
   private static final Logger log = LoggerFactory.getLogger(CategoryMembers.class);
 

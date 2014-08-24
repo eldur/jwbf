@@ -43,7 +43,7 @@ import org.slf4j.LoggerFactory;
  * @author Tobias Knerr
  * @author Thomas Stock
  */
-public class AllPageTitles extends TitleQuery<String> {
+public class AllPageTitles extends BaseQuery<String> {
 
   private static final Logger log = LoggerFactory.getLogger(AllPageTitles.class);
 

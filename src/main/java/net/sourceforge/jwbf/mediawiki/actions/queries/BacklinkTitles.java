@@ -43,7 +43,7 @@ import org.slf4j.LoggerFactory;
  * @author Tobias Knerr
  * @since JWBF 1.1
  */
-public class BacklinkTitles extends TitleQuery<String> {
+public class BacklinkTitles extends BaseQuery<String> {
 
   private static final Logger log = LoggerFactory.getLogger(BacklinkTitles.class);
 

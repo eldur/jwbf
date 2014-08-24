@@ -32,7 +32,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author Thomas Stock
  */
-public class CategoryMembersSimple extends TitleQuery<String> {
+public class CategoryMembersSimple extends BaseQuery<String> {
 
   private static final Logger log = LoggerFactory.getLogger(CategoryMembersSimple.class);
 

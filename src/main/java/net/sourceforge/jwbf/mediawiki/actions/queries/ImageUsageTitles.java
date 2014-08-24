@@ -43,7 +43,7 @@ import org.slf4j.LoggerFactory;
  * @author Thomas Stock
  * @since MediaWiki 1.9.0
  */
-public class ImageUsageTitles extends TitleQuery<String> {
+public class ImageUsageTitles extends BaseQuery<String> {
 
   private static final Logger log = LoggerFactory.getLogger(ImageUsageTitles.class);
 

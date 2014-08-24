@@ -14,7 +14,7 @@ import net.sourceforge.jwbf.mediawiki.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 import org.junit.Test;
 
-public class TitleQueryIntegTest extends AbstractIntegTest {
+public class BaseQueryIntegTest extends AbstractIntegTest {
 
   RequestMatcher embeddedinTwo = ApiMatcherBuilder.of() //
       .param("eicontinue", "10|Babel|37163") //
@@ -46,7 +46,7 @@ public class TitleQueryIntegTest extends AbstractIntegTest {
     MediaWikiBot bot = new MediaWikiBot(host());
 
     // WHEN
-    TitleQuery<String> testee = new TemplateUserTitles(bot, "Template:Babel", MediaWiki.NS_USER);
+    BaseQuery<String> testee = new TemplateUserTitles(bot, "Template:Babel", MediaWiki.NS_USER);
 
     try {
       ImmutableList.copyOf(testee.lazy());
@@ -85,7 +85,7 @@ public class TitleQueryIntegTest extends AbstractIntegTest {
     MediaWikiBot bot = new MediaWikiBot(host());
 
     // WHEN
-    TitleQuery<String> testee = new TemplateUserTitles(bot, "Template:Babel", MediaWiki.NS_USER);
+    BaseQuery<String> testee = new TemplateUserTitles(bot, "Template:Babel", MediaWiki.NS_USER);
     testee.lazy();
 
     // THEN

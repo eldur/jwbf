@@ -41,7 +41,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author Thomas Stock
  */
-public class RecentchangeTitles extends TitleQuery<String> {
+public class RecentchangeTitles extends BaseQuery<String> {
 
   private static final Logger log = LoggerFactory.getLogger(RecentchangeTitles.class);
 
