@@ -28,19 +28,6 @@ public class AllPageTitlesTest {
   }
 
   @Test
-  public void testParseHasMore() {
-
-    // GIVEN
-    String s = "wtf"; // TODO strage testdata
-
-    // WHEN
-    String more = testee.parseHasMore(s);
-
-    // THEN
-    assertEquals("", more);
-  }
-
-  @Test
   public void testGenerateRequest() {
     // GIVEN
     Optional<String> from = Optional.absent();

@@ -19,18 +19,16 @@
  */
 package net.sourceforge.jwbf.mediawiki.actions.queries;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import com.google.common.base.Optional;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import net.sourceforge.jwbf.core.actions.Get;
 import net.sourceforge.jwbf.core.actions.RequestBuilder;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
+import net.sourceforge.jwbf.mapper.XmlConverter;
+import net.sourceforge.jwbf.mapper.XmlElement;
 import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
 import net.sourceforge.jwbf.mediawiki.MediaWiki;
-import net.sourceforge.jwbf.mediawiki.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.actions.util.RedirectFilter;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
@@ -46,30 +44,6 @@ import org.slf4j.LoggerFactory;
 public class AllPageTitles extends BaseQuery<String> {
 
   private static final Logger log = LoggerFactory.getLogger(AllPageTitles.class);
-
-  /**
-   * @deprecated do not parse xml like this
-   * Pattern to parse returned page, @see {@link #parseHasMore(String)}.
-   */
-  @Deprecated
-  private static final Pattern HAS_MORE_PATTERN =
-      Pattern.compile("<query-continue>.*?<allpages *apfrom=\"([^\"]*)\" */>.*?</query-continue>",
-          Pattern.DOTALL | Pattern.MULTILINE);
-
-  /**
-   * @deprecated do not parse xml like this
-   */
-  @Deprecated
-  private static final Pattern HAS_MORE_PATTERN_21 =
-      Pattern.compile("<continue .*apcontinue=\"([^\"]*)\" */>",
-          Pattern.DOTALL | Pattern.MULTILINE);
-
-  /**
-   * @deprecated do not parse xml like this
-   */
-  @Deprecated
-  private static final Pattern ARTICLE_TITLES_PATTERN =
-      Pattern.compile("<p pageid=\".*?\" ns=\".*?\" title=\"(.*?)\" */>");
 
   /** Pattern to parse returned page, @see {@link #parseArticleTitles(String)} */
   /**
@@ -168,9 +142,10 @@ public class AllPageTitles extends BaseQuery<String> {
   @Override
   protected ImmutableList<String> parseArticleTitles(String s) {
     ImmutableList.Builder<String> titles = ImmutableList.builder();
-    Matcher m = ARTICLE_TITLES_PATTERN.matcher(s);
-    while (m.find()) {
-      String title = MediaWiki.htmlUnescape(m.group(1));
+    XmlElement child = XmlConverter.getChild(s, "query", "allpages");
+
+    for (XmlElement pageElement : child.getChildren("p")) {
+      String title = pageElement.getAttributeValue("title");
       log.debug("Found article title: \"{}\"", title);
       titles.add(title);
     }
@@ -187,28 +162,16 @@ public class AllPageTitles extends BaseQuery<String> {
   @Override
   protected String parseHasMore(final String s) {
 
-    final Pattern hasMorePattern;
-    switch (botVersion()) {
-    case MW1_19:
-      hasMorePattern = HAS_MORE_PATTERN;
-      break;
-    default:
-      hasMorePattern = HAS_MORE_PATTERN_21;
-      break;
-    }
+    XmlElement rootElement = XmlConverter.getRootElement(s);
 
-    Matcher m = hasMorePattern.matcher(s);
-    if (m.find()) {
-      return m.group(1);
+    XmlElement aContinue = rootElement.getChild("continue");
+    if (aContinue != XmlElement.NULL_XML) {
+      return aContinue.getAttributeValue("apcontinue");
     } else {
-      return "";
+      // XXX fallback for < MW1_19
+      return rootElement.getChild("query-continue").getChild("allpages") //
+          .getAttributeValue("apfrom");
     }
-  }
-
-  private Version botVersion() {
-    Version version = bot.getVersion();
-    return Optional.fromNullable(version) //
-        .or(Version.UNKNOWN);
   }
 
   /**
