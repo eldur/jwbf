@@ -2,7 +2,6 @@ package net.sourceforge.jwbf.mapper;
 
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
@@ -14,12 +13,12 @@ import java.io.UnsupportedEncodingException;
 import com.google.common.base.Charsets;
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
-import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import net.sourceforge.jwbf.core.Optionals;
 import net.sourceforge.jwbf.core.actions.util.ActionException;
 import net.sourceforge.jwbf.core.actions.util.ProcessException;
+import net.sourceforge.jwbf.core.internal.NonnullFunction;
 import net.sourceforge.jwbf.mediawiki.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.util.ApiException;
 import org.jdom2.Document;
@@ -36,25 +35,20 @@ public final class XmlConverter {
   }
 
   private static final Logger log = LoggerFactory.getLogger(XmlConverter.class);
-  private static final Function<XmlElement, XmlElement> GET_ERROR =
-      new Function<XmlElement, XmlElement>() {
-        @Nullable
+  private static final Function<XmlElement, Optional<XmlElement>> GET_ERROR =
+      new NonnullFunction<XmlElement, Optional<XmlElement>>() {
+        @Nonnull
         @Override
-        public XmlElement apply(@Nullable XmlElement input) {
-          XmlElement errorElement = getErrorElement(input);
-          if (errorElement == null) {
-            return XmlElement.NULL_XML;
-          }
-          return errorElement;
+        public Optional<XmlElement> applyNonnull(@Nonnull XmlElement input) {
+          return getErrorElement(input);
         }
       };
 
   public static Function<XmlElement, ApiException> toApiException() {
-    return new Function<XmlElement, ApiException>() {
-      @Nullable
+    return new NonnullFunction<XmlElement, ApiException>() {
+      @Nonnull
       @Override
-      public ApiException apply(@Nullable XmlElement input) {
-        XmlElement xmlElement = Preconditions.checkNotNull(input);
+      public ApiException applyNonnull(@Nonnull XmlElement xmlElement) {
         String qualifiedName = xmlElement.getQualifiedName();
         if (qualifiedName.equals("error")) {
           String code = xmlElement.getAttributeValue("code");
@@ -104,11 +98,11 @@ public final class XmlConverter {
    * @param rootXmlElement XML <code>Document</code>
    * @return error element
    */
-  @CheckForNull
-  static XmlElement getErrorElement(XmlElement rootXmlElement) {
-    XmlElement elem = rootXmlElement.getChild("error");
-    if (elem != null) {
-      log.error(elem.getAttributeValue("code") + ": " + elem.getAttributeValue("info"));
+  static Optional<XmlElement> getErrorElement(XmlElement rootXmlElement) {
+    Optional<XmlElement> elem = rootXmlElement.getChildOpt("error");
+    if (elem.isPresent()) {
+      ApiException error = elem.transform(toApiException()).get();
+      log.error(error.getCode() + ": " + error.getValue());
     }
     return elem;
   }
@@ -119,7 +113,7 @@ public final class XmlConverter {
     if (!rootXmlElement.isPresent()) {
       throw new IllegalArgumentException(xml + " is no valid xml");
     }
-    Optional<XmlElement> errorElement = absentIfNullXml(rootXmlElement.transform(GET_ERROR));
+    Optional<XmlElement> errorElement = rootXmlElement.transform(GET_ERROR).get();
     if (errorElement.isPresent()) {
       if (xml.length() > 700) {
         throw new ProcessException(xml.substring(0, 700));
@@ -127,13 +121,6 @@ public final class XmlConverter {
       throw new ProcessException(xml);
     }
     return rootXmlElement.get();
-  }
-
-  private static Optional<XmlElement> absentIfNullXml(Optional<XmlElement> elem) {
-    if (elem.isPresent() && elem.get().equals(XmlElement.NULL_XML)) {
-      return Optional.absent();
-    }
-    return elem;
   }
 
   public static String evaluateXpath(String xml, String xpath) {

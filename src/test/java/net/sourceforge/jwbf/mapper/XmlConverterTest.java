@@ -65,6 +65,6 @@ public class XmlConverterTest {
     XmlElement first = XmlConverter.getChild(xml, "a", "b", "c");
 
     // THEN
-    assertNull(first);
+    assertEquals(XmlElement.NULL_XML, first);
   }
 }

@@ -12,7 +12,7 @@ import com.google.common.collect.Iterables;
 
 public class XmlElement {
 
-  static final XmlElement NULL_XML = new XmlElement(null);
+  public static final XmlElement NULL_XML = new XmlElement(null);
 
   private final org.jdom2.Element element;
 
@@ -24,8 +24,13 @@ public class XmlElement {
     return element.getQualifiedName();
   }
 
+  @CheckForNull
   public String getAttributeValue(String name) {
-    return element.getAttributeValue(name);
+    if (element == null) {
+      return null;
+    } else {
+      return element.getAttributeValue(name);
+    }
   }
 
   public Optional<String> getAttributeValueOpt(String name) {
@@ -41,19 +46,31 @@ public class XmlElement {
   @CheckForNull
   public String getChildAttributeValue(String childName, String attributeName) {
     XmlElement child = getChild(childName);
-    if (child == null) {
+    if (child == NULL_XML) {
       return null;
     }
     return child.getAttributeValue(attributeName);
   }
 
-  @CheckForNull
-  public XmlElement getChild(String name) {
-    org.jdom2.Element child = element.getChild(name);
-    if (child == null) {
-      return null;
+  Optional<XmlElement> getChildOpt(String name) {
+    XmlElement child = getChild(name);
+    if (child == NULL_XML) {
+      return Optional.absent();
     } else {
-      return new XmlElement(child);
+      return Optional.of(child);
+    }
+  }
+
+  public XmlElement getChild(String name) {
+    if (element == null) {
+      return NULL_XML;
+    } else {
+      org.jdom2.Element child = element.getChild(name);
+      if (child == null) {
+        return NULL_XML;
+      } else {
+        return new XmlElement(child);
+      }
     }
   }
 
@@ -92,6 +109,6 @@ public class XmlElement {
   }
 
   public Optional<XmlElement> getErrorElement() {
-    return Optional.fromNullable(XmlConverter.getErrorElement(this));
+    return XmlConverter.getErrorElement(this);
   }
 }
