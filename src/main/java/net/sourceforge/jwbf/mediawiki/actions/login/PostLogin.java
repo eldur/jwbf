@@ -57,7 +57,6 @@ public class PostLogin extends MWAction {
    * @param domain   a
    */
   public PostLogin(final String username, final String pw, final String domain) {
-    super();
     this.login = new LoginData();
     this.username = username;
     this.pw = pw;
@@ -133,7 +132,6 @@ public class PostLogin extends MWAction {
   }
 
   public LoginData getLoginData() {
-    // TODO change to immutable
     return login;
   }
 }

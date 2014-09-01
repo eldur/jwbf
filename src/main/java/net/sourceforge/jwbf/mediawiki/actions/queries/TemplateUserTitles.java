@@ -22,6 +22,7 @@ package net.sourceforge.jwbf.mediawiki.actions.queries;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.google.common.base.Optional;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import net.sourceforge.jwbf.core.actions.RequestBuilder;
@@ -109,7 +110,7 @@ public class TemplateUserTitles extends BaseQuery<String> {
    * @param s text for parsing
    */
   @Override
-  protected String parseHasMore(final String s) {
+  protected Optional<String> parseHasMore(final String s) {
 
     // get the eicontinue-value
 
@@ -120,10 +121,9 @@ public class TemplateUserTitles extends BaseQuery<String> {
     Matcher m = p.matcher(s);
 
     if (m.find()) {
-      return m.group(1);
-
+      return Optional.of(m.group(1));
     } else {
-      return "";
+      return Optional.absent();
 
     }
 

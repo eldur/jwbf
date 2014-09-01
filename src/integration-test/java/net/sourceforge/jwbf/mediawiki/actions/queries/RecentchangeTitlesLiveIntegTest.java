@@ -16,6 +16,7 @@ import com.google.common.collect.Lists;
 import net.sourceforge.jwbf.core.actions.util.ActionException;
 import net.sourceforge.jwbf.core.contentRep.Article;
 import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
+import net.sourceforge.jwbf.mediawiki.BotFactory;
 import net.sourceforge.jwbf.mediawiki.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.VersionTestClassVerifier;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
@@ -51,9 +52,8 @@ public class RecentchangeTitlesLiveIntegTest extends ParamHelper {
   }
 
   public RecentchangeTitlesLiveIntegTest(Version v) {
-    super(v, classVerifier);
+    super(BotFactory.getMediaWikiBot(v, true));
   }
-
   @Before
   public void before() {
     watch = Stopwatch.createStarted();

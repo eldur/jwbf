@@ -11,6 +11,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import net.sourceforge.jwbf.GAssert;
 import net.sourceforge.jwbf.core.actions.HttpActionClient;
 import net.sourceforge.jwbf.core.actions.util.ActionException;
 import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
@@ -239,4 +240,17 @@ public class MediaWikiBotTest {
       }
     }).when(mockClient).performAction(isA(PostLogin.class));
   }
+
+  @Test(expected = IllegalArgumentException.class)
+  public final void wikiurl_must_end_with_php_or_slash() {
+
+    // GIVEN
+    String wikiUrl = "https://anyWikiurl.com/wiki";
+    GAssert.assertNotEndsWith(".php", wikiUrl);
+    GAssert.assertNotEndsWith("/", wikiUrl);
+
+    // WHEN
+    new MediaWikiBot(wikiUrl);
+  }
+
 }

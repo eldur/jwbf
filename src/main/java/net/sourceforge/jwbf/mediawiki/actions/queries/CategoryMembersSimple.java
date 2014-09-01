@@ -18,6 +18,7 @@
  */
 package net.sourceforge.jwbf.mediawiki.actions.queries;
 
+import com.google.common.base.Optional;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
@@ -69,7 +70,7 @@ public class CategoryMembersSimple extends BaseQuery<String> {
   }
 
   @Override
-  protected String parseHasMore(String s) {
+  protected Optional<String> parseHasMore(String s) {
     return cm.parseHasMore(s);
   }
 

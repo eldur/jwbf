@@ -8,6 +8,7 @@ import java.util.List;
 
 import com.google.common.collect.Lists;
 import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
+import net.sourceforge.jwbf.mediawiki.BotFactory;
 import net.sourceforge.jwbf.mediawiki.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.VersionTestClassVerifier;
@@ -41,7 +42,7 @@ public class BacklinkTitlesLiveIntegTest extends ParamHelper {
   }
 
   public BacklinkTitlesLiveIntegTest(Version v) {
-    super(v, classVerifier);
+    super(BotFactory.getMediaWikiBot(v, true));
   }
 
   protected final void doPreapare() {

@@ -149,7 +149,7 @@ public class PostDelete extends MWAction {
 
   private void logDelete(XmlElement rootXmlElement) {
     XmlElement elem = rootXmlElement.getChild("delete");
-    if (elem != null) {
+    if (elem != XmlElement.NULL_XML) {
       // process reply for delete request
       String title = elem.getAttributeValue("title");
       String reason = elem.getAttributeValue("reason");

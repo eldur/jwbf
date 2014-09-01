@@ -9,6 +9,7 @@ import java.util.Collection;
 
 import com.google.common.collect.Lists;
 import net.sourceforge.jwbf.core.contentRep.Article;
+import net.sourceforge.jwbf.mediawiki.BotFactory;
 import net.sourceforge.jwbf.mediawiki.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.VersionTestClassVerifier;
@@ -44,7 +45,7 @@ public class TemplateUserTitlesLiveIntegTest extends ParamHelper {
   }
 
   public TemplateUserTitlesLiveIntegTest(Version v) {
-    super(v, classVerifier);
+    super(BotFactory.getMediaWikiBot(v, true));
   }
 
   @Test

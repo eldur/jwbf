@@ -22,6 +22,7 @@ package net.sourceforge.jwbf.mediawiki.actions.queries;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import net.sourceforge.jwbf.core.actions.Get;
@@ -104,7 +105,7 @@ public class BacklinkTitles extends BaseQuery<String> {
    * @param s text for parsing
    */
   @Override
-  protected String parseHasMore(final String s) {
+  protected Optional<String> parseHasMore(final String s) {
     log.trace(s);
     // TODO do not use pattern matching
     // get the blcontinue-value
@@ -115,9 +116,9 @@ public class BacklinkTitles extends BaseQuery<String> {
     Matcher m = p.matcher(s);
 
     if (m.find()) {
-      return m.group(1);
+      return Optional.of(m.group(1));
     } else {
-      return "";
+      return Optional.absent();
     }
 
   }

@@ -1,6 +1,5 @@
 package net.sourceforge.jwbf.mediawiki.live.auto;
 
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -10,22 +9,13 @@ import com.google.common.collect.ImmutableSet;
 import net.sourceforge.jwbf.core.actions.util.ActionException;
 import net.sourceforge.jwbf.mediawiki.BotFactory;
 import net.sourceforge.jwbf.mediawiki.MediaWiki.Version;
-import net.sourceforge.jwbf.mediawiki.VersionTestClassVerifier;
-import net.sourceforge.jwbf.mediawiki.actions.login.PostLogin;
-import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
-import org.junit.ClassRule;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.Verifier;
 import org.junit.runners.Parameterized.Parameters;
 
 public class LoginTest extends ParamHelper {
 
-  private final Version v;
-
   public LoginTest(Version v) {
-    super(v, classVerifier);
-    this.v = v;
+    super(BotFactory.getMediaWikiBot(v, false));
   }
 
   @Parameters(name = "{0}")
@@ -33,21 +23,12 @@ public class LoginTest extends ParamHelper {
     return ParamHelper.prepare(Version.valuesStable());
   }
 
-  @ClassRule
-  public static VersionTestClassVerifier classVerifier =
-      new VersionTestClassVerifier(PostLogin.class);
-
-  @Rule
-  public Verifier successRegister = classVerifier.getSuccessRegister(this);
-
   /**
    * Test login on a Mediawiki.
    */
   @Test
   public final void login() {
-
-    bot = BotFactory.getMediaWikiBot(v, false);
-    bot.login(BotFactory.getWikiUser(v), BotFactory.getWikiPass(v));
+    bot.login(BotFactory.getWikiUser(version()), BotFactory.getWikiPass(version()));
     assertTrue(bot.isLoggedIn());
   }
 
@@ -57,26 +38,11 @@ public class LoginTest extends ParamHelper {
   @Test
   public final void loginFail() {
     try {
-      MediaWikiBot bot = BotFactory.getMediaWikiBot(v, false);
       bot.login("Klhjfd", "4sdf");
       fail();
     } catch (ActionException pe) {
       assertTrue(ImmutableSet.of("Throttled", "No such User").contains(pe.getMessage()));
     }
-  }
-
-  /**
-   * Test login where the wiki is in a subfolder, like www.abc.com/wiki .
-   */
-  @Test(expected = IllegalArgumentException.class)
-  public final void loginUrlformatsFail() {
-
-    String defektUrl = BotFactory.getWikiUrlOrSkip(v);
-    int lastSlash = defektUrl.lastIndexOf("/");
-    defektUrl = defektUrl.substring(0, lastSlash);
-    assertFalse("shuld not end with .php", defektUrl.endsWith(".php"));
-    MediaWikiBot bot = new MediaWikiBot(defektUrl);
-    bot.login(BotFactory.getWikiUser(v), BotFactory.getWikiPass(v));
   }
 
 }

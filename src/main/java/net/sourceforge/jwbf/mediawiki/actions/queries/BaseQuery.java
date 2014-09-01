@@ -123,7 +123,7 @@ public abstract class BaseQuery<T> implements Iterable<T>, Iterator<T>, Cloneabl
 
   protected abstract ImmutableList<T> parseArticleTitles(String s);
 
-  protected abstract String parseHasMore(final String s);
+  protected abstract Optional<String> parseHasMore(final String s);
 
   /**
    * Inner helper class for this type.
@@ -149,7 +149,7 @@ public abstract class BaseQuery<T> implements Iterable<T>, Iterator<T>, Cloneabl
     @Override
     public final String processAllReturningText(final String s) {
       ImmutableList<T> newTitles = parseArticleTitles(s);
-      setNextPageInfo(parseHasMore(s));
+      setNextPageInfo(parseHasMore(s).orNull());
       if (log.isWarnEnabled()) {
         if (oldTitlesForLogging.equals(newTitles)) {
           log.warn("previous response has same payload");

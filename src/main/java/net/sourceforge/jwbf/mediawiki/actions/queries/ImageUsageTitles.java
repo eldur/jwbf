@@ -23,6 +23,7 @@ import java.util.Collection;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.google.common.base.Optional;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
@@ -110,7 +111,7 @@ public class ImageUsageTitles extends BaseQuery<String> {
    * @param s text for parsing
    */
   @Override
-  protected String parseHasMore(final String s) {
+  protected Optional<String> parseHasMore(final String s) {
     return handler.parseHasMore(s);
   }
 
@@ -151,7 +152,7 @@ public class ImageUsageTitles extends BaseQuery<String> {
     public abstract Get generateContinueRequest(String imageName, String namespace,
         String ilcontinue);
 
-    public abstract String parseHasMore(final String s);
+    public abstract Optional<String> parseHasMore(final String s);
 
     public abstract Collection<String> parseArticleTitles(String s);
   }
@@ -198,12 +199,12 @@ public class ImageUsageTitles extends BaseQuery<String> {
     }
 
     @Override
-    public String parseHasMore(String s) {
+    public Optional<String> parseHasMore(String s) {
       Matcher m = CONTINUE_PATTERN.matcher(s);
       if (m.find()) {
-        return m.group(1);
+        return Optional.of(m.group(1));
       } else {
-        return "";
+        return Optional.absent();
       }
 
     }

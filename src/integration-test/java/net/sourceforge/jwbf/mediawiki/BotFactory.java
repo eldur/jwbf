@@ -114,11 +114,6 @@ public class BotFactory {
     return "nimdA";
   }
 
-  public static String getWikiUrlOrSkip(Version v) {
-    String host = LiveTestFather.getValueOrSkip("localwikihost");
-    return getWikiUrl(v, host);
-  }
-
   private static String getWikiUrl(Version v, String host) {
     String version = "mw-" + v.getNumber().replace(".", "-");
     return "http://" + host + "/" + version + MediaWiki.URL_INDEX;

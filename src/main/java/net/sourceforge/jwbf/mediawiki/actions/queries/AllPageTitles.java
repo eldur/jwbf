@@ -160,17 +160,17 @@ public class AllPageTitles extends BaseQuery<String> {
    * @return the
    */
   @Override
-  protected String parseHasMore(final String s) {
+  protected Optional<String> parseHasMore(final String s) {
 
     XmlElement rootElement = XmlConverter.getRootElement(s);
 
     XmlElement aContinue = rootElement.getChild("continue");
     if (aContinue != XmlElement.NULL_XML) {
-      return aContinue.getAttributeValue("apcontinue");
+      return aContinue.getAttributeValueOpt("apcontinue");
     } else {
       // XXX fallback for < MW1_19
-      return rootElement.getChild("query-continue").getChild("allpages") //
-          .getAttributeValue("apfrom");
+      XmlElement allpages = rootElement.getChild("query-continue").getChild("allpages");
+      return allpages.getAttributeValueOpt("apfrom");
     }
   }
 

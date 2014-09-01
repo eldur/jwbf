@@ -21,6 +21,7 @@ package net.sourceforge.jwbf.mediawiki.actions.queries;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import com.google.common.primitives.Ints;
 import net.sourceforge.jwbf.core.actions.Get;
@@ -63,7 +64,7 @@ abstract class CategoryMembers extends BaseQuery<CategoryItem> {
    * information necessary to get the next api page.
    */
   protected String nextPageInfo = null;
-  protected boolean hasMoreResults = false;
+  private boolean hasMoreResults = false;
 
   protected boolean init = true;
   /**
@@ -118,7 +119,7 @@ abstract class CategoryMembers extends BaseQuery<CategoryItem> {
    * @param s text for parsing
    */
   @Override
-  public String parseHasMore(final String s) {
+  public Optional<String> parseHasMore(final String s) {
 
     Matcher m = CONTINUE_PATTERN.matcher(s);
 
@@ -128,7 +129,7 @@ abstract class CategoryMembers extends BaseQuery<CategoryItem> {
     } else {
       hasMoreResults = false;
     }
-    return nextPageInfo;
+    return Optional.fromNullable(nextPageInfo);
   }
 
   /**

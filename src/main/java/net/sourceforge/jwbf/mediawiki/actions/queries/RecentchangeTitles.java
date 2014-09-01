@@ -20,6 +20,7 @@ package net.sourceforge.jwbf.mediawiki.actions.queries;
 
 import java.util.List;
 
+import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import net.sourceforge.jwbf.core.actions.RequestBuilder;
@@ -144,8 +145,8 @@ public class RecentchangeTitles extends BaseQuery<String> {
   }
 
   @Override
-  protected String parseHasMore(String s) {
-    return "";
+  protected Optional<String> parseHasMore(String s) {
+    return Optional.absent();
   }
 
 }
