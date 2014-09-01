@@ -29,7 +29,7 @@ public class TemplateUserTitlesIntegTest extends AbstractIntegTest {
         .param("eititle", "Template:Babel") //
         .param("format", "xml") //
         .param("list", "embeddedin") //
-      //  .param(ApiRequestBuilder.NEW_CONTINUE) //
+        //  .param(ApiRequestBuilder.NEW_CONTINUE) //
         ;
   }
 
@@ -55,10 +55,11 @@ public class TemplateUserTitlesIntegTest extends AbstractIntegTest {
     List<String> resultList = testee.getCopyOf(15);
 
     // THEN
-    ImmutableList<String> expected = ImmutableList
-        .of("User:AxelBoldt", "User:Piotr Gasiorowski", "User:RobLa", "User:Taral", "User:Ap",
-            "User:Yargo", "User:Joakim Ziegler", "User:Snorre", "User:LA2", "User:Codeczero",
-            "User:Jkominek", "User:Oliver", "User:Walter", "User:Poslfit", "User:Qaz");
+    ImmutableList<String> expected = //
+        ImmutableList.of("User:AxelBoldt", "User:Piotr Gasiorowski", "User:RobLa", "User:Taral",
+            "User:Ap", "User:Yargo", "User:Joakim Ziegler", "User:Snorre", "User:LA2",
+            "User:Codeczero", "User:Jkominek", "User:Oliver", "User:Walter", "User:Poslfit",
+            "User:Qaz");
     GAssert.assertEquals(expected, ImmutableList.copyOf(resultList));
     assertEquals(resultList.size(), ImmutableSet.copyOf(resultList).size());
 

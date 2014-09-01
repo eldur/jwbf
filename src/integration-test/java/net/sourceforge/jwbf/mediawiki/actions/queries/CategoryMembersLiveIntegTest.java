@@ -86,8 +86,7 @@ public class CategoryMembersLiveIntegTest extends ParamHelper {
     ImmutableList<String> initialCategories = copyWithoutDuplicatesOf(categories.lazy(), limitSize);
     if (initialCategories.size() < limitSize) {
       doPreapare();
-      return copyWithoutDuplicatesOf(new CategoryMembersSimple(bot(), TESTCATNAME),
-          limitSize);
+      return copyWithoutDuplicatesOf(new CategoryMembersSimple(bot(), TESTCATNAME), limitSize);
     } else {
       return initialCategories;
     }

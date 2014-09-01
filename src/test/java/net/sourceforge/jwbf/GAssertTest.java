@@ -171,7 +171,7 @@ public class GAssertTest {
     } catch (ComparisonFailure e) {
       // THEN
       assertEquals("Expected: a string starting with \"value\"\n"
-          + "     but: was \"test value\" expected:<[]value> but was:<[test ]value>",
+              + "     but: was \"test value\" expected:<[]value> but was:<[test ]value>",
           e.getMessage());
     }
   }
@@ -205,7 +205,8 @@ public class GAssertTest {
       fail();
     } catch (AssertionError e) {
       // THEN
-      assertEquals("expected value: \"\" is too short expected:<[]> but was:<[test value]>", e.getMessage());
+      assertEquals("expected value: \"\" is too short expected:<[]> but was:<[test value]>",
+          e.getMessage());
     }
   }
 
@@ -232,7 +233,8 @@ public class GAssertTest {
     } catch (ComparisonFailure e) {
       // THEN
       assertEquals("Expected: a string ending with \"test\"\n"
-          + "     but: was \"test value\" expected:<test[]> but was:<test[ value]>", e.getMessage());
+          + "     but: was \"test value\" expected:<test[]> but was:<test[ value]>",
+          e.getMessage());
     }
   }
 
@@ -265,7 +267,8 @@ public class GAssertTest {
       fail();
     } catch (AssertionError e) {
       // THEN
-      assertEquals("expected value: \"\" is too short expected:<[]> but was:<[test value]>", e.getMessage());
+      assertEquals("expected value: \"\" is too short expected:<[]> but was:<[test value]>",
+          e.getMessage());
     }
   }
 

@@ -35,10 +35,10 @@ public class GetUserinfoIntegTest extends MocoIntegTest {
 
     // THEN
     assertEquals("Admin", performedAction.getUsername());
-    GAssert
-        .assertEquals(splittedConfigOfString(ConfKey.USERINFO_RIGHTS), performedAction.getRights());
-    GAssert
-        .assertEquals(splittedConfigOfString(ConfKey.USERINFO_GROUPS), performedAction.getGroups());
+    GAssert.assertEquals(splittedConfigOfString(ConfKey.USERINFO_RIGHTS), //
+        performedAction.getRights());
+    GAssert.assertEquals(splittedConfigOfString(ConfKey.USERINFO_GROUPS), //
+        performedAction.getGroups());
   }
 
 }

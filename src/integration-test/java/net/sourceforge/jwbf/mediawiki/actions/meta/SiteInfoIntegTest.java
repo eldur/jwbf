@@ -39,9 +39,9 @@ public class SiteInfoIntegTest extends MocoIntegTest {
   public void doTest() {
     // GIVEN
     // TODO json?
-    server.request(newSiteInfoMatcherBuilder().build())
+    server.request(newSiteInfoMatcherBuilder().build()) //
         .response(mwFileOf(version(), "siteinfo.xml"));
-    server.request(newSiteinfoWithProperties())
+    server.request(newSiteinfoWithProperties()) //
         .response(mwFileOf(version(), "siteinfo_detail.xml"));
 
     // WHEN

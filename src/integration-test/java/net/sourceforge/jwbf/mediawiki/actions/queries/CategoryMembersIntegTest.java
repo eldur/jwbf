@@ -20,7 +20,7 @@ public class CategoryMembersIntegTest extends MocoIntegTest {
 
   ApiMatcherBuilder newBaseMatcher() {
     return ApiMatcherBuilder.of() //
-        .param("action", "query")
+        .param("action", "query") //
         .param("cmlimit", "50") //
             //.param("cmnamespace", "0") //
         .param("format", "xml") //
@@ -35,16 +35,14 @@ public class CategoryMembersIntegTest extends MocoIntegTest {
     // GIVEN
     server.request(newBaseMatcher().build()).response(mwFileOf(version(), "category0.xml"));
     server.request(newBaseMatcher().param("cmcontinue", "token|to1|") //
-        .build())
-        .response(mwFileOf(version(), "category1.xml"));
+        .build()).response(mwFileOf(version(), "category1.xml"));
     server.request(newBaseMatcher().param("cmcontinue", "token|to|2") //
-        .build())
-        .response(mwFileOf(version(), "category2.xml"));
+        .build()).response(mwFileOf(version(), "category2.xml"));
 
     // WHEN
     CategoryMembersFull testee = new CategoryMembersFull(bot(), "TestCat");
-    ImmutableList<CategoryItem> actual = CategoryMembersLiveIntegTest
-        .copyWithoutDuplicatesOf(testee, 3);
+    ImmutableList<CategoryItem> actual =
+        CategoryMembersLiveIntegTest.copyWithoutDuplicatesOf(testee, 3);
 
     // THEN
     ImmutableList<CategoryItem> expected = ImmutableList.of( //
@@ -77,7 +75,7 @@ public class CategoryMembersIntegTest extends MocoIntegTest {
     // nothing
     try {
       // WHEN
-      CategoryMembersLiveIntegTest
+      CategoryMembersLiveIntegTest //
           .copyWithoutDuplicatesOf(new CategoryMembersFull(bot(), "TestCat"), 3);
       fail();
     } catch (IllegalStateException e) {

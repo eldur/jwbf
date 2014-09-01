@@ -51,7 +51,7 @@ public class BotFactory {
 
       @Override
       protected void configure() {
-        bind(CacheActionClient.class)
+        bind(CacheActionClient.class) //
             .toInstance(Mockito.spy(new CacheActionClient(wikiUrl, new WireRegister())));
         bind(HttpBot.class).to(CacheHttpBot.class);
         bind(MediaWikiBot.class).asEagerSingleton();

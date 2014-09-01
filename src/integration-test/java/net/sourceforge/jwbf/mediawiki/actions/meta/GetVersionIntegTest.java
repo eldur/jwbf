@@ -34,10 +34,10 @@ public class GetVersionIntegTest extends MocoIntegTest {
     Siteinfo si = bot().getSiteinfo();
 
     // THEN
-    GAssert.assertEquals(splittedConfigOfString(ConfKey.SITEINFO, title()),
+    GAssert.assertEquals(splittedConfigOfString(ConfKey.SITEINFO, title()), //
         toSortedList(si.getNamespaces()));
-    GAssert
-        .assertEquals(splittedConfigOfString(ConfKey.INTERWIKI), toSortedList(si.getInterwikis()));
+    GAssert.assertEquals(splittedConfigOfString(ConfKey.INTERWIKI), //
+        toSortedList(si.getInterwikis()));
   }
 
   @Test
@@ -57,7 +57,7 @@ public class GetVersionIntegTest extends MocoIntegTest {
   @Test
   public void testVersion() {
     // GIVEN
-    server.request(SiteInfoIntegTest.newSiteInfoMatcherBuilder().build())
+    server.request(SiteInfoIntegTest.newSiteInfoMatcherBuilder().build()) //
         .response(mwFileOf(version(), "siteinfo.xml"));
 
     // WHEN

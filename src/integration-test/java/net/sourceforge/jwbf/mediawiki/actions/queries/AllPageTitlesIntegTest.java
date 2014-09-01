@@ -20,7 +20,7 @@ public class AllPageTitlesIntegTest extends MocoIntegTest {
 
   ApiMatcherBuilder newBaseMatcher() {
     return ApiMatcherBuilder.of() //
-        .param("action", "query")
+        .param("action", "query") //
         .param("apfilterredir", "nonredirects") //
         .paramNewContinue(version()) //
         .param("format", "xml") //
