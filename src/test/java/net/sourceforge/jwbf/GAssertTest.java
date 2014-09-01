@@ -170,7 +170,9 @@ public class GAssertTest {
       fail();
     } catch (ComparisonFailure e) {
       // THEN
-      assertEquals("expected:<[value]> but was:<[test ]>", e.getMessage());
+      assertEquals("Expected: a string starting with \"value\"\n"
+          + "     but: was \"test value\" expected:<[]value> but was:<[test ]value>",
+          e.getMessage());
     }
   }
 
@@ -186,7 +188,8 @@ public class GAssertTest {
       fail();
     } catch (ComparisonFailure e) {
       // THEN
-      assertEquals("expected:<[value]> but was:<[tes]>", e.getMessage());
+      assertEquals("Expected: a string starting with \"value\"\n"
+          + "     but: was \"tes\" expected:<[value]> but was:<[tes]>", e.getMessage());
     }
   }
 
@@ -202,7 +205,7 @@ public class GAssertTest {
       fail();
     } catch (AssertionError e) {
       // THEN
-      assertEquals("expected value: \"\" is too short", e.getMessage());
+      assertEquals("expected value: \"\" is too short expected:<[]> but was:<[test value]>", e.getMessage());
     }
   }
 
@@ -228,7 +231,8 @@ public class GAssertTest {
       fail();
     } catch (ComparisonFailure e) {
       // THEN
-      assertEquals("expected:<[test]> but was:<[alue]>", e.getMessage());
+      assertEquals("Expected: a string ending with \"test\"\n"
+          + "     but: was \"test value\" expected:<test[]> but was:<test[ value]>", e.getMessage());
     }
   }
 
@@ -244,7 +248,8 @@ public class GAssertTest {
       fail();
     } catch (ComparisonFailure e) {
       // THEN
-      assertEquals("expected:<[test]> but was:<[lue]>", e.getMessage());
+      assertEquals("Expected: a string ending with \"test\"\n"
+          + "     but: was \"lue\" expected:<[test]> but was:<[lue]>", e.getMessage());
     }
   }
 
@@ -260,7 +265,65 @@ public class GAssertTest {
       fail();
     } catch (AssertionError e) {
       // THEN
-      assertEquals("expected value: \"\" is too short", e.getMessage());
+      assertEquals("expected value: \"\" is too short expected:<[]> but was:<[test value]>", e.getMessage());
+    }
+  }
+
+  @Test
+  public void testNotEndsWith() {
+    // GIVEN
+    String expected = "value";
+    String actual = "value test";
+
+    // WHEN / THEN
+    GAssert.assertNotEndsWith(expected, actual);
+  }
+
+  @Test
+  public void testNotEndsWith_fail() {
+    // GIVEN
+    String expected = "test";
+    String actual = "value test";
+
+    try {
+      // WHEN
+      GAssert.assertNotEndsWith(expected, actual);
+      fail();
+    } catch (ComparisonFailure e) {
+      // THEN
+      assertEquals("Expected: not a string ending with \"test\"\n"
+              + "     but: was \"value test\" expected:<[]test> but was:<[value ]test>",
+          e.getMessage());
+    }
+  }
+
+  @Test
+  public void testNotEndsWith_actualToShort_fail() {
+    // GIVEN
+    String expected = "test";
+    String actual = "lue";
+
+    // WHEN
+    GAssert.assertNotEndsWith(expected, actual);
+
+    // THEN
+
+  }
+
+  @Test
+  public void testNotEndsWith_fail_toShort() {
+    // GIVEN
+    String expected = "";
+    String actual = "test value";
+
+    try {
+      // WHEN
+      GAssert.assertNotEndsWith(expected, actual);
+      fail();
+    } catch (AssertionError e) {
+      // THEN
+      assertEquals("Expected: not a string ending with \"\"\n"
+          + "     but: was \"test value\" expected:<[]> but was:<[test value]>", e.getMessage());
     }
   }
 

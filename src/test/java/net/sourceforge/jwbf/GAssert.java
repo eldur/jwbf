@@ -1,7 +1,10 @@
 package net.sourceforge.jwbf;
 
-import static org.junit.Assert.fail;
+import static org.hamcrest.CoreMatchers.endsWith;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.startsWith;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Map;
 import java.util.Set;
@@ -17,11 +20,11 @@ import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Ordering;
+import net.sourceforge.jwbf.core.internal.NonnullFunction;
 import org.junit.Assert;
+import org.junit.ComparisonFailure;
 
 public class GAssert {
-
-  public static final int MINIMUM_LENGTH = 1;
 
   private static ImmutableList<?> sortedCopy(Set<?> actual) {
     return FluentIterable.from(actual).toSortedList(Ordering.usingToString());
@@ -80,50 +83,27 @@ public class GAssert {
   }
 
   public static void assertStartsWith(final String expected, final String actual) {
-
-    Function<String, String> function = new Function<String, String>() {
-
-      @Nullable
-      @Override
-      public String apply(@Nullable String actual) {
-        return actual.substring(0, expected.length());
-      }
-    };
-    partialAssert(expected, actual, function);
-
-  }
-
-  public static void assertEndsWith(final String expected, final String actual) {
-    Function<String, String> function = new Function<String, String>() {
-
-      @Nullable
-      @Override
-      public String apply(@Nullable String actual) {
-        return actual.substring(actual.length() - expected.length(), actual.length());
-      }
-    };
-    partialAssert(expected, actual, function);
-
-  }
-
-  static void partialAssert(String expected, String actual, Function<String, String> function) {
-    if (actual != null) {
-      if (expected.length() <= MINIMUM_LENGTH) {
-        fail("expected value: \"" + expected + "\" is too short");
-      } else if (actual.length() > expected.length()) {
-        Assert.assertEquals(expected, function.apply(actual));
-      } else {
-        Assert.assertEquals(expected, actual);
-      }
-    } else {
-      Assert.assertEquals(expected, actual);
+    try {
+      Assert.assertTrue("expected value: \"\" is too short", expected.length() > 0);
+      Assert.assertThat(actual, startsWith(expected));
+    } catch (AssertionError e) {
+      throw new ComparisonFailure(e.getMessage().trim(), expected, actual);
     }
   }
 
-  static Function<Object, String> TO_DETAIL_STRING = new Function<Object, String>() {
-    @Nullable
+  public static void assertEndsWith(final String expected, final String actual) {
+    try {
+      Assert.assertTrue("expected value: \"\" is too short", expected.length() > 0);
+      Assert.assertThat(actual, endsWith(expected));
+    } catch (AssertionError e) {
+      throw new ComparisonFailure(e.getMessage().trim(), expected, actual);
+    }
+  }
+
+  static Function<Object, String> TO_DETAIL_STRING = new NonnullFunction<Object, String>() {
+    @Nonnull
     @Override
-    public String apply(@Nullable Object input) {
+    public String applyNonnull(@Nonnull Object input) {
       if (input instanceof Map.Entry) {
         Map.Entry<?, ?> entry = (Map.Entry<?, ?>) input;
         Object key = entry.getKey();
@@ -145,10 +125,10 @@ public class GAssert {
     return "{" + o.toString() + " [" + o.getClass().getCanonicalName() + "]}";
   }
 
-  static Function<Object, String> TO_TYPE_STRING = new Function<Object, String>() {
-    @Nullable
+  static Function<Object, String> TO_TYPE_STRING = new NonnullFunction<Object, String>() {
+    @Nonnull
     @Override
-    public String apply(@Nullable Object input) {
+    protected String applyNonnull(@Nonnull Object input) {
       if (input instanceof Map.Entry) {
         Map.Entry<?, ?> entry = (Map.Entry<?, ?>) input;
         Object key = entry.getKey();
@@ -173,12 +153,19 @@ public class GAssert {
     }
   };
 
-  static Function<Object, String> TO_CLASSES = new Function<Object, String>() {
-    @Nullable
+  static Function<Object, String> TO_CLASSES = new NonnullFunction<Object, String>() {
+    @Nonnull
     @Override
-    public String apply(@Nullable Object input) {
+    public String applyNonnull(@Nonnull Object input) {
       return input.getClass().getCanonicalName();
     }
   };
 
+  public static void assertNotEndsWith(final String expected, String actual) {
+    try {
+      Assert.assertThat(actual, not(endsWith(expected)));
+    } catch (AssertionError e) {
+      throw new ComparisonFailure(e.getMessage().trim(), expected, actual);
+    }
+  }
 }
