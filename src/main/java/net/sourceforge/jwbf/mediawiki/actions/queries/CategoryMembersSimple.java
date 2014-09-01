@@ -18,6 +18,7 @@
  */
 package net.sourceforge.jwbf.mediawiki.actions.queries;
 
+import com.google.common.base.Optional;
 import javax.annotation.Nonnull;
 
 import com.google.common.annotations.VisibleForTesting;

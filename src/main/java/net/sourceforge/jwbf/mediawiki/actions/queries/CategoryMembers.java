@@ -123,30 +123,30 @@ abstract class CategoryMembers extends BaseQuery<CategoryItem> {
 
       }
     };
-  }
+    }
 
   <T> ImmutableList<T> parseArticles(String xml, NonnullFunction<XmlElement, T> f) {
     List<XmlElement> children = //
         XmlConverter.getChild(xml, "query", "categorymembers").getChildren();
     return FluentIterable.from(children).transform(f).toList();
-  }
-
-  private RequestBuilder newRequestBuilder() {
-    ApiRequestBuilder requestBuilder = new ApiRequestBuilder();
-    if (namespaceStr.length() > 0) {
-      requestBuilder.param("cmnamespace", MediaWiki.urlEncode(namespaceStr));
     }
 
-    return requestBuilder //
-        .action("query") //
-        .formatXml() //
+    private RequestBuilder newRequestBuilder() {
+      ApiRequestBuilder requestBuilder = new ApiRequestBuilder();
+      if (namespaceStr.length() > 0) {
+        requestBuilder.param("cmnamespace", MediaWiki.urlEncode(namespaceStr));
+      }
+
+      return requestBuilder //
+          .action("query") //
+          .formatXml() //
         .paramNewContinue(bot().getVersion()) //
-        .param("list", "categorymembers") //
-        .param("cmlimit", LIMIT) //
+          .param("list", "categorymembers") //
+          .param("cmlimit", LIMIT) //
         .param("cmtitle", "Category:" + MediaWiki.urlEncode(categoryName)) //
         // TODO: do not add Category: - instead, change other methods' descs (e.g.
         // in MediaWikiBot)
-        ;
-  }
+          ;
+    }
 
 }
