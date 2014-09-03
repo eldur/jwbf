@@ -18,37 +18,31 @@
  */
 package net.sourceforge.jwbf.mediawiki.live.auto;
 
-import static net.sourceforge.jwbf.mediawiki.BotFactory.getMediaWikiBot;
-import static net.sourceforge.jwbf.mediawiki.LiveTestFather.getValueOrSkip;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.URL;
-import java.net.URLConnection;
 import java.util.Collection;
 
+import com.google.common.collect.ImmutableMap;
+import com.google.common.hash.Hashing;
+import com.google.common.io.Files;
+import com.google.common.io.Resources;
+import net.sourceforge.jwbf.JWBF;
 import net.sourceforge.jwbf.core.actions.util.ProcessException;
+import net.sourceforge.jwbf.mediawiki.BotFactory;
+import net.sourceforge.jwbf.mediawiki.LiveTestFather;
 import net.sourceforge.jwbf.mediawiki.MediaWiki.Version;
-import net.sourceforge.jwbf.mediawiki.VersionTestClassVerifier;
 import net.sourceforge.jwbf.mediawiki.actions.editing.FileUpload;
 import net.sourceforge.jwbf.mediawiki.actions.queries.ImageInfo;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 import net.sourceforge.jwbf.mediawiki.contentRep.SimpleFile;
-import org.junit.Assert;
-import org.junit.ClassRule;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.Verifier;
 import org.junit.runners.Parameterized.Parameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -60,20 +54,13 @@ public class UploadAndImageInfoTest extends ParamHelper {
 
   private static final Logger log = LoggerFactory.getLogger(UploadAndImageInfoTest.class);
 
-  @ClassRule
-  public static VersionTestClassVerifier classVerifier =
-      new VersionTestClassVerifier(FileUpload.class, ImageInfo.class);
-
-  @Rule
-  public Verifier successRegister = classVerifier.getSuccessRegister(this);
-
   @Parameters(name = "{0}")
   public static Collection<?> stableWikis() {
     return ParamHelper.prepare(Version.valuesStable());
   }
 
   public UploadAndImageInfoTest(Version v) {
-    super(v, classVerifier);
+    super(BotFactory.getMediaWikiBot(v, true));
   }
 
   @Test
@@ -83,8 +70,6 @@ public class UploadAndImageInfoTest extends ParamHelper {
 
   @Test
   public final void imageInfoFail() {
-
-    bot = getMediaWikiBot(Version.getLatest(), true);
     String name = "UnknownImage.jpg";
     ImageInfo a = new ImageInfo(bot, name);
     try {
@@ -100,7 +85,7 @@ public class UploadAndImageInfoTest extends ParamHelper {
   @Test
   public final void deleteImage() {
     generalUploadImageInfoTest(bot);
-    String testFilename = getValueOrSkip("filename");
+    String testFilename = LiveTestFather.getValue("filename");
     String urlAsString = new ImageInfo(bot, testFilename).getUrlAsString();
     assertTrue(urlAsString.endsWith("Test.gif"));
     bot.delete("File:" + testFilename);
@@ -113,11 +98,12 @@ public class UploadAndImageInfoTest extends ParamHelper {
     }
   }
 
-  protected final void generalUploadImageInfoTest(MediaWikiBot bot) {
-    String validFile = getValueOrSkip("validFile");
-    assertTrue("File (" + validFile + ") not readable", new File(validFile).canRead());
-    String testFilename = getValueOrSkip("filename");
-    SimpleFile sf = new SimpleFile(testFilename, validFile);
+  private void generalUploadImageInfoTest(MediaWikiBot bot) {
+    String validFileName = LiveTestFather.getValue("validFile");
+    File validFile = new File(validFileName);
+    assertTrue("File (" + validFileName + ") not readable", validFile.canRead());
+    String testFilename = LiveTestFather.getValue("filename");
+    SimpleFile sf = new SimpleFile(testFilename, validFileName);
     bot.delete("File:" + testFilename);
     BufferedImage img = toImage(sf);
     int upWidth = img.getWidth();
@@ -125,30 +111,31 @@ public class UploadAndImageInfoTest extends ParamHelper {
     FileUpload up = new FileUpload(sf, bot);
 
     bot.getPerformedAction(up);
-    URL url = null;
-    URL urlSizeVar = null;
+    URL url = getUrl(bot, sf, ImmutableMap.<String, String>of());
+    assertIdentical(url, validFile);
+    assertImageDimension(url, upWidth, upHeight);
+
     // TODO bad values, try others
     int newWidth = 50;
     int newHeight = 50;
-    try {
+    ImmutableMap<String, String> params = ImmutableMap.of( //
+        ImageInfo.HEIGHT, newHeight + "", //
+        ImageInfo.WIDTH, newWidth + ""  //
+    );
+    URL urlSizeVar = getUrl(bot, sf, params);
+    assertImageDimension(urlSizeVar, newWidth, newHeight);
+  }
 
-      url = new ImageInfo(bot, sf.getTitle()).getUrl();
+  private URL getUrl(MediaWikiBot bot, SimpleFile sf, ImmutableMap<String, String> params) {
+    try {
+      return new ImageInfo(bot, sf.getTitle(), params).getUrl();
     } catch (ProcessException e) {
       throw new ProcessException(
           e.getLocalizedMessage() + "; \n is upload enabled? $wgEnableUploads = true;");
     }
-    urlSizeVar = new ImageInfo(bot, sf.getTitle() //
-        , new String[][] { //
-        { ImageInfo.HEIGHT, newHeight + "" } //
-        , { ImageInfo.WIDTH, newWidth + "" } //
-    }).getUrl();
-    File file = new File(validFile);
-    assertFile(url, file);
-    assertImageDimension(url, upWidth, upHeight);
-    assertImageDimension(urlSizeVar, newWidth, newHeight);
   }
 
-  protected BufferedImage toImage(SimpleFile sf) {
+  private static BufferedImage toImage(SimpleFile sf) {
     try {
       return ImageIO.read(sf.getFile());
     } catch (IOException e) {
@@ -156,18 +143,11 @@ public class UploadAndImageInfoTest extends ParamHelper {
     }
   }
 
-  protected final void assertFile(URL url, File file) {
-    File temp = new File("temp.file");
-
-    download(url.toExternalForm(), temp);
-    Assert.assertTrue("files are not ident", filesAreIdentical(temp, file));
-
-    if (!temp.delete()) {
-      throw new RuntimeException("unable to delete file");
-    }
+  private static void assertIdentical(URL url, File file) {
+    filesAreIdentical(download(url.toExternalForm()), file);
   }
 
-  protected void assertImageDimension(URL url, int width, int height) {
+  private static void assertImageDimension(URL url, int width, int height) {
     try {
       BufferedImage img = ImageIO.read(url);
       assertEquals(height, img.getHeight());
@@ -177,89 +157,29 @@ public class UploadAndImageInfoTest extends ParamHelper {
     }
   }
 
-  protected static final void download(String address, File localFileName) {
-    OutputStream out = null;
-    URLConnection conn = null;
-    InputStream in = null;
+  private static File download(String url) {
     try {
-      URL url = new URL(address);
-      out = new BufferedOutputStream(new FileOutputStream(localFileName));
-      conn = url.openConnection();
-      in = conn.getInputStream();
-      byte[] buffer = new byte[1024];
-      int numRead;
-      long numWritten = 0;
-      while ((numRead = in.read(buffer)) != -1) {
-        out.write(buffer, 0, numRead);
-        numWritten += numRead;
-      }
-      log.info(localFileName + "\t" + numWritten);
-    } catch (Exception exception) {
-      exception.printStackTrace();
-    } finally {
-      try {
-        if (in != null) {
-          in.close();
-        }
-        if (out != null) {
-          out.close();
-        }
-      } catch (IOException ioe) {
-        log.warn(ioe.getMessage());
-      }
-    }
-  }
-
-  protected static final boolean filesAreIdentical(File left, File right) {
-    assert left != null;
-    assert right != null;
-    assert left.exists();
-    assert right.exists();
-
-    if (left.length() != right.length()) {
-      return false;
-    }
-    FileInputStream rin = null;
-    FileInputStream lin = null;
-    try {
-
-      rin = new FileInputStream(right);
-      lin = new FileInputStream(left);
-      byte[] lbuffer = new byte[4096];
-      byte[] rbuffer = new byte[lbuffer.length];
-      int lcount = 0;
-      lcount = lin.read(lbuffer);
-      while (lcount > 0) {
-        int bytesRead = 0;
-
-        int rcount = 0;
-        rcount = rin.read(rbuffer, bytesRead, lcount - bytesRead);
-        while (rcount > 0) {
-          bytesRead += rcount;
-          rcount = rin.read(rbuffer, bytesRead, lcount - bytesRead);
-        }
-
-        for (int byteIndex = 0; byteIndex < lcount; byteIndex++) {
-          if (lbuffer[byteIndex] != rbuffer[byteIndex]) {
-            return false;
-          }
-        }
-        lcount = lin.read(lbuffer);
-      }
+      File tempFile = File.createTempFile("jwbf", "gif");
+      tempFile.deleteOnExit();
+      Files.write(Resources.toByteArray(JWBF.newURL(url)), tempFile);
+      return tempFile;
     } catch (IOException e) {
       throw new IllegalStateException(e);
-    } finally {
-      try {
-        if (lin != null) {
-          lin.close();
-        }
-        if (rin != null) {
-          rin.close();
-        }
-      } catch (IOException e) {
-        throw new IllegalStateException(e);
-      }
     }
-    return true;
+
+  }
+
+  private static void filesAreIdentical(File left, File right) {
+    String leftHash = hashFile(left);
+    String rightHash = hashFile(right);
+    assertEquals(leftHash, rightHash);
+  }
+
+  private static String hashFile(File file) {
+    try {
+      return Hashing.sha1().hashBytes(Files.toByteArray(file)).toString();
+    } catch (IOException e) {
+      throw new IllegalStateException(e);
+    }
   }
 }

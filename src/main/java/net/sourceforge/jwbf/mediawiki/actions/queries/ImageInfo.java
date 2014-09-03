@@ -7,15 +7,15 @@ import java.net.URL;
 import java.util.Collections;
 import java.util.Map;
 
-import com.google.common.base.Preconditions;
-import com.google.common.collect.Maps;
+import com.google.common.base.Optional;
+import com.google.common.collect.ImmutableMap;
 import net.sourceforge.jwbf.JWBF;
 import net.sourceforge.jwbf.core.actions.Get;
 import net.sourceforge.jwbf.core.actions.RequestBuilder;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.core.actions.util.ProcessException;
+import net.sourceforge.jwbf.core.internal.Checked;
 import net.sourceforge.jwbf.mapper.XmlConverter;
-import net.sourceforge.jwbf.mapper.XmlElement;
 import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
 import net.sourceforge.jwbf.mediawiki.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
@@ -41,7 +41,7 @@ public class ImageInfo extends MWAction {
   private Get msg;
   private final MediaWikiBot bot;
   private boolean selfEx = true;
-  private final Map<String, String> map = Maps.newHashMap();
+  private final ImmutableMap<String, String> params;
 
   private final String name;
 
@@ -57,27 +57,7 @@ public class ImageInfo extends MWAction {
   public ImageInfo(MediaWikiBot bot, String name, Map<String, String> params) {
     this.bot = bot;
     this.name = name;
-    map.putAll(params);
-    prepareMsg(name);
-  }
-
-  /**
-   * TODO change params to a map
-   */
-  public ImageInfo(MediaWikiBot bot, String name, String[][] params) {
-    this.bot = bot;
-    this.name = name;
-    if (params != null) {
-      for (String[] param : params) {
-        if (param.length == 2) {
-          String key = param[0];
-          String value = param[1];
-          if (key != null && value != null) {
-            map.put(key, value);
-          }
-        }
-      }
-    }
+    this.params = ImmutableMap.copyOf(params);
     prepareMsg(name);
   }
 
@@ -90,12 +70,12 @@ public class ImageInfo extends MWAction {
         .param("prop", "imageinfo") //
         ;
 
-    int width = intOrZero(map.get(WIDTH));
+    int width = intOrZero(params.get(WIDTH)).or(0);
     if (width > 0) {
       requestBuilder.param(WIDTH, width);
     }
 
-    int height = intOrZero(map.get(HEIGHT));
+    int height = intOrZero(params.get(HEIGHT)).or(0);
     if (height > 0) {
       requestBuilder.param(HEIGHT, height);
     }
@@ -103,12 +83,16 @@ public class ImageInfo extends MWAction {
     msg = requestBuilder.buildGet();
   }
 
-  private int intOrZero(String string) {
-    try {
-      return Integer.parseInt(string);
-    } catch (NumberFormatException e) {
-      log.warn("\"{}\" is not a number", string);
-      return 0;
+  private Optional<Integer> intOrZero(String string) {
+    if (string == null) {
+      return Optional.absent();
+    } else {
+      try {
+        return Optional.of(Integer.parseInt(string));
+      } catch (NumberFormatException e) {
+        log.warn("\"{}\" is not a number", string);
+        return Optional.absent();
+      }
     }
   }
 
@@ -130,9 +114,7 @@ public class ImageInfo extends MWAction {
       selfEx = true;
     }
 
-    String url = Preconditions.checkNotNull(urlOfImage, "imate url is null");
-
-    return JWBF.newURL(url);
+    return JWBF.newURL(Checked.nonNull(urlOfImage, "image url"));
   }
 
   /**
@@ -140,8 +122,8 @@ public class ImageInfo extends MWAction {
    *
    * @deprecated see super
    */
-  @Deprecated
   @Override
+  @Deprecated
   public boolean isSelfExecuter() {
     return selfEx;
   }
@@ -155,29 +137,13 @@ public class ImageInfo extends MWAction {
    */
   @Override
   public String processAllReturningText(String xml) {
-    findUrlOfImage(xml);
-    return "";
-  }
+    urlOfImage = XmlConverter.getChild(xml, "query", "pages", "page", "imageinfo", "ii") //
+        .getAttributeValueOpt("url").or("");
 
-  private void findContent(final XmlElement root) {
-
-    for (XmlElement xmlElement : root.getChildren()) {
-      if (xmlElement.getQualifiedName().equalsIgnoreCase("ii")) {
-        urlOfImage = xmlElement.getAttributeValue("url");
-
-        return;
-      } else {
-        findContent(xmlElement);
-      }
-    }
-
-  }
-
-  private void findUrlOfImage(String s) {
-    findContent(XmlConverter.getRootElement(s));
     if (urlOfImage.length() < 1) {
-      throw new ProcessException("Could not find this image " + s);
+      throw new ProcessException("Could not find this image " + xml);
     }
+    return "";
   }
 
   /**
