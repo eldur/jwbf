@@ -19,7 +19,7 @@ public class RandomPageTitlesLiveIntegTest extends ParamHelper {
   }
 
   public RandomPageTitlesLiveIntegTest(Version v) {
-    super(BotFactory.getIntegMediaWikiBot(v, true));
+    super(BotFactory.getMediaWikiBot(v, true));
   }
 
   @Test

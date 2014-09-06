@@ -27,10 +27,13 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.InvalidPropertiesFormatException;
+import java.util.List;
 import java.util.Properties;
 import java.util.TimeZone;
 
+import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.io.Files;
 import org.junit.Assume;
@@ -67,7 +70,6 @@ public class LiveTestFather {
     if (workWithDisk) {
       throw new IllegalArgumentException("do not uses this toggle - use \"-DwithLiveTests\"");
     }
-
     return optSysProperty("withLiveTests", false, true);
   }
 
@@ -76,17 +78,16 @@ public class LiveTestFather {
     if (Strings.isNullOrEmpty(stringValue)) {
       return emptyValue;
     }
-    boolean booleanValue = Boolean.valueOf(stringValue).booleanValue();
-    return booleanValue;
+    return Boolean.valueOf(stringValue);
   }
 
   private static LiveTestFather instance;
 
   private static LiveTestFather get() {
-    if (instance == null) {
+    if (instance == null && executeLiveTests()) {
       instance = new LiveTestFather();
     }
-    return instance;
+    return Preconditions.checkNotNull(instance, "do not run integ tests within normal testrun");
   }
 
   /**
@@ -161,7 +162,9 @@ public class LiveTestFather {
           File f = new File(filename);
           try {
             Files.createParentDirs(f);
-            f.createNewFile();
+            if (!f.createNewFile()) {
+              throw new IllegalStateException("could not create file " + f.getAbsolutePath());
+            }
           } catch (IOException e1) {
             throw new IllegalStateException(e);
           }
@@ -172,34 +175,29 @@ public class LiveTestFather {
     }
 
     private String findTestConfig() {
-      // find jwftestfile
-      String filename = "";
-      Collection<String> filepos = Lists.newArrayList();
-      String jwbfDefaultTestConfig = System.getProperty("user.home") + "/.jwbf/test.xml";
-      filepos.add(jwbfDefaultTestConfig);
-      filepos.add(System.getProperty("user.home") + "/jwbftest.xml");
-      filepos.add("test.xml");
+      String home = System.getProperty("user.home");
 
-      for (String fname : filepos) {
+      List<String> testConfigFilenames = Lists.newArrayList();
+      testConfigFilenames.add(home + "/.jwbf/test.xml");
+      testConfigFilenames.add(home + "/jwbftest.xml");
+      testConfigFilenames.add("test.xml");
+
+      for (String fname : testConfigFilenames) {
         if (new File(fname).canRead()) {
-          filename = fname;
-          log.info("use testfile: " + filename);
-
-          break;
+          log.info("use testfile: " + fname);
+          return fname;
         }
       }
-      if (filename.length() < 1) {
-        log.warn("no testfile found. Use: " + jwbfDefaultTestConfig);
-        filename = jwbfDefaultTestConfig;
-      }
-      return filename;
+      String preferredConfigPosition = Iterables.getFirst(testConfigFilenames, null);
+      log.warn("no testfile found. Use: " + preferredConfigPosition);
+      return preferredConfigPosition;
     }
 
     @Override
     public String get(String key) {
       String value = properties.getProperty(key);
       if (!Strings.isNullOrEmpty(value)) {
-        value = value.trim();
+        return value.trim();
       }
       return value;
     }
