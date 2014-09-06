@@ -66,7 +66,7 @@ public class CategoryMembersLiveIntegTest extends ParamHelper {
     assertEquals(limitSize, categoryTitles.size());
     GAssert.assertEquals(categoryTitles, //
         FluentIterable.from(categoryItems) //
-            .transform(CategoryItem.TO_TITLE_STRING_F) //
+            .transform(CategoryItem.toTitleStringFunction()) //
             .toList());
   }
 

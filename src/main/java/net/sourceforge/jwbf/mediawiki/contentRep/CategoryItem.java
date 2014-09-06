@@ -18,23 +18,24 @@
  */
 package net.sourceforge.jwbf.mediawiki.contentRep;
 
-import javax.annotation.Nullable;
+import javax.annotation.Nonnull;
 import java.util.Objects;
 
-import com.google.common.base.Function;
 import com.google.common.base.Preconditions;
+import net.sourceforge.jwbf.core.internal.NonnullFunction;
 
 public class CategoryItem {
 
-  public static final Function<CategoryItem, String> TO_TITLE_STRING_F =
-      new Function<CategoryItem, String>() {
-        @Nullable
-        @Override
-        public String apply(@Nullable CategoryItem input) {
-          return input.getTitle();
+  public static NonnullFunction<CategoryItem, String> toTitleStringFunction() {
+    return new NonnullFunction<CategoryItem, String>() {
+      @Nonnull
+      @Override
+      public String applyNonnull(@Nonnull CategoryItem input) {
+        return input.getTitle();
 
-        }
-      };
+      }
+    };
+  }
 
   private final String title;
   private final int namespace;

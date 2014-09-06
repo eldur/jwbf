@@ -9,7 +9,6 @@ import net.sourceforge.jwbf.mediawiki.ApiMatcherBuilder;
 import net.sourceforge.jwbf.mediawiki.ConfKey;
 import net.sourceforge.jwbf.mediawiki.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.MocoIntegTest;
-import net.sourceforge.jwbf.mediawiki.actions.meta.SiteInfoIntegTest;
 import org.junit.Test;
 
 public class AllPageTitlesIntegTest extends MocoIntegTest {
@@ -44,8 +43,7 @@ public class AllPageTitlesIntegTest extends MocoIntegTest {
 
     // GIVEN
     // TODO json?
-    server.request(SiteInfoIntegTest.newSiteInfoMatcherBuilder().build()) //
-        .response(mwFileOf(version(), "siteinfo_detail.xml"));
+    applySiteinfoXmlToServer();
     server.request(allpages2).response(mwFileOf(version(), "allPageTitles2.xml"));
     server.request(allpages1).response(mwFileOf(version(), "allPageTitles1.xml"));
     server.request(allpages0).response(mwFileOf(version(), "allPageTitles0.xml"));

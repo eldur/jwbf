@@ -18,13 +18,17 @@
  */
 package net.sourceforge.jwbf.mediawiki.actions.queries;
 
+import javax.annotation.Nonnull;
+
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Optional;
-import com.google.common.collect.FluentIterable;
+import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
+import net.sourceforge.jwbf.core.internal.NonnullFunction;
+import net.sourceforge.jwbf.mapper.XmlElement;
 import net.sourceforge.jwbf.mediawiki.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
-import net.sourceforge.jwbf.mediawiki.contentRep.CategoryItem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,13 +43,18 @@ public class CategoryMembersSimple extends BaseQuery<String> {
 
   private final CategoryMembers cm;
 
+  @VisibleForTesting
+  CategoryMembersSimple(MediaWikiBot bot, CategoryMembers cm) {
+    super(bot);
+    this.cm = Preconditions.checkNotNull(cm);
+  }
+
   /**
    * @param categoryName like "Buildings" or "Chemical elements" without prefix "Category:" in
    *                     {@link MediaWiki#NS_MAIN}
    */
   public CategoryMembersSimple(MediaWikiBot bot, String categoryName) {
     this(bot, categoryName, MediaWiki.NS_MAIN);
-
   }
 
   /**
@@ -53,8 +62,7 @@ public class CategoryMembersSimple extends BaseQuery<String> {
    * @param namespaces   for search
    */
   public CategoryMembersSimple(MediaWikiBot bot, String categoryName, int... namespaces) {
-    super(bot);
-    cm = new CategoryMembersFull(bot, categoryName, namespaces);
+    this(bot, new CategoryMembersFull(bot, categoryName, namespaces));
   }
 
   @Override
@@ -64,9 +72,7 @@ public class CategoryMembersSimple extends BaseQuery<String> {
 
   @Override
   protected ImmutableList<String> parseArticleTitles(String s) {
-    ImmutableList<CategoryItem> categoryItems = cm.parseArticleTitles(s);
-    return FluentIterable.from(categoryItems) //
-        .transform(CategoryItem.TO_TITLE_STRING_F).toList();
+    return cm.parseArticles(s, toTitleFunction());
   }
 
   @Override
@@ -82,6 +88,17 @@ public class CategoryMembersSimple extends BaseQuery<String> {
   @Override
   public String next() {
     return cm.next().getTitle();
+  }
+
+  static NonnullFunction<XmlElement, String> toTitleFunction() {
+    return new NonnullFunction<XmlElement, String>() {
+      @Nonnull
+      @Override
+      public String applyNonnull(@Nonnull XmlElement input) {
+        return input.getAttributeValueNonNull("title");
+
+      }
+    };
   }
 
 }

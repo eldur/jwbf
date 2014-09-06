@@ -22,6 +22,48 @@ public class GAssertTest {
   }
 
   @Test
+  public void testAssertEquals_list_null() {
+    // GIVEN
+    ImmutableList<String> expected = null;
+    ImmutableList<String> actual = null;
+
+    // WHEN / THEN
+    GAssert.assertEquals(expected, actual);
+  }
+
+  @Test
+  public void testAssertEquals_list_null_actual() {
+    // GIVEN
+    ImmutableList<String> expected = ImmutableList.of("a");
+    ImmutableList<String> actual = null;
+
+    try {
+      // WHEN
+      GAssert.assertEquals(expected, actual);
+      fail();
+    } catch (AssertionError e) {
+      // THEN
+      assertEquals("expected:<a> but was:<null>", e.getMessage());
+    }
+  }
+
+  @Test
+  public void testAssertEquals_list_null_expected() {
+    // GIVEN
+    ImmutableList<String> expected = null;
+    ImmutableList<String> actual = ImmutableList.of("a");
+
+    try {
+      // WHEN
+      GAssert.assertEquals(expected, actual);
+      fail();
+    } catch (AssertionError e) {
+      // THEN
+      assertEquals("expected:<null> but was:<a>", e.getMessage());
+    }
+  }
+
+  @Test
   public void testAssertEquals_list_fail() {
     // GIVEN
     ImmutableList<String> expected = ImmutableList.of("a");

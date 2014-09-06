@@ -17,7 +17,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import net.sourceforge.jwbf.core.Optionals;
 import net.sourceforge.jwbf.core.actions.util.ActionException;
-import net.sourceforge.jwbf.core.actions.util.ProcessException;
 import net.sourceforge.jwbf.core.internal.NonnullFunction;
 import net.sourceforge.jwbf.mediawiki.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.util.ApiException;
@@ -35,14 +34,6 @@ public final class XmlConverter {
   }
 
   private static final Logger log = LoggerFactory.getLogger(XmlConverter.class);
-  private static final Function<XmlElement, Optional<XmlElement>> GET_ERROR =
-      new NonnullFunction<XmlElement, Optional<XmlElement>>() {
-        @Nonnull
-        @Override
-        public Optional<XmlElement> applyNonnull(@Nonnull XmlElement input) {
-          return getErrorElement(input);
-        }
-      };
 
   public static Function<XmlElement, ApiException> toApiException() {
     return new NonnullFunction<XmlElement, ApiException>() {
@@ -113,12 +104,10 @@ public final class XmlConverter {
     if (!rootXmlElement.isPresent()) {
       throw new IllegalArgumentException(xml + " is no valid xml");
     }
-    Optional<XmlElement> errorElement = rootXmlElement.transform(GET_ERROR).get();
-    if (errorElement.isPresent()) {
-      if (xml.length() > 700) {
-        throw new ProcessException(xml.substring(0, 700));
-      }
-      throw new ProcessException(xml);
+    Optional<ApiException> apiException = getErrorElement(rootXmlElement.get()) //
+        .transform(toApiException());
+    if (apiException.isPresent()) {
+      throw apiException.get();
     }
     return rootXmlElement.get();
   }

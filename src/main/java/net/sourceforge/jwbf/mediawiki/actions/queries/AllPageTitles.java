@@ -57,8 +57,6 @@ public class AllPageTitles extends BaseQuery<String> {
   private final String prefix;
   private final int[] namespaces;
 
-  private final MediaWikiBot bot;
-
   private final String from;
 
   private final RedirectFilter rf;
@@ -79,7 +77,6 @@ public class AllPageTitles extends BaseQuery<String> {
       int... namespaces) {
     super(bot);
 
-    this.bot = bot;
     this.rf = rf;
     this.prefix = prefix;
     this.namespaces = namespaces;
@@ -104,7 +101,7 @@ public class AllPageTitles extends BaseQuery<String> {
       String namespace) {
     RequestBuilder requestBuilder = new ApiRequestBuilder() //
         .action("query") //
-        .paramNewContinue(bot.getVersion()) //
+        .paramNewContinue(bot().getVersion()) //
         .formatXml() //
         .param("list", "allpages") //
         .param("apfilterredir", findRedirectFilterValue(rf)) //
@@ -156,22 +153,12 @@ public class AllPageTitles extends BaseQuery<String> {
    * Gets the information about a follow-up page from a provided api response. If there is one, a
    * new request is added to msgs by calling generateRequest. If no exists, the string is empty.
    *
-   * @param s text for parsing
+   * @param xml text for parsing
    * @return the
    */
   @Override
-  protected Optional<String> parseHasMore(final String s) {
-
-    XmlElement rootElement = XmlConverter.getRootElement(s);
-
-    XmlElement aContinue = rootElement.getChild("continue");
-    if (aContinue != XmlElement.NULL_XML) {
-      return aContinue.getAttributeValueOpt("apcontinue");
-    } else {
-      // XXX fallback for < MW1_19
-      XmlElement allpages = rootElement.getChild("query-continue").getChild("allpages");
-      return allpages.getAttributeValueOpt("apfrom");
-    }
+  protected Optional<String> parseHasMore(final String xml) {
+    return parseXmlHasMore(xml, "allpages", "apfrom", "apcontinue");
   }
 
   /**
@@ -188,7 +175,7 @@ public class AllPageTitles extends BaseQuery<String> {
    */
   @Override
   protected Object clone() throws CloneNotSupportedException {
-    return new AllPageTitles(bot, from, prefix, rf, namespaces);
+    return new AllPageTitles(bot(), from, prefix, rf, namespaces);
   }
 
 }

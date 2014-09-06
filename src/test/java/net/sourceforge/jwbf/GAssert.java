@@ -64,7 +64,7 @@ public class GAssert {
       final String actual1;
       final String expected1;
 
-      if (actualTypes.equals(expectedTypes)) {
+      if (actualTypes != null && actualTypes.equals(expectedTypes)) {
         actual1 = joinToString(actual, Functions.toStringFunction());
         expected1 = joinToString(expected, Functions.toStringFunction());
       } else {
@@ -78,6 +78,9 @@ public class GAssert {
   }
 
   private static String joinToString(ImmutableList<?> list, Function<Object, String> toString) {
+    if (list == null) {
+      return null;
+    }
     ImmutableList<String> parts = FluentIterable.from(list).transform(toString).toList();
     return Joiner.on("\n").join(parts);
   }

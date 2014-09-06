@@ -18,15 +18,18 @@
  */
 package net.sourceforge.jwbf.mediawiki.actions.queries;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import javax.annotation.Nonnull;
+import java.util.List;
 
 import com.google.common.base.Optional;
+import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
-import com.google.common.primitives.Ints;
 import net.sourceforge.jwbf.core.actions.Get;
 import net.sourceforge.jwbf.core.actions.RequestBuilder;
+import net.sourceforge.jwbf.core.internal.Checked;
+import net.sourceforge.jwbf.core.internal.NonnullFunction;
 import net.sourceforge.jwbf.mapper.XmlConverter;
+import net.sourceforge.jwbf.mapper.XmlElement;
 import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
 import net.sourceforge.jwbf.mediawiki.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
@@ -46,39 +49,21 @@ abstract class CategoryMembers extends BaseQuery<CategoryItem> {
 
   private static final Logger log = LoggerFactory.getLogger(CategoryMembers.class);
 
-  // TODO do not work with patterns
-  private static final Pattern CATEGORY_PATTERN =
-      Pattern.compile("<cm pageid=\"(.*?)\" ns=\"(.*?)\" title=\"(.*?)\" />");
-
-  private static final Pattern CONTINUE_PATTERN = Pattern.compile("<query-continue>.*?" + //
-      "<categorymembers *cmcontinue=\"([^\"]*)\" */>" + //
-      ".*?</query-continue>", Pattern.DOTALL | Pattern.MULTILINE);
-
   /**
    * constant value for the bllimit-parameter. *
    */
   protected static final int LIMIT = 50;
 
-  final MediaWikiBot bot;
-  private final RequestGenerator requestBuilder;
-
   final String categoryName;
   private final String namespaceStr;
   final ImmutableList<Integer> namespace;
 
-  protected CategoryMembers(MediaWikiBot bot, String categoryName, int[] namespaces) {
-    this(bot, categoryName, ImmutableList.copyOf(Ints.asList(namespaces)));
-  }
-
   protected CategoryMembers(MediaWikiBot bot, String categoryName,
       ImmutableList<Integer> namespaces) {
     super(bot);
-    this.bot = bot;
-    this.namespace = namespaces;
-    namespaceStr = MWAction.createNsString(namespaces);
-    this.categoryName = categoryName.replace(" ", "_");
-    requestBuilder = new RequestGenerator();
-
+    this.namespace = Checked.nonNull(namespaces, "namespaces");
+    this.namespaceStr = MWAction.createNsString(namespaces);
+    this.categoryName = Checked.nonNull(categoryName, "categoryName").replace(" ", "_");
   }
 
   /**
@@ -86,8 +71,9 @@ abstract class CategoryMembers extends BaseQuery<CategoryItem> {
    *
    * @return a
    */
-  protected final Get generateFirstRequest() {
-    return requestBuilder.first(categoryName);
+  Get generateFirstRequest() {
+    return newRequestBuilder() //
+        .buildGet();
   }
 
   /**
@@ -97,26 +83,21 @@ abstract class CategoryMembers extends BaseQuery<CategoryItem> {
    *                   initial request
    * @return a
    */
-  protected Get generateContinueRequest(String cmcontinue) {
-    return requestBuilder.continiue(cmcontinue);
+  Get generateContinueRequest(String cmcontinue) {
+    return newRequestBuilder() //
+        .param("cmcontinue", MediaWiki.urlEncode(cmcontinue)) //
+        .buildGet();
   }
 
   /**
    * gets the information about a follow-up page from a provided api response. If there is one, a
    * new request is added to msgs by calling generateRequest.
    *
-   * @param s text for parsing
+   * @param xml text for parsing
    */
   @Override
-  public Optional<String> parseHasMore(final String s) {
-
-    Matcher m = CONTINUE_PATTERN.matcher(s);
-
-    if (m.find()) {
-      return Optional.fromNullable(m.group(1));
-    } else {
-      return Optional.absent();
-    }
+  public Optional<String> parseHasMore(final String xml) {
+    return parseXmlHasMore(xml, "categorymembers", "cmcontinue", "cmcontinue");
   }
 
   /**
@@ -126,58 +107,46 @@ abstract class CategoryMembers extends BaseQuery<CategoryItem> {
    */
   @Override
   public ImmutableList<CategoryItem> parseArticleTitles(String xml) {
+    return parseArticles(xml, toCategoryItem());
 
-    XmlConverter.failOnError(xml);
-    Matcher m = CATEGORY_PATTERN.matcher(xml);
-
-    ImmutableList.Builder<CategoryItem> listBuilder = ImmutableList.builder();
-    while (m.find()) {
-      String title = m.group(3);
-      int namespace = Integer.parseInt(m.group(2));
-      int pageId = Integer.parseInt(m.group(1));
-      CategoryItem categoryItem = new CategoryItem(title, namespace, pageId);
-      listBuilder.add(categoryItem);
-    }
-    return listBuilder.build();
   }
 
-  protected class RequestGenerator {
+  private NonnullFunction<XmlElement, CategoryItem> toCategoryItem() {
+    return new NonnullFunction<XmlElement, CategoryItem>() {
+      @Nonnull
+      @Override
+      protected CategoryItem applyNonnull(@Nonnull XmlElement input) {
+        String title = input.getAttributeValueNonNull("title");
+        int namespace = Integer.parseInt(input.getAttributeValueNonNull("ns"));
+        int pageId = Integer.parseInt(input.getAttributeValueNonNull("pageid"));
+        return new CategoryItem(title, namespace, pageId);
 
-    private static final String CMTITLE = "cmtitle";
-
-    RequestGenerator() {
-
-    }
-
-    Get continiue(String cmcontinue) {
-      return newRequestBuilder() //
-          .param("cmcontinue", MediaWiki.urlEncode(cmcontinue)) //
-          .param(CMTITLE, "Category:" + MediaWiki.urlEncode(categoryName)) //
-              // TODO: do not add Category: - instead, change other methods' descs (e.g.
-              // in MediaWikiBot)
-          .buildGet();
-    }
-
-    private RequestBuilder newRequestBuilder() {
-      ApiRequestBuilder requestBuilder = new ApiRequestBuilder();
-      if (namespaceStr.length() > 0) {
-        requestBuilder.param("cmnamespace", MediaWiki.urlEncode(namespaceStr));
       }
+    };
+  }
 
-      return requestBuilder //
-          .action("query") //
-          .formatXml() //
-          .param("list", "categorymembers") //
-          .param("cmlimit", LIMIT) //
-          ;
+  <T> ImmutableList<T> parseArticles(String xml, NonnullFunction<XmlElement, T> f) {
+    List<XmlElement> children = //
+        XmlConverter.getChild(xml, "query", "categorymembers").getChildren();
+    return FluentIterable.from(children).transform(f).toList();
+  }
+
+  private RequestBuilder newRequestBuilder() {
+    ApiRequestBuilder requestBuilder = new ApiRequestBuilder();
+    if (namespaceStr.length() > 0) {
+      requestBuilder.param("cmnamespace", MediaWiki.urlEncode(namespaceStr));
     }
 
-    Get first(String categoryName) {
-      return newRequestBuilder() //
-          .param(CMTITLE, "Category:" + MediaWiki.urlEncode(categoryName)) //
-          .buildGet();
-    }
-
+    return requestBuilder //
+        .action("query") //
+        .formatXml() //
+        .paramNewContinue(bot().getVersion()) //
+        .param("list", "categorymembers") //
+        .param("cmlimit", LIMIT) //
+        .param("cmtitle", "Category:" + MediaWiki.urlEncode(categoryName)) //
+        // TODO: do not add Category: - instead, change other methods' descs (e.g.
+        // in MediaWikiBot)
+        ;
   }
 
 }

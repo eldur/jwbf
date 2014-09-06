@@ -9,6 +9,7 @@ import com.google.common.base.Function;
 import org.junit.Test;
 
 public class NonnullFunctionTest {
+
   @Test
   public void testApplyNonnull() throws Exception {
 

@@ -35,6 +35,7 @@ public class CategoryMembersIntegTest extends MocoIntegTest {
   @Test
   public void test_lazy() {
     // GIVEN
+    applySiteinfoXmlToServer();
     server.request(newBaseMatcher().build()).response(mwFileOf(version(), "category0.xml"));
     server.request(newBaseMatcher().param("cmcontinue", "token|to1|") //
         .build()).response(mwFileOf(version(), "category1.xml"));
@@ -57,6 +58,7 @@ public class CategoryMembersIntegTest extends MocoIntegTest {
   @Test
   public void test() {
     // GIVEN
+    applySiteinfoXmlToServer();
     server.request(newBaseMatcher().build()).response(mwFileOf(version(), "category0.xml"));
     server.request(newBaseMatcher().param("cmcontinue", "token|to1|") //
         .build()).response(mwFileOf(version(), "category1.xml"));
@@ -79,6 +81,7 @@ public class CategoryMembersIntegTest extends MocoIntegTest {
   @Test
   public void testWithoutPermission() {
     // GIVEN
+    applySiteinfoXmlToServer();
     server.request(newBaseMatcher().build()).response(mwFileOf(version(), "readapidenied.xml"));
     CategoryMembersFull testee = new CategoryMembersFull(bot(), "TestCat");
 

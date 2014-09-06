@@ -8,6 +8,9 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import net.sourceforge.jwbf.core.Optionals;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
+import net.sourceforge.jwbf.core.internal.Checked;
+import net.sourceforge.jwbf.mapper.XmlConverter;
+import net.sourceforge.jwbf.mapper.XmlElement;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 import org.slf4j.Logger;
@@ -51,7 +54,7 @@ public abstract class BaseQuery<T> implements Iterable<T>, Iterator<T>, Cloneabl
   }
 
   protected BaseQuery(MediaWikiBot bot) {
-    this.bot = bot;
+    this.bot = Checked.nonNull(bot, "bot");
     inner = getInnerAction();
   }
 
@@ -109,6 +112,20 @@ public abstract class BaseQuery<T> implements Iterable<T>, Iterator<T>, Cloneabl
     throw new UnsupportedOperationException("do not change this iteration");
   }
 
+  protected Optional<String> parseXmlHasMore(String xml, String elementName, String attributeKey,
+      String newContinueKey) {
+    XmlElement rootElement = XmlConverter.getRootElement(xml);
+
+    XmlElement aContinue = rootElement.getChild("continue");
+    if (aContinue != XmlElement.NULL_XML) {
+      return aContinue.getAttributeValueOpt(newContinueKey);
+    } else {
+      // XXX fallback for < MW1_19
+      XmlElement queryContinue = rootElement.getChild("query-continue").getChild(elementName);
+      return queryContinue.getAttributeValueOpt(attributeKey);
+    }
+  }
+
   protected abstract HttpAction prepareCollection();
 
   private void doCollection() {
@@ -124,6 +141,10 @@ public abstract class BaseQuery<T> implements Iterable<T>, Iterator<T>, Cloneabl
   protected abstract ImmutableList<T> parseArticleTitles(String s);
 
   protected abstract Optional<String> parseHasMore(final String s);
+
+  protected MediaWikiBot bot() {
+    return bot;
+  }
 
   /**
    * Inner helper class for this type.

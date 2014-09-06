@@ -21,6 +21,7 @@ package net.sourceforge.jwbf.mediawiki.actions.util;
 import java.util.List;
 
 import com.google.common.base.Joiner;
+import com.google.common.collect.ImmutableList;
 import com.google.common.primitives.Ints;
 import net.sourceforge.jwbf.core.actions.ContentProcessable;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
@@ -99,7 +100,15 @@ public abstract class MWAction implements ContentProcessable {
    * @return with numbers seperated by |
    */
   public static String createNsString(int... namespaces) {
-    return createNsString(Ints.asList(namespaces));
+    return createNsString(nullSafeCopyOf(namespaces));
+  }
+
+  public static ImmutableList<Integer> nullSafeCopyOf(int[] namespaces) {
+    if (namespaces == null) {
+      return ImmutableList.of();
+    } else {
+      return ImmutableList.copyOf(Ints.asList(namespaces));
+    }
   }
 
   public static String createNsString(List<Integer> asList) {

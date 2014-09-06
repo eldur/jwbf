@@ -22,7 +22,7 @@ public class CategoryMembersFullTest {
     CategoryMembersFull testee = new CategoryMembersFull(bot, categoryName);
 
     // THEN
-    assertEquals(bot, testee.bot);
+    assertEquals(bot, testee.bot());
     assertEquals("Test_It", testee.categoryName);
     GAssert.assertEquals(ImmutableList.<Integer>of(), testee.namespace);
     assertFalse(testee.iterator().hasNext());

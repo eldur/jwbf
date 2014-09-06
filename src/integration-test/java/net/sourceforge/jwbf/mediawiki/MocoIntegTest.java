@@ -25,6 +25,7 @@ import net.sourceforge.jwbf.AbstractIntegTest;
 import net.sourceforge.jwbf.JWBF;
 import net.sourceforge.jwbf.TestHelper;
 import net.sourceforge.jwbf.mediawiki.MediaWiki.Version;
+import net.sourceforge.jwbf.mediawiki.actions.meta.SiteInfoIntegTest;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 import net.sourceforge.jwbf.mediawiki.live.auto.ParamHelper;
 import org.junit.Before;
@@ -101,7 +102,15 @@ public abstract class MocoIntegTest extends AbstractIntegTest implements Provide
 
   protected void bot(MediaWikiBot bot) {
     this.bot = bot;
+  }
 
+  protected void applySiteinfoXmlToServer() {
+    applyToServer(SiteInfoIntegTest.newSiteInfoMatcherBuilder(), "siteinfo_detail.xml");
+  }
+
+  protected void applyToServer(ApiMatcherBuilder apiMatcherBuilder, String filename) {
+    server.request(apiMatcherBuilder.build()) //
+        .response(mwFileOf(version(), filename));
   }
 
   protected ContentResource mwFileOf(MediaWiki.Version version, String filename) {

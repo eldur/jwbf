@@ -3,6 +3,7 @@ package net.sourceforge.jwbf.mediawiki.actions.queries;
 import com.google.common.collect.ImmutableList;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.core.bots.util.JwbfException;
+import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 import net.sourceforge.jwbf.mediawiki.contentRep.CategoryItem;
 import org.slf4j.Logger;
@@ -25,7 +26,7 @@ public class CategoryMembersFull extends CategoryMembers {
   }
 
   public CategoryMembersFull(MediaWikiBot bot, String categoryName, int... namespaces) {
-    super(bot, categoryName, namespaces);
+    this(bot, categoryName, MWAction.nullSafeCopyOf(namespaces));
   }
 
   @Override
@@ -45,7 +46,7 @@ public class CategoryMembersFull extends CategoryMembers {
   protected Object clone() throws CloneNotSupportedException {
     super.clone();
     try {
-      return new CategoryMembersFull(bot, categoryName, namespace);
+      return new CategoryMembersFull(bot(), categoryName, namespace);
     } catch (JwbfException e) {
       throw new CloneNotSupportedException(e.getLocalizedMessage());
     }
