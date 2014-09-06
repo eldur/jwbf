@@ -17,6 +17,8 @@ public class CategoryMembersFull extends CategoryMembers {
 
   private static final Logger log = LoggerFactory.getLogger(CategoryMembersFull.class);
 
+  private boolean init = true;
+
   public CategoryMembersFull(MediaWikiBot bot, String categoryName,
       ImmutableList<Integer> namespaces) {
     super(bot, categoryName, namespaces);
@@ -32,7 +34,7 @@ public class CategoryMembersFull extends CategoryMembers {
       init = false;
       return generateFirstRequest();
     } else {
-      return generateContinueRequest(nextPageInfo);
+      return generateContinueRequest(getNextPageInfo());
     }
   }
 

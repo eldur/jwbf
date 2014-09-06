@@ -1,5 +1,7 @@
 package net.sourceforge.jwbf.mediawiki.actions.queries;
 
+import static net.sourceforge.jwbf.mediawiki.actions.queries.CategoryMembersLiveIntegTest.copyOfWithLimit;
+import static net.sourceforge.jwbf.mediawiki.actions.queries.CategoryMembersLiveIntegTest.copyWithoutDuplicatesOf;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
@@ -31,6 +33,28 @@ public class CategoryMembersIntegTest extends MocoIntegTest {
   }
 
   @Test
+  public void test_lazy() {
+    // GIVEN
+    server.request(newBaseMatcher().build()).response(mwFileOf(version(), "category0.xml"));
+    server.request(newBaseMatcher().param("cmcontinue", "token|to1|") //
+        .build()).response(mwFileOf(version(), "category1.xml"));
+    server.request(newBaseMatcher().param("cmcontinue", "token|to|2") //
+        .build()).response(mwFileOf(version(), "category2.xml"));
+
+    // WHEN
+    CategoryMembersFull testee = new CategoryMembersFull(bot(), "TestCat");
+    ImmutableList<CategoryItem> actual = copyOfWithLimit(testee.lazy(), 4);
+
+    // THEN
+    ImmutableList<CategoryItem> expected = ImmutableList.of( //
+        new CategoryItem("CategoryTest0", MediaWiki.NS_MAIN, 1000), //
+        new CategoryItem("CategoryTest1", MediaWiki.NS_MAIN, 1001), //
+        new CategoryItem("CategoryTest10", MediaWiki.NS_MAIN, 1002) //
+    );
+    GAssert.assertEquals(expected, actual);
+  }
+
+  @Test
   public void test() {
     // GIVEN
     server.request(newBaseMatcher().build()).response(mwFileOf(version(), "category0.xml"));
@@ -41,8 +65,7 @@ public class CategoryMembersIntegTest extends MocoIntegTest {
 
     // WHEN
     CategoryMembersFull testee = new CategoryMembersFull(bot(), "TestCat");
-    ImmutableList<CategoryItem> actual =
-        CategoryMembersLiveIntegTest.copyWithoutDuplicatesOf(testee, 3);
+    ImmutableList<CategoryItem> actual = copyWithoutDuplicatesOf(testee, 3);
 
     // THEN
     ImmutableList<CategoryItem> expected = ImmutableList.of( //
@@ -61,7 +84,7 @@ public class CategoryMembersIntegTest extends MocoIntegTest {
 
     // WHEN
     try {
-      CategoryMembersLiveIntegTest.copyWithoutDuplicatesOf(testee, 3);
+      copyWithoutDuplicatesOf(testee, 3);
       fail();
     } catch (ApiException e) {
       // THEN
@@ -75,8 +98,7 @@ public class CategoryMembersIntegTest extends MocoIntegTest {
     // nothing
     try {
       // WHEN
-      CategoryMembersLiveIntegTest //
-          .copyWithoutDuplicatesOf(new CategoryMembersFull(bot(), "TestCat"), 3);
+      copyWithoutDuplicatesOf(new CategoryMembersFull(bot(), "TestCat"), 3);
       fail();
     } catch (IllegalStateException e) {
       // THEN

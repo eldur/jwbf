@@ -59,23 +59,12 @@ abstract class CategoryMembers extends BaseQuery<CategoryItem> {
    */
   protected static final int LIMIT = 50;
 
-  protected final MediaWikiBot bot;
-  /**
-   * information necessary to get the next api page.
-   */
-  protected String nextPageInfo = null;
-  private boolean hasMoreResults = false;
+  final MediaWikiBot bot;
+  private final RequestGenerator requestBuilder;
 
-  protected boolean init = true;
-  /**
-   * Name of the category.
-   */
-  protected final String categoryName;
-
-  protected final RequestGenerator requestBuilder;
-
-  protected final ImmutableList<Integer> namespace;
+  final String categoryName;
   private final String namespaceStr;
+  final ImmutableList<Integer> namespace;
 
   protected CategoryMembers(MediaWikiBot bot, String categoryName, int[] namespaces) {
     this(bot, categoryName, ImmutableList.copyOf(Ints.asList(namespaces)));
@@ -124,12 +113,10 @@ abstract class CategoryMembers extends BaseQuery<CategoryItem> {
     Matcher m = CONTINUE_PATTERN.matcher(s);
 
     if (m.find()) {
-      nextPageInfo = m.group(1);
-      hasMoreResults = true;
+      return Optional.fromNullable(m.group(1));
     } else {
-      hasMoreResults = false;
+      return Optional.absent();
     }
-    return Optional.fromNullable(nextPageInfo);
   }
 
   /**
