@@ -27,7 +27,7 @@ public class PostDeleteTest {
   public void before() {
     Set<String> setWithDelete = ImmutableSet.of("delete");
     when(userinfo.getRights()).thenReturn(setWithDelete);
-    testee = Mockito.spy(new PostDelete(userinfo, "TitleToDelete"));
+    testee = Mockito.spy(new PostDelete(userinfo, "TitleToDelete", "Unused"));
   }
 
   @Test(expected = NullPointerException.class)

@@ -189,11 +189,8 @@ public class LogEvents extends MWAction implements Iterator<LogItem>, Iterable<L
 
     for (XmlElement xmlElement : root.getChildren()) {
       if (xmlElement.getQualifiedName().equalsIgnoreCase("item")) {
-
-        LogItem l = new LogItem();
-        l.setTitle(xmlElement.getAttributeValue("title"));
-        l.setType(xmlElement.getAttributeValue("type"));
-        l.setUser(xmlElement.getAttributeValue("user"));
+        LogItem l = new LogItem(xmlElement.getAttributeValue("title"),
+            xmlElement.getAttributeValue("type"), xmlElement.getAttributeValue("user"));
         logCollection.add(l);
 
       } else {
