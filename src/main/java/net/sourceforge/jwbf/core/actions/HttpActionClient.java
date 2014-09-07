@@ -40,7 +40,6 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Function;
 import com.google.common.base.Joiner;
 import com.google.common.base.Optional;
-import com.google.common.base.Preconditions;
 import com.google.common.base.Predicates;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMultimap;
@@ -51,6 +50,7 @@ import com.google.common.util.concurrent.RateLimiter;
 import net.sourceforge.jwbf.JWBF;
 import net.sourceforge.jwbf.core.Transform;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
+import net.sourceforge.jwbf.core.internal.Checked;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -102,7 +102,7 @@ public class HttpActionClient {
   }
 
   public HttpActionClient(Builder builder) {
-    this.url = Preconditions.checkNotNull(builder.url, "no url is defined");
+    this.url = Checked.nonNull(builder.url, "url");
     host = newHost(builder.url);
     path = pathOf(builder.url);
     if (builder.requestsPerSecond > 0) {
@@ -362,12 +362,9 @@ public class HttpActionClient {
 
     public Builder withUserAgent(String userAgentName, String userAgentVersion,
         String userAgentComment) {
-      String nonNullUserAgentName =
-          Preconditions.checkNotNull(userAgentName, "User-Agent name must not be null");
-      String nonNullUserAgentVersion =
-          Preconditions.checkNotNull(userAgentVersion, "User-Agent version must not be null");
-      String nonNullUserAgentComment =
-          Preconditions.checkNotNull(userAgentComment, "User-Agent comment must not be null");
+      String nonNullUserAgentName = Checked.nonNull(userAgentName, "User-Agent name");
+      String nonNullUserAgentVersion = Checked.nonNull(userAgentVersion, "User-Agent version");
+      String nonNullUserAgentComment = Checked.nonNull(userAgentComment, "User-Agent comment");
       String encodedName = toISO8859(trimAndReplaceWhitespace(nonNullUserAgentName));
       String encodedVersion = toISO8859(trimAndReplaceWhitespace(nonNullUserAgentVersion));
       String encodedComment = toISO8859(trimAndRemoveWhitespace(nonNullUserAgentComment));
@@ -491,9 +488,9 @@ public class HttpActionClient {
     final String comment;
 
     UserAgentPart(String name, String version, String comment) {
-      this.name = Preconditions.checkNotNull(name);
-      this.version = Preconditions.checkNotNull(version);
-      this.comment = Preconditions.checkNotNull(comment);
+      this.name = Checked.nonNull(name, "name");
+      this.version = Checked.nonNull(version, "version");
+      this.comment = Checked.nonNull(comment, "comment");
     }
   }
 

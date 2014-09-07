@@ -21,7 +21,7 @@ package net.sourceforge.jwbf.mediawiki.contentRep;
 import javax.annotation.Nonnull;
 import java.util.Objects;
 
-import com.google.common.base.Preconditions;
+import net.sourceforge.jwbf.core.internal.Checked;
 import net.sourceforge.jwbf.core.internal.NonnullFunction;
 
 public class CategoryItem {
@@ -42,7 +42,7 @@ public class CategoryItem {
   private final int pageid;
 
   public CategoryItem(String title, int namespace, int pageid) {
-    this.title = Preconditions.checkNotNull(title);
+    this.title = Checked.nonNull(title, "title");
     this.namespace = namespace;
     this.pageid = pageid;
   }

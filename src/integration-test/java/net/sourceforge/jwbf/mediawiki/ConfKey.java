@@ -1,7 +1,7 @@
 package net.sourceforge.jwbf.mediawiki;
 
-import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableMap;
+import net.sourceforge.jwbf.core.internal.Checked;
 
 public enum ConfKey {
   SITEINFO, INTERWIKI, SITENAME, MAINPAGE, //
@@ -25,6 +25,6 @@ public enum ConfKey {
       ;
 
   public static String toString(ConfKey key) {
-    return Preconditions.checkNotNull(KEY_MAP.get(key));
+    return Checked.nonNull(KEY_MAP.get(key), "value for key: " + key);
   }
 }

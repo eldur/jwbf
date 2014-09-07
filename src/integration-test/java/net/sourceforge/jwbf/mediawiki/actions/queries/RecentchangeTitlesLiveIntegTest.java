@@ -54,6 +54,7 @@ public class RecentchangeTitlesLiveIntegTest extends ParamHelper {
   public RecentchangeTitlesLiveIntegTest(Version v) {
     super(BotFactory.getMediaWikiBot(v, true));
   }
+
   @Before
   public void before() {
     watch = Stopwatch.createStarted();

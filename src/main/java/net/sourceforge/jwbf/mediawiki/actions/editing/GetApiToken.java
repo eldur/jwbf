@@ -4,12 +4,12 @@ import javax.annotation.Nonnull;
 
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
-import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableMap;
 import net.sourceforge.jwbf.core.Optionals;
 import net.sourceforge.jwbf.core.actions.Get;
 import net.sourceforge.jwbf.core.actions.ParamTuple;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
+import net.sourceforge.jwbf.core.internal.NonnullFunction;
 import net.sourceforge.jwbf.mapper.XmlConverter;
 import net.sourceforge.jwbf.mapper.XmlElement;
 import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
@@ -147,12 +147,12 @@ public class GetApiToken extends DequeMWAction<GetApiToken.TokenResponse> {
   }
 
   private static Function<XmlElement, String> tokenFunctionOf(final String key) {
-    return new Function<XmlElement, String>() {
+    return new NonnullFunction<XmlElement, String>() {
 
+      @Nonnull
       @Override
-      public String apply(XmlElement xmlElement) {
-        XmlElement xmlElementNonNull = Preconditions.checkNotNull(xmlElement);
-        return xmlElementNonNull.getAttributeValueNonNull(key);
+      public String applyNonnull(@Nonnull XmlElement xmlElement) {
+        return xmlElement.getAttributeValueNonNull(key);
       }
     };
   }

@@ -3,21 +3,21 @@ package net.sourceforge.jwbf.core.actions;
 import java.util.Objects;
 
 import com.google.common.annotations.VisibleForTesting;
-import com.google.common.base.Preconditions;
 import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
+import net.sourceforge.jwbf.core.internal.Checked;
 
 public final class ParamTuple<T> {
   final String key;
   final Supplier<T> valueSupplier;
 
   public ParamTuple(String key, T value) {
-    this(key, Suppliers.ofInstance(Preconditions.checkNotNull(value, "value must not be null")));
+    this(key, Suppliers.ofInstance(Checked.nonNull(value, "value")));
   }
 
   public ParamTuple(String key, Supplier<T> valueSupplier) {
-    this.key = Preconditions.checkNotNull(key, "key must not be null");
-    this.valueSupplier = Preconditions.checkNotNull(valueSupplier, "value must not be null");
+    this.key = Checked.nonNull(key, "key");
+    this.valueSupplier = Checked.nonNull(valueSupplier, "value");
   }
 
   @Override

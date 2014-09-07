@@ -5,7 +5,6 @@ import javax.inject.Inject;
 import java.net.URL;
 
 import com.google.common.base.Optional;
-import com.google.common.base.Preconditions;
 import net.sourceforge.jwbf.core.actions.ContentProcessable;
 import net.sourceforge.jwbf.core.actions.HttpActionClient;
 import net.sourceforge.jwbf.core.actions.util.ActionException;
@@ -14,6 +13,7 @@ import net.sourceforge.jwbf.core.bots.WikiBot;
 import net.sourceforge.jwbf.core.contentRep.Article;
 import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
 import net.sourceforge.jwbf.core.contentRep.Userinfo;
+import net.sourceforge.jwbf.core.internal.Checked;
 import net.sourceforge.jwbf.mediawiki.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.actions.editing.GetRevision;
@@ -60,7 +60,6 @@ public class MediaWikiBot implements WikiBot {
 
   private boolean loginChangeUserInfo = false;
   private boolean loginChangeVersion = false;
-  private boolean useEditApi = true;
 
   @Inject
   private HttpBot bot;
@@ -195,8 +194,7 @@ public class MediaWikiBot implements WikiBot {
       throw new ActionException("Please login first");
     }
 
-    SimpleArticle nonNullArticle =
-        Preconditions.checkNotNull(simpleArticle, "content must not be null");
+    SimpleArticle nonNullArticle = Checked.nonNull(simpleArticle, "content");
     checkTitle(nonNullArticle.getTitle());
 
     getPerformedAction(new PostModifyContent(this, simpleArticle));

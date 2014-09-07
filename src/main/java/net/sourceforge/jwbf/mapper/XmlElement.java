@@ -6,9 +6,9 @@ import java.util.List;
 
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
-import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
+import net.sourceforge.jwbf.core.internal.Checked;
 
 public class XmlElement {
 
@@ -38,8 +38,7 @@ public class XmlElement {
   }
 
   public String getAttributeValueNonNull(String name) {
-    return Preconditions.checkNotNull(getAttributeValue(name), //
-        "no attribute found for key: " + name);
+    return Checked.nonNull(getAttributeValue(name), "attribute value for key: " + name);
   }
 
   @Deprecated

@@ -92,8 +92,7 @@ public class CategoryMembersLiveIntegTest extends ParamHelper {
     }
   }
 
-  public static <T> ImmutableList<T> copyWithoutDuplicatesOf(Iterable<T> elements,
-      int limitSize) {
+  public static <T> ImmutableList<T> copyWithoutDuplicatesOf(Iterable<T> elements, int limitSize) {
     ImmutableList<T> ts = copyOfWithLimit(elements, limitSize);
     GAssert.assertEquals(ts, Sets.newHashSet(ts));
     return ts;

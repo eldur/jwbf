@@ -1,25 +1,27 @@
 package net.sourceforge.jwbf.core.actions;
 
-import java.util.Map;
+import static java.util.Map.Entry;
+
+import javax.annotation.Nonnull;
 
 import com.google.common.base.Function;
 import com.google.common.base.Joiner;
-import com.google.common.base.Preconditions;
 import com.google.common.base.Supplier;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Ordering;
+import net.sourceforge.jwbf.core.internal.NonnullFunction;
 
 class ParamJoiner implements Supplier<String> {
 
-  private static final Function<Map.Entry<String, Supplier<String>>, String> TO_KEY_VALUE_PAIR = //
-      new Function<Map.Entry<String, Supplier<String>>, String>() {
+  private static final Function<Entry<String, Supplier<String>>, String> TO_KEY_VALUE_PAIR = //
+      new NonnullFunction<Entry<String, Supplier<String>>, String>() {
 
+        @Nonnull
         @Override
-        public String apply(Map.Entry<String, Supplier<String>> input) {
-          Map.Entry<String, Supplier<String>> nonNullIn = Preconditions.checkNotNull(input);
-          return nonNullIn.getKey() + "=" + nonNullIn.getValue().get();
+        public String applyNonnull(@Nonnull Entry<String, Supplier<String>> input) {
+          return input.getKey() + "=" + input.getValue().get();
         }
       };
 

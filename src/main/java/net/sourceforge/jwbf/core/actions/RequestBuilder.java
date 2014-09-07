@@ -6,11 +6,11 @@ import java.util.Locale;
 
 import com.google.common.base.Charsets;
 import com.google.common.base.Optional;
-import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
 import com.google.common.collect.ImmutableMultimap;
+import net.sourceforge.jwbf.core.internal.Checked;
 
 public class RequestBuilder {
 
@@ -40,7 +40,7 @@ public class RequestBuilder {
   private <T> RequestBuilder applyKeyValueTo(String key, Supplier<?> stringSupplier,
       ImmutableMultimap.Builder<String, Supplier<T>> toParams) {
     if (!Strings.isNullOrEmpty(key)) {
-      Preconditions.checkNotNull(stringSupplier);
+      Checked.nonNull(stringSupplier, "stringSupplier");
 
       Supplier<?> memoize = new HashCodeEqualsMemoizingSupplier<>(stringSupplier);
       if (!toParams.build().containsEntry(key, memoize)) {

@@ -27,8 +27,8 @@ import com.google.common.collect.Maps;
  * /API#Posting_Data_.2F_needs_major_editPage.php_rewrite
  *
  * @author Thomas Stock
- * TODO change to immutable
- * FIXME check usage
+ *         TODO change to immutable
+ *         FIXME check usage
  */
 public class LoginData {
 

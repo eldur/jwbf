@@ -18,14 +18,13 @@
  */
 package net.sourceforge.jwbf.mediawiki.actions.queries;
 
-import com.google.common.base.Optional;
 import javax.annotation.Nonnull;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Optional;
-import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
+import net.sourceforge.jwbf.core.internal.Checked;
 import net.sourceforge.jwbf.core.internal.NonnullFunction;
 import net.sourceforge.jwbf.mapper.XmlElement;
 import net.sourceforge.jwbf.mediawiki.MediaWiki;
@@ -47,7 +46,7 @@ public class CategoryMembersSimple extends BaseQuery<String> {
   @VisibleForTesting
   CategoryMembersSimple(MediaWikiBot bot, CategoryMembers cm) {
     super(bot);
-    this.cm = Preconditions.checkNotNull(cm);
+    this.cm = Checked.nonNull(cm, "categoryMembers");
   }
 
   /**

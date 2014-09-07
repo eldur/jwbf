@@ -4,7 +4,7 @@ import javax.annotation.Nonnull;
 import java.io.IOException;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.base.Preconditions;
+import net.sourceforge.jwbf.core.internal.Checked;
 
 public class JsonMapper {
 
@@ -19,9 +19,8 @@ public class JsonMapper {
   }
 
   public <T> T get(String json, Class<T> clazz) {
-    String nonNullJson = Preconditions.checkNotNull(json, "do not convert null");
-    return (T) Preconditions.checkNotNull(transfomer.toJson(nonNullJson, clazz),
-        "a json mapping must not return null");
+    String nonNullJson = Checked.nonNull(json, "json");
+    return (T) Checked.nonNull(transfomer.toJson(nonNullJson, clazz), "a json mapping result");
   }
 
   public interface ToJsonFunction {

@@ -2,6 +2,7 @@ package net.sourceforge.jwbf.mediawiki;
 
 import static org.junit.runners.Parameterized.Parameters;
 
+import javax.annotation.Nonnull;
 import javax.inject.Provider;
 import java.io.File;
 import java.util.Arrays;
@@ -12,7 +13,6 @@ import java.util.Map.Entry;
 import com.github.dreamhead.moco.Moco;
 import com.github.dreamhead.moco.resource.ContentResource;
 import com.google.common.base.Function;
-import com.google.common.base.Preconditions;
 import com.google.common.base.Splitter;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
@@ -24,6 +24,7 @@ import com.typesafe.config.ConfigFactory;
 import net.sourceforge.jwbf.AbstractIntegTest;
 import net.sourceforge.jwbf.JWBF;
 import net.sourceforge.jwbf.TestHelper;
+import net.sourceforge.jwbf.core.internal.NonnullFunction;
 import net.sourceforge.jwbf.mediawiki.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.actions.meta.SiteInfoIntegTest;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
@@ -170,11 +171,11 @@ public abstract class MocoIntegTest extends AbstractIntegTest implements Provide
   }
 
   private static final Function<Entry<? extends Object, String>, String> function =
-      new Function<Map.Entry<? extends Object, String>, String>() {
+      new NonnullFunction<Entry<? extends Object, String>, String>() {
 
+        @Nonnull
         @Override
-        public String apply(Entry<? extends Object, String> input) {
-          Entry<? extends Object, String> in = Preconditions.checkNotNull(input);
+        public String applyNonnull(@Nonnull Entry<? extends Object, String> in) {
           return in.getKey() + "=" + in.getValue();
         }
       };

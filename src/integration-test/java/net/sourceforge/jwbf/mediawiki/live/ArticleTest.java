@@ -168,8 +168,8 @@ public class ArticleTest {
       fail();
     } catch (IllegalArgumentException iae) {
       assertEquals("do not convert an net.sourceforge.jwbf.core.contentRep.Article" + //
-              " to a net.sourceforge.jwbf.core.contentRep.SimpleArticle, " + //
-              "because its very expensive", iae.getMessage());
+          " to a net.sourceforge.jwbf.core.contentRep.SimpleArticle, " + //
+          "because its very expensive", iae.getMessage());
     }
   }
 

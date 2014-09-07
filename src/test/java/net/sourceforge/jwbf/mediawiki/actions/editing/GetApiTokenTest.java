@@ -44,7 +44,7 @@ public class GetApiTokenTest {
       fail();
     } catch (NullPointerException e) {
       // THEN
-      assertEquals("no attribute found for key: deletetoken", e.getMessage());
+      assertEquals("attribute value for key: deletetoken must not be null", e.getMessage());
     }
 
   }

@@ -35,6 +35,7 @@ public class MediaWikiBotTest {
   @Before
   public void before() {
     client = mock(HttpActionClient.class);
+    testee = new MediaWikiBot(client);
   }
 
   @Test
@@ -54,7 +55,6 @@ public class MediaWikiBotTest {
     // GIVEN
     when(client.performAction(Mockito.any(GetVersion.class))) //
         .thenThrow(new IllegalStateException("fail"));
-    testee = new MediaWikiBot(client);
 
     try {
       // WHEN
@@ -70,7 +70,6 @@ public class MediaWikiBotTest {
   public void testGetVersion() {
     // GIVEN
     when(client.performAction(Mockito.any(GetVersion.class))).thenReturn("");
-    testee = new MediaWikiBot(client);
 
     // WHEN
     Version version = testee.getVersion();
@@ -82,7 +81,6 @@ public class MediaWikiBotTest {
   @Test
   public void testWriteContent_not_logged_in() {
     // GIVEN
-    testee = new MediaWikiBot(client);
 
     try {
       // WHEN
@@ -97,7 +95,6 @@ public class MediaWikiBotTest {
   public void testWriteContent_null() {
     // GIVEN
     mockValidLogin("username", client);
-    testee = new MediaWikiBot(client);
     testee.login("username", "pw");
 
     try {
@@ -114,7 +111,6 @@ public class MediaWikiBotTest {
   public void testWriteContent_noTitle() {
     // GIVEN
     mockValidLogin("username", client);
-    testee = new MediaWikiBot(client);
     testee.login("username", "pw");
 
     try {
@@ -132,7 +128,6 @@ public class MediaWikiBotTest {
   public void testWriteContent_strageRuntimeException() {
     // GIVEN
     mockValidLogin("username", client);
-    testee = new MediaWikiBot(client);
     testee.login("username", "pw");
 
     // WHEN
@@ -152,7 +147,6 @@ public class MediaWikiBotTest {
   public void testWriteContent() {
     // GIVEN
     mockValidLogin("username", client);
-    testee = new MediaWikiBot(client);
     testee.login("username", "pw");
 
     // WHEN
@@ -170,7 +164,6 @@ public class MediaWikiBotTest {
     // GIVEN
     String username = "username";
     mockValidLogin(username, client);
-    testee = new MediaWikiBot(client);
     testee.login(username, "password");
 
     // WHEN / THEN
@@ -180,7 +173,6 @@ public class MediaWikiBotTest {
   @Test
   public void testIsNotLoggedIn() {
     // GIVEN
-    testee = new MediaWikiBot(client);
 
     // WHEN / THEN
     assertFalse(testee.isLoggedIn());
@@ -208,7 +200,6 @@ public class MediaWikiBotTest {
   @Test
   public void testGetSiteInfo() {
     // GIVEN
-    testee = new MediaWikiBot(client);
 
     // WHEN
     Siteinfo siteinfo = testee.getSiteinfo();
@@ -220,7 +211,6 @@ public class MediaWikiBotTest {
   @Test
   public void testGetWikiType() {
     // GIVEN
-    testee = new MediaWikiBot(client);
 
     // WHEN / THEN
     assertEquals("MediaWiki UNKNOWN", testee.getWikiType());

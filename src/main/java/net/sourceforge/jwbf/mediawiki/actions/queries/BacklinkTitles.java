@@ -23,11 +23,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.google.common.base.Optional;
-import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import net.sourceforge.jwbf.core.actions.Get;
 import net.sourceforge.jwbf.core.actions.RequestBuilder;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
+import net.sourceforge.jwbf.core.internal.Checked;
 import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
 import net.sourceforge.jwbf.mediawiki.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.MediaWiki.Version;
@@ -80,9 +80,9 @@ public class BacklinkTitles extends BaseQuery<String> {
       int... namespaces) {
     super(bot);
 
-    this.bot = Preconditions.checkNotNull(bot);
-    this.articleName = Preconditions.checkNotNull(articleName);
-    this.redirectFilter = Preconditions.checkNotNull(redirectFilter);
+    this.bot = Checked.nonNull(bot, "bot");
+    this.articleName = Checked.nonNull(articleName, "articleName");
+    this.redirectFilter = Checked.nonNull(redirectFilter, "redirectFilter");
     this.namespaces = namespaces;
     requestBuilder = createRequestBuilder(bot.getVersion());
 

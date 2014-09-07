@@ -49,7 +49,7 @@ public class JsonMapperTest {
       testee.get(null, SiteInfoData.class);
     } catch (NullPointerException npe) {
       // THEN
-      assertEquals("do not convert null", npe.getMessage());
+      assertEquals("json must not be null", npe.getMessage());
     }
   }
 
@@ -70,7 +70,7 @@ public class JsonMapperTest {
       testee.get("any", SiteInfoData.class);
     } catch (NullPointerException npe) {
       // THEN
-      assertEquals("a json mapping must not return null", npe.getMessage());
+      assertEquals("a json mapping result must not be null", npe.getMessage());
     }
   }
 
