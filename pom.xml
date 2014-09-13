@@ -120,7 +120,7 @@
       <plugin>
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
-        <version>0.7.1.201405082137</version>
+        <version>0.7.2.201409121644</version>
         <executions>
           <execution>
             <id>prepare-agent</id>
@@ -320,7 +320,7 @@
     <dependency>
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
-      <version>17.0</version>
+      <version>18.0</version>
     </dependency>
     <dependency>
       <groupId>junit</groupId>
@@ -367,7 +367,7 @@
       <groupId>org.jacoco</groupId>
       <artifactId>org.jacoco.agent</artifactId>
       <classifier>runtime</classifier>
-      <version>0.7.1.201405082137</version>
+      <version>0.7.2.201409121644</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -379,13 +379,13 @@
     <dependency>
       <groupId>org.eclipse.jetty</groupId>
       <artifactId>jetty-server</artifactId>
-      <version>9.2.2.v20140723</version>
+      <version>9.2.3.v20140905</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.eclipse.jetty</groupId>
       <artifactId>jetty-servlet</artifactId>
-      <version>9.2.2.v20140723</version>
+      <version>9.2.3.v20140905</version>
       <scope>test</scope>
     </dependency>
     <dependency>
