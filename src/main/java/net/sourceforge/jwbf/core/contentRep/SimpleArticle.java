@@ -33,11 +33,8 @@ import com.google.common.base.Optional;
  *
  * @author Thomas Stock
  */
-public class SimpleArticle implements ArticleMeta, Serializable, Cloneable, ContentSetable {
+public class SimpleArticle implements ArticleMeta, Serializable, ContentSetable {
 
-  /**
-   *
-   */
   private static final long serialVersionUID = -1368796410854055279L;
   private String title = "";
   private String editSummary = "";
@@ -91,15 +88,6 @@ public class SimpleArticle implements ArticleMeta, Serializable, Cloneable, Cont
     if (sa.getRevisionId() != null) {
       revId = sa.getRevisionId();
     }
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public final Object clone() throws CloneNotSupportedException {
-    super.clone();
-    return new SimpleArticle(this);
   }
 
   /**

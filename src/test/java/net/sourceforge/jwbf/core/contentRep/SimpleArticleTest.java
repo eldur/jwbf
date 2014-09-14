@@ -113,11 +113,6 @@ public class SimpleArticleTest {
         return null;
       }
 
-      @Override
-      public Object clone() throws CloneNotSupportedException {
-        return this;
-      }
-
     };
 
     SimpleArticle sa = new SimpleArticle(ca);
@@ -158,10 +153,6 @@ public class SimpleArticleTest {
         return null;
       }
 
-      @Override
-      public Object clone() throws CloneNotSupportedException {
-        return this;
-      }
     };
 
     SimpleArticle sa = new SimpleArticle(ca);
