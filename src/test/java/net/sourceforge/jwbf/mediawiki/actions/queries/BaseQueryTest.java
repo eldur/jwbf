@@ -16,4 +16,9 @@ public class BaseQueryTest {
   public void testRemove() {
     testee.remove();
   }
+
+  @Test(expected = CloneNotSupportedException.class)
+  public void testClone() throws CloneNotSupportedException {
+    testee.clone();
+  }
 }

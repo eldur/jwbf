@@ -19,6 +19,8 @@
  */
 package net.sourceforge.jwbf.mediawiki.actions.queries;
 
+import java.util.Iterator;
+
 import com.google.common.base.Optional;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
@@ -174,7 +176,7 @@ public class AllPageTitles extends BaseQuery<String> {
    * {@inheritDoc}
    */
   @Override
-  protected Object clone() throws CloneNotSupportedException {
+  protected Iterator<String> copy() {
     return new AllPageTitles(bot(), from, prefix, rf, namespaces);
   }
 

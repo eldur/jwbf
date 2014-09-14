@@ -20,6 +20,7 @@
 package net.sourceforge.jwbf.mediawiki.actions.queries;
 
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -138,7 +139,7 @@ public class ImageUsageTitles extends BaseQuery<String> {
    * {@inheritDoc}
    */
   @Override
-  protected Object clone() throws CloneNotSupportedException {
+  protected Iterator<String> copy() {
     return new ImageUsageTitles(bot, imageName, namespaces);
   }
 

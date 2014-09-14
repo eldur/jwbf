@@ -19,6 +19,7 @@
 package net.sourceforge.jwbf.mediawiki.actions.queries;
 
 import javax.annotation.Nonnull;
+import java.util.Iterator;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Optional;
@@ -65,6 +66,11 @@ public class CategoryMembersSimple extends BaseQuery<String> {
     this(bot, new CategoryMembersFull(bot, categoryName, namespaces));
   }
 
+  private CategoryMembersSimple(MediaWikiBot bot, String categoryName,
+      ImmutableList<Integer> namespace) {
+    this(bot, new CategoryMembersFull(bot, categoryName, namespace));
+  }
+
   @Override
   protected HttpAction prepareCollection() {
     return cm.prepareCollection();
@@ -78,6 +84,11 @@ public class CategoryMembersSimple extends BaseQuery<String> {
   @Override
   protected Optional<String> parseHasMore(String s) {
     return cm.parseHasMore(s);
+  }
+
+  @Override
+  protected Iterator<String> copy() {
+    return new CategoryMembersSimple(bot(), cm.categoryName, cm.namespace);
   }
 
   @Override

@@ -18,6 +18,7 @@
  */
 package net.sourceforge.jwbf.mediawiki.actions.queries;
 
+import java.util.Iterator;
 import java.util.List;
 
 import com.google.common.base.Optional;
@@ -140,7 +141,7 @@ public class RecentchangeTitles extends BaseQuery<String> {
   }
 
   @Override
-  protected Object clone() throws CloneNotSupportedException {
+  protected Iterator<String> copy() {
     return new RecentchangeTitles(bot, namespaces);
   }
 

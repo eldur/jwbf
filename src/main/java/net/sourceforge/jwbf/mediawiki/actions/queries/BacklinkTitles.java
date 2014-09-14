@@ -19,6 +19,7 @@
  */
 package net.sourceforge.jwbf.mediawiki.actions.queries;
 
+import java.util.Iterator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -94,7 +95,7 @@ public class BacklinkTitles extends BaseQuery<String> {
   }
 
   @Override
-  protected Object clone() throws CloneNotSupportedException {
+  protected Iterator<String> copy() {
     return new BacklinkTitles(bot, articleName, redirectFilter, namespaces);
   }
 

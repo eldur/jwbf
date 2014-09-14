@@ -1,8 +1,9 @@
 package net.sourceforge.jwbf.mediawiki.actions.queries;
 
+import java.util.Iterator;
+
 import com.google.common.collect.ImmutableList;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
-import net.sourceforge.jwbf.core.bots.util.JwbfException;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 import net.sourceforge.jwbf.mediawiki.contentRep.CategoryItem;
@@ -43,13 +44,7 @@ public class CategoryMembersFull extends CategoryMembers {
    * {@inheritDoc}
    */
   @Override
-  protected Object clone() throws CloneNotSupportedException {
-    super.clone();
-    try {
-      return new CategoryMembersFull(bot(), categoryName, namespace);
-    } catch (JwbfException e) {
-      throw new CloneNotSupportedException(e.getLocalizedMessage());
-    }
+  protected Iterator<CategoryItem> copy() {
+    return new CategoryMembersFull(bot(), categoryName, namespace);
   }
-
 }

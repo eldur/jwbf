@@ -19,6 +19,7 @@
  */
 package net.sourceforge.jwbf.mediawiki.actions.queries;
 
+import java.util.Iterator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -157,7 +158,7 @@ public class TemplateUserTitles extends BaseQuery<String> {
   }
 
   @Override
-  protected Object clone() throws CloneNotSupportedException {
+  protected Iterator<String> copy() {
     return new TemplateUserTitles(bot, templateName, namespaces);
   }
 

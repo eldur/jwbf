@@ -76,15 +76,11 @@ public abstract class BaseQuery<T> implements Iterable<T>, Iterator<T>, Cloneabl
    * {@inheritDoc}
    */
   @Override
-  @SuppressWarnings("unchecked")
   public final Iterator<T> iterator() {
-    try {
-      return (Iterator<T>) clone();
-    } catch (CloneNotSupportedException e) {
-      log.error("cloning should be supported", e);
-      return null;
-    }
+    return copy();
   }
+
+  protected abstract Iterator<T> copy();
 
   /**
    * {@inheritDoc}
@@ -182,6 +178,11 @@ public abstract class BaseQuery<T> implements Iterable<T>, Iterator<T>, Cloneabl
       titleIterator = newTitles.iterator();
       return "";
     }
+  }
 
+  @Override
+  protected Object clone() throws CloneNotSupportedException {
+    super.clone();
+    throw new CloneNotSupportedException();
   }
 }
