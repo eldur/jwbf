@@ -114,7 +114,7 @@ public class MediaWikiBot implements WikiBot {
   public MediaWikiBot(URL url, boolean testHostReachable) {
     bot = new HttpBot(client);
     if (testHostReachable) {
-      HttpBot.getPage(client);
+      HttpBot.getPage(url.toString());
     }
   }
 

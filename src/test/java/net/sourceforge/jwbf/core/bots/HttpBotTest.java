@@ -30,11 +30,7 @@ public class HttpBotTest {
   private static void startServerWith(ContextHandler userAgentHandler) {
     server = new JettyServer();
     server.setHandler(userAgentHandler);
-    try {
-      server.start();
-    } catch (Exception e) {
-      throw new IllegalStateException(e);
-    }
+    server.startSilent();
   }
 
   @Test
@@ -120,8 +116,8 @@ public class HttpBotTest {
   }
 
   @After
-  public void afterClass() throws Exception {
-    server.stop();
+  public void afterClass() {
+    server.stopSilent();
   }
 
 }

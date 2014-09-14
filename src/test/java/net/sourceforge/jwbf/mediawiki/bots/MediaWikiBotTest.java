@@ -12,6 +12,8 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import net.sourceforge.jwbf.GAssert;
+import net.sourceforge.jwbf.JWBF;
+import net.sourceforge.jwbf.JettyServer;
 import net.sourceforge.jwbf.core.actions.HttpActionClient;
 import net.sourceforge.jwbf.core.actions.util.ActionException;
 import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
@@ -48,6 +50,49 @@ public class MediaWikiBotTest {
 
     // THEN
     assertNotNull(testee);
+  }
+
+  @Test
+  public void testInitWithBuilder_and_rechable_check_off() {
+    // GIVEN
+    String url = "http://localhost/";
+
+    // WHEN
+    testee = new MediaWikiBot(JWBF.newURL(url), false);
+
+    // THEN
+    assertNotNull(testee);
+  }
+
+  @Test
+  public void testInitWithBuilder_and_reachable_check() {
+    // GIVEN
+    try (JettyServer server = new JettyServer().started(JettyServer.echoHandler())) {
+      String url = server.getTestUrl();
+
+      // WHEN
+      testee = new MediaWikiBot(JWBF.newURL(url), true);
+
+      // THEN
+      assertNotNull(testee);
+    } catch (Exception e) {
+      throw new IllegalStateException(e);
+    }
+  }
+
+  @Test
+  public void testInitWithBuilder_and_reachable_check_fail() {
+    // GIVEN
+    String url = "https://notExistingHost/";
+
+    try {
+      // WHEN
+      testee = new MediaWikiBot(JWBF.newURL(url), true);
+      fail();
+    } catch (IllegalStateException e) {
+      // THEN
+      GAssert.assertStartsWith("java.net.UnknownHostException", e.getMessage());
+    }
   }
 
   @Test

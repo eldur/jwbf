@@ -29,10 +29,16 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.ContextHandler;
 import org.joda.time.DateTime;
 
-public class JettyServer extends Server {
+public class JettyServer extends Server implements AutoCloseable {
 
   public JettyServer() {
     super(0);
+  }
+
+  public JettyServer started(ContextHandler handler) {
+    setHandler(handler);
+    startSilent();
+    return this;
   }
 
   public void startSilent() {
@@ -134,6 +140,11 @@ public class JettyServer extends Server {
 
   public String getTestUrl() {
     return "http://localhost:" + getPort() + "/";
+  }
+
+  @Override
+  public void close() throws Exception {
+    stopSilent();
   }
 
   @MultipartConfig
