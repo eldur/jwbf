@@ -2,6 +2,7 @@ package net.sourceforge.jwbf.core.contentRep;
 
 import java.util.Date;
 
+import com.google.common.annotations.VisibleForTesting;
 import net.sourceforge.jwbf.core.bots.WikiBot;
 
 /**
@@ -21,7 +22,8 @@ public class Article implements ArticleMeta, ContentSetable {
   private static final int EDIT_SUM_RELOAD = 1 << 5;
   private static final int EDIT_DATE_RELOAD = 1 << 6;
 
-  private boolean isReload(final int reloadVar) {
+  @VisibleForTesting
+  boolean isReload(final int reloadVar) {
     return (reload & reloadVar) == 0;
   }
 
@@ -223,7 +225,6 @@ public class Article implements ArticleMeta, ContentSetable {
   @Override
   public void addText(String text) {
     setText(getText() + text);
-
   }
 
   /**
@@ -232,7 +233,6 @@ public class Article implements ArticleMeta, ContentSetable {
   @Override
   public void addTextnl(String text) {
     setText(getText() + "\n" + text);
-
   }
 
   /**
@@ -241,7 +241,6 @@ public class Article implements ArticleMeta, ContentSetable {
   @Override
   public void setMinorEdit(boolean minor) {
     sa.setMinorEdit(minor);
-
   }
 
   /**
