@@ -37,13 +37,15 @@ import org.slf4j.LoggerFactory;
  * System.out.println(b.readContent(&quot;Main Page&quot;).getText());
  * </pre>
  * <b>How to find the correct wikiurl</b> <p> The correct wikiurl is sometimes not easy to find,
- * because some wikiadmis uses url rewriting rules. In this cases the correct url is the one, which
- * gives you access to <code>api.php</code>. E.g. Compare
+ * because some wiki admins uses url rewriting rules. In this cases the correct url is the one, 
+ * which gives you access to <code>api.php</code>. E.g. Compare
  * <pre>
  * http://www.mediawiki.org/wiki/api.php
  * http://www.mediawiki.org/w/api.php
  * </pre>
  * Thus the correct wikiurl is: <code>http://www.mediawiki.org/w/</code> </p>
+ * 
+ * Since MediaWiki 1.20, the wikiurl can be found on the wiki's Special:Version page.
  *
  * @author Thomas Stock
  * @author Tobias Knerr
