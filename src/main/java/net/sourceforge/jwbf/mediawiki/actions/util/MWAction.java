@@ -98,7 +98,9 @@ public abstract class MWAction implements ContentProcessable {
    *
    * @param namespaces namespace as
    * @return with numbers seperated by |
+   * @deprecated prefer {@link #createNsString(java.util.List)}
    */
+  @Deprecated
   public static String createNsString(int... namespaces) {
     return createNsString(nullSafeCopyOf(namespaces));
   }

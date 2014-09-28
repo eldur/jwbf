@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<api>
+  <query>
+    <backlinks>
+      <bl pageid="134" ns="0" title="Back10" redirect="" />
+      <bl pageid="135" ns="0" title="Back11" />
+      <bl pageid="136" ns="0" title="Back12" redirect="" />
+      <bl pageid="137" ns="0" title="Back13" />
+      <bl pageid="138" ns="0" title="Back14" redirect="" />
+    </backlinks>
+  </query>
+</api>

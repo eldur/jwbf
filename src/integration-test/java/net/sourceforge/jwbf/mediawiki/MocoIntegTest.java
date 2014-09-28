@@ -20,6 +20,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Ordering;
 import com.google.common.io.Resources;
 import com.typesafe.config.Config;
+import com.typesafe.config.ConfigException;
 import com.typesafe.config.ConfigFactory;
 import net.sourceforge.jwbf.AbstractIntegTest;
 import net.sourceforge.jwbf.JWBF;
@@ -36,10 +37,11 @@ import org.junit.runners.Parameterized;
 @RunWith(Parameterized.class)
 public abstract class MocoIntegTest extends AbstractIntegTest implements Provider<MediaWikiBot> {
 
+  public static final String MEDIAWIKI_CONF = "mediawiki.conf";
   private final Version version;
   private MediaWikiBot bot;
 
-  private final Config conf = ConfigFactory.load("mediawiki.conf");
+  private final Config conf = ConfigFactory.load(MEDIAWIKI_CONF);
 
   public MocoIntegTest(Version version) {
     this.version = version;
@@ -75,9 +77,14 @@ public abstract class MocoIntegTest extends AbstractIntegTest implements Provide
   }
 
   protected String confOf(ConfKey key) {
-    return conf().getString(ConfKey.toString(key));
+      String confKey = ConfKey.toString(key);
+    try {
+      return conf().getString(confKey);
+    } catch (ConfigException.Missing e) {
+      String message = "check \"" + confKey + "\" in test/resources/" + MEDIAWIKI_CONF;
+      throw new IllegalStateException(message, e);
+    }
   }
-
   public MediaWikiBot bot() {
     return bot;
   }

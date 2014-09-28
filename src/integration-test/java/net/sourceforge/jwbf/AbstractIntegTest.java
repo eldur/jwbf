@@ -12,9 +12,12 @@ import com.github.dreamhead.moco.RequestMatcher;
 import com.github.dreamhead.moco.Runner;
 import com.github.dreamhead.moco.matcher.AndRequestMatcher;
 import com.github.dreamhead.moco.matcher.CompositeRequestMatcher;
+import com.github.dreamhead.moco.monitor.AbstractMonitor;
 import com.google.common.collect.ImmutableList;
 import org.junit.After;
 import org.junit.Before;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public abstract class AbstractIntegTest {
 
@@ -24,7 +27,7 @@ public abstract class AbstractIntegTest {
 
   @Before
   public void before() {
-    server = httpserver(); // Moco.log()
+    server = httpserver(); // new IntegMonitor()
     runner = runner(server);
     runner.start();
     port = server.port();
@@ -74,5 +77,14 @@ public abstract class AbstractIntegTest {
       }
 
     };
+  }
+
+  private static class IntegMonitor extends AbstractMonitor {
+
+    private static Logger log = LoggerFactory.getLogger(IntegMonitor.class);
+    @Override
+    public void onMessageArrived(HttpRequest request) {
+      log.info(request.getUri() + " " + request.getQueries().toString());
+    }
   }
 }

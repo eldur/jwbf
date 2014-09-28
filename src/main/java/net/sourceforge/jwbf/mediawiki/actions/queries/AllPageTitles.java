@@ -47,7 +47,6 @@ public class AllPageTitles extends BaseQuery<String> {
 
   private static final Logger log = LoggerFactory.getLogger(AllPageTitles.class);
 
-  /** Pattern to parse returned page, @see {@link #parseArticleTitles(String)} */
   /**
    * Constant value for the aplimit-parameter. *
    */

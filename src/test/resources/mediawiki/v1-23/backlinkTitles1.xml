@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<api>
+  <query-continue>
+    <backlinks blcontinue="0|Backlinks|202" />
+  </query-continue>
+  <query>
+    <backlinks>
+      <bl pageid="197" ns="0" title="Back5" />
+      <bl pageid="198" ns="0" title="Back6" redirect="" />
+      <bl pageid="199" ns="0" title="Back7" />
+      <bl pageid="200" ns="0" title="Back8" redirect="" />
+      <bl pageid="201" ns="0" title="Back9" />
+    </backlinks>
+  </query>
+</api>

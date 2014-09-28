@@ -6,18 +6,16 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
+import net.sourceforge.jwbf.GAssert;
 import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
 import net.sourceforge.jwbf.mediawiki.BotFactory;
 import net.sourceforge.jwbf.mediawiki.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.MediaWiki.Version;
-import net.sourceforge.jwbf.mediawiki.VersionTestClassVerifier;
 import net.sourceforge.jwbf.mediawiki.actions.util.RedirectFilter;
 import net.sourceforge.jwbf.mediawiki.live.auto.ParamHelper;
-import org.junit.ClassRule;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.Verifier;
 import org.junit.runners.Parameterized.Parameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,15 +24,8 @@ public class BacklinkTitlesLiveIntegTest extends ParamHelper {
 
   private static final Logger log = LoggerFactory.getLogger(BacklinkTitlesLiveIntegTest.class);
 
-  @ClassRule
-  public static VersionTestClassVerifier classVerifier =
-      new VersionTestClassVerifier(BacklinkTitles.class);
-
-  @Rule
-  public Verifier successRegister = classVerifier.getSuccessRegister(this);
-
   private static final String BACKLINKS = "Backlinks";
-  private static final int COUNT = 60;
+  private static final int COUNT = 10;
 
   @Parameters(name = "{0}")
   public static Collection<?> stableWikis() {
@@ -60,18 +51,37 @@ public class BacklinkTitlesLiveIntegTest extends ParamHelper {
     log.info("... done");
   }
 
-  /**
-   * Test backlinks.
-   */
   @Test
-  public final void test() {
-    doTest(RedirectFilter.all);
+  public final void testAll() {
+
+    ImmutableList<String> expected =
+        ImmutableList.of("Back0", "Back1", "Back2", "Back3", "Back4", "Back5", "Back6", "Back7",
+            "Back8", "Back9");
+    doTest(expected, RedirectFilter.all);
   }
 
-  private void doTest(RedirectFilter rf) {
+  @Test
+  public final void testRedirects() {
 
-    BacklinkTitles gbt =
-        new BacklinkTitles(bot, BACKLINKS, rf, MediaWiki.NS_MAIN, MediaWiki.NS_CATEGORY);
+    ImmutableList<String> expected =
+        ImmutableList.of("Back0", "Back2", "Back4", "Back6", "Back8", "Back10", "Back12", "Back14",
+            "Back16", "Back18");
+    doTest(expected, RedirectFilter.redirects);
+  }
+
+  @Test
+  public final void testNonRedirects() {
+
+    ImmutableList<String> expected =
+        ImmutableList.of("Back1", "Back3", "Back5", "Back7", "Back9", "Back11", "Back13", "Back15",
+            "Back17", "Back19");
+    doTest(expected, RedirectFilter.nonredirects);
+  }
+
+  private void doTest(ImmutableList<String> expected, RedirectFilter rf) {
+
+    ImmutableList<Integer> namespaces = ImmutableList.of(MediaWiki.NS_MAIN, MediaWiki.NS_CATEGORY);
+    BacklinkTitles gbt = new BacklinkTitles(bot, BACKLINKS, 5, rf, namespaces);
 
     List<String> vx = Lists.newArrayList();
     Iterator<String> is = gbt.iterator();
@@ -95,17 +105,19 @@ public class BacklinkTitlesLiveIntegTest extends ParamHelper {
     vx.add(is.next());
     is = gbt.iterator();
     i = 0;
+    ImmutableList.Builder<String> actual = ImmutableList.builder();
     while (is.hasNext()) {
       String buff = is.next();
       vx.remove(buff);
+      actual.add(buff);
       i++;
-      if (i > COUNT) {
+      if (i >= COUNT) {
         break;
       }
     }
     assertTrue("Iterator should contain: " + vx, vx.isEmpty());
     assertTrue("Fail: " + i + " < " + COUNT, i > COUNT - 1);
-
+    GAssert.assertEquals(expected, actual.build());
   }
 
 }
