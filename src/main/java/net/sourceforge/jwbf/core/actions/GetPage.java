@@ -35,7 +35,7 @@ public class GetPage implements ContentProcessable {
   private String text = "";
 
   /**
-   * @param url like "/index.php?title=Special:Recentchanges&feed=rss"
+   * @param url like "/index.php?title=Special:Recentchanges&amp;feed=rss"
    */
   public GetPage(String url) {
     msg = RequestBuilder.of(url).buildGet();

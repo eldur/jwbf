@@ -38,7 +38,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Gets a list of pages recently changed, ordered by modification timestamp. Parameters: rcfrom
  * (paging timestamp), rcto (flt), rcnamespace (flt), rcminor (flt), rcusertype (dflt=not|bot),
- * rcdirection (dflt=older), rclimit (dflt=10, max=500/5000) F api.php ? action=query &
+ * rcdirection (dflt=older), rclimit (dflt=10, max=500/5000) F api.php ? action=query &amp;
  * list=recentchanges - List last 10 changes
  *
  * @author Thomas Stock

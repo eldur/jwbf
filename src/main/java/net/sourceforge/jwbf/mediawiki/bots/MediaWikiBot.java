@@ -43,7 +43,7 @@ import org.slf4j.LoggerFactory;
  * http://www.mediawiki.org/wiki/api.php
  * http://www.mediawiki.org/w/api.php
  * </pre>
- * Thus the correct wikiurl is: <code>http://www.mediawiki.org/w/</code> </p>
+ * Thus the correct wikiurl is: <code>http://www.mediawiki.org/w/</code>
  *
  * @author Thomas Stock
  * @author Tobias Knerr

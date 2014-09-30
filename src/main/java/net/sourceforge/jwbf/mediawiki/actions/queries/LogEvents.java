@@ -43,7 +43,7 @@ import org.slf4j.LoggerFactory;
  * List log events, filtered by time range, event type, user type, or the page it applies to.
  * Ordered by event timestamp. Parameters: letype (flt), lefrom (paging timestamp), leto (flt),
  * ledirection (dflt=older), leuser (flt), letitle (flt), lelimit (dflt=10, max=500/5000) api.php ?
- * action=query & list=logevents - List last 10 events of any type TODO This is a semi-complete
+ * action=query &amp; list=logevents - List last 10 events of any type TODO This is a semi-complete
  * extension point
  *
  * @author Thomas Stock

@@ -128,7 +128,7 @@ public class Article implements ArticleMeta, ContentSetable {
   }
 
   /**
-   * @deprecated use {@link net.sourceforge.jwbf.core.contentRep.Article(java.lang.String)}
+   * @deprecated use {@link #Article(net.sourceforge.jwbf.core.bots.WikiBot, String)}
    * and {@link #setText(String)} instead.
    */
   @Deprecated
