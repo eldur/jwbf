@@ -22,6 +22,7 @@ import net.sourceforge.jwbf.JWBF.ContainerEntry;
 import net.sourceforge.jwbf.core.actions.HttpActionClient;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.google.common.base.Function;
@@ -133,6 +134,7 @@ public class JWBFTest {
     return targetDir;
   }
 
+  @Ignore
   @Test
   public void testGetVersions() {
     // GIVEN TODO
@@ -144,6 +146,7 @@ public class JWBFTest {
     assertEquals(JWBF.DEVEL, version);
   }
 
+  @Ignore
   @Test
   public void testGetPartId() {
     // GIVEN TODO
@@ -155,6 +158,7 @@ public class JWBFTest {
     assertEquals("jwbf-generic-mediawiki", partId);
   }
 
+  @Ignore
   @Test
   public void testGetPartId_core() {
     // GIVEN TODO
