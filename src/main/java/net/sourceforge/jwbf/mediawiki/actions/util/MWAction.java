@@ -18,6 +18,8 @@
  */
 package net.sourceforge.jwbf.mediawiki.actions.util;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
 
 import com.google.common.base.Joiner;
@@ -40,16 +42,6 @@ public abstract class MWAction implements ContentProcessable {
    */
   @Deprecated
   private boolean hasMore = true;
-  static final ExceptionHandler DEFAULT_EXCEPTION_HANDLER = new ExceptionHandler() {
-
-    @Override
-    public void handle(RuntimeException e) {
-      throw e;
-
-    }
-  };
-
-  private static ExceptionHandler exceptionHandler = DEFAULT_EXCEPTION_HANDLER;
 
   /**
    * @return true if and changes state to false
@@ -105,7 +97,8 @@ public abstract class MWAction implements ContentProcessable {
     return createNsString(nullSafeCopyOf(namespaces));
   }
 
-  public static ImmutableList<Integer> nullSafeCopyOf(int[] namespaces) {
+  @Nonnull
+  public static ImmutableList<Integer> nullSafeCopyOf(@Nullable int[] namespaces) {
     if (namespaces == null) {
       return ImmutableList.of();
     } else {
@@ -126,16 +119,6 @@ public abstract class MWAction implements ContentProcessable {
   @Deprecated
   public boolean isSelfExecuter() {
     return false;
-  }
-
-  /**
-   * @deprecated no alternative method is given, because it is not recommended to change the
-   * exception handling
-   */
-  @Deprecated
-  public static void setExceptionHandler(ExceptionHandler exceptionHandler) {
-    log.warn("it is not recommended, to change the default handler, because of API changes");
-    MWAction.exceptionHandler = exceptionHandler;
   }
 
 }

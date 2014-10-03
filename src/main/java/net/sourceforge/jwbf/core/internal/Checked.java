@@ -16,7 +16,8 @@ public class Checked {
     return Preconditions.checkNotNull(t, String.valueOf(msg) + " must not be null");
   }
 
-  public static String nonBlank(String string, String msg) {
+  @Nonnull
+  public static String nonBlank(@Nullable String string, String msg) {
     if (string == null || string.length() == 0) {
       throw new IllegalArgumentException("The argument '" + msg + "' must not be null or empty");
     }

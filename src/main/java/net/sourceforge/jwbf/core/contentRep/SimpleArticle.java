@@ -56,23 +56,14 @@ public class SimpleArticle implements ArticleMeta, Serializable, ContentSetable 
 
   public SimpleArticle(ContentAccessable ca) {
     if (ca instanceof Article) {
-      throw new IllegalArgumentException(
-          "do not convert an " + Article.class.getCanonicalName() + " to a " +
-              getClass().getCanonicalName() +
-              ", because its very expensive");
+      throw new IllegalArgumentException("do not convert an " + //
+          Article.class.getCanonicalName() + " to a " + //
+          getClass().getCanonicalName() + ", because its very expensive");
     }
-    if (ca.getTitle() != null) {
-      title = ca.getTitle();
-    }
-    if (ca.getText() != null) {
-      text = ca.getText();
-    }
-    if (ca.getEditSummary() != null) {
-      editSummary = ca.getEditSummary();
-    }
-    if (ca.getEditor() != null) {
-      editor = ca.getEditor();
-    }
+    title = Optional.fromNullable(ca.getTitle()).or("");
+    text = Optional.fromNullable(ca.getText()).or("");
+    editSummary = Optional.fromNullable(ca.getEditSummary()).or("");
+    editor = Optional.fromNullable(ca.getEditor()).or("");
 
     setMinorEdit(ca.isMinorEdit());
 
