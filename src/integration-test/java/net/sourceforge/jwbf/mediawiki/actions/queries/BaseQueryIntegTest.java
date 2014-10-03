@@ -16,15 +16,17 @@ import org.junit.Test;
 
 public class BaseQueryIntegTest extends AbstractIntegTest {
 
-  RequestMatcher embeddedinTwo = ApiMatcherBuilder.of() //
-      .param("eicontinue", "10|Babel|37163") //
-      .param("action", "query") //
-      .param("format", "xml") //
-      .param("eilimit", "50") //
-      .param("einamespace", "2") //
-      .param("eititle", "Template:Babel") //
-      .param("list", "embeddedin") //
-      .build();
+  static RequestMatcher embeddedinTwo() {
+   return ApiMatcherBuilder.of() //
+        .param("eicontinue", "10|Babel|37163") //
+        .param("action", "query") //
+        .param("format", "xml") //
+        .param("eilimit", "50") //
+        .param("einamespace", "2") //
+        .param("eititle", "Template:Babel") //
+        .param("list", "embeddedin") //
+        .build();
+  }
 
   static RequestMatcher embeddedinOne() {
     return ApiMatcherBuilder.of() //
@@ -41,7 +43,7 @@ public class BaseQueryIntegTest extends AbstractIntegTest {
   public void testEndless_fail() {
 
     // GIVEN
-    server.request(embeddedinTwo).response(TestHelper.anyWikiResponse("embeddedin_2.xml"));
+    server.request(embeddedinTwo()).response(TestHelper.anyWikiResponse("embeddedin_2.xml"));
     server.request(embeddedinOne()).response(TestHelper.anyWikiResponse("embeddedin_1.xml"));
     MediaWikiBot bot = new MediaWikiBot(host());
 
@@ -64,8 +66,8 @@ public class BaseQueryIntegTest extends AbstractIntegTest {
     // GIVEN
     Supplier<ImmutableList<String>> logLinesSupplier = Logging.newLogLinesSupplier();
     server.request(embeddedinOne()).response(TestHelper.anyWikiResponse("embeddedin_1.xml"));
-    server.request(embeddedinOne()).response(TestHelper.anyWikiResponse("embeddedin_1.xml"));
-    server.request(embeddedinOne()).response(TestHelper.anyWikiResponse("embeddedin_1.xml"));
+    server.request(embeddedinTwo()).response(TestHelper.anyWikiResponse("embeddedin_1.xml"));
+    server.request(embeddedinTwo()).response(TestHelper.anyWikiResponse("embeddedin_1.xml"));
     MediaWikiBot bot = new MediaWikiBot(host());
 
     // WHEN

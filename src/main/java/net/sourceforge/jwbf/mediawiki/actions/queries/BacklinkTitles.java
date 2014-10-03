@@ -20,8 +20,7 @@
 package net.sourceforge.jwbf.mediawiki.actions.queries;
 
 import java.util.Iterator;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.List;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
@@ -30,6 +29,7 @@ import net.sourceforge.jwbf.core.actions.RequestBuilder;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.core.internal.Checked;
 import net.sourceforge.jwbf.mapper.XmlConverter;
+import net.sourceforge.jwbf.mapper.XmlElement;
 import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
 import net.sourceforge.jwbf.mediawiki.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
@@ -56,13 +56,6 @@ public class BacklinkTitles extends BaseQuery<String> {
   private final MediaWikiBot bot;
   private final RedirectFilter redirectFilter;
   private final ImmutableList<Integer> namespaces;
-
-  // TODO do not use pattern matching
-  public static final Pattern ARTICLE_NAME_PATTERN =
-      Pattern.compile("<bl pageid=\".*?\" ns=\".*?\" title=\"([^\"]*)\" (redirect=\"\" )?/>");
-  public static final Pattern CONTINUATION_PATTERN = Pattern.compile(
-      "<query-continue>.*?<backlinks *blcontinue=\"([^\"]*)\" */>.*?</query-continue>",
-      Pattern.DOTALL | Pattern.MULTILINE);
 
   BacklinkTitles(MediaWikiBot bot, String articleName, int backlinksPerRequestLimit,
       RedirectFilter redirectFilter, ImmutableList<Integer> namespaces) {
@@ -112,14 +105,7 @@ public class BacklinkTitles extends BaseQuery<String> {
    */
   @Override
   protected Optional<String> parseHasMore(final String xml) {
-    XmlConverter.getChecked(xml);
-    Matcher m = CONTINUATION_PATTERN.matcher(xml);
-
-    if (m.find()) {
-      return Optional.of(m.group(1));
-    } else {
-      return Optional.absent();
-    }
+    return parseXmlHasMore(xml, "backlinks", "blcontinue", "blcontinue");
 
   }
 
@@ -130,12 +116,11 @@ public class BacklinkTitles extends BaseQuery<String> {
    */
   @Override
   protected ImmutableList<String> parseArticleTitles(String xml) {
-    XmlConverter.getChecked(xml);
+    List<XmlElement> backlinks = XmlConverter.getChild(xml, "query", "backlinks").getChildren("bl");
     ImmutableList.Builder<String> titleCollection = ImmutableList.builder();
-    Matcher m = ARTICLE_NAME_PATTERN.matcher(xml);
 
-    while (m.find()) {
-      titleCollection.add(m.group(1));
+    for (XmlElement backlink : backlinks) {
+      titleCollection.add(backlink.getAttributeValue("title"));
     }
     return titleCollection.build();
 
@@ -146,6 +131,7 @@ public class BacklinkTitles extends BaseQuery<String> {
 
     RequestBuilder builder = new ApiRequestBuilder() //
         .action("query") //
+        .paramNewContinue(bot.getVersion()) //
         .formatXml() //
         .param("list", "backlinks") //
         .param("bllimit", backlinksPerRequestLimit) //

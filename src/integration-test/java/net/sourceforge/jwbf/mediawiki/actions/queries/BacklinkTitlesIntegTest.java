@@ -25,7 +25,7 @@ public class BacklinkTitlesIntegTest extends MocoIntegTest {
         .param("bltitle", "Test") //
         .param("format", "xml") //
         .param("list", "backlinks") //
-        // .paramNewContinue(version()) //
+        .paramNewContinue(version()) //
         ;
   }
 

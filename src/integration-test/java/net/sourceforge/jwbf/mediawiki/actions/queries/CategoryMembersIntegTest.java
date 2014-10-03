@@ -28,7 +28,7 @@ public class CategoryMembersIntegTest extends MocoIntegTest {
         .param("format", "xml") //
         .param("cmtitle", "Category:TestCat") //
         .param("list", "categorymembers") //
-        // .paramNewContinue(version()) //
+        .paramNewContinue(version()) //
         ;
   }
 

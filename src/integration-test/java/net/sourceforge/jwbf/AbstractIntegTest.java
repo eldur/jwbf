@@ -27,7 +27,7 @@ public abstract class AbstractIntegTest {
 
   @Before
   public void before() {
-    server = httpserver(); // new IntegMonitor()
+    server = httpserver(); // new IntegMonitor());
     runner = runner(server);
     runner.start();
     port = server.port();

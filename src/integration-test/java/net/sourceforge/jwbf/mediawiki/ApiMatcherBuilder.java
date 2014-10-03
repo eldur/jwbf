@@ -7,8 +7,12 @@ import static com.github.dreamhead.moco.Moco.uri;
 
 import java.util.Map;
 
+import com.github.dreamhead.moco.HttpRequest;
+import com.github.dreamhead.moco.MocoConfig;
+import com.github.dreamhead.moco.RequestExtractor;
 import com.github.dreamhead.moco.RequestMatcher;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import net.sourceforge.jwbf.core.actions.ParamTuple;
 
 public class ApiMatcherBuilder {
@@ -33,9 +37,14 @@ public class ApiMatcherBuilder {
     RequestMatcherBuilder apiBuilder = new RequestMatcherBuilder() //
         .with(by(uri("/api.php")));
 
+    ImmutableSet.Builder<String> paramNames = ImmutableSet.builder();
     for (Map.Entry<String, String> param : params.build().entrySet()) {
-      apiBuilder.with(eq(query(param.getKey()), param.getValue()));
+      RequestExtractor<String> query = query(param.getKey());
+      apiBuilder.with(eq(query, param.getValue()));
+      paramNames.add(param.getKey());
     }
+
+    apiBuilder.with(new AllParamsPresent(paramNames.build()));
     return apiBuilder.build();
   }
 
@@ -45,5 +54,26 @@ public class ApiMatcherBuilder {
       param(paramTuple.key(), paramTuple.value());
     }
     return this;
+  }
+
+  private class AllParamsPresent implements RequestMatcher {
+
+    private final ImmutableSet<String> params;
+
+    public AllParamsPresent(ImmutableSet<String> params) {
+      this.params = params;
+    }
+
+    @Override
+    public boolean match(HttpRequest request) {
+      ImmutableMap<String, String> queries = request.getQueries();
+      ImmutableSet<String> keys = queries.keySet();
+      return params.equals(keys);
+    }
+
+    @Override
+    public RequestMatcher apply(MocoConfig config) {
+      throw new UnsupportedOperationException();
+    }
   }
 }

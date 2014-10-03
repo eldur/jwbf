@@ -20,6 +20,7 @@ public class RecentchangeTitlesIntegTest extends AbstractIntegTest {
   RequestMatcher embeddedinTwo = ApiMatcherBuilder.of() //
       .param("action", "query") //
       .param("format", "xml") //
+      .param("list", "recentchanges") //
       .param("rclimit", "50") //
       .param("rcnamespace", "0") //
       .build();

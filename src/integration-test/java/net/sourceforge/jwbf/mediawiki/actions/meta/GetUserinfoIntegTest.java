@@ -18,6 +18,7 @@ public class GetUserinfoIntegTest extends MocoIntegTest {
 
   public static RequestMatcher newUserInfoMatcher() {
     return ApiMatcherBuilder.of() //
+        .param("action", "query") //
         .param("format", "xml") //
         .param("meta", "userinfo") //
         .param("uiprop", "blockinfo|hasmsg|groups|rights|options|editcount|ratelimits") //
