@@ -18,22 +18,20 @@
  */
 package net.sourceforge.jwbf.mediawiki.actions.queries;
 
-import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.google.common.base.Joiner;
-import com.google.common.collect.Lists;
+import com.google.common.base.Optional;
+import com.google.common.collect.ImmutableList;
 import net.sourceforge.jwbf.core.actions.Get;
 import net.sourceforge.jwbf.core.actions.RequestBuilder;
-import net.sourceforge.jwbf.core.actions.util.ActionException;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
-import net.sourceforge.jwbf.core.actions.util.ProcessException;
 import net.sourceforge.jwbf.mapper.XmlConverter;
 import net.sourceforge.jwbf.mapper.XmlElement;
 import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
-import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 import net.sourceforge.jwbf.mediawiki.contentRep.LogItem;
 import org.slf4j.Logger;
@@ -48,7 +46,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author Thomas Stock
  */
-public class LogEvents extends MWAction implements Iterator<LogItem>, Iterable<LogItem> {
+public class LogEvents extends BaseQuery<LogItem> {
 
   private static final Logger log = LoggerFactory.getLogger(LogEvents.class);
 
@@ -65,19 +63,12 @@ public class LogEvents extends MWAction implements Iterator<LogItem>, Iterable<L
   private final int limit;
 
   private Get msg;
-  private final MediaWikiBot bot;
-  /* first run variable */
   private boolean init = true;
-  private boolean selvEx = true;
   /**
    * Collection that will contain the result (titles of articles linking to the target) after
    * performing the action has finished.
    */
-  private final Collection<LogItem> logCollection = Lists.newArrayList();
-  private Iterator<LogItem> logIterator = null;
   private final String[] type;
-  private String nextPageInfo = "";
-  private boolean hasMoreResults = true;
 
   /**
    * information necessary to get the next api page.
@@ -108,7 +99,7 @@ public class LogEvents extends MWAction implements Iterator<LogItem>, Iterable<L
    * @param type  of like {@link #MOVE}
    */
   public LogEvents(MediaWikiBot bot, int limit, String[] type) {
-    this.bot = bot;
+    super(bot);
     this.type = type;
     this.limit = limit;
   }
@@ -129,166 +120,59 @@ public class LogEvents extends MWAction implements Iterator<LogItem>, Iterable<L
 
   }
 
-  private Get generateContinueRequest(String[] logtype, String continueing) {
+  private Get generateContinueRequest(String[] logtype) {
     // FIXME continueing is unused
     return generateRequest(logtype);
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
-  public String processAllReturningText(final String s) {
-    logCollection.clear();
-    parseArticleTitles(s);
-    parseHasMore(s);
-    logIterator = logCollection.iterator();
-    return "";
-  }
+  protected ImmutableList<LogItem> parseArticleTitles(String xml) {
 
-  /**
-   * picks the article name from a MediaWiki api response.
-   *
-   * @param xml text for parsing
-   */
-  private void parseArticleTitles(String xml) {
+    ImmutableList.Builder<LogItem> builder = ImmutableList.builder();
 
-    XmlElement root = XmlConverter.getRootElement(xml);
-    findContent(root);
+    List<XmlElement> itmes = XmlConverter.getChild(xml, "query", "logevents").getChildren("item");
+    for (XmlElement item : itmes) {
+      String title = item.getAttributeValue("title");
+      String typeOf = item.getAttributeValue("type");
+      String user = item.getAttributeValue("user");
+      builder.add(new LogItem(title, typeOf, user));
+
+    }
+    return builder.build();
 
   }
 
-  /**
-   * gets the information about a follow-up page from a provided api response. If there is one, a
-   * new request is added to msgs by calling generateRequest.
-   *
-   * @param s text for parsing
-   */
-  private void parseHasMore(final String s) {
+  @Override
+  protected Optional<String> parseHasMore(final String s) {
 
     // get the blcontinue-value
-
-    Pattern p = Pattern.compile(
-        "<query-continue>.*?" + "<logevents *lestart=\"([^\"]*)\" */>" + ".*?</query-continue>",
-        Pattern.DOTALL | Pattern.MULTILINE);
+    // FIXME remove this Pattern
+    Pattern p = Pattern //
+        .compile("<query-continue>.*?<logevents *lestart=\"([^\"]*)\" */>.*?</query-continue>",
+            Pattern.DOTALL | Pattern.MULTILINE);
 
     Matcher m = p.matcher(s);
-
     if (m.find()) {
-      nextPageInfo = m.group(1);
-      hasMoreResults = true;
+      return Optional.of(m.group(1));
     } else {
-      hasMoreResults = false;
-    }
-    log.debug("has more = {}", hasMoreResults);
-
-  }
-
-  @SuppressWarnings("unchecked")
-  private void findContent(final XmlElement root) {
-
-    for (XmlElement xmlElement : root.getChildren()) {
-      if (xmlElement.getQualifiedName().equalsIgnoreCase("item")) {
-        LogItem l = new LogItem(xmlElement.getAttributeValue("title"),
-            xmlElement.getAttributeValue("type"), xmlElement.getAttributeValue("user"));
-        logCollection.add(l);
-
-      } else {
-        findContent(xmlElement);
-      }
-
+      return Optional.absent();
     }
   }
 
-  private void prepareCollection() {
+  @Override
+  protected HttpAction prepareCollection() {
 
-    if (init || (!logIterator.hasNext() && hasMoreResults)) {
-      if (init) {
-        msg = generateRequest(type);
-      } else {
-        msg = generateContinueRequest(type, nextPageInfo);
-      }
-      init = false;
-      try {
-        selvEx = false; // TODO not good
-        bot.getPerformedAction(this);
-        selvEx = true; // TODO not good
-        setHasMoreMessages(true);
-        log.debug("preparing success");
-      } catch (ActionException | ProcessException e) {
-        log.warn("", e);
-        setHasMoreMessages(false);
-      }
-
+    if (hasNextPageInfo()) {
+      return generateContinueRequest(type); // TODO nextpageinfo
+    } else {
+      return generateRequest(type);
     }
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public HttpAction getNextMessage() {
-    return msg;
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public boolean hasNext() {
-    prepareCollection();
-    return logIterator.hasNext();
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public LogItem next() {
-    prepareCollection();
-    return logIterator.next();
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public void remove() {
-    logIterator.remove();
 
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
-  @SuppressWarnings("unchecked")
-  public Iterator<LogItem> iterator() {
-    try {
-      return (Iterator<LogItem>) clone();
-    } catch (CloneNotSupportedException e) {
-      e.printStackTrace();
-      return null;
-    }
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  protected Object clone() throws CloneNotSupportedException {
-    return new LogEvents(bot, limit, type);
-  }
-
-  /**
-   * {@inheritDoc}
-   *
-   * @deprecated see super
-   */
-  @Deprecated
-  @Override
-  public boolean isSelfExecuter() {
-    return selvEx;
+  protected Iterator<LogItem> copy() {
+    return new LogEvents(bot(), limit, type);
   }
 
 }

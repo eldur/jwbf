@@ -9,14 +9,10 @@ import java.util.Collection;
 import net.sourceforge.jwbf.core.contentRep.Article;
 import net.sourceforge.jwbf.mediawiki.BotFactory;
 import net.sourceforge.jwbf.mediawiki.MediaWiki.Version;
-import net.sourceforge.jwbf.mediawiki.VersionTestClassVerifier;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 import net.sourceforge.jwbf.mediawiki.contentRep.LogItem;
 import net.sourceforge.jwbf.mediawiki.live.auto.ParamHelper;
-import org.junit.ClassRule;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.Verifier;
 import org.junit.runners.Parameterized.Parameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,13 +20,6 @@ import org.slf4j.LoggerFactory;
 public class LogEventsLiveIntegTest extends ParamHelper {
 
   private static final Logger log = LoggerFactory.getLogger(LogEventsLiveIntegTest.class);
-
-  @ClassRule
-  public static VersionTestClassVerifier classVerifier =
-      new VersionTestClassVerifier(LogEvents.class);
-
-  @Rule
-  public Verifier successRegister = classVerifier.getSuccessRegister(this);
 
   @Parameters(name = "{0}")
   public static Collection<?> stableWikis() {
@@ -54,7 +43,7 @@ public class LogEventsLiveIntegTest extends ParamHelper {
       Article a = new Article(bot, title);
       a.setText(getRandom(5));
       a.save();
-      assertTrue("content shoul be", a.getText().length() > 0);
+      assertTrue("content should be", a.getText().length() > 0);
       a.delete();
     }
   }
