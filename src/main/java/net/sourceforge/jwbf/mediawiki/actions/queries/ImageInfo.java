@@ -109,7 +109,7 @@ public class ImageInfo extends MWAction {
       bot.getPerformedAction(this);
     } catch (ProcessException e) {
       String exceptionMsg = "no url for image with name \"" + name + "\"";
-      throw new ProcessException(exceptionMsg);
+      throw ProcessException.joinMsgs(e, exceptionMsg);
     } finally {
       selfEx = true;
     }

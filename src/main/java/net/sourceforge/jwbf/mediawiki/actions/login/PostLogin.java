@@ -22,7 +22,7 @@ package net.sourceforge.jwbf.mediawiki.actions.login;
 import net.sourceforge.jwbf.core.actions.Post;
 import net.sourceforge.jwbf.core.actions.util.ActionException;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
-import net.sourceforge.jwbf.core.actions.util.ProcessException;
+import net.sourceforge.jwbf.core.actions.util.PermissionException;
 import net.sourceforge.jwbf.mapper.XmlConverter;
 import net.sourceforge.jwbf.mapper.XmlElement;
 import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
@@ -107,7 +107,7 @@ public class PostLogin extends MWAction {
       reTry = true;
       reTryLimit = false;
     } else if (result.equalsIgnoreCase(wrongPass)) {
-      throw new ProcessException("Wrong Password");
+      throw new PermissionException("Wrong Password");
     } else if (result.equalsIgnoreCase(notExists)) {
       throw new ActionException("No such User");
     } else if (result.equalsIgnoreCase("Throttled")) {

@@ -33,6 +33,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.hash.Hashing;
 import com.google.common.io.Files;
 import com.google.common.io.Resources;
+import net.sourceforge.jwbf.GAssert;
 import net.sourceforge.jwbf.JWBF;
 import net.sourceforge.jwbf.core.actions.util.ProcessException;
 import net.sourceforge.jwbf.mediawiki.BotFactory;
@@ -75,7 +76,8 @@ public class UploadAndImageInfoTest extends ParamHelper {
     try {
       log.info(a.getUrlAsString());
     } catch (ProcessException e) {
-      assertEquals(String.format("no url for image with name \"%s\"", name), e.getMessage());
+      GAssert.assertStartsWith(String.format("no url for image with name \"%s\"", name),
+          e.getMessage());
     }
   }
 
@@ -94,7 +96,7 @@ public class UploadAndImageInfoTest extends ParamHelper {
       new ImageInfo(bot, testFilename).getUrlAsString();
       fail("file was found ");
     } catch (ProcessException e) {
-      assertEquals("no url for image with name \"Test.gif\"", e.getMessage());
+      GAssert.assertStartsWith("no url for image with name \"Test.gif\"", e.getMessage());
     }
   }
 
@@ -130,8 +132,7 @@ public class UploadAndImageInfoTest extends ParamHelper {
     try {
       return new ImageInfo(bot, sf.getTitle(), params).getUrl();
     } catch (ProcessException e) {
-      throw new ProcessException(
-          e.getLocalizedMessage() + "; \n is upload enabled? $wgEnableUploads = true;");
+      throw ProcessException.joinMsgs(e, "; \n is upload enabled? $wgEnableUploads = true;");
     }
   }
 

@@ -5,8 +5,10 @@ import com.google.common.base.Optional;
 import net.sourceforge.jwbf.core.actions.Post;
 import net.sourceforge.jwbf.core.actions.RequestBuilder;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
+import net.sourceforge.jwbf.core.actions.util.PermissionException;
 import net.sourceforge.jwbf.core.actions.util.ProcessException;
 import net.sourceforge.jwbf.core.contentRep.Userinfo;
+import net.sourceforge.jwbf.core.internal.Checked;
 import net.sourceforge.jwbf.mapper.XmlConverter;
 import net.sourceforge.jwbf.mapper.XmlElement;
 import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
@@ -49,12 +51,10 @@ public class PostDelete extends MWAction {
    * Constructs a new <code>PostDelete</code> action.
    */
   public PostDelete(Userinfo userinfo, String title) {
-    this.title = title;
-    if (title == null || title.length() == 0) {
-      throw new IllegalArgumentException("The argument 'title' must not be null or empty");
-    }
+    this.title = Checked.nonBlank(title, "title");
+
     if (!userinfo.getRights().contains("delete")) {
-      throw new ProcessException("The given user doesn't have the rights to delete. " +
+      throw new PermissionException("The given user doesn't have the rights to delete. " +
           "Add '$wgGroupPermissions['bot']['delete'] = true;' " +
           "to your MediaWiki's LocalSettings.php might solve this problem.");
     }

@@ -19,7 +19,7 @@ import org.junit.Test;
 import org.junit.rules.Verifier;
 import org.junit.runners.Parameterized.Parameters;
 
-public class MovePageTest extends ParamHelper {
+public class MovePageLiveIntegTest extends ParamHelper {
 
   @ClassRule
   public static VersionTestClassVerifier classVerifier =
@@ -37,7 +37,7 @@ public class MovePageTest extends ParamHelper {
   private final String newPage = "new";
   private final String lastPage = "last";
 
-  public MovePageTest(Version v) {
+  public MovePageLiveIntegTest(Version v) {
     super(v, classVerifier);
   }
 

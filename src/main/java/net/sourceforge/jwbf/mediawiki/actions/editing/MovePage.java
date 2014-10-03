@@ -1,9 +1,13 @@
 package net.sourceforge.jwbf.mediawiki.actions.editing;
 
+import java.util.Set;
+
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Strings;
 import net.sourceforge.jwbf.core.actions.RequestBuilder;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
-import net.sourceforge.jwbf.core.actions.util.ProcessException;
+import net.sourceforge.jwbf.core.actions.util.PermissionException;
+import net.sourceforge.jwbf.core.internal.Checked;
 import net.sourceforge.jwbf.mapper.XmlConverter;
 import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
 import net.sourceforge.jwbf.mediawiki.MediaWiki;
@@ -61,27 +65,27 @@ public class MovePage extends MWAction {
   public MovePage(MediaWikiBot bot, String oldtitle, String newtitle, String reason,
       boolean withsubpages, boolean noredirect) {
     token = new GetApiToken(GetApiToken.Intoken.MOVE, oldtitle);
-    this.oldtitle = oldtitle;
-    this.newtitle = newtitle;
+    this.oldtitle = Checked.nonBlank(oldtitle, "oldtitle");
+    this.newtitle = Checked.nonBlank(newtitle, "newtitle");
     this.reason = reason;
     this.withsubpages = withsubpages;
     this.noredirect = noredirect;
 
-    if (oldtitle == null || oldtitle.length() == 0 || newtitle == null || newtitle.length() == 0) {
-      throw new IllegalArgumentException(
-          "The arguments 'oldtitle' and 'newtitle' must not be null or empty");
-    }
+    checkPermissions(bot.getUserinfo().getRights(), withsubpages);
+  }
 
-    if (!bot.getUserinfo().getRights().contains("move")) {
-      throw new ProcessException("The given user doesn't have the rights to move. " +
+  @VisibleForTesting
+  void checkPermissions(Set<String> permissions, boolean withSubPages) {
+    if (!permissions.contains("move")) {
+      throw new PermissionException("The given user doesn't have the rights to move. " +
           "Add '$wgGroupPermissions['bot']['move'] = true;' " +
-          "to your MediaWiki's LocalSettings.php might solve this problem.");
+          "to your MediaWikis LocalSettings.php might solve this problem.");
     }
 
-    if (withsubpages && !bot.getUserinfo().getRights().contains("move-subpages")) {
-      throw new ProcessException("The given user doesn't have the rights to move subpages. " +
+    if (withSubPages && !permissions.contains("move-subpages")) {
+      throw new PermissionException("The given user doesn't have the rights to move subpages. " +
           "Add '$wgGroupPermissions['bot']['move-subpages'] = true;' " +
-          "to your MediaWiki's LocalSettings.php might solve this problem.");
+          "to your MediaWikis LocalSettings.php might solve this problem.");
     }
   }
 
