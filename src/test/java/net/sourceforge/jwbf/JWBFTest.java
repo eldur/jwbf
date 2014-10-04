@@ -355,7 +355,7 @@ public class JWBFTest {
       fail();
     } catch (IllegalArgumentException e) {
       // THEN
-      assertEquals("\\invalid", e.getMessage());
+      assertEquals("\"\\invalid\"", e.getMessage());
     }
   }
 

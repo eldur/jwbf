@@ -22,7 +22,7 @@ import net.sourceforge.jwbf.core.bots.util.JwbfException;
 
 /**
  * This exception can be used in children of a wikiaction to handle exceptions in these actions,
- * like access to content or mismatching patterns e.g.
+ * like access to content e.g.
  *
  * @author Thomas Stock
  */

@@ -1,8 +1,10 @@
 package net.sourceforge.jwbf.mediawiki.actions.queries;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import com.google.common.base.Optional;
+import com.google.common.collect.ImmutableList;
 import net.sourceforge.jwbf.core.actions.Get;
 import net.sourceforge.jwbf.mediawiki.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
@@ -125,6 +127,15 @@ public class AllPageTitlesTest {
 
     // THEN
     assertEquals("redirects", filterValue);
+  }
+
+  @Test
+  public void testParseArticleTitles() {
+    // GIVEN / WHEN
+    ImmutableList<String> result = testee.parseArticleTitles(BaseQueryTest.emptyXml());
+
+    // THEN
+    assertTrue(result.isEmpty());
   }
 
 }

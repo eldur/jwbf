@@ -153,13 +153,7 @@ public class GetRevision extends MWAction {
     for (XmlElement xmlElement : root.getChildren()) {
       if (xmlElement.getQualifiedName().equalsIgnoreCase("rev")) {
 
-        try {
-          sa.setText(xmlElement.getText());
-        } catch (NullPointerException e) {
-          if (log.isDebugEnabled()) {
-            log.debug("no text found");
-          }
-        }
+        sa.setText(xmlElement.getText());
         if ((properties & FLAGS) > 0) {
           if (xmlElement.hasAttribute("minor")) {
             sa.setMinorEdit(true);

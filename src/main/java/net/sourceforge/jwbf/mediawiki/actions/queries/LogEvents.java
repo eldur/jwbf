@@ -129,14 +129,16 @@ public class LogEvents extends BaseQuery<LogItem> {
   protected ImmutableList<LogItem> parseArticleTitles(String xml) {
 
     ImmutableList.Builder<LogItem> builder = ImmutableList.builder();
+    Optional<XmlElement> child = XmlConverter.getChildOpt(xml, "query", "logevents");
+    if (child.isPresent()) {
+      List<XmlElement> itmes = child.get().getChildren("item");
+      for (XmlElement item : itmes) {
+        String title = item.getAttributeValue("title");
+        String typeOf = item.getAttributeValue("type");
+        String user = item.getAttributeValue("user");
+        builder.add(new LogItem(title, typeOf, user));
 
-    List<XmlElement> itmes = XmlConverter.getChild(xml, "query", "logevents").getChildren("item");
-    for (XmlElement item : itmes) {
-      String title = item.getAttributeValue("title");
-      String typeOf = item.getAttributeValue("type");
-      String user = item.getAttributeValue("user");
-      builder.add(new LogItem(title, typeOf, user));
-
+      }
     }
     return builder.build();
 

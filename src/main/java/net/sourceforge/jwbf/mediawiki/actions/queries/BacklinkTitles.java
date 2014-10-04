@@ -116,11 +116,13 @@ public class BacklinkTitles extends BaseQuery<String> {
    */
   @Override
   protected ImmutableList<String> parseArticleTitles(String xml) {
-    List<XmlElement> backlinks = XmlConverter.getChild(xml, "query", "backlinks").getChildren("bl");
+    Optional<XmlElement> child = XmlConverter.getChildOpt(xml, "query", "backlinks");
     ImmutableList.Builder<String> titleCollection = ImmutableList.builder();
-
-    for (XmlElement backlink : backlinks) {
-      titleCollection.add(backlink.getAttributeValue("title"));
+    if (child.isPresent()) {
+      List<XmlElement> backlinks = child.get().getChildren("bl");
+      for (XmlElement backlink : backlinks) {
+        titleCollection.add(backlink.getAttributeValue("title"));
+      }
     }
     return titleCollection.build();
 

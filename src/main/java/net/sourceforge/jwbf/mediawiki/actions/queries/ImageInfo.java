@@ -16,6 +16,7 @@ import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.core.actions.util.ProcessException;
 import net.sourceforge.jwbf.core.internal.Checked;
 import net.sourceforge.jwbf.mapper.XmlConverter;
+import net.sourceforge.jwbf.mapper.XmlElement;
 import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
 import net.sourceforge.jwbf.mediawiki.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
@@ -104,17 +105,21 @@ public class ImageInfo extends MWAction {
   }
 
   public URL getUrl() {
+    String exceptionMsg = "no url for image with name \"" + name + "\"";
     try {
       selfEx = false;
       bot.getPerformedAction(this);
     } catch (ProcessException e) {
-      String exceptionMsg = "no url for image with name \"" + name + "\"";
       throw ProcessException.joinMsgs(e, exceptionMsg);
     } finally {
       selfEx = true;
     }
 
-    return JWBF.newURL(Checked.nonNull(urlOfImage, "image url"));
+    if (urlOfImage.length() < 1) {
+      throw new ProcessException(exceptionMsg);
+    }
+
+    return JWBF.newURL(Checked.nonBlank(urlOfImage, "image url"));
   }
 
   /**
@@ -137,11 +142,10 @@ public class ImageInfo extends MWAction {
    */
   @Override
   public String processAllReturningText(String xml) {
-    urlOfImage = XmlConverter.getChild(xml, "query", "pages", "page", "imageinfo", "ii") //
-        .getAttributeValueOpt("url").or("");
-
-    if (urlOfImage.length() < 1) {
-      throw new ProcessException("Could not find this image " + xml);
+    Optional<XmlElement> child = //
+        XmlConverter.getChildOpt(xml, "query", "pages", "page", "imageinfo", "ii");
+    if (child.isPresent()) {
+      urlOfImage = child.get().getAttributeValueOpt("url").or("");
     }
     return "";
   }

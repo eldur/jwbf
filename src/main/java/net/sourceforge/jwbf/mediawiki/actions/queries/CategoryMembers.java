@@ -126,9 +126,13 @@ abstract class CategoryMembers extends BaseQuery<CategoryItem> {
   }
 
   <T> ImmutableList<T> parseArticles(String xml, NonnullFunction<XmlElement, T> f) {
-    List<XmlElement> children = //
-        XmlConverter.getChild(xml, "query", "categorymembers").getChildren();
-    return FluentIterable.from(children).transform(f).toList();
+    Optional<XmlElement> child = XmlConverter.getChildOpt(xml, "query", "categorymembers");
+    if (child.isPresent()) {
+      List<XmlElement> children = child.get().getChildren();
+      return FluentIterable.from(children).transform(f).toList();
+    } else {
+      return ImmutableList.of();
+    }
   }
 
   private RequestBuilder newRequestBuilder() {

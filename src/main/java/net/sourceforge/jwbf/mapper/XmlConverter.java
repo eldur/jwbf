@@ -125,8 +125,16 @@ public final class XmlConverter {
     }
   }
 
+  public static Optional<XmlElement> getChildOpt(String xml, String first, String... childNames) {
+    XmlElement child = getChild(xml, first, childNames);
+    if (XmlElement.NULL_XML == child) {
+      return Optional.absent();
+    }
+    return Optional.fromNullable(child);
+  }
+
   @CheckForNull
-  public static XmlElement getChild(String xml, String first, String... childNames) {
+  static XmlElement getChild(String xml, String first, String... childNames) {
     if (first == null) {
       return null;
     }
@@ -139,6 +147,7 @@ public final class XmlConverter {
     return getChild(rootElement, names);
   }
 
+  @CheckForNull
   private static XmlElement getChild(XmlElement element, ImmutableList<String> names) {
     if (element == null) {
       return null;

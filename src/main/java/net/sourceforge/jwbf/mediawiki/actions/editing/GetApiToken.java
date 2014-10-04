@@ -129,8 +129,8 @@ public class GetApiToken extends DequeMWAction<GetApiToken.TokenResponse> {
     if (hm.getRequest().equals(msg.getRequest())) {
       log.debug("Got returning text: \"{}\"", s);
       try {
-        XmlElement elem = XmlConverter.getChild(s, "query", "pages", "page");
-        token = Optional.fromNullable(elem).transform(TOKEN_FUNCTIONS.get(intoken));
+        Optional<XmlElement> elem = XmlConverter.getChildOpt(s, "query", "pages", "page");
+        token = elem.transform(TOKEN_FUNCTIONS.get(intoken));
         // TODO check intoken from tokenfunc for null
 
         log.debug("urlEncodedToken = {} for: {}", token, msg.getRequest());

@@ -140,12 +140,13 @@ public class AllPageTitles extends BaseQuery<String> {
   @Override
   protected ImmutableList<String> parseArticleTitles(String s) {
     ImmutableList.Builder<String> titles = ImmutableList.builder();
-    XmlElement child = XmlConverter.getChild(s, "query", "allpages");
-
-    for (XmlElement pageElement : child.getChildren("p")) {
-      String title = pageElement.getAttributeValue("title");
-      log.debug("Found article title: \"{}\"", title);
-      titles.add(title);
+    Optional<XmlElement> child = XmlConverter.getChildOpt(s, "query", "allpages");
+    if (child.isPresent()) {
+      for (XmlElement pageElement : child.get().getChildren("p")) {
+        String title = pageElement.getAttributeValue("title");
+        log.debug("Found article title: \"{}\"", title);
+        titles.add(title);
+      }
     }
     return titles.build();
   }

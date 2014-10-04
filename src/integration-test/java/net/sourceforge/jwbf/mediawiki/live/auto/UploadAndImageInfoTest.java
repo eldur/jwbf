@@ -74,7 +74,8 @@ public class UploadAndImageInfoTest extends ParamHelper {
     String name = "UnknownImage.jpg";
     ImageInfo a = new ImageInfo(bot, name);
     try {
-      log.info(a.getUrlAsString());
+      a.getUrlAsString();
+      fail();
     } catch (ProcessException e) {
       GAssert.assertStartsWith(String.format("no url for image with name \"%s\"", name),
           e.getMessage());

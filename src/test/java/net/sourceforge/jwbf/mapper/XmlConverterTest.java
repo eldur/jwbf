@@ -4,8 +4,10 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 
+import com.google.common.base.Optional;
 import com.google.common.io.Resources;
 import net.sourceforge.jwbf.TestHelper;
+import net.sourceforge.jwbf.mediawiki.actions.queries.BaseQueryTest;
 import org.junit.Test;
 
 public class XmlConverterTest {
@@ -66,5 +68,17 @@ public class XmlConverterTest {
 
     // THEN
     assertEquals(XmlElement.NULL_XML, first);
+  }
+
+  @Test
+  public void testGetChildOpt_emptyXml() {
+    // GIVEN
+    String xml = BaseQueryTest.emptyXml();
+
+    // WHEN
+    Optional<XmlElement> first = XmlConverter.getChildOpt(xml, "a");
+
+    // THEN
+    assertEquals(Optional.absent(), first);
   }
 }
