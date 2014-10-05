@@ -68,8 +68,9 @@ public class GAssert {
         actual1 = joinToString(actual, Functions.toStringFunction());
         expected1 = joinToString(expected, Functions.toStringFunction());
       } else {
-        actual1 = joinToString(actual, TO_DETAIL_STRING);
-        expected1 = joinToString(expected, TO_DETAIL_STRING);
+        boolean notEqualTypes = actualTypes != null && !actualTypes.equals(expectedTypes);
+        actual1 = joinToString(actual, toDetailString(notEqualTypes));
+        expected1 = joinToString(expected, toDetailString(notEqualTypes));
       }
 
       Assert.assertEquals(expected1, actual1);
@@ -103,26 +104,33 @@ public class GAssert {
     }
   }
 
-  static Function<Object, String> TO_DETAIL_STRING = new NonnullFunction<Object, String>() {
-    @Nonnull
-    @Override
-    public String applyNonnull(@Nonnull Object input) {
-      if (input instanceof Map.Entry) {
-        Map.Entry<?, ?> entry = (Map.Entry<?, ?>) input;
-        Object key = entry.getKey();
-        Object value = entry.getValue();
-        if (value instanceof ImmutableList) {
-          ImmutableList<?> list = (ImmutableList<?>) value;
-          return toClassString(key) + "=" + Joiner.on("\n  ") //
-              .join(Iterables.transform(list, TO_CLASS_STRING)) + "\n";
+  private static Function<Object, String> toDetailString(final boolean notEqualTypes) {
+
+    return new NonnullFunction<Object, String>() {
+      @Nonnull
+      @Override
+      public String applyNonnull(@Nonnull Object input) {
+        if (input instanceof Map.Entry) {
+          Map.Entry<?, ?> entry = (Map.Entry<?, ?>) input;
+          Object key = entry.getKey();
+          Object value = entry.getValue();
+          if (value instanceof ImmutableList) {
+            ImmutableList<?> list = (ImmutableList<?>) value;
+            return toClassString(key) + "=" + Joiner.on("\n  ") //
+                .join(Iterables.transform(list, TO_CLASS_STRING)) + "\n";
+          } else {
+            return toClassString(key) + "=" + toClassString(value);
+          }
+        }
+        if (notEqualTypes) {
+          return input.getClass().getCanonicalName() + " " + input.toString();
         } else {
-          return toClassString(key) + "=" + toClassString(value);
+          return input.toString();
         }
       }
-      return input.toString();
-    }
 
-  };
+    };
+  }
 
   static String toClassString(Object o) {
     return "{" + o.toString() + " [" + o.getClass().getCanonicalName() + "]}";
@@ -144,7 +152,7 @@ public class GAssert {
           return key.getClass().getCanonicalName() + "=" + value.getClass().getCanonicalName();
         }
       }
-      return input.toString();
+      return input.getClass().getCanonicalName();
     }
   };
 

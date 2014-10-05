@@ -59,7 +59,7 @@ public class GAssertTest {
       fail();
     } catch (AssertionError e) {
       // THEN
-      assertEquals("expected:<null> but was:<a>", e.getMessage());
+      assertEquals("expected:<null> but was:<java.lang.String a>", e.getMessage());
     }
   }
 
@@ -91,7 +91,25 @@ public class GAssertTest {
       fail();
     } catch (ComparisonFailure e) {
       // THEN
-      assertEquals("expected:<[a]> but was:<[4]>", e.getMessage());
+      assertEquals("expected:<java.lang.[String a]> but was:<java.lang.[Integer 4]>",
+          e.getMessage());
+    }
+  }
+
+  @Test
+  public void testAssertEquals_listTypes_fail_optical() {
+    // GIVEN
+    ImmutableList<String> expected = ImmutableList.of("4");
+    ImmutableList<Integer> actual = ImmutableList.of(4);
+
+    try {
+      // WHEN
+      GAssert.assertEquals(expected, actual);
+      fail();
+    } catch (ComparisonFailure e) {
+      // THEN
+      assertEquals("expected:<java.lang.[String] 4> but was:<java.lang.[Integer] 4>",
+          e.getMessage());
     }
   }
 
