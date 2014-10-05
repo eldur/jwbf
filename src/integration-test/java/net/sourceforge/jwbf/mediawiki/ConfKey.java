@@ -7,7 +7,8 @@ public enum ConfKey {
   SITEINFO, INTERWIKI, SITENAME, MAINPAGE, //
   ALL_PAGE_CONT_2, ALL_PAGE_CONT_1, ALL_PAGE_2, ALL_PAGE_1, ALL_PAGE_0, //
   USERINFO_RIGHTS, USERINFO_GROUPS, //
-  BACKLINKS_PAGES, BACKLINKS_CONT_2, BACKLINKS_CONT_1;
+  BACKLINKS_PAGES, BACKLINKS_CONT_2, BACKLINKS_CONT_1, //
+  LOGEVENTS_DELETE_PAGES;
 
   private static final ImmutableMap<ConfKey, String> KEY_MAP =
       ImmutableMap.<ConfKey, String>builder() //
@@ -25,6 +26,7 @@ public enum ConfKey {
           .put(BACKLINKS_CONT_2, "backlinks2continue") //
           .put(USERINFO_GROUPS, "userinfoGroups") //
           .put(USERINFO_RIGHTS, "userinfoRights") //
+          .put(LOGEVENTS_DELETE_PAGES, "logevents_deleted") //
           .build() //
       ;
 

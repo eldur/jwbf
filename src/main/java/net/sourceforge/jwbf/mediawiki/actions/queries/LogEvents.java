@@ -18,20 +18,23 @@
  */
 package net.sourceforge.jwbf.mediawiki.actions.queries;
 
+import javax.annotation.Nonnull;
 import java.util.Iterator;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
+import com.google.common.base.Function;
 import com.google.common.base.Joiner;
 import com.google.common.base.Optional;
+import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
-import net.sourceforge.jwbf.core.actions.Get;
 import net.sourceforge.jwbf.core.actions.RequestBuilder;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
+import net.sourceforge.jwbf.core.internal.NonnullFunction;
 import net.sourceforge.jwbf.mapper.XmlConverter;
 import net.sourceforge.jwbf.mapper.XmlElement;
 import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
+import net.sourceforge.jwbf.mediawiki.MediaWiki;
+import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 import net.sourceforge.jwbf.mediawiki.contentRep.LogItem;
 import org.slf4j.Logger;
@@ -41,8 +44,7 @@ import org.slf4j.LoggerFactory;
  * List log events, filtered by time range, event type, user type, or the page it applies to.
  * Ordered by event timestamp. Parameters: letype (flt), lefrom (paging timestamp), leto (flt),
  * ledirection (dflt=older), leuser (flt), letitle (flt), lelimit (dflt=10, max=500/5000) api.php ?
- * action=query &amp; list=logevents - List last 10 events of any type TODO This is a semi-complete
- * extension point
+ * action=query &amp; list=logevents - List last 10 events of any type extension point
  *
  * @author Thomas Stock
  */
@@ -62,13 +64,11 @@ public class LogEvents extends BaseQuery<LogItem> {
 
   private final int limit;
 
-  private Get msg;
-  private boolean init = true;
   /**
    * Collection that will contain the result (titles of articles linking to the target) after
    * performing the action has finished.
    */
-  private final String[] type;
+  private final ImmutableList<String> type;
 
   /**
    * information necessary to get the next api page.
@@ -76,53 +76,60 @@ public class LogEvents extends BaseQuery<LogItem> {
    * @param type of like {@link #MOVE}
    */
   public LogEvents(MediaWikiBot bot, String type) {
-    this(bot, new String[] { type });
+    this(bot, 50, ImmutableList.<String>of(type));
   }
 
   /**
    * @param type of like {@link #MOVE}
+   *             @deprecated
    */
+  @Deprecated
   public LogEvents(MediaWikiBot bot, String[] type) {
-    this(bot, 50, type.clone());
+    this(bot, 50, type);
+  }
+
+  /**
+   * @param limit  of events
+   * @param first  of like {@link #MOVE}
+   * @param others like {@link #DELETE, ...}
+   */
+  public LogEvents(MediaWikiBot bot, int limit, String first, String... others) {
+    this(bot, limit, ImmutableList.<String>builder() //
+        .add(first) //
+        .addAll(MWAction.nullSafeCopyOf(others)) //
+        .build());
   }
 
   /**
    * @param limit of events
    * @param type  of like {@link #MOVE}
+   * @deprecated
    */
-  public LogEvents(MediaWikiBot bot, int limit, String type) {
-    this(bot, limit, new String[] { type });
-  }
-
-  /**
-   * @param limit of events
-   * @param type  of like {@link #MOVE}
-   */
+  @Deprecated
   public LogEvents(MediaWikiBot bot, int limit, String[] type) {
+    this(bot, limit, MWAction.nullSafeCopyOf(type));
+  }
+
+  LogEvents(MediaWikiBot bot, int limit, ImmutableList<String> logtypes) {
     super(bot);
-    this.type = type;
+    this.type = logtypes; // String because logtypes is an extension point
+    Preconditions.checkArgument(limit > 0, "limit must be > 0, but was " + limit);
     this.limit = limit;
   }
 
-  private Get generateRequest(String... logtype) {
+  private RequestBuilder generateRequest(ImmutableList<String> logtypes) {
 
     RequestBuilder requestBuilder = new ApiRequestBuilder() //
         .action("query") //
+        .paramNewContinue(bot().getVersion()) //
         .formatXml() //
         .param("list", "logevents") //
         .param("lelimit", limit) //
         ;
-    if (logtype.length > 0) {
-      requestBuilder.param("letype", Joiner.on("|").join(logtype));
+    if (logtypes.size() > 0) {
+      requestBuilder.param("letype", Joiner.on("|").join(logtypes));
     }
-
-    return requestBuilder.buildGet();
-
-  }
-
-  private Get generateContinueRequest(String[] logtype) {
-    // FIXME continueing is unused
-    return generateRequest(logtype);
+    return requestBuilder;
   }
 
   @Override
@@ -131,8 +138,8 @@ public class LogEvents extends BaseQuery<LogItem> {
     ImmutableList.Builder<LogItem> builder = ImmutableList.builder();
     Optional<XmlElement> child = XmlConverter.getChildOpt(xml, "query", "logevents");
     if (child.isPresent()) {
-      List<XmlElement> itmes = child.get().getChildren("item");
-      for (XmlElement item : itmes) {
+      List<XmlElement> items = child.get().getChildren("item");
+      for (XmlElement item : items) {
         String title = item.getAttributeValue("title");
         String typeOf = item.getAttributeValue("type");
         String user = item.getAttributeValue("user");
@@ -146,28 +153,22 @@ public class LogEvents extends BaseQuery<LogItem> {
 
   @Override
   protected Optional<String> parseHasMore(final String s) {
-
-    // get the blcontinue-value
-    // FIXME remove this Pattern
-    Pattern p = Pattern //
-        .compile("<query-continue>.*?<logevents *lestart=\"([^\"]*)\" */>.*?</query-continue>",
-            Pattern.DOTALL | Pattern.MULTILINE);
-
-    Matcher m = p.matcher(s);
-    if (m.find()) {
-      return Optional.of(m.group(1));
+    if (bot().getVersion().greaterEqThen(MediaWiki.Version.MW1_23)) {
+      return parseXmlHasMore(s, "logevents", "lestart", "lecontinue");
     } else {
+      log.warn("continuation is not supported");
       return Optional.absent();
     }
   }
 
   @Override
   protected HttpAction prepareCollection() {
-
     if (hasNextPageInfo()) {
-      return generateContinueRequest(type); // TODO nextpageinfo
+      return generateRequest(type) //
+          .param("lecontinue", MediaWiki.urlEncode(getNextPageInfo())) //
+          .buildGet();
     } else {
-      return generateRequest(type);
+      return generateRequest(type).buildGet();
     }
 
   }
@@ -177,4 +178,13 @@ public class LogEvents extends BaseQuery<LogItem> {
     return new LogEvents(bot(), limit, type);
   }
 
+  static Function<LogItem, String> toTitles() {
+    return new NonnullFunction<LogItem, String>() {
+      @Nonnull
+      @Override
+      protected String applyNonnull(@Nonnull LogItem in) {
+        return in.getTitle();
+      }
+    };
+  }
 }

@@ -97,12 +97,20 @@ public abstract class MWAction implements ContentProcessable {
     return createNsString(nullSafeCopyOf(namespaces));
   }
 
-  @Nonnull
-  public static ImmutableList<Integer> nullSafeCopyOf(@Nullable int[] namespaces) {
-    if (namespaces == null) {
+  public static ImmutableList<String> nullSafeCopyOf(@Nullable String[] strings) {
+    if (strings == null) {
       return ImmutableList.of();
     } else {
-      return ImmutableList.copyOf(Ints.asList(namespaces));
+      return ImmutableList.copyOf(strings);
+    }
+  }
+
+  @Nonnull
+  public static ImmutableList<Integer> nullSafeCopyOf(@Nullable int[] ints) {
+    if (ints == null) {
+      return ImmutableList.of();
+    } else {
+      return ImmutableList.copyOf(Ints.asList(ints));
     }
   }
 
@@ -120,5 +128,6 @@ public abstract class MWAction implements ContentProcessable {
   public boolean isSelfExecuter() {
     return false;
   }
+
 
 }

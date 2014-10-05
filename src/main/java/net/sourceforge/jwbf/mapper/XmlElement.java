@@ -56,7 +56,7 @@ public class XmlElement {
     return child.getAttributeValue(attributeName);
   }
 
-  Optional<XmlElement> getChildOpt(String name) {
+  public Optional<XmlElement> getChildOpt(String name) {
     XmlElement child = getChild(name);
     if (child == NULL_XML) {
       return Optional.absent();

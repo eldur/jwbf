@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<api>
+  <query>
+    <logevents>
+      <item logid="15256" pageid="0" ns="0" title="EYCVKH" type="delete" action="delete"
+            user="Admin" timestamp="2014-10-05T12:46:25Z"
+            comment="content was: &quot;ai6FF&quot; (and the only contributor was &quot;[[Special:Contributions/Admin|Admin]]&quot;)" />
+    </logevents>
+  </query>
+  <query-continue>
+    <logevents lestart="2014-10-05T12:46:25Z" />
+  </query-continue>
+</api>

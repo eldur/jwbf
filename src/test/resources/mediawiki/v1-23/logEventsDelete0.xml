@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<api>
+  <query>
+    <logevents>
+      <item logid="17682" ns="0" title="ZYRZZQ" pageid="0" type="delete" action="delete"
+            user="Admin" timestamp="2014-10-05T13:52:55Z"
+            comment="content was: &quot;ErE&gt;t&quot; (and the only contributor was &quot;[[Special:Contributions/Admin|Admin]]&quot;)" />
+    </logevents>
+  </query>
+  <continue continue="-||" lecontinue="20141005135252|17680" />
+</api>

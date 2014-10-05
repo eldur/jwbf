@@ -111,10 +111,9 @@ public abstract class BaseQuery<T> implements Iterable<T>, Iterator<T>, Cloneabl
   protected Optional<String> parseXmlHasMore(String xml, String elementName, String attributeKey,
       String newContinueKey) {
     XmlElement rootElement = XmlConverter.getRootElement(xml);
-
-    XmlElement aContinue = rootElement.getChild("continue");
-    if (aContinue != XmlElement.NULL_XML) {
-      return aContinue.getAttributeValueOpt(newContinueKey);
+    Optional<XmlElement> aContinue = rootElement.getChildOpt("continue");
+    if (aContinue.isPresent()) {
+      return aContinue.get().getAttributeValueOpt(newContinueKey);
     } else {
       // XXX fallback for < MW1_19
       XmlElement queryContinue = rootElement.getChild("query-continue").getChild(elementName);
@@ -168,7 +167,7 @@ public abstract class BaseQuery<T> implements Iterable<T>, Iterator<T>, Cloneabl
       ImmutableList<T> newTitles = parseArticleTitles(s);
       setNextPageInfo(parseHasMore(s).orNull());
       if (log.isWarnEnabled()) {
-        if (oldTitlesForLogging.equals(newTitles)) {
+        if (oldTitlesForLogging.equals(newTitles) && !oldTitlesForLogging.isEmpty()) {
           log.warn("previous response has same payload");
           // namespaces or same edits in recentchanges
         }

@@ -12,7 +12,14 @@ public class MWActionTest {
     ImmutableList<Integer> ints = MWAction.nullSafeCopyOf(new int[] { 1 });
     GAssert.assertEquals(ImmutableList.of(1), ints);
 
-    ImmutableList<Integer> empty = MWAction.nullSafeCopyOf(null);
+    ImmutableList<Integer> empty = MWAction.nullSafeCopyOf((int[]) null);
     GAssert.assertEquals(ImmutableList.<Integer>of(), empty);
+
+    ImmutableList<String> strings = MWAction.nullSafeCopyOf(new String[] { "" });
+    GAssert.assertEquals(ImmutableList.of(""), strings);
+
+    ImmutableList<String> emptyStrings = MWAction.nullSafeCopyOf((String[]) null);
+    GAssert.assertEquals(ImmutableList.<Integer>of(), emptyStrings);
+
   }
 }
