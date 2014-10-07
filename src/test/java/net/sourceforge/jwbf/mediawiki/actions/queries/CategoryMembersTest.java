@@ -27,7 +27,7 @@ public class CategoryMembersTest {
     }
 
     @Override
-    protected HttpAction prepareCollection() {
+    protected HttpAction prepareNextRequest() {
       return null;
     }
   };
@@ -35,7 +35,7 @@ public class CategoryMembersTest {
   @Test
   public void testParseArticleTitles() {
     // GIVEN / WHEN
-    ImmutableList<CategoryItem> result = testee.parseArticleTitles(BaseQueryTest.emptyXml());
+    ImmutableList<CategoryItem> result = testee.parseElements(BaseQueryTest.emptyXml());
 
     // THEN
     assertTrue(result.isEmpty());

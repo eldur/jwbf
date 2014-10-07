@@ -27,12 +27,12 @@ public class BaseQueryTest {
     }
 
     @Override
-    protected HttpAction prepareCollection() {
+    protected HttpAction prepareNextRequest() {
       return null;
     }
 
     @Override
-    protected ImmutableList<Object> parseArticleTitles(String s) {
+    protected ImmutableList<Object> parseElements(String s) {
       return ImmutableList.of();
     }
 

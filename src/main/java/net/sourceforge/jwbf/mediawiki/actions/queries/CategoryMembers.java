@@ -106,7 +106,7 @@ abstract class CategoryMembers extends BaseQuery<CategoryItem> {
    * @param xml text for parsing
    */
   @Override
-  public ImmutableList<CategoryItem> parseArticleTitles(String xml) {
+  public ImmutableList<CategoryItem> parseElements(String xml) {
     return parseArticles(xml, toCategoryItem());
 
   }

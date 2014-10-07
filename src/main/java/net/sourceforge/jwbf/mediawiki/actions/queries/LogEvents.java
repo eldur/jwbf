@@ -133,7 +133,7 @@ public class LogEvents extends BaseQuery<LogItem> {
   }
 
   @Override
-  protected ImmutableList<LogItem> parseArticleTitles(String xml) {
+  protected ImmutableList<LogItem> parseElements(String xml) {
 
     ImmutableList.Builder<LogItem> builder = ImmutableList.builder();
     Optional<XmlElement> child = XmlConverter.getChildOpt(xml, "query", "logevents");
@@ -162,7 +162,7 @@ public class LogEvents extends BaseQuery<LogItem> {
   }
 
   @Override
-  protected HttpAction prepareCollection() {
+  protected HttpAction prepareNextRequest() {
     if (hasNextPageInfo()) {
       return generateRequest(type) //
           .param("lecontinue", MediaWiki.urlEncode(getNextPageInfo())) //

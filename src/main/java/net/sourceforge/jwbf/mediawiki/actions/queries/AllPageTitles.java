@@ -138,7 +138,7 @@ public class AllPageTitles extends BaseQuery<String> {
    * @return a
    */
   @Override
-  protected ImmutableList<String> parseArticleTitles(String s) {
+  protected ImmutableList<String> parseElements(String s) {
     ImmutableList.Builder<String> titles = ImmutableList.builder();
     Optional<XmlElement> child = XmlConverter.getChildOpt(s, "query", "allpages");
     if (child.isPresent()) {
@@ -167,7 +167,7 @@ public class AllPageTitles extends BaseQuery<String> {
    * {@inheritDoc}
    */
   @Override
-  protected HttpAction prepareCollection() {
+  protected HttpAction prepareNextRequest() {
     return generateRequest(nextPageInfoOpt(), prefix, rf, MWAction.createNsString(namespaces));
 
   }

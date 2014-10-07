@@ -30,10 +30,10 @@ public class CategoryMembersSimpleTest {
   public void testPrepareCollection() {
     // GIVE
     HttpAction expected = mock(HttpAction.class);
-    when(categoryMembers.prepareCollection()).thenReturn(expected);
+    when(categoryMembers.prepareNextRequest()).thenReturn(expected);
 
     // WHEN
-    HttpAction result = testee.prepareCollection();
+    HttpAction result = testee.prepareNextRequest();
 
     // THEN
     assertEquals(expected, result);
@@ -48,7 +48,7 @@ public class CategoryMembersSimpleTest {
         .thenReturn(mock);
 
     // WHEN
-    ImmutableList<String> result = testee.parseArticleTitles("valid");
+    ImmutableList<String> result = testee.parseElements("valid");
 
     // THEN
     GAssert.assertEquals(ImmutableList.of("a title"), result);

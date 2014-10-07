@@ -72,12 +72,12 @@ public class CategoryMembersSimple extends BaseQuery<String> {
   }
 
   @Override
-  protected HttpAction prepareCollection() {
-    return cm.prepareCollection();
+  protected HttpAction prepareNextRequest() {
+    return cm.prepareNextRequest();
   }
 
   @Override
-  protected ImmutableList<String> parseArticleTitles(String s) {
+  protected ImmutableList<String> parseElements(String s) {
     return cm.parseArticles(s, toTitleFunction());
   }
 

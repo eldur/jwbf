@@ -136,7 +136,7 @@ public class TemplateUserTitles extends BaseQuery<String> {
    * @param s text for parsing
    */
   @Override
-  protected ImmutableList<String> parseArticleTitles(String s) {
+  protected ImmutableList<String> parseElements(String s) {
 
     Matcher m = TEMPLATE_USAGE_PATTERN.matcher(s);
     ImmutableList.Builder<String> titleCollection = ImmutableList.builder();
@@ -148,7 +148,7 @@ public class TemplateUserTitles extends BaseQuery<String> {
   }
 
   @Override
-  protected HttpAction prepareCollection() {
+  protected HttpAction prepareNextRequest() {
     if (hasNextPageInfo()) {
       return generateRequest(templateName, namespaces, getNextPageInfo());
     } else {

@@ -122,12 +122,12 @@ public class ImageUsageTitles extends BaseQuery<String> {
    * @param s text for parsing
    */
   @Override
-  protected ImmutableList<String> parseArticleTitles(String s) {
+  protected ImmutableList<String> parseElements(String s) {
     return ImmutableList.copyOf(handler.parseArticleTitles(s));
   }
 
   @Override
-  protected HttpAction prepareCollection() {
+  protected HttpAction prepareNextRequest() {
     if (hasNextPageInfo()) {
       return generateRequest(imageName, null, getNextPageInfo());
     } else {

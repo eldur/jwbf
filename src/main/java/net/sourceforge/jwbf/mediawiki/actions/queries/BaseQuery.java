@@ -17,8 +17,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Abstract class which is superclass of all titleiterations, represented by the sufix "Titles".
- *
  * @param <T> of
  * @author Thomas Stock
  */
@@ -27,13 +25,10 @@ public abstract class BaseQuery<T> implements Iterable<T>, Iterator<T>, Cloneabl
   private static final Logger log = LoggerFactory.getLogger(BaseQuery.class);
 
   private Iterator<T> titleIterator = ImmutableList.<T>of().iterator();
-  private final TitleQueryAction inner;
+  private final QueryAction inner;
   private final MediaWikiBot bot;
   private ImmutableList<T> oldTitlesForLogging = ImmutableList.of();
 
-  /**
-   * Information necessary to get the next api page.
-   */
   private Optional<String> nextPageInfo = Optional.absent();
 
   protected final String setNextPageInfo(String nextPageInfo) {
@@ -58,8 +53,8 @@ public abstract class BaseQuery<T> implements Iterable<T>, Iterator<T>, Cloneabl
     inner = getInnerAction();
   }
 
-  private TitleQueryAction getInnerAction() {
-    return new TitleQueryAction();
+  private QueryAction getInnerAction() {
+    return new QueryAction();
   }
 
   @Beta
@@ -108,6 +103,10 @@ public abstract class BaseQuery<T> implements Iterable<T>, Iterator<T>, Cloneabl
     throw new UnsupportedOperationException("do not change this iteration");
   }
 
+  /**
+   * XML related methods will be removed.
+   */
+  @Deprecated
   protected Optional<String> parseXmlHasMore(String xml, String elementName, String attributeKey,
       String newContinueKey) {
     XmlElement rootElement = XmlConverter.getRootElement(xml);
@@ -121,32 +120,40 @@ public abstract class BaseQuery<T> implements Iterable<T>, Iterator<T>, Cloneabl
     }
   }
 
-  protected abstract HttpAction prepareCollection();
+  /**
+   * @return the first and all following requests; depends on {@link #parseHasMore(String)}.
+   * Its implementation may ask {@link #nextPageInfoOpt()} for continuation value.
+   */
+  protected abstract HttpAction prepareNextRequest();
 
   private void doCollection() {
 
     if (inner.init || (!titleIterator.hasNext() && hasNextPageInfo())) {
       inner.init = false;
       inner.setHasMoreMessages(true);
-      inner.msg = prepareCollection();
+      inner.msg = prepareNextRequest();
       bot.getPerformedAction(inner);
     }
   }
 
-  protected abstract ImmutableList<T> parseArticleTitles(String s);
+  /**
+   * @param s content form the remote api; maybe xml or json.
+   *          It depends on {@link #prepareNextRequest()}
+   * @return elements that was found in the given string
+   */
+  protected abstract ImmutableList<T> parseElements(String s);
 
+  /**
+   * @param s content form the remote api; maybe xml or json.
+   * @return a token, that will be used from {@link #prepareNextRequest()}
+   */
   protected abstract Optional<String> parseHasMore(final String s);
 
   protected MediaWikiBot bot() {
     return bot;
   }
 
-  /**
-   * Inner helper class for this type.
-   *
-   * @author Thomas Stock
-   */
-  class TitleQueryAction extends MWAction {
+  class QueryAction extends MWAction {
 
     private HttpAction msg;
     private boolean init = true;
@@ -164,7 +171,7 @@ public abstract class BaseQuery<T> implements Iterable<T>, Iterator<T>, Cloneabl
      */
     @Override
     public final String processAllReturningText(final String s) {
-      ImmutableList<T> newTitles = parseArticleTitles(s);
+      ImmutableList<T> newTitles = parseElements(s);
       setNextPageInfo(parseHasMore(s).orNull());
       if (log.isWarnEnabled()) {
         if (oldTitlesForLogging.equals(newTitles) && !oldTitlesForLogging.isEmpty()) {

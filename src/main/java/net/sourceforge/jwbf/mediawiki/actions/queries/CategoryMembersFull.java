@@ -31,7 +31,7 @@ public class CategoryMembersFull extends CategoryMembers {
   }
 
   @Override
-  public HttpAction prepareCollection() {
+  public HttpAction prepareNextRequest() {
     if (init) {
       init = false;
       return generateFirstRequest();

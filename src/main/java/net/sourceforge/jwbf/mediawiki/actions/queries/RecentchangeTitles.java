@@ -109,7 +109,7 @@ public class RecentchangeTitles extends BaseQuery<String> {
    * @param s text for parsing
    */
   @Override
-  protected ImmutableList<String> parseArticleTitles(String s) {
+  protected ImmutableList<String> parseElements(String s) {
     XmlElement root = XmlConverter.getRootElement(s);
     List<String> titleCollection = Lists.newArrayList();
     findContent(root, titleCollection);
@@ -131,7 +131,7 @@ public class RecentchangeTitles extends BaseQuery<String> {
   }
 
   @Override
-  protected HttpAction prepareCollection() {
+  protected HttpAction prepareNextRequest() {
     if (hasNextPageInfo()) {
       return generateRequest(namespaces, getNextPageInfo());
     } else {

@@ -115,7 +115,7 @@ public class BacklinkTitles extends BaseQuery<String> {
    * @param xml text for parsing
    */
   @Override
-  protected ImmutableList<String> parseArticleTitles(String xml) {
+  protected ImmutableList<String> parseElements(String xml) {
     Optional<XmlElement> child = XmlConverter.getChildOpt(xml, "query", "backlinks");
     ImmutableList.Builder<String> titleCollection = ImmutableList.builder();
     if (child.isPresent()) {
@@ -163,7 +163,7 @@ public class BacklinkTitles extends BaseQuery<String> {
   }
 
   @Override
-  protected HttpAction prepareCollection() {
+  protected HttpAction prepareNextRequest() {
     if (hasNextPageInfo()) {
       return newContinueRequest(articleName, redirectFilter, namespaces, getNextPageInfo());
     } else {

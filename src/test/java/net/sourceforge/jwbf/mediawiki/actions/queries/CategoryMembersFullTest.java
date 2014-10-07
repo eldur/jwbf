@@ -34,7 +34,7 @@ public class CategoryMembersFullTest {
     // GIVEN
     MediaWikiBot bot = Mockito.mock(MediaWikiBot.class);
     IllegalStateException exception = new IllegalStateException();
-    Mockito.when(bot.getPerformedAction(Mockito.any(BaseQuery.TitleQueryAction.class))) //
+    Mockito.when(bot.getPerformedAction(Mockito.any(BaseQuery.QueryAction.class))) //
         .thenThrow(exception);
     String categoryName = "Test It";
 

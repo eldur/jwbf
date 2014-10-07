@@ -23,12 +23,12 @@ public class TitleQueryTest {
       }
 
       @Override
-      protected HttpAction prepareCollection() {
+      protected HttpAction prepareNextRequest() {
         return null;
       }
 
       @Override
-      protected ImmutableList<String> parseArticleTitles(String s) {
+      protected ImmutableList<String> parseElements(String s) {
         return ImmutableList.of();
       }
 

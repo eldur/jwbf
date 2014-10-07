@@ -19,7 +19,7 @@ public class BacklinkTitlesTest {
   @Test
   public void testParseArticleTitles() {
     // GIVEN / WHEN
-    ImmutableList<String> result = testee.parseArticleTitles(BaseQueryTest.emptyXml());
+    ImmutableList<String> result = testee.parseElements(BaseQueryTest.emptyXml());
 
     // THEN
     assertTrue(result.isEmpty());
