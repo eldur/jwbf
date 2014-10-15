@@ -332,6 +332,24 @@ public class HttpActionClientTest {
   }
 
   @Test
+  public void testUserAgentJwbf() {
+    // GIVEN / WHEN
+    Supplier<ImmutableList<String>> logLinesSupplier = Logging.newLogLinesSupplier();
+    new HttpActionClient.Builder() {
+      @Override
+      String getJwbfVersion() {
+        return JWBF.VERSION_FALLBACK_VALUE;
+      }
+    } //
+        .withUrl("http://example.org") //
+        .build();
+
+    // THEN
+    GAssert.assertEquals(ImmutableList.<String>of(), logLinesSupplier.get());
+
+  }
+
+  @Test
   public void testUserAgentString() {
     // GIVEN / WHEN
     Supplier<ImmutableList<String>> logLinesSupplier = Logging.newLogLinesSupplier();

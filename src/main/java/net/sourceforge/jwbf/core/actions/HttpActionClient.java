@@ -365,8 +365,8 @@ public class HttpActionClient {
       String nonNullUserAgentName = Checked.nonNull(userAgentName, "User-Agent name");
       String nonNullUserAgentVersion = Checked.nonNull(userAgentVersion, "User-Agent version");
       String nonNullUserAgentComment = Checked.nonNull(userAgentComment, "User-Agent comment");
-      String encodedName = toISO8859(trimAndReplaceWhitespace(nonNullUserAgentName));
-      String encodedVersion = toISO8859(trimAndReplaceWhitespace(nonNullUserAgentVersion));
+      String encodedName = toISO8859(trimAndReplaceWhitespaceLogged(nonNullUserAgentName));
+      String encodedVersion = toISO8859(trimAndReplaceWhitespaceLogged(nonNullUserAgentVersion));
       String encodedComment = toISO8859(trimAndRemoveWhitespace(nonNullUserAgentComment));
       this.userAgentParts.add(new UserAgentPart(encodedName, encodedVersion, encodedComment));
       return this;
@@ -381,7 +381,7 @@ public class HttpActionClient {
         if (userAgentParts.isEmpty()) {
           withUserAgent("Unknown", "Unknown");
         }
-        withUserAgent("JWBF", JWBF.getVersion(HttpActionClient.class));
+        withUserAgent("JWBF", trimAndReplaceWhitespace(getJwbfVersion()));
         HttpClientBuilder httpClientBuilder = HttpClientBuilder.create();
         httpClientBuilder.setUserAgent(makeUserAgentString(userAgentParts));
         withClient(httpClientBuilder.build());
@@ -389,6 +389,11 @@ public class HttpActionClient {
         log.warn("a User-Agent must be set in your client");
       }
       return new HttpActionClient(this);
+    }
+
+    @VisibleForTesting
+    String getJwbfVersion() {
+      return JWBF.getVersion(HttpActionClient.class);
     }
 
     private static String makeUserAgentString(List<UserAgentPart> userAgentParts) {
@@ -425,10 +430,14 @@ public class HttpActionClient {
         "\"{}\" was changed to \"{}\"; because of User-Agent " + "comment rules");
   }
 
-  private static String trimAndReplaceWhitespace(String in) {
-    String changed = emptyToUnknown(in.trim().replaceAll("[\r\n/]+", "").replaceAll("[ ]+", "_"));
+  private static String trimAndReplaceWhitespaceLogged(String in) {
+    String changed = trimAndReplaceWhitespace(in);
     return logIfDifferent(in, changed,
         "\"{}\" was changed to \"{}\"; because of User-Agent " + "name/version rules");
+  }
+
+  private static String trimAndReplaceWhitespace(String in) {
+    return emptyToUnknown(in.trim().replaceAll("[\r\n/]+", "").replaceAll("[ ]+", "_"));
   }
 
   private static String toISO8859(String toEncode) {

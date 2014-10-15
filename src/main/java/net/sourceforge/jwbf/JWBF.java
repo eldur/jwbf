@@ -44,6 +44,9 @@ import java.util.jar.Manifest;
  */
 public final class JWBF {
 
+  // visible only for internal testing
+  public static final String VERSION_FALLBACK_VALUE = "Version unknown";
+
   private static boolean errorInfo = true;
   static Map<String, String> cache = null;
 
@@ -185,7 +188,7 @@ public final class JWBF {
    * @return the version
    */
   public static String getVersion(Class<?> clazz) {
-    return getPartInfo(lazyVersion(), clazz, "Version unknown").version;
+    return getPartInfo(lazyVersion(), clazz, VERSION_FALLBACK_VALUE).version;
   }
 
   /**
