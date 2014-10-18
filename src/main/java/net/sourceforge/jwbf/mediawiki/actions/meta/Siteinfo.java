@@ -77,13 +77,13 @@ public class Siteinfo extends GetVersion {
       if (xmlElement.getQualifiedName().equalsIgnoreCase("ns")) {
         Integer id = Integer.parseInt(xmlElement.getAttributeValue("id"));
         String name = xmlElement.getText();
-        addNamespace(id, name);
+        namespaces.put(id, name);
 
       } else if (xmlElement.getQualifiedName().equalsIgnoreCase("iw")) {
         if (xmlElement.hasAttribute("prefix")) {
           String prefix = xmlElement.getAttributeValue("prefix");
           String name = xmlElement.getAttributeValue("url");
-          addInterwiki(prefix, name);
+          interwiki.put(prefix, name);
         }
       } else {
         findContent(xmlElement);
@@ -91,19 +91,11 @@ public class Siteinfo extends GetVersion {
     }
   }
 
-  private void addNamespace(Integer id, String name) {
-    namespaces.put(id, name);
-  }
-
   /**
    * @return of
    */
   public ImmutableMap<Integer, String> getNamespaces() {
     return ImmutableMap.copyOf(namespaces);
-  }
-
-  private void addInterwiki(String prefix, String name) {
-    interwiki.put(prefix, name);
   }
 
   /**

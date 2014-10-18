@@ -10,6 +10,7 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import com.github.dreamhead.moco.HttpServer;
 import com.github.dreamhead.moco.Moco;
 import com.github.dreamhead.moco.resource.ContentResource;
 import com.google.common.base.Function;
@@ -77,7 +78,7 @@ public abstract class MocoIntegTest extends AbstractIntegTest implements Provide
   }
 
   protected String confOf(ConfKey key) {
-      String confKey = ConfKey.toString(key);
+    String confKey = ConfKey.toString(key);
     try {
       return conf().getString(confKey);
     } catch (ConfigException.Missing e) {
@@ -85,6 +86,7 @@ public abstract class MocoIntegTest extends AbstractIntegTest implements Provide
       throw new IllegalStateException(message, e);
     }
   }
+
   public MediaWikiBot bot() {
     return bot;
   }
@@ -112,27 +114,45 @@ public abstract class MocoIntegTest extends AbstractIntegTest implements Provide
     this.bot = bot;
   }
 
+  public static void applySiteinfoXmlToServer(HttpServer server, Version latest, Class<?> clazz) {
+    applyToServer(server, SiteInfoIntegTest.newSiteInfoMatcherBuilder(), "siteinfo_detail.xml",
+        latest, clazz);
+  }
+
+  public static void applyToServer(HttpServer server, ApiMatcherBuilder apiMatcherBuilder,
+      String filename, Version version, Class<?> clazz) {
+    server.request(apiMatcherBuilder.build()) //
+        .response(mwFileOfInner(version, filename, clazz));
+  }
+
   protected void applySiteinfoXmlToServer() {
-    applyToServer(SiteInfoIntegTest.newSiteInfoMatcherBuilder(), "siteinfo_detail.xml");
+    applySiteinfoXmlToServer(server, version(), this.getClass());
   }
 
   protected void applyToServer(ApiMatcherBuilder apiMatcherBuilder, String filename) {
-    server.request(apiMatcherBuilder.build()) //
-        .response(mwFileOf(version(), filename));
+    MocoIntegTest.applyToServer(server, apiMatcherBuilder, filename, version(), this.getClass());
   }
 
-  protected ContentResource mwFileOf(MediaWiki.Version version, String filename) {
-    File file = fileOf(TestHelper.mediaWikiFileName(version, filename));
+  private static ContentResource mwFileOfInner(MediaWiki.Version version, String filename,
+      Class<?> clazz) {
+    File file = getFileInner(TestHelper.mediaWikiFileName(version, filename));
     if (file.canRead()) {
       String absFileName = file.getAbsolutePath();
       return Moco.file(absFileName);
     } else {
-      return Moco.text(
-          getClass().getCanonicalName() + " : SHOULD FAIL : File not found: " + filename);
+      return Moco.text(clazz.getCanonicalName() + " : SHOULD FAIL : File not found: " + filename);
     }
   }
 
+  protected ContentResource mwFileOf(MediaWiki.Version version, String filename) {
+    return mwFileOfInner(version, filename, this.getClass());
+  }
+
   protected File fileOf(String filename) {
+    return getFileInner(filename);
+  }
+
+  private static File getFileInner(String filename) {
     try {
       return JWBF.urlToFile(Resources.getResource(filename));
     } catch (IllegalArgumentException e) {
@@ -193,4 +213,5 @@ public abstract class MocoIntegTest extends AbstractIntegTest implements Provide
         .toSortedList(Ordering.natural()) //
         ;
   }
+
 }

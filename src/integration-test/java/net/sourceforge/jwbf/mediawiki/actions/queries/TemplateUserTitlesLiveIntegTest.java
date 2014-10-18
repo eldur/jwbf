@@ -1,24 +1,21 @@
 package net.sourceforge.jwbf.mediawiki.actions.queries;
 
 import static net.sourceforge.jwbf.TestHelper.getRandom;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 import java.util.Collection;
+import java.util.List;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
+import net.sourceforge.jwbf.GAssert;
 import net.sourceforge.jwbf.core.contentRep.Article;
 import net.sourceforge.jwbf.mediawiki.BotFactory;
 import net.sourceforge.jwbf.mediawiki.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.MediaWiki.Version;
-import net.sourceforge.jwbf.mediawiki.VersionTestClassVerifier;
+import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 import net.sourceforge.jwbf.mediawiki.live.auto.ParamHelper;
-import org.junit.ClassRule;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.Verifier;
 import org.junit.runners.Parameterized.Parameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,14 +27,8 @@ public class TemplateUserTitlesLiveIntegTest extends ParamHelper {
 
   private static final Logger log = LoggerFactory.getLogger(TemplateUserTitlesLiveIntegTest.class);
 
-  private static final String TESTPATTERNNAME = "Template:ATesT";
-
-  @ClassRule
-  public static VersionTestClassVerifier classVerifier =
-      new VersionTestClassVerifier(TemplateUserTitles.class);
-
-  @Rule
-  public Verifier successRegister = classVerifier.getSuccessRegister(this);
+  private static final String ARTICLE_NAME_PREFIX = "TestTemplate";
+  private static final String TESTPATTERNNAME = "Template:" + ARTICLE_NAME_PREFIX;
 
   @Parameters(name = "{0}")
   public static Collection<?> stableWikis() {
@@ -50,38 +41,30 @@ public class TemplateUserTitlesLiveIntegTest extends ParamHelper {
 
   @Test
   public void doRegularTest() {
-    TemplateUserTitles a = new TemplateUserTitles(bot, TESTPATTERNNAME, MediaWiki.NS_ALL);
+    TemplateUserTitles testee = //
+        new TemplateUserTitles(bot, 3, TESTPATTERNNAME, MWAction.nullSafeCopyOf(MediaWiki.NS_ALL));
 
-    int i = 0;
-    Collection<String> titles = Lists.newArrayList();
+    ImmutableList<String> titles = testTitles(4);
+    ImmutableList<String> backlinkTitles = testee.getCopyOf(4);
 
-    for (int j = 0; j < 55; j++) {
-      titles.add("Patx" + j);
-    }
-
-    for (@SuppressWarnings("unused") String pageTitle : a) {
-      pageTitle += "";
-      i++;
-    }
-    if (i < 50) {
+    if (!backlinkTitles.equals(titles)) {
       prepare(bot, titles);
+      GAssert.assertEquals(titles, testee.getCopyOf(4));
+    } else {
+      GAssert.assertEquals(titles, backlinkTitles);
     }
-
-    for (String pageTitle : a) {
-      titles.remove(pageTitle);
-      log.debug(titles.toString());
-      i++;
-    }
-    if (i < 50) {
-      fail("to less " + i);
-    }
-    assertTrue("title collection should be empty", titles.isEmpty());
-
-    Article template = new Article(bot, TESTPATTERNNAME);
-    assertEquals(TESTPATTERNNAME + " content ", "a test", template.getText());
   }
 
-  private void prepare(MediaWikiBot bot, Collection<String> titles) {
+  private ImmutableList<String> testTitles(int limit) {
+    List<String> temp = Lists.newArrayList();
+
+    for (int j = 0; j < limit; j++) {
+      temp.add(ARTICLE_NAME_PREFIX + j);
+    }
+    return ImmutableList.copyOf(temp);
+  }
+
+  private void prepare(MediaWikiBot bot, ImmutableList<String> titles) {
     Article template = new Article(bot, TESTPATTERNNAME);
     template.setText("a test");
     template.save();

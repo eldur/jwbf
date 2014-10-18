@@ -20,14 +20,14 @@
 package net.sourceforge.jwbf.mediawiki.actions.queries;
 
 import java.util.Iterator;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import net.sourceforge.jwbf.core.actions.RequestBuilder;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
+import net.sourceforge.jwbf.mapper.XmlConverter;
+import net.sourceforge.jwbf.mapper.XmlElement;
 import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
 import net.sourceforge.jwbf.mediawiki.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
@@ -47,101 +47,44 @@ public class TemplateUserTitles extends BaseQuery<String> {
 
   private static final Logger log = LoggerFactory.getLogger(TemplateUserTitles.class);
 
-  // TODO do not work with patterns
-  private static final Pattern TEMPLATE_USAGE_PATTERN =
-      Pattern.compile("<ei pageid=\".*?\" ns=\".*?\" title=\"(.*?)\" />");
-
-  /**
-   * constant value for the eilimit-parameter. *
-   */
-  private static final int LIMIT = 50;
   private final MediaWikiBot bot;
 
   private final String templateName;
-  private final int[] namespaces;
+  private final ImmutableList<Integer> namespaces;
+  private final int limit;
 
-  /**
-   * The public constructor. It will have an MediaWiki-request generated, which is then added to
-   * msgs. When it is answered, the method processAllReturningText will be called (from outside this
-   * class). For the parameters, see {@link TemplateUserTitles#generateRequest(String, int[],
-   * String)}
-   */
   public TemplateUserTitles(MediaWikiBot bot, String templateName, int... namespaces) {
+    this(bot, 50, templateName, MWAction.nullSafeCopyOf(namespaces));
+  }
+
+  TemplateUserTitles(MediaWikiBot bot, int limit, String templateName,
+      ImmutableList<Integer> namespaces) {
     super(bot);
     this.bot = bot;
     this.templateName = templateName;
     this.namespaces = namespaces;
-
-  }
-
-  /**
-   * generates the next MediaWiki-request (GetMethod) and adds it to msgs.
-   *
-   * @param templateName the name of the template, not null
-   * @param namespaces   the namespace(s) that will be searched for links, as a string of numbers
-   *                     separated by '|'; if null, this parameter is omitted
-   * @param eicontinue   the value for the eicontinue parameter, null for the generation of the
-   *                     initial request
-   */
-  private HttpAction generateRequest(String templateName, int[] namespaces, String eicontinue) {
-    String namespacesValue = MWAction.createNsString(namespaces);
-    RequestBuilder requestBuilder = new ApiRequestBuilder() //
-        .action("query") //
-        .formatXml() //
-        .param("list", "embeddedin") //
-        .param("eilimit", LIMIT) //
-        .param("eititle", MediaWiki.urlEncode(templateName)) //
-        ;
-
-    if (!Strings.isNullOrEmpty(namespacesValue)) {
-      requestBuilder.param("einamespace", MediaWiki.urlEncode(namespacesValue));
-    }
-    if (eicontinue != null) {
-      requestBuilder.param("eicontinue", MediaWiki.urlEncode(eicontinue));
-    }
-
-    return requestBuilder.buildGet();
-
+    this.limit = limit;
   }
 
   /**
    * gets the information about a follow-up page from a provided api response. If there is one, a
    * new request is added to msgs by calling generateRequest.
    *
-   * @param s text for parsing
+   * @param xml text for parsing
    */
   @Override
-  protected Optional<String> parseHasMore(final String s) {
-
-    // get the eicontinue-value
-
-    Pattern p = Pattern.compile(
-        "<query-continue>.*?" + "<embeddedin *eicontinue=\"([^\"]*)\" */>" + ".*?</query-continue>",
-        Pattern.DOTALL | Pattern.MULTILINE);
-
-    Matcher m = p.matcher(s);
-
-    if (m.find()) {
-      return Optional.of(m.group(1));
-    } else {
-      return Optional.absent();
-
-    }
-
+  protected Optional<String> parseHasMore(final String xml) {
+    return parseXmlHasMore(xml, "embeddedin", "eicontinue", "eicontinue");
   }
 
-  /**
-   * picks the article name from a MediaWiki api response.
-   *
-   * @param s text for parsing
-   */
   @Override
-  protected ImmutableList<String> parseElements(String s) {
-
-    Matcher m = TEMPLATE_USAGE_PATTERN.matcher(s);
+  protected ImmutableList<String> parseElements(String xml) {
+    Optional<XmlElement> children = XmlConverter.getChildOpt(xml, "query", "embeddedin");
     ImmutableList.Builder<String> titleCollection = ImmutableList.builder();
-    while (m.find()) {
-      titleCollection.add(m.group(1));
+    if (children.isPresent()) {
+      for (XmlElement e : children.get().getChildren("ei")) {
+        titleCollection.add(e.getAttributeValue("title"));
+      }
     }
 
     return titleCollection.build();
@@ -149,17 +92,32 @@ public class TemplateUserTitles extends BaseQuery<String> {
 
   @Override
   protected HttpAction prepareNextRequest() {
-    if (hasNextPageInfo()) {
-      return generateRequest(templateName, namespaces, getNextPageInfo());
-    } else {
-      return generateRequest(templateName, namespaces, null);
+    RequestBuilder requestBuilder = new ApiRequestBuilder() //
+        .action("query") //
+        .paramNewContinue(bot.getVersion()) //
+        .formatXml() //
+        .param("list", "embeddedin") //
+        .param("eilimit", limit) //
+        .param("eititle", MediaWiki.urlEncode(templateName)) //
+        ;
+
+    String namespacesValue = MWAction.createNsString(namespaces);
+    if (!Strings.isNullOrEmpty(namespacesValue)) {
+      requestBuilder.param("einamespace", MediaWiki.urlEncode(namespacesValue));
     }
+
+    Optional<String> eicontinue = nextPageInfoOpt();
+    if (eicontinue.isPresent()) {
+      requestBuilder.param("eicontinue", MediaWiki.urlEncode(eicontinue.get()));
+    }
+
+    return requestBuilder.buildGet();
 
   }
 
   @Override
   protected Iterator<String> copy() {
-    return new TemplateUserTitles(bot, templateName, namespaces);
+    return new TemplateUserTitles(bot, limit, templateName, namespaces);
   }
 
 }

@@ -11,13 +11,14 @@ import net.sourceforge.jwbf.Logging;
 import net.sourceforge.jwbf.TestHelper;
 import net.sourceforge.jwbf.mediawiki.ApiMatcherBuilder;
 import net.sourceforge.jwbf.mediawiki.MediaWiki;
+import net.sourceforge.jwbf.mediawiki.MocoIntegTest;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 import org.junit.Test;
 
 public class BaseQueryIntegTest extends AbstractIntegTest {
 
   static RequestMatcher embeddedinTwo() {
-   return ApiMatcherBuilder.of() //
+    return ApiMatcherBuilder.of() //
         .param("eicontinue", "10|Babel|37163") //
         .param("action", "query") //
         .param("format", "xml") //
@@ -25,6 +26,7 @@ public class BaseQueryIntegTest extends AbstractIntegTest {
         .param("einamespace", "2") //
         .param("eititle", "Template:Babel") //
         .param("list", "embeddedin") //
+        .param("continue", "-||") //
         .build();
   }
 
@@ -36,6 +38,7 @@ public class BaseQueryIntegTest extends AbstractIntegTest {
         .param("einamespace", "2") //
         .param("eititle", "Template:Babel") //
         .param("list", "embeddedin") //
+        .param("continue", "-||") //
         .build();
   }
 
@@ -43,6 +46,7 @@ public class BaseQueryIntegTest extends AbstractIntegTest {
   public void testEndless_fail() {
 
     // GIVEN
+    MocoIntegTest.applySiteinfoXmlToServer(server, MediaWiki.Version.getLatest(), this.getClass());
     server.request(embeddedinTwo()).response(TestHelper.anyWikiResponse("embeddedin_2.xml"));
     server.request(embeddedinOne()).response(TestHelper.anyWikiResponse("embeddedin_1.xml"));
     MediaWikiBot bot = new MediaWikiBot(host());
@@ -64,6 +68,7 @@ public class BaseQueryIntegTest extends AbstractIntegTest {
   public void testDuplication() {
 
     // GIVEN
+    MocoIntegTest.applySiteinfoXmlToServer(server, MediaWiki.Version.getLatest(), this.getClass());
     Supplier<ImmutableList<String>> logLinesSupplier = Logging.newLogLinesSupplier();
     server.request(embeddedinOne()).response(TestHelper.anyWikiResponse("embeddedin_1.xml"));
     server.request(embeddedinTwo()).response(TestHelper.anyWikiResponse("embeddedin_1.xml"));
