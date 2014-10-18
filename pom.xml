@@ -337,7 +337,7 @@
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-all</artifactId>
-      <version>1.9.5</version>
+      <version>1.10.8</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -379,13 +379,13 @@
     <dependency>
       <groupId>org.eclipse.jetty</groupId>
       <artifactId>jetty-server</artifactId>
-      <version>9.2.3.v20140905</version>
+      <version>9.3.0.M0</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.eclipse.jetty</groupId>
       <artifactId>jetty-servlet</artifactId>
-      <version>9.2.3.v20140905</version>
+      <version>9.3.0.M0</version>
       <scope>test</scope>
     </dependency>
     <dependency>
