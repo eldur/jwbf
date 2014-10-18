@@ -18,6 +18,7 @@
  */
 package net.sourceforge.jwbf.core.contentRep;
 
+import javax.annotation.Nullable;
 import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -25,6 +26,8 @@ import java.util.Date;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
+import com.google.common.annotations.Beta;
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Optional;
 
 /**
@@ -41,10 +44,17 @@ public class SimpleArticle implements ArticleMeta, Serializable, ContentSetable 
   private String text = "";
   private String editor = "";
   private boolean minorEdit = false;
-  private Date editTimestamp = INIT_DATE;
+  private long editTimestamp = newZeroDate().getTime();
   private String revId = "";
 
-  public static final Date INIT_DATE = new Date(0);
+  private static Pattern redirectPattern = Pattern //
+      .compile("#(.*)redirect (.*)" //
+          , Pattern.CASE_INSENSITIVE);
+
+  @VisibleForTesting
+  public static Date newZeroDate() {
+      return new Date(0);
+  }
 
   /**
    *
@@ -73,7 +83,7 @@ public class SimpleArticle implements ArticleMeta, Serializable, ContentSetable 
     this((ContentAccessable) sa);
 
     if (sa.getEditTimestamp() != null) {
-      editTimestamp = sa.getEditTimestamp();
+      editTimestamp = sa.getEditTimestamp().getTime();
     }
 
     if (sa.getRevisionId() != null) {
@@ -107,10 +117,6 @@ public class SimpleArticle implements ArticleMeta, Serializable, ContentSetable 
     return editSummary;
   }
 
-  /*
-   * (non-Javadoc)
-   * @see net.sourceforge.jwbf.core.contentRep.ContentSetable#setEditSummary(java .lang.String)
-   */
   @Override
   public void setEditSummary(final String s) {
     editSummary = s;
@@ -124,10 +130,6 @@ public class SimpleArticle implements ArticleMeta, Serializable, ContentSetable 
     return minorEdit;
   }
 
-  /*
-   * (non-Javadoc)
-   * @see net.sourceforge.jwbf.core.contentRep.ContentSetable#setMinorEdit(boolean)
-   */
   @Override
   public void setMinorEdit(final boolean minor) {
     minorEdit = minor;
@@ -159,10 +161,6 @@ public class SimpleArticle implements ArticleMeta, Serializable, ContentSetable 
     setTitle(label);
   }
 
-  /*
-   * (non-Javadoc)
-   * @see net.sourceforge.jwbf.core.contentRep.ContentSetable#setTitle(java.lang. String)
-   */
   @Override
   public void setTitle(final String title) {
     this.title = title;
@@ -176,76 +174,49 @@ public class SimpleArticle implements ArticleMeta, Serializable, ContentSetable 
     return text;
   }
 
-  /*
-   * (non-Javadoc)
-   * @see net.sourceforge.jwbf.core.contentRep.ContentSetable#setText(java.lang.String )
-   */
   @Override
   public void setText(final String text) {
     this.text = text;
   }
 
-  /*
-   * (non-Javadoc)
-   * @see net.sourceforge.jwbf.core.contentRep.ContentSetable#addText(java.lang.String )
-   */
   @Override
   public void addText(final String text) {
     setText(getText() + text);
   }
 
-  /*
-   * (non-Javadoc)
-   * @see net.sourceforge.jwbf.core.contentRep.ContentSetable#addTextnl(java.lang .String)
-   */
   @Override
   public void addTextnl(final String text) {
     setText(getText() + "\n" + text);
 
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public String getEditor() {
     return editor;
   }
 
-  /*
-   * (non-Javadoc)
-   * @see net.sourceforge.jwbf.core.contentRep.ContentSetable#setEditor(java.lang .String)
-   */
   @Override
   public void setEditor(final String editor) {
     this.editor = editor;
   }
 
-  private static Pattern redirectPattern = Pattern //
-      .compile("#(.*)redirect (.*)" //
-          , Pattern.CASE_INSENSITIVE);
 
   /**
-   * {@inheritDoc}
    *
-   * @deprecated see inheritDoc
+   * doesn't work correct
    */
+  @Beta
   @Override
-  @Deprecated
   public boolean isRedirect() {
     if (redirectPattern.matcher(text).matches()) {
       return true;
     }
-
     return false;
   }
 
-  /**
-   * @return the edittimestamp in UTC
-   */
   @Override
   public Date getEditTimestamp() {
-    return editTimestamp;
+    return new Date(editTimestamp);
   }
 
   public void setEditTimestamp(String editTimestamp) {
@@ -267,17 +238,12 @@ public class SimpleArticle implements ArticleMeta, Serializable, ContentSetable 
     }
   }
 
-  /**
-   * @param d the
-   */
-  public void setEditTimestamp(Date d) {
-    editTimestamp = d;
+  public void setEditTimestamp(@Nullable Date d) {
+    if (d != null) {
+      editTimestamp = d.getTime();
+    }
   }
 
-  /*
-   * (non-Javadoc)
-   * @see java.lang.Object#equals(java.lang.Object)
-   */
   @Override
   public boolean equals(Object obj) {
     if (obj instanceof SimpleArticle) {

@@ -27,7 +27,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.joda.time.DateTime;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -190,6 +192,19 @@ public class SimpleArticleTest {
   }
 
   @Test
+  @Ignore
+  public void testIsRedirectLocale() {
+    article.setText("#WEITERLEITUNG [[A]]");
+    assertTrue(article.isRedirect());
+    article.setText("#REDIRECTION [[A]]");
+    assertTrue(article.isRedirect());
+    article.setText("#REDIRECCIÓN [[A]]");
+    assertTrue(article.isRedirect());
+    article.setText("#REDIRECCION [[A]]");
+    assertTrue(article.isRedirect());
+  }
+
+  @Test
   public void testIsRedirectFail() {
     article.setText("Text\n#redirect [[A]]");
     assertFalse(article.isRedirect());
@@ -216,8 +231,7 @@ public class SimpleArticleTest {
   @Test
   public void testEquals() {
     Date d2 = new Date(System.currentTimeMillis());
-    doWait(10);
-    Date d3 = new Date(System.currentTimeMillis());
+    Date d3 = new Date(System.currentTimeMillis() + 10000);
 
     SimpleArticle sa = new SimpleArticle();
     assertTrue("self", sa.equals(sa));
@@ -268,11 +282,13 @@ public class SimpleArticleTest {
     assertFalse("sax rev diff", sa.equals(simpleArticle));
   }
 
-  private synchronized void doWait(int ms) {
-    try {
-      wait(ms);
-    } catch (InterruptedException e) {
-      throw new IllegalStateException(e);
-    }
+  @Test
+  public void testNewZeroDate() {
+    // GIVEN / WHEN
+    DateTime actual = new DateTime(SimpleArticle.newZeroDate());
+
+    // THEN
+    assertEquals("1970-01-01T01:00:00.000+01:00", actual.toString());
   }
+
 }

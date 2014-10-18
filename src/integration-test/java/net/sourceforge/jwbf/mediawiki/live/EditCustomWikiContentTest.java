@@ -91,7 +91,7 @@ public class EditCustomWikiContentTest {
     t.setText(getRandom(64));
     t.setEditSummary(summary);
     t.setMinorEdit(true);
-    assertEquals(SimpleArticle.INIT_DATE, t.getEditTimestamp());
+    assertEquals(SimpleArticle.newZeroDate(), t.getEditTimestamp());
 
     // WHEN
     bot.writeContent(t);
@@ -102,7 +102,7 @@ public class EditCustomWikiContentTest {
     assertEquals(summary, sa.getEditSummary());
     assertEquals(bot.getUserinfo().getUsername(), sa.getEditor());
     assertEquals(false, sa.isMinorEdit()); // XXX creation can't be a minor edit
-    assertNotEquals(SimpleArticle.INIT_DATE, sa.getEditTimestamp());
+    assertNotEquals(SimpleArticle.newZeroDate(), sa.getEditTimestamp());
 
     // GIVEN
     t.setText(getRandom(64));

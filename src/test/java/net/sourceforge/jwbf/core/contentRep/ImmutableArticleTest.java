@@ -29,7 +29,7 @@ public class ImmutableArticleTest {
     assertEquals("", immutable.getRevisionId());
     assertEquals("", immutable.getText());
     assertEquals("", immutable.getTitle());
-    assertEquals(SimpleArticle.INIT_DATE, immutable.getEditTimestamp());
+    assertEquals(SimpleArticle.newZeroDate(), immutable.getEditTimestamp());
     assertFalse(immutable.isMinorEdit());
     assertFalse(immutable.isRedirect());
   }
@@ -49,7 +49,7 @@ public class ImmutableArticleTest {
     assertEquals("", immutable.getRevisionId());
     assertEquals("", immutable.getText());
     assertEquals("", immutable.getTitle());
-    assertEquals(SimpleArticle.INIT_DATE, immutable.getEditTimestamp());
+    assertEquals(SimpleArticle.newZeroDate(), immutable.getEditTimestamp());
     assertFalse(immutable.isMinorEdit());
     assertFalse(immutable.isRedirect());
 
@@ -75,7 +75,7 @@ public class ImmutableArticleTest {
     ImmutableArticle immutable = ImmutableArticle.copyOf(in);
 
     // THEN
-    nowDate.setTime(SimpleArticle.INIT_DATE.getTime());
+    nowDate.setTime(SimpleArticle.newZeroDate().getTime());
     assertEquals("editor", immutable.getEditor());
     assertEquals("summary", immutable.getEditSummary());
     assertEquals("123", immutable.getRevisionId());
