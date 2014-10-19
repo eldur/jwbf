@@ -1,6 +1,11 @@
 package net.sourceforge.jwbf;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+import java.util.Random;
 
 import org.junit.Test;
 import org.junit.internal.AssumptionViolatedException;
@@ -35,6 +40,21 @@ public class TestHelperTest {
       fail(url + " is not reachable");
       throw e;
     }
+  }
+
+  @Test
+  public void testGetRandom() {
+
+    // GIVEN
+    Random random = mock(Random.class);
+    when(random.nextInt(79)).thenReturn(42, 42, 42, 43, 44);
+
+    // WHEN
+    String result = TestHelper.getRandom(3, 48, 126, random);
+
+    // THEN
+    assertEquals("Z[\\", result);
+
   }
 
 }

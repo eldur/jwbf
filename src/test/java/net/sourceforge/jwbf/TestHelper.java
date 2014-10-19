@@ -10,6 +10,7 @@ import java.util.Random;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Charsets;
 import com.google.common.base.Function;
 import com.google.common.base.Throwables;
@@ -49,16 +50,23 @@ public class TestHelper {
   }
 
   public static String getRandom(int length, int begin, int end) {
-    StringBuilder out = new StringBuilder();
-    int charNum = 0;
-    int count = 1;
-    while (count <= length) {
-      charNum = (wheel.nextInt(79) + begin);
-      if (charNum >= begin && charNum <= end) {
+    return getRandom(length, begin, end, wheel);
+  }
 
-        char d = (char) charNum;
-        out.append(d);
+  @VisibleForTesting
+  static String getRandom(int length, int begin, int end, Random random) {
+    StringBuilder out = new StringBuilder();
+    int count = 1;
+    char latest = '#';
+    while (count <= length) {
+      int charNum = (random.nextInt(79) + begin);
+      if (charNum >= begin && charNum <= end) {
+          char current = (char) charNum;
+        if (latest != current) {
+          out.append(current);
         count++;
+        }
+       latest = current;
       }
     }
     return out.toString();

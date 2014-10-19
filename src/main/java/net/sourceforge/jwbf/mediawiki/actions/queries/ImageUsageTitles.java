@@ -19,18 +19,14 @@
  */
 package net.sourceforge.jwbf.mediawiki.actions.queries;
 
-import java.util.Collection;
 import java.util.Iterator;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import com.google.common.base.Optional;
-import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
-import net.sourceforge.jwbf.core.actions.Get;
 import net.sourceforge.jwbf.core.actions.RequestBuilder;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
+import net.sourceforge.jwbf.mapper.XmlConverter;
+import net.sourceforge.jwbf.mapper.XmlElement;
 import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
 import net.sourceforge.jwbf.mediawiki.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
@@ -49,38 +45,24 @@ public class ImageUsageTitles extends BaseQuery<String> {
 
   private static final Logger log = LoggerFactory.getLogger(ImageUsageTitles.class);
 
-  /**
-   * constant value for the illimit-parameter. *
-   */
-  private static final int LIMIT = 50;
+  private final int limit;
 
   private final MediaWikiBot bot;
 
   private final String imageName;
-  private final int[] namespaces;
-  private final VersionHandler handler;
+  private final ImmutableList<Integer> namespaces;
 
-  @Deprecated
-  private static final Pattern CONTINUE_PATTERN = Pattern.compile(
-      "<query-continue>.*?<imageusage *iucontinue=\"([^\"]*)\" */>" + ".*?</query-continue>",
-      Pattern.DOTALL | Pattern.MULTILINE);
-
-  @Deprecated
-  private static final Pattern TITLE_PATTERN =
-      Pattern.compile("<iu pageid=\".*?\" ns=\".*?\" title=\"(.*?)\" />");
-
-  /**
-   * The public constructor. It will have an MediaWiki-request generated, which is then added to
-   * msgs. When it is answered, the method processAllReturningText will be called (from outside this
-   * class). For the parameters, see {@link ImageUsageTitles#generateRequest(String, String,
-   * String)}
-   */
   public ImageUsageTitles(MediaWikiBot bot, String imageName, int... namespaces) {
+    this(bot, 50, imageName, MWAction.nullSafeCopyOf(namespaces));
+  }
+
+  ImageUsageTitles(MediaWikiBot bot, int limit, String imageName,
+      ImmutableList<Integer> namespaces) {
     super(bot);
     this.bot = bot;
+    this.limit = limit;
     this.imageName = imageName;
     this.namespaces = namespaces;
-    handler = new DefaultHandler();
   }
 
   public ImageUsageTitles(MediaWikiBot bot, String nextPageInfo) {
@@ -88,32 +70,14 @@ public class ImageUsageTitles extends BaseQuery<String> {
   }
 
   /**
-   * generates the next MediaWiki-request (GetMethod) and adds it to msgs.
-   *
-   * @param imageName  the title of the image, not null
-   * @param namespace  the namespace(s) that will be searched for links, as a string of numbers
-   *                   separated by '|'; if null, this parameter is omitted
-   * @param ilcontinue the value for the ilcontinue parameter, null for the generation of the
-   *                   initial request
-   * @return a
-   */
-  private Get generateRequest(String imageName, String namespace, String ilcontinue) {
-    if (ilcontinue == null) {
-      return handler.generateRequest(imageName, namespace);
-    } else {
-      return handler.generateContinueRequest(imageName, namespace, ilcontinue);
-    }
-  }
-
-  /**
    * gets the information about a follow-up page from a provided api response. If there is one, a
    * new request is added to msgs by calling generateRequest.
    *
-   * @param s text for parsing
+   * @param xml text for parsing
    */
   @Override
-  protected Optional<String> parseHasMore(final String s) {
-    return handler.parseHasMore(s);
+  protected Optional<String> parseHasMore(final String xml) {
+    return parseXmlHasMore(xml, "imageusage", "iucontinue", "iucontinue");
   }
 
   /**
@@ -123,16 +87,33 @@ public class ImageUsageTitles extends BaseQuery<String> {
    */
   @Override
   protected ImmutableList<String> parseElements(String s) {
-    return ImmutableList.copyOf(handler.parseArticleTitles(s));
+    ImmutableList.Builder<String> titleCollection = ImmutableList.builder();
+    Optional<XmlElement> childOpt = XmlConverter.getChildOpt(s, "query", "imageusage");
+    if (childOpt.isPresent()) {
+      for (XmlElement element : childOpt.get().getChildren("iu")) {
+        titleCollection.add(element.getAttributeValue("title"));
+      }
+    }
+    return titleCollection.build();
   }
 
   @Override
   protected HttpAction prepareNextRequest() {
-    if (hasNextPageInfo()) {
-      return generateRequest(imageName, null, getNextPageInfo());
-    } else {
-      return generateRequest(imageName, MWAction.createNsString(namespaces), null);
+    RequestBuilder requestBuilder = new ApiRequestBuilder() //
+        .action("query") //
+        .paramNewContinue(bot.getVersion()) //
+        .formatXml() //
+        .param("iutitle", MediaWiki.urlEncode(imageName)) //
+        .param("list", "imageusage") //
+        .param("iulimit", limit) //
+        .param("iunamespace", MediaWiki.urlEncodedNamespace(namespaces));
+
+    Optional<String> ilcontinue = nextPageInfoOpt();
+    if (ilcontinue.isPresent()) {
+      requestBuilder.param("iucontinue", MediaWiki.urlEncode(ilcontinue.get()));
     }
+    return requestBuilder.buildGet();
+
   }
 
   /**
@@ -140,76 +121,7 @@ public class ImageUsageTitles extends BaseQuery<String> {
    */
   @Override
   protected Iterator<String> copy() {
-    return new ImageUsageTitles(bot, imageName, namespaces);
-  }
-
-  private abstract class VersionHandler {
-    VersionHandler() {
-
-    }
-
-    public abstract Get generateRequest(String imageName, String namespace);
-
-    public abstract Get generateContinueRequest(String imageName, String namespace,
-        String ilcontinue);
-
-    public abstract Optional<String> parseHasMore(final String s);
-
-    public abstract Collection<String> parseArticleTitles(String s);
-  }
-
-  private RequestBuilder newRequestBuilder() {
-    return new ApiRequestBuilder() //
-        .action("query") //
-        .formatXml() //
-        .param("list", "imageusage") //
-        .param("iulimit", LIMIT) //
-        ;
-  }
-
-  private class DefaultHandler extends VersionHandler {
-
-    @Override
-    public Get generateContinueRequest(String imageName, String namespace, String ilcontinue) {
-      return newRequestBuilder() //
-          .param("iucontinue", MediaWiki.urlEncode(ilcontinue)) //
-          .param("iutitle", MediaWiki.urlEncode(imageName)) //
-          .buildGet();
-    }
-
-    @Override
-    public Get generateRequest(String imageName, String namespace) {
-      RequestBuilder requestBuilder = newRequestBuilder();
-      requestBuilder.param("iutitle", MediaWiki.urlEncode(imageName));
-
-      if (!Strings.isNullOrEmpty(namespace)) {
-        requestBuilder.param("iunamespace", MediaWiki.urlEncode(namespace));
-      }
-      return requestBuilder.buildGet();
-
-    }
-
-    @Override
-    public Collection<String> parseArticleTitles(String s) {
-      Collection<String> titleCollection = Lists.newArrayList();
-      Matcher m = TITLE_PATTERN.matcher(s);
-      while (m.find()) {
-        titleCollection.add(m.group(1));
-      }
-      return titleCollection;
-    }
-
-    @Override
-    public Optional<String> parseHasMore(String s) {
-      Matcher m = CONTINUE_PATTERN.matcher(s);
-      if (m.find()) {
-        return Optional.of(m.group(1));
-      } else {
-        return Optional.absent();
-      }
-
-    }
-
+    return new ImageUsageTitles(bot, limit, imageName, namespaces);
   }
 
 }

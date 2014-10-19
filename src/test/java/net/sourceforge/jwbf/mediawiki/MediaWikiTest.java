@@ -9,6 +9,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import net.sourceforge.jwbf.GAssert;
+import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import org.junit.Test;
 
 public class MediaWikiTest {
@@ -181,6 +182,24 @@ public class MediaWikiTest {
   public void testGetFieldUnchecked() {
     MediaWiki.getFieldUnchecked(Object.class, "INVALID");
     fail();
+  }
+
+  @Test
+  public void testNamespaces_old() {
+    // GIVEN / WHEN
+    String nsString = MWAction.createNsString(MWAction.nullSafeCopyOf(MediaWiki.NS_ALL));
+
+    // THEN
+    assertEquals("0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15", nsString);
+  }
+
+  @Test
+  public void testNamespaces() {
+    // GIVEN / WHEN
+    String nsString = MWAction.createNsString(MediaWiki.NS_EVERY);
+
+    // THEN
+    assertEquals("0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15", nsString);
   }
 
 }

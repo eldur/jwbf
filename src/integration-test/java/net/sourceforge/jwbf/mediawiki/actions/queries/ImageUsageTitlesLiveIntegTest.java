@@ -2,38 +2,47 @@ package net.sourceforge.jwbf.mediawiki.actions.queries;
 
 import static net.sourceforge.jwbf.TestHelper.getRandom;
 
+import java.util.Collection;
+
 import com.google.common.collect.ImmutableList;
 import net.sourceforge.jwbf.GAssert;
 import net.sourceforge.jwbf.TestHelper;
 import net.sourceforge.jwbf.core.contentRep.Article;
 import net.sourceforge.jwbf.mediawiki.BotFactory;
+import net.sourceforge.jwbf.mediawiki.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.MediaWiki.Version;
-import net.sourceforge.jwbf.mediawiki.live.AbstractMediaWikiBotTest;
+import net.sourceforge.jwbf.mediawiki.live.auto.ParamHelper;
 import org.junit.Test;
+import org.junit.runners.Parameterized;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * @author Thomas Stock
  */
-public class ImageUsageTitlesLiveIntegTest extends AbstractMediaWikiBotTest {
+public class ImageUsageTitlesLiveIntegTest extends ParamHelper {
 
   private static final Logger log = LoggerFactory.getLogger(ImageUsageTitlesLiveIntegTest.class);
 
-  private static final int limit = 55;
+  private static final int limit = 4;
   public static final String IMAGE_NAME = "Image:Any.gif";
 
-  @Test
-  public final void imageUsageLatest() {
-    bot(BotFactory.getMediaWikiBot(Version.getLatest(), true));
-    test();
+  @Parameterized.Parameters(name = "{0}")
+  public static Collection<?> stableWikis() {
+    return ParamHelper.prepare(Version.valuesStable());
   }
 
-  private void test() {
+  public ImageUsageTitlesLiveIntegTest(Version v) {
+    super(BotFactory.getMediaWikiBot(v, true));
+  }
+
+  @Test
+  public void test() {
     // GIVEN
     ImmutableList<String> expectedTitles = TestHelper.createNames("TitleWithImg", limit);
 
-    ImmutableList<String> initPageTitles = new ImageUsageTitles(bot(), IMAGE_NAME).getCopyOf(limit);
+    ImmutableList<String> initPageTitles = new ImageUsageTitles(bot(), 3,
+        IMAGE_NAME, MediaWiki.NS_EVERY).getCopyOf(limit);
     ImmutableList<String> pageTitles;
     if (initPageTitles.size() < limit) {
       prepare(expectedTitles);

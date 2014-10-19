@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<api>
+  <query>
+    <imageusage>
+      <iu pageid="2388" ns="0" title="TitleWithImg0" />
+      <iu pageid="2389" ns="0" title="TitleWithImg1" />
+      <iu pageid="2390" ns="0" title="TitleWithImg2" />
+    </imageusage>
+  </query>
+  <continue continue="-||" iucontinue="6|Any.gif|5962" />
+</api>

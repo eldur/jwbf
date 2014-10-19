@@ -22,11 +22,10 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
-import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
-import com.google.common.primitives.Ints;
 import net.sourceforge.jwbf.core.actions.ContentProcessable;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
+import net.sourceforge.jwbf.mediawiki.MediaWiki;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -94,28 +93,32 @@ public abstract class MWAction implements ContentProcessable {
    */
   @Deprecated
   public static String createNsString(int... namespaces) {
-    return createNsString(nullSafeCopyOf(namespaces));
+    return MediaWiki.createNsString(nullSafeCopyOf(namespaces));
   }
 
+  /**
+   * @deprecated
+   */
+  @Deprecated
   public static ImmutableList<String> nullSafeCopyOf(@Nullable String[] strings) {
-    if (strings == null) {
-      return ImmutableList.of();
-    } else {
-      return ImmutableList.copyOf(strings);
-    }
+    return MediaWiki.nullSafeCopyOf(strings);
   }
 
+  /**
+   * @deprecated
+   */
+  @Deprecated
   @Nonnull
   public static ImmutableList<Integer> nullSafeCopyOf(@Nullable int[] ints) {
-    if (ints == null) {
-      return ImmutableList.of();
-    } else {
-      return ImmutableList.copyOf(Ints.asList(ints));
-    }
+    return MediaWiki.nullSafeCopyOf(ints);
   }
 
+  /**
+   * @deprecated
+   */
+  @Deprecated
   public static String createNsString(List<Integer> asList) {
-    return Joiner.on("|").join(asList);
+    return MediaWiki.createNsString(asList);
   }
 
   /**
@@ -128,6 +131,5 @@ public abstract class MWAction implements ContentProcessable {
   public boolean isSelfExecuter() {
     return false;
   }
-
 
 }

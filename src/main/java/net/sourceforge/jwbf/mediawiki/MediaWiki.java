@@ -18,6 +18,7 @@
  */
 package net.sourceforge.jwbf.mediawiki;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
@@ -27,14 +28,18 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Set;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Joiner;
 import com.google.common.base.Predicate;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
+import com.google.common.primitives.Ints;
+import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import org.apache.commons.lang3.StringEscapeUtils;
 
 /**
@@ -64,16 +69,35 @@ public final class MediaWiki {
   public static final int NS_CATEGORY = 14;
   public static final int NS_CATEGORY_TALK = 15;
 
-  public static final int[] NS_ALL = { //
-      NS_MAIN, NS_MAIN_TALK, NS_USER, NS_USER_TALK, NS_META, NS_META_TALK, NS_IMAGES,
-      NS_IMAGES_TALK, NS_MEDIAWIKI, NS_MEDIAWIKI_TALK, NS_TEMPLATE, NS_TEMPLATE_TALK, NS_HELP,
-      NS_HELP_TALK, NS_CATEGORY, NS_CATEGORY_TALK //
-  };
+  public static final ImmutableList<Integer> NS_EVERY = //
+      ImmutableList.<Integer>builder() //
+          .add(NS_MAIN) //
+          .add(NS_MAIN_TALK) //
+          .add(NS_USER) //
+          .add(NS_USER_TALK) //
+          .add(NS_META) //
+          .add(NS_META_TALK) //
+          .add(NS_IMAGES) //
+          .add(NS_IMAGES_TALK) //
+          .add(NS_MEDIAWIKI) //
+          .add(NS_MEDIAWIKI_TALK) //
+          .add(NS_TEMPLATE) //
+          .add(NS_TEMPLATE_TALK) //
+          .add(NS_HELP) //
+          .add(NS_HELP_TALK) //
+          .add(NS_CATEGORY) //
+          .add(NS_CATEGORY_TALK) //
+          .build();
+
+  /**
+   * @deprecated prefer {@link #NS_EVERY}
+   */
+  @Deprecated
+  public static final int[] NS_ALL = Ints.toArray(NS_EVERY);
 
   public static final Set<String> BOT_GROUPS;
 
   static {
-
     BOT_GROUPS = ImmutableSet.of("bot");
   }
 
@@ -249,4 +273,42 @@ public final class MediaWiki {
   public static String htmlUnescape(final String s) {
     return StringEscapeUtils.unescapeHtml4(s);
   }
+
+  /**
+   * helper method generating a namespace string as required by the MW-api.
+   *
+   * @param namespaces namespace as
+   * @return with numbers seperated by |
+   * @deprecated prefer {@link #createNsString(java.util.List)}
+   */
+  @Deprecated
+  public static String createNsString(int... namespaces) {
+    return createNsString(nullSafeCopyOf(namespaces));
+  }
+
+  public static ImmutableList<String> nullSafeCopyOf(@Nullable String[] strings) {
+    if (strings == null) {
+      return ImmutableList.of();
+    } else {
+      return ImmutableList.copyOf(strings);
+    }
+  }
+
+  @Nonnull
+  public static ImmutableList<Integer> nullSafeCopyOf(@Nullable int[] ints) {
+    if (ints == null) {
+      return ImmutableList.of();
+    } else {
+      return ImmutableList.copyOf(Ints.asList(ints));
+    }
+  }
+
+  public static String createNsString(List<Integer> asList) {
+    return Joiner.on("|").join(asList);
+  }
+
+  public static String urlEncodedNamespace(ImmutableList<Integer> namespaces) {
+    return MediaWiki.urlEncode(createNsString(namespaces));
+  }
+
 }
