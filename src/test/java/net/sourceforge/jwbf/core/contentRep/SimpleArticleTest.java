@@ -288,7 +288,7 @@ public class SimpleArticleTest {
     DateTime actual = new DateTime(SimpleArticle.newZeroDate());
 
     // THEN
-    assertEquals("1970-01-01T01:00:00.000+01:00", actual.toString());
+    assertEquals(0, actual.getMillis());
   }
 
 }
