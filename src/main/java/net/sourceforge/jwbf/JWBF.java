@@ -19,14 +19,19 @@
 package net.sourceforge.jwbf;
 
 import java.io.File;
-import java.io.FileFilter;
 import java.io.IOException;
+import java.net.JarURLConnection;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLStreamHandler;
+import java.nio.file.DirectoryStream;
+import java.nio.file.FileSystemNotFoundException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -37,7 +42,6 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
-import java.util.jar.Manifest;
 
 /**
  * @author Thomas Stock
@@ -50,18 +54,21 @@ public final class JWBF {
   private static boolean errorInfo = true;
   static Map<String, String> cache = null;
 
-  static final String DEVEL = "DEVEL";
+  static final String DEVEL_NAME = "jwbf-generic";
+  static final String DEVEL_VERSION = "DEVEL";
+
   static final char SEPARATOR_CHAR = '/';
   private static final String JAR_FILE_INDEX = "jar:file:";
   private static final String FILE_INDEX = "file:";
 
-  private static final FileFilter DIRECTORY_FILTER = new FileFilter() {
+  private static final DirectoryStream.Filter<Path> DIRECTORY_FILTER = //
+      new DirectoryStream.Filter<Path>() {
 
-    @Override
-    public boolean accept(File f) {
-      return f.isDirectory();
-    }
-  };
+        @Override
+        public boolean accept(Path entry) throws IOException {
+          return Files.isDirectory(entry);
+        }
+      };
 
   private JWBF() {
     // do nothing
@@ -71,95 +78,130 @@ public final class JWBF {
     Class<?> clazz = JWBF.class;
     String packageName = packageNameOf(clazz);
     URL url = urlOf(clazz, packageName);
-    synchronized (JWBF.class) {
-      if (cache == null) {
-        synchronized (JWBF.class) {
-          cache = init(packageName, url);
+    if (cache == null) {
+      synchronized (JWBF.class) {
+        if (cache == null) {
+          cache = init(packageName, toUri(url));
         }
       }
     }
     return cache;
   }
 
-  static Map<String, String> init(String packageName, URL url) {
-    String lowerCaseUrl = urlExtract(url).toLowerCase();
+  static Map<String, String> init(String packageName, URI uri) {
+    String lowerCaseUrl = urlExtract(uri).toLowerCase();
+
     if (lowerCaseUrl.startsWith(JAR_FILE_INDEX)) {
-      return jarManifestLookup(packageName, url);
-    } else if (lowerCaseUrl.startsWith(FILE_INDEX)) {
-      return fileSystemManifestLookup(packageName, url);
+      return jarVersionDetails(packageName, uri);
+    } else if (lowerCaseUrl.startsWith(FILE_INDEX) || exists(uri)) {
+      return fileSystemVersionDetails(packageName, uri);
     } else {
+      System.err.println("W: unknown uri: " + uri);
       return new HashMap<>();
     }
   }
 
-  private static URL urlOf(Class<?> clazz, String packagename) {
-    return clazz.getClassLoader().getResource(packagename);
+  static URI stripJarSuffix(URI uri) {
+    try {
+      URLConnection urlConnection = toUrl(uri).openConnection();
+      if (urlConnection instanceof JarURLConnection) {
+        JarURLConnection jarURLConnection = (JarURLConnection) urlConnection;
+        return toUri(jarURLConnection.getJarFileURL());
+      } else {
+        return uri;
+      }
+    } catch (IOException e) {
+      throw new IllegalArgumentException(e);
+    }
+  }
+
+  static boolean exists(URI uri) {
+    try {
+      return Files.exists(Paths.get(uri));
+    } catch (FileSystemNotFoundException e) {
+      return false;
+    }
+  }
+
+  private static URL urlOf(Class<?> clazz, String packageName) {
+    return clazz.getClassLoader().getResource(packageName);
   }
 
   private static String packageNameOf(Class<?> clazz) {
     return clazz.getPackage().getName().replace('.', SEPARATOR_CHAR);
   }
 
-  private static Map<String, String> fileSystemManifestLookup(String packageName, URL url) {
-    Manifest manifest = findManifest(urlToFile(url).getAbsolutePath());
-    File root = urlToFile(url);
-
-    File[] dirs = root.listFiles(DIRECTORY_FILTER);
-    List<ContainerEntry> entries = filesToEntries(dirs, packageName);
-    return makeVersionMap(packageName, manifest, entries);
+  private static Map<String, String> fileSystemVersionDetails(String packageName, URI url) {
+    Path root = uriToPath(url);
+    if (Files.exists(root)) {
+      List<Path> dirs = NioUnchecked.listFiles(root, DIRECTORY_FILTER);
+      List<ContainerEntry> entries = filesToEntries(dirs, packageName);
+      return makeVersionMap(packageName, entries, DEVEL_VERSION, DEVEL_NAME);
+    } else {
+      return new HashMap<>();
+    }
   }
 
-  private static Map<String, String> jarManifestLookup(String packageName, URL url) {
-    int jarEnd = urlExtract(url).indexOf("!" + SEPARATOR_CHAR);
-    String jarFileName = urlExtract(url).substring(JAR_FILE_INDEX.length(), jarEnd);
-    Manifest manifest = findManifest(jarFileName);
-    List<ContainerEntry> elements = jarToEntries(jarFileName);
-    return makeVersionMap(packageName, manifest, elements);
+  static Map<String, String> jarVersionDetails(String packageName, URI uri) {
+    List<ContainerEntry> elements = jarToEntries(uri);
+    String implementationTitle = getImplementationTitle();
+    String implementationVersion = getImplementationVersion();
+    return makeVersionMap(packageName, elements, implementationVersion, implementationTitle);
   }
 
-  private static String urlExtract(URL url) {
-    return url.toExternalForm();
+  private static String urlExtract(URI uri) {
+    return uri.toString();
   }
 
-  static Map<String, String> makeVersionMap(String packageName, Manifest manifest,
-      List<ContainerEntry> elements) {
+  static Map<String, String> makeVersionMap(String packageName, List<ContainerEntry> elements,
+      String implementationVersion, String implementationTitle) {
 
     Map<String, String> parts = new HashMap<>();
     for (ContainerEntry element : elements) {
 
-      String jarEntryName = element.getName();
-      String shlashes = jarEntryName.replaceAll("[a-zA-Z0-9]", "");
-      if (element.isDirectory() && jarEntryName.contains(packageName) && shlashes.length() == 4) {
+      String elementName = element.getName();
 
-        String wikiSystemName = jarEntryName.split(SEPARATOR_CHAR + "")[3];
-        String artifactId = readMFProductTitle(manifest) + "-" + wikiSystemName;
-        String readMFVersion = readMFVersion(manifest);
+      boolean isDirectory = element.isDirectory();
 
-        parts.put(artifactId, readMFVersion);
+      int slashCount = countSlashes(removeTrailingSlash(elementName));
+
+      if (isDirectory && slashCount == 4 && elementName.contains(packageName)) {
+        String wikiSystemName = elementName.split(SEPARATOR_CHAR + "")[3];
+        String artifactId = implementationTitle + "-" + wikiSystemName;
+        parts.put(artifactId, implementationVersion);
       }
     }
 
     return parts;
   }
 
-  private static List<ContainerEntry> filesToEntries(File[] dirs, String packageName) {
+  static String removeTrailingSlash(String str) {
+    return str.replaceFirst("([^/])/$", "$1");
+  }
+
+  static int countSlashes(String str) {
+    String s = str.replaceAll("[/]+", "");
+    return str.length() - s.length();
+  }
+
+  private static List<ContainerEntry> filesToEntries(Iterable<Path> dirs, String packageName) {
     List<ContainerEntry> result = new ArrayList<>();
     if (dirs != null) {
-      for (File f : dirs) {
-        if (f.isDirectory()) {
+      for (Path f : dirs) {
+        if (Files.isDirectory(f)) {
           String name = makeFileName(f, packageName);
           if (!name.isEmpty()) {
             result.add(new ContainerEntry(name, true));
           }
-          result.addAll(filesToEntries(f.listFiles(DIRECTORY_FILTER), packageName));
+          result.addAll(filesToEntries(NioUnchecked.listFiles(f, DIRECTORY_FILTER), packageName));
         }
       }
     }
     return result;
   }
 
-  private static String makeFileName(File file, String packageName) {
-    String path = file.getAbsolutePath();
+  private static String makeFileName(Path file, String packageName) {
+    String path = file.toAbsolutePath().toString();
     int indexOfPackage = path.indexOf(packageName);
     if (indexOfPackage == -1) {
       return "";
@@ -167,18 +209,21 @@ public final class JWBF {
     return path.substring(indexOfPackage);
   }
 
-  static List<ContainerEntry> jarToEntries(String jarFileName) {
+  static List<ContainerEntry> jarToEntries(URI jarFileName) {
     List<ContainerEntry> result = new ArrayList<>();
+    URI jarSimpleName = stripJarSuffix(jarFileName);
 
-    try (JarFile jar = new JarFile(jarFileName)) {
-      Enumeration<JarEntry> je = jar.entries();
-      while (je.hasMoreElements()) {
-        JarEntry jarEntry = je.nextElement();
-        boolean directory = jarEntry.isDirectory();
-        result.add(new ContainerEntry(jarEntry.getName(), directory));
+    if (jarSimpleName != null) {
+      try (JarFile jar = new JarFile(new File(jarSimpleName))) {
+        Enumeration<JarEntry> je = jar.entries();
+        while (je.hasMoreElements()) {
+          JarEntry jarEntry = je.nextElement();
+          boolean directory = jarEntry.isDirectory();
+          result.add(new ContainerEntry(jarEntry.getName(), directory));
+        }
+      } catch (IOException e) {
+        e.printStackTrace();
       }
-    } catch (IOException e) {
-      e.printStackTrace();
     }
     return result;
   }
@@ -227,7 +272,24 @@ public final class JWBF {
    * Prints the JWBF Version.
    */
   public static void printVersion() {
-    System.out.println(getVersions());
+    System.out.println("JWBF.");
+    System.out.println(formatVersionText());
+  }
+
+  static String formatVersionText() {
+
+    List<String> lines = new ArrayList<>();
+    for (Entry<String, String> entry : getVersions().entrySet()) {
+      lines.add(entry.getKey() + " => " + entry.getValue());
+    }
+
+    Collections.sort(lines);
+    StringBuilder sb = new StringBuilder();
+    for (String line : lines) {
+      sb.append(line).append("\n");
+    }
+
+    return sb.toString();
   }
 
   public static void main(String[] args) {
@@ -241,73 +303,32 @@ public final class JWBF {
     return Collections.unmodifiableMap(lazyVersion());
   }
 
-  private static String readMFVersion(Manifest manifest) {
-    return readFromManifest(manifest, "Implementation-Version", DEVEL);
+  private static String getImplementationVersion() {
+    return secondIfNull(objPackage().getImplementationVersion(), DEVEL_VERSION);
   }
 
-  private static String readMFProductTitle(Manifest mainfest) {
-    return readFromManifest(mainfest, "Implementation-Title", "jwbf-generic");
+  private static String getImplementationTitle() {
+    return secondIfNull(objPackage().getImplementationTitle(), DEVEL_NAME);
   }
 
-  static String readFromManifest(Manifest manifest, String manifestKey, String fallback) {
+  private static Package objPackage() {
+    return JWBF.class.getPackage();
+  }
 
-    if (manifest == null) {
-      return logAndReturn(fallback);
+  private static String secondIfNull(String str, String orStr) {
+    if (str == null) {
+      return logAndReturn(orStr);
+    } else {
+      return str;
     }
-    String result = manifest.getMainAttributes().getValue(manifestKey);
-    if (result == null) {
-      return logAndReturn(fallback);
-    }
-    return result;
   }
 
   private static String logAndReturn(String fallback) {
     if (errorInfo) {
       errorInfo = false;
-      String msg = "E: no MANIFEST.MF found, please create it.";
-      System.err.println(msg);
+      System.err.println("E: no MANIFEST.MF found, please create it.");
     }
     return fallback;
-  }
-
-  private static Manifest findManifest(String filesystemPath) {
-    URL manifestUrl;
-    if (filesystemPath.endsWith(".jar")) {
-
-      manifestUrl = newURL(JAR_FILE_INDEX + filesystemPath + "!/META-INF/MANIFEST.MF");
-    } else {
-      if (!filesystemPath.endsWith(File.separator)) {
-        filesystemPath += File.separatorChar;
-      }
-      manifestUrl = searchMF(filesystemPath);
-    }
-    if (manifestUrl != null) {
-      return newManifest(manifestUrl);
-    }
-    return null;
-  }
-
-  private static Manifest newManifest(URL manifestUrl) {
-    try {
-      return new Manifest(manifestUrl.openStream());
-    } catch (IOException e) {
-      System.err.println("no manifest found at " + manifestUrl);
-      return null;
-    }
-  }
-
-  private static URL searchMF(String fileName) {
-    if (fileName == null) {
-      return null;
-    }
-    File file = new File(fileName);
-    String manifestFileName = "MANIFEST.MF";
-    File manifestFile = new File(file, manifestFileName);
-    if (manifestFile.exists()) {
-      return newURL(FILE_INDEX + file + File.separatorChar + manifestFileName);
-    } else {
-      return searchMF(file.getParent());
-    }
   }
 
   static class ContainerEntry {
@@ -381,6 +402,10 @@ public final class JWBF {
 
   }
 
+  static Path uriToPath(URI uri) {
+    return Paths.get(uri);
+  }
+
   public static File urlToFile(URL url) {
     String urlString = url.toString();
     return new File(toUri(urlString));
@@ -391,6 +416,22 @@ public final class JWBF {
       return new URI(urlString);
     } catch (URISyntaxException e) {
       throw new IllegalArgumentException(urlString, e);
+    }
+  }
+
+  static URI toUri(URL url) {
+    try {
+      return url.toURI();
+    } catch (URISyntaxException e) {
+      throw new IllegalArgumentException(url.toString(), e);
+    }
+  }
+
+  static URL toUrl(URI uri) {
+    try {
+      return uri.toURL();
+    } catch (MalformedURLException e) {
+      throw new IllegalArgumentException(uri.toString(), e);
     }
   }
 }

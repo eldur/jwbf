@@ -258,9 +258,7 @@ public class HttpActionClientTest {
   }
 
   private String userAgentString(String userAgentString) {
-    return userAgentString +
-        "JWBF/" + JWBF.getVersion(HttpActionClient.class) + " " +
-        "Apache-HttpClient/4.3.4 (java 1.5)";
+    return userAgentString + "JWBF/Version_unknown Apache-HttpClient/4.3.4 (java 1.5)";
   }
 
   @Test
@@ -271,7 +269,7 @@ public class HttpActionClientTest {
       server.setHandler(JettyServer.headerMapHandler());
       server.startSilent();
       String url = server.getTestUrl();
-      testee = HttpActionClient.builder() //
+      testee = newVersionMockBuilder() //
           .withUserAgent("āTeštBot", "ač43e3a", "User:WikipediāUserId") //
           .withUrl(url) //
           .build();
@@ -335,12 +333,7 @@ public class HttpActionClientTest {
   public void testUserAgentJwbf() {
     // GIVEN / WHEN
     Supplier<ImmutableList<String>> logLinesSupplier = Logging.newLogLinesSupplier();
-    new HttpActionClient.Builder() {
-      @Override
-      String getJwbfVersion() {
-        return JWBF.VERSION_FALLBACK_VALUE;
-      }
-    } //
+    newVersionMockBuilder() //
         .withUrl("http://example.org") //
         .build();
 
@@ -449,16 +442,15 @@ public class HttpActionClientTest {
 
       Post post = RequestBuilder.of("/").buildPost();
 
-      HttpActionClient hac = HttpActionClient.builder() //
-          .withUrl(server.getTestUrl()) //
-          .build() //
-          ;
+      // WHEN
+      HttpActionClient hac = newVersionMockBuilder().withUrl(server.getTestUrl()) //
+          .build();
+
       ResponseHandler<String> a = ContentProcessableBuilder //
           .create(hac) //
           .withActions(post) //
           .build();
 
-      // WHEN
       String result = Iterables.getOnlyElement(a.get());
 
       // THEN
@@ -477,6 +469,15 @@ public class HttpActionClientTest {
     } finally {
       server.stopSilent();
     }
+  }
+
+  private HttpActionClient.Builder newVersionMockBuilder() {
+    return new HttpActionClient.Builder() {
+      @Override
+      String getJwbfVersion() {
+        return JWBF.VERSION_FALLBACK_VALUE;
+      }
+    };
   }
 
   @Test

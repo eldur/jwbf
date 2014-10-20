@@ -41,4 +41,5 @@ net.sourceforge:jwbf:jar:3.0.0-SNAPSHOT
 |  \- org.eclipse.jetty:jetty-io:jar:9.3.0.M0:test
 +- org.eclipse.jetty:jetty-servlet:jar:9.3.0.M0:test
 |  \- org.eclipse.jetty:jetty-security:jar:9.3.0.M0:test
-\- joda-time:joda-time:jar:2.5:test
++- joda-time:joda-time:jar:2.5:test
+\- com.google.jimfs:jimfs:jar:1.0:test

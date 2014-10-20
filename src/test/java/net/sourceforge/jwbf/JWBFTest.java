@@ -6,12 +6,13 @@ import static org.junit.Assert.fail;
 
 import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.URI;
 import java.net.URL;
+import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 import java.util.jar.Attributes;
@@ -27,6 +28,8 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Ordering;
+import com.google.common.jimfs.Configuration;
+import com.google.common.jimfs.Jimfs;
 import net.sourceforge.jwbf.JWBF.ContainerEntry;
 import net.sourceforge.jwbf.core.actions.HttpActionClient;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
@@ -47,7 +50,7 @@ public class JWBFTest {
     String packageName = "";
 
     // WHEN
-    Map<String, String> result = JWBF.init(packageName, url);
+    Map<String, String> result = JWBF.init(packageName, JWBF.toUri(url));
 
     // THEN
     Map<String, String> expected = ImmutableMap.of();
@@ -61,7 +64,7 @@ public class JWBFTest {
     String packageName = "";
 
     // WHEN
-    Map<String, String> result = JWBF.init(packageName, url);
+    Map<String, String> result = JWBF.init(packageName, JWBF.toUri(url));
 
     // THEN
     Map<String, String> expected = ImmutableMap.of();
@@ -75,7 +78,7 @@ public class JWBFTest {
     String packageName = "";
 
     // WHEN
-    Map<String, String> result = JWBF.init(packageName, url);
+    Map<String, String> result = JWBF.init(packageName, JWBF.toUri(url));
 
     // THEN
     Map<String, String> expected = ImmutableMap.of();
@@ -83,13 +86,13 @@ public class JWBFTest {
   }
 
   @Test
-  public void testInit_jar() {
+  public void testInit_jar_notExisting() {
     // GIVEN
     URL url = JWBF.newURL("jar:file:/home/noOne/lib/jwbf.jar!/net/sourceforge/jwbf");
     String packageName = "net/sourceforge/jwbf";
 
     // WHEN
-    Map<String, String> result = JWBF.init(packageName, url);
+    Map<String, String> result = JWBF.init(packageName, JWBF.toUri(url));
 
     // THEN
     Map<String, String> expected = ImmutableMap.of();
@@ -97,60 +100,71 @@ public class JWBFTest {
   }
 
   @Test
-  public void testInit_realFile() throws Exception {
+  public void testInit_realFile() {
     // GIVEN
-    File targetDir = getTargetDir();
-    Path tempDirectory = Files.createTempDirectory(targetDir.toPath(), "manifest-test");
-    File manifestFile = new File(tempDirectory.toFile(), "MANIFEST.MF");
+    Path targetDir = newMockFileSystem();
+    Path tempDirectory = NioUnchecked.createTempDir(targetDir, "manifest-test");
+    Path manifestFile = tempDirectory.resolveSibling("MANIFEST.MF");
     String expectedVersion = "999.0.0-SNAPSHOT-${buildNumber}";
     String expectedTitle = "jwbf";
     byte[] bytes = Joiner.on("\n").join("Manifest-Version: 1.0", //
         "Implementation-Title: " + expectedTitle, //
         "Implementation-Version: " + expectedVersion, "") //
         .getBytes();
-    Files.write(manifestFile.toPath(), bytes);
+    NioUnchecked.writeBytes(manifestFile, bytes);
+    // ---
 
     String name = MediaWikiBot.class.getPackage().getName();
     ImmutableList<String> fileNames = ImmutableList.copyOf(Splitter.on(".").split(name));
 
-    File first = new File(tempDirectory.toFile(), Iterables.getFirst(fileNames, null));
+    String firstFileName = Iterables.getFirst(fileNames, null);
+    Path first = tempDirectory.resolve(firstFileName);
+
     for (String fileName : Iterables.skip(fileNames, 1)) {
-      first = new File(first, fileName);
+      first = first.resolve(fileName);
     }
-    first.mkdirs();
+    NioUnchecked.createDirectories(first);
+
     String packageName = name.replace(".", "/");
-    URL url = tempDirectory.toUri().toURL();
+
     // WHEN
-    Map<String, String> result = JWBF.init(packageName, url);
+    Map<String, String> result = JWBF.init(packageName, tempDirectory.toUri());
 
     // THEN
     Map<String, String> expected = ImmutableMap.<String, String>builder() //
-        .put(expectedTitle + "-mediawiki", expectedVersion) //
+        .put(JWBF.DEVEL_NAME + "-mediawiki", JWBF.DEVEL_VERSION) //
         .build();
     assertEquals(expected, result);
 
   }
 
-  private File getTargetDir() {
-    File targetDir = new File("target");
-    if (!(targetDir.exists() && targetDir.isDirectory())) {
+  private Path getTargetDir() {
+    Path targetDir = Paths.get("target");
+    if (!(Files.exists(targetDir) && Files.isDirectory(targetDir))) {
       fail("no target dir found");
     }
     return targetDir;
+  }
+
+  private Path newMockFileSystem() {
+    FileSystem fs = Jimfs.newFileSystem(Configuration.unix());
+    Path foo = fs.getPath("/foo");
+    Path f = NioUnchecked.createDirectory(foo);
+    return f;
   }
 
   @Test
   public void testGetVersions() {
     // GIVEN
     JWBF.cache = ImmutableMap.<String, String>builder() //
-        .put("jwbf-generic-mediawiki", JWBF.DEVEL) //
+        .put("jwbf-generic-mediawiki", JWBF.DEVEL_VERSION) //
         .build();
 
     // WHEN
     String version = JWBF.getVersion(MediaWikiBot.class);
 
     // THEN
-    assertEquals(JWBF.DEVEL, version);
+    assertEquals(JWBF.DEVEL_VERSION, version);
   }
 
   @Test
@@ -200,7 +214,8 @@ public class JWBFTest {
     String packageName = "net/sourceforge/jwbf";
 
     // WHEN
-    Map<String, String> result = JWBF.makeVersionMap(packageName, null, elements);
+    Map<String, String> result =
+        JWBF.makeVersionMap(packageName, elements, "DEVEL", "jwbf-generic");
 
     // THEN
     Map<String, String> expected = ImmutableMap.<String, String>builder() //
@@ -228,22 +243,45 @@ public class JWBFTest {
   }
 
   @Test
-  public void testJarToEntries() throws Exception {
-
+  public void testJarManifestLookup() {
     // GIVEN
-    File targetDir = getTargetDir();
-    Path tempDirectory = Files.createTempDirectory(targetDir.toPath(), "jarfile-test");
-
-    File jarFile = new File(tempDirectory.toFile(), "a.jar");
-    File inputDir = new File(tempDirectory.toFile(), "jarContent");
-    inputDir.mkdir();
-    new File(inputDir, "test").createNewFile();
-    newJarFile(jarFile, inputDir);
-
-    String jarFileName = jarFile.getAbsolutePath();
+    URI mockUri = newTestJar().toUri();
 
     // WHEN
-    List<ContainerEntry> result = JWBF.jarToEntries(jarFileName);
+    Map<String, String> actual = JWBF.jarVersionDetails("test", mockUri);
+
+    // THEN
+    GAssert.assertEquals(ImmutableMap.of(JWBF.DEVEL_NAME + "-first", JWBF.DEVEL_VERSION), actual);
+  }
+
+  @Test
+  public void testRemoveTrailingSlash() {
+    assertEquals("b", JWBF.removeTrailingSlash("b"));
+    assertEquals(" / ", JWBF.removeTrailingSlash(" / "));
+    assertEquals("/", JWBF.removeTrailingSlash("/"));
+    assertEquals(" ", JWBF.removeTrailingSlash(" "));
+    assertEquals("//", JWBF.removeTrailingSlash("//"));
+    assertEquals("/a/.", JWBF.removeTrailingSlash("/a/./"));
+    assertEquals("/a/.-", JWBF.removeTrailingSlash("/a/.-/"));
+  }
+
+  @Test
+  public void testCountSlashes() {
+    assertEquals(0, JWBF.countSlashes("b"));
+    assertEquals(1, JWBF.countSlashes(" / "));
+    assertEquals(2, JWBF.countSlashes("//"));
+    assertEquals(3, JWBF.countSlashes("/a/./"));
+    assertEquals(3, JWBF.countSlashes("/a/.-/"));
+  }
+
+  @Test
+  public void testJarToEntries() {
+
+    // GIVEN
+    Path jarFile = newTestJar();
+
+    // WHEN
+    List<ContainerEntry> result = JWBF.jarToEntries(jarFile.toUri());
 
     Function<ContainerEntry, ContainerEntry> function =
         new Function<ContainerEntry, ContainerEntry>() {
@@ -258,32 +296,57 @@ public class JWBFTest {
           }
         };
     // THEN
-    List<ContainerEntry> mutated =
+    ImmutableList<ContainerEntry> mutated =
         Ordering.usingToString().immutableSortedCopy(Lists.transform(result, function));
 
-    List<ContainerEntry> expected = ImmutableList.<ContainerEntry>builder() //
+    ImmutableList<ContainerEntry> expected = ImmutableList.<ContainerEntry>builder() //
         .add(new ContainerEntry("META-INF/MANIFEST.MF", false)) //
         .add(new ContainerEntry("target/jarfile-test/jarContent/", true)) //
-        .add(new ContainerEntry("target/jarfile-test/jarContent/test/", true)) //
+        .add(new ContainerEntry("target/jarfile-test/jarContent/first/", true)) //
+        .add(new ContainerEntry("target/jarfile-test/jarContent/first/second/", true)) //
         .build();
-    assertEquals(expected, mutated);
+    GAssert.assertEquals(expected, mutated);
 
   }
 
-  public void newJarFile(File jarFile, File inputDir) throws IOException {
+  synchronized Path newTestJar() {
+    Path targetDir = getTargetDir();
+    Path tempDirectory = NioUnchecked.createTempDir(targetDir, "jarfile-test");
+    Path jarFile = tempDirectory.resolveSibling("a.jar");
+
+    if (!Files.exists(jarFile)) {
+      Path inputDir = NioUnchecked.createDirectory(tempDirectory, "jarContent");
+      Path firstDir = NioUnchecked.createDirectory(inputDir, "first");
+      NioUnchecked.createDirectory(firstDir, "second");
+      newJarFile(jarFile, inputDir);
+    }
+    return jarFile;
+  }
+
+  public void newJarFile(Path jarFile, Path inputDir) {
     Manifest manifest = new Manifest();
     manifest.getMainAttributes().put(Attributes.Name.MANIFEST_VERSION, "1.0");
-    JarOutputStream target = new JarOutputStream(new FileOutputStream(jarFile), manifest);
-    addRecursiv(inputDir, target);
-    target.close();
+
+    try (JarOutputStream target = newJarOutputStream(jarFile, manifest)) {
+      addRecursiv(inputDir, target);
+    } catch (IOException e) {
+      throw new IllegalStateException(e);
+    }
   }
 
-  private void addRecursiv(File source, JarOutputStream target) throws IOException {
-    if (source.isDirectory()) {
+  private JarOutputStream newJarOutputStream(Path jarFile, Manifest manifest) {
+    try {
+      return new JarOutputStream(NioUnchecked.newOutputStream(jarFile), manifest);
+    } catch (IOException e) {
+      throw new IllegalStateException(e);
+    }
+  }
+
+  private void addRecursiv(Path source, JarOutputStream target) {
+    if (Files.isDirectory(source)) {
       JarEntry entry = makeEntry(source);
-      target.putNextEntry(entry);
-      target.closeEntry();
-      for (File nestedFile : source.listFiles()) {
+      putAndClose(entry, target);
+      for (Path nestedFile : NioUnchecked.listFiles(source)) {
         addRecursiv(nestedFile, target);
       }
       return;
@@ -292,33 +355,47 @@ public class JWBFTest {
     addFile(source, target);
   }
 
-  private void addFile(File source, JarOutputStream target) throws IOException {
-    JarEntry entry = makeEntry(source);
-    target.putNextEntry(entry);
-
-    try (BufferedInputStream in = new BufferedInputStream(new FileInputStream(source));) {
-
-      byte[] buffer = new byte[1024];
-      while (true) {
-        int count = in.read(buffer);
-        if (count == -1) {
-          break;
-        }
-        target.write(buffer, 0, count);
-      }
+  private void putAndClose(JarEntry entry, JarOutputStream target) {
+    try {
+      target.putNextEntry(entry);
       target.closeEntry();
+    } catch (IOException e) {
+      throw new IllegalStateException(e);
     }
   }
 
-  private JarEntry makeEntry(File source) {
-    String name = source.getPath().replace("\\", "/");
+  private void addFile(Path source, JarOutputStream target) {
+    try {
+      JarEntry entry = makeEntry(source);
+      target.putNextEntry(entry);
+
+      try (BufferedInputStream in = new BufferedInputStream(Files.newInputStream(source));) {
+
+        byte[] buffer = new byte[1024];
+        while (true) {
+          int count = in.read(buffer);
+          if (count == -1) {
+            break;
+          }
+          target.write(buffer, 0, count);
+        }
+        target.closeEntry();
+      }
+    } catch (IOException e) {
+      throw new IllegalStateException(e);
+    }
+  }
+
+  private JarEntry makeEntry(Path source) {
+
+    String name = source.toString().replace("\\", "/");
     if (!name.isEmpty()) {
       if (!name.endsWith("/")) {
         name += "/";
       }
     }
     JarEntry entry = new JarEntry(name);
-    entry.setTime(source.lastModified());
+    entry.setTime(NioUnchecked.getLastModifiedTime(source).toMillis());
     return entry;
   }
 
@@ -360,6 +437,30 @@ public class JWBFTest {
   }
 
   @Test
+  public void testStripJarSuffix() {
+
+    URI uri = JWBF.toUri("jar:file:/any/target/jwbf-3.0.0-snapshot.jar!/net/sourceforge/jwbf");
+    String actual = JWBF.stripJarSuffix(uri).toString();
+
+    assertEquals("file:/any/target/jwbf-3.0.0-snapshot.jar", actual);
+  }
+
+  @Test
+  public void testStripJarSuffix_file() {
+
+    URI uri = JWBF.toUri("file:/any/target/jwbf-3.0.0-snapshot.jar");
+    String actual = JWBF.stripJarSuffix(uri).toString();
+
+    assertEquals("file:/any/target/jwbf-3.0.0-snapshot.jar", actual);
+  }
+
+  @Test(expected = NullPointerException.class)
+  public void testStripJarSuffix_null() {
+    JWBF.stripJarSuffix(null);
+    fail();
+  }
+
+  @Test
   public void testNewURLWithoutHandler() {
     try {
       // GIVEN/WHEN
@@ -388,16 +489,18 @@ public class JWBFTest {
   }
 
   @Test
-  public void testReadFromManifest() throws Exception {
-    // GIVEN
-    Manifest manifest = new Manifest();
-    String fallback = "fallback";
+  public void testFormatVersionText() {
 
-    // WHEN
-    String value = JWBF.readFromManifest(manifest, "test", fallback);
+    String versionText = JWBF.formatVersionText();
 
-    // THEN
-    assertEquals(fallback, value);
+    ImmutableList<String> expected = //
+        ImmutableList.of("jwbf-generic-core => DEVEL", //
+            "jwbf-generic-mediawiki => DEVEL");
+    GAssert.assertEquals(expected, splitVersionText(versionText));
+  }
+
+  public static ImmutableList<String> splitVersionText(String versionText) {
+    return ImmutableList.copyOf(Splitter.on("\n").omitEmptyStrings().split(versionText));
   }
 
 }
