@@ -39,6 +39,11 @@ public class GAssert {
     assertEquals(expected.asMap(), actual.asMap());
   }
 
+  public static void assertEquals(ImmutableMap<?, ?> expected,
+      Map<?, ?> actual) {
+    GAssert.assertEquals(expected, ImmutableMap.copyOf(actual));
+  }
+
   public static void assertEquals(ImmutableMap<?, ?> expected, ImmutableMap<?, ?> actual) {
     ImmutableList<?> expectedTuples = sortedCopy(expected.entrySet());
     ImmutableList<?> actualTuples = sortedCopy(actual.entrySet());
@@ -58,17 +63,17 @@ public class GAssert {
       Assert.assertEquals(expected, actual);
     } catch (AssertionError e) {
 
-      String actualTypes = joinToString(actual, TO_TYPE_STRING);
-      String expectedTypes = joinToString(expected, TO_TYPE_STRING);
+      Set<String> actualTypes = toSet(nullToEmpty(actual), TO_TYPE_STRING);
+      Set<String> expectedTypes = toSet(nullToEmpty(expected), TO_TYPE_STRING);
 
       final String actual1;
       final String expected1;
 
-      if (actualTypes != null && actualTypes.equals(expectedTypes)) {
+      if (actualTypes.equals(expectedTypes)) {
         actual1 = joinToString(actual, Functions.toStringFunction());
         expected1 = joinToString(expected, Functions.toStringFunction());
       } else {
-        boolean notEqualTypes = actualTypes != null && !actualTypes.equals(expectedTypes);
+        boolean notEqualTypes = !actualTypes.equals(expectedTypes);
         actual1 = joinToString(actual, toDetailString(notEqualTypes));
         expected1 = joinToString(expected, toDetailString(notEqualTypes));
       }
@@ -78,12 +83,38 @@ public class GAssert {
     }
   }
 
-  private static String joinToString(ImmutableList<?> list, Function<Object, String> toString) {
+  private static ImmutableList<?> nullToEmpty(ImmutableList<?> list) {
+    if (list == null) {
+      return ImmutableList.of();
+    } else {
+      return list;
+    }
+  }
+
+  private static String joinToString(ImmutableList<?> list, Function<Object, String> fn) {
     if (list == null) {
       return null;
     }
-    ImmutableList<String> parts = FluentIterable.from(list).transform(toString).toList();
+    return joinNL(toList(list, fn));
+  }
+
+  private static String joinNL(ImmutableList<String> parts) {
     return Joiner.on("\n").join(parts);
+  }
+
+  private static ImmutableList<String> toList(ImmutableList<?> list,
+      Function<Object, String> toStringFn) {
+    return toTransformed(list, toStringFn).toList();
+  }
+
+  private static FluentIterable<String> toTransformed(ImmutableList<?> list,
+      Function<Object, String> toString) {
+    return FluentIterable.from(list).transform(toString);
+  }
+
+  private static Set<String> toSet(ImmutableList<?> list,
+      Function<Object, String> toStringFn) {
+    return toTransformed(list, toStringFn).toSet();
   }
 
   public static void assertStartsWith(final String expected, final String actual) {

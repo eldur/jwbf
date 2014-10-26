@@ -3,9 +3,12 @@ package net.sourceforge.jwbf;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
+import java.util.Map;
+
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMultimap;
+import com.google.common.collect.Maps;
 import org.junit.ComparisonFailure;
 import org.junit.Test;
 
@@ -43,7 +46,7 @@ public class GAssertTest {
       fail();
     } catch (AssertionError e) {
       // THEN
-      assertEquals("expected:<a> but was:<null>", e.getMessage());
+      assertEquals("expected:<java.lang.String a> but was:<null>", e.getMessage());
     }
   }
 
@@ -80,6 +83,22 @@ public class GAssertTest {
   }
 
   @Test
+  public void testAssertEquals_list_fail_2() {
+    // GIVEN
+    ImmutableList<String> expected = ImmutableList.of("a");
+    ImmutableList<String> actual = ImmutableList.of("b", "c");
+
+    try {
+      // WHEN
+      GAssert.assertEquals(expected, actual);
+      fail();
+    } catch (ComparisonFailure e) {
+      // THEN
+      assertEquals("expected:<[a]> but was:<[b\nc]>", e.getMessage());
+    }
+  }
+
+  @Test
   public void testAssertEquals_listTypes_fail() {
     // GIVEN
     ImmutableList<String> expected = ImmutableList.of("a");
@@ -111,6 +130,17 @@ public class GAssertTest {
       assertEquals("expected:<java.lang.[String] 4> but was:<java.lang.[Integer] 4>",
           e.getMessage());
     }
+  }
+
+  @Test
+  public void testAssertEquals_map_mutable() {
+    // GIVEN
+    ImmutableMap<String, String> expected = ImmutableMap.of("a", "a");
+    Map<String, String> actual = Maps.newHashMap();
+    actual.put("a", "a");
+
+    // WHEN / THEN
+    GAssert.assertEquals(expected, actual);
   }
 
   @Test
