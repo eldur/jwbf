@@ -91,7 +91,7 @@ public class LogEvents extends BaseQuery<LogItem> {
   /**
    * @param limit  of events
    * @param first  of like {@link #MOVE}
-   * @param others like {@link #DELETE, ...}
+   * @param others like {@link #DELETE}
    */
   public LogEvents(MediaWikiBot bot, int limit, String first, String... others) {
     this(bot, limit, ImmutableList.<String>builder() //
