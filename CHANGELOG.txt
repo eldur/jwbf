@@ -1,11 +1,11 @@
 -------------------------------------------------------------------------------
-JWBF 1.3 - svn:219    												   Jun 2009
+JWBF 1.3 - svn:219                                                     Jun 2009
   * ContentAccessable#getLabel() is now getTitle()
   * fix ImageInfo output format change
-  * add test for MW 1.15 
+  * add test for MW 1.15
   * domain login option with API
   * more tests
-  * split in wiki core- and mediawiki related stuff  
+  * split in wiki core- and mediawiki related stuff
   * many cleanups
   * FIX TemplateUserTitles and add a testcase
   * add a query superclass for title iterations
@@ -24,16 +24,16 @@ JWBF svn:188                                                           Feb 2009
   * change action class names
   * fix categroy iteration
   * add test for ImagelinkTitles
-  * add test for MW 1.14 
+  * add test for MW 1.14
 --------------------------------------------------------------------------------
 JWBF svn:187                                                           Feb 2009
   * small refactorings and pom changes
 --------------------------------------------------------------------------------
 JWBF-1.2.186                                                           Feb 2009
-  * switch to maven build 
+  * switch to maven build
 --------------------------------------------------------------------------------
 JWBF-1.2.183                                                           Feb 2009
-  * fix GetRecentchanges and GetAllPagesTitles with html entities 
+  * fix GetRecentchanges and GetAllPagesTitles with html entities
   * first step to maven
 --------------------------------------------------------------------------------
 JWBF-1.2.181                                                           Feb 2009
@@ -45,7 +45,7 @@ JWBF-1.2.180                                                           Feb 2009
   * resorting package contens
   * test and fix for simple page get in HttpBot
   * new Action for Mediawiki GetRendering
-  * until now MediaWikiBot contains only the basic set of mehtods 
+  * until now MediaWikiBot contains only the basic set of mehtods
     (reading, writing, ...), for more see MediaWikiAdapterBot
   * detection if chosen action is a MultiAction
   * fix BacklinkTitles encoding of namespace variable
@@ -154,7 +154,7 @@ JWBF-1.2.144                                                               2008
 JWBF-1.2.143                                                               2008
 --------------------------------------------------------------------------------
   * add: mediawiki version sensitiv api requests for:
-  		category members (MW1_11)
+        category members (MW1_11)
   * fix: category read over 'limit' members
 --------------------------------------------------------------------------------
 JWBF-1.2.141 and 142                                                        2008
@@ -197,8 +197,8 @@ JWBF-1.2.0.0                                                                2007
 --------------------------------------------------------------------------------
   Features(MediaWiki):
   * For supported MW API functions, see Javadocs at
-  	http://jwbf.sourceforge.net/doc/net/sourceforge/jwbf/bots/MediaWikiBot.html
-  	there are special tags javadoc tags, that informs about it.
+    http://jwbf.sourceforge.net/doc/net/sourceforge/jwbf/bots/MediaWikiBot.html
+    there are special tags javadoc tags, that informs about it.
 
   Internal(MediaWiki):
   * Confiramtion if requested MW API function is available

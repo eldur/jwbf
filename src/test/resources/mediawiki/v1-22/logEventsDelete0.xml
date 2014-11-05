@@ -3,8 +3,8 @@
   <query>
     <logevents>
       <item logid="10978" pageid="0" ns="0" title="ESNWME" type="delete" action="delete"
-            user="Admin" timestamp="2014-10-05T12:46:50Z"
-            comment="content was: &quot;inqEO&quot; (and the only contributor was &quot;[[Special:Contributions/Admin|Admin]]&quot;)" />
+        user="Admin" timestamp="2014-10-05T12:46:50Z"
+        comment="content was: &quot;inqEO&quot; (and the only contributor was &quot;[[Special:Contributions/Admin|Admin]]&quot;)" />
     </logevents>
   </query>
   <continue continue="-||" lestart="2014-10-05T12:46:50Z" />

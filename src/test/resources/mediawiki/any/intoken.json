@@ -1,1 +1,20 @@
-{"query":{"pages":{"964":{"pageid":964,"ns":0,"title":"42","contentmodel":"wikitext","pagelanguage":"labs","touched":"2014-04-24T19:17:49Z","lastrevid":2592,"counter":"","length":4,"new":"","starttimestamp":"2014-04-24T19:19:33Z","edittoken":"e0691d5329779f0c01b1b286cd44a278+\\"}}}}
+{
+  "query": {
+    "pages": {
+      "964": {
+        "pageid": 964,
+        "ns": 0,
+        "title": "42",
+        "contentmodel": "wikitext",
+        "pagelanguage": "labs",
+        "touched": "2014-04-24T19:17:49Z",
+        "lastrevid": 2592,
+        "counter": "",
+        "length": 4,
+        "new": "",
+        "starttimestamp": "2014-04-24T19:19:33Z",
+        "edittoken": "e0691d5329779f0c01b1b286cd44a278+\\"
+      }
+    }
+  }
+}

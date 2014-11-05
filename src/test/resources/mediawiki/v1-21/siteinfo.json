@@ -1,1 +1,34 @@
-{"query":{"general":{"mainpage":"Main Page","base":"http:\/\/localhost\/loki\/mediawiki\/mw-1-21\/index.php\/Main_Page","sitename":"MW_1_21","generator":"MediaWiki 1.21.0rc5","phpversion":"5.3.10-1ubuntu3.10","phpsapi":"apache2handler","dbtype":"mysql","dbversion":"5.5.35-0ubuntu0.12.04.2","langconversion":"","titleconversion":"","linkprefix":"","linktrail":"\/^([a-z]+)(.*)$\/sD","case":"first-letter","rights":"","lang":"en","fallback":[],"fallback8bitEncoding":"windows-1252","writeapi":"","timezone":"Europe\/Berlin","timeoffset":120,"articlepath":"\/loki\/mediawiki\/mw-1-21\/index.php\/$1","scriptpath":"\/loki\/mediawiki\/mw-1-21","script":"\/loki\/mediawiki\/mw-1-21\/index.php","variantarticlepath":false,"server":"http:\/\/localhost","wikiid":"mw_1_21","time":"2014-03-30T15:32:53Z","maxuploadsize":104857600}}}
+{
+  "query": {
+    "general": {
+      "mainpage": "Main Page",
+      "base": "http:\/\/localhost\/loki\/mediawiki\/mw-1-21\/index.php\/Main_Page",
+      "sitename": "MW_1_21",
+      "generator": "MediaWiki 1.21.0rc5",
+      "phpversion": "5.3.10-1ubuntu3.10",
+      "phpsapi": "apache2handler",
+      "dbtype": "mysql",
+      "dbversion": "5.5.35-0ubuntu0.12.04.2",
+      "langconversion": "",
+      "titleconversion": "",
+      "linkprefix": "",
+      "linktrail": "\/^([a-z]+)(.*)$\/sD",
+      "case": "first-letter",
+      "rights": "",
+      "lang": "en",
+      "fallback": [],
+      "fallback8bitEncoding": "windows-1252",
+      "writeapi": "",
+      "timezone": "Europe\/Berlin",
+      "timeoffset": 120,
+      "articlepath": "\/loki\/mediawiki\/mw-1-21\/index.php\/$1",
+      "scriptpath": "\/loki\/mediawiki\/mw-1-21",
+      "script": "\/loki\/mediawiki\/mw-1-21\/index.php",
+      "variantarticlepath": false,
+      "server": "http:\/\/localhost",
+      "wikiid": "mw_1_21",
+      "time": "2014-03-30T15:32:53Z",
+      "maxuploadsize": 104857600
+    }
+  }
+}

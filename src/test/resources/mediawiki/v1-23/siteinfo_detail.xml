@@ -2,17 +2,17 @@
 <api>
   <query>
     <general mainpage="Main Page" base="http://localhost/loki/mediawiki/mw-1-23/index.php/Main_Page"
-             sitename="MW_1_23"
-             logo="http://localhost/loki/mediawiki/mw-1-23/skins/common/images/wiki.png"
-             generator="MediaWiki 1.23.0" phpversion="5.3.10-1ubuntu3.11" phpsapi="apache2handler"
-             dbtype="mysql" dbversion="5.5.37-0ubuntu0.12.04.1" imagewhitelistenabled=""
-             langconversion="" titleconversion="" linkprefixcharset="" linkprefix=""
-             linktrail="/^([a-z]+)(.*)$/sD" case="first-letter" lang="en"
-             fallback8bitEncoding="windows-1252" writeapi="" timezone="Europe/Berlin"
-             timeoffset="120" articlepath="/loki/mediawiki/mw-1-23/index.php/$1"
-             scriptpath="/loki/mediawiki/mw-1-23" script="/loki/mediawiki/mw-1-23/index.php"
-             server="http://localhost" wikiid="mw_1_23" time="2014-06-22T09:06:39Z"
-             maxuploadsize="104857600" favicon="http://localhost/favicon.ico">
+      sitename="MW_1_23"
+      logo="http://localhost/loki/mediawiki/mw-1-23/skins/common/images/wiki.png"
+      generator="MediaWiki 1.23.0" phpversion="5.3.10-1ubuntu3.11" phpsapi="apache2handler"
+      dbtype="mysql" dbversion="5.5.37-0ubuntu0.12.04.1" imagewhitelistenabled=""
+      langconversion="" titleconversion="" linkprefixcharset="" linkprefix=""
+      linktrail="/^([a-z]+)(.*)$/sD" case="first-letter" lang="en"
+      fallback8bitEncoding="windows-1252" writeapi="" timezone="Europe/Berlin"
+      timeoffset="120" articlepath="/loki/mediawiki/mw-1-23/index.php/$1"
+      scriptpath="/loki/mediawiki/mw-1-23" script="/loki/mediawiki/mw-1-23/index.php"
+      server="http://localhost" wikiid="mw_1_23" time="2014-06-22T09:06:39Z"
+      maxuploadsize="104857600" favicon="http://localhost/favicon.ico">
       <fallback />
       <thumblimits>
         <limit>120</limit>
@@ -35,16 +35,16 @@
     </namespaces>
     <interwikimap>
       <iw prefix="acronym"
-          url="http://www.acronymfinder.com/~/search/af.aspx?string=exact&amp;Acronym=$1" wikiid=""
-          api="" />
+        url="http://www.acronymfinder.com/~/search/af.aspx?string=exact&amp;Acronym=$1" wikiid=""
+        api="" />
       <iw prefix="advogato" url="http://www.advogato.org/$1" wikiid="" api="" />
       <iw prefix="arxiv" url="http://www.arxiv.org/abs/$1" wikiid="" api="" />
       <iw prefix="c2find" url="http://c2.com/cgi/wiki?FindPage&amp;value=$1" wikiid="" api="" />
       <iw prefix="cache" url="http://www.google.com/search?q=cache:$1" wikiid="" api="" />
       <iw prefix="commons" url="https://commons.wikimedia.org/wiki/$1" wikiid="" api="" />
       <iw prefix="dictionary"
-          url="http://www.dict.org/bin/Dict?Database=*&amp;Form=Dict1&amp;Strategy=*&amp;Query=$1"
-          wikiid="" api="" />
+        url="http://www.dict.org/bin/Dict?Database=*&amp;Form=Dict1&amp;Strategy=*&amp;Query=$1"
+        wikiid="" api="" />
       <iw prefix="docbook" url="http://wiki.docbook.org/$1" wikiid="" api="" />
       <iw prefix="doi" url="http://dx.doi.org/$1" wikiid="" api="" />
       <iw prefix="drumcorpswiki" url="http://www.drumcorpswiki.com/$1" wikiid="" api="" />
@@ -54,7 +54,7 @@
       <iw prefix="foldoc" url="http://foldoc.org/?$1" wikiid="" api="" />
       <iw prefix="foxwiki" url="http://fox.wikis.com/wc.dll?Wiki~$1" wikiid="" api="" />
       <iw prefix="freebsdman" url="http://www.FreeBSD.org/cgi/man.cgi?apropos=1&amp;query=$1"
-          wikiid="" api="" />
+        wikiid="" api="" />
       <iw prefix="gej" url="http://www.esperanto.de/dej.malnova/aktivikio.pl?$1" wikiid="" api="" />
       <iw prefix="gentoo-wiki" url="http://gentoo-wiki.com/$1" wikiid="" api="" />
       <iw prefix="google" url="http://www.google.com/search?q=$1" wikiid="" api="" />
@@ -63,11 +63,11 @@
       <iw prefix="hrwiki" url="http://www.hrwiki.org/wiki/$1" wikiid="" api="" />
       <iw prefix="imdb" url="http://www.imdb.com/find?q=$1&amp;tt=on" wikiid="" api="" />
       <iw prefix="jargonfile" url="http://sunir.org/apps/meta.pl?wiki=JargonFile&amp;redirect=$1"
-          wikiid="" api="" />
+        wikiid="" api="" />
       <iw prefix="kmwiki" url="http://kmwiki.wikispaces.com/$1" wikiid="" api="" />
       <iw prefix="linuxwiki" url="http://linuxwiki.de/$1" wikiid="" api="" />
       <iw prefix="lojban" url="http://www.lojban.org/tiki/tiki-index.php?page=$1" wikiid=""
-          api="" />
+        api="" />
       <iw prefix="lqwiki" url="http://wiki.linuxquestions.org/wiki/$1" wikiid="" api="" />
       <iw prefix="lugkr" url="http://www.lug-kr.de/wiki/$1" wikiid="" api="" />
       <iw prefix="meatball" url="http://www.usemod.com/cgi-bin/mb.pl?$1" wikiid="" api="" />
@@ -88,7 +88,7 @@
       <iw prefix="senseislibrary" url="http://senseis.xmp.net/?$1" wikiid="" api="" />
       <iw prefix="sourceforge" url="http://sourceforge.net/$1" wikiid="" api="" />
       <iw prefix="sourcewatch" url="http://www.sourcewatch.org/index.php?title=$1" wikiid=""
-          api="" />
+        api="" />
       <iw prefix="squeak" url="http://wiki.squeak.org/squeak/$1" wikiid="" api="" />
       <iw prefix="tejo" url="http://www.tejo.org/vikio/$1" wikiid="" api="" />
       <iw prefix="theopedia" url="http://www.theopedia.com/$1" wikiid="" api="" />

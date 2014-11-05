@@ -2,17 +2,17 @@
 <api>
   <query>
     <general mainpage="Main Page" base="http://localhost/loki/mediawiki/mw-1-23/index.php/Main_Page"
-             sitename="MW_1_23"
-             logo="http://localhost/loki/mediawiki/mw-1-23/skins/common/images/wiki.png"
-             generator="MediaWiki 1.23.0" phpversion="5.3.10-1ubuntu3.11" phpsapi="apache2handler"
-             dbtype="mysql" dbversion="5.5.37-0ubuntu0.12.04.1" imagewhitelistenabled=""
-             langconversion="" titleconversion="" linkprefixcharset="" linkprefix=""
-             linktrail="/^([a-z]+)(.*)$/sD" case="first-letter" lang="en"
-             fallback8bitEncoding="windows-1252" writeapi="" timezone="Europe/Berlin"
-             timeoffset="120" articlepath="/loki/mediawiki/mw-1-23/index.php/$1"
-             scriptpath="/loki/mediawiki/mw-1-23" script="/loki/mediawiki/mw-1-23/index.php"
-             server="http://localhost" wikiid="mw_1_23" time="2014-06-22T09:20:36Z"
-             maxuploadsize="104857600" favicon="http://localhost/favicon.ico">
+      sitename="MW_1_23"
+      logo="http://localhost/loki/mediawiki/mw-1-23/skins/common/images/wiki.png"
+      generator="MediaWiki 1.23.0" phpversion="5.3.10-1ubuntu3.11" phpsapi="apache2handler"
+      dbtype="mysql" dbversion="5.5.37-0ubuntu0.12.04.1" imagewhitelistenabled=""
+      langconversion="" titleconversion="" linkprefixcharset="" linkprefix=""
+      linktrail="/^([a-z]+)(.*)$/sD" case="first-letter" lang="en"
+      fallback8bitEncoding="windows-1252" writeapi="" timezone="Europe/Berlin"
+      timeoffset="120" articlepath="/loki/mediawiki/mw-1-23/index.php/$1"
+      scriptpath="/loki/mediawiki/mw-1-23" script="/loki/mediawiki/mw-1-23/index.php"
+      server="http://localhost" wikiid="mw_1_23" time="2014-06-22T09:20:36Z"
+      maxuploadsize="104857600" favicon="http://localhost/favicon.ico">
       <fallback />
       <thumblimits>
         <limit>120</limit>

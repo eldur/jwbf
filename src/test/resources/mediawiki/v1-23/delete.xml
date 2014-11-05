@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <api>
   <delete title="Delete0"
-          reason="content was: &quot;A&quot; (and the only contributor was &quot;[[Special:Contributions/Admin|Admin]]&quot;)"
-          logid="5919" />
+    reason="content was: &quot;A&quot; (and the only contributor was &quot;[[Special:Contributions/Admin|Admin]]&quot;)"
+    logid="5919" />
 </api>
