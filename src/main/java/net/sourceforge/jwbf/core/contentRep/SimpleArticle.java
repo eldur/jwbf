@@ -98,8 +98,8 @@ public class SimpleArticle implements ArticleMeta, Serializable, ContentSetable 
    */
   @Deprecated
   public SimpleArticle(final String text, final String title) {
+    this(title);
     this.text = text;
-    this.title = title;
   }
 
   /**
@@ -187,7 +187,6 @@ public class SimpleArticle implements ArticleMeta, Serializable, ContentSetable 
   @Override
   public void addTextnl(final String text) {
     setText(getText() + "\n" + text);
-
   }
 
   @Override

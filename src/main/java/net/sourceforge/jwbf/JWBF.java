@@ -54,6 +54,8 @@ public final class JWBF {
   private static boolean errorInfo = true;
   static Map<String, String> cache = null;
 
+  private static NioUnchecked nio = new NioUnchecked();
+
   static final String DEVEL_NAME = "jwbf-generic";
   static final String DEVEL_VERSION = "DEVEL";
 
@@ -134,7 +136,7 @@ public final class JWBF {
   private static Map<String, String> fileSystemVersionDetails(String packageName, URI url) {
     Path root = uriToPath(url);
     if (Files.exists(root)) {
-      List<Path> dirs = NioUnchecked.listFiles(root, DIRECTORY_FILTER);
+      List<Path> dirs = nio.listFiles(root, DIRECTORY_FILTER);
       List<ContainerEntry> entries = filesToEntries(dirs, packageName);
       return makeVersionMap(packageName, entries, DEVEL_VERSION, DEVEL_NAME);
     } else {
@@ -193,7 +195,7 @@ public final class JWBF {
           if (!name.isEmpty()) {
             result.add(new ContainerEntry(name, true));
           }
-          result.addAll(filesToEntries(NioUnchecked.listFiles(f, DIRECTORY_FILTER), packageName));
+          result.addAll(filesToEntries(nio.listFiles(f, DIRECTORY_FILTER), packageName));
         }
       }
     }
@@ -315,7 +317,7 @@ public final class JWBF {
     return JWBF.class.getPackage();
   }
 
-  private static String secondIfNull(String str, String orStr) {
+  static String secondIfNull(String str, String orStr) {
     if (str == null) {
       return logAndReturn(orStr);
     } else {
@@ -420,11 +422,8 @@ public final class JWBF {
   }
 
   static URI toUri(URL url) {
-    try {
-      return url.toURI();
-    } catch (URISyntaxException e) {
-      throw new IllegalArgumentException(url.toString(), e);
-    }
+    // url.toUri() -> new URI(toString());
+    return toUri(url.toString());
   }
 
   static URL toUrl(URI uri) {

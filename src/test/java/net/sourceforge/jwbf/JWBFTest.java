@@ -103,7 +103,7 @@ public class JWBFTest {
   public void testInit_realFile() {
     // GIVEN
     Path targetDir = newMockFileSystem();
-    Path tempDirectory = NioUnchecked.createTempDir(targetDir, "manifest-test");
+    Path tempDirectory = new NioUnchecked().createTempDir(targetDir, "manifest-test");
     Path manifestFile = tempDirectory.resolveSibling("MANIFEST.MF");
     String expectedVersion = "999.0.0-SNAPSHOT-${buildNumber}";
     String expectedTitle = "jwbf";
@@ -111,7 +111,7 @@ public class JWBFTest {
         "Implementation-Title: " + expectedTitle, //
         "Implementation-Version: " + expectedVersion, "") //
         .getBytes();
-    NioUnchecked.writeBytes(manifestFile, bytes);
+    new NioUnchecked().writeBytes(manifestFile, bytes);
     // ---
 
     String name = MediaWikiBot.class.getPackage().getName();
@@ -123,7 +123,7 @@ public class JWBFTest {
     for (String fileName : Iterables.skip(fileNames, 1)) {
       first = first.resolve(fileName);
     }
-    NioUnchecked.createDirectories(first);
+    new NioUnchecked().createDirectories(first);
 
     String packageName = name.replace(".", "/");
 
@@ -149,8 +149,15 @@ public class JWBFTest {
   private Path newMockFileSystem() {
     FileSystem fs = Jimfs.newFileSystem(Configuration.unix());
     Path foo = fs.getPath("/foo");
-    Path f = NioUnchecked.createDirectory(foo);
-    return f;
+    return new NioUnchecked().createDirectory(foo);
+  }
+
+  @Test
+  public void testSecondIfNull() {
+    assertEquals("a", JWBF.secondIfNull(null, "a"));
+    assertEquals("b", JWBF.secondIfNull("b", "a"));
+    assertEquals(null, JWBF.secondIfNull(null, null));
+    assertEquals("b", JWBF.secondIfNull("b", null));
   }
 
   @Test
@@ -311,13 +318,13 @@ public class JWBFTest {
 
   synchronized Path newTestJar() {
     Path targetDir = getTargetDir();
-    Path tempDirectory = NioUnchecked.createTempDir(targetDir, "jarfile-test");
+    Path tempDirectory = new NioUnchecked().createTempDir(targetDir, "jarfile-test");
     Path jarFile = tempDirectory.resolveSibling("a.jar");
 
     if (!Files.exists(jarFile)) {
-      Path inputDir = NioUnchecked.createDirectory(tempDirectory, "jarContent");
-      Path firstDir = NioUnchecked.createDirectory(inputDir, "first");
-      NioUnchecked.createDirectory(firstDir, "second");
+      Path inputDir = new NioUnchecked().createDirectory(tempDirectory, "jarContent");
+      Path firstDir = new NioUnchecked().createDirectory(inputDir, "first");
+      new NioUnchecked().createDirectory(firstDir, "second");
       newJarFile(jarFile, inputDir);
     }
     return jarFile;
@@ -336,7 +343,7 @@ public class JWBFTest {
 
   private JarOutputStream newJarOutputStream(Path jarFile, Manifest manifest) {
     try {
-      return new JarOutputStream(NioUnchecked.newOutputStream(jarFile), manifest);
+      return new JarOutputStream(new NioUnchecked().newOutputStream(jarFile), manifest);
     } catch (IOException e) {
       throw new IllegalStateException(e);
     }
@@ -346,7 +353,7 @@ public class JWBFTest {
     if (Files.isDirectory(source)) {
       JarEntry entry = makeEntry(source);
       putAndClose(entry, target);
-      for (Path nestedFile : NioUnchecked.listFiles(source)) {
+      for (Path nestedFile : new NioUnchecked().listFiles(source)) {
         addRecursiv(nestedFile, target);
       }
       return;
@@ -395,7 +402,7 @@ public class JWBFTest {
       }
     }
     JarEntry entry = new JarEntry(name);
-    entry.setTime(NioUnchecked.getLastModifiedTime(source).toMillis());
+    entry.setTime(new NioUnchecked().getLastModifiedTime(source).toMillis());
     return entry;
   }
 

@@ -22,6 +22,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+import static org.mockito.Mockito.mock;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -80,6 +82,69 @@ public class SimpleArticleTest {
     article.setEditTimestamp(dateString);
 
     assertEquals(dateStringTarget, sdf.format(article.getEditTimestamp()));
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testInitWithArticle() {
+    new SimpleArticle(mock(Article.class));
+    fail();
+  }
+
+  @Test
+  public void testInitWithArticleMeta() {
+    SimpleArticle sa = new SimpleArticle(new MetaAdapter() {
+
+      @Override
+      public boolean isRedirect() {
+        return false;
+      }
+
+      @Override
+      public Date getEditTimestamp() {
+        return null;
+      }
+
+      @Override
+      public String getRevisionId() {
+        return null;
+      }
+    });
+
+    // THEN
+    assertEquals("", sa.getEditor());
+    assertEquals("", sa.getEditSummary());
+    assertEquals("", sa.getTitle());
+    assertEquals("", sa.getText());
+    assertNotNull(sa.getEditTimestamp());
+  }
+
+  @Test
+  public void testInitWithArticleMeta_nonnull() {
+    SimpleArticle sa = new SimpleArticle(new MetaAdapter() {
+
+      @Override
+      public boolean isRedirect() {
+        return false;
+      }
+
+      @Override
+      public Date getEditTimestamp() {
+        return new Date(7);
+      }
+
+      @Override
+      public String getRevisionId() {
+        return "5";
+      }
+    });
+
+    // THEN
+    assertEquals("", sa.getEditor());
+    assertEquals("", sa.getEditSummary());
+    assertEquals("", sa.getTitle());
+    assertEquals("", sa.getText());
+    assertEquals("5", sa.getRevisionId());
+    assertEquals(new Date(7), sa.getEditTimestamp());
   }
 
   @Test
@@ -177,6 +242,22 @@ public class SimpleArticleTest {
     assertFalse(sa.isRedirect());
     assertFalse(sa.isMinorEdit());
 
+  }
+
+  @Test
+  public void testInit_deprecated() {
+    SimpleArticle sa = new SimpleArticle("a", "b");
+
+    assertEquals("b", sa.getTitle());
+    assertEquals("a", sa.getText());
+
+  }
+
+  @Test
+  public void testInit_with_title() {
+    SimpleArticle sa = new SimpleArticle("a");
+
+    assertEquals("a", sa.getTitle());
   }
 
   @Test
@@ -289,6 +370,35 @@ public class SimpleArticleTest {
 
     // THEN
     assertEquals(0, actual.getMillis());
+  }
+
+  private static abstract class MetaAdapter implements ArticleMeta {
+
+    @Override
+    public String getEditSummary() {
+      return null;
+    }
+
+    @Override
+    public String getEditor() {
+      return null;
+    }
+
+    @Override
+    public boolean isMinorEdit() {
+      return false;
+    }
+
+    @Override
+    public String getTitle() {
+      return null;
+    }
+
+    @Override
+    public String getText() {
+      return null;
+    }
+
   }
 
 }
