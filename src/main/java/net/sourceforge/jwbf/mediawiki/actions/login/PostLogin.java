@@ -20,6 +20,7 @@
 package net.sourceforge.jwbf.mediawiki.actions.login;
 
 import net.sourceforge.jwbf.core.actions.Post;
+import net.sourceforge.jwbf.core.actions.RequestBuilder;
 import net.sourceforge.jwbf.core.actions.util.ActionException;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.core.actions.util.PermissionException;
@@ -67,19 +68,18 @@ public class PostLogin extends MWAction {
 
   private Post getLoginMsg(final String username, final String pw, final String domain,
       final String token) {
-    Post loginRequest = new ApiRequestBuilder() //
+    RequestBuilder loginRequest = new ApiRequestBuilder() //
         .action("login") //
         .formatXml() //
-        .buildPost();
-    loginRequest.postParam("lgname", username);
-    loginRequest.postParam("lgpassword", pw);
+        .postParam("lgname", username) //
+        .postParam("lgpassword", pw);
     if (domain != null) {
       loginRequest.postParam("lgdomain", domain);
     }
     if (token != null) {
       loginRequest.postParam("lgtoken", token);
     }
-    return loginRequest;
+    return loginRequest.buildPost();
   }
 
   /**

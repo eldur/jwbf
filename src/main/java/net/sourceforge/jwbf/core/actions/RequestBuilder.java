@@ -156,7 +156,12 @@ public class RequestBuilder {
       if (obj instanceof HashCodeEqualsMemoizingSupplier) {
         return delegate.equals(((HashCodeEqualsMemoizingSupplier) obj).delegate);
       } else {
-        throw new IllegalStateException(obj.getClass().getCanonicalName());
+        if (obj == null) {
+          throw new IllegalStateException("do not compare with null");
+        } else {
+          String canonicalName = obj.getClass().getCanonicalName();
+          throw new IllegalStateException(canonicalName);
+        }
       }
     }
   }

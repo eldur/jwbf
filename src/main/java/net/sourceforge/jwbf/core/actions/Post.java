@@ -1,6 +1,8 @@
 package net.sourceforge.jwbf.core.actions;
 
-import javax.annotation.Nullable;
+import javax.annotation.CheckReturnValue;
+import javax.annotation.Nonnull;
+import javax.annotation.meta.When;
 import java.nio.charset.Charset;
 import java.util.Objects;
 
@@ -12,14 +14,15 @@ import com.google.common.base.Suppliers;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimaps;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
+import net.sourceforge.jwbf.core.internal.NonnullFunction;
 
 public class Post extends HttpBase implements HttpAction {
 
   private static Function<Supplier<Object>, Object> flattenSuppliers =
-      new Function<Supplier<Object>, Object>() {
-        @Nullable
+      new NonnullFunction<Supplier<Object>, Object>() {
+        @Nonnull
         @Override
-        public Object apply(@Nullable Supplier<Object> input) {
+        public Object applyNonnull(@Nonnull Supplier<Object> input) {
           return input.get();
         }
       };
@@ -91,6 +94,7 @@ public class Post extends HttpBase implements HttpAction {
    * server based throttling
    */
   @Deprecated
+  @CheckReturnValue(when = When.NEVER)
   public Post postParam(String key, Object value) {
     params.put(key, Suppliers.ofInstance(value));
     return new Post(req, charset, Optional.<ParamJoiner>absent(), params);

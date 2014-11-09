@@ -76,7 +76,7 @@ public class RecentchangeTitlesLiveIntegTest extends ParamHelper {
     SimpleArticle a = new SimpleArticle();
     for (int i = 0; i < 2 + 1; i++) {
       String label = getRandom(10);
-      for (char c : MediaWikiBot.INVALID_LABEL_CHARS) {
+      for (char c : MediaWikiBot.invalidLabelChars()) {
         label = label.replace(c + "", "");
       }
       a.setTitle(label);
@@ -100,7 +100,7 @@ public class RecentchangeTitlesLiveIntegTest extends ParamHelper {
       }
     } catch (ActionException e) {
       boolean found = false;
-      for (char ch : MediaWikiBot.INVALID_LABEL_CHARS) {
+      for (char ch : MediaWikiBot.invalidLabelChars()) {
         if (e.getMessage().contains(ch + "")) {
           found = true;
           break;
@@ -121,7 +121,7 @@ public class RecentchangeTitlesLiveIntegTest extends ParamHelper {
       specialChars.remove(specialChar);
       i++;
     }
-    for (char c : MediaWikiBot.INVALID_LABEL_CHARS) {
+    for (char c : MediaWikiBot.invalidLabelChars()) {
       specialChars.remove(c + "");
     }
 

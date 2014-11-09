@@ -258,10 +258,6 @@ public class SimpleArticle implements ArticleMeta, Serializable, ContentSetable 
     }
   }
 
-  /*
-   * (non-Javadoc)
-   * @see java.lang.Object#hashCode()
-   */
   @Override
   public int hashCode() {
     return Objects.hash(editTimestamp, revId, text, title);

@@ -39,7 +39,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.primitives.Ints;
-import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import org.apache.commons.lang3.StringEscapeUtils;
 
 /**
@@ -207,8 +206,12 @@ public final class MediaWiki {
 
     @VisibleForTesting
     public static boolean isStableVersion(Version version) {
-      boolean isDeprecated = getField(version).isAnnotationPresent(Deprecated.class);
-      return !(version.equals(DEVELOPMENT) || version.equals(UNKNOWN) || isDeprecated);
+      if (version != null) {
+        boolean isDeprecated = getField(version).isAnnotationPresent(Deprecated.class);
+        return !(version.equals(DEVELOPMENT) || version.equals(UNKNOWN) || isDeprecated);
+      } else {
+        return false;
+      }
     }
 
     /**

@@ -226,4 +226,15 @@ public class RequestBuilderTest {
     fail();
   }
 
+  @Test(expected = IllegalStateException.class)
+  public void testMemoizer_compare_null() {
+    // GIVEN
+    Supplier<String> supplier = Suppliers.ofInstance("A");
+    HashCodeEqualsMemoizingSupplier<String> a = new HashCodeEqualsMemoizingSupplier<>(supplier);
+
+    // WHEN // THEN
+    a.equals(null);
+    fail();
+  }
+
 }

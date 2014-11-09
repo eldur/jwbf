@@ -139,6 +139,11 @@ public class MediaWikiTest {
   }
 
   @Test
+  public void testIsStableVersion_null() {
+    assertFalse(MediaWiki.Version.isStableVersion(null));
+  }
+
+  @Test
   public void testIsStableVersion_development_fail() {
     assertFalse(MediaWiki.Version.isStableVersion(MediaWiki.Version.DEVELOPMENT));
   }

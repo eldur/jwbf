@@ -41,7 +41,7 @@ public final class XmlConverter {
       @Override
       public ApiException applyNonnull(@Nonnull XmlElement xmlElement) {
         String qualifiedName = xmlElement.getQualifiedName();
-        if (qualifiedName.equals("error")) {
+        if (qualifiedName != null && qualifiedName.equals("error")) {
           String code = xmlElement.getAttributeValue("code");
           String info = xmlElement.getAttributeValue("info");
           return new ApiException(code, info);

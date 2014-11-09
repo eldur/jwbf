@@ -24,6 +24,7 @@ import net.sourceforge.jwbf.core.actions.ContentProcessable;
 import net.sourceforge.jwbf.core.actions.GetPage;
 import net.sourceforge.jwbf.core.actions.HttpActionClient;
 import net.sourceforge.jwbf.core.actions.HttpActionClient.Builder;
+import net.sourceforge.jwbf.core.internal.Checked;
 
 /**
  * @author Thomas Stock
@@ -34,7 +35,7 @@ public class HttpBot {
   private final HttpActionClient actionClient;
 
   public HttpBot(HttpActionClient actionClient) {
-    this.actionClient = actionClient;
+    this.actionClient = Checked.nonNull(actionClient, "actionClient");
   }
 
   public HttpBot(final String url) {

@@ -20,7 +20,6 @@
 package net.sourceforge.jwbf.core.actions;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -51,6 +50,7 @@ import net.sourceforge.jwbf.JWBF;
 import net.sourceforge.jwbf.core.Transform;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.core.internal.Checked;
+import net.sourceforge.jwbf.core.internal.NonnullFunction;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -340,10 +340,10 @@ public class HttpActionClient {
   public static class Builder {
 
     private static final Function<UserAgentPart, String> TO_STRING =
-        new Function<UserAgentPart, String>() {
-          @Nullable
+        new NonnullFunction<UserAgentPart, String>() {
+          @Nonnull
           @Override
-          public String apply(@Nullable UserAgentPart input) {
+          public String applyNonnull(@Nonnull UserAgentPart input) {
             final String comment;
             if (!Strings.isNullOrEmpty(input.comment)) {
               comment = " (" + input.comment + ")";
@@ -441,7 +441,8 @@ public class HttpActionClient {
   }
 
   private static String toISO8859(String toEncode) {
-    String encoded = new String(StandardCharsets.ISO_8859_1.encode(toEncode).array());
+    byte[] array = StandardCharsets.ISO_8859_1.encode(toEncode).array();
+    String encoded = new String(array, StandardCharsets.UTF_8);
     return logIfDifferent(toEncode, encoded,
         "\"{}\" was encoded to \"{}\"; because only iso8859 is supported");
   }

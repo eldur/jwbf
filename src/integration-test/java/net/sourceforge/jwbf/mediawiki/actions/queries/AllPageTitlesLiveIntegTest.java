@@ -46,7 +46,7 @@ public class AllPageTitlesLiveIntegTest extends ParamHelper {
       }
     } catch (ActionException e) {
       boolean found = false;
-      for (char ch : MediaWikiBot.INVALID_LABEL_CHARS) {
+      for (char ch : MediaWikiBot.invalidLabelChars()) {
         if (e.getMessage().contains(ch + "")) {
           found = true;
           break;
@@ -66,7 +66,7 @@ public class AllPageTitlesLiveIntegTest extends ParamHelper {
       }
     }
 
-    for (char c : MediaWikiBot.INVALID_LABEL_CHARS) {
+    for (char c : MediaWikiBot.invalidLabelChars()) {
       specialChars.remove(c + "");
     }
     if (!specialChars.isEmpty()) {

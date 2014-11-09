@@ -4,6 +4,7 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.net.URL;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Optional;
 import net.sourceforge.jwbf.core.actions.ContentProcessable;
 import net.sourceforge.jwbf.core.actions.HttpActionClient;
@@ -70,7 +71,11 @@ public class MediaWikiBot implements WikiBot {
   /**
    * These chars are not allowed in article names.
    */
-  public static final char[] INVALID_LABEL_CHARS = "[]{}<>|".toCharArray();
+  @VisibleForTesting
+  public static char[] invalidLabelChars() {
+    return "[]{}<>|".toCharArray();
+  }
+
   private static final int DEFAULT_READ_PROPERTIES =
       GetRevision.CONTENT | GetRevision.COMMENT | GetRevision.USER | GetRevision.TIMESTAMP |
           GetRevision.IDS |
@@ -113,10 +118,10 @@ public class MediaWikiBot implements WikiBot {
    * @param testHostReachable if true, test if host reachable
    */
   public MediaWikiBot(URL url, boolean testHostReachable) {
-    bot = new HttpBot(client);
     if (testHostReachable) {
       HttpBot.getPage(url.toString());
     }
+    bot = new HttpBot(url);
   }
 
   /**
@@ -205,7 +210,7 @@ public class MediaWikiBot implements WikiBot {
   }
 
   static Optional<String> checkTitle(String title) {
-    for (char invChar : INVALID_LABEL_CHARS) {
+    for (char invChar : invalidLabelChars()) {
       if (title.contains(invChar + "")) {
         throw new ActionException(
             "Invalid character \"" + invChar + "\" in label \"" + title + "\"");

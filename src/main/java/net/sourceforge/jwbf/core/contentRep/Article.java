@@ -42,7 +42,7 @@ public class Article implements ArticleMeta, ContentSetable {
   public String getText() {
     if (isReload(TEXT_RELOAD)) {
       setReload(TEXT_RELOAD);
-      setText(bot.readData(sa.getTitle()).getText());
+      setText(read().getText());
     }
     return sa.getText();
   }
@@ -61,10 +61,9 @@ public class Article implements ArticleMeta, ContentSetable {
    */
   @Override
   public String getRevisionId() {
-
     if (isReload(REVISION_ID_RELOAD)) {
       setReload(REVISION_ID_RELOAD);
-      sa.setRevisionId(bot.readData(sa.getTitle()).getRevisionId());
+      sa.setRevisionId(read().getRevisionId());
     }
     return sa.getRevisionId();
   }
@@ -73,7 +72,7 @@ public class Article implements ArticleMeta, ContentSetable {
   public String getEditor() {
     if (isReload(EDITOR_RELOAD)) {
       setReload(EDITOR_RELOAD);
-      setEditor(bot.readData(sa.getTitle()).getEditor());
+      setEditor(read().getEditor());
     }
     return sa.getEditor();
   }
@@ -88,10 +87,14 @@ public class Article implements ArticleMeta, ContentSetable {
   public String getEditSummary() {
     if (isReload(EDIT_SUM_RELOAD)) {
       setReload(EDIT_SUM_RELOAD);
-      setEditSummary(bot.readData(sa.getTitle()).getEditSummary());
+      setEditSummary(read().getEditSummary());
     }
 
     return sa.getEditSummary();
+  }
+
+  SimpleArticle read() {
+    return bot.readData(sa.getTitle());
   }
 
   @Override
@@ -104,7 +107,7 @@ public class Article implements ArticleMeta, ContentSetable {
   public boolean isMinorEdit() {
     if (isReload(MINOR_EDIT_RELOAD)) {
       setReload(MINOR_EDIT_RELOAD);
-      setMinorEdit(bot.readData(sa.getTitle()).isMinorEdit());
+      setMinorEdit(read().isMinorEdit());
     }
     return sa.isMinorEdit();
   }
@@ -203,7 +206,7 @@ public class Article implements ArticleMeta, ContentSetable {
   public Date getEditTimestamp() {
     if (isReload(EDIT_DATE_RELOAD)) {
       setReload(EDIT_DATE_RELOAD);
-      sa.setEditTimestamp(bot.readData(sa.getTitle()).getEditTimestamp());
+      sa.setEditTimestamp(read().getEditTimestamp());
     }
     return sa.getEditTimestamp();
   }
@@ -249,7 +252,6 @@ public class Article implements ArticleMeta, ContentSetable {
   @Override
   public void setTitle(String title) {
     sa.setTitle(title);
-
   }
 
   public SimpleArticle getSimpleArticle() {
