@@ -10,8 +10,9 @@ public class SimpleFileTest {
   @Test
   public void testHashCode() {
 
-    SimpleFile testee = new SimpleFile("Test");
-    assertEquals(112069425, testee.hashCode());
+    SimpleFile testeeA = new SimpleFile("Test");
+    SimpleFile testeeB = new SimpleFile("Test");
+    assertEquals(testeeA.hashCode(), testeeB.hashCode());
 
   }
 

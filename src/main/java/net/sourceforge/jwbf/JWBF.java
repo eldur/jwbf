@@ -203,7 +203,7 @@ public final class JWBF {
   }
 
   private static String makeFileName(Path file, String packageName) {
-    String path = file.toAbsolutePath().toString();
+    String path = file.toAbsolutePath().toUri().toString();
     int indexOfPackage = path.indexOf(packageName);
     if (indexOfPackage == -1) {
       return "";

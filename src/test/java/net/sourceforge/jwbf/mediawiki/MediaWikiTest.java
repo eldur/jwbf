@@ -5,12 +5,14 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import org.junit.Test;
+
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
+
 import net.sourceforge.jwbf.GAssert;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
-import org.junit.Test;
 
 public class MediaWikiTest {
 
@@ -75,7 +77,7 @@ public class MediaWikiTest {
     String unescaped = MediaWiki.htmlUnescape(in);
 
     // THEN
-    assertEquals("\"t\" '><'", unescaped);
+    assertEquals("\"t\"\u00A0'><'", unescaped);
   }
 
   @Test
