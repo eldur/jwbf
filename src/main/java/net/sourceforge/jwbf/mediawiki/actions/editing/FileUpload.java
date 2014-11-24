@@ -63,7 +63,7 @@ public class FileUpload extends MWAction {
     if (!simpleFile.getFile().exists()) {
       throw new IllegalStateException("file not found" + simpleFile.getFile());
     }
-    actionHandler = new ApiUpload(bot, simpleFile);
+    actionHandler = new ApiUpload(simpleFile);
     actions = actionHandler.getActions();
 
   }
@@ -98,7 +98,7 @@ public class FileUpload extends MWAction {
     private final SimpleFile simpleFile;
     private GetApiToken uploadTokenAction;
 
-    public ApiUpload(MediaWikiBot bot, SimpleFile simpleFile) {
+    public ApiUpload(SimpleFile simpleFile) {
       this.simpleFile = simpleFile;
     }
 
@@ -111,6 +111,7 @@ public class FileUpload extends MWAction {
 
     @Override
     public String handleResponse(String xml, HttpAction hm) {
+      log.debug("{}", xml);
       if (uploadTokenAction != null) {
         uploadTokenAction.processReturningText(xml, hm);
         Post upload = new ApiRequestBuilder() //

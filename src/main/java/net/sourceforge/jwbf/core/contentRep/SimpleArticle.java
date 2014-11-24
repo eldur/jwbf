@@ -179,11 +179,13 @@ public class SimpleArticle implements ArticleMeta, Serializable, ContentSetable 
     this.text = text;
   }
 
+  // TODO check mutation
   @Override
   public void addText(final String text) {
     setText(getText() + text);
   }
 
+  // TODO check mutation
   @Override
   public void addTextnl(final String text) {
     setText(getText() + "\n" + text);
