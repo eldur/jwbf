@@ -1,0 +1,4 @@
+<?xml version="1.0" ?>
+<api servedby="mw1189">
+  <error code="mustposttoken" info="The &#039;token&#039; parameter was found in the query string, but must be in the POST body" xml:space="preserve">See https://commons.wikimedia.org/w/api.php for API usage</error>
+</api>

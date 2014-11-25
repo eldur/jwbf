@@ -222,7 +222,7 @@ public class MediaWikiBot implements WikiBot {
   /**
    * @return true if
    */
-  public final boolean isLoggedIn() {
+  public boolean isLoggedIn() {
     return login != null && login.isLoggedIn();
   }
 

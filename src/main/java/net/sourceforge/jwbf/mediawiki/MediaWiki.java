@@ -265,9 +265,9 @@ public final class MediaWiki {
     return urlEncodeUnchecked(s, MediaWiki.getCharset());
   }
 
-  static String urlEncodeUnchecked(String s, String charset) {
+  static String urlEncodeUnchecked(String in, String charset) {
     try {
-      return URLEncoder.encode(s, charset);
+      return URLEncoder.encode(Checked.nonNull(in, "in"), charset);
     } catch (UnsupportedEncodingException e) {
       throw new IllegalArgumentException(e);
     }
@@ -277,9 +277,9 @@ public final class MediaWiki {
     return urlDecodeUnchecked(s, MediaWiki.getCharset());
   }
 
-  static String urlDecodeUnchecked(String s, String charset) {
+  static String urlDecodeUnchecked(String in, String charset) {
     try {
-      return URLDecoder.decode(s, charset);
+      return URLDecoder.decode(Checked.nonNull(in, "in"), charset);
     } catch (UnsupportedEncodingException e) {
       throw new IllegalArgumentException(e);
     }

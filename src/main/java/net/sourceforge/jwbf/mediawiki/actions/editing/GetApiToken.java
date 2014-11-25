@@ -110,7 +110,6 @@ public class GetApiToken extends DequeMWAction<GetApiToken.TokenResponse> {
    * @param title   title of the article to generate the urlEncodedToken for
    */
   private static Get generateTokenRequest(Intoken intoken, String title) {
-    log.trace("enter GetToken.generateTokenRequest()");
     return new ApiRequestBuilder() //
         .action("query") //
         .formatXml() //

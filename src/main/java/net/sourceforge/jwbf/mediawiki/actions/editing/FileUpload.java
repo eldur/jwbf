@@ -20,13 +20,18 @@ package net.sourceforge.jwbf.mediawiki.actions.editing;
 
 import java.util.Deque;
 
+import com.google.common.base.Optional;
 import com.google.common.collect.Queues;
 import net.sourceforge.jwbf.core.actions.Post;
+import net.sourceforge.jwbf.core.actions.RequestBuilder;
 import net.sourceforge.jwbf.core.actions.util.ActionException;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
+import net.sourceforge.jwbf.mapper.XmlConverter;
+import net.sourceforge.jwbf.mapper.XmlElement;
 import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
 import net.sourceforge.jwbf.mediawiki.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.editing.GetApiToken.Intoken;
+import net.sourceforge.jwbf.mediawiki.actions.util.ApiException;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 import net.sourceforge.jwbf.mediawiki.contentRep.SimpleFile;
@@ -53,17 +58,17 @@ public class FileUpload extends MWAction {
   private UploadAction actionHandler;
 
   public FileUpload(final SimpleFile simpleFile, MediaWikiBot bot) {
-    if (!simpleFile.getFile().isFile() || !simpleFile.getFile().canRead()) {
-      throw new ActionException("no such file " + simpleFile.getFile());
+    if (!simpleFile.isFile() || !simpleFile.canRead()) {
+      throw new IllegalArgumentException("no such file " + simpleFile.getFile());
     }
     if (!bot.isLoggedIn()) {
       throw new ActionException("Please login first");
     }
 
-    if (!simpleFile.getFile().exists()) {
-      throw new IllegalStateException("file not found" + simpleFile.getFile());
+    if (!simpleFile.exists()) {
+      throw new IllegalArgumentException("file not found " + simpleFile.getFile());
     }
-    actionHandler = new ApiUpload(simpleFile);
+    actionHandler = new ApiUpload(simpleFile, bot.getVersion());
     actions = actionHandler.getActions();
 
   }
@@ -96,10 +101,12 @@ public class FileUpload extends MWAction {
   private static class ApiUpload implements UploadAction {
     private final Deque<HttpAction> actions = Queues.newArrayDeque();
     private final SimpleFile simpleFile;
+    private final MediaWiki.Version version;
     private GetApiToken uploadTokenAction;
 
-    public ApiUpload(SimpleFile simpleFile) {
+    public ApiUpload(SimpleFile simpleFile, MediaWiki.Version version) {
       this.simpleFile = simpleFile;
+      this.version = version;
     }
 
     @Override
@@ -112,22 +119,33 @@ public class FileUpload extends MWAction {
     @Override
     public String handleResponse(String xml, HttpAction hm) {
       log.debug("{}", xml);
-      if (uploadTokenAction != null) {
-        uploadTokenAction.processReturningText(xml, hm);
-        Post upload = new ApiRequestBuilder() //
-            .action("upload") //
-            .formatXml() //
-            .param(uploadTokenAction.get().urlEncodedToken()) //
-            .param("filename", MediaWiki.urlEncode(simpleFile.getTitle())) //
-            .param("ignorewarnings", true) //
-            .buildPost() //
-            .postParam("file", simpleFile.getFile()) //
-            ;
-        actions.add(upload);
-        uploadTokenAction = null; // XXX
+      XmlElement doc = XmlConverter.getRootElementWithError(xml);
+      Optional<ApiException> exceptionOptional = doc.getErrorElement() //
+          .transform(XmlConverter.toApiException());
+      if (exceptionOptional.isPresent()) {
+        throw exceptionOptional.get();
+      } else {
+        if (uploadTokenAction != null) {
+          uploadTokenAction.processReturningText(xml, hm);
+          RequestBuilder requestBuilder = new ApiRequestBuilder() //
+              .action("upload") //
+              .formatXml() //
+              .param("filename", MediaWiki.urlEncode(simpleFile.getTitle())) //
+              .param("ignorewarnings", true) //
+              .postParam("file", simpleFile.getFile());
+          if (version.greaterEqThen(MediaWiki.Version.MW1_24)) {
+            // TODO test after public release of MW1_24
+            requestBuilder.postParam(uploadTokenAction.get().urlEncodedToken());
+          } else {
+            requestBuilder.param(uploadTokenAction.get().urlEncodedToken());
+          }
+          Post upload = requestBuilder.buildPost();
+          actions.add(upload);
+          uploadTokenAction = null; // XXX
+        }
+        // file upload requires enabled uploads, upload rights and filesystem permisions
+        return xml;
       }
-      // file upload requires enabled uploads, upload rights and filesystem permisions
-      return xml;
     }
   }
 

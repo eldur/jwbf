@@ -72,6 +72,18 @@ public class SimpleFile extends SimpleArticle {
     return this.file;
   }
 
+  public boolean isFile() {
+    return getFile().isFile();
+  }
+
+  public boolean canRead() {
+  return getFile().canRead();
+  }
+
+  public boolean exists() {
+    return getFile().exists();
+  }
+
   public String getPath() {
     return file.getPath();
   }
