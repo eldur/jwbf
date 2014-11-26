@@ -39,6 +39,8 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.primitives.Ints;
+import net.sourceforge.jwbf.core.NotReleased;
+import net.sourceforge.jwbf.core.internal.Checked;
 import org.apache.commons.lang3.StringEscapeUtils;
 
 /**
@@ -151,6 +153,14 @@ public final class MediaWiki {
      */
     , MW1_23
     /**
+     * TODO Not released
+     */
+    , @NotReleased MW1_24
+    /**
+     * TODO Not released
+     */
+    , @NotReleased MW1_25
+    /**
      *
      */
     , DEVELOPMENT;
@@ -207,8 +217,10 @@ public final class MediaWiki {
     @VisibleForTesting
     public static boolean isStableVersion(Version version) {
       if (version != null) {
-        boolean isDeprecated = getField(version).isAnnotationPresent(Deprecated.class);
-        return !(version.equals(DEVELOPMENT) || version.equals(UNKNOWN) || isDeprecated);
+        Field field = getField(version);
+        boolean isDeprecated = field.isAnnotationPresent(Deprecated.class);
+        boolean isBeta = field.isAnnotationPresent(NotReleased.class);
+        return !(version.equals(DEVELOPMENT) || version.equals(UNKNOWN) || isDeprecated || isBeta);
       } else {
         return false;
       }

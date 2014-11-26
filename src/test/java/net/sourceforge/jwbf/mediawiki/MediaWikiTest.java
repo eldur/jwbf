@@ -103,6 +103,9 @@ public class MediaWikiTest {
         .add(MediaWiki.Version.MW1_18) //
         .add(MediaWiki.Version.MW1_20) //
         .add(MediaWiki.Version.MW1_21) //
+        // --
+        .add(MediaWiki.Version.MW1_24) //
+        .add(MediaWiki.Version.MW1_25) //
         .build();
 
     assertFalse("there should be unstable versions as reference test", unstable.isEmpty());
