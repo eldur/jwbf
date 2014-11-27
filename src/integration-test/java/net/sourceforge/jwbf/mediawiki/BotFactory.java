@@ -2,7 +2,7 @@ package net.sourceforge.jwbf.mediawiki;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.net.URL;
+import java.util.concurrent.TimeUnit;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
@@ -30,12 +30,10 @@ public class BotFactory {
     @Override
     protected void configure() {
       bind(WireRegister.class);
-
     }
   });
 
   public static MediaWikiBot getMediaWikiBot(final Version v, final boolean login) {
-    LiveTestFather.skipIfIsNoIntegTest();
     return getIntegMediaWikiBot(v, login);
   }
 
@@ -84,14 +82,6 @@ public class BotFactory {
 
     private final WireRegister wireRegister;
 
-    public CacheActionClient(URL url, WireRegister wireRegister) {
-      super(url);
-      this.wireRegister = wireRegister;
-      if (this.wireRegister.hasContentFor(url.toString())) {
-        TestHelper.assumeReachable(url); // TODO this is an error
-      }
-    }
-
     @Override
     protected String processAction(HttpAction httpAction, ReturningTextProcessor answerParser) {
       log.debug("{}", httpAction);
@@ -117,6 +107,23 @@ public class BotFactory {
   private static String getWikiUrl(Version v, String host) {
     String version = "mw-" + v.getNumber().replace(".", "-");
     return "http://" + host + "/" + version + MediaWiki.URL_INDEX;
+  }
+
+  public static MediaWikiBot newWikimediaBot(String liveUrl, Class<?> clazz) {
+
+    String self = getUrlForWikimedia(clazz);
+    HttpActionClient client = HttpActionClient.builder() //
+        .withUrl(liveUrl) //
+        .withUserAgent("JwbfIntegTest", "A", "could be found at " + self //
+            + " or at any fork of this project") //
+        .withRequestsPerUnit(10, TimeUnit.MINUTES) //
+        .build();
+    return new MediaWikiBot(client);
+  }
+
+  static String getUrlForWikimedia(Class<?> clazz) {
+    String prefix = "https://github.com/eldur/jwbf/blob/master/src/integration-test/java/";
+    return prefix + clazz.getCanonicalName().replace('.', '/') + ".java";
   }
 
 }

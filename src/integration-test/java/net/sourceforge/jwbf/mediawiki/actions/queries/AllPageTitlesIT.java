@@ -31,6 +31,8 @@ public class AllPageTitlesIT extends ParamHelper {
 
   @Test
   public void doTest() {
+    // TODO split this method
+    // TODO test redirects
     AllPageTitles allPages =
         new AllPageTitles(bot, null, null, RedirectFilter.all, MediaWiki.NS_MAIN);
 

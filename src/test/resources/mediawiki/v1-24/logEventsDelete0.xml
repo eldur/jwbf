@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<api>
+  <continue lecontinue="20141005135252|17680" continue="-||" />
+  <query>
+    <logevents>
+      <item logid="165" action="delete" ns="0" title="DVFZMV" pageid="0" logpage="138" type="delete"
+        user="Admin" timestamp="2014-12-07T11:50:39Z"
+        comment="content was: &quot;Nyicr&quot; (and the only contributor was &quot;[[Special:Contributions/Admin|Admin]]&quot;)" />
+    </logevents>
+  </query>
+</api>

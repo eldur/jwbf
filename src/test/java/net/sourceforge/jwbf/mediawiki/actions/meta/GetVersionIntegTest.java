@@ -19,7 +19,7 @@ public class GetVersionIntegTest extends MocoIntegTest {
     super(v);
   }
 
-  private final ImmutableMap<String, String> title() {
+  private ImmutableMap<String, String> title() {
     return ImmutableMap.of("title", "MW " + version().getNumber().replace(".", " "));
   }
 

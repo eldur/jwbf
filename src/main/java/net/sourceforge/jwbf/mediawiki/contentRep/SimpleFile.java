@@ -77,7 +77,7 @@ public class SimpleFile extends SimpleArticle {
   }
 
   public boolean canRead() {
-  return getFile().canRead();
+    return getFile().canRead();
   }
 
   public boolean exists() {

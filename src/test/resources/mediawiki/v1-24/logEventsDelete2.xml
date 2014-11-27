@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<api>
+  <continue lecontinue="20141207114718|159" continue="-||" />
+  <query>
+    <logevents>
+      <item logid="161" action="delete" ns="0" title="CVDXME" pageid="0" logpage="136" type="delete"
+        user="Admin" timestamp="2014-12-07T11:50:37Z"
+        comment="content was: &quot;sGP&lt;7&quot; (and the only contributor was &quot;[[Special:Contributions/Admin|Admin]]&quot;)" />
+    </logevents>
+  </query>
+</api>

@@ -147,15 +147,15 @@ public final class MediaWiki {
     /**
      * Released 2013-12-06
      */
-    , MW1_22
+    , @Deprecated MW1_22
     /**
      * Released 2014-06-05
      */
     , MW1_23
     /**
-     * TODO Not released
+     * Released 2014-11-26
      */
-    , @NotReleased MW1_24
+    , MW1_24
     /**
      * TODO Not released
      */

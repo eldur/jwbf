@@ -131,14 +131,9 @@ public class FileUpload extends MWAction {
               .action("upload") //
               .formatXml() //
               .param("filename", MediaWiki.urlEncode(simpleFile.getTitle())) //
+              .postParam(uploadTokenAction.get().token()) //
               .param("ignorewarnings", true) //
               .postParam("file", simpleFile.getFile());
-          if (version.greaterEqThen(MediaWiki.Version.MW1_24)) {
-            // TODO test after public release of MW1_24
-            requestBuilder.postParam(uploadTokenAction.get().urlEncodedToken());
-          } else {
-            requestBuilder.param(uploadTokenAction.get().urlEncodedToken());
-          }
           Post upload = requestBuilder.buildPost();
           actions.add(upload);
           uploadTokenAction = null; // XXX

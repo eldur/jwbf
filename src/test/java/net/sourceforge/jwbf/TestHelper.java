@@ -61,12 +61,12 @@ public class TestHelper {
     while (count <= length) {
       int charNum = (random.nextInt(79) + begin);
       if (charNum >= begin && charNum <= end) {
-          char current = (char) charNum;
+        char current = (char) charNum;
         if (latest != current) {
           out.append(current);
-        count++;
+          count++;
         }
-       latest = current;
+        latest = current;
       }
     }
     return out.toString();

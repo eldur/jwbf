@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<api>
+  <continue apcontinue="%" continue="-||" />
+  <query>
+    <allpages>
+      <p pageid="122" ns="0" title="&quot;" />
+    </allpages>
+  </query>
+</api>

@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<api>
+  <continue lecontinue="20141005135252|17678" continue="-||" />
+  <query>
+    <logevents>
+      <item logid="163" action="delete" ns="0" title="KWXONW" pageid="0" logpage="137" type="delete"
+        user="Admin" timestamp="2014-12-07T11:50:38Z"
+        comment="content was: &quot;_oCSo&quot; (and the only contributor was &quot;[[Special:Contributions/Admin|Admin]]&quot;)" />
+    </logevents>
+  </query>
+</api>

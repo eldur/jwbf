@@ -11,11 +11,15 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.google.inject.AbstractModule;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 import net.sourceforge.jwbf.GAssert;
 import net.sourceforge.jwbf.JWBF;
 import net.sourceforge.jwbf.JettyServer;
 import net.sourceforge.jwbf.core.actions.HttpActionClient;
 import net.sourceforge.jwbf.core.actions.util.ActionException;
+import net.sourceforge.jwbf.core.bots.HttpBot;
 import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
 import net.sourceforge.jwbf.mediawiki.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.actions.editing.PostModifyContent;
@@ -286,6 +290,23 @@ public class MediaWikiBotTest {
 
     // WHEN
     new MediaWikiBot(wikiUrl);
+  }
+
+  @Test
+  public void testInitIoC() {
+    // GIVEN
+    Injector injector = Guice.createInjector(new AbstractModule() {
+      @Override
+      protected void configure() {
+        bind(HttpBot.class).toInstance(new HttpBot("http://192.0.2.2/"));
+      }
+    });
+
+    // WHEN
+    MediaWikiBot instance = injector.getInstance(MediaWikiBot.class);
+
+    // THEN
+    instance.bot(); // no exception
   }
 
 }

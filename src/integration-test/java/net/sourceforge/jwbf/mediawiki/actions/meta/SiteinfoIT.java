@@ -16,7 +16,7 @@
  * Contributors:
  *
  */
-package net.sourceforge.jwbf.mediawiki.live;
+package net.sourceforge.jwbf.mediawiki.actions.meta;
 
 import static net.sourceforge.jwbf.TestHelper.assumeReachable;
 import static net.sourceforge.jwbf.mediawiki.BotFactory.getMediaWikiBot;
@@ -26,9 +26,10 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import net.sourceforge.jwbf.core.contentRep.Article;
+import net.sourceforge.jwbf.mediawiki.BotFactory;
 import net.sourceforge.jwbf.mediawiki.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
-import org.junit.Ignore;
+import net.sourceforge.jwbf.mediawiki.live.AbstractMediaWikiBotIT;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,12 +41,17 @@ public class SiteinfoIT extends AbstractMediaWikiBotIT {
   /**
    * Test get siteinfo on Wikipedia DE.
    */
-  @Ignore("do we need this?")
   @Test
   public final void siteInfoWikipediaDe() {
+    // GIVEN
     String liveUrl = getWikipediaDeUrl();
-    bot = new MediaWikiBot(liveUrl);
-    // doTest(bot, Version.DEVELOPMENT);
+    MediaWikiBot wikiBot = BotFactory.newWikimediaBot(liveUrl, getClass());
+
+    // WHEN
+    Siteinfo siteinfo = wikiBot.getSiteinfo();
+
+    // THEN
+    assertEquals(Version.DEVELOPMENT, siteinfo.getVersion());
   }
 
   /**
@@ -56,12 +62,17 @@ public class SiteinfoIT extends AbstractMediaWikiBotIT {
    * </pre>
    */
   @Test
-  public final void siteInfoMW1x15Blocking() throws Exception {
-
-    bot = getMediaWikiBot(Version.MW1_15, false);
+  public final void siteInfoBlocking() {
+    // GIVEN
+    Version version = Version.MW1_19;
+    bot = getMediaWikiBot(version, false);
     assertEquals(Version.UNKNOWN, bot.getVersion());
-    bot.login(getWikiUser(Version.MW1_15), getWikiPass(Version.MW1_15));
-    assertEquals(Version.MW1_15, bot.getVersion());
+
+    // WHEN
+    bot.login(getWikiUser(version), getWikiPass(version));
+
+    // THEN
+    assertEquals(version, bot.getVersion());
   }
 
   @Test
@@ -70,7 +81,7 @@ public class SiteinfoIT extends AbstractMediaWikiBotIT {
     String liveUrl = "http://www.mediawiki.org/w/api.php";
     assumeReachable(liveUrl);
     String versionInfoTemplate = "Template:MW stable release number";
-    MediaWikiBot bot = new MediaWikiBot(liveUrl);
+    MediaWikiBot bot = BotFactory.newWikimediaBot(liveUrl, getClass());
 
     // WHEN
     Article a = new Article(bot, versionInfoTemplate);

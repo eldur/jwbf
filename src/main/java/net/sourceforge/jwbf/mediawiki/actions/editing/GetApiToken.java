@@ -35,9 +35,11 @@ public class GetApiToken extends DequeMWAction<GetApiToken.TokenResponse> {
        * Returns the requested urlEncodedToken after parsing the result from MediaWiki.
        *
        * @return the requested urlEncodedToken
+       * @deprecated
        */
       @Nonnull
       @Override
+      @Deprecated
       public ParamTuple<String> urlEncodedToken() {
         return new ParamTuple<>("token", MediaWiki.urlEncode(getToken()));
       }
@@ -55,6 +57,11 @@ public class GetApiToken extends DequeMWAction<GetApiToken.TokenResponse> {
   }
 
   public interface TokenResponse {
+
+    /**
+     * @deprecated prefer {@link #token()} with postPram.
+     */
+    @Deprecated
     ParamTuple<String> urlEncodedToken();
 
     ParamTuple<String> token();

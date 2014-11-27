@@ -39,8 +39,7 @@ public class GAssert {
     assertEquals(expected.asMap(), actual.asMap());
   }
 
-  public static void assertEquals(ImmutableMap<?, ?> expected,
-      Map<?, ?> actual) {
+  public static void assertEquals(ImmutableMap<?, ?> expected, Map<?, ?> actual) {
     GAssert.assertEquals(expected, ImmutableMap.copyOf(actual));
   }
 
@@ -112,8 +111,7 @@ public class GAssert {
     return FluentIterable.from(list).transform(toString);
   }
 
-  private static Set<String> toSet(ImmutableList<?> list,
-      Function<Object, String> toStringFn) {
+  private static Set<String> toSet(ImmutableList<?> list, Function<Object, String> toStringFn) {
     return toTransformed(list, toStringFn).toSet();
   }
 

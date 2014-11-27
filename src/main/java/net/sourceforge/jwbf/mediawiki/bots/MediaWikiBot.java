@@ -243,7 +243,7 @@ public class MediaWikiBot implements WikiBot {
    */
   @Override
   public void delete(String title) {
-    getPerformedAction(new PostDelete(getUserinfo(), title));
+    delete(title, null);
   }
 
   /**

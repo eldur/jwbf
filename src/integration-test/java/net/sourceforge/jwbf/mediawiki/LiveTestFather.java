@@ -84,7 +84,7 @@ public class LiveTestFather {
   private static LiveTestFather instance;
 
   private static LiveTestFather get() {
-    if (instance == null && executeLiveTests()) {
+    if (instance == null) {
       instance = new LiveTestFather();
     }
     return Preconditions.checkNotNull(instance, "do not run integ tests within normal testrun");
@@ -217,7 +217,6 @@ public class LiveTestFather {
 
   public static void skipIfIsNoIntegTest() {
     Assume.assumeTrue(LiveTestFather.executeLiveTests());
-
   }
 
 }
