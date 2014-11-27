@@ -9,7 +9,7 @@ import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 
 public abstract class AbstractMediaWikiBotIT implements Provider<MediaWikiBot> {
 
-  private static final String WIKIPEDIA_DE = "http://de.wikipedia.org/w/index.php";
+  private static final String WIKIPEDIA_DE = "https://de.wikipedia.org/w/index.php";
 
   protected MediaWikiBot bot = null;
   private MediaWiki.Version version;

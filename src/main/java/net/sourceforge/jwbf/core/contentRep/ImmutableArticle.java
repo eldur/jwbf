@@ -110,7 +110,7 @@ public class ImmutableArticle implements ArticleMeta, ContentAccessable {
     }
 
     public Builder withRevisionId(String revisionId) {
-    this.revisionId = revisionId;
+      this.revisionId = revisionId;
       return this;
     }
 

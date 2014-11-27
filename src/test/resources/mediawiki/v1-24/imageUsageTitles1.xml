@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<api>
+  <query>
+    <imageusage>
+      <iu pageid="7" ns="0" title="TitleWithImg3" />
+    </imageusage>
+  </query>
+</api>

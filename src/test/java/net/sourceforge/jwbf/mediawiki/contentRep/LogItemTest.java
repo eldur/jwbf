@@ -6,7 +6,6 @@ import org.junit.Test;
 
 public class LogItemTest {
 
-
   @Test
   public void testToString() {
 

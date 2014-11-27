@@ -2,6 +2,7 @@ package net.sourceforge.jwbf.mediawiki.actions.editing;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Optional;
+import com.google.common.base.Strings;
 import net.sourceforge.jwbf.core.actions.Post;
 import net.sourceforge.jwbf.core.actions.RequestBuilder;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
@@ -42,24 +43,19 @@ public class PostDelete extends MWAction {
   private static final Logger log = LoggerFactory.getLogger(PostDelete.class);
 
   private final String title;
-  private String reason;
+  private final String reason;
 
   private final GetApiToken tokenAction;
   private boolean delToken = true;
 
   /**
    * Constructs a new <code>PostDelete</code> action.
+   *
+   * @deprecated
    */
+  @Deprecated
   public PostDelete(Userinfo userinfo, String title) {
-    this.title = Checked.nonBlank(title, "title");
-
-    if (!userinfo.getRights().contains("delete")) {
-      throw new PermissionException("The given user doesn't have the rights to delete. " +
-          "Add '$wgGroupPermissions['bot']['delete'] = true;' " +
-          "to your MediaWiki's LocalSettings.php might solve this problem.");
-    }
-    tokenAction = new GetApiToken(GetApiToken.Intoken.DELETE, title);
-
+    this(userinfo, title, null);
   }
 
   /**
@@ -70,8 +66,15 @@ public class PostDelete extends MWAction {
    *               of an action exception
    */
   public PostDelete(Userinfo userinfo, String title, String reason) {
-    this(userinfo, title);
-    this.reason = reason;
+    this.title = Checked.nonBlank(title, "title");
+
+    if (!userinfo.getRights().contains("delete")) {
+      throw new PermissionException("The given user doesn't have the rights to delete. " +
+          "Add '$wgGroupPermissions['bot']['delete'] = true;' " +
+          "to your MediaWiki's LocalSettings.php might solve this problem.");
+    }
+    tokenAction = new GetApiToken(GetApiToken.Intoken.DELETE, title);
+    this.reason = Strings.emptyToNull(reason);
   }
 
   /**
@@ -82,8 +85,8 @@ public class PostDelete extends MWAction {
     RequestBuilder requestBuilder = new ApiRequestBuilder() //
         .action("delete") //
         .formatXml() //
+        .postParam(tokenAction.get().token()) //
         .param("title", MediaWiki.urlEncode(title)) //
-        .param(tokenAction.get().urlEncodedToken()) //
         ;
 
     if (reason != null) {

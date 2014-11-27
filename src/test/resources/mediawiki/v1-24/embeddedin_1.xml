@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<api>
+  <continue eicontinue="10|TestTemplate|5743" continue="-||" />
+  <query>
+    <embeddedin>
+      <ei pageid="26" ns="0" title="TestTemplate0" />
+      <ei pageid="27" ns="0" title="TestTemplate1" />
+      <ei pageid="28" ns="0" title="TestTemplate2" />
+    </embeddedin>
+  </query>
+</api>

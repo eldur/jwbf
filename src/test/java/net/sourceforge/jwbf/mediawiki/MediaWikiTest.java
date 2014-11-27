@@ -5,14 +5,12 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import org.junit.Test;
-
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
-
 import net.sourceforge.jwbf.GAssert;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
+import org.junit.Test;
 
 public class MediaWikiTest {
 
@@ -89,8 +87,8 @@ public class MediaWikiTest {
     // THEN
     ImmutableList<MediaWiki.Version> expected = ImmutableList.<MediaWiki.Version>builder() //
         .add(MediaWiki.Version.MW1_19) //
-        .add(MediaWiki.Version.MW1_22) //
         .add(MediaWiki.Version.MW1_23) //
+        .add(MediaWiki.Version.MW1_24) //
         .build();
 
     GAssert.assertEquals(expected, versions);
@@ -103,8 +101,8 @@ public class MediaWikiTest {
         .add(MediaWiki.Version.MW1_18) //
         .add(MediaWiki.Version.MW1_20) //
         .add(MediaWiki.Version.MW1_21) //
-        // --
-        .add(MediaWiki.Version.MW1_24) //
+        .add(MediaWiki.Version.MW1_22) //
+            // --
         .add(MediaWiki.Version.MW1_25) //
         .build();
 
@@ -130,7 +128,7 @@ public class MediaWikiTest {
     MediaWiki.Version latest = MediaWiki.Version.getLatest();
 
     // THEN
-    assertEquals(MediaWiki.Version.MW1_23, latest);
+    assertEquals(MediaWiki.Version.MW1_24, latest);
   }
 
   @Test

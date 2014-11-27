@@ -58,7 +58,7 @@ public class GetRevision extends MWAction {
   private boolean singleProcess = true;
 
   /**
-   * TODO follow redirects. TODO change constructor fild ordering; bot
+   * TODO follow redirects. TODO change constructor field ordering; bot
    */
   public GetRevision(Version v, final String articlename, final int properties) {
     this.properties = properties;

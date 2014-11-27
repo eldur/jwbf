@@ -82,6 +82,7 @@ public abstract class AbstractIntegTest {
   private static class IntegMonitor extends AbstractMonitor {
 
     private static Logger log = LoggerFactory.getLogger(IntegMonitor.class);
+
     @Override
     public void onMessageArrived(HttpRequest request) {
       log.info(request.getUri() + " " + request.getQueries().toString());

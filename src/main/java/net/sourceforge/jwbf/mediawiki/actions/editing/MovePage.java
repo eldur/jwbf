@@ -93,17 +93,12 @@ public class MovePage extends MWAction {
    * @return the delete action
    */
   private HttpAction getSecondRequest() {
-
-    if (log.isTraceEnabled()) {
-      log.trace("enter MovePage.generateMoveRequest(String)");
-    }
-
     RequestBuilder requestBuilder = new ApiRequestBuilder() //
         .action("move") //
         .formatXml() //
         .param("from", MediaWiki.urlEncode(oldtitle)) //
         .param("to", MediaWiki.urlEncode(newtitle)) //
-        .param(token.get().urlEncodedToken()) //
+        .postParam(token.get().token()) //
         .param("movetalk", "") // XXX
         ;
 

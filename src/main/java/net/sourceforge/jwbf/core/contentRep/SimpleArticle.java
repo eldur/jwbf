@@ -53,7 +53,7 @@ public class SimpleArticle implements ArticleMeta, Serializable, ContentSetable 
 
   @VisibleForTesting
   public static Date newZeroDate() {
-      return new Date(0);
+    return new Date(0);
   }
 
   /**
@@ -201,9 +201,7 @@ public class SimpleArticle implements ArticleMeta, Serializable, ContentSetable 
     this.editor = editor;
   }
 
-
   /**
-   *
    * doesn't work correct
    */
   @Beta

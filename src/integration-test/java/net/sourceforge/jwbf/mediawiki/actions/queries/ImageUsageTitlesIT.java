@@ -41,8 +41,8 @@ public class ImageUsageTitlesIT extends ParamHelper {
     // GIVEN
     ImmutableList<String> expectedTitles = TestHelper.createNames("TitleWithImg", limit);
 
-    ImmutableList<String> initPageTitles = new ImageUsageTitles(bot(), 3,
-        IMAGE_NAME, MediaWiki.NS_EVERY).getCopyOf(limit);
+    ImmutableList<String> initPageTitles =
+        new ImageUsageTitles(bot(), 3, IMAGE_NAME, MediaWiki.NS_EVERY).getCopyOf(limit);
     ImmutableList<String> pageTitles;
     if (initPageTitles.size() < limit) {
       prepare(expectedTitles);

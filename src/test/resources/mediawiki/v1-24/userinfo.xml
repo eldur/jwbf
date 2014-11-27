@@ -1,0 +1,87 @@
+<?xml version="1.0"?>
+<api>
+  <query>
+    <userinfo id="1" name="Admin" editcount="97">
+      <groups>
+        <g>bureaucrat</g>
+        <g>sysop</g>
+        <g>*</g>
+        <g>user</g>
+        <g>autoconfirmed</g>
+      </groups>
+      <rights>
+        <r>userrights</r>
+        <r>noratelimit</r>
+        <r>block</r>
+        <r>createaccount</r>
+        <r>delete</r>
+        <r>bigdelete</r>
+        <r>deletedhistory</r>
+        <r>deletedtext</r>
+        <r>undelete</r>
+        <r>editinterface</r>
+        <r>editusercss</r>
+        <r>edituserjs</r>
+        <r>import</r>
+        <r>importupload</r>
+        <r>move</r>
+        <r>move-subpages</r>
+        <r>move-rootuserpages</r>
+        <r>move-categorypages</r>
+        <r>patrol</r>
+        <r>autopatrol</r>
+        <r>protect</r>
+        <r>editprotected</r>
+        <r>proxyunbannable</r>
+        <r>rollback</r>
+        <r>upload</r>
+        <r>reupload</r>
+        <r>reupload-shared</r>
+        <r>unwatchedpages</r>
+        <r>autoconfirmed</r>
+        <r>editsemiprotected</r>
+        <r>ipblock-exempt</r>
+        <r>blockemail</r>
+        <r>markbotedits</r>
+        <r>apihighlimits</r>
+        <r>browsearchive</r>
+        <r>movefile</r>
+        <r>unblockself</r>
+        <r>suppressredirect</r>
+        <r>mergehistory</r>
+        <r>skipcaptcha</r>
+        <r>spamblacklistlog</r>
+        <r>read</r>
+        <r>edit</r>
+        <r>createpage</r>
+        <r>createtalk</r>
+        <r>writeapi</r>
+        <r>editmyusercss</r>
+        <r>editmyuserjs</r>
+        <r>viewmywatchlist</r>
+        <r>editmywatchlist</r>
+        <r>viewmyprivateinfo</r>
+        <r>editmyprivateinfo</r>
+        <r>editmyoptions</r>
+        <r>minoredit</r>
+        <r>purge</r>
+        <r>sendemail</r>
+      </rights>
+      <options ccmeonemails="0" cols="80" date="default" diffonly="0" disablemail="0"
+        editfont="default" editondblclick="0" editsectiononrightclick="0" enotifminoredits="0"
+        enotifrevealaddr="0" enotifusertalkpages="1" enotifwatchlistpages="1" extendwatchlist="0"
+        fancysig="0" forceeditsummary="0" gender="unknown" hideminor="0" hidepatrolled="0"
+        imagesize="2" math="1" minordefault="0" newpageshidepatrolled="0" nickname=""
+        norollbackdiff="0" numberheadings="0" previewonfirst="0" previewontop="1" rcdays="7"
+        rclimit="50" rows="25" showhiddencats="0" shownumberswatching="1" showtoolbar="1"
+        skin="vector" stubthreshold="0" thumbsize="5" underline="2" uselivepreview="0" usenewrc="0"
+        watchcreations="1" watchdefault="1" watchdeletion="0" watchlistdays="3"
+        watchlisthideanons="0" watchlisthidebots="0" watchlisthideliu="0" watchlisthideminor="0"
+        watchlisthideown="0" watchlisthidepatrolled="0" watchmoves="0" watchrollback="0"
+        wllimit="250" useeditwarning="1" prefershttps="1" language="de" variant-gan="gan"
+        variant-iu="iu" variant-kk="kk" variant-ku="ku" variant-shi="shi" variant-sr="sr"
+        variant-tg="tg" variant-uz="uz" variant-zh="zh" searchNs0="" />
+      <ratelimits />
+    </userinfo>
+  </query>
+</api>

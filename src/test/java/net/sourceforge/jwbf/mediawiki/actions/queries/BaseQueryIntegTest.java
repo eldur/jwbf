@@ -46,7 +46,7 @@ public class BaseQueryIntegTest extends AbstractIntegTest {
   public void testEndless_fail() {
 
     // GIVEN
-    MocoIntegTest.applySiteinfoXmlToServer(server, MediaWiki.Version.getLatest(), this.getClass());
+    MocoIntegTest.applySiteinfoXmlToServer(server, MediaWiki.Version.MW1_23, this.getClass());
     server.request(embeddedinTwo()).response(TestHelper.anyWikiResponse("embeddedin_2.xml"));
     server.request(embeddedinOne()).response(TestHelper.anyWikiResponse("embeddedin_1.xml"));
     MediaWikiBot bot = new MediaWikiBot(host());
@@ -68,7 +68,7 @@ public class BaseQueryIntegTest extends AbstractIntegTest {
   public void testDuplication() {
 
     // GIVEN
-    MocoIntegTest.applySiteinfoXmlToServer(server, MediaWiki.Version.getLatest(), this.getClass());
+    MocoIntegTest.applySiteinfoXmlToServer(server, MediaWiki.Version.MW1_23, this.getClass());
     Supplier<ImmutableList<String>> logLinesSupplier = Logging.newLogLinesSupplier();
     server.request(embeddedinOne()).response(TestHelper.anyWikiResponse("embeddedin_1.xml"));
     server.request(embeddedinTwo()).response(TestHelper.anyWikiResponse("embeddedin_1.xml"));

@@ -56,9 +56,8 @@ public class GetApiTokenTest {
 
     try {
       // WHEN
-      testee.get().urlEncodedToken();
+      testee.get().token();
       fail();
-
     } catch (IllegalArgumentException e) {
       // THEN
       assertEquals("The argument 'token' is missing", e.getMessage());

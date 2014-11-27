@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<api>
+  <query>
+    <embeddedin>
+      <ei pageid="29" ns="0" title="TestTemplate3" />
+    </embeddedin>
+  </query>
+</api>

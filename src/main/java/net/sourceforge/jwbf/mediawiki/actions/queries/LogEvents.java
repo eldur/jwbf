@@ -81,7 +81,7 @@ public class LogEvents extends BaseQuery<LogItem> {
 
   /**
    * @param type of like {@link #MOVE}
-   *             @deprecated
+   * @deprecated
    */
   @Deprecated
   public LogEvents(MediaWikiBot bot, String[] type) {
@@ -126,6 +126,7 @@ public class LogEvents extends BaseQuery<LogItem> {
         .param("list", "logevents") //
         .param("lelimit", limit) //
         ;
+
     if (logtypes.size() > 0) {
       requestBuilder.param("letype", Joiner.on("|").join(logtypes));
     }

@@ -45,13 +45,13 @@ public class TemplateUserTitlesIT extends ParamHelper {
         new TemplateUserTitles(bot, 3, TESTPATTERNNAME, MWAction.nullSafeCopyOf(MediaWiki.NS_ALL));
 
     ImmutableList<String> titles = testTitles(4);
-    ImmutableList<String> backlinkTitles = testee.getCopyOf(4);
+    ImmutableList<String> templateUserTitles = testee.getCopyOf(4);
 
-    if (!backlinkTitles.equals(titles)) {
+    if (!templateUserTitles.equals(titles)) {
       prepare(bot, titles);
       GAssert.assertEquals(titles, testee.getCopyOf(4));
     } else {
-      GAssert.assertEquals(titles, backlinkTitles);
+      GAssert.assertEquals(titles, templateUserTitles);
     }
   }
 
