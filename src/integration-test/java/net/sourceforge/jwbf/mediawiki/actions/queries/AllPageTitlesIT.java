@@ -18,14 +18,14 @@ import net.sourceforge.jwbf.mediawiki.live.auto.ParamHelper;
 import org.junit.Test;
 import org.junit.runners.Parameterized.Parameters;
 
-public class AllPageTitlesLiveIntegTest extends ParamHelper {
+public class AllPageTitlesIT extends ParamHelper {
 
   @Parameters(name = "{0}")
   public static Collection<?> stableWikis() {
     return ParamHelper.prepare(Version.valuesStable());
   }
 
-  public AllPageTitlesLiveIntegTest(Version v) {
+  public AllPageTitlesIT(Version v) {
     super(BotFactory.getMediaWikiBot(v, true));
   }
 

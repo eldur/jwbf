@@ -20,9 +20,9 @@ import org.slf4j.LoggerFactory;
 /**
  * @author Thomas Stock
  */
-public class ImageUsageTitlesLiveIntegTest extends ParamHelper {
+public class ImageUsageTitlesIT extends ParamHelper {
 
-  private static final Logger log = LoggerFactory.getLogger(ImageUsageTitlesLiveIntegTest.class);
+  private static final Logger log = LoggerFactory.getLogger(ImageUsageTitlesIT.class);
 
   private static final int limit = 4;
   public static final String IMAGE_NAME = "Image:Any.gif";
@@ -32,7 +32,7 @@ public class ImageUsageTitlesLiveIntegTest extends ParamHelper {
     return ParamHelper.prepare(Version.valuesStable());
   }
 
-  public ImageUsageTitlesLiveIntegTest(Version v) {
+  public ImageUsageTitlesIT(Version v) {
     super(BotFactory.getMediaWikiBot(v, true));
   }
 

@@ -23,9 +23,9 @@ import org.slf4j.LoggerFactory;
 /**
  * @author Thomas Stock
  */
-public class TemplateUserTitlesLiveIntegTest extends ParamHelper {
+public class TemplateUserTitlesIT extends ParamHelper {
 
-  private static final Logger log = LoggerFactory.getLogger(TemplateUserTitlesLiveIntegTest.class);
+  private static final Logger log = LoggerFactory.getLogger(TemplateUserTitlesIT.class);
 
   private static final String ARTICLE_NAME_PREFIX = "TestTemplate";
   private static final String TESTPATTERNNAME = "Template:" + ARTICLE_NAME_PREFIX;
@@ -35,7 +35,7 @@ public class TemplateUserTitlesLiveIntegTest extends ParamHelper {
     return ParamHelper.prepare(Version.valuesStable());
   }
 
-  public TemplateUserTitlesLiveIntegTest(Version v) {
+  public TemplateUserTitlesIT(Version v) {
     super(BotFactory.getMediaWikiBot(v, true));
   }
 

@@ -29,7 +29,7 @@ import org.junit.Test;
 /**
  * @author Thomas Stock
  */
-public class RenderingTest extends AbstractMediaWikiBotTest {
+public class RenderingIT extends AbstractMediaWikiBotIT {
 
   @Ignore("check this")
   @Test

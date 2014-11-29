@@ -15,7 +15,7 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.junit.Ignore;
 import org.junit.Test;
 
-public class HttpActionClientIntegTest extends AbstractIntegTest {
+public class HttpActionClientIT extends AbstractIntegTest {
 
   private HttpActionClient testee;
 

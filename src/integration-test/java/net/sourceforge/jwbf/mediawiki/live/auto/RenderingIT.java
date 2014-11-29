@@ -12,7 +12,7 @@ import org.junit.Test;
 import org.junit.rules.Verifier;
 import org.junit.runners.Parameterized.Parameters;
 
-public class RenderingTest extends ParamHelper {
+public class RenderingIT extends ParamHelper {
 
   @ClassRule
   public static VersionTestClassVerifier classVerifier =
@@ -26,7 +26,7 @@ public class RenderingTest extends ParamHelper {
     return ParamHelper.prepare(Version.valuesStable());
   }
 
-  public RenderingTest(Version v) {
+  public RenderingIT(Version v) {
     super(v, classVerifier);
   }
 

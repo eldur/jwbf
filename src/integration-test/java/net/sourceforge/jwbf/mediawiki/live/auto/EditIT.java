@@ -16,7 +16,7 @@ import org.junit.Test;
 import org.junit.rules.Verifier;
 import org.junit.runners.Parameterized.Parameters;
 
-public class EditTest extends ParamHelper {
+public class EditIT extends ParamHelper {
 
   @ClassRule
   public static VersionTestClassVerifier classVerifier =
@@ -30,7 +30,7 @@ public class EditTest extends ParamHelper {
     return ParamHelper.prepare(Version.valuesStable());
   }
 
-  public EditTest(Version v) {
+  public EditIT(Version v) {
     super(BotFactory.getMediaWikiBot(v, true));
   }
 

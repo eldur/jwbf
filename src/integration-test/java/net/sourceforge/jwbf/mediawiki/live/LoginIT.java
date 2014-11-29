@@ -69,7 +69,7 @@ import org.junit.Test;
  *
  * @author Thomas Stock
  */
-public class LoginTest extends AbstractMediaWikiBotTest {
+public class LoginIT extends AbstractMediaWikiBotIT {
 
   /**
    * Test login on Wikipedia.

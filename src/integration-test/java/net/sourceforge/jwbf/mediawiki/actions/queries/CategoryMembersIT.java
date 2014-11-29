@@ -37,16 +37,16 @@ import org.junit.runners.Parameterized.Parameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class CategoryMembersLiveIntegTest extends ParamHelper {
+public class CategoryMembersIT extends ParamHelper {
 
-  private static final Logger log = LoggerFactory.getLogger(CategoryMembersLiveIntegTest.class);
+  private static final Logger log = LoggerFactory.getLogger(CategoryMembersIT.class);
 
   @Parameters(name = "{0}")
   public static Collection<?> stableWikis() {
     return ParamHelper.prepare(Version.valuesStable());
   }
 
-  public CategoryMembersLiveIntegTest(Version v) {
+  public CategoryMembersIT(Version v) {
     super(BotFactory.getMediaWikiBot(v, true));
   }
 

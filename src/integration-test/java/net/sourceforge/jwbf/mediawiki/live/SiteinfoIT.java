@@ -33,9 +33,9 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class SiteinfoTest extends AbstractMediaWikiBotTest {
+public class SiteinfoIT extends AbstractMediaWikiBotIT {
 
-  private static final Logger log = LoggerFactory.getLogger(SiteinfoTest.class);
+  private static final Logger log = LoggerFactory.getLogger(SiteinfoIT.class);
 
   /**
    * Test get siteinfo on Wikipedia DE.

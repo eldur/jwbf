@@ -51,16 +51,16 @@ import org.slf4j.LoggerFactory;
 /**
  * @author Thomas Stock
  */
-public class UploadAndImageInfoTest extends ParamHelper {
+public class UploadAndImageInfoIT extends ParamHelper {
 
-  private static final Logger log = LoggerFactory.getLogger(UploadAndImageInfoTest.class);
+  private static final Logger log = LoggerFactory.getLogger(UploadAndImageInfoIT.class);
 
   @Parameters(name = "{0}")
   public static Collection<?> stableWikis() {
     return ParamHelper.prepare(Version.valuesStable());
   }
 
-  public UploadAndImageInfoTest(Version v) {
+  public UploadAndImageInfoIT(Version v) {
     super(BotFactory.getMediaWikiBot(v, true));
   }
 

@@ -11,14 +11,14 @@ import net.sourceforge.jwbf.mediawiki.live.auto.ParamHelper;
 import org.junit.Test;
 import org.junit.runners.Parameterized.Parameters;
 
-public class RandomPageTitlesLiveIntegTest extends ParamHelper {
+public class RandomPageTitlesIT extends ParamHelper {
 
   @Parameters(name = "{0}")
   public static Collection<?> stableWikis() {
     return ParamHelper.prepare(Version.valuesStable());
   }
 
-  public RandomPageTitlesLiveIntegTest(Version v) {
+  public RandomPageTitlesIT(Version v) {
     super(BotFactory.getMediaWikiBot(v, true));
   }
 

@@ -31,9 +31,9 @@ import org.junit.runners.Parameterized.Parameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class RecentchangeTitlesLiveIntegTest extends ParamHelper {
+public class RecentchangeTitlesIT extends ParamHelper {
 
-  private static final Logger log = LoggerFactory.getLogger(RecentchangeTitlesLiveIntegTest.class);
+  private static final Logger log = LoggerFactory.getLogger(RecentchangeTitlesIT.class);
   private static final int COUNT = 3;
   private static final int LIMIT = COUNT * 2;
 
@@ -51,7 +51,7 @@ public class RecentchangeTitlesLiveIntegTest extends ParamHelper {
     return ParamHelper.prepare(Version.valuesStable());
   }
 
-  public RecentchangeTitlesLiveIntegTest(Version v) {
+  public RecentchangeTitlesIT(Version v) {
     super(BotFactory.getMediaWikiBot(v, true));
   }
 

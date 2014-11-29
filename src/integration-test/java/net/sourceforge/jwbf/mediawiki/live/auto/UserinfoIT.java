@@ -25,11 +25,11 @@ import org.junit.runners.Parameterized.Parameters;
 /**
  * @author Thomas
  */
-public class UserinfoTest extends ParamHelper {
+public class UserinfoIT extends ParamHelper {
 
   private Version v;
 
-  public UserinfoTest(Version v) {
+  public UserinfoIT(Version v) {
     super(v, classVerifier);
     this.v = v;
   }

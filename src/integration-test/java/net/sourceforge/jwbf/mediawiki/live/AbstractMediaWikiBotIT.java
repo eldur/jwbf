@@ -7,7 +7,7 @@ import javax.inject.Provider;
 import net.sourceforge.jwbf.mediawiki.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 
-public abstract class AbstractMediaWikiBotTest implements Provider<MediaWikiBot> {
+public abstract class AbstractMediaWikiBotIT implements Provider<MediaWikiBot> {
 
   private static final String WIKIPEDIA_DE = "http://de.wikipedia.org/w/index.php";
 

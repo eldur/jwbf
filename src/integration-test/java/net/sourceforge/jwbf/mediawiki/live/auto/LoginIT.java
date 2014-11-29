@@ -12,9 +12,9 @@ import net.sourceforge.jwbf.mediawiki.MediaWiki.Version;
 import org.junit.Test;
 import org.junit.runners.Parameterized.Parameters;
 
-public class LoginTest extends ParamHelper {
+public class LoginIT extends ParamHelper {
 
-  public LoginTest(Version v) {
+  public LoginIT(Version v) {
     super(BotFactory.getMediaWikiBot(v, false));
   }
 
