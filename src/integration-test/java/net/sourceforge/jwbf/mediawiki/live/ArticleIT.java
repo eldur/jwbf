@@ -33,9 +33,9 @@ import org.mockito.Mockito;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class ArticleTest {
+public class ArticleIT {
 
-  private static final Logger log = LoggerFactory.getLogger(ArticleTest.class);
+  private static final Logger log = LoggerFactory.getLogger(ArticleIT.class);
 
   private Collection<MediaWikiBot> getTestBots() {
     Collection<MediaWikiBot> bots = Lists.newArrayList();

@@ -23,7 +23,7 @@ import org.junit.runners.Parameterized.Parameters;
 /**
  * @author Thomas Stock
  */
-public class RevisionTest extends ParamHelper {
+public class RevisionIT extends ParamHelper {
 
   @ClassRule
   public static VersionTestClassVerifier classVerifier =
@@ -37,7 +37,7 @@ public class RevisionTest extends ParamHelper {
     return ParamHelper.prepare(Version.valuesStable());
   }
 
-  public RevisionTest(Version v) {
+  public RevisionIT(Version v) {
     super(v, classVerifier);
   }
 

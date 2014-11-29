@@ -15,7 +15,7 @@ import net.sourceforge.jwbf.mediawiki.live.auto.ParamHelper;
 import org.junit.Test;
 import org.junit.runners.Parameterized.Parameters;
 
-public class PostDeleteLiveIntegTest extends ParamHelper {
+public class PostDeleteIT extends ParamHelper {
 
   private static final String DELETE_PREFIX = "Delete";
   private static final int LIMIT = 1;
@@ -25,7 +25,7 @@ public class PostDeleteLiveIntegTest extends ParamHelper {
     return ParamHelper.prepare(Version.valuesStable());
   }
 
-  public PostDeleteLiveIntegTest(Version v) {
+  public PostDeleteIT(Version v) {
     super(BotFactory.getMediaWikiBot(v, true));
   }
 

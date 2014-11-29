@@ -21,16 +21,16 @@ import org.junit.runners.Parameterized.Parameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class LogEventsLiveIntegTest extends ParamHelper {
+public class LogEventsIT extends ParamHelper {
 
-  private static final Logger log = LoggerFactory.getLogger(LogEventsLiveIntegTest.class);
+  private static final Logger log = LoggerFactory.getLogger(LogEventsIT.class);
 
   @Parameters(name = "{0}")
   public static Collection<?> stableWikis() {
     return ParamHelper.prepare(Version.valuesStable());
   }
 
-  public LogEventsLiveIntegTest(Version v) {
+  public LogEventsIT(Version v) {
     super(BotFactory.getMediaWikiBot(v, true));
   }
 

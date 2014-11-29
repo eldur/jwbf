@@ -28,7 +28,7 @@ public class GetUserinfo extends MWAction implements Userinfo {
   private final Get msg;
 
   public GetUserinfo() {
-    String properties =
+    String properties = //
         MediaWiki.urlEncode("blockinfo|hasmsg|groups|rights|options|editcount|ratelimits");
     msg = new ApiRequestBuilder() //
         .action("query") //

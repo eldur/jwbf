@@ -25,14 +25,14 @@ import java.util.Iterator;
 import net.sourceforge.jwbf.mediawiki.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.util.RedirectFilter;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
-import net.sourceforge.jwbf.mediawiki.live.AbstractMediaWikiBotTest;
+import net.sourceforge.jwbf.mediawiki.live.AbstractMediaWikiBotIT;
 import org.junit.Ignore;
 import org.junit.Test;
 
 /**
  * @author Thomas Stock
  */
-public class AllPageTitlesVarLiveIntegTest extends AbstractMediaWikiBotTest {
+public class AllPageTitlesVarIT extends AbstractMediaWikiBotIT {
 
   /**
    * TODO move to integation tests

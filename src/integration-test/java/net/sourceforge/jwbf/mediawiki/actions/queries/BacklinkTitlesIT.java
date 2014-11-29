@@ -20,9 +20,9 @@ import org.junit.runners.Parameterized.Parameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class BacklinkTitlesLiveIntegTest extends ParamHelper {
+public class BacklinkTitlesIT extends ParamHelper {
 
-  private static final Logger log = LoggerFactory.getLogger(BacklinkTitlesLiveIntegTest.class);
+  private static final Logger log = LoggerFactory.getLogger(BacklinkTitlesIT.class);
 
   private static final String BACKLINKS = "Backlinks";
   private static final int COUNT = 10;
@@ -32,7 +32,7 @@ public class BacklinkTitlesLiveIntegTest extends ParamHelper {
     return ParamHelper.prepare(Version.valuesStable());
   }
 
-  public BacklinkTitlesLiveIntegTest(Version v) {
+  public BacklinkTitlesIT(Version v) {
     super(BotFactory.getMediaWikiBot(v, true));
   }
 

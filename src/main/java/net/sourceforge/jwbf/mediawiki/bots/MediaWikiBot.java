@@ -281,7 +281,8 @@ public class MediaWikiBot implements WikiBot {
     }
   }
 
-  private HttpBot bot() {
+  @VisibleForTesting
+  HttpBot bot() {
     if (bot == null) {
       throw new IllegalStateException("please use another constructor or inject " + //
           HttpBot.class.getCanonicalName());

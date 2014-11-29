@@ -8,14 +8,14 @@ import net.sourceforge.jwbf.mediawiki.BotFactory;
 import net.sourceforge.jwbf.mediawiki.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.VersionTestClassVerifier;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
-import net.sourceforge.jwbf.mediawiki.live.AbstractMediaWikiBotTest;
+import net.sourceforge.jwbf.mediawiki.live.AbstractMediaWikiBotIT;
 import org.junit.Assert;
 import org.junit.internal.AssumptionViolatedException;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
 @RunWith(Parameterized.class)
-public abstract class ParamHelper extends AbstractMediaWikiBotTest {
+public abstract class ParamHelper extends AbstractMediaWikiBotIT {
 
   /**
    * @deprecated use {@link #ParamHelper(net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot)} instead
