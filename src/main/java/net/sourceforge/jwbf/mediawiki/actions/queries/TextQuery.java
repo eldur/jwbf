@@ -65,7 +65,8 @@ public class TextQuery extends BaseQuery<SearchResult> {
         /** title of the matching section. */
         sectiontitle, title, ;
 
-        public static final Set<SearchProps> DEFAULT = EnumSet.of(size, wordcount, timestamp, snippet);
+        public static final Set<SearchProps> DEFAULT = EnumSet.of(size, wordcount, timestamp,
+            snippet);
     }
 
     private static final Logger log = LoggerFactory.getLogger(TextQuery.class);

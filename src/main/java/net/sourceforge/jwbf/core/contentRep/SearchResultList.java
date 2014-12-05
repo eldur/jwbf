@@ -11,14 +11,15 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
-@JsonNaming( PropertyNamingStrategy.LowerCaseStrategy.class)
+@JsonNaming(PropertyNamingStrategy.LowerCaseStrategy.class)
 @JsonInclude(Include.NON_DEFAULT)
 public class SearchResultList {
     static class SearchContinue {
         private final int offset;
         private final String continueToken;
         @JsonCreator
-        public SearchContinue(@JsonProperty("sroffset") int offset, @JsonProperty("continue") String continueToken) {
+        public SearchContinue(@JsonProperty("sroffset") int offset,
+                @JsonProperty("continue") String continueToken) {
             this.offset = offset;
             this.continueToken = continueToken;
         }
@@ -72,7 +73,8 @@ public class SearchResultList {
 
     @JsonCreator
     public SearchResultList(@JsonProperty("continue") SearchContinue searchContinue,
-            @JsonProperty("batchcomplete") String batchComplete, @JsonProperty("query") Query query) {
+            @JsonProperty("batchcomplete") String batchComplete,
+            @JsonProperty("query") Query query) {
         this.searchContinue = searchContinue;
         this.batchComplete = batchComplete;
         this.query = Checked.nonNull(query, "search query");
