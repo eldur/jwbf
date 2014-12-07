@@ -10,13 +10,13 @@ import com.google.common.collect.ImmutableList;
 import net.sourceforge.jwbf.AbstractIntegTest;
 import net.sourceforge.jwbf.core.contentRep.SearchResult;
 import net.sourceforge.jwbf.mediawiki.ApiMatcherBuilder;
-import net.sourceforge.jwbf.mediawiki.actions.queries.TextQuery.SearchInfo;
-import net.sourceforge.jwbf.mediawiki.actions.queries.TextQuery.SearchProps;
-import net.sourceforge.jwbf.mediawiki.actions.queries.TextQuery.SearchWhat;
+import net.sourceforge.jwbf.mediawiki.actions.queries.Search.SearchInfo;
+import net.sourceforge.jwbf.mediawiki.actions.queries.Search.SearchProps;
+import net.sourceforge.jwbf.mediawiki.actions.queries.Search.SearchWhat;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 import org.junit.Test;
 
-public class TextQueryLiveIntegTest extends AbstractIntegTest {
+public class SearchIntegTest extends AbstractIntegTest {
   private static final ApiMatcherBuilder MATCHERS_COMMON = ApiMatcherBuilder.of() //
       .param("action", "query") //
       .param("continue", "-||") //
@@ -45,8 +45,8 @@ public class TextQueryLiveIntegTest extends AbstractIntegTest {
     MediaWikiBot bot = new MediaWikiBot(host());
 
     // WHEN
-    TextQuery testee =
-        new TextQuery(bot, "meaning", EnumSet.of(SearchWhat.text), EnumSet.of(SearchInfo.totalhits),
+    Search testee =
+        new Search(bot, "meaning", EnumSet.of(SearchWhat.text), EnumSet.of(SearchInfo.totalhits),
             EnumSet.of(SearchProps.size), 0);
     List<SearchResult> resultList = testee.getCopyOf(55);
 

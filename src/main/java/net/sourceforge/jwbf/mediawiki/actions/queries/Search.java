@@ -19,7 +19,7 @@ import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class TextQuery extends BaseQuery<SearchResult> {
+public class Search extends BaseQuery<SearchResult> {
   private static final Joiner PARAM_JOINER = Joiner.on('|');
 
   public static final int DEFAULT_NS = 0;
@@ -94,7 +94,7 @@ public class TextQuery extends BaseQuery<SearchResult> {
     public static final Set<SearchProps> DEFAULT = EnumSet.of(size, wordcount, timestamp, snippet);
   }
 
-  private static final Logger log = LoggerFactory.getLogger(TextQuery.class);
+  private static final Logger log = LoggerFactory.getLogger(Search.class);
 
   /**
    * Constant value for the srlimit-parameter.
@@ -122,12 +122,12 @@ public class TextQuery extends BaseQuery<SearchResult> {
    * @param props      Which properties to return.
    * @param namespaces Search only within these namespaces.
    */
-  public TextQuery(MediaWikiBot bot, String query, Set<SearchWhat> what, Set<SearchInfo> searchInfo,
+  public Search(MediaWikiBot bot, String query, Set<SearchWhat> what, Set<SearchInfo> searchInfo,
       Set<SearchProps> props, int... namespaces) {
     this(bot, query, what, searchInfo, props, Ints.asList(namespaces));
   }
 
-  public TextQuery(MediaWikiBot bot, String query, Set<SearchWhat> what, Set<SearchInfo> searchInfo,
+  public Search(MediaWikiBot bot, String query, Set<SearchWhat> what, Set<SearchInfo> searchInfo,
       Set<SearchProps> props, List<Integer> namespaces) {
     super(bot);
     this.query = query;
@@ -137,13 +137,13 @@ public class TextQuery extends BaseQuery<SearchResult> {
     this.namespaces = ImmutableList.copyOf(namespaces);
   }
 
-  public TextQuery(MediaWikiBot bot, String query) {
+  public Search(MediaWikiBot bot, String query) {
     this(bot, query, SearchWhat.DEFAULT, SearchInfo.DEFAULT, SearchProps.DEFAULT, DEFAULT_NS);
   }
 
   @Override
-  protected TextQuery copy() {
-    return new TextQuery(bot(), query, what, searchInfo, props, namespaces);
+  protected Search copy() {
+    return new Search(bot(), query, what, searchInfo, props, namespaces);
   }
 
   @Override
