@@ -1,1 +1,55 @@
-{"continue":{"sroffset":5,"continue":"-||"},"batchcomplete":"","query":{"searchinfo":{"totalhits":193,"suggestion":"meeting"},"search":[{"ns":0,"title":"Design/WikiFont","snippet":"pixel-perfect so they retain their <span class=\"searchmatch\">meaning</span> and look sharp in all sizes. An icon should fully express its intended <span class=\"searchmatch\">meaning</span> without any text companion. In selective","size":8159,"wordcount":890,"timestamp":"2014-10-24T18:41:45Z"},{"ns":0,"title":"Parsoid/Bibliography","snippet":"en:Parsing expression grammar HTML5 parsing spec Extricating <span class=\"searchmatch\">Meaning</span> from Wikimedia Article Archives -- Brian W. Curry, Andrew Trotman, and Michael Albert","size":304,"wordcount":22,"timestamp":"2014-10-25T19:17:12Z"},{"ns":0,"title":"Bug management/Phabricator etiquette","snippet":"fields summarize and reflect reality and do not cause it. Read about the <span class=\"searchmatch\">meaning</span> of the Priority field values and, when in doubt, do not change them, but","size":3036,"wordcount":378,"timestamp":"2014-11-27T01:42:00Z"},{"ns":0,"title":"VisualEditor/Design/User testing","snippet":"Level <span class=\"searchmatch\">Meaning</span> 0 Not a usability problem 1 Cosmetic problem only: need not be fixed unless extra time is available on project 2 Minor usability problem:","size":10968,"wordcount":1430,"timestamp":"2014-12-01T21:52:40Z"},{"ns":0,"title":"Bugzilla/Fields","snippet":"Priority <span class=\"searchmatch\">Meaning</span> immediate Must be fixed immediately (means: &quot;Drop any other work&quot;). Reports must have an assignee set in the &quot;Assigned to&quot; field, and","size":8187,"wordcount":802,"timestamp":"2014-11-22T03:11:32Z"}]}}
+{
+  "continue": {
+    "sroffset": 5,
+    "continue": "-||"
+  },
+  "batchcomplete": "",
+  "query": {
+    "searchinfo": {
+      "totalhits": 193,
+      "suggestion": "meeting"
+    },
+    "search": [
+      {
+        "ns": 0,
+        "title": "Design/WikiFont",
+        "snippet": "pixel-perfect so they retain their <span class=\"searchmatch\">meaning</span> and look sharp in all sizes. An icon should fully express its intended <span class=\"searchmatch\">meaning</span> without any text companion. In selective",
+        "size": 8159,
+        "wordcount": 890,
+        "timestamp": "2014-10-24T18:41:45Z"
+      },
+      {
+        "ns": 0,
+        "title": "Parsoid/Bibliography",
+        "snippet": "en:Parsing expression grammar HTML5 parsing spec Extricating <span class=\"searchmatch\">Meaning</span> from Wikimedia Article Archives -- Brian W. Curry, Andrew Trotman, and Michael Albert",
+        "size": 304,
+        "wordcount": 22,
+        "timestamp": "2014-10-25T19:17:12Z"
+      },
+      {
+        "ns": 0,
+        "title": "Bug management/Phabricator etiquette",
+        "snippet": "fields summarize and reflect reality and do not cause it. Read about the <span class=\"searchmatch\">meaning</span> of the Priority field values and, when in doubt, do not change them, but",
+        "size": 3036,
+        "wordcount": 378,
+        "timestamp": "2014-11-27T01:42:00Z"
+      },
+      {
+        "ns": 0,
+        "title": "VisualEditor/Design/User testing",
+        "snippet": "Level <span class=\"searchmatch\">Meaning</span> 0 Not a usability problem 1 Cosmetic problem only: need not be fixed unless extra time is available on project 2 Minor usability problem:",
+        "size": 10968,
+        "wordcount": 1430,
+        "timestamp": "2014-12-01T21:52:40Z"
+      },
+      {
+        "ns": 0,
+        "title": "Bugzilla/Fields",
+        "snippet": "Priority <span class=\"searchmatch\">Meaning</span> immediate Must be fixed immediately (means: &quot;Drop any other work&quot;). Reports must have an assignee set in the &quot;Assigned to&quot; field, and",
+        "size": 8187,
+        "wordcount": 802,
+        "timestamp": "2014-11-22T03:11:32Z"
+      }
+    ]
+  }
+}

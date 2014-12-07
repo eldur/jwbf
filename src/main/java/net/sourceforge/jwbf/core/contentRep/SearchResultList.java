@@ -17,15 +17,18 @@ public class SearchResultList {
     static class SearchContinue {
         private final int offset;
         private final String continueToken;
+
         @JsonCreator
         public SearchContinue(@JsonProperty("sroffset") int offset,
-                @JsonProperty("continue") String continueToken) {
+            @JsonProperty("continue") String continueToken) {
             this.offset = offset;
             this.continueToken = continueToken;
         }
+
         public int getOffset() {
             return offset;
         }
+
         public String getContinueToken() {
             return continueToken;
         }
@@ -41,7 +44,7 @@ public class SearchResultList {
 
         @JsonCreator
         public SearchInfo(@JsonProperty("totalhits") int totalHits,
-                @JsonProperty("suggestion") String suggestion) {
+            @JsonProperty("suggestion") String suggestion) {
             this.totalHits = totalHits;
             this.suggestion = suggestion;
         }
@@ -61,7 +64,7 @@ public class SearchResultList {
 
         @JsonCreator
         public Query(@JsonProperty("searchinfo") SearchInfo searchInfo,
-                @JsonProperty("search") List<SearchResult> results) {
+            @JsonProperty("search") List<SearchResult> results) {
             this.searchInfo = Checked.nonNull(searchInfo, "search info");
             this.results = Checked.nonNull(results, "search results");
         }
@@ -73,8 +76,7 @@ public class SearchResultList {
 
     @JsonCreator
     public SearchResultList(@JsonProperty("continue") SearchContinue searchContinue,
-            @JsonProperty("batchcomplete") String batchComplete,
-            @JsonProperty("query") Query query) {
+        @JsonProperty("batchcomplete") String batchComplete, @JsonProperty("query") Query query) {
         this.searchContinue = searchContinue;
         this.batchComplete = batchComplete;
         this.query = Checked.nonNull(query, "search query");
