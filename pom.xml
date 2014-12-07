@@ -126,19 +126,52 @@
         <version>0.7.2.201409121644</version>
         <executions>
           <execution>
-            <id>prepare-agent</id>
+            <id>pre-unit-test</id>
             <goals>
               <goal>prepare-agent</goal>
             </goals>
+            <configuration>
+              <destFile>${project.build.directory}/coverage-reports/jacoco.exec</destFile>
+              <propertyName>surefireArgLine</propertyName>
+              <append>true</append>
+            </configuration>
           </execution>
           <execution>
-            <id>report</id>
-            <phase>prepare-package</phase>
+            <id>post-unit-test</id>
+            <phase>test</phase>
             <goals>
               <goal>report</goal>
             </goals>
+            <configuration>
+              <dataFile>${project.build.directory}/coverage-reports/jacoco.exec</dataFile>
+              <outputDirectory>${project.reporting.outputDirectory}/jacoco</outputDirectory>
+            </configuration>
+          </execution>
+          <execution>
+            <id>pre-integration-test</id>
+            <phase>pre-integration-test</phase>
+            <goals>
+              <goal>prepare-agent</goal>
+            </goals>
+            <configuration>
+              <destFile>${project.build.directory}/coverage-reports/jacoco.exec</destFile>
+              <propertyName>failsafeArgLine</propertyName>
+              <append>true</append>
+            </configuration>
+          </execution>
+          <execution>
+            <id>post-integration-test</id>
+            <phase>post-integration-test</phase>
+            <goals>
+              <goal>report</goal>
+            </goals>
+            <configuration>
+              <dataFile>${project.build.directory}/coverage-reports/jacoco.exec</dataFile>
+              <outputDirectory>${project.reporting.outputDirectory}/jacoco</outputDirectory>
+            </configuration>
           </execution>
         </executions>
+
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -149,6 +182,7 @@
             <jacoco-agent.destfile>target/jacoco.exec</jacoco-agent.destfile>
           </systemPropertyVariables>
           <runOrder>random</runOrder>
+          <argLine>${surefireArgLine}</argLine>
           <skipTests>${skip.unit.tests}</skipTests>
         </configuration>
       </plugin>
@@ -159,6 +193,7 @@
         <configuration>
           <runOrder>random</runOrder>
           <skipITs>${skip.integration.tests}</skipITs>
+          <argLine>${failsafeArgLine}</argLine>
         </configuration>
         <executions>
           <execution>
@@ -244,10 +279,13 @@
       <plugin>
         <groupId>org.eluder.coveralls</groupId>
         <artifactId>coveralls-maven-plugin</artifactId>
-        <version>2.2.0</version>
+        <version>3.0.1</version>
         <configuration>
           <!-- FIXME jenkins exports timestamp value in milliseconds -->
           <timestamp>2014-01-01 00:00:00</timestamp>
+          <jacocoReports>
+            <param>${project.reporting.outputDirectory}/jacoco/jacoco.xml</param>
+          </jacocoReports>
         </configuration>
       </plugin>
     </plugins>
