@@ -35,6 +35,7 @@ import com.google.common.io.Files;
 import com.google.common.io.Resources;
 import net.sourceforge.jwbf.GAssert;
 import net.sourceforge.jwbf.JWBF;
+import net.sourceforge.jwbf.TestHelper;
 import net.sourceforge.jwbf.core.actions.util.ProcessException;
 import net.sourceforge.jwbf.mediawiki.BotFactory;
 import net.sourceforge.jwbf.mediawiki.LiveTestFather;
@@ -107,7 +108,9 @@ public class UploadAndImageInfoIT extends ParamHelper {
     assertTrue("File (" + validFileName + ") not readable", validFile.canRead());
     String testFilename = LiveTestFather.getValue("filename");
     SimpleFile sf = new SimpleFile(testFilename, validFileName);
-    bot.delete("File:" + testFilename);
+    sf.setText(TestHelper.getRandomAlph(10));
+    String name = "File:" + testFilename;
+    bot.delete(name);
     BufferedImage img = toImage(sf);
     int upWidth = img.getWidth();
     int upHeight = img.getHeight();
@@ -127,6 +130,8 @@ public class UploadAndImageInfoIT extends ParamHelper {
     );
     URL urlSizeVar = getUrl(bot, sf, params);
     assertImageDimension(urlSizeVar, newWidth, newHeight);
+    String text = bot().getArticle(name).getText();
+    assertEquals(sf.getText(), text);
   }
 
   private URL getUrl(MediaWikiBot bot, SimpleFile sf, ImmutableMap<String, String> params) {
