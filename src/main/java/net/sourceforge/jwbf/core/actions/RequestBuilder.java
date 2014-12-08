@@ -11,8 +11,12 @@ import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
 import com.google.common.collect.ImmutableMultimap;
 import net.sourceforge.jwbf.core.internal.Checked;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class RequestBuilder {
+
+  private static Logger log = LoggerFactory.getLogger(RequestBuilder.class);
 
   private final ImmutableMultimap.Builder<String, Supplier<String>> params =
       ImmutableMultimap.builder();
@@ -64,8 +68,19 @@ public class RequestBuilder {
     return applyKeyValueTo(key, Suppliers.ofInstance(value), postParams);
   }
 
+  public RequestBuilder postParam(String key) {
+    return postParam(key, (Object) "");
+  }
+
   public RequestBuilder postParam(String key, String value) {
-    return postParam(key, (Object) value);
+    if (!Strings.isNullOrEmpty(key)) {
+      if (Strings.isNullOrEmpty(value)) {
+        postParam(key, (Object) "");
+      } else {
+        postParam(key, (Object) value);
+      }
+    }
+    return this;
   }
 
   public RequestBuilder postParam(String key, int value) {
@@ -89,14 +104,21 @@ public class RequestBuilder {
     return param(key, Boolean.toString(value));
   }
 
+  public RequestBuilder param(String key) {
+    if (!Strings.isNullOrEmpty(key)) {
+      param(key, Suppliers.ofInstance(""));
+    }
+    return this;
+  }
+
   public RequestBuilder param(String key, String value) {
     if (!Strings.isNullOrEmpty(key)) {
       if (Strings.isNullOrEmpty(value)) {
         param(key, Suppliers.ofInstance("None"));
+        log.warn("Empty string for GET param \"" + key + "\" was transformed to \"None\"");
       } else {
         param(key, Suppliers.ofInstance(value));
       }
-
     }
     return this;
   }

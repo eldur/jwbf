@@ -21,10 +21,12 @@ public class RequestBuilderTest {
         .param("b", "c") //
         .build());
     assertEquals("/a?b=c&b=e", new RequestBuilder("/a") //
+        .param(null, (String) null) //
         .param("b", "e") //
         .param("b", "c") //
         .build());
-    assertEquals("/a?b=c&q=None", new RequestBuilder("/a") //
+    assertEquals("/a?b=c&llun=None&q=None", new RequestBuilder("/a") //
+        .param("llun", (String) null) //
         .param("b", "c") //
         .param("q", "") //
         .param("", "z") //
@@ -32,6 +34,7 @@ public class RequestBuilderTest {
         .buildPost().getRequest());
     assertEquals("/a?b=1&d=e", new RequestBuilder("/a") //
         .param("d", "e") //
+        .param(null, "null") //
         .param("b", 1) //
         .param("d", "e") //
         .buildGet().getRequest());
@@ -162,6 +165,11 @@ public class RequestBuilderTest {
     Post post = RequestBuilder.of("/index.php") //
         .param("c", "") //
         .postParam("e", "") //
+        .param("f") //
+        .postParam("g") //
+        .postParam(null, (String) null) //
+        .postParam(null, "null") //
+        .postParam("llun", (String) null) //
         .buildPost() //
         ;
 
@@ -170,7 +178,7 @@ public class RequestBuilderTest {
     Post newPost = builder.buildPost();
 
     // THEN
-    assertEquals("/index.php?c=None UTF-8 {e=[]}", post.toString());
+    assertEquals("/index.php?c=None&f= UTF-8 {e=[], g=[], llun=[]}", post.toString());
     assertEquals(post, newPost);
   }
 
