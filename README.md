@@ -77,7 +77,7 @@ downloaded automatically.
 <dependency>
   <groupId>net.sourceforge</groupId>
   <artifactId>jwbf</artifactId>
-  <version>3.0.0</version>
+  <version>3.1.0</version>
 </dependency>
 ```
 
