@@ -105,11 +105,7 @@ public class HttpActionClient {
     this.url = Checked.nonNull(builder.url, "url");
     host = newHost(builder.url);
     path = pathOf(builder.url);
-    if (builder.requestsPerSecond > 0) {
-      rateLimiter = Optional.of(RateLimiter.create(builder.requestsPerSecond));
-    } else {
-      rateLimiter = Optional.absent();
-    }
+    rateLimiter = builder.rateLimiter;
 
     this.client = builder.client;
   }
@@ -275,11 +271,11 @@ public class HttpActionClient {
 
   @VisibleForTesting
   HttpResponse execute(HttpRequestBase requestBase) {
+    if (rateLimiter.isPresent()) {
+      rateLimiter.get().acquire();
+    }
     HttpResponse res;
     try {
-      if (rateLimiter.isPresent()) {
-        rateLimiter.get().acquire();
-      }
       res = client.execute(requestBase);
     } catch (IOException e) {
       throw new IllegalStateException(e);
@@ -354,7 +350,7 @@ public class HttpActionClient {
           }
         };
 
-    private double requestsPerSecond = -1;
+    private Optional<RateLimiter> rateLimiter = Optional.absent();
     private HttpClient client;
     private URL url;
     @VisibleForTesting
@@ -419,7 +415,11 @@ public class HttpActionClient {
 
     public Builder withRequestsPerUnit(double requestsPer, TimeUnit unit) {
       long seconds = TimeUnit.SECONDS.convert(1, unit);
-      this.requestsPerSecond = requestsPer / seconds;
+      return withRateLimiter(RateLimiter.create(requestsPer / seconds));
+    }
+
+    Builder withRateLimiter(RateLimiter rateLimiter) {
+      this.rateLimiter = Optional.of(rateLimiter);
       return this;
     }
   }
