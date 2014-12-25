@@ -8,6 +8,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import com.github.dreamhead.moco.HttpRequest;
 import com.github.dreamhead.moco.HttpServer;
 import com.github.dreamhead.moco.MocoConfig;
+import com.github.dreamhead.moco.Request;
 import com.github.dreamhead.moco.RequestMatcher;
 import com.github.dreamhead.moco.Runner;
 import com.github.dreamhead.moco.matcher.AndRequestMatcher;
@@ -52,7 +53,7 @@ public abstract class AbstractIntegTest {
       private final AtomicInteger countdown = new AtomicInteger(times);
 
       @Override
-      public boolean match(HttpRequest request) {
+      public boolean match(Request request) {
         if (countdown.get() != 0) {
           for (RequestMatcher matcher : matchers) {
             if (!matcher.match(request)) {
@@ -84,8 +85,13 @@ public abstract class AbstractIntegTest {
     private static Logger log = LoggerFactory.getLogger(IntegMonitor.class);
 
     @Override
-    public void onMessageArrived(HttpRequest request) {
-      log.info(request.getUri() + " " + request.getQueries().toString());
+    public void onMessageArrived(Request request) {
+      if (request instanceof HttpRequest) {
+        HttpRequest httpRequest = (HttpRequest) request;
+        log.info(httpRequest.getUri() + " " + httpRequest.getQueries().toString());
+      } else {
+        log.warn("unknown type: " + request.getClass().getCanonicalName());
+      }
     }
   }
 }

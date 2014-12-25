@@ -394,7 +394,7 @@
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
-      <version>1.7.7</version>
+      <version>1.7.9</version>
     </dependency>
     <dependency>
       <groupId>javax.inject</groupId>
@@ -409,7 +409,7 @@
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>4.11</version>
+      <version>4.12</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -421,13 +421,13 @@
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-all</artifactId>
-      <version>1.10.8</version>
+      <version>1.10.17</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>com.github.dreamhead</groupId>
       <artifactId>moco-core</artifactId>
-      <version>0.9.2</version>
+      <version>0.10.0</version>
       <scope>test</scope>
       <exclusions>
         <exclusion>
@@ -463,19 +463,19 @@
     <dependency>
       <groupId>org.eclipse.jetty</groupId>
       <artifactId>jetty-server</artifactId>
-      <version>9.3.0.M0</version>
+      <version>9.3.0.M1</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.eclipse.jetty</groupId>
       <artifactId>jetty-servlet</artifactId>
-      <version>9.3.0.M0</version>
+      <version>9.3.0.M1</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>joda-time</groupId>
       <artifactId>joda-time</artifactId>
-      <version>2.5</version>
+      <version>2.6</version>
       <scope>test</scope>
     </dependency>
     <dependency>

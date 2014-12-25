@@ -9,6 +9,7 @@ import java.util.Map;
 
 import com.github.dreamhead.moco.HttpRequest;
 import com.github.dreamhead.moco.MocoConfig;
+import com.github.dreamhead.moco.Request;
 import com.github.dreamhead.moco.RequestExtractor;
 import com.github.dreamhead.moco.RequestMatcher;
 import com.google.common.collect.ImmutableMap;
@@ -56,7 +57,7 @@ public class ApiMatcherBuilder {
     return this;
   }
 
-  private class AllParamsPresent implements RequestMatcher {
+  private class AllParamsPresent extends HttpRequestMatcher {
 
     private final ImmutableSet<String> params;
 
@@ -65,11 +66,25 @@ public class ApiMatcherBuilder {
     }
 
     @Override
-    public boolean match(HttpRequest request) {
+    public boolean matchHttp(HttpRequest request) {
       ImmutableMap<String, String> queries = request.getQueries();
       ImmutableSet<String> keys = queries.keySet();
       return params.equals(keys);
     }
+
+  }
+
+  private abstract class HttpRequestMatcher implements RequestMatcher {
+
+    @Override
+    public final boolean match(Request request) {
+      if (request instanceof HttpRequest) {
+        return matchHttp((HttpRequest) request);
+      }
+      return false;
+    }
+
+    abstract boolean matchHttp(HttpRequest httpRequest);
 
     @Override
     public RequestMatcher apply(MocoConfig config) {
