@@ -1,24 +1,33 @@
 package net.sourceforge.jwbf.mediawiki.actions.queries;
 
-import static org.junit.Assert.assertEquals;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 
-import java.util.Date;
+import net.sourceforge.jwbf.AbstractIntegTest;
+import net.sourceforge.jwbf.core.contentRep.WatchResponse;
+import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 
-import org.joda.time.DateTime;
 import org.junit.Test;
 
-public class WatchListTest {
-
+public class WatchListTest extends AbstractIntegTest {
   @Test
-  public void testTimeFormatting() {
-    // GIVEN
-    Date date = DateTime.parse("2008-03-04T17:01:48+0100").toDate();
+  public void test() {
+    MediaWikiBot bot = new MediaWikiBot("http://fr.wikipedia.org/w/");
+    bot.login("Hunsu", "password");
+    HashMap<String, List<String>> params = new HashMap<>();
+    List<String> values = new ArrayList<String>();
+    values.add("user"); values.add("timestamp");
+    values.add("comment"); values.add("title");
 
-    // WHEN
-    String formattedDate = WatchList.formatDate(date);
+    params.put("wlprop", values);
 
-    // THEN
-    assertEquals("2008-03-04T16:01:48Z", formattedDate);
+    WatchList testee =
+        new WatchList(bot, params, 0);
+    Iterator<WatchResponse> iterator = testee.iterator();
+    while(iterator.hasNext())
+    System.out.println(iterator.next());
   }
 
 }
