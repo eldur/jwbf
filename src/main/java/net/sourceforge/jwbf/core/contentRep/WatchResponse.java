@@ -10,14 +10,21 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 @JsonNaming(PropertyNamingStrategy.LowerCaseStrategy.class)
 //@JsonInclude(Include.NON_DEFAULT)
 public class WatchResponse {
+	@JsonProperty("ns")
 	private int ns;
+	@JsonProperty("title")
 	private String title;
+	@JsonProperty("user")
 	private String user;
 	@JsonProperty("comment")
 	private String comment;
 	@JsonProperty("parsedcomment")
 	private String parsedComment;
+	@JsonProperty("timestamp")
+	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'hh:mm:ss'Z'")
 	private Date timestamp;
+	@JsonProperty("notificationtimestamp")
+	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'hh:mm:ss'Z'")
 	private Date notificationTimestamp;
 	@JsonProperty("pageid")
 	private int pageid;
@@ -31,45 +38,10 @@ public class WatchResponse {
 	private int newLen;
 	@JsonProperty("patrolled")
 	private boolean patrolled;
+	@JsonProperty("type")
 	private String type;
 	@JsonProperty("anon")
 	private String anon;
-	public String getAnon() {
-		return anon;
-	}
-
-	public void setAnon(String anon) {
-		this.anon = anon;
-	}
-
-	public String getMinor() {
-		return minor;
-	}
-
-	public void setMinor(String minor) {
-		this.minor = minor;
-	}
-
-	public String getBot() {
-		return bot;
-	}
-
-	public void setBot(String bot) {
-		this.bot = bot;
-	}
-
-	public String getNewFlag() {
-		return newFlag;
-	}
-
-	public void setNewFlag(String newFlag) {
-		this.newFlag = newFlag;
-	}
-
-	public void setTitle(String title) {
-		this.title = title;
-	}
-
 	@JsonProperty("minor")
 	private String minor;
 	@JsonProperty("bot")
@@ -77,7 +49,6 @@ public class WatchResponse {
 	@JsonProperty("new")
 	private String newFlag;
 
-	@JsonProperty("ns")
 	public int getNs() {
 		return ns;
 	}
@@ -86,8 +57,6 @@ public class WatchResponse {
 		return timestamp;
 	}
 
-	@JsonProperty("timestamp")
-	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'hh:mm:ss'Z'")
 	public void setTimestamp(Date timestamp) {
 		this.timestamp = timestamp;
 	}
@@ -96,7 +65,6 @@ public class WatchResponse {
 		this.ns = ns;
 	}
 
-	@JsonProperty("user")
 	public void setUser(String user) {
 		this.user = user;
 	}
@@ -109,8 +77,6 @@ public class WatchResponse {
 		this.parsedComment = parsedComment;
 	}
 
-	@JsonProperty("notificationtimestamp")
-	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'hh:mm:ss'Z'")
 	public void setNotificationTimestamp(Date notificationTimestamp) {
 		this.notificationTimestamp = notificationTimestamp;
 	}
@@ -147,7 +113,6 @@ public class WatchResponse {
 		return ns;
 	}
 
-	@JsonProperty("title")
 	public String getTitle() {
 		return title;
 	}
@@ -192,9 +157,44 @@ public class WatchResponse {
 		return patrolled;
 	}
 
-	@JsonProperty("type")
 	public String getType() {
 		return type;
+	}
+
+	public String getAnon() {
+		return anon;
+	}
+
+	public void setAnon(String anon) {
+		this.anon = anon;
+	}
+
+	public String getMinor() {
+		return minor;
+	}
+
+	public void setMinor(String minor) {
+		this.minor = minor;
+	}
+
+	public String getBot() {
+		return bot;
+	}
+
+	public void setBot(String bot) {
+		this.bot = bot;
+	}
+
+	public String getNewFlag() {
+		return newFlag;
+	}
+
+	public void setNewFlag(String newFlag) {
+		this.newFlag = newFlag;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
 	}
 
 	public String toString(){
