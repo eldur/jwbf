@@ -163,7 +163,7 @@ public class MediaWikiBot implements WikiBot {
    * @see GetRevision
    */
   public synchronized Article getArticle(final String name, final int properties) {
-    return new Article(this, readData(name, properties));
+    return Article.withoutReload(readData(name, properties), this);
   }
 
   /**

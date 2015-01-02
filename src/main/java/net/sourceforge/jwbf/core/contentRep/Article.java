@@ -14,13 +14,14 @@ public class Article implements ArticleMeta, ContentSetable {
 
   private final SimpleArticle sa;
 
-  private int reload = 0;
-  private static final int TEXT_RELOAD = 1 << 1;
-  private static final int REVISION_ID_RELOAD = 1 << 2;
-  private static final int MINOR_EDIT_RELOAD = 1 << 3;
-  private static final int EDITOR_RELOAD = 1 << 4;
-  private static final int EDIT_SUM_RELOAD = 1 << 5;
-  private static final int EDIT_DATE_RELOAD = 1 << 6;
+  @VisibleForTesting
+  int reload = 0;
+  private static final int TEXT_RELOAD = 1;
+  private static final int REVISION_ID_RELOAD = 1 << 1;
+  private static final int MINOR_EDIT_RELOAD = 1 << 2;
+  private static final int EDITOR_RELOAD = 1 << 3;
+  private static final int EDIT_SUM_RELOAD = 1 << 4;
+  private static final int EDIT_DATE_RELOAD = 1 << 5;
 
   @VisibleForTesting
   boolean isReload(final int reloadVar) {
@@ -258,4 +259,14 @@ public class Article implements ArticleMeta, ContentSetable {
     return sa;
   }
 
+  public static Article withoutReload(SimpleArticle simpleArticle, WikiBot bot) {
+    Article article = new Article(bot, simpleArticle);
+    article.setReload(TEXT_RELOAD);
+    article.setReload(REVISION_ID_RELOAD);
+    article.setReload(MINOR_EDIT_RELOAD);
+    article.setReload(EDITOR_RELOAD);
+    article.setReload(EDIT_SUM_RELOAD);
+    article.setReload(EDIT_DATE_RELOAD);
+    return article;
+  }
 }

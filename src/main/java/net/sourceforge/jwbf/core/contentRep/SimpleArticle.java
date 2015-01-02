@@ -29,6 +29,7 @@ import java.util.regex.Pattern;
 import com.google.common.annotations.Beta;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Optional;
+import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 
 /**
  * This is a simple content helper class that implements the EditContentAccesable interface, plus
@@ -276,5 +277,4 @@ public class SimpleArticle implements ArticleMeta, Serializable, ContentSetable 
   public void setRevisionId(String revId) {
     this.revId = revId;
   }
-
 }
