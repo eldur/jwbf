@@ -1,15 +1,16 @@
 package net.sourceforge.jwbf.core.actions;
 
-import static net.sourceforge.jwbf.core.actions.RequestBuilder.HashCodeEqualsMemoizingSupplier;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
+import net.sourceforge.jwbf.GAssert;
+import net.sourceforge.jwbf.core.actions.RequestBuilder.HashCodeEqualsMemoizingSupplier;
+
+import org.junit.Ignore;
+import org.junit.Test;
 
 import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
-import com.google.common.collect.ImmutableMultimap;
-import net.sourceforge.jwbf.GAssert;
-import org.junit.Ignore;
-import org.junit.Test;
+import com.google.common.collect.ImmutableMap;
 
 public class RequestBuilderTest {
 
@@ -218,8 +219,8 @@ public class RequestBuilderTest {
     // THEN
     assertEquals("/", post2.getRequest());
 
-    ImmutableMultimap<String, Object> params = post2.getParams();
-    ImmutableMultimap<String, Object> expected = ImmutableMultimap.<String, Object>of("c", "4");
+    ImmutableMap<String, Object> params = post2.getParams();
+    ImmutableMap<String, Object> expected = ImmutableMap.<String, Object>of("c", "4");
     GAssert.assertEquals(expected, params);
   }
 
