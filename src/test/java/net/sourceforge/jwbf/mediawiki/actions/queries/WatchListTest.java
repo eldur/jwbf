@@ -12,9 +12,9 @@ public class WatchListTest extends AbstractIntegTest {
 	public void test() {
 		MediaWikiBot bot = new MediaWikiBot("http://fr.wikipedia.org/w/");
 		bot.login("Hunsu", "password");
-
-		WatchList testee = new WatchList(bot, 3, 0);
-		testee.addParam("wlprop", "user", "timestamp", "comment", "title");
+		QueryParameter params = new QueryParameter();
+		params.param("wlprop", "user", "timestamp", "comment", "title");
+		WatchList testee = new WatchList(bot, 50, params, 0);
 		Iterator<WatchResponse> iterator = testee.iterator();
 		while (iterator.hasNext())
 			System.out.println(iterator.next());
