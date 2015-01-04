@@ -1,12 +1,13 @@
 package net.sourceforge.jwbf.mapper;
 
+import java.io.IOException;
+
 import javax.annotation.Nonnull;
 
-import java.io.IOException;
+import net.sourceforge.jwbf.core.internal.Checked;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import net.sourceforge.jwbf.core.internal.Checked;
 
 public class JsonMapper {
 
@@ -22,7 +23,8 @@ public class JsonMapper {
 
   public <T> T get(String json, Class<T> clazz) {
     String nonNullJson = Checked.nonNull(json, "json");
-    return (T) Checked.nonNull(transfomer.toJson(nonNullJson, clazz), "a json mapping result");
+		return (T) Checked.nonNull(transfomer.toJson(nonNullJson, clazz),
+				"a json mapping result");
   }
 
   public interface ToJsonFunction {
@@ -44,6 +46,7 @@ public class JsonMapper {
     public Object toJson(@Nonnull String jsonString, Class<?> clazz) {
       try {
         // ObjectMapper stores mutable data so each mapping uses a fresh instance
+				//TODO: why are you creating a mapper for each call?
         return newObjectMapper().readValue(jsonString, clazz);
       } catch (IOException e) {
         throw new IllegalArgumentException(e);

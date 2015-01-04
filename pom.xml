@@ -40,7 +40,6 @@
     <skip.integration.tests>true</skip.integration.tests>
   </properties>
   <build>
-  <pluginManagement>
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -291,7 +290,6 @@
         </configuration>
       </plugin>
     </plugins>
-    </pluginManagement>
   </build>
   <profiles>
     <profile>
