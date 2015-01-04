@@ -372,7 +372,7 @@ public class SimpleArticleTest {
     assertEquals(0, actual.getMillis());
   }
 
-  private static abstract class MetaAdapter implements ArticleMeta {
+  private abstract static class MetaAdapter implements ArticleMeta {
 
     @Override
     public String getEditSummary() {

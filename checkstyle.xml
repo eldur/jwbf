@@ -18,7 +18,9 @@
     <module name="LocalFinalVariableName" />
     <module name="LocalVariableName" />
     <module name="MemberName" />
-    <module name="MethodName" />
+    <module name="MethodName">
+      <property name="format" value="^(test[a-zA-Z0-9_]*|[a-z][a-zA-Z0-9]*$)"/>
+    </module>
     <module name="PackageName" />
     <module name="ParameterName" />
     <module name="StaticVariableName" />
@@ -76,6 +78,12 @@
       <metadata name="net.sf.eclipsecs.core.lastEnabledSeverity" value="inherit" />
     </module>
     <module name="UpperEll" />
+    <module name="RegexpSinglelineJava">
+      <property name="severity" value="error" />
+      <property name="format" value="\t+"/>
+      <property name="message"
+                value="Line has tab characters; indentation should be performed with spaces."/>
+    </module>
   </module>
   <module name="RegexpMultiline">
     <property name="severity" value="error" />
