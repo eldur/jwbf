@@ -1,9 +1,9 @@
 package net.sourceforge.jwbf.mediawiki.actions.queries;
 
 import java.io.IOException;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map.Entry;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Set;
 
 import net.sourceforge.jwbf.core.actions.RequestBuilder;
@@ -26,37 +26,52 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.primitives.Ints;
 
 public class WatchList extends BaseQuery<WatchResponse> {
+
+	public enum WatchListProperties {
+		//TODO: add all the properties
+		USER("user"), TITLE("title"), COMMENT("comment"), TIMESTAMP("timestamp"), PARSED_COMMENT(
+				"parsedcomment");
+
+		private String name;
+
+		private WatchListProperties(String name) {
+			this.name = name;
+		}
+
+		public String toString() {
+			return name;
+		}
+	}
+
 	public static final int DEFAULT_NS = 0;
 	private static final Joiner PARAM_JOINER = Joiner.on('|');
 
 	private static final Logger log = LoggerFactory.getLogger(WatchList.class);
 
-	private int limit = -1;
 	private final ObjectMapper objectMapper = new ObjectMapper();
 
+	private final int limit;
 	private final ImmutableList<Integer> namespaces;
-	private QueryParameter params;
+	private WatchListProperties[] properties;
+	private boolean showBots;
+	private boolean showAnonymous;
+	private boolean showMinor;
 
 	private WatchListResults responseList;
 
-	public WatchList(MediaWikiBot bot, int limit, QueryParameter params,
-			int... namespaces) {
-		this(bot, limit, params, Ints.asList(namespaces));
-	}
-
-	public WatchList(MediaWikiBot bot, int limit, QueryParameter params,
-			List<Integer> namespaces) {
-		super(bot);
-		if (!bot.isLoggedIn())
+	private WatchList(Builder builder) {
+		super(builder.getBot());
+		if (!bot().isLoggedIn())
 			throw new ActionException("Please login first");
-		this.limit = limit;
-		this.namespaces = ImmutableList.copyOf(namespaces);
-		this.params = params;
-		initMapper();
-	}
+		this.limit = builder.getLimit();
+		this.namespaces = ImmutableList.copyOf(Ints.asList(builder
+				.getNamespaces()));
+		this.properties = builder.getProperties();
+		this.showBots = builder.showBots;
+		this.showAnonymous = builder.showAnonymous;
+		this.showMinor = builder.showMinor;
 
-	public WatchList(MediaWikiBot bot) {
-		this(bot, -1, null, DEFAULT_NS);
+		initMapper();
 	}
 
 	private void initMapper() {
@@ -69,43 +84,48 @@ public class WatchList extends BaseQuery<WatchResponse> {
 		return MediaWiki.urlEncode(PARAM_JOINER.join(params));
 	}
 
-	private RequestBuilder buildRequest() {
-		RequestBuilder request = new ApiRequestBuilder().action("query") //
-				.formatJson() //
-				.param("continue", MediaWiki.urlEncode("-||")) //
-				.param("list", "watchlist");
-		request.param("wlnamespace", MediaWiki.urlEncodedNamespace(namespaces));
-		if (limit < 1)
-			request.param("wllimit", "max");
-		else
-			request.param("wllimit", limit);
-		Iterator<Entry<String, Set<String>>> it = params.iterator();
-		while (it.hasNext()) {
-			Entry<String, Set<String>> entry = it.next();
-			request.param(entry.getKey(), joinParam(entry.getValue()));
-		}
-		return request;
-	}
-
 	@Override
 	protected WatchList copy() {
-		return new WatchList(bot(), limit, params, namespaces);
+		return new WatchList(bot());
 	}
 
 	@Override
 	protected HttpAction prepareNextRequest() {
-		RequestBuilder request = buildRequest();
+		RequestBuilder requestBuilder = new ApiRequestBuilder().action("query") //
+				.formatJson() //
+				.param("continue", MediaWiki.urlEncode("-||")) //
+				.param("list", "watchlist");
+		requestBuilder.param("wlnamespace",
+				MediaWiki.urlEncodedNamespace(namespaces)).param(
+				"wlprop",
+				joinParam(new HashSet<WatchListProperties>(Arrays
+						.asList(properties))));
+		if (showBots)
+			requestBuilder.param("wlshow", "bot");
+		else
+			requestBuilder.param("wlshow", "!bot");
+		if (showAnonymous)
+			requestBuilder.param("wlshow", "anon");
+		else
+			requestBuilder.param("wlshow", "!anon");
+		if (showMinor)
+			requestBuilder.param("wlshow", "minor");
+		else
+			requestBuilder.param("wlshow", "!minor");
+		if (limit < 1)
+			requestBuilder.param("wllimit", "max");
+		else
+			requestBuilder.param("wllimit", limit);
 		if (hasNextPageInfo()) {
-			request.param("wlcontinue", MediaWiki.urlEncode(getNextPageInfo()));
+			requestBuilder.param("wlcontinue", getNextPageInfo());
 		}
-		log.debug("using query {}", request.build());
-		return request.buildGet();
+		log.debug("using query {}", requestBuilder.build());
+		return requestBuilder.buildGet();
 
 	}
 
 	@Override
 	protected ImmutableList<WatchResponse> parseElements(String json) {
-		System.out.println(json);
 		try {
 			this.responseList = objectMapper.readValue(json,
 					WatchListResults.class);
@@ -121,6 +141,97 @@ public class WatchList extends BaseQuery<WatchResponse> {
 			return Optional.of(responseList.getContinueToken());
 		} else {
 			return Optional.absent();
+		}
+	}
+
+	public static Builder from(MediaWikiBot bot) {
+		return new Builder(bot);
+	}
+
+	public static class Builder {
+
+		private MediaWikiBot bot;
+		private int limit = -1;
+		private WatchListProperties[] properties;
+		private boolean showBots = true;
+		private boolean showAnonymous = true;
+		private int[] namespaces = new int[] { DEFAULT_NS };
+		private boolean showMinor;
+
+		public Builder(MediaWikiBot bot) {
+			this.bot = bot;
+		}
+		/**
+		 * How many results to return per request.
+		 * Use a negative value to return the maximum.
+		 * @param limit
+		 * @return
+		 */
+		public Builder withLimit(int limit) {
+			this.limit = limit;
+			return this;
+		}
+
+		/**
+		 * Only list pages in these namespaces
+		 * @param namespaces
+		 * @return
+		 */
+		public Builder withNamespaces(int... namespaces) {
+			this.namespaces = namespaces;
+			return this;
+		}
+
+		public Builder withProperties(WatchListProperties... properties) {
+			this.properties = properties;
+			return this;
+		}
+
+		public Builder showBots(boolean show) {
+			this.showBots = show;
+			return this;
+		}
+
+		public Builder showAnonymous(boolean show) {
+			this.showAnonymous = show;
+			return this;
+		}
+
+		public Builder showMinor(boolean show) {
+			this.showMinor = show;
+			return this;
+		}
+
+		public WatchList build() {
+			return new WatchList(this);
+		}
+
+		public int[] getNamespaces() {
+			return namespaces;
+		}
+
+		public MediaWikiBot getBot() {
+			return bot;
+		}
+
+		public int getLimit() {
+			return limit;
+		}
+
+		public WatchListProperties[] getProperties() {
+			return properties;
+		}
+
+		public boolean showBots() {
+			return showBots;
+		}
+
+		public boolean showAnonymous() {
+			return showAnonymous;
+		}
+
+		public boolean showMinor() {
+			return showMinor;
 		}
 	}
 
