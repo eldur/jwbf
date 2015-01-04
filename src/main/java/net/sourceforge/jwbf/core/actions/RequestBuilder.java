@@ -2,6 +2,7 @@ package net.sourceforge.jwbf.core.actions;
 
 import java.io.File;
 import java.io.Serializable;
+import java.util.Date;
 import java.util.Locale;
 
 import net.sourceforge.jwbf.core.internal.Checked;
@@ -193,5 +194,9 @@ public class RequestBuilder {
 				}
 			}
 		}
+	}
+
+	public void param(String key, Date date) {
+		// TODO I don't know how the dates must be formatted!
 	}
 }

@@ -1,18 +1,15 @@
-package net.sourceforge.jwbf.core.contentRep;
+package net.sourceforge.jwbf.mediawiki.actions.queries;
 
 import java.util.List;
 
 import net.sourceforge.jwbf.core.internal.Checked;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
 @JsonNaming(PropertyNamingStrategy.LowerCaseStrategy.class)
-@JsonInclude(Include.NON_DEFAULT)
 public class WatchListResults {
     static class WatchContinue {
         private final String continueToken;
