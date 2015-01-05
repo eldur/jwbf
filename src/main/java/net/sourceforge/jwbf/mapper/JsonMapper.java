@@ -3,6 +3,7 @@ package net.sourceforge.jwbf.mapper;
 import javax.annotation.Nonnull;
 import java.io.IOException;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.sourceforge.jwbf.core.internal.Checked;
 
@@ -31,13 +32,17 @@ public class JsonMapper {
   static class JacksonToJsonFunction implements ToJsonFunction {
 
     ObjectMapper newObjectMapper() {
-      return new ObjectMapper();
+      ObjectMapper mapper = new ObjectMapper();
+      // TODO: find a better way to do this
+      mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+      return mapper;
     }
 
     @Nonnull
     @Override
     public Object toJson(@Nonnull String jsonString, Class<?> clazz) {
       try {
+        // ObjectMapper stores mutable data so each mapping uses a fresh instance
         return newObjectMapper().readValue(jsonString, clazz);
       } catch (IOException e) {
         throw new IllegalArgumentException(e);
