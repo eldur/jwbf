@@ -9,7 +9,7 @@ import com.google.common.base.Optional;
 import com.google.common.base.Strings;
 import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
-import com.google.common.collect.ImmutableMultimap;
+import com.google.common.collect.ImmutableMap;
 import net.sourceforge.jwbf.core.internal.Checked;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,10 +18,8 @@ public class RequestBuilder {
 
   private static Logger log = LoggerFactory.getLogger(RequestBuilder.class);
 
-  private final ImmutableMultimap.Builder<String, Supplier<String>> params =
-      ImmutableMultimap.builder();
-  private final ImmutableMultimap.Builder<String, Supplier<Object>> postParams =
-      ImmutableMultimap.builder();
+  private final ImmutableMap.Builder<String, Supplier<String>> params = ImmutableMap.builder();
+  private final ImmutableMap.Builder<String, Supplier<Object>> postParams = ImmutableMap.builder();
   private final String path;
 
   public RequestBuilder(String path) {
@@ -42,24 +40,23 @@ public class RequestBuilder {
   }
 
   private <T> RequestBuilder applyKeyValueTo(String key, Supplier<?> stringSupplier,
-      ImmutableMultimap.Builder<String, Supplier<T>> toParams) {
+      ImmutableMap.Builder<String, Supplier<T>> toParams) {
     if (!Strings.isNullOrEmpty(key)) {
       Checked.nonNull(stringSupplier, "stringSupplier");
 
       Supplier<?> memoize = new HashCodeEqualsMemoizingSupplier<>(stringSupplier);
-      if (!toParams.build().containsEntry(key, memoize)) {
-        toParams.put(key, (Supplier<T>) memoize);
-      }
+      toParams.put(key, (Supplier<T>) memoize);
+
     }
     return this;
   }
 
-  RequestBuilder postParams(ImmutableMultimap.Builder<String, Supplier<Object>> all) {
+  RequestBuilder postParams(ImmutableMap.Builder<String, Supplier<Object>> all) {
     postParams.putAll(all.build());
     return this;
   }
 
-  RequestBuilder params(ImmutableMultimap.Builder<String, Supplier<String>> params) {
+  RequestBuilder params(ImmutableMap.Builder<String, Supplier<String>> params) {
     this.params.putAll(params.build());
     return this;
   }

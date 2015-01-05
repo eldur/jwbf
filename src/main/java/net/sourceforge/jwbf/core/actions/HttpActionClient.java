@@ -29,7 +29,6 @@ import java.net.URI;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -39,10 +38,8 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Function;
 import com.google.common.base.Joiner;
 import com.google.common.base.Optional;
-import com.google.common.base.Predicates;
 import com.google.common.base.Strings;
-import com.google.common.collect.ImmutableMultimap;
-import com.google.common.collect.Iterables;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.io.CharStreams;
 import com.google.common.util.concurrent.RateLimiter;
@@ -182,8 +179,8 @@ public class HttpActionClient {
     Post post = (Post) ha;
     Charset charset = Charset.forName(post.getCharset());
     MultipartEntityBuilder entityBuilder = MultipartEntityBuilder.create();
-    ImmutableMultimap<String, Object> postParams = post.getParams();
-    for (Map.Entry<String, Collection<Object>> entry : postParams.asMap().entrySet()) {
+    ImmutableMap<String, Object> postParams = post.getParams();
+    for (Map.Entry<String, Object> entry : postParams.entrySet()) {
       applyToEntityBuilder(entry.getKey(), entry.getValue(), charset, entityBuilder);
     }
     ((HttpPost) requestBase).setEntity(entityBuilder.build());
@@ -192,20 +189,19 @@ public class HttpActionClient {
   }
 
   @VisibleForTesting
-  void applyToEntityBuilder(String key, Collection<Object> values, Charset charset,
+  void applyToEntityBuilder(String key, Object value, Charset charset,
       MultipartEntityBuilder entityBuilder) {
-    for (Object content : Iterables.filter(values, Predicates.notNull())) {
-      if (content instanceof String) {
-        String text = (String) content;
+    if (value != null) {
+      if (value instanceof String) {
+        String text = (String) value;
         entityBuilder.addTextBody(key, text, ContentType.create("*/*", charset));
-      } else if (content instanceof File) {
-        File file = (File) content;
+      } else if (value instanceof File) {
+        File file = (File) value;
         entityBuilder.addBinaryBody(key, file);
       } else {
-        String canonicalName = content.getClass().getCanonicalName();
-        throw new UnsupportedOperationException("No Handler found for " + canonicalName +
-            ". Only String or File is accepted, " +
-            "because http parameters knows no other types.");
+        String canonicalName = value.getClass().getCanonicalName();
+        throw new UnsupportedOperationException("No Handler found for " + canonicalName + //
+            ". Only String or File is accepted, because http parameters knows no other types.");
       }
     }
   }
@@ -254,10 +250,10 @@ public class HttpActionClient {
   String writeToString(HttpAction ha, HttpResponse res) {
     Charset charSet = Charset.forName(ha.getCharset());
 
-    try (
+    try ( //
         InputStream content = res.getEntity().getContent();
         InputStreamReader inputStreamReader = new InputStreamReader(content, charSet); //
-        BufferedReader br = new BufferedReader(inputStreamReader); //
+        BufferedReader br = new BufferedReader(inputStreamReader) //
     ) {
       return toString(br);
     } catch (IOException e) {

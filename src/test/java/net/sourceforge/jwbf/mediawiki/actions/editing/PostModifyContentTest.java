@@ -10,7 +10,7 @@ import static org.mockito.Mockito.when;
 
 import java.util.Set;
 
-import com.google.common.collect.ImmutableMultimap;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import net.sourceforge.jwbf.core.actions.ParamTuple;
@@ -86,29 +86,31 @@ public class PostModifyContentTest {
   @Test
   public void testGetNextMessageMinorEdit() {
     simpleArticle.setMinorEdit(true);
-    ImmutableMultimap<String, Object> params = getParams();
-    assertEquals("{summary=[], text=[], minor=[], token=[!testToken]}", params.toString());
+    ImmutableMap<String, Object> params = getParams();
+    // TODO do not compare toString
+    assertEquals("{summary=, text=, minor=, token=!testToken}", params.toString());
   }
 
   @Test
   public void testGetNextMessageNoMinorEdit() {
-    ImmutableMultimap<String, Object> params = getParams();
-    assertEquals("{summary=[], text=[], notminor=[], token=[!testToken]}", params.toString());
+    ImmutableMap<String, Object> params = getParams();
+    // TODO do not compare toString
+    assertEquals("{summary=, text=, notminor=, token=!testToken}", params.toString());
   }
 
   @Test
   public void testGetNextMessageBotEdit() {
     when(userinfo.getGroups()).thenReturn(of("bot", "user"));
-    ImmutableMultimap<String, Object> params = getParams();
-    assertEquals("{summary=[], text=[], bot=[], notminor=[], token=[!testToken]}",
-        params.toString());
+    ImmutableMap<String, Object> params = getParams();
+    // TODO do not compare toString
+    assertEquals("{summary=, text=, bot=, notminor=, token=!testToken}", params.toString());
   }
 
-  private ImmutableMultimap<String, Object> getParams() {
+  private ImmutableMap<String, Object> getParams() {
     when(userinfo.getRights()).thenReturn(rights);
     testee.getNextMessage();
     Post message = (Post) testee.getNextMessage();
-    ImmutableMultimap<String, Object> params = message.getParams();
+    ImmutableMap<String, Object> params = message.getParams();
     return params;
   }
 

@@ -11,8 +11,8 @@ import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
-import com.google.common.collect.ImmutableMultimap;
-import com.google.common.collect.Multimaps;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Maps;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.core.internal.NonnullFunction;
 
@@ -28,7 +28,7 @@ public class Post extends HttpBase implements HttpAction {
       };
 
   private final Supplier<String> req;
-  private final ImmutableMultimap.Builder<String, Supplier<Object>> params;
+  private final ImmutableMap.Builder<String, Supplier<Object>> params;
   private final Charset charset;
 
   /**
@@ -48,7 +48,7 @@ public class Post extends HttpBase implements HttpAction {
   }
 
   private Post(Supplier<String> req, Charset charset, Optional<ParamJoiner> joiner,
-      ImmutableMultimap.Builder<String, Supplier<Object>> params) {
+      ImmutableMap.Builder<String, Supplier<Object>> params) {
     super(joiner);
     this.req = req;
     this.charset = charset;
@@ -62,7 +62,7 @@ public class Post extends HttpBase implements HttpAction {
     if (joiner.isPresent()) {
       this.params = joiner.get().postParams();
     } else {
-      this.params = ImmutableMultimap.builder();
+      this.params = ImmutableMap.builder();
     }
   }
 
@@ -100,8 +100,8 @@ public class Post extends HttpBase implements HttpAction {
     return new Post(req, charset, Optional.<ParamJoiner>absent(), params);
   }
 
-  public ImmutableMultimap<String, Object> getParams() {
-    return ImmutableMultimap.copyOf(Multimaps.transformValues(params.build(), flattenSuppliers));
+  public ImmutableMap<String, Object> getParams() {
+    return ImmutableMap.copyOf(Maps.transformValues(params.build(), flattenSuppliers));
   }
 
   @Override

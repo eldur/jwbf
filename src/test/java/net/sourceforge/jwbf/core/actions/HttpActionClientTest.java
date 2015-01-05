@@ -20,8 +20,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -172,38 +170,6 @@ public class HttpActionClientTest {
       ImmutableList<String> expected = ImmutableList.<String>builder() //
           .add("b=c") //
           .addAll(multipartOf("a", utf8RawData)) //
-          .add("") //
-          .build();
-
-      GAssert.assertEquals(expected, GAssert.toList(result));
-
-    } finally {
-      server.stopSilent();
-    }
-  }
-
-  @Test
-  public void testParameterArrays() {
-    JettyServer server = new JettyServer();
-    try {
-      // GIVEN
-      server.setHandler(JettyServer.echoHandler());
-      server.startSilent();
-      String url = "http://localhost:" + server.getPort();
-      testee = HttpActionClient.of(url);
-      Post post = RequestBuilder.of(url) //
-          .param("b", "c") //
-          .param("b", "e").postParam("b", "c").postParam("b", "e").buildPost() //
-          .postParam("a", "b");
-
-      // WHEN
-      String result = testee.post(post);
-
-      // THEN
-      ImmutableList<String> expected = ImmutableList.<String>builder().add("b=c&b=e") // b = [c, e]
-          .addAll(multipartOf("b", "c")) //
-          .addAll(multipartOf("b", "e")) //
-          .addAll(multipartOf("a", "b")) //
           .add("") //
           .build();
 
@@ -369,8 +335,8 @@ public class HttpActionClientTest {
     GAssert.assertEquals(ImmutableList.<String>of(
         "[WARN] \"āTeštBot\" was encoded to \"?Te?tBot\"; because only iso8859 is supported",
         "[WARN] \"ač43e3a\" was encoded to \"a?43e3a\"; because only iso8859 is supported",
-        "[WARN] \"User:WikipediāUserId\" was encoded to \"User:Wikipedi?UserId\"; because only "
-            + "iso8859 is supported"), logLinesSupplier.get());
+        "[WARN] \"User:WikipediāUserId\" was encoded to \"User:Wikipedi?UserId\"; because only " +
+            "iso8859 is supported"), logLinesSupplier.get());
   }
 
   @Test
@@ -384,12 +350,12 @@ public class HttpActionClientTest {
     // THEN
     assertAgentPart("name_with", "version_with", "comment/of me", parts);
     GAssert.assertEquals(ImmutableList.<String>of(
-        "[WARN] \" name\\r //with \" was changed to \"name_with\"; because of User-Agent "
-            + "name/version rules",
-        "[WARN] \" version/\\n\\n with \" was changed to \"version_with\"; because of User-Agent "
-            + "name/version rules",
-        "[WARN] \" comment/of (me) \" was changed to \"comment/of me\"; because of User-Agent "
-            + "comment rules"), logLinesSupplier.get());
+        "[WARN] \" name\\r //with \" was changed to \"name_with\"; because of User-Agent " +
+            "name/version rules",
+        "[WARN] \" version/\\n\\n with \" was changed to \"version_with\"; because of User-Agent " +
+            "name/version rules",
+        "[WARN] \" comment/of (me) \" was changed to \"comment/of me\"; because of User-Agent " +
+            "comment rules"), logLinesSupplier.get());
   }
 
   @Test
@@ -402,7 +368,7 @@ public class HttpActionClientTest {
 
     // THEN
     assertAgentPart("Unknown", "Unknown", "", parts);
-    GAssert.assertEquals(ImmutableList.<String>of(
+    GAssert.assertEquals(ImmutableList.of(
             "[WARN] \" \\t \" was changed to \"Unknown\"; because of User-Agent name/version rules",
             "[WARN] \" \\t \" was changed to \"Unknown\"; because of User-Agent name/version rules",
             "[WARN] \" \\n \" was changed to \"\"; because of User-Agent comment rules"),
@@ -697,13 +663,12 @@ public class HttpActionClientTest {
     testee = HttpActionClient.of("http://localhost/");
 
     String key = "a";
-    Collection<Object> values = new ArrayList<>();
-    values.add(null);
+    Object value = null;
     Charset charset = Charsets.UTF_8;
     MultipartEntityBuilder builder = mock(MultipartEntityBuilder.class);
 
     // WHEN
-    testee.applyToEntityBuilder(key, values, charset, builder);
+    testee.applyToEntityBuilder(key, value, charset, builder);
 
     // THEN
     verifyNoMoreInteractions(builder);
@@ -716,12 +681,11 @@ public class HttpActionClientTest {
 
     String key = "a";
     File file = new File(".");
-    Collection<Object> values = ImmutableList.<Object>of(file);
     Charset charset = Charsets.UTF_8;
     MultipartEntityBuilder builder = mock(MultipartEntityBuilder.class);
 
     // WHEN
-    testee.applyToEntityBuilder(key, values, charset, builder);
+    testee.applyToEntityBuilder(key, file, charset, builder);
 
     // THEN
     verify(builder).addBinaryBody(key, file);
@@ -733,18 +697,18 @@ public class HttpActionClientTest {
     testee = HttpActionClient.of("http://localhost/");
 
     String key = "a";
-    Collection<Object> values = ImmutableList.<Object>of(new Object());
+    Object value = new Object();
     Charset charset = Charsets.UTF_8;
     MultipartEntityBuilder builder = mock(MultipartEntityBuilder.class);
 
     // WHEN
     try {
-      testee.applyToEntityBuilder(key, values, charset, builder);
+      testee.applyToEntityBuilder(key, value, charset, builder);
       fail();
     } catch (UnsupportedOperationException e) {
       // THEN
-      assertEquals("No Handler found for java.lang.Object. Only String or File is accepted, "
-          + "because http parameters knows no other types.", e.getMessage());
+      assertEquals("No Handler found for java.lang.Object. Only String or File is accepted, " +
+          "because http parameters knows no other types.", e.getMessage());
     }
   }
 
@@ -765,8 +729,8 @@ public class HttpActionClientTest {
       testee.performAction(actionHandler);
 
       // THEN
-      Mockito.verify(actionHandler).processReturningText(Mockito.isA(String.class),
-          Mockito.eq(get));
+      Mockito.verify(actionHandler) //e
+          .processReturningText(Mockito.isA(String.class), Mockito.eq(get));
     } finally {
       server.stopSilent();
     }
