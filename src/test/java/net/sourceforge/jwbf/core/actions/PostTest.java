@@ -79,7 +79,7 @@ public class PostTest {
 
     // THEN
     assertEquals(url, request);
-    assertEquals(ImmutableMultimap.of("a", "b"), params);
+    assertEquals(ImmutableMap.of("a", "b"), params);
   }
 
   @Test
@@ -159,8 +159,8 @@ public class PostTest {
     String url = "http://localhost/";
     Post post = new Post(url) //
         .postParam("a", "b") //
-        .postParam("a", "b") //
-        .postParam("a", "c") //
+        .postParam("c", "d") //
+        .postParam("e", "f") //
         ;
 
     // WHEN
@@ -169,7 +169,7 @@ public class PostTest {
 
     // THEN
     assertEquals(url, request);
-    assertEquals(ImmutableMultimap.of("a", "b", "a", "b", "a", "c"), params);
+    assertEquals(ImmutableMap.of("a", "b", "c", "d", "e", "f"), params);
   }
 
   @Test
@@ -186,7 +186,7 @@ public class PostTest {
   public void testDeprecatedPostParams() {
     Post post = new Post("uuuh");
     post.addParam("a", "b");
-    assertEquals("uuuh UTF-8 {a=[b]}", post.toString());
+    assertEquals("uuuh UTF-8 {a=b}", post.toString());
   }
 
   @Test

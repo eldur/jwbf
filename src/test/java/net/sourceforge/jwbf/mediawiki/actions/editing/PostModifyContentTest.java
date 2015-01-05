@@ -91,14 +91,14 @@ public class PostModifyContentTest {
 	public void testGetNextMessageMinorEdit() {
 		simpleArticle.setMinorEdit(true);
 		ImmutableMap<String, Object> params = getParams();
-		assertEquals("{summary=[], text=[], minor=[], token=[!testToken]}",
+		assertEquals("{summary=, text=, minor=, token=!testToken}",
 				params.toString());
 	}
 
 	@Test
 	public void testGetNextMessageNoMinorEdit() {
 		ImmutableMap<String, Object> params = getParams();
-		assertEquals("{summary=[], text=[], notminor=[], token=[!testToken]}",
+		assertEquals("{summary=, text=, notminor=, token=!testToken}",
 				params.toString());
 	}
 
@@ -107,7 +107,7 @@ public class PostModifyContentTest {
 		when(userinfo.getGroups()).thenReturn(of("bot", "user"));
 		ImmutableMap<String, Object> params = getParams();
 		assertEquals(
-				"{summary=[], text=[], bot=[], notminor=[], token=[!testToken]}",
+				"{summary=, text=, bot=, notminor=, token=!testToken}",
 				params.toString());
 	}
 

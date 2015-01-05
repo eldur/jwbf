@@ -21,10 +21,10 @@ public class RequestBuilderTest {
     assertEquals("/a?b=c", new RequestBuilder("/a") //
         .param("b", "c") //
         .build());
-    assertEquals("/a?b=c&b=e", new RequestBuilder("/a") //
+    assertEquals("/a?b=e&d=c", new RequestBuilder("/a") //
         .param(null, (String) null) //
         .param("b", "e") //
-        .param("b", "c") //
+        .param("d", "c") //
         .build());
     assertEquals("/a?b=c&llun=None&q=None", new RequestBuilder("/a") //
         .param("llun", (String) null) //
@@ -33,11 +33,11 @@ public class RequestBuilderTest {
         .param("", "z") //
         .param("", Suppliers.ofInstance("t")) //
         .buildPost().getRequest());
-    assertEquals("/a?b=1&d=e", new RequestBuilder("/a") //
+    assertEquals("/a?b=1&c=e&d=e", new RequestBuilder("/a") //
         .param("d", "e") //
         .param(null, "null") //
         .param("b", 1) //
-        .param("d", "e") //
+        .param("c", "e") //
         .buildGet().getRequest());
     assertEquals("/a?a=true&b=false", new RequestBuilder("/a") //
         .param("a", true) //
@@ -135,10 +135,10 @@ public class RequestBuilderTest {
     Post newPost = builder.buildPost();
 
     // THEN
-    assertEquals("/index.html?a=b UTF-8 {c=[d]}", post.toString());
+    assertEquals("/index.html?a=b UTF-8 {c=d}", post.toString());
     assertEquals(post, newPost);
 
-    assertEquals("/index.html?a=b&c=e UTF-8 {c=[d]}",
+    assertEquals("/index.html?a=b&c=e UTF-8 {c=d}",
         builder.param("c", "e").buildPost().toString());
   }
 
@@ -156,7 +156,7 @@ public class RequestBuilderTest {
     Post newPost = builder.buildPost();
 
     // THEN
-    assertEquals("/index.php?c=d UTF-8 {e=[f]}", post.toString());
+    assertEquals("/index.php?c=d UTF-8 {e=f}", post.toString());
     assertEquals(post, newPost);
   }
 
@@ -179,7 +179,7 @@ public class RequestBuilderTest {
     Post newPost = builder.buildPost();
 
     // THEN
-    assertEquals("/index.php?c=None&f= UTF-8 {e=[], g=[], llun=[]}", post.toString());
+    assertEquals("/index.php?c=None&f= UTF-8 {e=, g=, llun=}", post.toString());
     assertEquals(post, newPost);
   }
 

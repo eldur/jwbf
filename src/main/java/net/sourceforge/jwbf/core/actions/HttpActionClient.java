@@ -199,18 +199,20 @@ public class HttpActionClient {
 	@VisibleForTesting
 	void applyToEntityBuilder(String key, Object value, Charset charset,
 			MultipartEntityBuilder entityBuilder) {
-		if (value instanceof String) {
-			String text = (String) value;
-			entityBuilder.addTextBody(key, text,
-					ContentType.create("*/*", charset));
-		} else if (value instanceof File) {
-			File file = (File) value;
-			entityBuilder.addBinaryBody(key, file);
-		} else {
-			String canonicalName = value.getClass().getCanonicalName();
-			throw new UnsupportedOperationException("No Handler found for "
-					+ canonicalName + ". Only String or File is accepted, "
-					+ "because http parameters knows no other types.");
+		if (value != null) {
+			if (value instanceof String) {
+				String text = (String) value;
+				entityBuilder.addTextBody(key, text,
+						ContentType.create("*/*", charset));
+			} else if (value instanceof File) {
+				File file = (File) value;
+				entityBuilder.addBinaryBody(key, file);
+			} else {
+				String canonicalName = value.getClass().getCanonicalName();
+				throw new UnsupportedOperationException("No Handler found for "
+						+ canonicalName + ". Only String or File is accepted, "
+						+ "because http parameters knows no other types.");
+			}
 		}
 	}
 
