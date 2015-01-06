@@ -18,21 +18,64 @@ import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * A query class to get a list of pages on the current user's watchlist that were changed within the
+ * given time period.
+ * <p/>
+ * You must be logged in or pass a user name and his watchlist token to use this class.
+ *
+ * @author Rabah Meradi.
+ */
 // TODO add public if a working test and integration test (IT) is present
 class WatchList extends BaseQuery<WatchResponse> {
 
+  /**
+   * The properties that could be returned with WatchList request.
+   */
   public enum WatchListProperties {
-    USER("user"), //
-    TITLE("title"), //
-    COMMENT("comment"), //
-    PARSED_COMMENT("parsedcomment"), //
-    TIMESTAMP("timestamp"), //
-    NOTIFICATION_TIMESTAMP("notificationtimestamp"), //
-    IDS("ids"), //
-    SIZES("sizes"), //
-    PATROL("patrol"), //
+    /**
+     * The user who made the change
+     */
+    USER("user"),
+    /**
+     * The title of page
+     */
+    TITLE("title"),
+    /**
+     * The edit/log comment
+     */
+    COMMENT("comment"),
+    /**
+     * The edit/log comment in HTML format
+     */
+    PARSED_COMMENT("parsedcomment"),
+    /**
+     * The time and date of the change
+     */
+    TIMESTAMP("timestamp"),
+    /**
+     * Adds timestamp of when the user was last notified about the edit
+     */
+    NOTIFICATION_TIMESTAMP("notificationtimestamp"),
+    /**
+     * The page ID and revision ID
+     */
+    IDS("ids"),
+    /**
+     * The page size before and after the change
+     */
+    SIZES("sizes"),
+    /**
+     * Whether the change is patrolled.
+     */
+    PATROL("patrol"),
+    /**
+     * The flags associated with the change (bot edit, minor edit ...)
+     */
     FLAGS("flags");
-
+    /**
+     * The name of the property like it's used by MW
+     */
     private String name;
 
     private WatchListProperties(String name) {
@@ -45,8 +88,25 @@ class WatchList extends BaseQuery<WatchResponse> {
   }
 
   public enum EditType {
-    EDIT("edit"), EXTERNAL("external"), NEW("new"), LOG("log");
-
+    /**
+     * Regular page edits
+     */
+    EDIT("edit"),
+    /**
+     * External edits
+     */
+    EXTERNAL("external"),
+    /**
+     * Pages creation
+     */
+    NEW("new"),
+    /**
+     * Log entries
+     */
+    LOG("log");
+    /**
+     * The name of the property like it's used by MW
+     */
     private String name;
 
     private EditType(String name) {
@@ -59,8 +119,17 @@ class WatchList extends BaseQuery<WatchResponse> {
   }
 
   public enum Direction {
-    OLDER("older"), NEWER("newer");
-
+    /**
+     * Older edits first
+     */
+    OLDER("older"),
+    /**
+     * Newer edits first
+     */
+    NEWER("newer");
+    /**
+     * the name used by MW
+     */
     private String name;
 
     private Direction(String name) {
@@ -86,6 +155,9 @@ class WatchList extends BaseQuery<WatchResponse> {
   private final ImmutableList<WatchListProperties> properties;
   private final String user;
   private final String excludeUser;
+  private final String owner;
+  private final String token;
+
   private final ImmutableList<EditType> editType;
   private final boolean showBots;
   private final boolean showAnonymous;
@@ -96,7 +168,9 @@ class WatchList extends BaseQuery<WatchResponse> {
   private WatchList(Builder builder) {
     super(builder.bot);
     if (!bot().isLoggedIn()) {
-      throw new ActionException("Please login first");
+      if (builder.owner == null || builder.token == null) {
+        throw new ActionException("Please login first or set owner and token");
+      }
     }
     this.limit = builder.limit;
     this.start = builder.start;
@@ -106,6 +180,9 @@ class WatchList extends BaseQuery<WatchResponse> {
     this.properties = builder.properties;
     this.user = builder.user;
     this.excludeUser = builder.excludeUser;
+    this.owner = builder.owner;
+    this.token = builder.token;
+
     this.editType = builder.editTypes;
     this.showBots = builder.showBots;
     this.showAnonymous = builder.showAnonymous;
@@ -222,11 +299,13 @@ class WatchList extends BaseQuery<WatchResponse> {
     private ImmutableList<Integer> namespaces = MediaWiki.NS_EVERY;
     private boolean showMinor = true;
     private ImmutableList<EditType> editTypes = ImmutableList.of();
-    private String user = null;
-    private String excludeUser = null;
+    private String user;
+    private String excludeUser;
     private Date start;
     private Date end;
     private Direction dir;
+    private String owner;
+    private String token;
 
     public Builder(MediaWikiBot bot) {
       this.bot = bot;
@@ -248,26 +327,49 @@ class WatchList extends BaseQuery<WatchResponse> {
       return this;
     }
 
+    /**
+     * Which properties to get.
+     */
     public Builder withProperties(WatchListProperties... properties) {
       this.properties = ImmutableList.copyOf(properties);
       return this;
     }
 
+    /**
+     * Whatever to include edits made by bots or not
+     *
+     * @param show include edits made by bots or not
+     */
     public Builder showBots(boolean show) {
       this.showBots = show;
       return this;
     }
 
+    /**
+     * Whatever to include edits made by anonymous users or not
+     *
+     * @param show include edits made by anonymous users or not
+     */
     public Builder showAnonymous(boolean show) {
       this.showAnonymous = show;
       return this;
     }
 
+    /**
+     * Include or not edits that are marked as minor
+     *
+     * @param show include minor edits or not
+     */
     public Builder showMinor(boolean show) {
       this.showMinor = show;
       return this;
     }
 
+    /**
+     * Only list certain types of changes
+     *
+     * @param types the types of changes that will be listed
+     */
     public Builder onlyTypes(EditType... types) {
       return onlyTypes(ImmutableList.copyOf(types));
     }
@@ -277,16 +379,46 @@ class WatchList extends BaseQuery<WatchResponse> {
       return this;
     }
 
+    /**
+     * Only list changes made by this a specific user
+     *
+     * @param user the user
+     */
     public Builder onlyUser(String user) {
       this.user = user;
       return this;
     }
 
+    /**
+     * Exclude changes made by a certain user
+     *
+     * @param user the user
+     */
     public Builder excludeUser(String user) {
       this.excludeUser = user;
       return this;
     }
 
+    /**
+     * The user whose watchlist you want
+     *
+     * @param ownerUser the user
+     * @param token     the wtahclist token of the user
+     */
+    public Builder owner(String ownerUser, String token) {
+      if (owner != null && token == null) {
+        throw new IllegalArgumentException("owner and token mustn't be null");
+      }
+      this.owner = ownerUser;
+      this.token = token;
+      return this;
+    }
+
+    /**
+     * The timestamp to start listing from
+     *
+     * @param start the timestamp
+     */
     public Builder withStart(Date start) {
       if (end != null && start != null && end.compareTo(start) < 0) {
         throw new IllegalArgumentException("start must be before end");
@@ -295,6 +427,11 @@ class WatchList extends BaseQuery<WatchResponse> {
       return this;
     }
 
+    /**
+     * The timestamp to end listing at
+     *
+     * @param end the timestamp
+     */
     public Builder withEnd(Date end) {
       if (start != null && end != null && end.compareTo(start) < 0) {
         throw new IllegalArgumentException("end must be later than start");
@@ -303,10 +440,22 @@ class WatchList extends BaseQuery<WatchResponse> {
       return this;
     }
 
+    /**
+     * Direction to list in
+     *
+     * @param dir the direction
+     */
+
     public Builder withDir(Direction dir) {
       this.dir = dir;
       return this;
     }
+
+    /**
+     * Create a WatchList query with the given configuration
+     *
+     * @return the watchlist query
+     */
 
     public WatchList build() {
       return new WatchList(this);

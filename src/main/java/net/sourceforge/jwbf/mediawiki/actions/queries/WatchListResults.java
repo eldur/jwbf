@@ -11,6 +11,7 @@ import net.sourceforge.jwbf.core.internal.Checked;
 @JsonNaming(PropertyNamingStrategy.LowerCaseStrategy.class)
 public class WatchListResults {
   static class WatchContinue {
+    /** The continue token */
     private final String continueToken;
 
     @JsonCreator
@@ -36,15 +37,44 @@ public class WatchListResults {
     }
   }
 
+  static class Error {
+    private final String code;
+    private final String message;
+    private final String moreInfo;
+
+    @JsonCreator
+    public Error(@JsonProperty("code") String code, @JsonProperty("info") String message,
+        @JsonProperty("*") String moreInfo) {
+      this.code = code;
+      this.message = message;
+      this.moreInfo = moreInfo;
+    }
+
+    public String getCode() {
+      return code;
+    }
+
+    public String getMessage() {
+      return message;
+    }
+
+    public String getMoreInfo() {
+      return moreInfo;
+    }
+  }
+
   private final WatchContinue watchContinue;
   private final String batchComplete;
+  private final Error error;
   private final Query query;
 
   @JsonCreator
   public WatchListResults(@JsonProperty("continue") WatchContinue watchContinue,
-      @JsonProperty("batchcomplete") String batchComplete, @JsonProperty("query") Query query) {
+      @JsonProperty("batchcomplete") String batchComplete, @JsonProperty("error") Error error,
+      @JsonProperty("query") Query query) {
     this.watchContinue = watchContinue;
     this.batchComplete = batchComplete;
+    this.error = error;
     this.query = Checked.nonNull(query, "watchlist results");
   }
 
@@ -58,6 +88,10 @@ public class WatchListResults {
 
   public String getBatchComplete() {
     return batchComplete;
+  }
+
+  public Error getError() {
+    return error;
   }
 
   public List<WatchResponse> getResults() {
