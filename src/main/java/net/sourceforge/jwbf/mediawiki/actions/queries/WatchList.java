@@ -1,9 +1,10 @@
 package net.sourceforge.jwbf.mediawiki.actions.queries;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
-import com.google.common.base.Joiner;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
@@ -23,11 +24,20 @@ import org.slf4j.LoggerFactory;
  * given time period.
  * <p/>
  * You must be logged in or pass a user name and his watchlist token to use this class.
+ * <p/>
+ * See also: <a href="https://www.mediawiki.org/wiki/API:Watchlist">API:Watchlist</a>
  *
  * @author Rabah Meradi.
  */
 // TODO add public if a working test and integration test (IT) is present
 class WatchList extends BaseQuery<WatchResponse> {
+
+  static String formatDate(Date date) {
+    // XXX change with java8
+    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+    simpleDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+    return simpleDateFormat.format(date);
+  }
 
   /**
    * The properties that could be returned with WatchList request.
@@ -141,8 +151,6 @@ class WatchList extends BaseQuery<WatchResponse> {
     }
   }
 
-  private static final Joiner PARAM_JOINER = Joiner.on('|');
-
   private static final Logger log = LoggerFactory.getLogger(WatchList.class);
 
   private final JsonMapper mapper = new JsonMapper();
@@ -189,8 +197,8 @@ class WatchList extends BaseQuery<WatchResponse> {
     this.showMinor = builder.showMinor;
   }
 
-  private static String joinParams(List<?> params) {
-    return MediaWiki.urlEncode(PARAM_JOINER.join(params));
+  private static String joinedAndEncodedParams(List<?> params) {
+    return MediaWiki.urlEncode(MediaWiki.pipeJoiner().join(params));
   }
 
   @Override
@@ -214,7 +222,7 @@ class WatchList extends BaseQuery<WatchResponse> {
         .param("list", "watchlist");
     requestBuilder.param("wlnamespace", MediaWiki.urlEncodedNamespace(namespaces));
     if (!properties.isEmpty()) {
-      requestBuilder.param("wlprop", joinParams(Lists.newArrayList(properties)));
+      requestBuilder.param("wlprop", joinedAndEncodedParams(Lists.newArrayList(properties)));
     }
     if (start != null) {
       requestBuilder.param("wlstart", start.toString()); // TODO do formatting in this class
@@ -233,7 +241,7 @@ class WatchList extends BaseQuery<WatchResponse> {
       }
     }
     if (!editType.isEmpty()) {
-      requestBuilder.param("wltype", joinParams(Lists.newArrayList(editType)));
+      requestBuilder.param("wltype", joinedAndEncodedParams(Lists.newArrayList(editType)));
     }
     requestBuilder.param("wlshow", createShowParamValue());
 
@@ -267,7 +275,7 @@ class WatchList extends BaseQuery<WatchResponse> {
     } else {
       shows.add("!minor");
     }
-    return joinParams(shows);
+    return joinedAndEncodedParams(shows);
   }
 
   @Override
