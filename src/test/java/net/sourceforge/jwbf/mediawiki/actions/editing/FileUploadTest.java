@@ -35,8 +35,8 @@ public class FileUploadTest {
       fail();
     } catch (ApiException e) {
       // THEN
-      assertEquals("API ERROR CODE: mustposttoken VALUE: The 'token' parameter was found " //
-          + "in the query string, but must be in the POST body", e.getMessage());
+      assertEquals("API ERROR CODE: mustposttoken VALUE: The 'token' parameter was found " + //
+          "in the query string, but must be in the POST body", e.getMessage());
     }
   }
 

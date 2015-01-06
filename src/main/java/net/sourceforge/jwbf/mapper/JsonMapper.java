@@ -1,47 +1,56 @@
 package net.sourceforge.jwbf.mapper;
 
-import javax.annotation.Nonnull;
 import java.io.IOException;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import javax.annotation.Nonnull;
+
 import net.sourceforge.jwbf.core.internal.Checked;
+
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class JsonMapper {
 
-  private final ToJsonFunction transfomer;
+	private final ToJsonFunction transfomer;
 
-  public JsonMapper() {
-    this(new JacksonToJsonFunction());
-  }
+	public JsonMapper() {
+		this(new JacksonToJsonFunction());
+	}
 
-  public <T> JsonMapper(ToJsonFunction transfomer) {
-    this.transfomer = transfomer;
-  }
+	public <T> JsonMapper(ToJsonFunction transfomer) {
+		this.transfomer = transfomer;
+	}
 
-  public <T> T get(String json, Class<T> clazz) {
-    String nonNullJson = Checked.nonNull(json, "json");
-    return (T) Checked.nonNull(transfomer.toJson(nonNullJson, clazz), "a json mapping result");
-  }
+	public <T> T get(String json, Class<T> clazz) {
+		String nonNullJson = Checked.nonNull(json, "json");
+		return (T) Checked.nonNull(transfomer.toJson(nonNullJson, clazz),
+				"a json mapping result");
+	}
 
-  public interface ToJsonFunction {
-    @Nonnull
-    Object toJson(@Nonnull String jsonString, Class<?> clazz);
-  }
+	public interface ToJsonFunction {
+		@Nonnull
+		Object toJson(@Nonnull String jsonString, Class<?> clazz);
+	}
 
-  static class JacksonToJsonFunction implements ToJsonFunction {
+	static class JacksonToJsonFunction implements ToJsonFunction {
 
-    ObjectMapper newObjectMapper() {
-      return new ObjectMapper();
-    }
+		ObjectMapper newObjectMapper() {
+			ObjectMapper mapper = new ObjectMapper();
+			//TODO: find a better way to do this
+			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES,
+					false);
+			return mapper;
+		}
 
-    @Nonnull
-    @Override
-    public Object toJson(@Nonnull String jsonString, Class<?> clazz) {
-      try {
-        return newObjectMapper().readValue(jsonString, clazz);
-      } catch (IOException e) {
-        throw new IllegalArgumentException(e);
-      }
-    }
-  }
+		@Nonnull
+		@Override
+		public Object toJson(@Nonnull String jsonString, Class<?> clazz) {
+			try {
+				//TODO: why are you creating a mapper for each call?
+				return newObjectMapper().readValue(jsonString, clazz);
+			} catch (IOException e) {
+				throw new IllegalArgumentException(e);
+			}
+		}
+	}
 }
