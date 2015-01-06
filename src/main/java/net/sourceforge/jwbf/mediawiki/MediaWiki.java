@@ -40,8 +40,10 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.primitives.Ints;
+
 import net.sourceforge.jwbf.core.NotReleased;
 import net.sourceforge.jwbf.core.internal.Checked;
+
 import org.apache.commons.lang3.StringEscapeUtils;
 
 /**
@@ -128,23 +130,28 @@ public final class MediaWiki {
     /**
      *
      */
-    , @Deprecated MW1_14
+		, @Deprecated
+		MW1_14
     /**
      * Released 2009-06
      */
-    , @Deprecated MW1_15
+		, @Deprecated
+		MW1_15
     /**
      * Released 2010-07
      */
-    , @Deprecated MW1_16
+		, @Deprecated
+		MW1_16
     /**
      * Released 2011-06
      */
-    , @Deprecated MW1_17
+		, @Deprecated
+		MW1_17
     /**
      * Released 2011-11
      */
-    , @Deprecated MW1_18
+		, @Deprecated
+		MW1_18
     /**
      * Released 2012-05
      */
@@ -152,15 +159,18 @@ public final class MediaWiki {
     /**
      * Released 2012-11
      */
-    , @Deprecated MW1_20
+		, @Deprecated
+		MW1_20
     /**
      * Released 2013-05-25
      */
-    , @Deprecated MW1_21
+		, @Deprecated
+		MW1_21
     /**
      * Released 2013-12-06
      */
-    , @Deprecated MW1_22
+		, @Deprecated
+		MW1_22
     /**
      * Released 2014-06-05
      */
@@ -172,7 +182,8 @@ public final class MediaWiki {
     /**
      * TODO Not released
      */
-    , @NotReleased MW1_25
+		, @NotReleased
+		MW1_25
     /**
      *
      */
@@ -189,17 +200,20 @@ public final class MediaWiki {
         .toSortedList(new Comparator<Version>() {
           @Override
           public int compare(Version o1, Version o2) {
-            return Integer.valueOf(o1.getIntValue()).compareTo(Integer.valueOf(o2.getIntValue()));
+						return Integer.valueOf(o1.getIntValue()).compareTo(
+								Integer.valueOf(o2.getIntValue()));
           }
         });
 
-    private static final Version LATEST_VERSION = Iterables.getLast(valuesStable());
+		private static final Version LATEST_VERSION = Iterables
+				.getLast(valuesStable());
 
     /**
      * @return a, like 1.15
      */
     public String getNumber() {
-      return name().replace("MW", "").replace("_0", "_").replace("_", ".");
+			return name().replace("MW", "").replace("_0", "_")
+					.replace("_", ".");
     }
 
     /**
@@ -231,9 +245,11 @@ public final class MediaWiki {
     public static boolean isStableVersion(Version version) {
       if (version != null) {
         Field field = getField(version);
-        boolean isDeprecated = field.isAnnotationPresent(Deprecated.class);
+				boolean isDeprecated = field
+						.isAnnotationPresent(Deprecated.class);
         boolean isBeta = field.isAnnotationPresent(NotReleased.class);
-        return !(version.equals(DEVELOPMENT) || version.equals(UNKNOWN) || isDeprecated || isBeta);
+				return !(version.equals(DEVELOPMENT) || version.equals(UNKNOWN)
+						|| isDeprecated || isBeta);
       } else {
         return false;
       }
@@ -305,7 +321,8 @@ public final class MediaWiki {
   /**
    * helper method generating a namespace string as required by the MW-api.
    *
-   * @param namespaces namespace as
+	 * @param namespaces
+	 *            namespace as
    * @return with numbers seperated by |
    * @deprecated prefer {@link #createNsString(java.util.List)}
    */
@@ -314,7 +331,8 @@ public final class MediaWiki {
     return createNsString(nullSafeCopyOf(namespaces));
   }
 
-  public static ImmutableList<String> nullSafeCopyOf(@Nullable String[] strings) {
+	public static ImmutableList<String> nullSafeCopyOf(
+			@Nullable String[] strings) {
     if (strings == null) {
       return ImmutableList.of();
     } else {
@@ -338,5 +356,9 @@ public final class MediaWiki {
   public static String urlEncodedNamespace(ImmutableList<Integer> namespaces) {
     return MediaWiki.urlEncode(createNsString(namespaces));
   }
+
+	public static String joinParam(Set<?> params) {
+		return urlEncode(Joiner.on("|").join(params));
+	}
 
 }

@@ -201,20 +201,20 @@ public class HttpActionClient {
 	void applyToEntityBuilder(String key, Object value, Charset charset,
 			MultipartEntityBuilder entityBuilder) {
 		if (value != null) {
-		if (value instanceof String) {
-			String text = (String) value;
-			entityBuilder.addTextBody(key, text,
-					ContentType.create("*/*", charset));
-		} else if (value instanceof File) {
-			File file = (File) value;
-			entityBuilder.addBinaryBody(key, file);
-		} else {
-			String canonicalName = value.getClass().getCanonicalName();
-			throw new UnsupportedOperationException("No Handler found for "
-					+ canonicalName + ". Only String or File is accepted, "
-					+ "because http parameters knows no other types.");
+			if (value instanceof String) {
+				String text = (String) value;
+				entityBuilder.addTextBody(key, text,
+						ContentType.create("*/*", charset));
+			} else if (value instanceof File) {
+				File file = (File) value;
+				entityBuilder.addBinaryBody(key, file);
+			} else {
+				String canonicalName = value.getClass().getCanonicalName();
+				throw new UnsupportedOperationException("No Handler found for " +
+						canonicalName + ". Only String or File is accepted, " +
+						"because http parameters knows no other types.");
+			}
 		}
-	}
 	}
 
 	@Nonnull
@@ -295,8 +295,8 @@ public class HttpActionClient {
 		int code = statusLine.getStatusCode();
 		if (code >= HttpStatus.SC_BAD_REQUEST) {
 			consume(res);
-			throw new IllegalStateException("invalid status: " + statusLine
-					+ "; for " + requestBase.getURI());
+			throw new IllegalStateException("invalid status: " + statusLine +
+					"; for " + requestBase.getURI());
 		}
 		return res;
 	}
@@ -327,8 +327,8 @@ public class HttpActionClient {
 		} else if (ha instanceof Get) {
 			return "(GET " + suffix;
 		} else {
-			throw new IllegalStateException("unknown type: "
-					+ ha.getClass().getCanonicalName());
+			throw new IllegalStateException("unknown type: " +
+					ha.getClass().getCanonicalName());
 		}
 	}
 
@@ -348,7 +348,8 @@ public class HttpActionClient {
 
 	public static class Builder {
 
-		private static final Function<UserAgentPart, String> TO_STRING = new NonnullFunction<UserAgentPart, String>() {
+		private static final Function<UserAgentPart, String> TO_STRING =
+				new NonnullFunction<UserAgentPart, String>() {
 			@Nonnull
 			@Override
 			public String applyNonnull(@Nonnull UserAgentPart input) {
@@ -415,8 +416,8 @@ public class HttpActionClient {
 		private static String makeUserAgentString(
 				List<UserAgentPart> userAgentParts) {
 			String userAgent = Joiner.on(" ") //
-					.join(Transform.the(userAgentParts, TO_STRING)) + " "
-					+ HttpClientVersion.DEFAULT_USER_AGENT;
+					.join(Transform.the(userAgentParts, TO_STRING)) + " " +
+					HttpClientVersion.DEFAULT_USER_AGENT;
 			return userAgent.trim();
 		}
 
@@ -448,15 +449,15 @@ public class HttpActionClient {
 	private static String trimAndRemoveWhitespace(String in) {
 		String changed = in.trim().replaceAll("[\r\n()]+", "");
 		return logIfDifferent(in, changed,
-				"\"{}\" was changed to \"{}\"; because of User-Agent "
-						+ "comment rules");
+				"\"{}\" was changed to \"{}\"; because of User-Agent " +
+						"comment rules");
 	}
 
 	private static String trimAndReplaceWhitespaceLogged(String in) {
 		String changed = trimAndReplaceWhitespace(in);
 		return logIfDifferent(in, changed,
-				"\"{}\" was changed to \"{}\"; because of User-Agent "
-						+ "name/version rules");
+				"\"{}\" was changed to \"{}\"; because of User-Agent " +
+						"name/version rules");
 	}
 
 	private static String trimAndReplaceWhitespace(String in) {

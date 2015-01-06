@@ -109,6 +109,10 @@ public class RequestBuilder {
 		return param(key, Boolean.toString(value));
 	}
 
+	public RequestBuilder param(String key, Date date) {
+		return param(key, String.valueOf(date.getTime() / 1000L));
+	}
+
 	public RequestBuilder param(String key) {
 		if (!Strings.isNullOrEmpty(key)) {
 			param(key, Suppliers.ofInstance(""));
@@ -184,7 +188,7 @@ public class RequestBuilder {
 		public boolean equals(Object obj) {
 			if (obj instanceof HashCodeEqualsMemoizingSupplier) {
 				return delegate
-						.equals(((HashCodeEqualsMemoizingSupplier) obj).delegate);
+						.equals(((HashCodeEqualsMemoizingSupplier<?>) obj).delegate);
 			} else {
 				if (obj == null) {
 					throw new IllegalStateException("do not compare with null");
@@ -194,9 +198,5 @@ public class RequestBuilder {
 				}
 			}
 		}
-	}
-
-	public void param(String key, Date date) {
-		// TODO I don't know how the dates must be formatted!
 	}
 }
