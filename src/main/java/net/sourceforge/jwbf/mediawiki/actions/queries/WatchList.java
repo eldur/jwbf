@@ -255,7 +255,6 @@ class WatchList extends BaseQuery<WatchResponse> {
     }
     log.debug("using query {}", requestBuilder.build());
     return requestBuilder.buildGet();
-
   }
 
   private String createShowParamValue() {

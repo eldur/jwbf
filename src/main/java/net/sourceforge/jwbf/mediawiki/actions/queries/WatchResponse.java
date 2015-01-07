@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import com.google.common.base.MoreObjects;
 import net.sourceforge.jwbf.mediawiki.actions.queries.WatchList.EditType;
 
 /**
@@ -244,4 +245,30 @@ public class WatchResponse {
     return newFlag;
   }
 
+  @Override
+  public String toString() {
+    return MoreObjects.toStringHelper(this) //
+        .add("ns", ns) //
+        .add("title", title) //
+        .add("user", user) //
+        .add("comment", comment) //
+        .add("parsedComment", parsedComment) //
+        .add("timestamp", timestamp) //
+        .add("notificationTimestamp", notificationTimestamp) //
+        .add("pageid", pageid) //
+        .add("revid", revid) //
+        .add("oldRevid", oldRevid) //
+        .add("oldLen", oldLen) //
+        .add("newLen", newLen) //
+        .add("patrolled", patrolled) //
+        .add("type", type) //
+        .add("anon", anon) //
+        .add("minor", minor) //
+        .add("bot", bot) //
+        .add("newFlag", newFlag) //
+        .toString();
+  }
+
+  // TODO implement hashCode and equals like SimpleArticle#hashCode(),
+  // SimpleArticle#equals()
 }
