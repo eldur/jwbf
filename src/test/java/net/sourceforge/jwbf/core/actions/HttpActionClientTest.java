@@ -428,7 +428,7 @@ public class HttpActionClientTest {
         .build();
 
     // THEN
-    GAssert.assertEquals(ImmutableList.<String>of("[WARN] a User-Agent must be set in your client"),
+    GAssert.assertEquals(ImmutableList.of("[WARN] a User-Agent must be set in your client"),
         logLinesSupplier.get());
   }
 

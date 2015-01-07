@@ -28,8 +28,8 @@ import java.util.regex.Pattern;
 
 import com.google.common.annotations.Beta;
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Optional;
-import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 
 /**
  * This is a simple content helper class that implements the EditContentAccesable interface, plus
@@ -256,6 +256,19 @@ public class SimpleArticle implements ArticleMeta, Serializable, ContentSetable 
     } else {
       return false;
     }
+  }
+
+  @Override
+  public String toString() {
+    return MoreObjects.toStringHelper(this) //
+        .add("title", title) //
+        .add("editSummary", editSummary) // XXX check equals
+        .add("text", text) //
+        .add("editor", editor) // XXX check equals
+        .add("minorEdit", minorEdit) // XXX check equals
+        .add("editTimestamp", editTimestamp) //
+        .add("revId", revId) //
+        .toString();
   }
 
   @Override

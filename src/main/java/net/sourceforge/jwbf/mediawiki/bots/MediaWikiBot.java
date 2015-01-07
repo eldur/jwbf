@@ -171,18 +171,22 @@ public class MediaWikiBot implements WikiBot {
    * @deprecated use {@link #readData(String)}
    */
   @Override
+  // TODO 'data' is not very descriptive
   public SimpleArticle readData(String name, int properties) {
     return readData(properties, name);
   }
 
+  // TODO 'data' is not very descriptive
   SimpleArticle readData(int properties, String name) {
-    return getPerformedAction(new GetRevision(getVersion(), name, properties)).getArticle();
+    return getPerformedAction(new GetRevision(null, name, properties)).getArticle();
   }
 
+  // TODO 'data' is not very descriptive
   public ImmutableList<SimpleArticle> readData(String... names) {
     return readData(ImmutableList.copyOf(names));
   }
 
+  // TODO 'data' is not very descriptive
   public ImmutableList<SimpleArticle> readData(ImmutableList<String> names) {
     return getPerformedAction(new GetRevision(names, DEFAULT_READ_PROPERTIES)).asList();
   }
@@ -191,10 +195,26 @@ public class MediaWikiBot implements WikiBot {
    * {@inheritDoc}
    */
   @Override
+  // TODO 'data' is not very descriptive
   public SimpleArticle readData(String name) {
     return readData(DEFAULT_READ_PROPERTIES, name);
   }
 
+  // TODO 'data' is not very descriptive
+  public ImmutableList<Optional<SimpleArticle>> readDataOpt(String... names) {
+    return readDataOpt(ImmutableList.copyOf(names));
+  }
+
+  // TODO 'data' is not very descriptive
+  public ImmutableList<Optional<SimpleArticle>> readDataOpt(ImmutableList<String> names) {
+    return getPerformedAction(new GetRevision(names, DEFAULT_READ_PROPERTIES)).asListOpt();
+  }
+
+  // TODO 'data' is not very descriptive
+  public Optional<SimpleArticle> readDataOpt(String name) {
+    return getPerformedAction(new GetRevision(null, name, DEFAULT_READ_PROPERTIES))
+        .getArticleOpt();
+  }
   /**
    * @param name of article in a mediawiki like "Main Page"
    * @return a content representation of requested article, never null
