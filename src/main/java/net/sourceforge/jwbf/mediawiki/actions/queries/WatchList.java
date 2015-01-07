@@ -1,9 +1,7 @@
 package net.sourceforge.jwbf.mediawiki.actions.queries;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.TimeZone;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
@@ -12,6 +10,7 @@ import com.google.common.primitives.Ints;
 import net.sourceforge.jwbf.core.actions.RequestBuilder;
 import net.sourceforge.jwbf.core.actions.util.ActionException;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
+import net.sourceforge.jwbf.core.internal.TimeConverter;
 import net.sourceforge.jwbf.mapper.JsonMapper;
 import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
 import net.sourceforge.jwbf.mediawiki.MediaWiki;
@@ -33,10 +32,7 @@ import org.slf4j.LoggerFactory;
 class WatchList extends BaseQuery<WatchResponse> {
 
   static String formatDate(Date date) {
-    // XXX change with java8
-    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
-    simpleDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-    return simpleDateFormat.format(date);
+    return TimeConverter.valueOf(date);
   }
 
   /**

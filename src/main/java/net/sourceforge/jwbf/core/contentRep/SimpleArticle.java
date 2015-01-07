@@ -20,8 +20,6 @@ package net.sourceforge.jwbf.core.contentRep;
 
 import javax.annotation.Nullable;
 import java.io.Serializable;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
 import java.util.regex.Pattern;
@@ -30,6 +28,7 @@ import com.google.common.annotations.Beta;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Optional;
+import net.sourceforge.jwbf.core.internal.TimeConverter;
 
 /**
  * This is a simple content helper class that implements the EditContentAccesable interface, plus
@@ -225,17 +224,9 @@ public class SimpleArticle implements ArticleMeta, Serializable, ContentSetable 
   }
 
   private Date tryParse(String editTimestamp) {
-    Optional<Date> parsedDate = tryParse(editTimestamp, "yyyy-MM-dd'T'HH:mm:ss'Z'");
-    return parsedDate.or(tryParse(editTimestamp, "MM/dd/yy' 'HH:mm:ss")).get();
-  }
-
-  private Optional<Date> tryParse(String editTimestamp, String datePattern) {
-    SimpleDateFormat sdf = new SimpleDateFormat(datePattern);
-    try {
-      return Optional.of(sdf.parse(editTimestamp));
-    } catch (ParseException e) {
-      return Optional.absent();
-    }
+    Optional<Date> parsedDate = //
+        TimeConverter.from(editTimestamp, TimeConverter.YYYYMMDD_T_HHMMSS_Z);
+    return parsedDate.or(TimeConverter.from(editTimestamp, "MM/dd/yy' 'HH:mm:ss")).get();
   }
 
   public void setEditTimestamp(@Nullable Date d) {

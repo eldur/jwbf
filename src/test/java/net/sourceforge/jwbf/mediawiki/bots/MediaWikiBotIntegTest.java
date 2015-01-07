@@ -79,7 +79,7 @@ public class MediaWikiBotIntegTest extends AbstractIntegTest {
     articleB.setText("#REDIRECT [[Any]]");
     articleB.setEditSummary("#REDIRECT [[Whatever]]");
     articleB.setEditor("Any");
-    articleB.setEditTimestamp(new Date(1134723450000L));
+    articleB.setEditTimestamp(new Date(1134727050000L));
     articleB.setRevisionId("13560");
     return articleB;
   }
