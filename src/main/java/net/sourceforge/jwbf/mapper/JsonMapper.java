@@ -1,10 +1,15 @@
 package net.sourceforge.jwbf.mapper;
 
-import javax.annotation.Nonnull;
 import java.io.IOException;
+import java.util.HashMap;
+
+import javax.annotation.Nonnull;
+
+import net.sourceforge.jwbf.core.internal.Checked;
+
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import net.sourceforge.jwbf.core.internal.Checked;
 
 public class JsonMapper {
     private final ToJsonFunction transfomer;
@@ -22,9 +27,16 @@ public class JsonMapper {
         return (T) Checked.nonNull(transfomer.toJson(nonNullJson, clazz), "a json mapping result");
     }
 
+    public HashMap<String, Object> toMap(String json) {
+        String nonNullJson = Checked.nonNull(json, "json");
+        return Checked.nonNull(transfomer.toMap(nonNullJson), "a json mapping result");
+    }
+
     public interface ToJsonFunction {
         @Nonnull
         Object toJson(@Nonnull String jsonString, Class<?> clazz);
+
+        HashMap<String, Object> toMap(@Nonnull String json);
     }
 
     static class JacksonToJsonFunction implements ToJsonFunction {
@@ -43,6 +55,16 @@ public class JsonMapper {
                 return newObjectMapper().readValue(jsonString, clazz);
             } catch (IOException e) {
                 throw new IllegalArgumentException(e);
+            }
+        }
+
+        public HashMap<String, Object> toMap(@Nonnull String jsonString) {
+            try {
+                return newObjectMapper().readValue(jsonString,
+                        new TypeReference<HashMap<String, Object>>() {
+                        });
+            } catch (IOException e) {
+                throw new IllegalArgumentException();
             }
         }
     }

@@ -19,16 +19,18 @@
  */
 package net.sourceforge.jwbf.mediawiki.actions.login;
 
+import java.util.HashMap;
+
 import net.sourceforge.jwbf.core.actions.Post;
 import net.sourceforge.jwbf.core.actions.RequestBuilder;
 import net.sourceforge.jwbf.core.actions.util.ActionException;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.core.actions.util.PermissionException;
-import net.sourceforge.jwbf.mapper.XmlConverter;
-import net.sourceforge.jwbf.mapper.XmlElement;
+import net.sourceforge.jwbf.mapper.JsonMapper;
 import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.contentRep.LoginData;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,6 +53,7 @@ public class PostLogin extends MWAction {
   private final String username;
   private final String pw;
   private final String domain;
+  private final JsonMapper mapper = new JsonMapper();
 
   /**
    * @param username the
@@ -70,7 +73,7 @@ public class PostLogin extends MWAction {
       final String token) {
     RequestBuilder loginRequest = new ApiRequestBuilder() //
         .action("login") //
-        .formatXml() //
+        .formatJson() //
         .postParam("lgname", username) //
         .postParam("lgpassword", pw);
     if (domain != null) {
@@ -87,23 +90,24 @@ public class PostLogin extends MWAction {
    */
   @Override
   public String processAllReturningText(final String s) {
-    XmlElement root = XmlConverter.getRootElement(s);
-    findContent(root);
+      HashMap<String, Object> map = mapper.toMap(s);
+    findContent(map);
 
     return s;
   }
 
   /**
-   * @param startXmlElement the, where the search begins
+   * @param map the, where the search begins
    */
-  private void findContent(final XmlElement startXmlElement) {
-
-    String result = startXmlElement.getChildAttributeValue("login", "result");
+  private void findContent(final HashMap<String, Object> map) {
+      @SuppressWarnings("unchecked")
+    HashMap<String, String> data = (HashMap<String, String>) map.get("login");
+    String result = data.get("result");
     if (result.equalsIgnoreCase(success)) {
-      login.setup(startXmlElement.getChildAttributeValue("login", "lgusername"), true);
+      login.setup(data.get("lgusername"), true);
     } else if (result.equalsIgnoreCase(needToken) && reTryLimit) {
       msg = getLoginMsg(username, pw, domain,
-          startXmlElement.getChildAttributeValue("login", "token"));
+          data.get("token"));
       reTry = true;
       reTryLimit = false;
     } else if (result.equalsIgnoreCase(wrongPass)) {

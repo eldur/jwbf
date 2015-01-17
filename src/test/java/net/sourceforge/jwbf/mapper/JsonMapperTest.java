@@ -7,8 +7,10 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 
 import javax.annotation.Nonnull;
+
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -16,7 +18,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Charsets;
 import com.google.common.io.Files;
 import com.google.common.io.Resources;
+
 import net.sourceforge.jwbf.JWBF;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -63,6 +67,12 @@ public class JsonMapperTest {
       public Object toJson(@Nonnull String jsonString, Class<?> clazz) {
         return null;
       }
+
+    @Override
+    public HashMap<String, Object> toMap(String json) {
+        // TODO Auto-generated method stub
+        return null;
+    }
     };
     testee = new JsonMapper(nullFunction);
     try {
