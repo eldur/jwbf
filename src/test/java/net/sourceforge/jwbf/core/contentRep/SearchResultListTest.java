@@ -27,8 +27,8 @@ public class SearchResultListTest {
   @Test
   public void testJsonParsing() throws IOException {
     // GIVEN
-    String content = Resources.toString(Resources.getResource("mediawiki/v1-23/search.json"),
-        StandardCharsets.UTF_8);
+    String content = Resources
+        .toString(Resources.getResource("mediawiki/v1-23/search.json"), StandardCharsets.UTF_8);
 
     // WHEN
     SearchResultList srl = testee.get(content, SearchResultList.class);
@@ -45,8 +45,10 @@ public class SearchResultListTest {
     assertThat(result, notNullValue());
     assertThat(result.getNamespace(), is(0));
     assertThat(result.getTitle(), is("Design/WikiFont"));
-    assertThat(result.getSnippet(),
-        is("pixel-perfect so they retain their <span class=\"searchmatch\">meaning</span> and look sharp in all sizes. An icon should fully express its intended <span class=\"searchmatch\">meaning</span> without any text companion. In selective"));
+    assertThat(result.getSnippet(), is("pixel-perfect so they retain their " +
+            "<span class=\"searchmatch\">meaning</span> and " +
+            "look sharp in all sizes. An icon should fully express its intended " +
+            "<span class=\"searchmatch\">meaning</span> without any text companion. In selective"));
     assertThat(result.getSize(), is(8159));
     assertThat(result.getWordCount(), is(890));
     assertThat(result.getTimestamp(), is("2014-10-24T18:41:45Z"));

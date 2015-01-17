@@ -23,7 +23,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.google.common.base.Function;
-import com.google.common.base.Joiner;
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
@@ -128,7 +127,7 @@ public class LogEvents extends BaseQuery<LogItem> {
         ;
 
     if (logtypes.size() > 0) {
-      requestBuilder.param("letype", Joiner.on("|").join(logtypes));
+      requestBuilder.param("letype", MediaWiki.pipeJoined(logtypes));
     }
     return requestBuilder;
   }

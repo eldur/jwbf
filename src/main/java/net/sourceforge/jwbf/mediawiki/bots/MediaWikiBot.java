@@ -6,6 +6,7 @@ import java.net.URL;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Optional;
+import com.google.common.collect.ImmutableList;
 import net.sourceforge.jwbf.core.actions.ContentProcessable;
 import net.sourceforge.jwbf.core.actions.HttpActionClient;
 import net.sourceforge.jwbf.core.actions.util.ActionException;
@@ -44,8 +45,8 @@ import org.slf4j.LoggerFactory;
  * http://www.mediawiki.org/wiki/api.php
  * http://www.mediawiki.org/w/api.php
  * </pre>
- * Thus the correct wikiurl is: <code>http://www.mediawiki.org/w/</code>
- * Since MediaWiki 1.20, the wikiurl can be found on the wiki's Special:Version page.
+ * Thus the correct wikiurl is: <code>http://www.mediawiki.org/w/</code> Since MediaWiki 1.20, the
+ * wikiurl can be found on the wiki's Special:Version page.
  *
  * @author Thomas Stock
  * @author Tobias Knerr
@@ -133,14 +134,12 @@ public class MediaWikiBot implements WikiBot {
    *                 users)
    * @see PostLogin
    */
-  public void login(final String username, final String passwd, final String domain) {
-
+  public void login(String username, String passwd, String domain) {
     this.login = getPerformedAction(new PostLogin(username, passwd, domain)).getLoginData();
     loginChangeUserInfo = true;
     if (getVersion() == Version.UNKNOWN) {
       loginChangeVersion = true;
     }
-
   }
 
   /**
@@ -152,7 +151,7 @@ public class MediaWikiBot implements WikiBot {
    * @see PostLogin
    */
   @Override
-  public void login(final String username, final String passwd) {
+  public void login(String username, String passwd) {
     login(username, passwd, null);
   }
 
@@ -161,33 +160,67 @@ public class MediaWikiBot implements WikiBot {
    * @param properties {@link GetRevision}
    * @return a content representation of requested article, never null
    * @see GetRevision
+   * @deprecated {@link #getArticle(String)}
    */
-  public synchronized Article getArticle(final String name, final int properties) {
-    return new Article(this, readData(name, properties));
+  @Deprecated
+  public Article getArticle(String name, final int properties) {
+    return new Article(this, readData(properties, name));
+  }
+
+  /**
+   * @deprecated use {@link #readData(String)}
+   */
+  @Override
+  // TODO 'data' is not very descriptive
+  public SimpleArticle readData(String name, int properties) {
+    return readData(properties, name);
+  }
+
+  // TODO 'data' is not very descriptive
+  SimpleArticle readData(int properties, String name) {
+    return getPerformedAction(new GetRevision(null, name, properties)).getArticle();
+  }
+
+  // TODO 'data' is not very descriptive
+  public ImmutableList<SimpleArticle> readData(String... names) {
+    return readData(ImmutableList.copyOf(names));
+  }
+
+  // TODO 'data' is not very descriptive
+  public ImmutableList<SimpleArticle> readData(ImmutableList<String> names) {
+    return getPerformedAction(new GetRevision(names, DEFAULT_READ_PROPERTIES)).asList();
   }
 
   /**
    * {@inheritDoc}
    */
   @Override
-  public synchronized SimpleArticle readData(final String name, final int properties) {
-    return getPerformedAction(new GetRevision(getVersion(), name, properties)).getArticle();
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
+  // TODO 'data' is not very descriptive
   public SimpleArticle readData(String name) {
-    return readData(name, DEFAULT_READ_PROPERTIES);
+    return readData(DEFAULT_READ_PROPERTIES, name);
   }
 
+  // TODO 'data' is not very descriptive
+  public ImmutableList<Optional<SimpleArticle>> readDataOpt(String... names) {
+    return readDataOpt(ImmutableList.copyOf(names));
+  }
+
+  // TODO 'data' is not very descriptive
+  public ImmutableList<Optional<SimpleArticle>> readDataOpt(ImmutableList<String> names) {
+    return getPerformedAction(new GetRevision(names, DEFAULT_READ_PROPERTIES)).asListOpt();
+  }
+
+  // TODO 'data' is not very descriptive
+  public Optional<SimpleArticle> readDataOpt(String name) {
+    return getPerformedAction(new GetRevision(null, name, DEFAULT_READ_PROPERTIES))
+        .getArticleOpt();
+  }
   /**
    * @param name of article in a mediawiki like "Main Page"
    * @return a content representation of requested article, never null
    * @see GetRevision
    */
-  public synchronized Article getArticle(final String name) {
+  public Article getArticle(final String name) {
     return getArticle(name, DEFAULT_READ_PROPERTIES);
   }
 
@@ -195,7 +228,7 @@ public class MediaWikiBot implements WikiBot {
    * {@inheritDoc}
    */
   @Override
-  public synchronized void writeContent(final SimpleArticle simpleArticle) {
+  public void writeContent(final SimpleArticle simpleArticle) {
     if (!isLoggedIn()) {
       throw new ActionException("Please login first");
     }
@@ -265,13 +298,13 @@ public class MediaWikiBot implements WikiBot {
     return bot().performAction(a);
   }
 
-  public synchronized <T extends ContentProcessable> T getPerformedAction(T answer) {
+  public <T extends ContentProcessable> T getPerformedAction(T answer) {
     // TODO transform to throttled
     performAction(answer);
     return answer;
   }
 
-  public synchronized <T extends ContentProcessable> T getPerformedAction(Class<T> clazz) {
+  public <T extends ContentProcessable> T getPerformedAction(Class<T> clazz) {
     T answer;
     try {
       answer = clazz.newInstance();

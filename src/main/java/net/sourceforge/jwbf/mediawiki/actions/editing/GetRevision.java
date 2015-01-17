@@ -18,6 +18,13 @@
  */
 package net.sourceforge.jwbf.mediawiki.actions.editing;
 
+import java.util.List;
+
+import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Optional;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 import net.sourceforge.jwbf.core.actions.Get;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
@@ -39,7 +46,9 @@ public class GetRevision extends MWAction {
 
   private static final Logger log = LoggerFactory.getLogger(GetRevision.class);
 
-  private final SimpleArticle sa;
+  private List<SimpleArticle> articles = Lists.newArrayList();
+  private List<Optional<SimpleArticle>> articlesOpt = Lists.newArrayList();
+  private final ImmutableList<String> names;
 
   public static final int CONTENT = 1 << 1;
   public static final int TIMESTAMP = 1 << 2;
@@ -55,20 +64,22 @@ public class GetRevision extends MWAction {
 
   private final Get msg;
 
-  private boolean singleProcess = true;
-
   /**
    * TODO follow redirects. TODO change constructor field ordering; bot
    */
-  public GetRevision(Version v, final String articlename, final int properties) {
+  public GetRevision(Version v, String articlename, int properties) {
+    this(ImmutableList.of(articlename), properties);
+  }
+
+  public GetRevision(ImmutableList<String> names, int properties) {
     this.properties = properties;
-    sa = new SimpleArticle();
-    sa.setTitle(articlename);
+    this.names = names;
+    // TODO continue=-||
     msg = new ApiRequestBuilder() //
         .action("query") //
         .formatXml() //
         .param("prop", "revisions") //
-        .param("titles", MediaWiki.urlEncode(articlename)) //
+        .param("titles", MediaWiki.urlEncode(MediaWiki.pipeJoined(names))) //
         .param("rvprop", getDataProperties(properties) + getReversion(properties)) //
         .param("rvlimit", "1") //
         .buildGet();
@@ -79,101 +90,100 @@ public class GetRevision extends MWAction {
    */
   @Override
   public String processReturningText(final String s, HttpAction ha) {
-    if (msg.getRequest().equals(ha.getRequest()) && singleProcess) {
-      if (log.isDebugEnabled()) { // TODO no very nice debug here
-        if (s.length() < 151) {
-          log.debug(s);
-        } else {
-          log.debug("..." + s.substring(50, 150) + "...");
-        }
-
-      }
-
+    if (msg.getRequest().equals(ha.getRequest())) {
       parse(s);
-      singleProcess = false;
-
     }
     return "";
   }
 
-  /**
-   * TODO Not very nice implementation.
-   */
-  private String getDataProperties(final int property) {
-    String properties = "";
+  @VisibleForTesting
+  static String getDataProperties(final int property) {
+    ImmutableList.Builder<String> builder = ImmutableList.builder();
 
-    if ((property & CONTENT) > 0) {
-      properties += "content|";
+    if (hasMarker(property, CONTENT)) {
+      builder.add("content");
     }
-    if ((property & COMMENT) > 0) {
-      properties += "comment|";
+    if (hasMarker(property, COMMENT)) {
+      builder.add("comment");
     }
-    if ((property & TIMESTAMP) > 0) {
-      properties += "timestamp|";
+    if (hasMarker(property, TIMESTAMP)) {
+      builder.add("timestamp");
     }
-    if ((property & USER) > 0) {
-      properties += "user|";
+    if (hasMarker(property, USER)) {
+      builder.add("user");
     }
-    if ((property & IDS) > 0) {
-      properties += "ids|";
+    if (hasMarker(property, IDS)) {
+      builder.add("ids");
     }
-    if ((property & FLAGS) > 0) {
-      properties += "flags|";
+    if (hasMarker(property, FLAGS)) {
+      builder.add("flags");
     }
 
-    if (properties.length() > 0) {
-      return MediaWiki.urlEncode(properties.substring(0, properties.length() - 1));
-    }
+    return MediaWiki.urlEncode(MediaWiki.pipeJoined(builder.build()));
+  }
 
-    return "";
+  private static boolean hasMarker(int property, int marker) {
+    return (property & marker) > 0;
   }
 
   private String getReversion(final int property) {
-    String properties = "&rvdir=";
-
-    if ((property & FIRST) > 0) {
-      properties += "newer";
+    if (hasMarker(property, FIRST)) {
+      return "&rvdir=newer";
     } else {
-      properties += "older";
+      return "&rvdir=older";
     }
-
-    return properties;
   }
 
   private void parse(final String xml) {
-    findContent(XmlConverter.getChecked(xml));
+
+    Optional<XmlElement> childOpt = XmlConverter.getChildOpt(xml, "query", "pages");
+    if (childOpt.isPresent()) {
+      List<XmlElement> pages = childOpt.get().getChildren("page");
+      for (XmlElement page : pages) {
+
+        SimpleArticle sa = new SimpleArticle();
+        sa.setTitle(page.getAttributeValue("title"));
+        Optional<XmlElement> revOpt = page.getChild("revisions").getChildOpt("rev");
+        if (revOpt.isPresent()) {
+          XmlElement rev = revOpt.get();
+          sa.setText(rev.getText());
+          sa.setRevisionId(rev.getAttributeValueOpt("revid").or(""));
+          sa.setEditSummary(rev.getAttributeValueOpt("comment").or(""));
+          sa.setEditor(rev.getAttributeValueOpt("user").or(""));
+          if (hasMarker(properties, TIMESTAMP)) {
+            sa.setEditTimestamp(rev.getAttributeValueOpt("timestamp").or(""));
+          }
+          if (hasMarker(properties, FLAGS)) {
+            if (rev.hasAttribute("minor")) {
+              sa.setMinorEdit(true);
+            } else {
+              sa.setMinorEdit(false);
+            }
+          }
+          articlesOpt.add(Optional.of(sa));
+        } else {
+          log.warn("Article '{}' is missing", sa.getTitle());
+          articlesOpt.add(Optional.<SimpleArticle>absent());
+        }
+        articles.add(sa);
+      }
+    }
   }
 
   public SimpleArticle getArticle() {
-    return sa;
+    return Iterables.getOnlyElement(asList());
   }
 
-  private void findContent(final XmlElement root) {
+  public ImmutableList<Optional<SimpleArticle>> asListOpt() {
+    return ImmutableList.copyOf(articlesOpt);
+  }
 
-    for (XmlElement xmlElement : root.getChildren()) {
-      if (xmlElement.getQualifiedName().equalsIgnoreCase("rev")) {
+  public Optional<SimpleArticle> getArticleOpt() {
+    return Iterables.getOnlyElement(asListOpt());
+  }
 
-        sa.setText(xmlElement.getText());
-        if ((properties & FLAGS) > 0) {
-          if (xmlElement.hasAttribute("minor")) {
-            sa.setMinorEdit(true);
-          } else {
-            sa.setMinorEdit(false);
-          }
-        }
-
-        sa.setRevisionId(xmlElement.getAttributeValueOpt("revid").or(""));
-        sa.setEditSummary(xmlElement.getAttributeValueOpt("comment").or(""));
-        sa.setEditor(xmlElement.getAttributeValueOpt("user").or(""));
-
-        if ((properties & TIMESTAMP) > 0) {
-          sa.setEditTimestamp(xmlElement.getAttributeValueOpt("timestamp").or(""));
-        }
-      } else {
-        findContent(xmlElement);
-      }
-    }
-
+  public ImmutableList<SimpleArticle> asList() {
+    return ImmutableList.copyOf(articles);
   }
 
   /**

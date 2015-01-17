@@ -1,7 +1,8 @@
 package net.sourceforge.jwbf.mediawiki.actions.queries;
 
 import static net.sourceforge.jwbf.mediawiki.actions.queries.CategoryMembersIT.copyOfWithLimit;
-import static net.sourceforge.jwbf.mediawiki.actions.queries.CategoryMembersIT.copyWithoutDuplicatesOf;
+import static net.sourceforge.jwbf.mediawiki.actions.queries.CategoryMembersIT //
+    .copyWithoutDuplicatesOf;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 

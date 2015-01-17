@@ -10,6 +10,10 @@ import net.sourceforge.jwbf.core.contentRep.Userinfo;
  */
 public interface WikiBot {
 
+  /**
+   * @deprecated use {@link #readData(String)}
+   */
+  @Deprecated
   SimpleArticle readData(final String name, final int properties);
 
   SimpleArticle readData(final String name);

@@ -2,7 +2,6 @@ package net.sourceforge.jwbf.mediawiki.actions.meta;
 
 import java.util.Map;
 
-import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import net.sourceforge.jwbf.core.actions.Get;
@@ -52,7 +51,7 @@ public class Siteinfo extends GetVersion {
    * @param types the, see {@link #GENERAL}, {@link #INTERWIKIMAP}, ...
    */
   public Siteinfo(String... types) {
-    String result = Joiner.on("|").join(types);
+    String result = MediaWiki.pipeJoined(types);
     msg = new ApiRequestBuilder() //
         .action("query") //
         .formatXml() //

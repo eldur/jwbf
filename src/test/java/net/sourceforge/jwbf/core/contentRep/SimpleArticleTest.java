@@ -28,6 +28,7 @@ import static org.mockito.Mockito.mock;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.TimeZone;
 
 import org.joda.time.DateTime;
 import org.junit.Before;
@@ -64,6 +65,7 @@ public class SimpleArticleTest {
   public void testDateFormat() {
     // GIVEN
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+    sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
     String dateString = "2007-01-08T15:12:55Z";
 
     // WHEN
@@ -76,6 +78,7 @@ public class SimpleArticleTest {
   @Test
   public void testDateFormatTrac() throws ParseException {
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+    sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
 
     String dateString = "02/04/09 14:04:36 (35 minutes ago)</dd>\n\n      \n";
     String dateStringTarget = "2009-02-04T14:04:36Z";
@@ -372,7 +375,7 @@ public class SimpleArticleTest {
     assertEquals(0, actual.getMillis());
   }
 
-  private static abstract class MetaAdapter implements ArticleMeta {
+  private abstract static class MetaAdapter implements ArticleMeta {
 
     @Override
     public String getEditSummary() {
