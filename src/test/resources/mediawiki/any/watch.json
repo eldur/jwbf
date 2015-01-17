@@ -1,0 +1,16 @@
+{
+    "batchcomplete":"",
+    "watch":
+        [
+            {
+                "title":"A",
+                "watched":"",
+                "message":"<p>The page \"<b>A</b>\" has been added to your <a href=\"/wiki/Special:Watchlist\" title=\"Special:Watchlist\">watchlist</a>, which will list edits to this page and its associated talk page.\n</p>"
+            },
+            {
+            "title":"B",
+            "watched":"",
+            "message":"<p>The page \"<b>B</b>\" has been added to your <a href=\"/wiki/Special:Watchlist\" title=\"Special:Watchlist\">watchlist</a>, which will list edits to this page and its associated talk page.\n</p>"
+            }
+        ]
+}

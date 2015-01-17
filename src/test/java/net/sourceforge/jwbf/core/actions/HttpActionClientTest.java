@@ -20,8 +20,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -151,12 +149,14 @@ public class HttpActionClientTest {
       server.startSilent();
       String url = "http://localhost:" + server.getPort();
       testee = HttpActionClient.of(url);
-      String utf8Data = "츠 ᅳ פעילות הבינאáßçकखी國際ɕɕkɕoːɐ̯eːaɕɐɑɒæɑ̃ɕʌbɓʙβcɕçɕɕçɕɔɔɕɕöäü\u200B";
-			String utf8RawData = "\uCE20 \u1173 \u05E4\u05E2\u05D9\u05DC\u05D5\u05EA \u05D4\u05D1\u05D9\u05E0"
-					+ "\u05D0\u00E1\u00DF\u00E7\u0915\u0916\u0940\u570B\u969B\u0255\u0255k\u0255o"
-					+ "\u02D0\u0250\u032Fe\u02D0a\u0255\u0250\u0251\u0252\u00E6\u0251\u0303\u0255"
-					+ "\u028Cb\u0253\u0299\u03B2c\u0255\u00E7\u0255\u0255\u00E7\u0255\u0254\u0254"
-					+ "\u0255\u0255\u00F6\u00E4\u00FC\u200B";
+            String utf8Data = "츠 ᅳ פעילות הבינאáßçकखी國際ɕɕkɕoːɐ̯eː" +
+                    "aɕɐɑɒæɑ̃ɕʌbɓʙβcɕçɕɕçɕɔɔɕɕöäü\u200B";
+            String utf8RawData = "\uCE20 \u1173 \u05E4\u05E2\u05D9\u05DC\u05D5\u05EA " +
+                    "\u05D4\u05D1\u05D9\u05E0\u05D0\u00E1\u00DF\u00E7\u0915\u0916" +
+                    "\u0940\u570B\u969B\u0255\u0255k\u0255o\u02D0\u0250\u032Fe\u02D0a" +
+                    "\u0255\u0250\u0251\u0252\u00E6\u0251\u0303\u0255\u028Cb\u0253\u0299" +
+                    "\u03B2c\u0255\u00E7\u0255\u0255\u00E7\u0255\u0254\u0254\u0255\u0255" +
+                    "\u00F6\u00E4\u00FC\u200B";
       assertEquals(utf8RawData, utf8Data);
       Post post = RequestBuilder.of(url) //
           .param("b", "c") //
@@ -386,10 +386,13 @@ public class HttpActionClientTest {
 		GAssert.assertEquals(
 				ImmutableList
 						.<String> of(
-        "[WARN] \"āTeštBot\" was encoded to \"?Te?tBot\"; because only iso8859 is supported",
-        "[WARN] \"ač43e3a\" was encoded to \"a?43e3a\"; because only iso8859 is supported",
-        "[WARN] \"User:WikipediāUserId\" was encoded to \"User:Wikipedi?UserId\"; because only "
-										+ "iso8859 is supported"),
+                                "[WARN] \"āTeštBot\" was encoded to \"?Te?tBot\";" +
+                                " because only iso8859 is supported",
+                                "[WARN] \"ač43e3a\" was encoded to \"a?43e3a\";" +
+                                " because only iso8859 is supported",
+                                "[WARN] \"User:WikipediāUserId\" was encoded to" +
+                                " \"User:Wikipedi?UserId\"; because only " +
+                                "iso8859 is supported"),
 				logLinesSupplier.get());
   }
 
@@ -408,12 +411,12 @@ public class HttpActionClientTest {
 		GAssert.assertEquals(
 				ImmutableList
 						.<String> of(
-        "[WARN] \" name\\r //with \" was changed to \"name_with\"; because of User-Agent "
-            + "name/version rules",
-        "[WARN] \" version/\\n\\n with \" was changed to \"version_with\"; because of User-Agent "
-            + "name/version rules",
-        "[WARN] \" comment/of (me) \" was changed to \"comment/of me\"; because of User-Agent "
-										+ "comment rules"),
+                                "[WARN] \" name\\r //with \" was changed to \"name_with\";" +
+                                " because of User-Agent name/version rules",
+                                "[WARN] \" version/\\n\\n with \" was changed to " +
+                                "\"version_with\"; because of User-Agent name/version rules",
+                                "[WARN] \" comment/of (me) \" was changed to \"comment/of me\";" +
+                                " because of User-Agent comment rules"),
 				logLinesSupplier.get());
   }
 
@@ -431,9 +434,12 @@ public class HttpActionClientTest {
 		GAssert.assertEquals(
 				ImmutableList
 						.<String> of(
-            "[WARN] \" \\t \" was changed to \"Unknown\"; because of User-Agent name/version rules",
-            "[WARN] \" \\t \" was changed to \"Unknown\"; because of User-Agent name/version rules",
-            "[WARN] \" \\n \" was changed to \"\"; because of User-Agent comment rules"),
+                                "[WARN] \" \\t \" was changed to \"Unknown\";" +
+                                " because of User-Agent name/version rules",
+                                "[WARN] \" \\t \" was changed to \"Unknown\";" +
+                                " because of User-Agent name/version rules",
+                                "[WARN] \" \\n \" was changed to \"\";" +
+                                " because of User-Agent comment rules"),
         logLinesSupplier.get());
   }
 
@@ -588,11 +594,11 @@ public class HttpActionClientTest {
       // THEN
 			ImmutableList<Range<Long>> expected = ImmutableList
 					.<Range<Long>> builder() //
-          .add(Range.closed(0l, 600l)) //
-          .add(Range.closed(0l, 600l)) //
-          .add(Range.closed(0l, 600l)) //
-          .add(Range.closed(400l, 900l)) //
-          .add(Range.closed(400l, 900l)) //
+                    .add(Range.closed(0L, 600L)) //
+                    .add(Range.closed(0L, 600L)) //
+                    .add(Range.closed(0L, 600L)) //
+                    .add(Range.closed(400L, 900L)) //
+                    .add(Range.closed(400L, 900L)) //
           .build();
 
       int n = 0;

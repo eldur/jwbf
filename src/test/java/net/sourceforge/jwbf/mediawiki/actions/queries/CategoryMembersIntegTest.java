@@ -47,7 +47,7 @@ public class CategoryMembersIntegTest extends MocoIntegTest {
     ImmutableList<CategoryItem> actual = copyOfWithLimit(testee.lazy(), 4);
 
     // THEN
-    ImmutableList<CategoryItem> expected = ImmutableList.of( //
+    ImmutableList<CategoryItem> expected = ImmutableList.of(//
         new CategoryItem("CategoryTest0", MediaWiki.NS_MAIN, 1000), //
         new CategoryItem("CategoryTest1", MediaWiki.NS_MAIN, 1001), //
         new CategoryItem("CategoryTest10", MediaWiki.NS_MAIN, 1002) //
@@ -70,7 +70,7 @@ public class CategoryMembersIntegTest extends MocoIntegTest {
     ImmutableList<CategoryItem> actual = copyWithoutDuplicatesOf(testee, 3);
 
     // THEN
-    ImmutableList<CategoryItem> expected = ImmutableList.of( //
+    ImmutableList<CategoryItem> expected = ImmutableList.of(//
         new CategoryItem("CategoryTest0", MediaWiki.NS_MAIN, 1000), //
         new CategoryItem("CategoryTest1", MediaWiki.NS_MAIN, 1001), //
         new CategoryItem("CategoryTest10", MediaWiki.NS_MAIN, 1002) //

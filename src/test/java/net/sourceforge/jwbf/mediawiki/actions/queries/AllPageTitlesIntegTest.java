@@ -52,7 +52,7 @@ public class AllPageTitlesIntegTest extends MocoIntegTest {
     ImmutableList<String> actual = new AllPageTitles(bot()).getCopyOf(3);
 
     // THEN
-    ImmutableList<String> expected = ImmutableList.of( //
+    ImmutableList<String> expected = ImmutableList.of(//
         confOf(ConfKey.ALL_PAGE_0), //
         confOf(ConfKey.ALL_PAGE_1), //
         confOf(ConfKey.ALL_PAGE_2));
