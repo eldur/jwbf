@@ -9,6 +9,7 @@ import net.sourceforge.jwbf.core.internal.Checked;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class JsonMapper {
@@ -32,9 +33,16 @@ public class JsonMapper {
         return Checked.nonNull(transfomer.toMap(nonNullJson), "a json mapping result");
     }
 
+    public JsonNode toJsonNode(String json) {
+        String nonNullJson = Checked.nonNull(json, "json");
+        return Checked.nonNull(transfomer.toJsonNode(nonNullJson), "a json mapping result");
+    }
+
     public interface ToJsonFunction {
         @Nonnull
         Object toJson(@Nonnull String jsonString, Class<?> clazz);
+
+        JsonNode toJsonNode(String nonNullJson);
 
         HashMap<String, Object> toMap(@Nonnull String json);
     }
@@ -63,6 +71,15 @@ public class JsonMapper {
                 return newObjectMapper().readValue(jsonString,
                         new TypeReference<HashMap<String, Object>>() {
                         });
+            } catch (IOException e) {
+                throw new IllegalArgumentException();
+            }
+        }
+
+        @Override
+        public JsonNode toJsonNode(String json) {
+            try {
+                return newObjectMapper().readTree(json);
             } catch (IOException e) {
                 throw new IllegalArgumentException();
             }

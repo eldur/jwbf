@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Charsets;
 import com.google.common.io.Files;
@@ -70,6 +71,12 @@ public class JsonMapperTest {
 
     @Override
     public HashMap<String, Object> toMap(String json) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public JsonNode toJsonNode(String nonNullJson) {
         // TODO Auto-generated method stub
         return null;
     }
