@@ -29,10 +29,10 @@ public class SearchIntegTest extends AbstractIntegTest {
       .param("srsearch", "meaning") //
       .param("srwhat", "text");
 
-  private static RequestMatcher[] MATCHERS =
+  private static RequestMatcher[] matchers =
       { MATCHERS_COMMON.build(), MATCHERS_COMMON.param("sroffset", "50").build() };
 // TODO: put this into a ressource file
-  private static String[] RESPONSES =
+  private static String[] responses =
       { "{\"continue\":{\"sroffset\":50,\"continue\":\"-||\"},\"batchcomplete\":\"\"," +
           "\"query\":{\"searchinfo\":{\"totalhits\":193,\"suggestion\":\"meeting\"}," +
           "\"search\":[{\"ns\":0,\"title\":\"Design/WikiFont\",\"size\":8159},{\"ns\":0," +
@@ -164,8 +164,8 @@ public class SearchIntegTest extends AbstractIntegTest {
   @Test
   public void test() {
     // GIVEN
-    for (int i = 0; i < RESPONSES.length; i++) {
-      server.get(MATCHERS[i]).response(RESPONSES[i]);
+    for (int i = 0; i < responses.length; i++) {
+      server.get(matchers[i]).response(responses[i]);
     }
     MediaWikiBot bot = new MediaWikiBot(host());
 
