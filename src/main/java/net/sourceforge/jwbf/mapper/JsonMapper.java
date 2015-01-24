@@ -78,6 +78,7 @@ public class JsonMapper {
 
         @Override
         public JsonNode toJsonNode(String json) {
+            System.out.println(json);
             try {
                 return newObjectMapper().readTree(json);
             } catch (IOException e) {

@@ -25,9 +25,8 @@ public class MediaWikiBotIntegTest extends AbstractIntegTest {
 
   RequestMatcher revisions = ApiMatcherBuilder.of() //
       .param("action", "query") //
-      .param("format", "xml") //
+      .param("format", "json") //
       .param("prop", "revisions") //
-      .param("rvlimit", "1") //
       .param("rvprop", "content|comment|timestamp|user|ids|flags") //
       .param("rvdir", "older") //
       .param("titles", "A|B") //
@@ -35,12 +34,12 @@ public class MediaWikiBotIntegTest extends AbstractIntegTest {
 
   RequestMatcher revision = ApiMatcherBuilder.of() //
       .param("action", "query") //
-      .param("format", "xml") //
+      .param("format", "json") //
       .param("prop", "revisions") //
-      .param("rvlimit", "1") //
+      //.param("rvlimit", "1") //
       .param("rvprop", "content|comment|timestamp|user|ids|flags") //
       .param("rvdir", "older") //
-      .param("titles", "B") //
+      .param("titles", "B")//
       .build();
 
   RequestMatcher watchToken = ApiMatcherBuilder.of() //
@@ -66,7 +65,7 @@ public class MediaWikiBotIntegTest extends AbstractIntegTest {
   public void testreadData() {
     // GIVEN
     Supplier<ImmutableList<String>> logLinesSupplier = Logging.newLogLinesSupplier();
-    server.request(revisions).response(TestHelper.anyWikiResponse("revisions.xml"));
+    server.request(revisions).response(TestHelper.anyWikiResponse("revisions.json"));
     MediaWikiBot testee = new MediaWikiBot(host());
 
     // WHEN
@@ -83,7 +82,7 @@ public class MediaWikiBotIntegTest extends AbstractIntegTest {
   public void testReadDataOpt() {
     // GIVEN
     Supplier<ImmutableList<String>> logLinesSupplier = Logging.newLogLinesSupplier();
-    server.request(revisions).response(TestHelper.anyWikiResponse("revisions.xml"));
+    server.request(revisions).response(TestHelper.anyWikiResponse("revisions.json"));
     MediaWikiBot testee = new MediaWikiBot(host());
 
     // WHEN
@@ -110,7 +109,7 @@ public class MediaWikiBotIntegTest extends AbstractIntegTest {
   @Test
   public void testReadDataOpt_single_fail() {
     // GIVEN
-    server.request(revision).response(TestHelper.anyWikiResponse("revisions.xml"));
+    server.request(revision).response(TestHelper.anyWikiResponse("revisions.json"));
     MediaWikiBot testee = new MediaWikiBot(host());
 
     try {
@@ -127,7 +126,7 @@ public class MediaWikiBotIntegTest extends AbstractIntegTest {
   @Test
   public void testReadDataOpt_single() {
     // GIVEN
-    server.request(revision).response(TestHelper.anyWikiResponse("revision.xml"));
+    server.request(revision).response(TestHelper.anyWikiResponse("revision.json"));
     MediaWikiBot testee = new MediaWikiBot(host());
 
     // WHEN
@@ -143,7 +142,6 @@ public class MediaWikiBotIntegTest extends AbstractIntegTest {
       server.request(watchToken).response(TestHelper.anyWikiResponse("watchToken.json"));
       server.request(loginSuccess).response(TestHelper.anyWikiResponse("login_valid.json"));
       MocoIntegTest.applySiteinfoXmlToServer(server, MediaWiki.Version.MW1_24, this.getClass());
-
       MediaWikiBot testee = new MediaWikiBot(host());
       testee.login("username", "****");
 

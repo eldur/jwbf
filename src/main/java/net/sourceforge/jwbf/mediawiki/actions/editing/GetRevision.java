@@ -85,7 +85,7 @@ public class GetRevision extends MWAction {
                 .param("prop", "revisions") //
                 .param("titles", MediaWiki.urlEncode(MediaWiki.pipeJoined(names))) //
                 .param("rvprop", getDataProperties(properties) + getReversion(properties)) //
-                .param("rvlimit", "1") //
+                //.param("rvlimit", "1") TODO: when passing multiples pages we can't pass rvlimit
                 .buildGet();
     }
 
@@ -145,9 +145,9 @@ public class GetRevision extends MWAction {
             for (JsonNode page : pages) {
                 SimpleArticle sa = new SimpleArticle();
                 sa.setTitle(page.get("title").asText());
-                sa.setPageId(page.get("pageid").asInt());
-                JsonNode rev = page.path("revisions");
-                if (!rev.isMissingNode()) {
+                if (!page.has("missing")) {
+                    sa.setPageId(page.get("pageid").asInt());
+                    JsonNode rev = page.path("revisions");
                     rev = rev.get(0);
                     sa.setText(rev.get("*").asText());
                     sa.setRevisionId(Optional.of(rev.path("revid").asText()).or(""));
