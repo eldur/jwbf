@@ -1,0 +1,30 @@
+{  
+    "query": {
+        "pages": {
+            "987086": {
+                "pageid": 987086,
+                "ns": 0,
+                "title": "A",
+                "contentmodel": "wikitext",
+                "pagelanguage": "fr",
+                "touched": "2015-01-21T21:36:44Z",
+                "lastrevid": 110993170,
+                "length": 4265,
+                "starttimestamp": "2015-01-23T07:49:17Z",
+                "watchtoken": "e5a8004ef87871e95e40b101d833c25c54c1fcfd+\\"
+            },
+            "2356863": {
+                "pageid": 2356863,
+                "ns": 0,
+                "title": "B",
+                "contentmodel": "wikitext",
+                "pagelanguage": "fr",
+                "touched": "2015-01-21T21:40:06Z",
+                "lastrevid": 110114050,
+                "length": 2109,
+                "starttimestamp": "2015-01-23T07:49:17Z",
+                "watchtoken": "e5a8004ef87871e95e40b101d833c25c54c1fcfd+\\"
+            }
+        }
+    }
+}

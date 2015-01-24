@@ -2,11 +2,12 @@ package net.sourceforge.jwbf.mediawiki.actions.queries;
 
 import java.util.List;
 
+import net.sourceforge.jwbf.core.internal.Checked;
+
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import net.sourceforge.jwbf.core.internal.Checked;
 
 @JsonNaming(PropertyNamingStrategy.LowerCaseStrategy.class)
 public class WatchListResults {

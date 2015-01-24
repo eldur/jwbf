@@ -9,21 +9,24 @@ import com.github.dreamhead.moco.RequestMatcher;
 import com.google.common.base.Optional;
 import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableList;
+
 import net.sourceforge.jwbf.AbstractIntegTest;
 import net.sourceforge.jwbf.GAssert;
 import net.sourceforge.jwbf.Logging;
 import net.sourceforge.jwbf.TestHelper;
 import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
 import net.sourceforge.jwbf.mediawiki.ApiMatcherBuilder;
+import net.sourceforge.jwbf.mediawiki.MediaWiki;
+import net.sourceforge.jwbf.mediawiki.MocoIntegTest;
+
 import org.junit.Test;
 
 public class MediaWikiBotIntegTest extends AbstractIntegTest {
 
   RequestMatcher revisions = ApiMatcherBuilder.of() //
       .param("action", "query") //
-      .param("format", "xml") //
+      .param("format", "json") //
       .param("prop", "revisions") //
-      .param("rvlimit", "1") //
       .param("rvprop", "content|comment|timestamp|user|ids|flags") //
       .param("rvdir", "older") //
       .param("titles", "A|B") //
@@ -31,19 +34,38 @@ public class MediaWikiBotIntegTest extends AbstractIntegTest {
 
   RequestMatcher revision = ApiMatcherBuilder.of() //
       .param("action", "query") //
-      .param("format", "xml") //
+      .param("format", "json") //
       .param("prop", "revisions") //
-      .param("rvlimit", "1") //
+      //.param("rvlimit", "1") //
       .param("rvprop", "content|comment|timestamp|user|ids|flags") //
       .param("rvdir", "older") //
-      .param("titles", "B") //
+      .param("titles", "B")//
       .build();
+
+  RequestMatcher watchToken = ApiMatcherBuilder.of() //
+          .param("action", "query") //
+          .param("format", "json") //
+          .param("prop", "info") //
+          .param("intoken", "watch") //
+          .param("titles", "A|B") //
+          .build() ;
+
+  RequestMatcher unWatch = ApiMatcherBuilder.of() //
+          .param("action", "watch") //
+          .param("format", "json") //
+          .param("titles", "A|B") //
+          .build();
+
+  RequestMatcher loginSuccess = ApiMatcherBuilder.of() //
+          .param("action", "login") //
+          .param("format", "json") //
+          .build();
 
   @Test
   public void testreadData() {
     // GIVEN
     Supplier<ImmutableList<String>> logLinesSupplier = Logging.newLogLinesSupplier();
-    server.request(revisions).response(TestHelper.anyWikiResponse("revisions.xml"));
+    server.request(revisions).response(TestHelper.anyWikiResponse("revisions.json"));
     MediaWikiBot testee = new MediaWikiBot(host());
 
     // WHEN
@@ -60,7 +82,7 @@ public class MediaWikiBotIntegTest extends AbstractIntegTest {
   public void testReadDataOpt() {
     // GIVEN
     Supplier<ImmutableList<String>> logLinesSupplier = Logging.newLogLinesSupplier();
-    server.request(revisions).response(TestHelper.anyWikiResponse("revisions.xml"));
+    server.request(revisions).response(TestHelper.anyWikiResponse("revisions.json"));
     MediaWikiBot testee = new MediaWikiBot(host());
 
     // WHEN
@@ -87,7 +109,7 @@ public class MediaWikiBotIntegTest extends AbstractIntegTest {
   @Test
   public void testReadDataOpt_single_fail() {
     // GIVEN
-    server.request(revision).response(TestHelper.anyWikiResponse("revisions.xml"));
+    server.request(revision).response(TestHelper.anyWikiResponse("revisions.json"));
     MediaWikiBot testee = new MediaWikiBot(host());
 
     try {
@@ -104,7 +126,7 @@ public class MediaWikiBotIntegTest extends AbstractIntegTest {
   @Test
   public void testReadDataOpt_single() {
     // GIVEN
-    server.request(revision).response(TestHelper.anyWikiResponse("revision.xml"));
+    server.request(revision).response(TestHelper.anyWikiResponse("revision.json"));
     MediaWikiBot testee = new MediaWikiBot(host());
 
     // WHEN
@@ -112,5 +134,18 @@ public class MediaWikiBotIntegTest extends AbstractIntegTest {
 
     // THEN
     assertEquals(Optional.of(getSimpleArticle()), result);
+  }
+
+  @Test
+  public void testwatch() {
+      server.request(unWatch).response(TestHelper.anyWikiResponse("watch.json"));
+      server.request(watchToken).response(TestHelper.anyWikiResponse("watchToken.json"));
+      server.request(loginSuccess).response(TestHelper.anyWikiResponse("login_valid.json"));
+      MocoIntegTest.applySiteinfoXmlToServer(server, MediaWiki.Version.MW1_24, this.getClass());
+      MediaWikiBot testee = new MediaWikiBot(host());
+      testee.login("username", "****");
+
+      testee.watch("A", "B");
+
   }
 }
