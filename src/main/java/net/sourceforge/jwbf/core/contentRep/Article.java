@@ -165,6 +165,21 @@ public class Article implements ArticleMeta, ContentSetable {
     setText("");
     save();
   }
+  /**
+   * Add this article to the user watchlist
+   * This require the user to be logged in.
+   */
+  public void watch() {
+      bot.watch(sa.getTitle());
+  }
+
+  /**
+   * Remove this article from the user watchlist
+   * This require the user to be logged in.
+   */
+  public void unwatch() {
+      bot.unwatch(sa.getTitle());
+  }
 
   /**
    * Deletes this article, if the user has the required rights.

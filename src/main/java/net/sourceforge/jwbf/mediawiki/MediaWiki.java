@@ -32,6 +32,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Joiner;
 import com.google.common.base.Predicate;
@@ -43,6 +44,8 @@ import com.google.common.primitives.Ints;
 
 import net.sourceforge.jwbf.core.NotReleased;
 import net.sourceforge.jwbf.core.internal.Checked;
+import net.sourceforge.jwbf.mapper.JsonMapper;
+import net.sourceforge.jwbf.mediawiki.actions.util.ApiException;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 
@@ -93,6 +96,8 @@ public final class MediaWiki {
             .add(NS_CATEGORY_TALK) //
             .build();
 
+    private static JsonMapper mapper = new JsonMapper();
+
     /**
      * @deprecated prefer {@link #NS_EVERY}
      */
@@ -105,32 +110,32 @@ public final class MediaWiki {
         BOT_GROUPS = ImmutableSet.of("bot");
     }
 
-  public static String pipeJoined(String... parts) {
-    return pipeJoined(nullSafeCopyOf(parts));
-  }
+    public static String pipeJoined(String... parts) {
+        return pipeJoined(nullSafeCopyOf(parts));
+    }
 
-  public static String pipeJoined(ImmutableList<String> parts) {
-    return pipeJoiner().join(parts);
-  }
+    public static String pipeJoined(ImmutableList<String> parts) {
+        return pipeJoiner().join(parts);
+    }
 
-  public static Joiner pipeJoiner() {
-    return Joiner.on("|");
-  }
+    public static Joiner pipeJoiner() {
+        return Joiner.on("|");
+    }
 
-  /**
-   * Representaion of MediaWiki version.
-   *
-   * @author Thomas Stock
-   */
-  public enum Version {
     /**
-     * TODO add enum value
-     */
-    UNKNOWN
-    /**
->>>>>>> branch 'master' of https://github.com/eldur/jwbf.git
+     * Representaion of MediaWiki version.
      *
+     * @author Thomas Stock
      */
+    public enum Version {
+        /**
+         * TODO add enum value
+         */
+        UNKNOWN
+        /**
+         * >>>>>>> branch 'master' of https://github.com/eldur/jwbf.git
+         *
+         */
         , @Deprecated
         MW1_14
         /**
@@ -206,15 +211,13 @@ public final class MediaWiki {
                     }
                 });
 
-        private static final Version LATEST_VERSION = Iterables
-                .getLast(valuesStable());
+        private static final Version LATEST_VERSION = Iterables.getLast(valuesStable());
 
         /**
          * @return a, like 1.15
          */
         public String getNumber() {
-            return name().replace("MW", "").replace("_0", "_")
-                    .replace("_", ".");
+            return name().replace("MW", "").replace("_0", "_").replace("_", ".");
         }
 
         /**
@@ -246,11 +249,10 @@ public final class MediaWiki {
         public static boolean isStableVersion(Version version) {
             if (version != null) {
                 Field field = getField(version);
-                boolean isDeprecated = field
-                        .isAnnotationPresent(Deprecated.class);
+                boolean isDeprecated = field.isAnnotationPresent(Deprecated.class);
                 boolean isBeta = field.isAnnotationPresent(NotReleased.class);
-                return !(version.equals(DEVELOPMENT) || version.equals(UNKNOWN)
-                        || isDeprecated || isBeta);
+                return !(version.equals(DEVELOPMENT) || version.equals(UNKNOWN) ||
+                        isDeprecated || isBeta);
             } else {
                 return false;
             }
@@ -332,8 +334,7 @@ public final class MediaWiki {
         return createNsString(nullSafeCopyOf(namespaces));
     }
 
-    public static ImmutableList<String> nullSafeCopyOf(
-            @Nullable String[] strings) {
+    public static ImmutableList<String> nullSafeCopyOf(@Nullable String[] strings) {
         if (strings == null) {
             return ImmutableList.of();
         } else {
@@ -350,9 +351,9 @@ public final class MediaWiki {
         }
     }
 
-  public static String createNsString(List<Integer> asList) {
-    return MediaWiki.pipeJoiner().join(asList);
-  }
+    public static String createNsString(List<Integer> asList) {
+        return MediaWiki.pipeJoiner().join(asList);
+    }
 
     public static String urlEncodedNamespace(ImmutableList<Integer> namespaces) {
         return MediaWiki.urlEncode(createNsString(namespaces));
@@ -360,6 +361,14 @@ public final class MediaWiki {
 
     public static String joinParam(Set<?> params) {
         return urlEncode(Joiner.on("|").join(params));
+    }
+
+    public static void checkResponseForError(String response) {
+        JsonNode node = mapper.toJsonNode(response);
+        node = node.path("error");
+        if (!node.isMissingNode()) {
+            throw new ApiException(node.get("code").asText(), node.get("info").asText());
+        }
     }
 
 }
