@@ -9,10 +9,12 @@ import static org.junit.Assert.fail;
 import java.io.File;
 import java.util.Locale;
 
-import com.google.common.base.Suppliers;
-import com.google.common.collect.ImmutableMultimap;
 import net.sourceforge.jwbf.GAssert;
+
 import org.junit.Test;
+
+import com.google.common.base.Suppliers;
+import com.google.common.collect.ImmutableMap;
 
 public class PostTest {
 
@@ -57,7 +59,7 @@ public class PostTest {
 
     // WHEN
     String request = post.getRequest();
-    ImmutableMultimap<String, Object> params = post.getParams();
+    ImmutableMap<String, Object> params = post.getParams();
 
     // THEN
     assertEquals(url, request);
@@ -72,11 +74,11 @@ public class PostTest {
 
     // WHEN
     String request = post.getRequest();
-    ImmutableMultimap<String, Object> params = post.getParams();
+    ImmutableMap<String, Object> params = post.getParams();
 
     // THEN
     assertEquals(url, request);
-    assertEquals(ImmutableMultimap.of("a", "b"), params);
+    assertEquals(ImmutableMap.of("a", "b"), params);
   }
 
   @Test
@@ -85,12 +87,12 @@ public class PostTest {
     String url = "http://localhost/";
 
     // WHEN
-    ImmutableMultimap<String, Object> postWithInt = RequestBuilder.of(url) //
+    ImmutableMap<String, Object> postWithInt = RequestBuilder.of(url) //
         .postParam("a", 5) //
         .buildPost().getParams();
 
     // THEN
-    GAssert.assertEquals(ImmutableMultimap.of("a", "5"), postWithInt);
+    GAssert.assertEquals(ImmutableMap.of("a", "5"), postWithInt);
   }
 
   @Test
@@ -99,12 +101,12 @@ public class PostTest {
     String url = "http://localhost/";
 
     // WHEN
-    ImmutableMultimap<String, Object> postWithDouble = RequestBuilder.of(url) //
+    ImmutableMap<String, Object> postWithDouble = RequestBuilder.of(url) //
         .postParam("a", 5d, Locale.US, "%1.0f") //
         .buildPost().getParams();
 
     // THEN
-    GAssert.assertEquals(ImmutableMultimap.of("a", "5"), postWithDouble);
+    GAssert.assertEquals(ImmutableMap.of("a", "5"), postWithDouble);
   }
 
   @Test
@@ -113,12 +115,12 @@ public class PostTest {
     String url = "http://localhost/";
 
     // WHEN
-    ImmutableMultimap<String, Object> postWithDouble = RequestBuilder.of(url) //
+    ImmutableMap<String, Object> postWithDouble = RequestBuilder.of(url) //
         .postParam("a", 5.000_00d, Locale.US, "%4.3f") //
         .buildPost().getParams();
 
     // THEN
-    GAssert.assertEquals(ImmutableMultimap.of("a", "5.000"), postWithDouble);
+    GAssert.assertEquals(ImmutableMap.of("a", "5.000"), postWithDouble);
   }
 
   @Test
@@ -127,12 +129,12 @@ public class PostTest {
     String url = "http://localhost/";
 
     // WHEN
-    ImmutableMultimap<String, Object> postWithDouble = RequestBuilder.of(url) //
+    ImmutableMap<String, Object> postWithDouble = RequestBuilder.of(url) //
         .postParam("a", 5.000_1d, Locale.GERMANY, "%.4f") //
         .buildPost().getParams();
 
     // THEN
-    GAssert.assertEquals(ImmutableMultimap.of("a", "5,0001"), postWithDouble);
+    GAssert.assertEquals(ImmutableMap.of("a", "5,0001"), postWithDouble);
   }
 
   @Test
@@ -142,12 +144,12 @@ public class PostTest {
     File file = new File("test");
 
     // WHEN
-    ImmutableMultimap<String, Object> postWithInt = RequestBuilder.of(url) //
+    ImmutableMap<String, Object> postWithInt = RequestBuilder.of(url) //
         .postParam("a", file) //
         .buildPost().getParams();
 
     // THEN
-    GAssert.assertEquals(ImmutableMultimap.of("a", file), postWithInt);
+    GAssert.assertEquals(ImmutableMap.of("a", file), postWithInt);
   }
 
   @Test
@@ -156,17 +158,17 @@ public class PostTest {
     String url = "http://localhost/";
     Post post = new Post(url) //
         .postParam("a", "b") //
-        .postParam("a", "b") //
-        .postParam("a", "c") //
+        .postParam("c", "d") //
+        .postParam("e", "f") //
         ;
 
     // WHEN
     String request = post.getRequest();
-    ImmutableMultimap<String, Object> params = post.getParams();
+    ImmutableMap<String, Object> params = post.getParams();
 
     // THEN
     assertEquals(url, request);
-    assertEquals(ImmutableMultimap.of("a", "b", "a", "b", "a", "c"), params);
+    assertEquals(ImmutableMap.of("a", "b", "c", "d", "e", "f"), params);
   }
 
   @Test
@@ -183,7 +185,7 @@ public class PostTest {
   public void testDeprecatedPostParams() {
     Post post = new Post("uuuh");
     post.addParam("a", "b");
-    assertEquals("uuuh UTF-8 {a=[b]}", post.toString());
+    assertEquals("uuuh UTF-8 {a=b}", post.toString());
   }
 
   @Test

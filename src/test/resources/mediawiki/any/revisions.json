@@ -1,0 +1,55 @@
+{
+
+    "warnings": 
+
+{
+
+    "query": 
+
+    {
+        "*": "Formatting of continuation data will be changing soon. To continue using the current formatting, use the 'rawcontinue' parameter. To begin using the new format, pass an empty string for 'continue' in the initial query."
+    }
+
+},
+"query":
+{
+
+    "pages": 
+
+{
+
+    "-1": 
+
+{
+
+    "ns": 0,
+    "title": "A",
+    "missing": ""
+
+},
+"2356863":
+{
+
+    "pageid": 2356863,
+    "ns": 0,
+    "title": "B",
+    "revisions": 
+
+[
+
+                     {
+                        "revid": 13560,
+                        "parentid": 111191652,
+                        "user": "Any",
+                        "timestamp": "2005-12-16T09:57:30Z",
+                        "comment": "#REDIRECT [[Whatever]]",
+                        "contentformat": "text/x-wiki",
+                        "contentmodel": "wikitext",
+                        "*": "#REDIRECT [[Any]]"
+                    }
+                ]
+            }
+        }
+    }
+
+}

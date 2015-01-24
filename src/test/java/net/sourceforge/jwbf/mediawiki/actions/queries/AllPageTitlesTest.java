@@ -58,8 +58,8 @@ public class AllPageTitlesTest {
     Get allPagesRequest = testee.generateRequest(from, prefix, rf, namespace);
 
     // THEN
-    assertEquals("/api.php?action=query&apfilterredir=nonredirects&aplimit=50"
-        + "&apprefix=Test&format=xml&list=allpages", allPagesRequest.getRequest());
+    assertEquals("/api.php?action=query&apfilterredir=nonredirects&aplimit=50" +
+        "&apprefix=Test&format=xml&list=allpages", allPagesRequest.getRequest());
   }
 
   @Test
@@ -74,8 +74,8 @@ public class AllPageTitlesTest {
     Get allPagesRequest = testee.generateRequest(from, prefix, rf, namespace);
 
     // THEN
-    assertEquals("/api.php?action=query&apfilterredir=nonredirects&aplimit=50"
-        + "&apnamespace=14&format=xml&list=allpages", allPagesRequest.getRequest());
+    assertEquals("/api.php?action=query&apfilterredir=nonredirects&aplimit=50" +
+        "&apnamespace=14&format=xml&list=allpages", allPagesRequest.getRequest());
   }
 
   @Test
