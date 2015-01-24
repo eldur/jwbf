@@ -31,7 +31,6 @@ public class WatchUnwatchAction extends MWAction {
 
     @Override
     public String processReturningText(String s, HttpAction action) {
-        System.out.println(s);
         if (actionToken) {
             watchToken.processReturningText(s, action);
             actionToken = false;
