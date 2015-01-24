@@ -31,7 +31,7 @@ public class SearchIntegTest extends AbstractIntegTest {
 
   private static RequestMatcher[] MATCHERS =
       { MATCHERS_COMMON.build(), MATCHERS_COMMON.param("sroffset", "50").build() };
-
+// TODO: put this into a ressource file
   private static String[] RESPONSES =
       { "{\"continue\":{\"sroffset\":50,\"continue\":\"-||\"},\"batchcomplete\":\"\"," +
           "\"query\":{\"searchinfo\":{\"totalhits\":193,\"suggestion\":\"meeting\"}," +
