@@ -19,10 +19,10 @@ public class GetApiTokenTest {
     public void testProcessReturningText() {
         // GIVEN
         testee = new GetApiToken(Intoken.EDIT, "test");
-        String xml = TestHelper.anyWikiResponse("intoken.json");
+        String json = TestHelper.anyWikiResponse("intoken.json");
 
         // WHEN
-        testee.processReturningText(xml, testee.popAction());
+        testee.processReturningText(json, testee.popAction());
 
         // THEN
         ParamTuple<String> encodedToken = new ParamTuple<String>("token",

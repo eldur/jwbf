@@ -1,7 +1,5 @@
 package net.sourceforge.jwbf.mediawiki.actions.editing;
 
-import java.util.Iterator;
-
 import javax.annotation.Nonnull;
 
 import net.sourceforge.jwbf.core.Optionals;
@@ -82,7 +80,8 @@ public class GetApiToken extends DequeMWAction<GetApiToken.TokenResponse> {
     public enum Intoken {
         DELETE("delete", "deletetoken"), EDIT("edit", "edittoken"), MOVE("move", "movetoken"),
         PROTECT("protect", "protecttoken"), EMAIL("email", "emailtoken"), BLOCK("block",
-                "blocktoken"), UNBLOCK("unblock", "unblocktoken"), IMPORT("import", "IMPORT");
+                "blocktoken"), UNBLOCK("unblock", "unblocktoken"), IMPORT("import", "IMPORT"),
+                WATCH ("watch", "watchtoken");
 
         private String requestName;
         private String responseName;
@@ -112,11 +111,11 @@ public class GetApiToken extends DequeMWAction<GetApiToken.TokenResponse> {
      *
      * @param intoken
      *            type to get the token for
-     * @param title
+     * @param titles
      *            title of the article to generate the token for
      */
-    public GetApiToken(Intoken intoken, String title) {
-        super(generateTokenRequest(intoken, title));
+    public GetApiToken(Intoken intoken, String... titles) {
+        super(generateTokenRequest(intoken, titles));
         this.intoken = intoken;
         msg = actions.getFirst(); // XXX realy nesessary?
 
@@ -127,16 +126,16 @@ public class GetApiToken extends DequeMWAction<GetApiToken.TokenResponse> {
      *
      * @param intoken
      *            type to get the urlEncodedToken for
-     * @param title
+     * @param titles
      *            title of the article to generate the urlEncodedToken for
      */
-    private static Get generateTokenRequest(Intoken intoken, String title) {
+    private static Get generateTokenRequest(Intoken intoken, String... titles) {
         return new ApiRequestBuilder() //
                 .action("query") //
                 .formatJson() //
                 .param("prop", "info") //
                 .param("intoken", intoken.getRequestName()) //
-                .param("titles", MediaWiki.urlEncode(title)) //
+                .param("titles", MediaWiki.urlEncode(MediaWiki.pipeJoined(titles))) //
                 .buildGet();
 
     }
@@ -151,8 +150,7 @@ public class GetApiToken extends DequeMWAction<GetApiToken.TokenResponse> {
             try {
                 JsonNode node = mapper.toJsonNode(s).path("query").path("pages");
                 String fieldName = node.fieldNames().next();
-                node = node.get(fieldName)
-                        .get(intoken.getResponseName());
+                node = node.get(fieldName).get(intoken.getResponseName());
                 token = Optional.of(node.asText());
                 // TODO check intoken from tokenfunc for null
 
