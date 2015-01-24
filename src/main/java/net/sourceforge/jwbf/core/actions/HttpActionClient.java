@@ -377,7 +377,8 @@ public class HttpActionClient {
             String nonNullUserAgentComment = Checked.nonNull(userAgentComment,
                     "User-Agent comment");
             String encodedName = toISO8859(trimAndReplaceWhitespaceLogged(nonNullUserAgentName));
-            String encodedVersion = toISO8859(trimAndReplaceWhitespaceLogged(nonNullUserAgentVersion));
+            String encodedVersion = toISO8859(
+                    trimAndReplaceWhitespaceLogged(nonNullUserAgentVersion));
             String encodedComment = toISO8859(trimAndRemoveWhitespace(nonNullUserAgentComment));
             this.userAgentParts.add(new UserAgentPart(encodedName,
                     encodedVersion, encodedComment));

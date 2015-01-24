@@ -15,7 +15,6 @@ import org.junit.Test;
 
 import com.google.common.base.Suppliers;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableMultimap;
 
 public class PostTest {
 
