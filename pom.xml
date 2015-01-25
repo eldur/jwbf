@@ -23,9 +23,9 @@
   <developers>
   </developers>
   <scm>
-    <developerConnection>scm:git:git@github.com:Hunsu/jwbf.git</developerConnection>
-    <connection>scm:git:git@github.com:Hunsu/jwbf.git</connection>
-    <url>https://github.com/Hunsu/jwbf</url>
+    <developerConnection>scm:git:git@github.com:eldur/jwbf.git</developerConnection>
+    <connection>scm:git:git@github.com:eldur/jwbf.git</connection>
+    <url>https://github.com/eldur/jwbf</url>
   </scm>
   <licenses>
     <license>
@@ -116,7 +116,7 @@
             </goals>
             <configuration>
               <configLocation>checkstyle.xml</configLocation>
-              <failsOnError>false</failsOnError>
+              <failsOnError>true</failsOnError>
               <consoleOutput>true</consoleOutput>
               <propertyExpansion>baseDir=${basedir}</propertyExpansion>
               <includeTestSourceDirectory>true</includeTestSourceDirectory>
