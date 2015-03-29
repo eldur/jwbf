@@ -54,27 +54,27 @@ public class BacklinkTitlesIT extends ParamHelper {
   @Test
   public final void testAll() {
 
-    ImmutableList<String> expected =
-        ImmutableList.of("Back0", "Back1", "Back2", "Back3", "Back4", "Back5", "Back6", "Back7",
-            "Back8", "Back9");
+    ImmutableList<String> expected = ImmutableList
+        .of("Back0", "Back1", "Back2", "Back3", "Back4", "Back5", "Back6", "Back7", "Back8",
+            "Back9");
     doTest(expected, RedirectFilter.all);
   }
 
   @Test
   public final void testRedirects() {
 
-    ImmutableList<String> expected =
-        ImmutableList.of("Back0", "Back2", "Back4", "Back6", "Back8", "Back10", "Back12", "Back14",
-            "Back16", "Back18");
+    ImmutableList<String> expected = ImmutableList
+        .of("Back0", "Back2", "Back4", "Back6", "Back8", "Back10", "Back12", "Back14", "Back16",
+            "Back18");
     doTest(expected, RedirectFilter.redirects);
   }
 
   @Test
   public final void testNonRedirects() {
 
-    ImmutableList<String> expected =
-        ImmutableList.of("Back1", "Back3", "Back5", "Back7", "Back9", "Back11", "Back13", "Back15",
-            "Back17", "Back19");
+    ImmutableList<String> expected = ImmutableList
+        .of("Back1", "Back3", "Back5", "Back7", "Back9", "Back11", "Back13", "Back15", "Back17",
+            "Back19");
     doTest(expected, RedirectFilter.nonredirects);
   }
 

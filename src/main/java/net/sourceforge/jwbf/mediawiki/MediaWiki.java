@@ -20,6 +20,7 @@ package net.sourceforge.jwbf.mediawiki;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
 import java.net.URLDecoder;

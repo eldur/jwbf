@@ -131,8 +131,7 @@ public class FileUpload extends MWAction {
               .action("upload") //
               .formatXml() //
               .param("filename", MediaWiki.urlEncode(simpleFile.getTitle())) //
-              .postParam("text", simpleFile.getText())
-              .postParam(uploadTokenAction.get().token()) //
+              .postParam("text", simpleFile.getText()).postParam(uploadTokenAction.get().token()) //
               .param("ignorewarnings", true) //
               .postParam("file", simpleFile.getFile());
           Post upload = requestBuilder.buildPost();

@@ -2,6 +2,7 @@ package net.sourceforge.jwbf.mapper;
 
 import javax.annotation.CheckForNull;
 import javax.annotation.Nullable;
+
 import java.util.List;
 
 import com.google.common.base.Function;

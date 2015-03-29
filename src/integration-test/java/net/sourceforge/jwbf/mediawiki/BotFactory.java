@@ -2,6 +2,7 @@ package net.sourceforge.jwbf.mediawiki;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+
 import java.util.concurrent.TimeUnit;
 
 import com.google.inject.AbstractModule;

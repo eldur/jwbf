@@ -2,6 +2,7 @@ package net.sourceforge.jwbf.mediawiki;
 
 import javax.annotation.CheckForNull;
 import javax.inject.Singleton;
+
 import java.util.Map;
 
 import com.google.common.collect.Maps;

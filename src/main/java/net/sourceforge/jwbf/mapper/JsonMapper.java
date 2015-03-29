@@ -1,6 +1,7 @@
 package net.sourceforge.jwbf.mapper;
 
 import javax.annotation.Nonnull;
+
 import java.io.IOException;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;

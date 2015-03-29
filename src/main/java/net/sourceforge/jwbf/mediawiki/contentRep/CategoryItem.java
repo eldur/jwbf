@@ -19,6 +19,7 @@
 package net.sourceforge.jwbf.mediawiki.contentRep;
 
 import javax.annotation.Nonnull;
+
 import java.util.Objects;
 
 import net.sourceforge.jwbf.core.internal.Checked;

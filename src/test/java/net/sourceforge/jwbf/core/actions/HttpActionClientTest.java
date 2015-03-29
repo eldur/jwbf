@@ -765,8 +765,8 @@ public class HttpActionClientTest {
       testee.performAction(actionHandler);
 
       // THEN
-      Mockito.verify(actionHandler).processReturningText(Mockito.isA(String.class),
-          Mockito.eq(get));
+      Mockito.verify(actionHandler)
+          .processReturningText(Mockito.isA(String.class), Mockito.eq(get));
     } finally {
       server.stopSilent();
     }

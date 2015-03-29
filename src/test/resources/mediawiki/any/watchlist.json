@@ -1,96 +1,96 @@
 {
-  "query-continue": {
-    "watchlist": {
-      "wlcontinue": "20150106002349|704632061"
+  "query-continue" : {
+    "watchlist" : {
+      "wlcontinue" : "20150106002349|704632061"
     }
   },
-  "warnings": {
-    "query": {
-      "*": "Formatting of continuation data will be changing soon. To continue using the current formatting, use the 'rawcontinue' parameter. To begin using the new format, pass an empty string for 'continue' in the initial query."
+  "warnings" : {
+    "query" : {
+      "*" : "Formatting of continuation data will be changing soon. To continue using the current formatting, use the 'rawcontinue' parameter. To begin using the new format, pass an empty string for 'continue' in the initial query."
     }
   },
-  "query": {
-    "watchlist": [
+  "query" : {
+    "watchlist" : [
       {
-        "type": "edit",
-        "ns": 0,
-        "title": "Revenge (TV series)",
-        "pageid": 31808292,
-        "revid": 641213576,
-        "old_revid": 641162910
+        "type" : "edit",
+        "ns" : 0,
+        "title" : "Revenge (TV series)",
+        "pageid" : 31808292,
+        "revid" : 641213576,
+        "old_revid" : 641162910
       },
       {
-        "type": "edit",
-        "ns": 4,
-        "title": "Wikipedia:Reference desk/Language",
-        "pageid": 2515121,
-        "revid": 641213194,
-        "old_revid": 641195380
+        "type" : "edit",
+        "ns" : 4,
+        "title" : "Wikipedia:Reference desk/Language",
+        "pageid" : 2515121,
+        "revid" : 641213194,
+        "old_revid" : 641195380
       },
       {
-        "type": "edit",
-        "ns": 4,
-        "title": "Wikipedia:Reference desk/Humanities",
-        "pageid": 2535875,
-        "revid": 641211705,
-        "old_revid": 641208678
+        "type" : "edit",
+        "ns" : 4,
+        "title" : "Wikipedia:Reference desk/Humanities",
+        "pageid" : 2535875,
+        "revid" : 641211705,
+        "old_revid" : 641208678
       },
       {
-        "type": "edit",
-        "ns": 4,
-        "title": "Wikipedia:Reference desk/Mathematics",
-        "pageid": 3271152,
-        "revid": 641211647,
-        "old_revid": 641210849
+        "type" : "edit",
+        "ns" : 4,
+        "title" : "Wikipedia:Reference desk/Mathematics",
+        "pageid" : 3271152,
+        "revid" : 641211647,
+        "old_revid" : 641210849
       },
       {
-        "type": "edit",
-        "ns": 4,
-        "title": "Wikipedia:Reference desk/Computing",
-        "pageid": 6041086,
-        "revid": 641203963,
-        "old_revid": 641195810
+        "type" : "edit",
+        "ns" : 4,
+        "title" : "Wikipedia:Reference desk/Computing",
+        "pageid" : 6041086,
+        "revid" : 641203963,
+        "old_revid" : 641195810
       },
       {
-        "type": "edit",
-        "ns": 0,
-        "title": "True Detective (TV series)",
-        "pageid": 38411152,
-        "revid": 641203930,
-        "old_revid": 639803751
+        "type" : "edit",
+        "ns" : 0,
+        "title" : "True Detective (TV series)",
+        "pageid" : 38411152,
+        "revid" : 641203930,
+        "old_revid" : 639803751
       },
       {
-        "type": "edit",
-        "ns": 0,
-        "title": "Orange Is the New Black",
-        "pageid": 34119966,
-        "revid": 641194827,
-        "old_revid": 639820107
+        "type" : "edit",
+        "ns" : 0,
+        "title" : "Orange Is the New Black",
+        "pageid" : 34119966,
+        "revid" : 641194827,
+        "old_revid" : 639820107
       },
       {
-        "type": "edit",
-        "ns": 3,
-        "title": "User talk:MER-C",
-        "pageid": 44865968,
-        "revid": 641188535,
-        "old_revid": 641170620,
-        "minor": ""
+        "type" : "edit",
+        "ns" : 3,
+        "title" : "User talk:MER-C",
+        "pageid" : 44865968,
+        "revid" : 641188535,
+        "old_revid" : 641170620,
+        "minor" : ""
       },
       {
-        "type": "edit",
-        "ns": 0,
-        "title": "Vikings (season 2)",
-        "pageid": 40419770,
-        "revid": 641184231,
-        "old_revid": 639847054
+        "type" : "edit",
+        "ns" : 0,
+        "title" : "Vikings (season 2)",
+        "pageid" : 40419770,
+        "revid" : 641184231,
+        "old_revid" : 639847054
       },
       {
-        "type": "edit",
-        "ns": 0,
-        "title": "List of Anger Management episodes",
-        "pageid": 38356500,
-        "revid": 641182876,
-        "old_revid": 640695842
+        "type" : "edit",
+        "ns" : 0,
+        "title" : "List of Anger Management episodes",
+        "pageid" : 38356500,
+        "revid" : 641182876,
+        "old_revid" : 640695842
       }
     ]
   }

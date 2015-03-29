@@ -19,6 +19,7 @@
 package net.sourceforge.jwbf.core.contentRep;
 
 import javax.annotation.Nullable;
+
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;

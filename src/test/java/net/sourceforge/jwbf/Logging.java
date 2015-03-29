@@ -13,8 +13,8 @@ public class Logging {
 
   public static Supplier<ImmutableList<String>> newLogLinesSupplier() {
 
-    ch.qos.logback.classic.Logger root = (ch.qos.logback.classic.Logger) LoggerFactory.getLogger(
-        ch.qos.logback.classic.Logger.ROOT_LOGGER_NAME);
+    ch.qos.logback.classic.Logger root = (ch.qos.logback.classic.Logger) LoggerFactory
+        .getLogger(ch.qos.logback.classic.Logger.ROOT_LOGGER_NAME);
 
     final ListAppender<ILoggingEvent> mockAppender = new ListAppender<>();
     LoggerContext iLoggerFactory =

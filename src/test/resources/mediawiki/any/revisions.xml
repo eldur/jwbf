@@ -1,14 +1,14 @@
 <?xml version="1.0"?>
 <api>
   <query-continue>
-    <revisions rvcontinue="13559"/>
+    <revisions rvcontinue="13559" />
   </query-continue>
   <warnings>
     <query xml:space="preserve">Formatting of continuation data will be changing soon. To continue using the current formatting, use the 'rawcontinue' parameter. To begin using the new format, pass an empty string for 'continue' in the initial query.</query>
   </warnings>
   <query>
     <pages>
-      <page ns="0" title="A" missing=""/>
+      <page ns="0" title="A" missing="" />
       <page pageid="4092" ns="0" title="B">
         <revisions>
           <rev revid="13560" parentid="13559" user="Any" timestamp="2005-12-16T09:57:30Z"

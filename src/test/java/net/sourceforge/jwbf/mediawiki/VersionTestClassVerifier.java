@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import javax.annotation.Nullable;
 import javax.inject.Provider;
+
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;

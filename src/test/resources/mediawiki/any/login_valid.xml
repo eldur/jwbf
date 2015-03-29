@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <api>
   <login result="Success" lguserid="0" lgusername="Hunsu"
-         lgtoken="mock" cookieprefix="mediawikiwiki"
-         sessionid="mock"/>
+    lgtoken="mock" cookieprefix="mediawikiwiki"
+    sessionid="mock" />
 </api>

@@ -19,6 +19,7 @@
 package net.sourceforge.jwbf.mediawiki.actions.queries;
 
 import javax.annotation.Nonnull;
+
 import java.util.Iterator;
 import java.util.List;
 

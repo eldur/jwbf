@@ -20,6 +20,7 @@ package net.sourceforge.jwbf.mediawiki.actions.util;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
 import java.util.List;
 
 import com.google.common.collect.ImmutableList;

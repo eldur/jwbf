@@ -2,6 +2,7 @@ package net.sourceforge.jwbf.mediawiki.bots;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+
 import java.net.URL;
 
 import com.google.common.annotations.VisibleForTesting;
@@ -212,9 +213,9 @@ public class MediaWikiBot implements WikiBot {
 
   // TODO 'data' is not very descriptive
   public Optional<SimpleArticle> readDataOpt(String name) {
-    return getPerformedAction(new GetRevision(null, name, DEFAULT_READ_PROPERTIES))
-        .getArticleOpt();
+    return getPerformedAction(new GetRevision(null, name, DEFAULT_READ_PROPERTIES)).getArticleOpt();
   }
+
   /**
    * @param name of article in a mediawiki like "Main Page"
    * @return a content representation of requested article, never null

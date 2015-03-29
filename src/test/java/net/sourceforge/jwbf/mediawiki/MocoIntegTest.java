@@ -4,6 +4,7 @@ import static org.junit.runners.Parameterized.Parameters;
 
 import javax.annotation.Nonnull;
 import javax.inject.Provider;
+
 import java.io.File;
 import java.util.Arrays;
 import java.util.Collection;
@@ -184,8 +185,8 @@ public abstract class MocoIntegTest extends AbstractIntegTest implements Provide
             for (Entry<String, String> entry : replacements.entrySet()) {
               String key = String.format("${%s}", entry.getKey());
               if (input.contains(key)) {
-                return input.replaceFirst(String.format("\\$\\{%s\\}", entry.getKey()),
-                    entry.getValue());
+                return input
+                    .replaceFirst(String.format("\\$\\{%s\\}", entry.getKey()), entry.getValue());
               }
             }
             return input;

@@ -3,6 +3,7 @@ package net.sourceforge.jwbf.core.actions;
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nonnull;
 import javax.annotation.meta.When;
+
 import java.nio.charset.Charset;
 import java.util.Objects;
 
