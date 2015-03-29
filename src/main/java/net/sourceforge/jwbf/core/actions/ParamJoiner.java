@@ -1,10 +1,8 @@
 package net.sourceforge.jwbf.core.actions;
 
-import java.util.Map.Entry;
-
 import javax.annotation.Nonnull;
 
-import net.sourceforge.jwbf.core.internal.NonnullFunction;
+import java.util.Map.Entry;
 
 import com.google.common.base.Function;
 import com.google.common.base.Joiner;
@@ -13,6 +11,7 @@ import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Ordering;
+import net.sourceforge.jwbf.core.internal.NonnullFunction;
 
 class ParamJoiner implements Supplier<String> {
 

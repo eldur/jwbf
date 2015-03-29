@@ -1,14 +1,11 @@
 package net.sourceforge.jwbf.core.actions;
 
-import java.nio.charset.Charset;
-import java.util.Objects;
-
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nonnull;
 import javax.annotation.meta.When;
 
-import net.sourceforge.jwbf.core.actions.util.HttpAction;
-import net.sourceforge.jwbf.core.internal.NonnullFunction;
+import java.nio.charset.Charset;
+import java.util.Objects;
 
 import com.google.common.base.Charsets;
 import com.google.common.base.Function;
@@ -17,6 +14,8 @@ import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
+import net.sourceforge.jwbf.core.actions.util.HttpAction;
+import net.sourceforge.jwbf.core.internal.NonnullFunction;
 
 public class Post extends HttpBase implements HttpAction {
 

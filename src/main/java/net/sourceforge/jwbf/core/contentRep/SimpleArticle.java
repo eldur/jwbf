@@ -39,263 +39,263 @@ import net.sourceforge.jwbf.core.internal.TimeConverter;
  */
 public class SimpleArticle implements ArticleMeta, Serializable, ContentSetable {
 
-    private static final long serialVersionUID = -1368796410854055279L;
-    private String title = "";
-    private String editSummary = "";
-    private String text = "";
-    private String editor = "";
-    private boolean minorEdit = false;
-    private long editTimestamp = newZeroDate().getTime();
-    private String revId = "";
-    private int pageId;
+  private static final long serialVersionUID = -1368796410854055279L;
+  private String title = "";
+  private String editSummary = "";
+  private String text = "";
+  private String editor = "";
+  private boolean minorEdit = false;
+  private long editTimestamp = newZeroDate().getTime();
+  private String revId = "";
+  private int pageId;
 
-    private static Pattern redirectPattern = Pattern //
-            .compile("#(.*)redirect (.*)" //
-                    , Pattern.CASE_INSENSITIVE);
+  private static Pattern redirectPattern = Pattern //
+      .compile("#(.*)redirect (.*)" //
+          , Pattern.CASE_INSENSITIVE);
 
-    @VisibleForTesting
-    public static Date newZeroDate() {
-        return new Date(0);
-    }
+  @VisibleForTesting
+  public static Date newZeroDate() {
+    return new Date(0);
+  }
 
-    /**
+  /**
    *
    *
    */
-    public SimpleArticle() {
-        // do nothing
+  public SimpleArticle() {
+    // do nothing
+  }
+
+  public SimpleArticle(ContentAccessable ca) {
+    if (ca instanceof Article) {
+      throw new IllegalArgumentException("do not convert an " + //
+          Article.class.getCanonicalName() + " to a " + //
+          getClass().getCanonicalName() + ", because its very expensive");
+    }
+    title = Optional.fromNullable(ca.getTitle()).or("");
+    text = Optional.fromNullable(ca.getText()).or("");
+    editSummary = Optional.fromNullable(ca.getEditSummary()).or("");
+    editor = Optional.fromNullable(ca.getEditor()).or("");
+
+    setMinorEdit(ca.isMinorEdit());
+
+  }
+
+  public SimpleArticle(ArticleMeta sa) {
+    this((ContentAccessable) sa);
+
+    if (sa.getEditTimestamp() != null) {
+      editTimestamp = sa.getEditTimestamp().getTime();
     }
 
-    public SimpleArticle(ContentAccessable ca) {
-        if (ca instanceof Article) {
-            throw new IllegalArgumentException("do not convert an " + //
-                    Article.class.getCanonicalName() + " to a " + //
-                    getClass().getCanonicalName() + ", because its very expensive");
-        }
-        title = Optional.fromNullable(ca.getTitle()).or("");
-        text = Optional.fromNullable(ca.getText()).or("");
-        editSummary = Optional.fromNullable(ca.getEditSummary()).or("");
-        editor = Optional.fromNullable(ca.getEditor()).or("");
-
-        setMinorEdit(ca.isMinorEdit());
-
+    if (sa.getRevisionId() != null) {
+      revId = sa.getRevisionId();
     }
+  }
 
-    public SimpleArticle(ArticleMeta sa) {
-        this((ContentAccessable) sa);
+  /**
+   * @param text
+   *            of article
+   * @param title
+   *            of article
+   * @deprecated use {@link #SimpleArticle(String)} and {@link #setText(String)} instead.
+   */
+  @Deprecated
+  public SimpleArticle(final String text, final String title) {
+    this(title);
+    this.text = text;
+  }
 
-        if (sa.getEditTimestamp() != null) {
-            editTimestamp = sa.getEditTimestamp().getTime();
-        }
+  /**
+   * @param title
+   *            of article
+   */
+  public SimpleArticle(final String title) {
+    this.title = title;
+  }
 
-        if (sa.getRevisionId() != null) {
-            revId = sa.getRevisionId();
-        }
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public String getEditSummary() {
+    return editSummary;
+  }
+
+  @Override
+  public void setEditSummary(final String s) {
+    editSummary = s;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public boolean isMinorEdit() {
+    return minorEdit;
+  }
+
+  @Override
+  public void setMinorEdit(final boolean minor) {
+    minorEdit = minor;
+  }
+
+  /**
+   * @return the
+   * @deprecated use {@link #getTitle()} instead
+   */
+  @Deprecated
+  public String getLabel() {
+    return getTitle();
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public String getTitle() {
+    return title;
+  }
+
+  /**
+   * @param label
+   *            the label, like "Main Page"
+   * @deprecated use {@link #setTitle(String)} instead
+   */
+  @Deprecated
+  public void setLabel(final String label) {
+    setTitle(label);
+  }
+
+  @Override
+  public void setTitle(final String title) {
+    this.title = title;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public String getText() {
+    return text;
+  }
+
+  @Override
+  public void setText(final String text) {
+    this.text = text;
+  }
+
+  // TODO check mutation
+  @Override
+  public void addText(final String text) {
+    setText(getText() + text);
+  }
+
+  // TODO check mutation
+  @Override
+  public void addTextnl(final String text) {
+    setText(getText() + "\n" + text);
+  }
+
+  @Override
+  public String getEditor() {
+    return editor;
+  }
+
+  @Override
+  public void setEditor(final String editor) {
+    this.editor = editor;
+  }
+
+  /**
+   * doesn't work correct
+   */
+  @Beta
+  @Override
+  public boolean isRedirect() {
+    if (redirectPattern.matcher(text).matches()) {
+      return true;
     }
+    return false;
+  }
 
-    /**
-     * @param text
-     *            of article
-     * @param title
-     *            of article
-     * @deprecated use {@link #SimpleArticle(String)} and {@link #setText(String)} instead.
-     */
-    @Deprecated
-    public SimpleArticle(final String text, final String title) {
-        this(title);
-        this.text = text;
-    }
+  @Override
+  public Date getEditTimestamp() {
+    return new Date(editTimestamp);
+  }
 
-    /**
-     * @param title
-     *            of article
-     */
-    public SimpleArticle(final String title) {
-        this.title = title;
-    }
+  public void setEditTimestamp(String editTimestamp) {
+    Date parsedDate = tryParse(editTimestamp);
+    setEditTimestamp(parsedDate);
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String getEditSummary() {
-        return editSummary;
-    }
-
-    @Override
-    public void setEditSummary(final String s) {
-        editSummary = s;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean isMinorEdit() {
-        return minorEdit;
-    }
-
-    @Override
-    public void setMinorEdit(final boolean minor) {
-        minorEdit = minor;
-    }
-
-    /**
-     * @return the
-     * @deprecated use {@link #getTitle()} instead
-     */
-    @Deprecated
-    public String getLabel() {
-        return getTitle();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String getTitle() {
-        return title;
-    }
-
-    /**
-     * @param label
-     *            the label, like "Main Page"
-     * @deprecated use {@link #setTitle(String)} instead
-     */
-    @Deprecated
-    public void setLabel(final String label) {
-        setTitle(label);
-    }
-
-    @Override
-    public void setTitle(final String title) {
-        this.title = title;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String getText() {
-        return text;
-    }
-
-    @Override
-    public void setText(final String text) {
-        this.text = text;
-    }
-
-    // TODO check mutation
-    @Override
-    public void addText(final String text) {
-        setText(getText() + text);
-    }
-
-    // TODO check mutation
-    @Override
-    public void addTextnl(final String text) {
-        setText(getText() + "\n" + text);
-    }
-
-    @Override
-    public String getEditor() {
-        return editor;
-    }
-
-    @Override
-    public void setEditor(final String editor) {
-        this.editor = editor;
-    }
-
-    /**
-     * doesn't work correct
-     */
-    @Beta
-    @Override
-    public boolean isRedirect() {
-        if (redirectPattern.matcher(text).matches()) {
-            return true;
-        }
-        return false;
-    }
-
-    @Override
-    public Date getEditTimestamp() {
-        return new Date(editTimestamp);
-    }
-
-    public void setEditTimestamp(String editTimestamp) {
-        Date parsedDate = tryParse(editTimestamp);
-        setEditTimestamp(parsedDate);
-    }
-
-    private Date tryParse(String editTimestamp) {
-        Optional<Date> parsedDate = //
+  private Date tryParse(String editTimestamp) {
+    Optional<Date> parsedDate = //
         TimeConverter.from(editTimestamp, TimeConverter.YYYYMMDD_T_HHMMSS_Z);
-        return parsedDate.or(TimeConverter.from(editTimestamp, "MM/dd/yy' 'HH:mm:ss")).get();
-    }
+    return parsedDate.or(TimeConverter.from(editTimestamp, "MM/dd/yy' 'HH:mm:ss")).get();
+  }
 
-    public void setEditTimestamp(@Nullable Date d) {
-        if (d != null) {
-            editTimestamp = d.getTime();
-        }
+  public void setEditTimestamp(@Nullable Date d) {
+    if (d != null) {
+      editTimestamp = d.getTime();
     }
+  }
 
-    @Override
-    public boolean equals(Object obj) {
-        if (obj instanceof SimpleArticle) {
-            SimpleArticle that = (SimpleArticle) obj;
-            return Objects.equals(this.editTimestamp, that.editTimestamp) && //
-                    Objects.equals(this.revId, that.revId) && //
-                    Objects.equals(this.text, that.text) && //
-                    Objects.equals(this.title, that.title) //
-            ;
-        } else {
-            return false;
-        }
+  @Override
+  public boolean equals(Object obj) {
+    if (obj instanceof SimpleArticle) {
+      SimpleArticle that = (SimpleArticle) obj;
+      return Objects.equals(this.editTimestamp, that.editTimestamp) && //
+          Objects.equals(this.revId, that.revId) && //
+          Objects.equals(this.text, that.text) && //
+          Objects.equals(this.title, that.title) //
+          ;
+    } else {
+      return false;
     }
+  }
 
-    @Override
-    public String toString() {
-        return MoreObjects.toStringHelper(this) //
-                .add("title", title) //
-                .add("editSummary", editSummary) // XXX check equals
-                .add("text", text) //
-                .add("editor", editor) // XXX check equals
-                .add("minorEdit", minorEdit) // XXX check equals
-                .add("editTimestamp", editTimestamp) //
-                .add("pageid", pageId) //
-                .add("revId", revId) //
-                .toString();
-    }
+  @Override
+  public String toString() {
+    return MoreObjects.toStringHelper(this) //
+        .add("title", title) //
+        .add("editSummary", editSummary) // XXX check equals
+        .add("text", text) //
+        .add("editor", editor) // XXX check equals
+        .add("minorEdit", minorEdit) // XXX check equals
+        .add("editTimestamp", editTimestamp) //
+        .add("pageid", pageId) //
+        .add("revId", revId) //
+        .toString();
+  }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(editTimestamp, revId, text, title);
-    }
+  @Override
+  public int hashCode() {
+    return Objects.hash(editTimestamp, revId, text, title);
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String getRevisionId() {
-        return revId;
-    }
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public String getRevisionId() {
+    return revId;
+  }
 
-    /**
-     * @param revId
-     *            the
-     */
-    public void setRevisionId(String revId) {
-        this.revId = revId;
-    }
+  /**
+   * @param revId
+   *            the
+   */
+  public void setRevisionId(String revId) {
+    this.revId = revId;
+  }
 
-    public int getPageId() {
-        return pageId;
-    }
+  public int getPageId() {
+    return pageId;
+  }
 
-    public void setPageId(int pageId) {
-        this.pageId = pageId;
+  public void setPageId(int pageId) {
+    this.pageId = pageId;
 
-    }
+  }
 }

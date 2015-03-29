@@ -2,15 +2,14 @@ package net.sourceforge.jwbf.core.actions;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
-import net.sourceforge.jwbf.GAssert;
-import net.sourceforge.jwbf.core.actions.RequestBuilder.HashCodeEqualsMemoizingSupplier;
-
-import org.junit.Ignore;
-import org.junit.Test;
 
 import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
 import com.google.common.collect.ImmutableMap;
+import net.sourceforge.jwbf.GAssert;
+import net.sourceforge.jwbf.core.actions.RequestBuilder.HashCodeEqualsMemoizingSupplier;
+import org.junit.Ignore;
+import org.junit.Test;
 
 public class RequestBuilderTest {
 
@@ -138,8 +137,7 @@ public class RequestBuilderTest {
     assertEquals("/index.html?a=b UTF-8 {c=d}", post.toString());
     assertEquals(post, newPost);
 
-    assertEquals("/index.html?a=b&c=e UTF-8 {c=d}",
-        builder.param("c", "e").buildPost().toString());
+    assertEquals("/index.html?a=b&c=e UTF-8 {c=d}", builder.param("c", "e").buildPost().toString());
   }
 
   @Test

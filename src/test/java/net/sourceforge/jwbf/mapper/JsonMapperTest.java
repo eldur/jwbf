@@ -19,9 +19,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Charsets;
 import com.google.common.io.Files;
 import com.google.common.io.Resources;
-
 import net.sourceforge.jwbf.JWBF;
-
 import org.junit.Before;
 import org.junit.Test;
 
@@ -69,17 +67,17 @@ public class JsonMapperTest {
         return null;
       }
 
-    @Override
-    public HashMap<String, Object> toMap(String json) {
+      @Override
+      public HashMap<String, Object> toMap(String json) {
         // TODO Auto-generated method stub
         return null;
-    }
+      }
 
-    @Override
-    public JsonNode toJsonNode(String nonNullJson) {
+      @Override
+      public JsonNode toJsonNode(String nonNullJson) {
         // TODO Auto-generated method stub
         return null;
-    }
+      }
     };
     testee = new JsonMapper(nullFunction);
     try {

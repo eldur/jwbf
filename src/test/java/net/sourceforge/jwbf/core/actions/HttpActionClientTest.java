@@ -149,14 +149,13 @@ public class HttpActionClientTest {
       server.startSilent();
       String url = "http://localhost:" + server.getPort();
       testee = HttpActionClient.of(url);
-            String utf8Data = "츠 ᅳ פעילות הבינאáßçकखी國際ɕɕkɕoːɐ̯eː" +
-                    "aɕɐɑɒæɑ̃ɕʌbɓʙβcɕçɕɕçɕɔɔɕɕöäü\u200B";
-            String utf8RawData = "\uCE20 \u1173 \u05E4\u05E2\u05D9\u05DC\u05D5\u05EA " +
-                    "\u05D4\u05D1\u05D9\u05E0\u05D0\u00E1\u00DF\u00E7\u0915\u0916" +
-                    "\u0940\u570B\u969B\u0255\u0255k\u0255o\u02D0\u0250\u032Fe\u02D0a" +
-                    "\u0255\u0250\u0251\u0252\u00E6\u0251\u0303\u0255\u028Cb\u0253\u0299" +
-                    "\u03B2c\u0255\u00E7\u0255\u0255\u00E7\u0255\u0254\u0254\u0255\u0255" +
-                    "\u00F6\u00E4\u00FC\u200B";
+      String utf8Data = "츠 ᅳ פעילות הבינאáßçकखी國際ɕɕkɕoːɐ̯eː" + "aɕɐɑɒæɑ̃ɕʌbɓʙβcɕçɕɕçɕɔɔɕɕöäü\u200B";
+      String utf8RawData = "\uCE20 \u1173 \u05E4\u05E2\u05D9\u05DC\u05D5\u05EA " +
+          "\u05D4\u05D1\u05D9\u05E0\u05D0\u00E1\u00DF\u00E7\u0915\u0916" +
+          "\u0940\u570B\u969B\u0255\u0255k\u0255o\u02D0\u0250\u032Fe\u02D0a" +
+          "\u0255\u0250\u0251\u0252\u00E6\u0251\u0303\u0255\u028Cb\u0253\u0299" +
+          "\u03B2c\u0255\u00E7\u0255\u0255\u00E7\u0255\u0254\u0254\u0255\u0255" +
+          "\u00F6\u00E4\u00FC\u200B";
       assertEquals(utf8RawData, utf8Data);
       Post post = RequestBuilder.of(url) //
           .param("b", "c") //
@@ -192,17 +191,16 @@ public class HttpActionClientTest {
       testee = HttpActionClient.of(url);
       Post post = RequestBuilder.of(url) //
           .param("b", "c") //
-					.postParam("d", "c").postParam("c", "e").buildPost() //
+          .postParam("d", "c").postParam("c", "e").buildPost() //
           .postParam("a", "b");
 
       // WHEN
       String result = testee.post(post);
 
       // THEN
-			ImmutableList<String> expected = ImmutableList.<String> builder()
-					.add("b=c") // b = [c, e]
-					.addAll(multipartOf("d", "c")) //
-					.addAll(multipartOf("c", "e")) //
+      ImmutableList<String> expected = ImmutableList.<String>builder().add("b=c") // b = [c, e]
+          .addAll(multipartOf("d", "c")) //
+          .addAll(multipartOf("c", "e")) //
           .addAll(multipartOf("a", "b")) //
           .add("") //
           .build();
@@ -242,15 +240,14 @@ public class HttpActionClientTest {
       String result = testee.get(new Get(url));
 
       // THEN
-			ImmutableList<String> expected = ImmutableList
-					.<String> builder()
-					//
-					.add(entry(ACCEPT_ENCODING, "gzip,deflate"))
-					//
-					.add(entry(CONNECTION, "keep-alive"))
-					//
-					.add(entry(HOST, "localhost:????"))
-					//
+      ImmutableList<String> expected = ImmutableList.<String>builder()
+          //
+          .add(entry(ACCEPT_ENCODING, "gzip,deflate"))
+              //
+          .add(entry(CONNECTION, "keep-alive"))
+              //
+          .add(entry(HOST, "localhost:????"))
+              //
           .add(entry(USER_AGENT, "Apache-HttpClient/4.3.4 (java 1.5)")) //
           .add("") //
           .build();
@@ -263,8 +260,7 @@ public class HttpActionClientTest {
   }
 
   private String userAgentString(String userAgentString) {
-		return userAgentString
-				+ "JWBF/Version_unknown Apache-HttpClient/4.3.4 (java 1.5)";
+    return userAgentString + "JWBF/Version_unknown Apache-HttpClient/4.3.4 (java 1.5)";
   }
 
   @Test
@@ -276,8 +272,7 @@ public class HttpActionClientTest {
       server.startSilent();
       String url = server.getTestUrl();
       testee = newVersionMockBuilder() //
-					.withUserAgent("āTeštBot", "ač43e3a",
-							"User:WikipediāUserId") //
+          .withUserAgent("āTeštBot", "ač43e3a", "User:WikipediāUserId") //
           .withUrl(url) //
           .build();
 
@@ -288,11 +283,9 @@ public class HttpActionClientTest {
       ImmutableList<String> expected = ImmutableList.<String>builder() //
           .add(entry(ACCEPT_ENCODING, "gzip,deflate")) //
           .add(entry(CONNECTION, "keep-alive")) //
-					.add(entry(HOST, "localhost:????"))
-					//
-					.add(entry(
-							USER_AGENT,
-							userAgentString("?Te?tBot/a?43e3a (User:Wikipedi?UserId) "))) //
+          .add(entry(HOST, "localhost:????"))
+              //
+          .add(entry(USER_AGENT, userAgentString("?Te?tBot/a?43e3a (User:Wikipedi?UserId) "))) //
           .add("") //
           .build();
 
@@ -342,112 +335,88 @@ public class HttpActionClientTest {
   @Test
   public void testUserAgentJwbf() {
     // GIVEN / WHEN
-		Supplier<ImmutableList<String>> logLinesSupplier = Logging
-				.newLogLinesSupplier();
+    Supplier<ImmutableList<String>> logLinesSupplier = Logging.newLogLinesSupplier();
     newVersionMockBuilder() //
         .withUrl("http://example.org") //
         .build();
 
     // THEN
-		GAssert.assertEquals(ImmutableList.<String> of(),
-				logLinesSupplier.get());
+    GAssert.assertEquals(ImmutableList.<String>of(), logLinesSupplier.get());
 
   }
 
   @Test
   public void testUserAgentString() {
     // GIVEN / WHEN
-		Supplier<ImmutableList<String>> logLinesSupplier = Logging
-				.newLogLinesSupplier();
+    Supplier<ImmutableList<String>> logLinesSupplier = Logging.newLogLinesSupplier();
     List<HttpActionClient.UserAgentPart> parts = HttpActionClient.builder() //
-				.withUserAgent("test", "1.0",
-						"written by User:Testuser - testuser@example.org") //
+        .withUserAgent("test", "1.0", "written by User:Testuser - testuser@example.org") //
         .userAgentParts;
 
     // THEN
-		assertAgentPart("test", "1.0",
-				"written by User:Testuser - testuser@example.org", parts);
-		GAssert.assertEquals(ImmutableList.<String> of(),
-				logLinesSupplier.get());
+    assertAgentPart("test", "1.0", "written by User:Testuser - testuser@example.org", parts);
+    GAssert.assertEquals(ImmutableList.<String>of(), logLinesSupplier.get());
 
   }
 
   @Test
   public void testUserAgentString_encodingLogging() {
     // GIVEN / WHEN
-		Supplier<ImmutableList<String>> logLinesSupplier = Logging
-				.newLogLinesSupplier();
+    Supplier<ImmutableList<String>> logLinesSupplier = Logging.newLogLinesSupplier();
     List<HttpActionClient.UserAgentPart> parts = HttpActionClient.builder() //
         .withUserAgent("āTeštBot", "ač43e3a", "User:WikipediāUserId") //
         .userAgentParts;
 
     // THEN
     assertAgentPart("?Te?tBot", "a?43e3a", "User:Wikipedi?UserId", parts);
-		GAssert.assertEquals(
-				ImmutableList
-						.<String> of(
-                                "[WARN] \"āTeštBot\" was encoded to \"?Te?tBot\";" +
-                                " because only iso8859 is supported",
-                                "[WARN] \"ač43e3a\" was encoded to \"a?43e3a\";" +
-                                " because only iso8859 is supported",
-                                "[WARN] \"User:WikipediāUserId\" was encoded to" +
-                                " \"User:Wikipedi?UserId\"; because only " +
-                                "iso8859 is supported"),
-				logLinesSupplier.get());
+    GAssert.assertEquals(ImmutableList.<String>of(
+        "[WARN] \"āTeštBot\" was encoded to \"?Te?tBot\";" + " because only iso8859 is supported",
+        "[WARN] \"ač43e3a\" was encoded to \"a?43e3a\";" + " because only iso8859 is supported",
+        "[WARN] \"User:WikipediāUserId\" was encoded to" +
+            " \"User:Wikipedi?UserId\"; because only " +
+            "iso8859 is supported"), logLinesSupplier.get());
   }
 
   @Test
   public void testUserAgentString_whitespaceLogging() {
     // GIVEN / WHEN
-		Supplier<ImmutableList<String>> logLinesSupplier = Logging
-				.newLogLinesSupplier();
+    Supplier<ImmutableList<String>> logLinesSupplier = Logging.newLogLinesSupplier();
     List<HttpActionClient.UserAgentPart> parts = HttpActionClient.builder() //
-				.withUserAgent(" name\r //with ", " version/\n\n with ",
-						" comment/of (me) ") //
+        .withUserAgent(" name\r //with ", " version/\n\n with ", " comment/of (me) ") //
         .userAgentParts;
 
     // THEN
     assertAgentPart("name_with", "version_with", "comment/of me", parts);
-		GAssert.assertEquals(
-				ImmutableList
-						.<String> of(
-                                "[WARN] \" name\\r //with \" was changed to \"name_with\";" +
-                                " because of User-Agent name/version rules",
-                                "[WARN] \" version/\\n\\n with \" was changed to " +
-                                "\"version_with\"; because of User-Agent name/version rules",
-                                "[WARN] \" comment/of (me) \" was changed to \"comment/of me\";" +
-                                " because of User-Agent comment rules"),
-				logLinesSupplier.get());
+    GAssert.assertEquals(ImmutableList.<String>of(
+        "[WARN] \" name\\r //with \" was changed to \"name_with\";"
+            + " because of User-Agent name/version rules",
+        "[WARN] \" version/\\n\\n with \" was changed to "
+            + "\"version_with\"; because of User-Agent name/version rules",
+        "[WARN] \" comment/of (me) \" was changed to \"comment/of me\";"
+            + " because of User-Agent comment rules"), logLinesSupplier.get());
   }
 
   @Test
   public void testUserAgentString_emptyLogging() {
     // GIVEN / WHEN
-		Supplier<ImmutableList<String>> logLinesSupplier = Logging
-				.newLogLinesSupplier();
+    Supplier<ImmutableList<String>> logLinesSupplier = Logging.newLogLinesSupplier();
     List<HttpActionClient.UserAgentPart> parts = HttpActionClient.builder() //
         .withUserAgent(" \t ", " \t ", " \n ") //
         .userAgentParts;
 
     // THEN
     assertAgentPart("Unknown", "Unknown", "", parts);
-		GAssert.assertEquals(
-				ImmutableList
-						.<String> of(
-                                "[WARN] \" \\t \" was changed to \"Unknown\";" +
-                                " because of User-Agent name/version rules",
-                                "[WARN] \" \\t \" was changed to \"Unknown\";" +
-                                " because of User-Agent name/version rules",
-                                "[WARN] \" \\n \" was changed to \"\";" +
-                                " because of User-Agent comment rules"),
+    GAssert.assertEquals(ImmutableList.<String>of("[WARN] \" \\t \" was changed to \"Unknown\";"
+                + " because of User-Agent name/version rules",
+            "[WARN] \" \\t \" was changed to \"Unknown\";"
+                + " because of User-Agent name/version rules",
+            "[WARN] \" \\n \" was changed to \"\";" + " because of User-Agent comment rules"),
         logLinesSupplier.get());
   }
 
-	private static void assertAgentPart(String expectedName,
-			String expectedVersion, String expectedComment,
-			List<HttpActionClient.UserAgentPart> actualParts) {
-		HttpActionClient.UserAgentPart onlyElement = Iterables
-				.getOnlyElement(actualParts);
+  private static void assertAgentPart(String expectedName, String expectedVersion,
+      String expectedComment, List<HttpActionClient.UserAgentPart> actualParts) {
+    HttpActionClient.UserAgentPart onlyElement = Iterables.getOnlyElement(actualParts);
     assertEquals(expectedName, onlyElement.name);
     assertEquals(expectedVersion, onlyElement.version);
     assertEquals(expectedComment, onlyElement.comment);
@@ -455,8 +424,7 @@ public class HttpActionClientTest {
 
   @Test
   public void testMissingUseragent() {
-		Supplier<ImmutableList<String>> logLinesSupplier = Logging
-				.newLogLinesSupplier();
+    Supplier<ImmutableList<String>> logLinesSupplier = Logging.newLogLinesSupplier();
 
     // GIVEN / WHEN
     HttpActionClient.builder() //
@@ -480,8 +448,7 @@ public class HttpActionClientTest {
       Post post = RequestBuilder.of("/").buildPost();
 
       // WHEN
-			HttpActionClient hac = newVersionMockBuilder().withUrl(
-					server.getTestUrl()) //
+      HttpActionClient hac = newVersionMockBuilder().withUrl(server.getTestUrl()) //
           .build();
 
       ResponseHandler<String> a = ContentProcessableBuilder //
@@ -492,13 +459,12 @@ public class HttpActionClientTest {
       String result = Iterables.getOnlyElement(a.get());
 
       // THEN
-			ImmutableList<String> expected = ImmutableList.<String> builder()
-					.add(entry(ACCEPT_ENCODING, "gzip,deflate")) //
+      ImmutableList<String> expected =
+          ImmutableList.<String>builder().add(entry(ACCEPT_ENCODING, "gzip,deflate")) //
               .add(entry(CONNECTION, "keep-alive")) //
-					.add(entry(CONTENT_LENGTH, "???"))
-					//
-					.add(entry(CONTENT_TYPE,
-							"multipart/form-data; boundary=????")) //
+              .add(entry(CONTENT_LENGTH, "???"))
+                  //
+              .add(entry(CONTENT_TYPE, "multipart/form-data; boundary=????")) //
               .add(entry(HOST, "localhost:????")) //
               .add(entry(USER_AGENT, userAgentString("Unknown/Unknown "))) //
               .add("") //
@@ -526,17 +492,15 @@ public class HttpActionClientTest {
     testee = HttpActionClient.of("http://localhost/");
     HttpAction action = new Get("a");
     HttpUriRequest request = mock(HttpUriRequest.class);
-		when(request.getURI()).thenReturn(
-				JWBF.toUri("http://localhost/wiki/api.php"));
+    when(request.getURI()).thenReturn(JWBF.toUri("http://localhost/wiki/api.php"));
 
     // WHEN
-		ImmutableList<String> result = ImmutableList.copyOf((String[]) testee
-				.debug(request, action, MOCK_HANDLER));
+    ImmutableList<String> result =
+        ImmutableList.copyOf((String[]) testee.debug(request, action, MOCK_HANDLER));
 
     // THEN
-		ImmutableList<String> expected = ImmutableList
-				.<String> builder()
-				//
+    ImmutableList<String> expected = ImmutableList.<String>builder()
+        //
         .add("(GET net.sourceforge.jwbf.core.actions.HttpActionClientTest$2)") //
         .add("http://localhost/wiki") //
         .add("a") //
@@ -551,8 +515,7 @@ public class HttpActionClientTest {
     ReturningTextProcessor responseHandler = mock(ReturningTextProcessor.class);
     HttpAction action = mock(HttpAction.class);
     HttpUriRequest request = mock(HttpUriRequest.class);
-		when(request.getURI()).thenReturn(
-				JWBF.toUri("http://localhost/wiki/api.php"));
+    when(request.getURI()).thenReturn(JWBF.toUri("http://localhost/wiki/api.php"));
     try {
       // WHEN
       testee.debug(request, action, responseHandler);
@@ -592,21 +555,19 @@ public class HttpActionClientTest {
       ImmutableList<Long> deltas = toRanges(ints);
 
       // THEN
-			ImmutableList<Range<Long>> expected = ImmutableList
-					.<Range<Long>> builder() //
-                    .add(Range.closed(0L, 600L)) //
-                    .add(Range.closed(0L, 600L)) //
-                    .add(Range.closed(0L, 600L)) //
-                    .add(Range.closed(400L, 900L)) //
-                    .add(Range.closed(400L, 900L)) //
+      ImmutableList<Range<Long>> expected = ImmutableList.<Range<Long>>builder() //
+          .add(Range.closed(0L, 600L)) //
+          .add(Range.closed(0L, 600L)) //
+          .add(Range.closed(0L, 600L)) //
+          .add(Range.closed(400L, 900L)) //
+          .add(Range.closed(400L, 900L)) //
           .build();
 
       int n = 0;
       for (Range<Long> range : expected) {
         int index = n++;
         Long value = deltas.get(index);
-				assertTrue("range(" + index + "): " + range + " val: " + value,
-						range.contains(value));
+        assertTrue("range(" + index + "): " + range + " val: " + value, range.contains(value));
       }
 
     } finally {
@@ -722,8 +683,7 @@ public class HttpActionClientTest {
   public void testExecute() throws IOException {
     // GIVEN
     HttpClient failClient = mock(HttpClient.class);
-		when(failClient.execute(Mockito.isA(HttpUriRequest.class))).thenThrow(
-				IOException.class);
+    when(failClient.execute(Mockito.isA(HttpUriRequest.class))).thenThrow(IOException.class);
     testee = HttpActionClient.builder().withUrl("http://localhost/") //
         .withClient(failClient).build();
     HttpRequestBase requestBase = mock(HttpRequestBase.class);
@@ -744,12 +704,12 @@ public class HttpActionClientTest {
     testee = HttpActionClient.of("http://localhost/");
 
     String key = "a";
-		Object value = null;
+    Object value = null;
     Charset charset = Charsets.UTF_8;
     MultipartEntityBuilder builder = mock(MultipartEntityBuilder.class);
 
     // WHEN
-		testee.applyToEntityBuilder(key, value, charset, builder);
+    testee.applyToEntityBuilder(key, value, charset, builder);
 
     // THEN
     verifyNoMoreInteractions(builder);
@@ -766,7 +726,7 @@ public class HttpActionClientTest {
     MultipartEntityBuilder builder = mock(MultipartEntityBuilder.class);
 
     // WHEN
-		testee.applyToEntityBuilder(key, file, charset, builder);
+    testee.applyToEntityBuilder(key, file, charset, builder);
 
     // THEN
     verify(builder).addBinaryBody(key, file);
@@ -778,20 +738,18 @@ public class HttpActionClientTest {
     testee = HttpActionClient.of("http://localhost/");
 
     String key = "a";
-		Object value = new Object();
+    Object value = new Object();
     Charset charset = Charsets.UTF_8;
     MultipartEntityBuilder builder = mock(MultipartEntityBuilder.class);
 
     // WHEN
     try {
-			testee.applyToEntityBuilder(key, value, charset, builder);
+      testee.applyToEntityBuilder(key, value, charset, builder);
       fail();
     } catch (UnsupportedOperationException e) {
       // THEN
-			assertEquals(
-					"No Handler found for java.lang.Object. Only String or File is accepted, "
-							+ "because http parameters knows no other types.",
-					e.getMessage());
+      assertEquals("No Handler found for java.lang.Object. Only String or File is accepted, "
+          + "because http parameters knows no other types.", e.getMessage());
     }
   }
 
@@ -804,8 +762,7 @@ public class HttpActionClientTest {
       server.startSilent();
       testee = HttpActionClient.of(server.getTestUrl());
       ActionHandler actionHandler = mock(ActionHandler.class);
-			when(actionHandler.hasMoreActions()).thenReturn(Boolean.TRUE,
-					Boolean.FALSE);
+      when(actionHandler.hasMoreActions()).thenReturn(Boolean.TRUE, Boolean.FALSE);
       Get get = new RequestBuilder("/").buildGet();
       when(actionHandler.popAction()).thenReturn(get);
 

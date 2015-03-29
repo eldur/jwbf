@@ -8,7 +8,6 @@ import java.net.URL;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
-
 import net.sourceforge.jwbf.core.actions.ContentProcessable;
 import net.sourceforge.jwbf.core.actions.HttpActionClient;
 import net.sourceforge.jwbf.core.actions.util.ActionException;
@@ -29,7 +28,6 @@ import net.sourceforge.jwbf.mediawiki.actions.meta.GetUserinfo;
 import net.sourceforge.jwbf.mediawiki.actions.meta.GetVersion;
 import net.sourceforge.jwbf.mediawiki.actions.meta.Siteinfo;
 import net.sourceforge.jwbf.mediawiki.contentRep.LoginData;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -360,17 +358,17 @@ public class MediaWikiBot implements WikiBot {
   }
 
   public void watch(String... titles) {
-      if (!isLoggedIn()) {
-          throw new ActionException("Please login first");
-      }
-      getPerformedAction(new WatchUnwatchAction(true, titles));
+    if (!isLoggedIn()) {
+      throw new ActionException("Please login first");
+    }
+    getPerformedAction(new WatchUnwatchAction(true, titles));
   }
 
   public void unwatch(String... titles) {
-      if (!isLoggedIn()) {
-          throw new ActionException("Please login first");
-      }
-      getPerformedAction(new WatchUnwatchAction(false, titles));
+    if (!isLoggedIn()) {
+      throw new ActionException("Please login first");
+    }
+    getPerformedAction(new WatchUnwatchAction(false, titles));
   }
 
 }

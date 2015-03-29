@@ -1,11 +1,7 @@
 package net.sourceforge.jwbf.core.internal;
 
-import java.util.List;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import net.sourceforge.jwbf.mediawiki.actions.queries.WatchResponse;
 
 import com.google.common.base.Preconditions;
 

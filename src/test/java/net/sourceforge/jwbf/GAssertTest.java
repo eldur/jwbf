@@ -214,8 +214,8 @@ public class GAssertTest {
       fail();
     } catch (ComparisonFailure e) {
       // THEN
-      assertEquals("expected:<...java.lang.String]}={[4 [java.lang.Integer]]}> " +
-          "but was:<...java.lang.String]}={[b [java.lang.String]]}>", e.getMessage());
+      assertEquals("expected:<...java.lang.String]}={[4 [java.lang.Integer]]}> "
+          + "but was:<...java.lang.String]}={[b [java.lang.String]]}>", e.getMessage());
     }
   }
 
@@ -261,8 +261,7 @@ public class GAssertTest {
     } catch (ComparisonFailure e) {
       // THEN
       assertEquals("Expected: a string starting with \"value\"\n" + //
-              "     but: was \"test value\" expected:<[]value> but was:<[test ]value>",
-          e.getMessage());
+          "     but: was \"test value\" expected:<[]value> but was:<[test ]value>", e.getMessage());
     }
   }
 
@@ -278,8 +277,8 @@ public class GAssertTest {
       fail();
     } catch (ComparisonFailure e) {
       // THEN
-      assertEquals("Expected: a string starting with \"value\"\n" +
-          "     but: was \"tes\" expected:<[value]> but was:<[tes]>", e.getMessage());
+      assertEquals("Expected: a string starting with \"value\"\n"
+          + "     but: was \"tes\" expected:<[value]> but was:<[tes]>", e.getMessage());
     }
   }
 
@@ -323,8 +322,7 @@ public class GAssertTest {
     } catch (ComparisonFailure e) {
       // THEN
       assertEquals("Expected: a string ending with \"test\"\n" + //
-              "     but: was \"test value\" expected:<test[]> but was:<test[ value]>",
-          e.getMessage());
+          "     but: was \"test value\" expected:<test[]> but was:<test[ value]>", e.getMessage());
     }
   }
 
@@ -385,8 +383,7 @@ public class GAssertTest {
     } catch (ComparisonFailure e) {
       // THEN
       assertEquals("Expected: not a string ending with \"test\"\n" + //
-              "     but: was \"value test\" expected:<[]test> but was:<[value ]test>",
-          e.getMessage());
+          "     but: was \"value test\" expected:<[]test> but was:<[value ]test>", e.getMessage());
     }
   }
 
@@ -416,7 +413,7 @@ public class GAssertTest {
     } catch (AssertionError e) {
       // THEN
       assertEquals("Expected: not a string ending with \"\"\n" + //
-           "     but: was \"test value\" expected:<[]> but was:<[test value]>", e.getMessage());
+          "     but: was \"test value\" expected:<[]> but was:<[test value]>", e.getMessage());
     }
   }
 

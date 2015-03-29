@@ -165,12 +165,13 @@ public class Article implements ArticleMeta, ContentSetable {
     setText("");
     save();
   }
+
   /**
    * Add this article to the user watchlist
    * This require the user to be logged in.
    */
   public void watch() {
-      bot.watch(sa.getTitle());
+    bot.watch(sa.getTitle());
   }
 
   /**
@@ -178,7 +179,7 @@ public class Article implements ArticleMeta, ContentSetable {
    * This require the user to be logged in.
    */
   public void unwatch() {
-      bot.unwatch(sa.getTitle());
+    bot.unwatch(sa.getTitle());
   }
 
   /**
