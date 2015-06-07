@@ -89,8 +89,7 @@ public class HttpActionClient {
   }
 
   /**
-   * @param url
-   *            like "http://host/of/wiki/"
+   * @param url like "http://host/of/wiki/"
    */
   public HttpActionClient(final HttpClientBuilder clientBuilder, final URL url) {
     this.url = url;
@@ -202,8 +201,8 @@ public class HttpActionClient {
         entityBuilder.addBinaryBody(key, file);
       } else {
         String canonicalName = value.getClass().getCanonicalName();
-        throw new UnsupportedOperationException("No Handler found for " +
-            canonicalName + ". Only String or File is accepted, " +
+        throw new UnsupportedOperationException("No Handler found for " + canonicalName + //
+            ". Only String or File is accepted, " + //
             "because http parameters knows no other types.");
       }
     }
@@ -264,10 +263,7 @@ public class HttpActionClient {
   }
 
   private String toString(BufferedReader br) throws IOException {
-    return Joiner.on("\n").join(CharStreams.readLines(br)) + "\n"; // TODO
-    // remove
-    // trailing
-    // newline
+    return Joiner.on("\n").join(CharStreams.readLines(br)) + "\n"; // TODO remove trailing newline
   }
 
   @VisibleForTesting
@@ -285,8 +281,8 @@ public class HttpActionClient {
     int code = statusLine.getStatusCode();
     if (code >= HttpStatus.SC_BAD_REQUEST) {
       consume(res);
-      throw new IllegalStateException("invalid status: " + statusLine +
-          "; for " + requestBase.getURI());
+      throw new IllegalStateException("invalid status: " + statusLine + "; for " //
+          + requestBase.getURI());
     }
     return res;
   }

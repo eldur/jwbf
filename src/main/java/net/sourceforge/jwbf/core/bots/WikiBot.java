@@ -22,10 +22,6 @@ public interface WikiBot {
 
   void delete(String title);
 
-  void watch(String... titles);
-
-  void unwatch(String... titles);
-
   void login(String user, String passwd);
 
   Userinfo getUserinfo();

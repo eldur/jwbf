@@ -191,14 +191,17 @@ public class HttpActionClientTest {
       testee = HttpActionClient.of(url);
       Post post = RequestBuilder.of(url) //
           .param("b", "c") //
-          .postParam("d", "c").postParam("c", "e").buildPost() //
+          .postParam("d", "c") //
+          .param("b", "e") //
+          .postParam("c", "e").buildPost() //
           .postParam("a", "b");
 
       // WHEN
       String result = testee.post(post);
 
       // THEN
-      ImmutableList<String> expected = ImmutableList.<String>builder().add("b=c") // b = [c, e]
+      // TODO @Hunsu test that multiple entries are not allowed anymore
+      ImmutableList<String> expected = ImmutableList.<String>builder().add("b=c&b=e") // b = [c, e]
           .addAll(multipartOf("d", "c")) //
           .addAll(multipartOf("c", "e")) //
           .addAll(multipartOf("a", "b")) //
@@ -240,14 +243,10 @@ public class HttpActionClientTest {
       String result = testee.get(new Get(url));
 
       // THEN
-      ImmutableList<String> expected = ImmutableList.<String>builder()
-          //
-          .add(entry(ACCEPT_ENCODING, "gzip,deflate"))
-              //
-          .add(entry(CONNECTION, "keep-alive"))
-              //
-          .add(entry(HOST, "localhost:????"))
-              //
+      ImmutableList<String> expected = ImmutableList.<String>builder() //
+          .add(entry(ACCEPT_ENCODING, "gzip,deflate")) //
+          .add(entry(CONNECTION, "keep-alive")) //
+          .add(entry(HOST, "localhost:????")) //
           .add(entry(USER_AGENT, "Apache-HttpClient/4.3.4 (java 1.5)")) //
           .add("") //
           .build();
@@ -406,10 +405,10 @@ public class HttpActionClientTest {
 
     // THEN
     assertAgentPart("Unknown", "Unknown", "", parts);
-    GAssert.assertEquals(ImmutableList.<String>of("[WARN] \" \\t \" was changed to \"Unknown\";"
-                + " because of User-Agent name/version rules",
-            "[WARN] \" \\t \" was changed to \"Unknown\";"
-                + " because of User-Agent name/version rules",
+    GAssert.assertEquals(ImmutableList.of("[WARN] \" \\t \" was changed to \"Unknown\";" //
+                + " because of User-Agent name/version rules", //
+            "[WARN] \" \\t \" was changed to \"Unknown\";" //
+                + " because of User-Agent name/version rules", //
             "[WARN] \" \\n \" was changed to \"\";" + " because of User-Agent comment rules"),
         logLinesSupplier.get());
   }

@@ -1,9 +1,13 @@
 package net.sourceforge.jwbf.core.contentRep;
 
+import javax.annotation.Nonnull;
+
 import java.util.Date;
 
+import com.google.common.annotations.Beta;
 import com.google.common.annotations.VisibleForTesting;
 import net.sourceforge.jwbf.core.bots.WikiBot;
+import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 
 /**
  * @author Thomas Stock
@@ -169,17 +173,31 @@ public class Article implements ArticleMeta, ContentSetable {
   /**
    * Add this article to the user watchlist
    * This require the user to be logged in.
+   * TODO @Hunsu add a test for this method
    */
+  @Beta
   public void watch() {
-    bot.watch(sa.getTitle());
+    asMediwikiBot(bot).watch(sa.getTitle());
   }
 
   /**
    * Remove this article from the user watchlist
    * This require the user to be logged in.
+   * TODO @Hunsu add a test for this method
    */
+  @Beta
   public void unwatch() {
-    bot.unwatch(sa.getTitle());
+    asMediwikiBot(bot).unwatch(sa.getTitle());
+  }
+
+  @Nonnull
+  private MediaWikiBot asMediwikiBot(WikiBot bot) {
+    // XXX I'm not sure if I like this new beta methods ... give me a moment ;-)
+    if (bot instanceof MediaWikiBot) {
+      return (MediaWikiBot) bot;
+    } else {
+      throw new UnsupportedOperationException("this will only work with mediawikis");
+    }
   }
 
   /**

@@ -74,11 +74,17 @@ public class GetApiToken extends DequeMWAction<GetApiToken.TokenResponse> {
   // TODO this does not feel the elegant way.
   // Probably put complete request URIs into this enum objects
   // to support different URIs for different actions.
-  public enum Intoken {
-    DELETE("delete", "deletetoken"), EDIT("edit", "edittoken"), MOVE("move", "movetoken"),
-    PROTECT("protect", "protecttoken"), EMAIL("email", "emailtoken"), BLOCK("block",
-        "blocktoken"), UNBLOCK("unblock", "unblocktoken"), IMPORT("import", "IMPORT"),
-    WATCH("watch", "watchtoken");
+  public enum Intoken { //
+    DELETE("delete", "deletetoken"), //
+    EDIT("edit", "edittoken"), //
+    MOVE("move", "movetoken"), //
+    PROTECT("protect", "protecttoken"), //
+    EMAIL("email", "emailtoken"), //
+    BLOCK("block", "blocktoken"), //
+    UNBLOCK("unblock", "unblocktoken"), //
+    IMPORT("import", "IMPORT"),  //
+    WATCH("watch", "watchtoken") //
+    ;
 
     private String requestName;
     private String responseName;
@@ -106,10 +112,8 @@ public class GetApiToken extends DequeMWAction<GetApiToken.TokenResponse> {
   /**
    * Constructs a new <code>GetToken</code> action.
    *
-   * @param intoken
-   *            type to get the token for
-   * @param titles
-   *            title of the article to generate the token for
+   * @param intoken type to get the token for
+   * @param titles title of the article to generate the token for
    */
   public GetApiToken(Intoken intoken, String... titles) {
     super(generateTokenRequest(intoken, titles));
@@ -121,10 +125,8 @@ public class GetApiToken extends DequeMWAction<GetApiToken.TokenResponse> {
   /**
    * Generates the next MediaWiki API urlEncodedToken and adds it to <code>msgs</code>.
    *
-   * @param intoken
-   *            type to get the urlEncodedToken for
-   * @param titles
-   *            title of the article to generate the urlEncodedToken for
+   * @param intoken type to get the urlEncodedToken for
+   * @param titles title of the article to generate the urlEncodedToken for
    */
   private static Get generateTokenRequest(Intoken intoken, String... titles) {
     return new ApiRequestBuilder() //

@@ -4,6 +4,7 @@ import javax.annotation.Nonnull;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Map;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -19,7 +20,7 @@ public class JsonMapper {
     this(new JacksonToJsonFunction());
   }
 
-  public <T> JsonMapper(ToJsonFunction transfomer) {
+  public JsonMapper(ToJsonFunction transfomer) {
     this.transfomer = transfomer;
   }
 
@@ -28,7 +29,7 @@ public class JsonMapper {
     return (T) Checked.nonNull(transfomer.toJson(nonNullJson, clazz), "a json mapping result");
   }
 
-  public HashMap<String, Object> toMap(String json) {
+  public Map<String, Object> toMap(String json) {
     String nonNullJson = Checked.nonNull(json, "json");
     return Checked.nonNull(transfomer.toMap(nonNullJson), "a json mapping result");
   }
@@ -38,13 +39,17 @@ public class JsonMapper {
     return Checked.nonNull(transfomer.toJsonNode(nonNullJson), "a json mapping result");
   }
 
+  public static JsonMapper create() {
+    return new JsonMapper();
+  }
+
   public interface ToJsonFunction {
     @Nonnull
     Object toJson(@Nonnull String jsonString, Class<?> clazz);
 
     JsonNode toJsonNode(String nonNullJson);
 
-    HashMap<String, Object> toMap(@Nonnull String json);
+    Map<String, Object> toMap(@Nonnull String json);
   }
 
   static class JacksonToJsonFunction implements ToJsonFunction {
@@ -62,13 +67,14 @@ public class JsonMapper {
       try {
         // ObjectMapper stores mutable data so each mapping uses a fresh instance
         //TODO: why are you creating a mapper for each call?
+        // TODO @Hunsu: are you sure that it has no inner state?
         return newObjectMapper().readValue(jsonString, clazz);
       } catch (IOException e) {
         throw new IllegalArgumentException(e);
       }
     }
 
-    public HashMap<String, Object> toMap(@Nonnull String jsonString) {
+    public Map<String, Object> toMap(@Nonnull String jsonString) {
       try {
         return newObjectMapper()
             .readValue(jsonString, new TypeReference<HashMap<String, Object>>() {

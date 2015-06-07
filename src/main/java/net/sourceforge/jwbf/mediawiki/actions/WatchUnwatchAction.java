@@ -15,9 +15,9 @@ public class WatchUnwatchAction extends MWAction {
 
   private static final Logger log = LoggerFactory.getLogger(WatchUnwatchAction.class);
 
-  private boolean watch;
-  private ImmutableList<String> titles;
-  private GetApiToken watchToken;
+  private final boolean watch;
+  private final ImmutableList<String> titles;
+  private final GetApiToken watchToken;
   private boolean actionToken = true;
   private boolean hasMore = true;
 
@@ -50,7 +50,7 @@ public class WatchUnwatchAction extends MWAction {
         .param("titles", MediaWiki.urlEncode(MediaWiki.pipeJoined(titles))) //
         ;
     if (!watch) {
-      requestBuilder.param("unwatch", !watch);
+      requestBuilder.param("unwatch", false);
     }
 
     Post msg = requestBuilder.buildPost();
@@ -62,4 +62,5 @@ public class WatchUnwatchAction extends MWAction {
   public boolean hasMoreMessages() {
     return hasMore;
   }
+
 }

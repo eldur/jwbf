@@ -35,6 +35,7 @@ public class WatchResponse {
   private final boolean bot;
   private final boolean newFlag;
 
+  // TODO @Hunsu do we need a @JsonCreator for this? -- delete this comment if not ;-)
   public WatchResponse(@JsonProperty("ns") int ns, @JsonProperty("title") String title,
       @JsonProperty("user") String user, @JsonProperty("comment") String comment,
       @JsonProperty("parsedcomment") String parsedComment,

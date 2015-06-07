@@ -50,18 +50,13 @@ public class SimpleArticle implements ArticleMeta, Serializable, ContentSetable 
   private int pageId;
 
   private static Pattern redirectPattern = Pattern //
-      .compile("#(.*)redirect (.*)" //
-          , Pattern.CASE_INSENSITIVE);
+      .compile("#(.*)redirect (.*)", Pattern.CASE_INSENSITIVE);
 
   @VisibleForTesting
   public static Date newZeroDate() {
     return new Date(0);
   }
 
-  /**
-   *
-   *
-   */
   public SimpleArticle() {
     // do nothing
   }
@@ -94,10 +89,8 @@ public class SimpleArticle implements ArticleMeta, Serializable, ContentSetable 
   }
 
   /**
-   * @param text
-   *            of article
-   * @param title
-   *            of article
+   * @param text of article
+   * @param title of article
    * @deprecated use {@link #SimpleArticle(String)} and {@link #setText(String)} instead.
    */
   @Deprecated
@@ -107,8 +100,7 @@ public class SimpleArticle implements ArticleMeta, Serializable, ContentSetable 
   }
 
   /**
-   * @param title
-   *            of article
+   * @param title of article
    */
   public SimpleArticle(final String title) {
     this.title = title;
@@ -290,6 +282,7 @@ public class SimpleArticle implements ArticleMeta, Serializable, ContentSetable 
     this.revId = revId;
   }
 
+  // TODO @Hunsu never used, do we realy need this method?
   public int getPageId() {
     return pageId;
   }

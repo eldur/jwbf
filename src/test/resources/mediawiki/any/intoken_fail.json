@@ -1,5 +1,9 @@
 {
-  "warnings" : {"info" : {"*" : "Action 'move' is not allowed for the current user"}},
+  "warnings" : {
+    "info" : {
+      "*" : "Action 'move' is not allowed for the current user"
+    }
+  },
   "query" : {
     "pages" : {
       "35258" : {

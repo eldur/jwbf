@@ -48,7 +48,6 @@ public class GetRevision extends MWAction {
 
   private List<SimpleArticle> articles = Lists.newArrayList();
   private List<Optional<SimpleArticle>> articlesOpt = Lists.newArrayList();
-  private final ImmutableList<String> names;
 
   public static final int CONTENT = 1 << 1;
   public static final int TIMESTAMP = 1 << 2;
@@ -64,7 +63,7 @@ public class GetRevision extends MWAction {
 
   private final Get msg;
 
-  private JsonMapper mapper = new JsonMapper();
+  private JsonMapper mapper = JsonMapper.create();
 
   /**
    * TODO follow redirects. TODO change constructor field ordering; bot
@@ -75,7 +74,6 @@ public class GetRevision extends MWAction {
 
   public GetRevision(ImmutableList<String> names, int properties) {
     this.properties = properties;
-    this.names = names;
     // TODO continue=-||
     msg = new ApiRequestBuilder() //
         .action("query") //
@@ -144,7 +142,7 @@ public class GetRevision extends MWAction {
         SimpleArticle sa = new SimpleArticle();
         sa.setTitle(page.get("title").asText());
         if (!page.has("missing")) {
-          sa.setPageId(page.get("pageid").asInt());
+          sa.setPageId(page.get("pageid").asInt()); // TODO @Hunus store as String
           JsonNode rev = page.path("revisions");
           rev = rev.get(0);
           sa.setText(rev.get("*").asText());

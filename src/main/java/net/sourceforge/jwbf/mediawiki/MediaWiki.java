@@ -238,8 +238,7 @@ public final class MediaWiki {
         Field field = getField(version);
         boolean isDeprecated = field.isAnnotationPresent(Deprecated.class);
         boolean isBeta = field.isAnnotationPresent(NotReleased.class);
-        return !(version.equals(DEVELOPMENT) || version.equals(UNKNOWN) ||
-            isDeprecated || isBeta);
+        return !(version.equals(DEVELOPMENT) || version.equals(UNKNOWN) || isDeprecated || isBeta);
       } else {
         return false;
       }
@@ -311,8 +310,7 @@ public final class MediaWiki {
   /**
    * helper method generating a namespace string as required by the MW-api.
    *
-   * @param namespaces
-   *            namespace as
+   * @param namespaces namespace as
    * @return with numbers seperated by |
    * @deprecated prefer {@link #createNsString(java.util.List)}
    */
@@ -350,9 +348,9 @@ public final class MediaWiki {
     return urlEncode(Joiner.on("|").join(params));
   }
 
+  // TODO @Hunsu move to JsonMapper, else it is difficult to see that it is a json checker
   public static void checkResponseForError(String response) {
-    JsonNode node = mapper.toJsonNode(response);
-    node = node.path("error");
+    JsonNode node = JsonMapper.create().toJsonNode(response).path("error");
     if (!node.isMissingNode()) {
       throw new ApiException(node.get("code").asText(), node.get("info").asText());
     }

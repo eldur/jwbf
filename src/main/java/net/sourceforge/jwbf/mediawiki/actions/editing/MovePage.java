@@ -63,18 +63,12 @@ public class MovePage extends MWAction {
   /**
    * Constructs a new <code>MovePage</code> action.
    *
-   * @param bot
-   *            the MediaWikiBot
-   * @param oldtitle
-   *            title to move
-   * @param newtitle
-   *            new title
-   * @param reason
-   *            reason why to move
-   * @param withsubpages
-   *            if <b>TRUE</b> also move the subpages
-   * @param noredirect
-   *            if <b>TRUE</b> create no redirects
+   * @param bot the MediaWikiBot
+   * @param oldtitle title to move
+   * @param newtitle new title
+   * @param reason reason why to move
+   * @param withsubpages if <b>TRUE</b> also move the subpages
+   * @param noredirect if <b>TRUE</b> create no redirects
    */
   public MovePage(MediaWikiBot bot, String oldtitle, String newtitle, String reason,
       boolean withsubpages, boolean noredirect) {

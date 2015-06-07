@@ -56,7 +56,7 @@ public final class WatchList extends BaseQuery<WatchResponse> {
     /* The name of the property like it's used by MW */
     private String name;
 
-    private WatchListProperties(String name) {
+    WatchListProperties(String name) {
       this.name = name;
     }
 
@@ -77,7 +77,7 @@ public final class WatchList extends BaseQuery<WatchResponse> {
     /* The name of the property like it's used by MW */
     private String name;
 
-    private EditType(String name) {
+    EditType(String name) {
       this.name = name;
     }
 
@@ -94,7 +94,7 @@ public final class WatchList extends BaseQuery<WatchResponse> {
     /* the name used by MW */
     private String name;
 
-    private Direction(String name) {
+    Direction(String name) {
       this.name = name;
     }
 
@@ -284,9 +284,6 @@ public final class WatchList extends BaseQuery<WatchResponse> {
 
     /**
      * How many results to return per request. Use a negative value to return the maximum.
-     *
-     * @param limit
-     * @return
      */
     public Builder withLimit(int limit) {
       this.limit = limit;
@@ -295,16 +292,13 @@ public final class WatchList extends BaseQuery<WatchResponse> {
 
     /**
      * Only list pages in these namespaces
-     *
-     * @param namespaces
-     * @return
      */
     public Builder withNamespaces(int... namespaces) {
       this.namespaces = ImmutableList.copyOf(Ints.asList(namespaces));
       return this;
     }
 
-    /*
+    /**
      * Which properties to get.
      */
     public Builder withProperties(WatchListProperties... properties) {
@@ -315,9 +309,8 @@ public final class WatchList extends BaseQuery<WatchResponse> {
     /**
      * Whatever to include edits made by bots or not
      *
-     * @param show
-     *            include edits made by bots or not
-     * @return
+     * @param show include edits made by bots or not
+     * TODO @Hunsu never used?
      */
     public Builder showBots(boolean show) {
       this.showBots = show;
@@ -327,9 +320,8 @@ public final class WatchList extends BaseQuery<WatchResponse> {
     /**
      * Whatever to include edits made by anonymous users or not
      *
-     * @param show
-     *            include edits made by anonymous users or not
-     * @return
+     * @param show include edits made by anonymous users or not
+     * TODO @Hunsu never used?
      */
     public Builder showAnonymous(boolean show) {
       this.showAnonymous = show;
@@ -339,9 +331,8 @@ public final class WatchList extends BaseQuery<WatchResponse> {
     /**
      * Include or not edits that are marked as minor
      *
-     * @param show
-     *            include minor edits or not
-     * @return
+     * @param show include minor edits or not
+     * TODO @Hunsu never used?
      */
     public Builder showMinor(boolean show) {
       this.showMinor = show;
@@ -351,9 +342,8 @@ public final class WatchList extends BaseQuery<WatchResponse> {
     /**
      * Only list certain types of changes
      *
-     * @param types
-     *            the types of changes that will be listed
-     * @return
+     * @param types the types of changes that will be listed
+     * TODO @Hunsu never used?
      */
     public Builder onlyTypes(EditType... types) {
       this.editTypes = ImmutableList.copyOf(types);
@@ -363,9 +353,8 @@ public final class WatchList extends BaseQuery<WatchResponse> {
     /**
      * Only list changes made by this a specific user
      *
-     * @param user
-     *            the user
-     * @return
+     * @param user  the user
+     * TODO @Hunsu never used?
      */
     public Builder onlyUser(String user) {
       this.user = user;
@@ -375,9 +364,8 @@ public final class WatchList extends BaseQuery<WatchResponse> {
     /**
      * Exclude changes made by a certain user
      *
-     * @param user
-     *            the user
-     * @return
+     * @param user the user
+     * TODO @Hunsu never used?
      */
     public Builder excludeUser(String user) {
       this.excludeUser = user;
@@ -387,11 +375,8 @@ public final class WatchList extends BaseQuery<WatchResponse> {
     /**
      * The user whose watchlist you want
      *
-     * @param ownerUser
-     *            the user
-     * @param token
-     *            the wtahclist token of the user
-     * @return
+     * @param ownerUser the user
+     * @param token the watchlist token of the user
      */
     public Builder owner(String ownerUser, String token) {
       if (owner != null && token == null) {
@@ -405,9 +390,7 @@ public final class WatchList extends BaseQuery<WatchResponse> {
     /**
      * The timestamp to start listing from
      *
-     * @param start
-     *            the timestamp
-     * @return
+     * @param start the timestamp
      */
     public Builder withStart(Date start) {
       if (end != null && start != null && end.compareTo(start) < 0) {
@@ -420,9 +403,8 @@ public final class WatchList extends BaseQuery<WatchResponse> {
     /**
      * The timestamp to end listing at
      *
-     * @param end
-     *            the timestamp
-     * @return
+     * @param end the timestamp
+     * TODO @Hunsu never used?
      */
     public Builder withEnd(Date end) {
       if (start != null && end != null && end.compareTo(start) < 0) {
@@ -435,9 +417,8 @@ public final class WatchList extends BaseQuery<WatchResponse> {
     /**
      * Direction to list in
      *
-     * @param dir
-     *            the direction
-     * @return
+     * @param dir the direction
+     * TODO @Hunsu never used?
      */
     public Builder withDir(Direction dir) {
       this.dir = dir;

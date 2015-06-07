@@ -102,6 +102,11 @@ public class RequestBuilder {
     return param(key, Boolean.toString(value));
   }
 
+  /**
+   * Date should be replaced with LocalDate of java8 later
+   * TODO @Hunsu add a test for this _formatter_
+   */
+  @Deprecated
   public RequestBuilder param(String key, Date date) {
     return param(key, String.valueOf(date.getTime() / 1000L));
   }
