@@ -11,6 +11,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Stopwatch;
 import com.google.common.collect.Lists;
 import net.sourceforge.jwbf.core.actions.util.ActionException;
@@ -38,6 +39,7 @@ public class RecentchangeTitlesIT extends ParamHelper {
   private static final int LIMIT = COUNT * 2;
 
   @ClassRule
+  @VisibleForTesting
   public static VersionTestClassVerifier classVerifier =
       new VersionTestClassVerifier(RecentchangeTitles.class);
 

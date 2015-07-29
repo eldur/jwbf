@@ -165,15 +165,7 @@ public class LoginIT extends AbstractMediaWikiBotIT {
     assertEquals("https", u.getProtocol());
     int port = 443;
     TestHelper.assumeReachable(u);
-    {
-      // test if authentication required
-      HttpHost targetHost = new HttpHost(u.getHost(), port, u.getProtocol());
-      HttpGet httpget = new HttpGet(u.getPath());
-      HttpResponse resp = httpClient.execute(targetHost, httpget);
-
-      assertEquals(401, resp.getStatusLine().getStatusCode());
-      resp.getEntity().consumeContent();
-    }
+    checkAuthenticationRequired(httpClient, u, port);
 
     httpClient.getCredentialsProvider().setCredentials(new AuthScope(u.getHost(), port),
         new UsernamePasswordCredentials(BotFactory.getWikiUser(latest),
@@ -185,6 +177,17 @@ public class LoginIT extends AbstractMediaWikiBotIT {
 
     bot.login(BotFactory.getWikiUser(latest), BotFactory.getWikiPass(latest));
     assertTrue(bot.isLoggedIn());
+  }
+
+  void checkAuthenticationRequired(AbstractHttpClient httpClient, URL u, int port)
+      throws IOException {
+    // test if authentication required
+    HttpHost targetHost = new HttpHost(u.getHost(), port, u.getProtocol());
+    HttpGet httpget = new HttpGet(u.getPath());
+    HttpResponse resp = httpClient.execute(targetHost, httpget);
+
+    assertEquals(401, resp.getStatusLine().getStatusCode());
+    resp.getEntity().consumeContent();
   }
 
   private AbstractHttpClient getSSLFakeHttpClient()

@@ -2,6 +2,7 @@ package net.sourceforge.jwbf.mediawiki.live.auto;
 
 import java.util.Collection;
 
+import com.google.common.annotations.VisibleForTesting;
 import net.sourceforge.jwbf.mediawiki.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.VersionTestClassVerifier;
 import net.sourceforge.jwbf.mediawiki.actions.misc.GetRendering;
@@ -15,6 +16,7 @@ import org.junit.runners.Parameterized.Parameters;
 public class RenderingIT extends ParamHelper {
 
   @ClassRule
+  @VisibleForTesting
   public static VersionTestClassVerifier classVerifier =
       new VersionTestClassVerifier(GetRendering.class);
 

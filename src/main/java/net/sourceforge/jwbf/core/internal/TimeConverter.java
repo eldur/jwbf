@@ -9,6 +9,10 @@ import com.google.common.base.Optional;
 
 public class TimeConverter {
 
+  private TimeConverter() {
+    // lib
+  }
+
   public static final String YYYYMMDD_T_HHMMSS_Z = "yyyy-MM-dd'T'HH:mm:ss'Z'";
 
   public static String valueOf(Date date) {

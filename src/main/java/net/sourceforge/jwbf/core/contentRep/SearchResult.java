@@ -22,6 +22,7 @@ public class SearchResult {
   private final String sectionSnippet;
   private final String sectionTitle;
 
+  @SuppressWarnings("checkstyle:parameternumber")
   public SearchResult(@JsonProperty("ns") int ns, @JsonProperty("title") String title,
       @JsonProperty("size") int size, @JsonProperty("wordcount") int wordCount,
       @JsonProperty("timestamp") String timestamp, @JsonProperty("snippet") String snippet,

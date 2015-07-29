@@ -89,7 +89,7 @@ public class Search extends BaseQuery<SearchResult> {
     /**
      * title of the matching section.
      */
-    sectiontitle, title,;
+    sectiontitle, title;
 
     public static final Set<SearchProps> DEFAULT = EnumSet.of(size, wordcount, timestamp, snippet);
   }

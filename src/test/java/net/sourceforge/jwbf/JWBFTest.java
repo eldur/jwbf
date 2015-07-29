@@ -204,7 +204,7 @@ public class JWBFTest {
   @Test
   public void testMakeVersionMap() {
     // GIVEN
-    List<ContainerEntry> elements = ImmutableList.of( //
+    List<ContainerEntry> elements = ImmutableList.of(//
         new ContainerEntry("META-INF/", true), //
         new ContainerEntry("META-INF/MANIFEST.MF", false), //
         new ContainerEntry("net/", true), //

@@ -14,6 +14,7 @@ import com.github.dreamhead.moco.Runner;
 import com.github.dreamhead.moco.matcher.AndRequestMatcher;
 import com.github.dreamhead.moco.matcher.CompositeRequestMatcher;
 import com.github.dreamhead.moco.monitor.AbstractMonitor;
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
 import org.junit.After;
 import org.junit.Before;
@@ -24,6 +25,7 @@ public abstract class AbstractIntegTest {
 
   private Runner runner;
   private int port;
+  @VisibleForTesting
   protected HttpServer server;
 
   @Before

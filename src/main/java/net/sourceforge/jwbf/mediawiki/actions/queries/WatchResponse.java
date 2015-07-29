@@ -35,6 +35,7 @@ public class WatchResponse {
   private final boolean bot;
   private final boolean newFlag;
 
+  @SuppressWarnings("checkstyle:parameternumber")
   public WatchResponse(@JsonProperty("ns") int ns, @JsonProperty("title") String title,
       @JsonProperty("user") String user, @JsonProperty("comment") String comment,
       @JsonProperty("parsedcomment") String parsedComment, @JsonProperty("timestamp") //

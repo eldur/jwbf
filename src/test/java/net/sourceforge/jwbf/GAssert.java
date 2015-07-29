@@ -27,6 +27,10 @@ import org.junit.ComparisonFailure;
 
 public class GAssert {
 
+  private GAssert() {
+    // do nothing
+  }
+
   private static ImmutableList<?> sortedCopy(Set<?> actual) {
     return FluentIterable.from(actual).toSortedList(Ordering.usingToString());
   }
@@ -166,7 +170,7 @@ public class GAssert {
     return "{" + o.toString() + " [" + o.getClass().getCanonicalName() + "]}";
   }
 
-  static Function<Object, String> TO_TYPE_STRING = new NonnullFunction<Object, String>() {
+  static final Function<Object, String> TO_TYPE_STRING = new NonnullFunction<Object, String>() {
     @Nonnull
     @Override
     protected String applyNonnull(@Nonnull Object input) {
@@ -186,7 +190,7 @@ public class GAssert {
     }
   };
 
-  static Function<Object, String> TO_CLASS_STRING = new Function<Object, String>() {
+  static final Function<Object, String> TO_CLASS_STRING = new Function<Object, String>() {
     @Nullable
     @Override
     public String apply(@Nullable Object input) {
@@ -194,7 +198,7 @@ public class GAssert {
     }
   };
 
-  static Function<Object, String> TO_CLASSES = new NonnullFunction<Object, String>() {
+  static final Function<Object, String> TO_CLASSES = new NonnullFunction<Object, String>() {
     @Nonnull
     @Override
     public String applyNonnull(@Nonnull Object input) {

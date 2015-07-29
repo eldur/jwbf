@@ -186,5 +186,10 @@ public class RequestBuilder {
         }
       }
     }
+
+    @Override
+    public int hashCode() {
+      throw new IllegalStateException("do not hashcode");
+    }
   }
 }

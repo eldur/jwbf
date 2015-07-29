@@ -369,8 +369,8 @@ public class HttpActionClientTest {
     GAssert.assertEquals(ImmutableList.<String>of(
         "[WARN] \"āTeštBot\" was encoded to \"?Te?tBot\"; because only iso8859 is supported",
         "[WARN] \"ač43e3a\" was encoded to \"a?43e3a\"; because only iso8859 is supported",
-        "[WARN] \"User:WikipediāUserId\" was encoded to \"User:Wikipedi?UserId\"; because only "
-            + "iso8859 is supported"), logLinesSupplier.get());
+        "[WARN] \"User:WikipediāUserId\" was encoded to \"User:Wikipedi?UserId\"; because only " +
+            "iso8859 is supported"), logLinesSupplier.get());
   }
 
   @Test
@@ -384,12 +384,12 @@ public class HttpActionClientTest {
     // THEN
     assertAgentPart("name_with", "version_with", "comment/of me", parts);
     GAssert.assertEquals(ImmutableList.<String>of(
-        "[WARN] \" name\\r //with \" was changed to \"name_with\"; because of User-Agent "
-            + "name/version rules",
-        "[WARN] \" version/\\n\\n with \" was changed to \"version_with\"; because of User-Agent "
-            + "name/version rules",
-        "[WARN] \" comment/of (me) \" was changed to \"comment/of me\"; because of User-Agent "
-            + "comment rules"), logLinesSupplier.get());
+        "[WARN] \" name\\r //with \" was changed to \"name_with\"; because of User-Agent" +
+            " name/version rules",
+        "[WARN] \" version/\\n\\n with \" was changed to \"version_with\"; because of User-Agent" +
+            " name/version rules",
+        "[WARN] \" comment/of (me) \" was changed to \"comment/of me\"; because of User-Agent" +
+            " comment rules"), logLinesSupplier.get());
   }
 
   @Test
@@ -549,11 +549,11 @@ public class HttpActionClientTest {
 
       // THEN
       ImmutableList<Range<Long>> expected = ImmutableList.<Range<Long>>builder() //
-          .add(Range.closed(0l, 600l)) //
-          .add(Range.closed(0l, 600l)) //
-          .add(Range.closed(0l, 600l)) //
-          .add(Range.closed(400l, 900l)) //
-          .add(Range.closed(400l, 900l)) //
+          .add(Range.closed(0L, 600L)) //
+          .add(Range.closed(0L, 600L)) //
+          .add(Range.closed(0L, 600L)) //
+          .add(Range.closed(400L, 900L)) //
+          .add(Range.closed(400L, 900L)) //
           .build();
 
       int n = 0;
@@ -743,8 +743,8 @@ public class HttpActionClientTest {
       fail();
     } catch (UnsupportedOperationException e) {
       // THEN
-      assertEquals("No Handler found for java.lang.Object. Only String or File is accepted, "
-          + "because http parameters knows no other types.", e.getMessage());
+      assertEquals("No Handler found for java.lang.Object. Only String or File is accepted, " +
+          "because http parameters knows no other types.", e.getMessage());
     }
   }
 

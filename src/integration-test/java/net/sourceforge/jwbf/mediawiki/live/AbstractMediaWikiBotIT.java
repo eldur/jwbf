@@ -4,13 +4,14 @@ import static net.sourceforge.jwbf.TestHelper.assumeReachable;
 
 import javax.inject.Provider;
 
+import com.google.common.annotations.VisibleForTesting;
 import net.sourceforge.jwbf.mediawiki.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 
 public abstract class AbstractMediaWikiBotIT implements Provider<MediaWikiBot> {
 
   private static final String WIKIPEDIA_DE = "https://de.wikipedia.org/w/index.php";
-
+  @VisibleForTesting
   protected MediaWikiBot bot = null;
   private MediaWiki.Version version;
 

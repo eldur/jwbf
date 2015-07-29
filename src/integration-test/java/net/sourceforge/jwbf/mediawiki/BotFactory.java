@@ -115,8 +115,8 @@ public class BotFactory {
     String self = getUrlForWikimedia(clazz);
     HttpActionClient client = HttpActionClient.builder() //
         .withUrl(liveUrl) //
-        .withUserAgent("JwbfIntegTest", "A", "could be found at " + self //
-            + " or at any fork of this project") //
+        .withUserAgent("JwbfIntegTest", "A", "could be found at " + self +
+            " or at any fork of this project") //
         .withRequestsPerUnit(10, TimeUnit.MINUTES) //
         .build();
     return new MediaWikiBot(client);

@@ -49,7 +49,7 @@ public class LiveTestFather {
 
   private static final Logger log = LoggerFactory.getLogger(LiveTestFather.class);
 
-  private static final Collection<String> specialChars = Lists.newArrayList();
+  private static Collection<String> specialChars = Lists.newArrayList();
 
   static {
     specialChars.add("\"");
@@ -125,7 +125,7 @@ public class LiveTestFather {
     return get().getVal(key);
   }
 
-  private static interface SimpleMap {
+  private interface SimpleMap {
     String get(String key);
 
     String put(String key, String value);

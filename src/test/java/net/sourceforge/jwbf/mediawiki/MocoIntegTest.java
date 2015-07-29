@@ -198,7 +198,7 @@ public abstract class MocoIntegTest extends AbstractIntegTest implements Provide
     return splittedConfigOfString(key, ImmutableMap.<String, String>of());
   }
 
-  private static final Function<Entry<? extends Object, String>, String> function =
+  private static Function<Entry<? extends Object, String>, String> function =
       new NonnullFunction<Entry<? extends Object, String>, String>() {
 
         @Nonnull

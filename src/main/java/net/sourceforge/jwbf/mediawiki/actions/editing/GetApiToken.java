@@ -143,8 +143,8 @@ public class GetApiToken extends DequeMWAction<GetApiToken.TokenResponse> {
         // TODO check catch
       } catch (IllegalArgumentException e) {
         if (s.startsWith("unknown_action:")) {
-          log.error("Adding '$wgEnableWriteAPI = true;' "
-              + "to your MediaWiki's LocalSettings.php might remove this problem.", e);
+          log.error("Adding '$wgEnableWriteAPI = true;' " +
+              "to your MediaWiki's LocalSettings.php might remove this problem.", e);
         } else {
           log.error(e.getMessage(), e);
         }

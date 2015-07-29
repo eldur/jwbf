@@ -372,7 +372,7 @@ public class MediaWikiBotTest {
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public final void wikiurl_must_end_with_php_or_slash() {
+  public final void wikiurlMustEndWithPhpOrSlash() {
 
     // GIVEN
     String wikiUrl = "https://anyWikiurl.com/wiki";

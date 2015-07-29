@@ -25,11 +25,11 @@ import org.junit.Test;
 
 public class PostModifyContentTest {
 
-  private static final String editFailMsg = "editing is not allowed";
+  private static String editFailMsg = "editing is not allowed";
   private PostModifyContent testee;
   private MediaWikiBot bot;
   private Userinfo userinfo;
-  private static final ImmutableSet<String> rights =
+  private static ImmutableSet<String> rights =
       of(Userinfo.RIGHT_WRITEAPI, Userinfo.RIGHT_EDIT);
   private SimpleArticle simpleArticle;
 

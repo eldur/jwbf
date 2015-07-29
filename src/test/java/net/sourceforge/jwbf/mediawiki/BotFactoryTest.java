@@ -13,7 +13,7 @@ public class BotFactoryTest {
     String url = BotFactory.getUrlForWikimedia(UserinfoIT.class);
 
     // THEN
-    assertEquals("https://github.com/eldur/jwbf/blob/master/src/integration-test/java/net"
-        + "/sourceforge/jwbf/mediawiki/live/auto/UserinfoIT.java", url);
+    assertEquals("https://github.com/eldur/jwbf/blob/master/src/integration-test/java/net" +
+        "/sourceforge/jwbf/mediawiki/live/auto/UserinfoIT.java", url);
   }
 }

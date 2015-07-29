@@ -32,8 +32,8 @@ public class PostPackageIT {
     File jar = Iterables.getOnlyElement(ImmutableList.copyOf(files));
     Process p = Runtime.getRuntime().exec("java -jar " + jar.getAbsolutePath());
 
-    String stdOutErr = getString(p.getInputStream()).replaceAll("=>.*", "=>") //
-        + getString(p.getErrorStream());
+    String stdOutErr = //
+        getString(p.getInputStream()).replaceAll("=>.*", "=>") + getString(p.getErrorStream());
     ImmutableList<String> lines = JWBFTest.splitVersionText(stdOutErr);
     GAssert.assertEquals(ImmutableList.of("JWBF.", //
         "jwbf-core =>", //

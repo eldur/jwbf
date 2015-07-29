@@ -7,6 +7,7 @@ import static org.junit.Assert.assertTrue;
 import java.util.Collection;
 import java.util.Set;
 
+import com.google.common.annotations.VisibleForTesting;
 import net.sourceforge.jwbf.TestHelper;
 import net.sourceforge.jwbf.core.contentRep.Article;
 import net.sourceforge.jwbf.mediawiki.MediaWiki.Version;
@@ -22,6 +23,7 @@ import org.junit.runners.Parameterized.Parameters;
 public class MovePageIT extends ParamHelper {
 
   @ClassRule
+  @VisibleForTesting
   public static VersionTestClassVerifier classVerifier =
       new VersionTestClassVerifier(MovePage.class);
 

@@ -11,6 +11,10 @@ import org.slf4j.LoggerFactory;
 
 public class Logging {
 
+  private Logging() {
+    // do nothing
+  }
+
   public static Supplier<ImmutableList<String>> newLogLinesSupplier() {
 
     ch.qos.logback.classic.Logger root = (ch.qos.logback.classic.Logger) LoggerFactory

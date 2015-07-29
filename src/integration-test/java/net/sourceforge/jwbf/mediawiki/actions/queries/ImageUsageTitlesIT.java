@@ -24,7 +24,7 @@ public class ImageUsageTitlesIT extends ParamHelper {
 
   private static final Logger log = LoggerFactory.getLogger(ImageUsageTitlesIT.class);
 
-  private static final int limit = 4;
+  private static final int LIMIT = 4;
   public static final String IMAGE_NAME = "Image:Any.gif";
 
   @Parameterized.Parameters(name = "{0}")
@@ -39,14 +39,14 @@ public class ImageUsageTitlesIT extends ParamHelper {
   @Test
   public void test() {
     // GIVEN
-    ImmutableList<String> expectedTitles = TestHelper.createNames("TitleWithImg", limit);
+    ImmutableList<String> expectedTitles = TestHelper.createNames("TitleWithImg", LIMIT);
 
     ImmutableList<String> initPageTitles =
-        new ImageUsageTitles(bot(), 3, IMAGE_NAME, MediaWiki.NS_EVERY).getCopyOf(limit);
+        new ImageUsageTitles(bot(), 3, IMAGE_NAME, MediaWiki.NS_EVERY).getCopyOf(LIMIT);
     ImmutableList<String> pageTitles;
-    if (initPageTitles.size() < limit) {
+    if (initPageTitles.size() < LIMIT) {
       prepare(expectedTitles);
-      pageTitles = new ImageUsageTitles(bot(), IMAGE_NAME).getCopyOf(limit);
+      pageTitles = new ImageUsageTitles(bot(), IMAGE_NAME).getCopyOf(LIMIT);
     } else {
       pageTitles = initPageTitles;
     }

@@ -7,6 +7,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.Collection;
 
+import com.google.common.annotations.VisibleForTesting;
 import net.sourceforge.jwbf.core.contentRep.ArticleMeta;
 import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
 import net.sourceforge.jwbf.mediawiki.MediaWiki.Version;
@@ -26,6 +27,7 @@ import org.junit.runners.Parameterized.Parameters;
 public class RevisionIT extends ParamHelper {
 
   @ClassRule
+  @VisibleForTesting
   public static VersionTestClassVerifier classVerifier =
       new VersionTestClassVerifier(GetRevision.class, PostModifyContent.class, GetApiToken.class);
 

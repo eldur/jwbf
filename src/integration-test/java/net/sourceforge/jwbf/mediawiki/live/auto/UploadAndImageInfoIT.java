@@ -23,7 +23,6 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import javax.imageio.ImageIO;
-
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -125,7 +124,7 @@ public class UploadAndImageInfoIT extends ParamHelper {
     // TODO bad values, try others
     int newWidth = 50;
     int newHeight = 50;
-    ImmutableMap<String, String> params = ImmutableMap.of( //
+    ImmutableMap<String, String> params = ImmutableMap.of(//
         ImageInfo.HEIGHT, newHeight + "", //
         ImageInfo.WIDTH, newWidth + ""  //
     );

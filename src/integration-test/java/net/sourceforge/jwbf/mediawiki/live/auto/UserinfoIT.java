@@ -9,6 +9,7 @@ import static net.sourceforge.jwbf.mediawiki.BotFactory.getWikiUser;
 
 import java.util.Collection;
 
+import com.google.common.annotations.VisibleForTesting;
 import net.sourceforge.jwbf.core.contentRep.Userinfo;
 import net.sourceforge.jwbf.mediawiki.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.VersionTestClassVerifier;
@@ -35,6 +36,7 @@ public class UserinfoIT extends ParamHelper {
   }
 
   @ClassRule
+  @VisibleForTesting
   public static VersionTestClassVerifier classVerifier =
       new VersionTestClassVerifier(GetUserinfo.class);
 
