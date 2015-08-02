@@ -246,7 +246,7 @@ public class HttpActionClientTest {
           .add(entry(ACCEPT_ENCODING, "gzip,deflate")) //
           .add(entry(CONNECTION, "keep-alive")) //
           .add(entry(HOST, "localhost:????")) //
-          .add(entry(USER_AGENT, "Apache-HttpClient/4.3.4 (java 1.5)")) //
+          .add(entry(USER_AGENT, apacheHttpClientVersion())) //
           .add("") //
           .build();
 
@@ -258,7 +258,12 @@ public class HttpActionClientTest {
   }
 
   private String userAgentString(String userAgentString) {
-    return userAgentString + "JWBF/Version_unknown Apache-HttpClient/4.3.4 (java 1.5)";
+    return userAgentString + "JWBF/Version_unknown " + apacheHttpClientVersion();
+  }
+
+  private String apacheHttpClientVersion() {
+    String version = System.getProperty("java.runtime.version");
+    return "Apache-HttpClient/4.5 (Java/" + version.replaceFirst("\\-[^\\-]*$", "") + ")";
   }
 
   @Test
@@ -369,8 +374,8 @@ public class HttpActionClientTest {
     GAssert.assertEquals(ImmutableList.<String>of(
         "[WARN] \"āTeštBot\" was encoded to \"?Te?tBot\"; because only iso8859 is supported",
         "[WARN] \"ač43e3a\" was encoded to \"a?43e3a\"; because only iso8859 is supported",
-        "[WARN] \"User:WikipediāUserId\" was encoded to \"User:Wikipedi?UserId\"; because only " +
-            "iso8859 is supported"), logLinesSupplier.get());
+        "[WARN] \"User:WikipediāUserId\" was encoded to \"User:Wikipedi?UserId\"; because only "
+            + "iso8859 is supported"), logLinesSupplier.get());
   }
 
   @Test
@@ -384,12 +389,12 @@ public class HttpActionClientTest {
     // THEN
     assertAgentPart("name_with", "version_with", "comment/of me", parts);
     GAssert.assertEquals(ImmutableList.<String>of(
-        "[WARN] \" name\\r //with \" was changed to \"name_with\"; because of User-Agent" +
-            " name/version rules",
-        "[WARN] \" version/\\n\\n with \" was changed to \"version_with\"; because of User-Agent" +
-            " name/version rules",
-        "[WARN] \" comment/of (me) \" was changed to \"comment/of me\"; because of User-Agent" +
-            " comment rules"), logLinesSupplier.get());
+        "[WARN] \" name\\r //with \" was changed to \"name_with\"; because of User-Agent"
+            + " name/version rules",
+        "[WARN] \" version/\\n\\n with \" was changed to \"version_with\"; because of User-Agent"
+            + " name/version rules",
+        "[WARN] \" comment/of (me) \" was changed to \"comment/of me\"; because of User-Agent"
+            + " comment rules"), logLinesSupplier.get());
   }
 
   @Test
@@ -743,8 +748,8 @@ public class HttpActionClientTest {
       fail();
     } catch (UnsupportedOperationException e) {
       // THEN
-      assertEquals("No Handler found for java.lang.Object. Only String or File is accepted, " +
-          "because http parameters knows no other types.", e.getMessage());
+      assertEquals("No Handler found for java.lang.Object. Only String or File is accepted, "
+          + "because http parameters knows no other types.", e.getMessage());
     }
   }
 

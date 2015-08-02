@@ -64,7 +64,7 @@ import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.impl.client.HttpClientVersion;
+import org.apache.http.util.VersionInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -396,7 +396,7 @@ public class HttpActionClient {
     private static String makeUserAgentString(List<UserAgentPart> userAgentParts) {
       String userAgent = Joiner.on(" ") //
           .join(Transform.the(userAgentParts, TO_STRING)) + " " +
-          HttpClientVersion.DEFAULT_USER_AGENT;
+          httpClientVersion();
       return userAgent.trim();
     }
 
@@ -503,6 +503,12 @@ public class HttpActionClient {
       this.version = Checked.nonNull(version, "version");
       this.comment = Checked.nonNull(comment, "comment");
     }
+  }
+
+  @VisibleForTesting
+  public static String httpClientVersion() {
+    return VersionInfo
+        .getUserAgent("Apache-HttpClient", "org.apache.http.client", HttpClientBuilder.class);
   }
 
 }

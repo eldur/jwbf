@@ -1,12 +1,12 @@
 package net.sourceforge.jwbf;
 
-import static com.github.dreamhead.moco.Moco.httpserver;
 import static com.github.dreamhead.moco.Runner.runner;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
 import com.github.dreamhead.moco.HttpRequest;
 import com.github.dreamhead.moco.HttpServer;
+import com.github.dreamhead.moco.Moco;
 import com.github.dreamhead.moco.MocoConfig;
 import com.github.dreamhead.moco.Request;
 import com.github.dreamhead.moco.RequestMatcher;
@@ -30,7 +30,7 @@ public abstract class AbstractIntegTest {
 
   @Before
   public void before() {
-    server = httpserver(); // new IntegMonitor());
+    server = Moco.httpServer(); // new IntegMonitor());
     runner = runner(server);
     runner.start();
     port = server.port();
@@ -50,36 +50,49 @@ public abstract class AbstractIntegTest {
   }
 
   public static CompositeRequestMatcher only(Iterable<RequestMatcher> matchers, final int times) {
+    return new OnlyMatcher(matchers, times);
+  }
 
-    return new CompositeRequestMatcher(matchers) {
-      private final AtomicInteger countdown = new AtomicInteger(times);
+  static class OnlyMatcher extends CompositeRequestMatcher {
+    private final int times;
+    private final AtomicInteger countdown;
 
-      @Override
-      public boolean match(Request request) {
-        if (countdown.get() != 0) {
-          for (RequestMatcher matcher : matchers) {
-            if (!matcher.match(request)) {
-              return false;
-            }
+    public OnlyMatcher(Iterable<RequestMatcher> matchers, int times) {
+      super(matchers);
+      this.times = times;
+      countdown = new AtomicInteger(times);
+    }
+
+    @Override
+    protected RequestMatcher newMatcher(Iterable<RequestMatcher> iterable) {
+      return new OnlyMatcher(iterable, times);
+    }
+
+    @Override
+    public boolean match(Request request) {
+      if (countdown.get() != 0) {
+        for (RequestMatcher matcher : matchers) {
+          if (!matcher.match(request)) {
+            return false;
           }
-          countdown.decrementAndGet();
-          return true;
-        } else {
-          return false;
         }
+        countdown.decrementAndGet();
+        return true;
+      } else {
+        return false;
+      }
+    }
+
+    @Override
+    public RequestMatcher apply(final MocoConfig config) {
+      Iterable<RequestMatcher> appliedMatchers = applyToMatchers(config);
+      if (appliedMatchers == this.matchers) {
+        return this;
       }
 
-      @Override
-      public RequestMatcher apply(final MocoConfig config) {
-        Iterable<RequestMatcher> appliedMatchers = applyToMatchers(config);
-        if (appliedMatchers == this.matchers) {
-          return this;
-        }
+      return new AndRequestMatcher(appliedMatchers);
+    }
 
-        return new AndRequestMatcher(appliedMatchers);
-      }
-
-    };
   }
 
   private static class IntegMonitor extends AbstractMonitor {

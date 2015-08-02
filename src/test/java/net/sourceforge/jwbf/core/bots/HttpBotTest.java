@@ -18,7 +18,6 @@ import com.google.common.collect.ImmutableList;
 import net.sourceforge.jwbf.JWBF;
 import net.sourceforge.jwbf.JettyServer;
 import net.sourceforge.jwbf.core.actions.HttpActionClient;
-import org.apache.http.impl.client.HttpClientVersion;
 import org.eclipse.jetty.server.handler.ContextHandler;
 import org.junit.After;
 import org.junit.Test;
@@ -109,7 +108,7 @@ public class HttpBotTest {
             .add(entry(HOST, "localhost:????")) //
             .add(entry(USER_AGENT, userAgentString +
                 "JWBF/" + JWBF.getVersion(HttpActionClient.class) + " " +
-                HttpClientVersion.DEFAULT_USER_AGENT)) //
+                HttpActionClient.httpClientVersion())) //
             .build();
 
     return Joiner.on("\n").join(expected) + "\n";
