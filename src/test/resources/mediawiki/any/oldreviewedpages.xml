@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<api>
+    <query>
+        <oldreviewedpages>
+            <p pageid="45530" ns="0" title="Team SC2Improve" revid="961488" stable_revid="945490" pending_since="2015-11-21T14:36:48Z" flagged_level="0" flagged_level_text="stable" diff_size="-1"/>
+            <p pageid="15537" ns="0" title="Honor" revid="971548" stable_revid="861713" pending_since="2015-12-20T23:01:31Z" flagged_level="0" flagged_level_text="stable" diff_size="503"/>
+            <p pageid="61687" ns="0" title="EURONICS Gaming" revid="974837" stable_revid="973673" pending_since="2015-12-31T14:33:13Z" flagged_level="0" flagged_level_text="stable" diff_size="213"/>
+            <p pageid="18143" ns="0" title="Virtus.pro" revid="976382" stable_revid="961967" pending_since="2016-01-04T23:11:58Z" flagged_level="0" flagged_level_text="stable" diff_size="0"/>
+        </oldreviewedpages>
+    </query>
+</api>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<api>
+    <query>
+        <reviewedpages>
+            <p pageid="1" ns="0" title="Main Page" revid="969931" stable_revid="969931" flagged_level="1" flagged_level_text="quality"/>
+            <p pageid="146" ns="0" title="Units/WoL" revid="772694" stable_revid="772694" flagged_level="0" flagged_level_text="stable"/>
+            <p pageid="147" ns="0" title="SCV (Wings of Liberty and Heart of the Swarm)" revid="965246" stable_revid="965246" flagged_level="0" flagged_level_text="stable"/>
+            <p pageid="148" ns="0" title="Terran Units/WoL" revid="939657" stable_revid="939657" flagged_level="0" flagged_level_text="stable"/>
+        </reviewedpages>
+    </query>
+</api>
