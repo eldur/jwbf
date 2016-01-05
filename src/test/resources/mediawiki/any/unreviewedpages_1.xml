@@ -1,0 +1,16 @@
+<api>
+    <warnings>
+        <query xml:space="preserve">Formatting of continuation data will be changing soon. To continue using the current formatting, use the 'rawcontinue' parameter. To begin using the new format, pass an empty string for 'continue' in the initial query.</query>
+    </warnings>
+    <query-continue>
+        <unreviewedpages urstart="5_Rax_Reaper"/>
+    </query-continue>
+    <query>
+        <unreviewedpages>
+            <p pageid="17455" ns="0" title="1-1-1" revid="147614"/>
+            <p pageid="53181" ns="0" title="2014-15 Season 1 eGamers Starcraft II Open/Participants" revid="810682"/>
+            <p pageid="42609" ns="0" title="2014 WCS Season 1 Korea GSL" revid="631460"/>
+            <p pageid="2667" ns="0" title="4 Warpgate All In (vs. Protoss)" revid="16772"/>
+        </unreviewedpages>
+    </query>
+</api>
