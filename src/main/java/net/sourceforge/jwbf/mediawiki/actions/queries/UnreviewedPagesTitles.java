@@ -43,7 +43,7 @@ public class UnreviewedPagesTitles extends BaseQuery<String> {
      * value for the urlimit-parameter.
      *
      */
-    private static int LIMIT;
+    private static int LIMIT = 50;
     private final MediaWikiBot bot;
     private final int[] namespaces;
 
