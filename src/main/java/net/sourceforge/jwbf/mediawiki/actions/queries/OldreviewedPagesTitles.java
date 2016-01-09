@@ -38,7 +38,7 @@ import org.slf4j.LoggerFactory;
  */
 public class OldreviewedPagesTitles extends BaseQuery<String> {
 
-    private static final Logger log = LoggerFactory.getLogger(net.sourceforge.jwbf.mediawiki.actions.queries.RecentchangeTitles.class);
+    private static final Logger log = LoggerFactory.getLogger(RecentchangeTitles.class);
     /**
      * value for the orlimit-parameter.
      */
@@ -64,7 +64,8 @@ public class OldreviewedPagesTitles extends BaseQuery<String> {
                 .param("orlimit", LIMIT) //
                 ;
         if (namespace != null) {
-            requestBuilder.param("ornamespace", MediaWiki.urlEncode(MWAction.createNsString(namespace)));
+            String ornamespace = MediaWiki.urlEncode(MWAction.createNsString(namespace));
+            requestBuilder.param("ornamespace", ornamespace);
         }
         if (orstart.length() > 0) {
             requestBuilder.param("orstart", orstart);
@@ -141,7 +142,7 @@ public class OldreviewedPagesTitles extends BaseQuery<String> {
 
     @Override
     protected Iterator<String> copy() {
-        return new net.sourceforge.jwbf.mediawiki.actions.queries.OldreviewedPagesTitles(bot, namespaces);
+        return new OldreviewedPagesTitles(bot, namespaces);
     }
 
     @Override
