@@ -50,7 +50,7 @@ public class ReviewedPagesTitlesIntegTest extends AbstractIntegTest {
   public void test() {
 
     // GIVEN
-    server.request(embeddedinTwo).response(TestHelper.anyWikiResponse("reviewedpages_1.xml"));
+    server.request(embeddedinTwo).response(TestHelper.anyWikiResponse("reviewedpages.xml"));
     MediaWikiBot bot = new MediaWikiBot(host());
 
     // WHEN
@@ -70,7 +70,7 @@ public class ReviewedPagesTitlesIntegTest extends AbstractIntegTest {
   public void testOne() {
 
     // GIVEN
-    server.request(embeddedinTwo).response(TestHelper.anyWikiResponse("reviewedpages_1.xml"));
+    server.request(embeddedinTwo).response(TestHelper.anyWikiResponse("reviewedpages.xml"));
     MediaWikiBot bot = new MediaWikiBot(host());
 
     // WHEN
