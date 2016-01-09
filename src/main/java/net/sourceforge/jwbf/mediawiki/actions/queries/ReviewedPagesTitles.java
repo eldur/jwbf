@@ -142,7 +142,7 @@ public class ReviewedPagesTitles extends BaseQuery<String> {
 
     @Override
     protected Iterator<String> copy() {
-        return new OldreviewedPagesTitles(bot, namespaces);
+        return new ReviewedPagesTitles(bot, namespaces);
     }
 
     @Override
