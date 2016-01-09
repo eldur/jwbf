@@ -54,7 +54,7 @@ public class OldreviewedPagesTitlesIntegTest extends AbstractIntegTest {
     MediaWikiBot bot = new MediaWikiBot(host());
 
     // WHEN
-    UnreviewedPagesTitles testee = new UnreviewedPagesTitles(bot, MediaWiki.NS_MAIN);
+    OldreviewedPagesTitles testee = new OldreviewedPagesTitles(bot, MediaWiki.NS_MAIN);
     List<String> resultList = testee.getCopyOf(15); // query-continue is not implemented
 
     // THEN
@@ -74,7 +74,7 @@ public class OldreviewedPagesTitlesIntegTest extends AbstractIntegTest {
     MediaWikiBot bot = new MediaWikiBot(host());
 
     // WHEN
-    UnreviewedPagesTitles testee = new UnreviewedPagesTitles(bot, MediaWiki.NS_MAIN);
+    OldreviewedPagesTitles testee = new OldreviewedPagesTitles(bot, MediaWiki.NS_MAIN);
     List<String> resultList = testee.getCopyOf(1);
 
     // THEN
