@@ -55,7 +55,8 @@ public class AllUsersTest {
     @Test
     public void testParseUserList() {
         // GIVEN / WHEN
-        ImmutableList<String> result = testee.parseElements(TestHelper.anyWikiResponse("allusers.xml"));
+        String response = TestHelper.anyWikiResponse("allusers.xml");
+        ImmutableList<String> result = testee.parseElements(response);
         ImmutableList<String> expected = ImmutableList.of("Y0su", "YKK", "YNWAGT", "YP977");
 
         // THEN
