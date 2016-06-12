@@ -81,4 +81,16 @@ public class XmlConverterTest {
     // THEN
     assertEquals(Optional.absent(), first);
   }
+
+  @Test
+  public void testInvalidXml() {
+    // GIVEN
+    String xml = " <?xml version=\"1.0\"?><api><a>test</a></api>";
+
+    // WHEN
+    Optional<XmlElement> first = XmlConverter.getChildOpt(xml, "a");
+
+    // THEN
+    assertEquals("test", first.get().getText());
+  }
 }
