@@ -58,12 +58,14 @@ public final class XmlConverter {
   }
 
   static Optional<XmlElement> getRootElementWithErrorOpt(String xml) {
-    Optional<String> xmlStringOpt = Optionals.absentIfEmpty(xml);
+    String xmlTrimmedInCauseOfMediawikiProblem = xml.trim();
+    Optional<String> xmlStringOpt = Optionals.absentIfEmpty(xmlTrimmedInCauseOfMediawikiProblem);
     if (xmlStringOpt.isPresent()) {
       SAXBuilder builder = new SAXBuilder();
       org.jdom2.Element root;
       try {
-        Document doc = builder.build(new ByteArrayInputStream(xml.getBytes(Charsets.UTF_8)));
+        byte[] bytes = xmlTrimmedInCauseOfMediawikiProblem.getBytes(Charsets.UTF_8);
+        Document doc = builder.build(new ByteArrayInputStream(bytes));
 
         root = doc.getRootElement();
 
@@ -102,7 +104,7 @@ public final class XmlConverter {
   public static XmlElement getRootElement(String xml) {
     Optional<XmlElement> rootXmlElement = getRootElementWithErrorOpt(xml);
     if (!rootXmlElement.isPresent()) {
-      throw new IllegalArgumentException(xml + " is no valid xml");
+      throw new IllegalArgumentException("\"" + xml + "\" is no valid xml");
     }
     Optional<ApiException> apiException = getErrorElement(rootXmlElement.get()) //
         .transform(toApiException());
