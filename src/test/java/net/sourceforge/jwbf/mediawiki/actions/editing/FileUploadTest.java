@@ -23,6 +23,7 @@ public class FileUploadTest {
     when(simpleFile.exists()).thenReturn(true);
     when(simpleFile.canRead()).thenReturn(true);
     when(simpleFile.getPath()).thenReturn("any");
+    when(simpleFile.getTitle()).thenReturn("any");
     when(bot.isLoggedIn()).thenReturn(true);
     FileUpload testee = new FileUpload(simpleFile, bot);
     HttpAction action = mock(HttpAction.class);
