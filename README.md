@@ -71,13 +71,15 @@ bot's project, add the appropriate JWBF dependency to the `<dependencies>`
 section. When you build your project, JWBF and its own dependencies will be
 downloaded automatically.
 
+Beginning with **jwbf 4.x.x Java 8 is required**
+
 #### From [RELEASES](http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22net.sourceforge%22%20AND%20a%3A%22jwbf%22):
 
 ```xml
 <dependency>
   <groupId>net.sourceforge</groupId>
   <artifactId>jwbf</artifactId>
-  <version>3.1.0</version>
+  <version>3.1.1</version>
 </dependency>
 ```
 
