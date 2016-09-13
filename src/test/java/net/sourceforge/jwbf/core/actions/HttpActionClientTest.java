@@ -263,7 +263,7 @@ public class HttpActionClientTest {
 
   private String apacheHttpClientVersion() {
     String version = System.getProperty("java.runtime.version");
-    return "Apache-HttpClient/4.5 (Java/" + version.replaceFirst("\\-[^\\-]*$", "") + ")";
+    return "Apache-HttpClient/4.5.2 (Java/" + version.replaceFirst("\\-[^\\-]*$", "") + ")";
   }
 
   @Test

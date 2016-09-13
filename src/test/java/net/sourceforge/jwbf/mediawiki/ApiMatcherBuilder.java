@@ -40,9 +40,10 @@ public class ApiMatcherBuilder {
 
     ImmutableSet.Builder<String> paramNames = ImmutableSet.builder();
     for (Map.Entry<String, String> param : params.build().entrySet()) {
-      RequestExtractor<String> query = query(param.getKey());
+      String key = param.getKey();
+      RequestExtractor<String[]> query = query(key);
       apiBuilder.with(eq(query, param.getValue()));
-      paramNames.add(param.getKey());
+      paramNames.add(key);
     }
 
     apiBuilder.with(new AllParamsPresent(paramNames.build()));
@@ -67,7 +68,7 @@ public class ApiMatcherBuilder {
 
     @Override
     public boolean matchHttp(HttpRequest request) {
-      ImmutableMap<String, String> queries = request.getQueries();
+      ImmutableMap<String, String[]> queries = request.getQueries();
       ImmutableSet<String> keys = queries.keySet();
       return params.equals(keys);
     }

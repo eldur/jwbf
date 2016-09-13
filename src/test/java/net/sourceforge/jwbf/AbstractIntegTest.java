@@ -54,11 +54,13 @@ public abstract class AbstractIntegTest {
   }
 
   static class OnlyMatcher extends CompositeRequestMatcher {
+    private Iterable<RequestMatcher> matchers;
     private final int times;
     private final AtomicInteger countdown;
 
     public OnlyMatcher(Iterable<RequestMatcher> matchers, int times) {
       super(matchers);
+      this.matchers = matchers;
       this.times = times;
       countdown = new AtomicInteger(times);
     }
@@ -84,13 +86,8 @@ public abstract class AbstractIntegTest {
     }
 
     @Override
-    public RequestMatcher apply(final MocoConfig config) {
-      Iterable<RequestMatcher> appliedMatchers = applyToMatchers(config);
-      if (appliedMatchers == this.matchers) {
-        return this;
-      }
-
-      return new AndRequestMatcher(appliedMatchers);
+    protected boolean doMatch(Request request, Iterable<RequestMatcher> iterable) {
+      return this.matchers.equals(iterable);
     }
 
   }
