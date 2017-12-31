@@ -1,9 +1,10 @@
 # JWBF - JavaWikiBotFramework.
 [![Build Status](https://travis-ci.org/eldur/jwbf.svg?branch=master)](https://travis-ci.org/eldur/jwbf)
 [![Coverage Status](https://coveralls.io/repos/eldur/jwbf/badge.svg?branch=master)](https://coveralls.io/r/eldur/jwbf)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/net.sourceforge/jwbf/badge.svg)](http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22net.sourceforge%22%20AND%20a%3A%22jwbf%22)
-
-
+[![Maven Central](https://img.shields.io/maven-central/v/net.sourceforge/jwbf.svg)](http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22net.sourceforge%22%20AND%20a%3A%22jwbf%22)
+<!--
+[![codecov.io](http://codecov.io/github/eldur/jwbf/coverage.svg?branch=master)](http://codecov.io/github/eldur/jwbf?branch=master)
+-->
 The Java Wiki Bot Framework is a library to retrieve data from and maintain
 [MediaWiki-based wikis](http://www.mediawiki.org) such as Wikipedia. It has
 packages that handle basic tasks (login, cookies, encoding, token management)
