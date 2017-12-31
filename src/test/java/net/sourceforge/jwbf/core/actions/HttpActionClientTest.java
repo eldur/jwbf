@@ -25,20 +25,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import com.google.common.base.Charsets;
-import com.google.common.base.Function;
-import com.google.common.base.Joiner;
-import com.google.common.base.Supplier;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableList.Builder;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Range;
-import com.google.common.io.ByteSource;
-import net.sourceforge.jwbf.GAssert;
-import net.sourceforge.jwbf.JWBF;
-import net.sourceforge.jwbf.JettyServer;
-import net.sourceforge.jwbf.Logging;
-import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -49,6 +35,22 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.junit.Test;
 import org.mockito.Mockito;
+
+import com.google.common.base.Charsets;
+import com.google.common.base.Function;
+import com.google.common.base.Joiner;
+import com.google.common.base.Supplier;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableList.Builder;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Range;
+import com.google.common.io.ByteSource;
+
+import net.sourceforge.jwbf.GAssert;
+import net.sourceforge.jwbf.JWBF;
+import net.sourceforge.jwbf.JettyServer;
+import net.sourceforge.jwbf.Logging;
+import net.sourceforge.jwbf.core.actions.util.HttpAction;
 
 public class HttpActionClientTest {
 
@@ -661,11 +663,13 @@ public class HttpActionClientTest {
   }
 
   @Test
-  public void testConsume() {
+  public void testConsume() throws IOException {
     // GIVEN
     testee = HttpActionClient.of("http://localhost/");
     HttpResponse response = mock(HttpResponse.class);
-    when(response.getEntity()).thenThrow(IOException.class);
+    HttpEntity httpEntity = mock(HttpEntity.class);
+    when(httpEntity.getContent()).thenThrow(IOException.class);
+    when(response.getEntity()).thenReturn(httpEntity);
 
     try {
       // WHEN
