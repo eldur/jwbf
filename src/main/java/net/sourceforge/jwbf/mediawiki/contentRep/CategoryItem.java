@@ -18,9 +18,11 @@
  */
 package net.sourceforge.jwbf.mediawiki.contentRep;
 
+import java.util.Objects;
+
 import javax.annotation.Nonnull;
 
-import java.util.Objects;
+import com.google.common.base.MoreObjects;
 
 import net.sourceforge.jwbf.core.internal.Checked;
 import net.sourceforge.jwbf.core.internal.NonnullFunction;
@@ -50,7 +52,7 @@ public class CategoryItem {
 
   @Override
   public String toString() {
-    return com.google.common.base.Objects.toStringHelper(this) //
+    return MoreObjects.toStringHelper(this) //
         .add("title", title) //
         .add("namespace", namespace) //
         .add("pageid", pageid) //
