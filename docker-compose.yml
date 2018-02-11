@@ -1,0 +1,37 @@
+version: '2'
+services:
+  mw-latest:
+    image: "mediawiki:latest"
+    ports:
+      - 7000:80
+    volumes:
+      - ./mediawiki/latest/data/:/var/www/data
+      # - ./mediawiki/latest/LocalSettings.php:/var/www/html/LocalSettings.php
+  mw-1-30:
+    image: "mediawiki:1.30"
+    ports:
+      - 7001:80
+    volumes:
+      - ./mediawiki/1-30/data/:/var/www/data
+      - ./mediawiki/1-30/LocalSettings.php:/var/www/html/LocalSettings.php
+  mw-1-29:
+    image: "mediawiki:1.29"
+    ports:
+      - 7002:80
+    volumes:
+      - ./mediawiki/1-29/data/:/var/www/data
+      - ./mediawiki/1-29/LocalSettings.php:/var/www/html/LocalSettings.php
+  mw-1-28:
+    image: "mediawiki:1.28"
+    ports:
+      - 7003:80
+    volumes:
+      - ./mediawiki/1-28/data/:/var/www/data
+      - ./mediawiki/1-28/LocalSettings.php:/var/www/html/LocalSettings.php
+  mw-1-27:
+    image: "mediawiki:1.27"
+    ports:
+      - 7004:80
+    volumes:
+      - ./mediawiki/1-27/data/:/var/www/data
+      - ./mediawiki/1-27/LocalSettings.php:/var/www/html/LocalSettings.php
