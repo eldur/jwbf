@@ -5,8 +5,9 @@ import static org.junit.Assert.fail;
 
 import javax.annotation.Nonnull;
 
-import com.google.common.base.Function;
 import org.junit.Test;
+
+import com.google.common.base.Function;
 
 public class NonnullFunctionTest {
 
@@ -15,13 +16,14 @@ public class NonnullFunctionTest {
 
     // GIVEN
     final String result = "result";
-    Function f = new NonnullFunction() {
-      @Nonnull
-      @Override
-      protected Object applyNonnull(@Nonnull Object input) {
-        return result;
-      }
-    };
+    Function f =
+        new NonnullFunction() {
+          @Nonnull
+          @Override
+          protected Object applyNonnull(@Nonnull Object input) {
+            return result;
+          }
+        };
 
     // WHEN
     Object actual = f.apply("in");
@@ -34,13 +36,14 @@ public class NonnullFunctionTest {
   public void testApplyNonnull_input() throws Exception {
 
     // GIVEN
-    Function f = new NonnullFunction() {
-      @Nonnull
-      @Override
-      protected Object applyNonnull(@Nonnull Object input) {
-        return "";
-      }
-    };
+    Function f =
+        new NonnullFunction() {
+          @Nonnull
+          @Override
+          protected Object applyNonnull(@Nonnull Object input) {
+            return "";
+          }
+        };
 
     // WHEN
     try {
@@ -56,13 +59,14 @@ public class NonnullFunctionTest {
   public void testApplyNonnull_result() throws Exception {
 
     // GIVEN
-    Function f = new NonnullFunction() {
-      @Nonnull
-      @Override
-      protected Object applyNonnull(@Nonnull Object input) {
-        return null;
-      }
-    };
+    Function f =
+        new NonnullFunction() {
+          @Nonnull
+          @Override
+          protected Object applyNonnull(@Nonnull Object input) {
+            return null;
+          }
+        };
 
     // WHEN
     try {

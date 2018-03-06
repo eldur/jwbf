@@ -22,17 +22,24 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Collection;
 
+import javax.imageio.ImageIO;
+
+import org.junit.Test;
+import org.junit.runners.Parameterized.Parameters;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.common.collect.ImmutableMap;
 import com.google.common.hash.Hashing;
 import com.google.common.io.Files;
 import com.google.common.io.Resources;
+
 import net.sourceforge.jwbf.GAssert;
 import net.sourceforge.jwbf.JWBF;
 import net.sourceforge.jwbf.TestHelper;
@@ -44,14 +51,8 @@ import net.sourceforge.jwbf.mediawiki.actions.editing.FileUpload;
 import net.sourceforge.jwbf.mediawiki.actions.queries.ImageInfo;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 import net.sourceforge.jwbf.mediawiki.contentRep.SimpleFile;
-import org.junit.Test;
-import org.junit.runners.Parameterized.Parameters;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-/**
- * @author Thomas Stock
- */
+/** @author Thomas Stock */
 public class UploadAndImageInfoIT extends ParamHelper {
 
   private static final Logger log = LoggerFactory.getLogger(UploadAndImageInfoIT.class);
@@ -78,14 +79,12 @@ public class UploadAndImageInfoIT extends ParamHelper {
       a.getUrlAsString();
       fail();
     } catch (ProcessException e) {
-      GAssert.assertStartsWith(String.format("no url for image with name \"%s\"", name),
-          e.getMessage());
+      GAssert.assertStartsWith(
+          String.format("no url for image with name \"%s\"", name), e.getMessage());
     }
   }
 
-  /**
-   * Test to delete an image.
-   */
+  /** Test to delete an image. */
   @Test
   public final void deleteImage() {
     generalUploadImageInfoTest(bot);
@@ -124,10 +123,11 @@ public class UploadAndImageInfoIT extends ParamHelper {
     // TODO bad values, try others
     int newWidth = 50;
     int newHeight = 50;
-    ImmutableMap<String, String> params = ImmutableMap.of(//
-        ImageInfo.HEIGHT, newHeight + "", //
-        ImageInfo.WIDTH, newWidth + ""  //
-    );
+    ImmutableMap<String, String> params =
+        ImmutableMap.of( //
+            ImageInfo.HEIGHT, newHeight + "", //
+            ImageInfo.WIDTH, newWidth + "" //
+            );
     URL urlSizeVar = getUrl(bot, sf, params);
     assertImageDimension(urlSizeVar, newWidth, newHeight);
     String text = bot().getArticle(name).getText();
@@ -173,7 +173,6 @@ public class UploadAndImageInfoIT extends ParamHelper {
     } catch (IOException e) {
       throw new IllegalStateException(e);
     }
-
   }
 
   private static void filesAreIdentical(File left, File right) {

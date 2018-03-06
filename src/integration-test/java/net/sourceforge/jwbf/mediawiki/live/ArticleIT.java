@@ -14,8 +14,15 @@ import static org.mockito.Mockito.verify;
 import java.util.Collection;
 import java.util.Date;
 
+import org.junit.Ignore;
+import org.junit.Test;
+import org.mockito.Mockito;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.common.collect.Lists;
 import com.google.inject.Injector;
+
 import net.sourceforge.jwbf.core.contentRep.Article;
 import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
 import net.sourceforge.jwbf.mediawiki.BotFactory;
@@ -27,11 +34,6 @@ import net.sourceforge.jwbf.mediawiki.actions.login.PostLogin;
 import net.sourceforge.jwbf.mediawiki.actions.meta.GetVersion;
 import net.sourceforge.jwbf.mediawiki.actions.util.VersionException;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.mockito.Mockito;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class ArticleIT {
 
@@ -89,7 +91,6 @@ public class ArticleIT {
       }
       a.delete(); // clean up
     }
-
   }
 
   @Test
@@ -167,9 +168,13 @@ public class ArticleIT {
       verify(actionClient, times(7)).performAction(Mockito.isA(GetRevision.class));
       fail();
     } catch (IllegalArgumentException iae) {
-      assertEquals("do not convert an net.sourceforge.jwbf.core.contentRep.Article" + //
-          " to a net.sourceforge.jwbf.core.contentRep.SimpleArticle, " + //
-          "because its very expensive", iae.getMessage());
+      assertEquals(
+          "do not convert an net.sourceforge.jwbf.core.contentRep.Article"
+              + //
+              " to a net.sourceforge.jwbf.core.contentRep.SimpleArticle, "
+              + //
+              "because its very expensive",
+          iae.getMessage());
     }
   }
 
@@ -189,7 +194,6 @@ public class ArticleIT {
     verify(actionClient, times(1)).performAction(Mockito.isA(PostLogin.class));
     verify(actionClient, times(1)).performAction(Mockito.isA(GetVersion.class));
     verify(actionClient, times(2)).performAction(Mockito.isA(GetRevision.class));
-
   }
 
   @Test
@@ -217,10 +221,10 @@ public class ArticleIT {
     final String thirdEdit = a.getRevisionId();
     assertTrue(a.isMinorEdit());
     assertFalse("text should be differ:\n" + aaText + "\n" + aText, aaText.equals(aText));
-    assertTrue("dif rev ID, both: " + thirdEdit,
+    assertTrue(
+        "dif rev ID, both: " + thirdEdit,
         Integer.parseInt(firstEdit) != Integer.parseInt(thirdEdit));
 
     log.debug("--> end article test");
   }
-
 }

@@ -6,41 +6,44 @@ import static org.junit.Assert.fail;
 
 import java.util.Iterator;
 
-import com.google.common.base.Optional;
-import com.google.common.collect.ImmutableList;
-import net.sourceforge.jwbf.core.actions.util.HttpAction;
-import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import com.google.common.base.Optional;
+import com.google.common.collect.ImmutableList;
+
+import net.sourceforge.jwbf.core.actions.util.HttpAction;
+import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
+
 @RunWith(MockitoJUnitRunner.class)
 public class BaseQueryTest {
 
   @Spy
-  BaseQuery<Object> testee = new BaseQuery<Object>(Mockito.mock(MediaWikiBot.class)) {
-    @Override
-    protected Iterator<Object> copy() {
-      return ImmutableList.of().iterator();
-    }
+  BaseQuery<Object> testee =
+      new BaseQuery<Object>(Mockito.mock(MediaWikiBot.class)) {
+        @Override
+        protected Iterator<Object> copy() {
+          return ImmutableList.of().iterator();
+        }
 
-    @Override
-    protected HttpAction prepareNextRequest() {
-      return null;
-    }
+        @Override
+        protected HttpAction prepareNextRequest() {
+          return null;
+        }
 
-    @Override
-    protected ImmutableList<Object> parseElements(String s) {
-      return ImmutableList.of();
-    }
+        @Override
+        protected ImmutableList<Object> parseElements(String s) {
+          return ImmutableList.of();
+        }
 
-    @Override
-    protected Optional<String> parseHasMore(String s) {
-      return Optional.absent();
-    }
-  };
+        @Override
+        protected Optional<String> parseHasMore(String s) {
+          return Optional.absent();
+        }
+      };
 
   @Test(expected = UnsupportedOperationException.class)
   public void testRemove() {
@@ -87,5 +90,4 @@ public class BaseQueryTest {
   public static String emptyXml() {
     return "<empty />";
   }
-
 }

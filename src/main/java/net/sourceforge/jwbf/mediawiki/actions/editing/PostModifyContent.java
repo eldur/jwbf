@@ -20,9 +20,13 @@ package net.sourceforge.jwbf.mediawiki.actions.editing;
 
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.common.base.Strings;
 import com.google.common.collect.Sets;
 import com.google.common.collect.Sets.SetView;
+
 import net.sourceforge.jwbf.core.actions.Post;
 import net.sourceforge.jwbf.core.actions.RequestBuilder;
 import net.sourceforge.jwbf.core.actions.util.ActionException;
@@ -36,8 +40,6 @@ import net.sourceforge.jwbf.mediawiki.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.actions.util.VersionException;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Writes an article.
@@ -68,16 +70,16 @@ public class PostModifyContent extends MWAction {
     this.bot = bot;
   }
 
-  /**
-   * {@inheritDoc}
-   */
+  /** {@inheritDoc} */
   @Override
   public HttpAction getNextMessage() {
 
     Userinfo userinfo = bot.getUserinfo();
     Set<String> rights = userinfo.getRights();
-    boolean canWrite = rights.contains(Userinfo.RIGHT_EDIT) && //
-        rights.contains(Userinfo.RIGHT_WRITEAPI);
+    boolean canWrite =
+        rights.contains(Userinfo.RIGHT_EDIT)
+            && //
+            rights.contains(Userinfo.RIGHT_WRITEAPI);
 
     if (!canWrite) {
       throw new VersionException("editing is not allowed");
@@ -89,13 +91,13 @@ public class PostModifyContent extends MWAction {
       return apiGet;
     } else if (second) {
 
-      RequestBuilder builder = new ApiRequestBuilder() //
-          .action("edit") //
-          .formatXml() //
-          .param("title", MediaWiki.urlEncode(a.getTitle())) //
-
-          .postParam("summary", a.getEditSummary()) //
-          .postParam("text", a.getText()) //
+      RequestBuilder builder =
+          new ApiRequestBuilder() //
+              .action("edit") //
+              .formatXml() //
+              .param("title", MediaWiki.urlEncode(a.getTitle())) //
+              .postParam("summary", a.getEditSummary()) //
+              .postParam("text", a.getText()) //
           ;
       Set<String> groups = userinfo.getGroups();
       if (!isIntersectionEmpty(groups, MediaWiki.BOT_GROUPS)) {
@@ -118,24 +120,18 @@ public class PostModifyContent extends MWAction {
     }
   }
 
-  /**
-   * TODO only for testing
-   */
+  /** TODO only for testing */
   GetApiToken newTokenRequest() {
     return new GetApiToken(GetApiToken.Intoken.EDIT, a.getTitle());
   }
 
-  /**
-   * {@inheritDoc}
-   */
+  /** {@inheritDoc} */
   @Override
   public boolean hasMoreMessages() {
     return first || second;
   }
 
-  /**
-   * {@inheritDoc}
-   */
+  /** {@inheritDoc} */
   @Override
   public String processReturningText(String xml, HttpAction hm) {
     String request = hm.getRequest();
@@ -165,5 +161,4 @@ public class PostModifyContent extends MWAction {
     SetView<?> intersection = Sets.intersection(a, b);
     return intersection.isEmpty();
   }
-
 }

@@ -15,36 +15,35 @@
  */
 package net.sourceforge.jwbf.mediawiki.actions.queries;
 
-/**
- *
- * @author Marco Ammon <ammon.marco@t-online.de>
- */
-
+/** @author Marco Ammon <ammon.marco@t-online.de> */
 
 import static org.junit.Assert.assertEquals;
 
 import java.util.List;
 
+import org.junit.Test;
+
 import com.github.dreamhead.moco.RequestMatcher;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+
 import net.sourceforge.jwbf.AbstractIntegTest;
 import net.sourceforge.jwbf.GAssert;
 import net.sourceforge.jwbf.TestHelper;
 import net.sourceforge.jwbf.mediawiki.ApiMatcherBuilder;
 import net.sourceforge.jwbf.mediawiki.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
-import org.junit.Test;
 
 public class UnreviewedPagesTitlesIntegTest extends AbstractIntegTest {
 
-  RequestMatcher embeddedinTwo = ApiMatcherBuilder.of() //
-      .param("action", "query") //
-      .param("format", "xml") //
-      .param("list", "unreviewedpages") //
-      .param("urlimit", "50") //
-      .param("urnamespace", "0") //
-      .build();
+  RequestMatcher embeddedinTwo =
+      ApiMatcherBuilder.of() //
+          .param("action", "query") //
+          .param("format", "xml") //
+          .param("list", "unreviewedpages") //
+          .param("urlimit", "50") //
+          .param("urnamespace", "0") //
+          .build();
 
   @Test
   public void test() {
@@ -58,12 +57,12 @@ public class UnreviewedPagesTitlesIntegTest extends AbstractIntegTest {
     List<String> resultList = testee.getCopyOf(15); // query-continue is not implemented
 
     // THEN
-    ImmutableList<String> expected = ImmutableList
-        .of("1-1-1", "2014-15 Season 1 eGamers Starcraft II Open/Participants",
+    ImmutableList<String> expected =
+        ImmutableList.of(
+            "1-1-1", "2014-15 Season 1 eGamers Starcraft II Open/Participants",
             "2014 WCS Season 1 Korea GSL", "4 Warpgate All In (vs. Protoss)");
     GAssert.assertEquals(expected, ImmutableList.copyOf(resultList));
     assertEquals(resultList.size(), ImmutableSet.copyOf(resultList).size());
-
   }
 
   @Test
@@ -81,7 +80,5 @@ public class UnreviewedPagesTitlesIntegTest extends AbstractIntegTest {
     ImmutableList<String> expected = ImmutableList.of("1-1-1");
     GAssert.assertEquals(expected, ImmutableList.copyOf(resultList));
     assertEquals(resultList.size(), ImmutableSet.copyOf(resultList).size());
-
   }
-
 }

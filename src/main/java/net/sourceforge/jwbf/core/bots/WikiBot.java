@@ -10,9 +10,7 @@ import net.sourceforge.jwbf.core.contentRep.Userinfo;
  */
 public interface WikiBot {
 
-  /**
-   * @deprecated use {@link #readData(String)}
-   */
+  /** @deprecated use {@link #readData(String)} */
   @Deprecated
   SimpleArticle readData(final String name, final int properties);
 
@@ -27,5 +25,4 @@ public interface WikiBot {
   Userinfo getUserinfo();
 
   String getWikiType();
-
 }

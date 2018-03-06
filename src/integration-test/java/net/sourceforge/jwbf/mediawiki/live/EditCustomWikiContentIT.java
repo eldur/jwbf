@@ -25,19 +25,19 @@ import static org.junit.Assert.assertNotEquals;
 import java.util.List;
 import java.util.Random;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
-import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
-import net.sourceforge.jwbf.mediawiki.BotFactory;
-import net.sourceforge.jwbf.mediawiki.MediaWiki.Version;
-import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-/**
- * @author Thomas Stock
- */
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
+
+import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
+import net.sourceforge.jwbf.mediawiki.BotFactory;
+import net.sourceforge.jwbf.mediawiki.MediaWiki.Version;
+import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
+
+/** @author Thomas Stock */
 public class EditCustomWikiContentIT {
 
   private MediaWikiBot bot;
@@ -79,9 +79,7 @@ public class EditCustomWikiContentIT {
     assertEquals(text, resultText);
   }
 
-  /**
-   * Test the read of metadata on english Mediawiki.
-   */
+  /** Test the read of metadata on english Mediawiki. */
   @Test
   public final void contentModifyDetails() {
     // GIVEN
@@ -113,7 +111,5 @@ public class EditCustomWikiContentIT {
 
     // THEN
     assertEquals(true, sa.isMinorEdit());
-
   }
-
 }

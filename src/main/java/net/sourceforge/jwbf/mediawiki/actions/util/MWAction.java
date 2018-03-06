@@ -18,34 +18,29 @@
  */
 package net.sourceforge.jwbf.mediawiki.actions.util;
 
+import java.util.List;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import java.util.List;
-
-import com.google.common.collect.ImmutableList;
-import net.sourceforge.jwbf.core.actions.ContentProcessable;
-import net.sourceforge.jwbf.core.actions.util.HttpAction;
-import net.sourceforge.jwbf.mediawiki.MediaWiki;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * @author Thomas Stock
- */
+import com.google.common.collect.ImmutableList;
+
+import net.sourceforge.jwbf.core.actions.ContentProcessable;
+import net.sourceforge.jwbf.core.actions.util.HttpAction;
+import net.sourceforge.jwbf.mediawiki.MediaWiki;
+
+/** @author Thomas Stock */
 public abstract class MWAction implements ContentProcessable {
 
   private static final Logger log = LoggerFactory.getLogger(MWAction.class);
 
-  /**
-   * @deprecated remove
-   */
-  @Deprecated
-  private boolean hasMore = true;
+  /** @deprecated remove */
+  @Deprecated private boolean hasMore = true;
 
-  /**
-   * @return true if and changes state to false
-   */
+  /** @return true if and changes state to false */
   @Override
   public boolean hasMoreMessages() {
     final boolean b = hasMore;
@@ -53,22 +48,18 @@ public abstract class MWAction implements ContentProcessable {
     return b;
   }
 
-  /**
-   * @deprecated do not use this method TODO rm
-   */
+  /** @deprecated do not use this method TODO rm */
   @Deprecated
   public void setHasMoreMessages(boolean b) {
     hasMore = b;
   }
 
-  protected MWAction() {
-
-  }
+  protected MWAction() {}
 
   /**
    * Deals with the MediaWiki API's response by parsing the provided text.
    *
-   * @param s  the answer to the most recently generated MediaWiki API request
+   * @param s the answer to the most recently generated MediaWiki API request
    * @param hm the requestor message
    * @return the returning text on processing problems
    */
@@ -97,26 +88,20 @@ public abstract class MWAction implements ContentProcessable {
     return MediaWiki.createNsString(nullSafeCopyOf(namespaces));
   }
 
-  /**
-   * @deprecated
-   */
+  /** @deprecated */
   @Deprecated
   public static ImmutableList<String> nullSafeCopyOf(@Nullable String[] strings) {
     return MediaWiki.nullSafeCopyOf(strings);
   }
 
-  /**
-   * @deprecated
-   */
+  /** @deprecated */
   @Deprecated
   @Nonnull
   public static ImmutableList<Integer> nullSafeCopyOf(@Nullable int[] ints) {
     return MediaWiki.nullSafeCopyOf(ints);
   }
 
-  /**
-   * @deprecated
-   */
+  /** @deprecated */
   @Deprecated
   public static String createNsString(List<Integer> asList) {
     return MediaWiki.createNsString(asList);
@@ -132,5 +117,4 @@ public abstract class MWAction implements ContentProcessable {
   public boolean isSelfExecuter() {
     return false;
   }
-
 }

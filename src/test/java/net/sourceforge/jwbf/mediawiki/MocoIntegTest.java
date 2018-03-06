@@ -2,14 +2,18 @@ package net.sourceforge.jwbf.mediawiki;
 
 import static org.junit.runners.Parameterized.Parameters;
 
-import javax.annotation.Nonnull;
-import javax.inject.Provider;
-
 import java.io.File;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import javax.annotation.Nonnull;
+import javax.inject.Provider;
+
+import org.junit.Before;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
 
 import com.github.dreamhead.moco.HttpServer;
 import com.github.dreamhead.moco.Moco;
@@ -24,6 +28,7 @@ import com.google.common.io.Resources;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigException;
 import com.typesafe.config.ConfigFactory;
+
 import net.sourceforge.jwbf.AbstractIntegTest;
 import net.sourceforge.jwbf.JWBF;
 import net.sourceforge.jwbf.TestHelper;
@@ -32,9 +37,6 @@ import net.sourceforge.jwbf.mediawiki.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.actions.meta.SiteInfoIntegTest;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 import net.sourceforge.jwbf.mediawiki.live.auto.ParamHelper;
-import org.junit.Before;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
 
 @RunWith(Parameterized.class)
 public abstract class MocoIntegTest extends AbstractIntegTest implements Provider<MediaWikiBot> {
@@ -62,9 +64,7 @@ public abstract class MocoIntegTest extends AbstractIntegTest implements Provide
     bot(BotFactory.getIntegMediaWikiBot(version(), login));
   }
 
-  /**
-   * @deprecated
-   */
+  /** @deprecated */
   @Deprecated
   protected void before(boolean login) {
     bot(BotFactory.getIntegMediaWikiBot(version(), login));
@@ -116,13 +116,22 @@ public abstract class MocoIntegTest extends AbstractIntegTest implements Provide
   }
 
   public static void applySiteinfoXmlToServer(HttpServer server, Version latest, Class<?> clazz) {
-    applyToServer(server, SiteInfoIntegTest.newSiteInfoMatcherBuilder(), "siteinfo_detail.xml",
-        latest, clazz);
+    applyToServer(
+        server,
+        SiteInfoIntegTest.newSiteInfoMatcherBuilder(),
+        "siteinfo_detail.xml",
+        latest,
+        clazz);
   }
 
-  public static void applyToServer(HttpServer server, ApiMatcherBuilder apiMatcherBuilder,
-      String filename, Version version, Class<?> clazz) {
-    server.request(apiMatcherBuilder.build()) //
+  public static void applyToServer(
+      HttpServer server,
+      ApiMatcherBuilder apiMatcherBuilder,
+      String filename,
+      Version version,
+      Class<?> clazz) {
+    server
+        .request(apiMatcherBuilder.build()) //
         .response(mwFileOfInner(version, filename, clazz));
   }
 
@@ -134,8 +143,8 @@ public abstract class MocoIntegTest extends AbstractIntegTest implements Provide
     MocoIntegTest.applyToServer(server, apiMatcherBuilder, filename, version(), this.getClass());
   }
 
-  private static ContentResource mwFileOfInner(MediaWiki.Version version, String filename,
-      Class<?> clazz) {
+  private static ContentResource mwFileOfInner(
+      MediaWiki.Version version, String filename, Class<?> clazz) {
     File file = getFileInner(TestHelper.mediaWikiFileName(version, filename));
     if (file.canRead()) {
       String absFileName = file.getAbsolutePath();
@@ -169,29 +178,32 @@ public abstract class MocoIntegTest extends AbstractIntegTest implements Provide
     return ImmutableMap.of();
   }
 
-  protected ImmutableList<String> splittedConfigOfString(ConfKey key,
-      final ImmutableMap<String, String> replacements) {
-    Iterable<String> splitted = Splitter.on(",") //
-        .trimResults() //
-        .omitEmptyStrings() //
-        .split(confOf(key));
+  protected ImmutableList<String> splittedConfigOfString(
+      ConfKey key, final ImmutableMap<String, String> replacements) {
+    Iterable<String> splitted =
+        Splitter.on(",") //
+            .trimResults() //
+            .omitEmptyStrings() //
+            .split(confOf(key));
 
     return FluentIterable.from(splitted) //
-        .transform(new Function<String, String>() {
+        .transform(
+            new Function<String, String>() {
 
-          @Override
-          public String apply(String input) {
+              @Override
+              public String apply(String input) {
 
-            for (Entry<String, String> entry : replacements.entrySet()) {
-              String key = String.format("${%s}", entry.getKey());
-              if (input.contains(key)) {
-                return input
-                    .replaceFirst(String.format("\\$\\{%s\\}", entry.getKey()), entry.getValue());
+                for (Entry<String, String> entry : replacements.entrySet()) {
+                  String key = String.format("${%s}", entry.getKey());
+                  if (input.contains(key)) {
+                    return input.replaceFirst(
+                        String.format("\\$\\{%s\\}", entry.getKey()), entry.getValue());
+                  }
+                }
+                return input;
               }
-            }
-            return input;
-          }
-        }).toList();
+            })
+        .toList();
   }
 
   protected ImmutableList<String> splittedConfigOfString(ConfKey key) {
@@ -212,7 +224,6 @@ public abstract class MocoIntegTest extends AbstractIntegTest implements Provide
     return FluentIterable.from(stringList.entrySet()) //
         .transform(function) //
         .toSortedList(Ordering.natural()) //
-        ;
+    ;
   }
-
 }

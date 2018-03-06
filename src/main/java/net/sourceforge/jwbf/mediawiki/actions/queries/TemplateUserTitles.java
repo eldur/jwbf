@@ -21,9 +21,13 @@ package net.sourceforge.jwbf.mediawiki.actions.queries;
 
 import java.util.Iterator;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.common.base.Optional;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
+
 import net.sourceforge.jwbf.core.actions.RequestBuilder;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.mapper.XmlConverter;
@@ -32,8 +36,6 @@ import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
 import net.sourceforge.jwbf.mediawiki.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * action class using the MediaWiki-api's "list=embeddedin" that is used to find all articles which
@@ -57,8 +59,8 @@ public class TemplateUserTitles extends BaseQuery<String> {
     this(bot, 50, templateName, MWAction.nullSafeCopyOf(namespaces));
   }
 
-  TemplateUserTitles(MediaWikiBot bot, int limit, String templateName,
-      ImmutableList<Integer> namespaces) {
+  TemplateUserTitles(
+      MediaWikiBot bot, int limit, String templateName, ImmutableList<Integer> namespaces) {
     super(bot);
     this.bot = bot;
     this.templateName = templateName;
@@ -92,13 +94,14 @@ public class TemplateUserTitles extends BaseQuery<String> {
 
   @Override
   protected HttpAction prepareNextRequest() {
-    RequestBuilder requestBuilder = new ApiRequestBuilder() //
-        .action("query") //
-        .paramNewContinue(bot.getVersion()) //
-        .formatXml() //
-        .param("list", "embeddedin") //
-        .param("eilimit", limit) //
-        .param("eititle", MediaWiki.urlEncode(templateName)) //
+    RequestBuilder requestBuilder =
+        new ApiRequestBuilder() //
+            .action("query") //
+            .paramNewContinue(bot.getVersion()) //
+            .formatXml() //
+            .param("list", "embeddedin") //
+            .param("eilimit", limit) //
+            .param("eititle", MediaWiki.urlEncode(templateName)) //
         ;
 
     String namespacesValue = MWAction.createNsString(namespaces);
@@ -112,12 +115,10 @@ public class TemplateUserTitles extends BaseQuery<String> {
     }
 
     return requestBuilder.buildGet();
-
   }
 
   @Override
   protected Iterator<String> copy() {
     return new TemplateUserTitles(bot, limit, templateName, namespaces);
   }
-
 }

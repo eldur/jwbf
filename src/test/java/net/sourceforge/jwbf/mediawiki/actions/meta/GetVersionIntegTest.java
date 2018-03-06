@@ -2,14 +2,16 @@ package net.sourceforge.jwbf.mediawiki.actions.meta;
 
 import static org.junit.Assert.assertEquals;
 
+import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.common.collect.ImmutableMap;
+
 import net.sourceforge.jwbf.GAssert;
 import net.sourceforge.jwbf.mediawiki.ConfKey;
 import net.sourceforge.jwbf.mediawiki.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.MocoIntegTest;
-import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class GetVersionIntegTest extends MocoIntegTest {
 
@@ -27,23 +29,27 @@ public class GetVersionIntegTest extends MocoIntegTest {
   public void testSiteInfo() {
     // GIVEN
     // /api.php?action=query&format=xml&meta=siteinfoWithProperties
-    server.request(SiteInfoIntegTest.newSiteinfoWithProperties()) //
+    server
+        .request(SiteInfoIntegTest.newSiteinfoWithProperties()) //
         .response(mwFileOf(version(), "siteinfo_detail.xml"));
 
     // WHEN
     Siteinfo si = bot().getSiteinfo();
 
     // THEN
-    GAssert.assertEquals(splittedConfigOfString(ConfKey.SITEINFO, title()), //
+    GAssert.assertEquals(
+        splittedConfigOfString(ConfKey.SITEINFO, title()), //
         toSortedList(si.getNamespaces()));
-    GAssert.assertEquals(splittedConfigOfString(ConfKey.INTERWIKI), //
+    GAssert.assertEquals(
+        splittedConfigOfString(ConfKey.INTERWIKI), //
         toSortedList(si.getInterwikis()));
   }
 
   @Test
   public void testSiteInfo_withError() {
     // GIVEN
-    server.request(SiteInfoIntegTest.newSiteinfoWithProperties()) //
+    server
+        .request(SiteInfoIntegTest.newSiteinfoWithProperties()) //
         .response(mwFileOf(version(), "siteinfo_fail.xml"));
 
     // WHEN
@@ -57,7 +63,8 @@ public class GetVersionIntegTest extends MocoIntegTest {
   @Test
   public void testVersion() {
     // GIVEN
-    server.request(SiteInfoIntegTest.newSiteInfoMatcherBuilder().build()) //
+    server
+        .request(SiteInfoIntegTest.newSiteInfoMatcherBuilder().build()) //
         .response(mwFileOf(version(), "siteinfo.xml"));
 
     // WHEN
@@ -65,14 +72,14 @@ public class GetVersionIntegTest extends MocoIntegTest {
 
     // THEN
     assertEquals(version(), responseVersion);
-
   }
 
   @Test
   public void testVersionDetails() {
 
     // GIVEN
-    server.request(SiteInfoIntegTest.newSiteInfoMatcherBuilder().build()) //
+    server
+        .request(SiteInfoIntegTest.newSiteInfoMatcherBuilder().build()) //
         .response(mwFileOf(version(), "siteinfo.xml"));
 
     // WHEN
@@ -86,7 +93,5 @@ public class GetVersionIntegTest extends MocoIntegTest {
     GAssert.assertStartsWith("MediaWiki " + version().getNumber(), gv.getGenerator());
     assertEquals(confOf(ConfKey.SITENAME), gv.getSitename());
     assertEquals(confOf(ConfKey.MAINPAGE), gv.getMainpage());
-
   }
-
 }

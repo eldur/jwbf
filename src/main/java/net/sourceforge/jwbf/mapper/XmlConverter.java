@@ -1,5 +1,9 @@
 package net.sourceforge.jwbf.mapper;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 import javax.xml.xpath.XPath;
@@ -7,26 +11,24 @@ import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-
-import com.google.common.base.Charsets;
-import com.google.common.base.Function;
-import com.google.common.base.Optional;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Iterables;
-import net.sourceforge.jwbf.core.Optionals;
-import net.sourceforge.jwbf.core.actions.util.ActionException;
-import net.sourceforge.jwbf.core.internal.NonnullFunction;
-import net.sourceforge.jwbf.mediawiki.MediaWiki;
-import net.sourceforge.jwbf.mediawiki.actions.util.ApiException;
 import org.jdom2.Document;
 import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.InputSource;
+
+import com.google.common.base.Charsets;
+import com.google.common.base.Function;
+import com.google.common.base.Optional;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
+
+import net.sourceforge.jwbf.core.Optionals;
+import net.sourceforge.jwbf.core.actions.util.ActionException;
+import net.sourceforge.jwbf.core.internal.NonnullFunction;
+import net.sourceforge.jwbf.mediawiki.MediaWiki;
+import net.sourceforge.jwbf.mediawiki.actions.util.ApiException;
 
 public final class XmlConverter {
 
@@ -107,8 +109,9 @@ public final class XmlConverter {
     if (!rootXmlElement.isPresent()) {
       throw new IllegalArgumentException("\"" + xml + "\" is no valid xml");
     }
-    Optional<ApiException> apiException = getErrorElement(rootXmlElement.get()) //
-        .transform(toApiException());
+    Optional<ApiException> apiException =
+        getErrorElement(rootXmlElement.get()) //
+            .transform(toApiException());
     if (apiException.isPresent()) {
       throw apiException.get();
     }
@@ -141,10 +144,11 @@ public final class XmlConverter {
     if (first == null) {
       return null;
     }
-    ImmutableList<String> names = ImmutableList.<String>builder() //
-        .add(first) //
-        .addAll(ImmutableList.copyOf(childNames)) //
-        .build();
+    ImmutableList<String> names =
+        ImmutableList.<String>builder() //
+            .add(first) //
+            .addAll(ImmutableList.copyOf(childNames)) //
+            .build();
 
     XmlElement rootElement = getRootElement(xml);
     return getChild(rootElement, names);
@@ -175,5 +179,4 @@ public final class XmlConverter {
     }
     return root;
   }
-
 }

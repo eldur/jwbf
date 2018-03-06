@@ -2,6 +2,9 @@ package net.sourceforge.jwbf.mediawiki.actions.misc;
 
 import java.util.NoSuchElementException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import net.sourceforge.jwbf.core.actions.Get;
 import net.sourceforge.jwbf.core.actions.util.ActionException;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
@@ -12,15 +15,13 @@ import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
 import net.sourceforge.jwbf.mediawiki.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Implements function to render wikitext on remote.
  *
  * @author Thomas Stock
  * @see <a href="http://www.mediawiki.org/wiki/API:Expanding_templates_and_rendering#parse">
- * API:Parsing wikitext</a>
+ *     API:Parsing wikitext</a>
  */
 public class GetRendering extends MWAction {
 
@@ -33,13 +34,13 @@ public class GetRendering extends MWAction {
 
   public GetRendering(MediaWikiBot bot, String wikitext) {
     this.bot = bot;
-    msg = new ApiRequestBuilder() //
-        .action("parse") //
-        .formatXml() //
-        .param("text", MediaWiki.urlEncode(wikitext)) //
-        .param("title", "API") //
-        .buildGet();
-
+    msg =
+        new ApiRequestBuilder() //
+            .action("parse") //
+            .formatXml() //
+            .param("text", MediaWiki.urlEncode(wikitext)) //
+            .param("title", "API") //
+            .buildGet();
   }
 
   /**
@@ -53,17 +54,13 @@ public class GetRendering extends MWAction {
     return isSelfEx;
   }
 
-  /**
-   * {@inheritDoc}
-   */
+  /** {@inheritDoc} */
   @Override
   public HttpAction getNextMessage() {
     return msg;
   }
 
-  /**
-   * {@inheritDoc}
-   */
+  /** {@inheritDoc} */
   @Override
   public String processAllReturningText(String s) {
     html = findElement("text", s).getText();
@@ -87,7 +84,6 @@ public class GetRendering extends MWAction {
       } else {
         found = findContent(xmlElement, name);
       }
-
     }
     if (found == null) {
       throw new NoSuchElementException();
@@ -107,14 +103,11 @@ public class GetRendering extends MWAction {
     }
   }
 
-  /**
-   * @return the
-   */
+  /** @return the */
   public String getHtml() {
     if (html.length() < 1) {
       update();
     }
     return html;
   }
-
 }

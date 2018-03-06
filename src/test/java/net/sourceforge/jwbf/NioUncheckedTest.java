@@ -18,11 +18,9 @@ import org.mockito.runners.MockitoJUnitRunner;
 @RunWith(MockitoJUnitRunner.class)
 public class NioUncheckedTest {
 
-  @Mock
-  private NioUnchecked.FilesDelegate files;
+  @Mock private NioUnchecked.FilesDelegate files;
 
-  @InjectMocks
-  private NioUnchecked testee;
+  @InjectMocks private NioUnchecked testee;
 
   @Test(expected = IllegalStateException.class)
   public void testcreateDirectory() throws IOException {
@@ -90,5 +88,4 @@ public class NioUncheckedTest {
     testee.getLastModifiedTime(path);
     fail();
   }
-
 }

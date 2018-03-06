@@ -4,6 +4,7 @@ import java.util.Deque;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Queues;
+
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 
 public class ContentProcessableBuilder {
@@ -36,5 +37,4 @@ public class ContentProcessableBuilder {
     this.actions = ImmutableList.copyOf(actions);
     return this;
   }
-
 }

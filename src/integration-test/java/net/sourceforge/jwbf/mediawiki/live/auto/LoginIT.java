@@ -5,12 +5,14 @@ import static org.junit.Assert.fail;
 
 import java.util.Collection;
 
+import org.junit.Test;
+import org.junit.runners.Parameterized.Parameters;
+
 import com.google.common.collect.ImmutableSet;
+
 import net.sourceforge.jwbf.core.actions.util.ActionException;
 import net.sourceforge.jwbf.mediawiki.BotFactory;
 import net.sourceforge.jwbf.mediawiki.MediaWiki.Version;
-import org.junit.Test;
-import org.junit.runners.Parameterized.Parameters;
 
 public class LoginIT extends ParamHelper {
 
@@ -23,9 +25,7 @@ public class LoginIT extends ParamHelper {
     return ParamHelper.prepare(Version.valuesStable());
   }
 
-  /**
-   * Test login on a Mediawiki.
-   */
+  /** Test login on a Mediawiki. */
   @Test
   public final void login() {
     bot.login(BotFactory.getWikiUser(version()), BotFactory.getWikiPass(version()));
@@ -44,5 +44,4 @@ public class LoginIT extends ParamHelper {
       assertTrue(ImmutableSet.of("Throttled", "No such User").contains(pe.getMessage()));
     }
   }
-
 }

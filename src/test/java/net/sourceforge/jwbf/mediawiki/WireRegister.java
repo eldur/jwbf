@@ -1,14 +1,16 @@
 package net.sourceforge.jwbf.mediawiki;
 
+import java.util.Map;
+
 import javax.annotation.CheckForNull;
 import javax.inject.Singleton;
 
-import java.util.Map;
-
-import com.google.common.collect.Maps;
-import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.google.common.collect.Maps;
+
+import net.sourceforge.jwbf.core.actions.util.HttpAction;
 
 @Singleton
 class WireRegister extends Thread {

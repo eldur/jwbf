@@ -6,25 +6,25 @@ import static org.mockito.Mockito.when;
 
 import java.util.Set;
 
-import com.google.common.collect.ImmutableSet;
-import net.sourceforge.jwbf.core.actions.util.PermissionException;
-import net.sourceforge.jwbf.core.contentRep.Userinfo;
-import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import com.google.common.collect.ImmutableSet;
+
+import net.sourceforge.jwbf.core.actions.util.PermissionException;
+import net.sourceforge.jwbf.core.contentRep.Userinfo;
+import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
+
 @RunWith(MockitoJUnitRunner.class)
 public class MovePageTest {
 
   public static final ImmutableSet<String> VALID_MOVE_PERMISSIONS =
       ImmutableSet.of("move", "move-subpages");
-  @Mock
-  private MediaWikiBot bot;
-  @Mock
-  private Userinfo userinfo;
+  @Mock private MediaWikiBot bot;
+  @Mock private Userinfo userinfo;
 
   private MovePage testee;
 
@@ -34,7 +34,6 @@ public class MovePageTest {
     Set<String> validPermissions = VALID_MOVE_PERMISSIONS;
     when(userinfo.getRights()).thenReturn(validPermissions);
     testee = new MovePage(bot, "old", "new", "why", true, false);
-
   }
 
   @Test
@@ -58,9 +57,11 @@ public class MovePageTest {
       fail();
     } catch (PermissionException e) {
       // THEN
-      assertEquals("The given user doesn't have the rights to move subpages. " +
-          "Add '$wgGroupPermissions['bot']['move-subpages'] = true;' to your MediaWikis " +
-          "LocalSettings.php might solve this problem.", e.getMessage());
+      assertEquals(
+          "The given user doesn't have the rights to move subpages. "
+              + "Add '$wgGroupPermissions['bot']['move-subpages'] = true;' to your MediaWikis "
+              + "LocalSettings.php might solve this problem.",
+          e.getMessage());
     }
   }
 
@@ -76,9 +77,11 @@ public class MovePageTest {
       fail();
     } catch (PermissionException e) {
       // THEN
-      assertEquals("The given user doesn't have the rights to move. " +
-          "Add '$wgGroupPermissions['bot']['move'] = true;' to your MediaWikis " +
-          "LocalSettings.php might solve this problem.", e.getMessage());
+      assertEquals(
+          "The given user doesn't have the rights to move. "
+              + "Add '$wgGroupPermissions['bot']['move'] = true;' to your MediaWikis "
+              + "LocalSettings.php might solve this problem.",
+          e.getMessage());
     }
   }
 }

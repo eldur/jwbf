@@ -6,9 +6,10 @@ import static org.mockito.Mockito.when;
 
 import java.util.Date;
 
-import net.sourceforge.jwbf.core.bots.WikiBot;
 import org.junit.Test;
 import org.mockito.Mockito;
+
+import net.sourceforge.jwbf.core.bots.WikiBot;
 
 public class ArticleTest {
 
@@ -74,7 +75,6 @@ public class ArticleTest {
     assertEquals(text, testee.getText());
     assertEquals(date, testee.getEditTimestamp());
     assertEquals(revId, testee.getRevisionId());
-
   }
 
   @Test
@@ -102,7 +102,5 @@ public class ArticleTest {
     assertEquals(date, testee.getEditTimestamp());
     assertEquals(revId, testee.getRevisionId());
     Mockito.verifyNoMoreInteractions(bot);
-
   }
-
 }

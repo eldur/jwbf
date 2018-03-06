@@ -1,14 +1,15 @@
 package net.sourceforge.jwbf.mapper;
 
+import java.util.List;
+
 import javax.annotation.CheckForNull;
 import javax.annotation.Nullable;
-
-import java.util.List;
 
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
+
 import net.sourceforge.jwbf.core.internal.Checked;
 
 public class XmlElement {
@@ -109,7 +110,6 @@ public class XmlElement {
       return toElements(element.get().getChildren(name));
     } else {
       return ImmutableList.of();
-
     }
   }
 

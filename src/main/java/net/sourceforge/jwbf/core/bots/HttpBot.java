@@ -26,10 +26,7 @@ import net.sourceforge.jwbf.core.actions.HttpActionClient;
 import net.sourceforge.jwbf.core.actions.HttpActionClient.Builder;
 import net.sourceforge.jwbf.core.internal.Checked;
 
-/**
- * @author Thomas Stock
- */
-
+/** @author Thomas Stock */
 public class HttpBot {
 
   private final HttpActionClient actionClient;
@@ -50,9 +47,7 @@ public class HttpBot {
     return HttpActionClient.builder();
   }
 
-  /**
-   * @return http raw content
-   */
+  /** @return http raw content */
   public synchronized String performAction(final ContentProcessable a) {
     return actionClient.performAction(a);
   }
@@ -72,5 +67,4 @@ public class HttpBot {
   public static String getPage(String url) {
     return getPage(HttpActionClient.of(url));
   }
-
 }

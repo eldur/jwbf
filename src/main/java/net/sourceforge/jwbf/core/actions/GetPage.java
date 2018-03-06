@@ -34,16 +34,12 @@ public class GetPage implements ContentProcessable {
   private boolean hasMore = true;
   private String text = "";
 
-  /**
-   * @param url like "/index.php?title=Special:Recentchanges&amp;feed=rss"
-   */
+  /** @param url like "/index.php?title=Special:Recentchanges&amp;feed=rss" */
   public GetPage(String url) {
     msg = RequestBuilder.of(url).buildGet();
   }
 
-  /**
-   * @return true if
-   */
+  /** @return true if */
   @Override
   public boolean hasMoreMessages() {
     final boolean b = hasMore;
@@ -61,7 +57,7 @@ public class GetPage implements ContentProcessable {
   }
 
   /**
-   * @param s  the returning text
+   * @param s the returning text
    * @param hm the on any problems with inner browser
    * @return the returning text
    * @see ContentProcessable#processReturningText(String, HttpAction)
@@ -72,19 +68,14 @@ public class GetPage implements ContentProcessable {
     return s;
   }
 
-  /**
-   * @return the requested text
-   */
+  /** @return the requested text */
   public String getText() {
     return text;
   }
 
-  /**
-   * {@inheritDoc}
-   */
+  /** {@inheritDoc} */
   @Override
   public boolean isSelfExecuter() {
     return false;
   }
-
 }

@@ -1,13 +1,24 @@
 package net.sourceforge.jwbf.mediawiki;
 
 import com.google.common.collect.ImmutableMap;
+
 import net.sourceforge.jwbf.core.internal.Checked;
 
 public enum ConfKey {
-  SITEINFO, INTERWIKI, SITENAME, MAINPAGE, //
-  ALL_PAGE_CONT_2, ALL_PAGE_CONT_1, ALL_PAGE_2, ALL_PAGE_1, ALL_PAGE_0, //
-  USERINFO_RIGHTS, USERINFO_GROUPS, //
-  BACKLINKS_PAGES, BACKLINKS_CONT_2, BACKLINKS_CONT_1, //
+  SITEINFO,
+  INTERWIKI,
+  SITENAME,
+  MAINPAGE, //
+  ALL_PAGE_CONT_2,
+  ALL_PAGE_CONT_1,
+  ALL_PAGE_2,
+  ALL_PAGE_1,
+  ALL_PAGE_0, //
+  USERINFO_RIGHTS,
+  USERINFO_GROUPS, //
+  BACKLINKS_PAGES,
+  BACKLINKS_CONT_2,
+  BACKLINKS_CONT_1, //
   LOGEVENTS_DELETE_PAGES;
 
   private static final ImmutableMap<ConfKey, String> KEY_MAP =

@@ -6,9 +6,10 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import org.junit.Test;
+
 import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
-import org.junit.Test;
 
 public class ParamTupleTest {
 
@@ -73,6 +74,5 @@ public class ParamTupleTest {
     ParamTuple a = new ParamTuple("a", "b");
 
     assertEquals("('a', 'b')", a.toString());
-
   }
 }

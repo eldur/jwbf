@@ -4,11 +4,13 @@ import static org.mockito.Mockito.mock;
 
 import java.util.Iterator;
 
+import org.junit.Test;
+
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
+
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
-import org.junit.Test;
 
 public class TitleQueryTest {
 
@@ -38,5 +40,4 @@ public class TitleQueryTest {
       }
     };
   }
-
 }

@@ -3,24 +3,25 @@ package net.sourceforge.jwbf.mediawiki.actions.queries;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import com.google.common.base.Optional;
-import com.google.common.collect.ImmutableList;
-import net.sourceforge.jwbf.core.actions.Get;
-import net.sourceforge.jwbf.mediawiki.MediaWiki;
-import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
-import net.sourceforge.jwbf.mediawiki.actions.util.RedirectFilter;
-import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import com.google.common.base.Optional;
+import com.google.common.collect.ImmutableList;
+
+import net.sourceforge.jwbf.core.actions.Get;
+import net.sourceforge.jwbf.mediawiki.MediaWiki;
+import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
+import net.sourceforge.jwbf.mediawiki.actions.util.RedirectFilter;
+import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
+
 @RunWith(MockitoJUnitRunner.class)
 public class AllPageTitlesTest {
 
-  @Mock
-  private MediaWikiBot bot;
+  @Mock private MediaWikiBot bot;
 
   private AllPageTitles testee;
 
@@ -58,8 +59,10 @@ public class AllPageTitlesTest {
     Get allPagesRequest = testee.generateRequest(from, prefix, rf, namespace);
 
     // THEN
-    assertEquals("/api.php?action=query&apfilterredir=nonredirects&aplimit=50" +
-        "&apprefix=Test&format=xml&list=allpages", allPagesRequest.getRequest());
+    assertEquals(
+        "/api.php?action=query&apfilterredir=nonredirects&aplimit=50"
+            + "&apprefix=Test&format=xml&list=allpages",
+        allPagesRequest.getRequest());
   }
 
   @Test
@@ -74,8 +77,10 @@ public class AllPageTitlesTest {
     Get allPagesRequest = testee.generateRequest(from, prefix, rf, namespace);
 
     // THEN
-    assertEquals("/api.php?action=query&apfilterredir=nonredirects&aplimit=50" +
-        "&apnamespace=14&format=xml&list=allpages", allPagesRequest.getRequest());
+    assertEquals(
+        "/api.php?action=query&apfilterredir=nonredirects&aplimit=50"
+            + "&apnamespace=14&format=xml&list=allpages",
+        allPagesRequest.getRequest());
   }
 
   @Test
@@ -137,5 +142,4 @@ public class AllPageTitlesTest {
     // THEN
     assertTrue(result.isEmpty());
   }
-
 }

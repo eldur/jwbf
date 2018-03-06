@@ -2,14 +2,16 @@ package net.sourceforge.jwbf.mediawiki.actions.queries;
 
 import static org.junit.Assert.fail;
 
+import org.junit.Test;
+
 import com.github.dreamhead.moco.RequestMatcher;
 import com.google.common.collect.ImmutableList;
+
 import net.sourceforge.jwbf.GAssert;
 import net.sourceforge.jwbf.mediawiki.ApiMatcherBuilder;
 import net.sourceforge.jwbf.mediawiki.ConfKey;
 import net.sourceforge.jwbf.mediawiki.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.MocoIntegTest;
-import org.junit.Test;
 
 public class AllPageTitlesIntegTest extends MocoIntegTest {
 
@@ -25,18 +27,20 @@ public class AllPageTitlesIntegTest extends MocoIntegTest {
         .param("format", "xml") //
         .param("list", "allpages") //
         .param("aplimit", "50") //
-        ;
+    ;
   }
 
   RequestMatcher allpages0 = newBaseMatcher().build();
 
-  RequestMatcher allpages1 = newBaseMatcher() //
-      .param("apfrom", confOf(ConfKey.ALL_PAGE_CONT_1)) //
-      .build();
+  RequestMatcher allpages1 =
+      newBaseMatcher() //
+          .param("apfrom", confOf(ConfKey.ALL_PAGE_CONT_1)) //
+          .build();
 
-  RequestMatcher allpages2 = newBaseMatcher() //
-      .param("apfrom", confOf(ConfKey.ALL_PAGE_CONT_2)) //
-      .build();
+  RequestMatcher allpages2 =
+      newBaseMatcher() //
+          .param("apfrom", confOf(ConfKey.ALL_PAGE_CONT_2)) //
+          .build();
 
   @Test
   public void test() {
@@ -52,10 +56,11 @@ public class AllPageTitlesIntegTest extends MocoIntegTest {
     ImmutableList<String> actual = new AllPageTitles(bot()).getCopyOf(3);
 
     // THEN
-    ImmutableList<String> expected = ImmutableList.of(//
-        confOf(ConfKey.ALL_PAGE_0), //
-        confOf(ConfKey.ALL_PAGE_1), //
-        confOf(ConfKey.ALL_PAGE_2));
+    ImmutableList<String> expected =
+        ImmutableList.of( //
+            confOf(ConfKey.ALL_PAGE_0), //
+            confOf(ConfKey.ALL_PAGE_1), //
+            confOf(ConfKey.ALL_PAGE_2));
     GAssert.assertEquals(expected, actual);
   }
 
@@ -72,5 +77,4 @@ public class AllPageTitlesIntegTest extends MocoIntegTest {
       GAssert.assertStartsWith("invalid status: HTTP", e.getMessage());
     }
   }
-
 }

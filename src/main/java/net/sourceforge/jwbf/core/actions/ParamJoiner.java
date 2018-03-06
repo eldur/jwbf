@@ -11,6 +11,7 @@ import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Ordering;
+
 import net.sourceforge.jwbf.core.internal.NonnullFunction;
 
 class ParamJoiner implements Supplier<String> {
@@ -29,7 +30,8 @@ class ParamJoiner implements Supplier<String> {
   private final ImmutableMultimap.Builder<String, Supplier<String>> params;
   private final ImmutableMultimap.Builder<String, Supplier<Object>> postParams;
 
-  ParamJoiner(String path, //
+  ParamJoiner(
+      String path, //
       ImmutableMultimap.Builder<String, Supplier<String>> params, //
       ImmutableMultimap.Builder<String, Supplier<Object>> postParams) {
     this.path = path;
@@ -45,9 +47,10 @@ class ParamJoiner implements Supplier<String> {
   public String get() {
     ImmutableMultimap<String, Supplier<String>> build = params.build();
     if (!build.isEmpty()) {
-      ImmutableList<String> values = FluentIterable.from(build.entries()) //
-          .transform(TO_KEY_VALUE_PAIR) //
-          .toSortedList(Ordering.natural()) //
+      ImmutableList<String> values =
+          FluentIterable.from(build.entries()) //
+              .transform(TO_KEY_VALUE_PAIR) //
+              .toSortedList(Ordering.natural()) //
           ;
       return path + "?" + Joiner.on("&").join(values);
     }

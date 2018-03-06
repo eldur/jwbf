@@ -13,7 +13,6 @@ public class SimpleFileTest {
     SimpleFile testeeA = new SimpleFile("Test");
     SimpleFile testeeB = new SimpleFile("Test");
     assertEquals(testeeA.hashCode(), testeeB.hashCode());
-
   }
 
   @Test

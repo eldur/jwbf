@@ -2,13 +2,15 @@ package net.sourceforge.jwbf.mediawiki.actions.queries;
 
 import java.util.Iterator;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.common.collect.ImmutableList;
+
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 import net.sourceforge.jwbf.mediawiki.contentRep.CategoryItem;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * A specialization of {@link CategoryMembers} with contains {@link CategoryItem}s.
@@ -21,8 +23,8 @@ public class CategoryMembersFull extends CategoryMembers {
 
   private boolean init = true;
 
-  public CategoryMembersFull(MediaWikiBot bot, String categoryName,
-      ImmutableList<Integer> namespaces) {
+  public CategoryMembersFull(
+      MediaWikiBot bot, String categoryName, ImmutableList<Integer> namespaces) {
     super(bot, categoryName, namespaces);
   }
 
@@ -40,9 +42,7 @@ public class CategoryMembersFull extends CategoryMembers {
     }
   }
 
-  /**
-   * {@inheritDoc}
-   */
+  /** {@inheritDoc} */
   @Override
   protected Iterator<CategoryItem> copy() {
     return new CategoryMembersFull(bot(), categoryName, namespace);

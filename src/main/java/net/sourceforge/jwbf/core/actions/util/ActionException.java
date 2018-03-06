@@ -20,9 +20,7 @@ package net.sourceforge.jwbf.core.actions.util;
 
 import net.sourceforge.jwbf.core.bots.util.JwbfException;
 
-/**
- * @author Thomas Stock
- */
+/** @author Thomas Stock */
 public class ActionException extends JwbfException {
 
   private static final long serialVersionUID = 1L;
@@ -34,5 +32,4 @@ public class ActionException extends JwbfException {
   public ActionException(Throwable t) {
     super(t);
   }
-
 }

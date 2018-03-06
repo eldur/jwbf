@@ -18,21 +18,23 @@
  */
 package net.sourceforge.jwbf.mediawiki.actions.queries;
 
+import java.util.Iterator;
+
 import javax.annotation.Nonnull;
 
-import java.util.Iterator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
+
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.core.internal.Checked;
 import net.sourceforge.jwbf.core.internal.NonnullFunction;
 import net.sourceforge.jwbf.mapper.XmlElement;
 import net.sourceforge.jwbf.mediawiki.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * A specialization of {@link CategoryMembers} with contains {@link String}s.
@@ -53,7 +55,7 @@ public class CategoryMembersSimple extends BaseQuery<String> {
 
   /**
    * @param categoryName like "Buildings" or "Chemical elements" without prefix "Category:" in
-   *                     {@link MediaWiki#NS_MAIN}
+   *     {@link MediaWiki#NS_MAIN}
    */
   public CategoryMembersSimple(MediaWikiBot bot, String categoryName) {
     this(bot, categoryName, MediaWiki.NS_MAIN);
@@ -61,14 +63,14 @@ public class CategoryMembersSimple extends BaseQuery<String> {
 
   /**
    * @param categoryName like "Buildings" or "Chemical elements" without prefix "Category:"
-   * @param namespaces   for search
+   * @param namespaces for search
    */
   public CategoryMembersSimple(MediaWikiBot bot, String categoryName, int... namespaces) {
     this(bot, new CategoryMembersFull(bot, categoryName, namespaces));
   }
 
-  private CategoryMembersSimple(MediaWikiBot bot, String categoryName,
-      ImmutableList<Integer> namespace) {
+  private CategoryMembersSimple(
+      MediaWikiBot bot, String categoryName, ImmutableList<Integer> namespace) {
     this(bot, new CategoryMembersFull(bot, categoryName, namespace));
   }
 
@@ -108,9 +110,7 @@ public class CategoryMembersSimple extends BaseQuery<String> {
       @Override
       public String applyNonnull(@Nonnull XmlElement input) {
         return input.getAttributeValueNonNull("title");
-
       }
     };
   }
-
 }

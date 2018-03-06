@@ -1,6 +1,10 @@
 package net.sourceforge.jwbf.mediawiki.actions.queries;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.common.base.Optional;
+
 import net.sourceforge.jwbf.core.Optionals;
 import net.sourceforge.jwbf.core.actions.Get;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
@@ -8,8 +12,6 @@ import net.sourceforge.jwbf.mapper.XmlConverter;
 import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Action to receive the title of a random page
@@ -32,19 +34,17 @@ public class RandomPageTitle extends MWAction {
   public RandomPageTitle(MediaWikiBot bot) {
     this.bot = bot;
 
-    msg = new ApiRequestBuilder() //
-        .action("query") //
-        .formatXml() //
-        .param("list", "random") //
-        .param("rnnamespace", "0") // TODO select namespace
-        .param("rnlimit", "1") // TODO select random count
-        .buildGet();
-
+    msg =
+        new ApiRequestBuilder() //
+            .action("query") //
+            .formatXml() //
+            .param("list", "random") //
+            .param("rnnamespace", "0") // TODO select namespace
+            .param("rnlimit", "1") // TODO select random count
+            .buildGet();
   }
 
-  /**
-   * @return Title of a random page
-   */
+  /** @return Title of a random page */
   public String getTitle() {
     if (!title.isPresent()) {
       // XXX feels bad
@@ -53,9 +53,7 @@ public class RandomPageTitle extends MWAction {
     return title.get();
   }
 
-  /**
-   * {@inheritDoc}
-   */
+  /** {@inheritDoc} */
   @Override
   public String processAllReturningText(String xml) {
     String xpathResult = XmlConverter.evaluateXpath(xml, "/api/query/random/page/@title");
@@ -64,9 +62,7 @@ public class RandomPageTitle extends MWAction {
     return "";
   }
 
-  /**
-   * {@inheritDoc}
-   */
+  /** {@inheritDoc} */
   @Override
   public HttpAction getNextMessage() {
     return msg;

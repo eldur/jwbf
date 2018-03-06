@@ -37,5 +37,4 @@ public class ProcessException extends JwbfException {
   public static ProcessException joinMsgs(ProcessException e, String msg) {
     return new ProcessException(msg + e.getMessage());
   }
-
 }

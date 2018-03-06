@@ -20,8 +20,12 @@ package net.sourceforge.jwbf.mediawiki.actions.editing;
 
 import java.util.Deque;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.common.base.Optional;
 import com.google.common.collect.Queues;
+
 import net.sourceforge.jwbf.core.actions.Post;
 import net.sourceforge.jwbf.core.actions.RequestBuilder;
 import net.sourceforge.jwbf.core.actions.util.ActionException;
@@ -35,12 +39,11 @@ import net.sourceforge.jwbf.mediawiki.actions.util.ApiException;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 import net.sourceforge.jwbf.mediawiki.contentRep.SimpleFile;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * * To allow your bot to upload media in your MediaWiki. Add at least the following line to your
  * MediaWiki's LocalSettings.php:<br>
+ *
  * <pre>
  * $wgEnableUploads = true;
  * </pre>
@@ -48,7 +51,7 @@ import org.slf4j.LoggerFactory;
  * @author Justus Bisser
  * @author Thomas Stock
  * @see <a href="http://www.mediawiki.org/wiki/Help:Configuration_settings#Uploads" >Upload
- * Config</a>
+ *     Config</a>
  */
 public class FileUpload extends MWAction {
 
@@ -70,24 +73,19 @@ public class FileUpload extends MWAction {
     }
     actionHandler = new ApiUpload(simpleFile, bot.getVersion());
     actions = actionHandler.getActions();
-
   }
 
   public FileUpload(MediaWikiBot bot, String filename) {
     this(new SimpleFile(filename), bot);
   }
 
-  /**
-   * {@inheritDoc}
-   */
+  /** {@inheritDoc} */
   @Override
   public HttpAction getNextMessage() {
     return actions.pop();
   }
 
-  /**
-   * {@inheritDoc}
-   */
+  /** {@inheritDoc} */
   @Override
   public boolean hasMoreMessages() {
     return !actions.isEmpty();
@@ -120,20 +118,23 @@ public class FileUpload extends MWAction {
     public String handleResponse(String xml, HttpAction hm) {
       log.debug("{}", xml);
       XmlElement doc = XmlConverter.getRootElementWithError(xml);
-      Optional<ApiException> exceptionOptional = doc.getErrorElement() //
-          .transform(XmlConverter.toApiException());
+      Optional<ApiException> exceptionOptional =
+          doc.getErrorElement() //
+              .transform(XmlConverter.toApiException());
       if (exceptionOptional.isPresent()) {
         throw exceptionOptional.get();
       } else {
         if (uploadTokenAction != null) {
           uploadTokenAction.processReturningText(xml, hm);
-          RequestBuilder requestBuilder = new ApiRequestBuilder() //
-              .action("upload") //
-              .formatXml() //
-              .param("filename", MediaWiki.urlEncode(simpleFile.getTitle())) //
-              .postParam("text", simpleFile.getText()).postParam(uploadTokenAction.get().token()) //
-              .param("ignorewarnings", true) //
-              .postParam("file", simpleFile.getFile());
+          RequestBuilder requestBuilder =
+              new ApiRequestBuilder() //
+                  .action("upload") //
+                  .formatXml() //
+                  .param("filename", MediaWiki.urlEncode(simpleFile.getTitle())) //
+                  .postParam("text", simpleFile.getText())
+                  .postParam(uploadTokenAction.get().token()) //
+                  .param("ignorewarnings", true) //
+                  .postParam("file", simpleFile.getFile());
           Post upload = requestBuilder.buildPost();
           actions.add(upload);
           uploadTokenAction = null; // XXX
@@ -150,5 +151,4 @@ public class FileUpload extends MWAction {
 
     String handleResponse(String xml, HttpAction hm);
   }
-
 }

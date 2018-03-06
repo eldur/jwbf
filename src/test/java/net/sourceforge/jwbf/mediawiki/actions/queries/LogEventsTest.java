@@ -3,17 +3,17 @@ package net.sourceforge.jwbf.mediawiki.actions.queries;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
-import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
+
 @RunWith(MockitoJUnitRunner.class)
 public class LogEventsTest {
 
-  @Mock
-  MediaWikiBot bot;
+  @Mock MediaWikiBot bot;
 
   @Test
   public void testInit() {

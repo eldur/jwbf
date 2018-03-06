@@ -4,15 +4,16 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
+import org.junit.Assert;
+import org.junit.internal.AssumptionViolatedException;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
+
 import net.sourceforge.jwbf.mediawiki.BotFactory;
 import net.sourceforge.jwbf.mediawiki.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.VersionTestClassVerifier;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 import net.sourceforge.jwbf.mediawiki.live.AbstractMediaWikiBotIT;
-import org.junit.Assert;
-import org.junit.internal.AssumptionViolatedException;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
 
 @RunWith(Parameterized.class)
 public abstract class ParamHelper extends AbstractMediaWikiBotIT {

@@ -2,9 +2,7 @@ package net.sourceforge.jwbf.mediawiki.actions.util;
 
 import net.sourceforge.jwbf.core.actions.util.ProcessException;
 
-/**
- * @author Thomas Stock
- */
+/** @author Thomas Stock */
 public class ApiException extends ProcessException {
 
   private static final long serialVersionUID = -959971173922381579L;

@@ -20,11 +20,15 @@ package net.sourceforge.jwbf.mediawiki.actions.editing;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
+
 import net.sourceforge.jwbf.core.actions.Get;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
@@ -34,8 +38,6 @@ import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
 import net.sourceforge.jwbf.mediawiki.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Reads the content of a given article.
@@ -64,9 +66,7 @@ public class GetRevision extends MWAction {
 
   private final Get msg;
 
-  /**
-   * TODO follow redirects. TODO change constructor field ordering; bot
-   */
+  /** TODO follow redirects. TODO change constructor field ordering; bot */
   public GetRevision(Version v, String articlename, int properties) {
     this(ImmutableList.of(articlename), properties);
   }
@@ -75,19 +75,18 @@ public class GetRevision extends MWAction {
     this.properties = properties;
     this.names = names;
     // TODO continue=-||
-    msg = new ApiRequestBuilder() //
-        .action("query") //
-        .formatXml() //
-        .param("prop", "revisions") //
-        .param("titles", MediaWiki.urlEncode(MediaWiki.pipeJoined(names))) //
-        .param("rvprop", getDataProperties(properties) + getReversion(properties)) //
-        .param("rvlimit", "1") //
-        .buildGet();
+    msg =
+        new ApiRequestBuilder() //
+            .action("query") //
+            .formatXml() //
+            .param("prop", "revisions") //
+            .param("titles", MediaWiki.urlEncode(MediaWiki.pipeJoined(names))) //
+            .param("rvprop", getDataProperties(properties) + getReversion(properties)) //
+            .param("rvlimit", "1") //
+            .buildGet();
   }
 
-  /**
-   * {@inheritDoc}
-   */
+  /** {@inheritDoc} */
   @Override
   public String processReturningText(final String s, HttpAction ha) {
     if (msg.getRequest().equals(ha.getRequest())) {
@@ -186,12 +185,9 @@ public class GetRevision extends MWAction {
     return ImmutableList.copyOf(articles);
   }
 
-  /**
-   * {@inheritDoc}
-   */
+  /** {@inheritDoc} */
   @Override
   public HttpAction getNextMessage() {
     return msg;
   }
-
 }

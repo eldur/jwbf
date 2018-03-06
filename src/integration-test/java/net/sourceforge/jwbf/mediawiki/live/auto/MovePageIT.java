@@ -7,12 +7,6 @@ import static org.junit.Assert.assertTrue;
 import java.util.Collection;
 import java.util.Set;
 
-import com.google.common.annotations.VisibleForTesting;
-import net.sourceforge.jwbf.TestHelper;
-import net.sourceforge.jwbf.core.contentRep.Article;
-import net.sourceforge.jwbf.mediawiki.MediaWiki.Version;
-import net.sourceforge.jwbf.mediawiki.VersionTestClassVerifier;
-import net.sourceforge.jwbf.mediawiki.actions.editing.MovePage;
 import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Rule;
@@ -20,15 +14,21 @@ import org.junit.Test;
 import org.junit.rules.Verifier;
 import org.junit.runners.Parameterized.Parameters;
 
+import com.google.common.annotations.VisibleForTesting;
+
+import net.sourceforge.jwbf.TestHelper;
+import net.sourceforge.jwbf.core.contentRep.Article;
+import net.sourceforge.jwbf.mediawiki.MediaWiki.Version;
+import net.sourceforge.jwbf.mediawiki.VersionTestClassVerifier;
+import net.sourceforge.jwbf.mediawiki.actions.editing.MovePage;
+
 public class MovePageIT extends ParamHelper {
 
-  @ClassRule
-  @VisibleForTesting
+  @ClassRule @VisibleForTesting
   public static VersionTestClassVerifier classVerifier =
       new VersionTestClassVerifier(MovePage.class);
 
-  @Rule
-  public Verifier successRegister = classVerifier.getSuccessRegister(this);
+  @Rule public Verifier successRegister = classVerifier.getSuccessRegister(this);
 
   @Parameters(name = "{0}")
   public static Collection<?> stableWikis() {

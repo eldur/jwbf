@@ -7,6 +7,7 @@ import com.google.common.base.Charsets;
 import com.google.common.base.Optional;
 import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
+
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 
 public class Get extends HttpBase implements HttpAction {
@@ -15,7 +16,7 @@ public class Get extends HttpBase implements HttpAction {
   private final Charset charset;
 
   /**
-   * @param req     like index.html?parm=value
+   * @param req like index.html?parm=value
    * @param charset like utf-8
    */
   Get(String req, String charset) {
@@ -32,9 +33,7 @@ public class Get extends HttpBase implements HttpAction {
     this.charset = charset;
   }
 
-  /**
-   * Use utf-8 as default charset.
-   */
+  /** Use utf-8 as default charset. */
   Get(String url) {
     this(Suppliers.ofInstance(url), Charsets.UTF_8, Optional.<ParamJoiner>absent());
   }
@@ -43,17 +42,13 @@ public class Get extends HttpBase implements HttpAction {
     this(joiner, Charsets.UTF_8, Optional.of(joiner));
   }
 
-  /**
-   * {@inheritDoc}
-   */
+  /** {@inheritDoc} */
   @Override
   public String getRequest() {
     return getRequestAndFixAllSuppliers();
   }
 
-  /**
-   * {@inheritDoc}
-   */
+  /** {@inheritDoc} */
   @Override
   public String getCharset() {
     return charset.displayName();
@@ -69,9 +64,7 @@ public class Get extends HttpBase implements HttpAction {
     return Objects.hash(getRequest(), getCharset());
   }
 
-  /**
-   * if you look at the content, you can't change it anymore.
-   */
+  /** if you look at the content, you can't change it anymore. */
   private String getRequestAndFixAllSuppliers() {
     return req.get();
   }
@@ -84,12 +77,13 @@ public class Get extends HttpBase implements HttpAction {
       return true;
     } else if (obj instanceof Get) {
       Get that = (Get) obj;
-      return Objects.equals(this.getRequestAndFixAllSuppliers(), //
-          that.getRequestAndFixAllSuppliers()) && //
+      return Objects.equals(
+              this.getRequestAndFixAllSuppliers(), //
+              that.getRequestAndFixAllSuppliers())
+          && //
           Objects.equals(this.getCharset(), that.getCharset());
     } else {
       return false;
     }
   }
-
 }

@@ -5,8 +5,14 @@ import static net.sourceforge.jwbf.TestHelper.getRandom;
 import java.util.Collection;
 import java.util.List;
 
+import org.junit.Test;
+import org.junit.runners.Parameterized.Parameters;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
+
 import net.sourceforge.jwbf.GAssert;
 import net.sourceforge.jwbf.core.contentRep.Article;
 import net.sourceforge.jwbf.mediawiki.BotFactory;
@@ -15,14 +21,8 @@ import net.sourceforge.jwbf.mediawiki.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 import net.sourceforge.jwbf.mediawiki.live.auto.ParamHelper;
-import org.junit.Test;
-import org.junit.runners.Parameterized.Parameters;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-/**
- * @author Thomas Stock
- */
+/** @author Thomas Stock */
 public class TemplateUserTitlesIT extends ParamHelper {
 
   private static final Logger log = LoggerFactory.getLogger(TemplateUserTitlesIT.class);
@@ -74,6 +74,5 @@ public class TemplateUserTitlesIT extends ParamHelper {
       a.setText(getRandom(1) + " {{" + TESTPATTERNNAME + "}}");
       a.save();
     }
-
   }
 }

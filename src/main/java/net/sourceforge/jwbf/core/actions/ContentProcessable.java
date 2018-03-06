@@ -20,19 +20,13 @@ package net.sourceforge.jwbf.core.actions;
 
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 
-/**
- * @author Thomas Stock
- */
+/** @author Thomas Stock */
 public interface ContentProcessable extends ReturningTextProcessor {
 
-  /**
-   * @return the of messages in this action
-   */
+  /** @return the of messages in this action */
   HttpAction getNextMessage();
 
-  /**
-   * @return true if
-   */
+  /** @return true if */
   boolean hasMoreMessages();
 
   /**
@@ -43,5 +37,4 @@ public interface ContentProcessable extends ReturningTextProcessor {
    */
   @Deprecated
   boolean isSelfExecuter();
-
 }

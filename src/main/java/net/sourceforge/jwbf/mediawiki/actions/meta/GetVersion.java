@@ -21,8 +21,12 @@ package net.sourceforge.jwbf.mediawiki.actions.meta;
 
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.common.base.Joiner;
 import com.google.common.collect.Sets;
+
 import net.sourceforge.jwbf.JWBF;
 import net.sourceforge.jwbf.core.actions.Get;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
@@ -31,8 +35,6 @@ import net.sourceforge.jwbf.mapper.XmlElement;
 import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
 import net.sourceforge.jwbf.mediawiki.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Basic action to receive {@link Version}.
@@ -57,15 +59,14 @@ public class GetVersion extends MWAction {
     GENERATOR_EXT.add("wmf");
   }
 
-  /**
-   * Create the request.
-   */
+  /** Create the request. */
   public GetVersion() {
-    msg = new ApiRequestBuilder() //
-        .action("query") //
-        .formatXml() //
-        .param("meta", "siteinfo") //
-        .buildGet();
+    msg =
+        new ApiRequestBuilder() //
+            .action("query") //
+            .formatXml() //
+            .param("meta", "siteinfo") //
+            .buildGet();
   }
 
   private void parse(final String xml) {
@@ -74,32 +75,24 @@ public class GetVersion extends MWAction {
     findContent(rootElement);
   }
 
-  /**
-   * {@inheritDoc}
-   */
+  /** {@inheritDoc} */
   @Override
   public final String processAllReturningText(final String s) {
     parse(s);
     return "";
   }
 
-  /**
-   * @return the, like "Wikipedia"
-   */
+  /** @return the, like "Wikipedia" */
   public String getSitename() {
     return sitename;
   }
 
-  /**
-   * @return the, like "http://de.wikipedia.org/wiki/Wikipedia:Hauptseite"
-   */
+  /** @return the, like "http://de.wikipedia.org/wiki/Wikipedia:Hauptseite" */
   public String getBase() {
     return base;
   }
 
-  /**
-   * @return the, like "first-letter"
-   */
+  /** @return the, like "first-letter" */
   public String getCase() {
     return theCase;
   }
@@ -115,28 +108,28 @@ public class GetVersion extends MWAction {
       if (getGenerator().contains(version.getNumber())) {
         return version;
       }
-
     }
     if (log.isDebugEnabled()) {
-      log.debug("\nVersion is UNKNOWN for JWBF (" + JWBF.getVersion(getClass()) + ") : \n\t" +
-          getGenerator() + "\n\t" +
-          "supported versions: " + Joiner.on(" ").join(Version.values()) + "\n\t" +
-          "\n\tUsing settings for actual Wikipedia development version");
+      log.debug(
+          "\nVersion is UNKNOWN for JWBF ("
+              + JWBF.getVersion(getClass())
+              + ") : \n\t"
+              + getGenerator()
+              + "\n\t"
+              + "supported versions: "
+              + Joiner.on(" ").join(Version.values())
+              + "\n\t"
+              + "\n\tUsing settings for actual Wikipedia development version");
     }
     return Version.UNKNOWN;
-
   }
 
-  /**
-   * @return the MediaWiki Generator, like "MediaWiki 1.16alpha"
-   */
+  /** @return the MediaWiki Generator, like "MediaWiki 1.16alpha" */
   public String getGenerator() {
     return generator;
   }
 
-  /**
-   * @return the, like "Main Page"
-   */
+  /** @return the, like "Main Page" */
   public String getMainpage() {
     return mainpage;
   }
@@ -158,9 +151,7 @@ public class GetVersion extends MWAction {
     }
   }
 
-  /**
-   * {@inheritDoc}
-   */
+  /** {@inheritDoc} */
   @Override
   public HttpAction getNextMessage() {
     return msg;

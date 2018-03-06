@@ -16,20 +16,17 @@
  * Contributors:
  *
  */
-/**
- *
- */
+/** */
 package net.sourceforge.jwbf.core.bots.util;
 
 import java.io.PrintStream;
 import java.io.PrintWriter;
 
 import com.google.common.annotations.VisibleForTesting;
+
 import net.sourceforge.jwbf.JWBF;
 
-/**
- * @author Thomas Stock
- */
+/** @author Thomas Stock */
 public class JwbfException extends RuntimeException {
 
   private static final long serialVersionUID = -2456904376052276104L;
@@ -70,22 +67,17 @@ public class JwbfException extends RuntimeException {
     return "( " + JWBF.getPartId(clazz) + "-" + JWBF.getVersion(clazz) + " )";
   }
 
-  /**
-   * {@inheritDoc}
-   */
+  /** {@inheritDoc} */
   @Override
   public void printStackTrace(PrintWriter arg0) {
     arg0.println(getModulInfo());
     super.printStackTrace(arg0);
   }
 
-  /**
-   * {@inheritDoc}
-   */
+  /** {@inheritDoc} */
   @Override
   public void printStackTrace(PrintStream s) {
     s.println(getModulInfo());
     super.printStackTrace(s);
   }
-
 }

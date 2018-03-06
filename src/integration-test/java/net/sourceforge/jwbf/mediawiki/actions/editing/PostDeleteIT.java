@@ -5,15 +5,17 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.Collection;
 
+import org.junit.Test;
+import org.junit.runners.Parameterized.Parameters;
+
 import com.google.common.collect.ImmutableList;
+
 import net.sourceforge.jwbf.TestHelper;
 import net.sourceforge.jwbf.core.contentRep.ContentAccessable;
 import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
 import net.sourceforge.jwbf.mediawiki.BotFactory;
 import net.sourceforge.jwbf.mediawiki.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.live.auto.ParamHelper;
-import org.junit.Test;
-import org.junit.runners.Parameterized.Parameters;
 
 public class PostDeleteIT extends ParamHelper {
 
@@ -47,7 +49,8 @@ public class PostDeleteIT extends ParamHelper {
   private void checkAbsent(ImmutableList<String> titles) {
     for (String title : titles) {
       ContentAccessable ca = bot.getArticle(title);
-      assertTrue("textlength of " + title + " is greater then 0 (" + ca.getText().length() + ")",
+      assertTrue(
+          "textlength of " + title + " is greater then 0 (" + ca.getText().length() + ")",
           ca.getText().length() == 0);
     }
   }
@@ -62,5 +65,4 @@ public class PostDeleteIT extends ParamHelper {
     // THEN
     checkAbsent(titles);
   }
-
 }

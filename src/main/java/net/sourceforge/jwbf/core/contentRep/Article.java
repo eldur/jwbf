@@ -3,19 +3,17 @@ package net.sourceforge.jwbf.core.contentRep;
 import java.util.Date;
 
 import com.google.common.annotations.VisibleForTesting;
+
 import net.sourceforge.jwbf.core.bots.WikiBot;
 
-/**
- * @author Thomas Stock
- */
+/** @author Thomas Stock */
 public class Article implements ArticleMeta, ContentSetable {
 
   private final WikiBot bot;
 
   private final SimpleArticle sa;
 
-  @VisibleForTesting
-  int reload = 0;
+  @VisibleForTesting int reload = 0;
   private static final int TEXT_RELOAD = 1;
   private static final int REVISION_ID_RELOAD = 1 << 1;
   private static final int MINOR_EDIT_RELOAD = 1 << 2;
@@ -36,9 +34,7 @@ public class Article implements ArticleMeta, ContentSetable {
     reload = (reload | reloadVar) ^ reloadVar;
   }
 
-  /**
-   * {@inheritDoc}
-   */
+  /** {@inheritDoc} */
   @Override
   public String getText() {
     if (isReload(TEXT_RELOAD)) {
@@ -48,18 +44,14 @@ public class Article implements ArticleMeta, ContentSetable {
     return sa.getText();
   }
 
-  /**
-   * {@inheritDoc}
-   */
+  /** {@inheritDoc} */
   @Override
   public void setText(String text) {
     setReload(TEXT_RELOAD);
     sa.setText(text);
   }
 
-  /**
-   * {@inheritDoc}
-   */
+  /** {@inheritDoc} */
   @Override
   public String getRevisionId() {
     if (isReload(REVISION_ID_RELOAD)) {
@@ -114,7 +106,7 @@ public class Article implements ArticleMeta, ContentSetable {
   }
 
   /**
-   * @param bot   the
+   * @param bot the
    * @param title of
    */
   public Article(WikiBot bot, String title) {
@@ -124,7 +116,7 @@ public class Article implements ArticleMeta, ContentSetable {
 
   /**
    * @param bot the
-   * @param sa  the
+   * @param sa the
    */
   public Article(WikiBot bot, SimpleArticle sa) {
     this.sa = sa;
@@ -132,8 +124,8 @@ public class Article implements ArticleMeta, ContentSetable {
   }
 
   /**
-   * @deprecated use {@link #Article(net.sourceforge.jwbf.core.bots.WikiBot, String)}
-   * and {@link #setText(String)} instead.
+   * @deprecated use {@link #Article(net.sourceforge.jwbf.core.bots.WikiBot, String)} and {@link
+   *     #setText(String)} instead.
    */
   @Deprecated
   public Article(WikiBot bot, String text, String title) {
@@ -141,34 +133,26 @@ public class Article implements ArticleMeta, ContentSetable {
     this.bot = bot;
   }
 
-  /**
-   * Save this article.
-   */
+  /** Save this article. */
   public void save() {
     bot.writeContent(sa);
     unSetReload(REVISION_ID_RELOAD);
     setReload(TEXT_RELOAD);
   }
 
-  /**
-   * Saves with a given comment.
-   */
+  /** Saves with a given comment. */
   public void save(String summary) {
     setEditSummary(summary);
     save();
   }
 
-  /**
-   * clear content.
-   */
+  /** clear content. */
   public void clear() {
     setText("");
     save();
   }
 
-  /**
-   * Deletes this article, if the user has the required rights.
-   */
+  /** Deletes this article, if the user has the required rights. */
   public void delete() {
     bot.delete(sa.getTitle());
   }
@@ -191,18 +175,14 @@ public class Article implements ArticleMeta, ContentSetable {
     return bot;
   }
 
-  /**
-   * {@inheritDoc}
-   */
+  /** {@inheritDoc} */
   @Override
   public String getTitle() {
     // TODO is here a reload mechanism required ?
     return sa.getTitle();
   }
 
-  /**
-   * @return the edittimestamp in UTC
-   */
+  /** @return the edittimestamp in UTC */
   @Override
   public Date getEditTimestamp() {
     if (isReload(EDIT_DATE_RELOAD)) {
@@ -223,33 +203,25 @@ public class Article implements ArticleMeta, ContentSetable {
     return sa.isRedirect();
   }
 
-  /**
-   * {@inheritDoc}
-   */
+  /** {@inheritDoc} */
   @Override
   public void addText(String text) {
     setText(getText() + text);
   }
 
-  /**
-   * {@inheritDoc}
-   */
+  /** {@inheritDoc} */
   @Override
   public void addTextnl(String text) {
     setText(getText() + "\n" + text);
   }
 
-  /**
-   * {@inheritDoc}
-   */
+  /** {@inheritDoc} */
   @Override
   public void setMinorEdit(boolean minor) {
     sa.setMinorEdit(minor);
   }
 
-  /**
-   * {@inheritDoc}
-   */
+  /** {@inheritDoc} */
   @Override
   public void setTitle(String title) {
     sa.setTitle(title);

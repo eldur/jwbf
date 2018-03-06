@@ -24,5 +24,4 @@ public class XmlElementTest {
 
     assertFalse(xmlElement.hasAttribute(""));
   }
-
 }

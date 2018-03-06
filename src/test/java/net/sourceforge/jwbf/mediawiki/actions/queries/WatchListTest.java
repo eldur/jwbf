@@ -20,5 +20,4 @@ public class WatchListTest {
     // THEN
     assertEquals("2008-03-04T16:01:48Z", formattedDate);
   }
-
 }

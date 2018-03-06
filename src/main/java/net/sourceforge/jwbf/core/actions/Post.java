@@ -1,11 +1,11 @@
 package net.sourceforge.jwbf.core.actions;
 
+import java.nio.charset.Charset;
+import java.util.Objects;
+
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nonnull;
 import javax.annotation.meta.When;
-
-import java.nio.charset.Charset;
-import java.util.Objects;
 
 import com.google.common.base.Charsets;
 import com.google.common.base.Function;
@@ -14,6 +14,7 @@ import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimaps;
+
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.core.internal.NonnullFunction;
 
@@ -32,23 +33,22 @@ public class Post extends HttpBase implements HttpAction {
   private final ImmutableMultimap.Builder<String, Supplier<Object>> params;
   private final Charset charset;
 
-  /**
-   * @deprecated use net.sourceforge.jwbf.core.actions.RequestBuilder
-   */
+  /** @deprecated use net.sourceforge.jwbf.core.actions.RequestBuilder */
   @Deprecated
   Post(String req, String charset) {
     this(Suppliers.ofInstance(req), charset);
   }
 
-  /**
-   * @deprecated use net.sourceforge.jwbf.core.actions.RequestBuilder
-   */
+  /** @deprecated use net.sourceforge.jwbf.core.actions.RequestBuilder */
   @Deprecated
   Post(Supplier<String> req, String charset) {
     this(req, Charset.forName(charset), Optional.<ParamJoiner>absent());
   }
 
-  private Post(Supplier<String> req, Charset charset, Optional<ParamJoiner> joiner,
+  private Post(
+      Supplier<String> req,
+      Charset charset,
+      Optional<ParamJoiner> joiner,
       ImmutableMultimap.Builder<String, Supplier<Object>> params) {
     super(joiner);
     this.req = req;
@@ -71,9 +71,7 @@ public class Post extends HttpBase implements HttpAction {
     this(url, charset, Optional.<ParamJoiner>absent());
   }
 
-  /**
-   * Use utf-8 as default charset
-   */
+  /** Use utf-8 as default charset */
   Post(String url) {
     this(Suppliers.ofInstance(url));
   }
@@ -82,9 +80,7 @@ public class Post extends HttpBase implements HttpAction {
     this(url, Charsets.UTF_8);
   }
 
-  /**
-   * @deprecated use {@link #postParam(String, Object)}
-   */
+  /** @deprecated use {@link #postParam(String, Object)} */
   @Deprecated
   public void addParam(String key, Object value) {
     postParam(key, value);
@@ -92,7 +88,7 @@ public class Post extends HttpBase implements HttpAction {
 
   /**
    * @deprecated use request builder instead, else it is difficult to apply request mutation for
-   * server based throttling
+   *     server based throttling
    */
   @Deprecated
   @CheckReturnValue(when = When.NEVER)
@@ -133,8 +129,10 @@ public class Post extends HttpBase implements HttpAction {
       return true;
     } else if (obj instanceof Post) {
       Post that = (Post) obj;
-      return Objects.equals(this.getRequest(), that.getRequest()) && //
-          Objects.equals(this.getCharset(), that.getCharset()) && //
+      return Objects.equals(this.getRequest(), that.getRequest())
+          && //
+          Objects.equals(this.getCharset(), that.getCharset())
+          && //
           Objects.equals(this.getParams(), that.getParams());
     } else {
       return false;

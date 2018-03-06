@@ -21,9 +21,13 @@ package net.sourceforge.jwbf.mediawiki.actions.queries;
 
 import java.util.Iterator;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.common.base.Optional;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
+
 import net.sourceforge.jwbf.core.actions.Get;
 import net.sourceforge.jwbf.core.actions.RequestBuilder;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
@@ -34,8 +38,6 @@ import net.sourceforge.jwbf.mediawiki.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.actions.util.RedirectFilter;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Action class using the MediaWiki-api's "list=allpages".
@@ -47,15 +49,12 @@ public class AllPageTitles extends BaseQuery<String> {
 
   private static final Logger log = LoggerFactory.getLogger(AllPageTitles.class);
 
-  /**
-   * Constant value for the aplimit-parameter. *
-   */
+  /** Constant value for the aplimit-parameter. * */
   private static final int LIMIT = 50;
 
-  /**
-   * Information given in the constructor, necessary for creating next action.
-   */
+  /** Information given in the constructor, necessary for creating next action. */
   private final String prefix;
+
   private final int[] namespaces;
 
   private final String from;
@@ -67,15 +66,14 @@ public class AllPageTitles extends BaseQuery<String> {
    * msgs. When it is answered, the method processAllReturningText will be called (from outside this
    * class).
    *
-   * @param from       page title to start from, may be null
-   * @param prefix     restricts search to titles that begin with this value, may be null
-   * @param rf         include redirects in the list
+   * @param from page title to start from, may be null
+   * @param prefix restricts search to titles that begin with this value, may be null
+   * @param rf include redirects in the list
    * @param namespaces the namespace(s) that will be searched for links, as a string of numbers
-   *                   separated by '|'; if null, this parameter is omitted TODO are multible
-   *                   namespaces allowed?
+   *     separated by '|'; if null, this parameter is omitted TODO are multible namespaces allowed?
    */
-  public AllPageTitles(MediaWikiBot bot, String from, String prefix, RedirectFilter rf,
-      int... namespaces) {
+  public AllPageTitles(
+      MediaWikiBot bot, String from, String prefix, RedirectFilter rf, int... namespaces) {
     super(bot);
 
     this.rf = rf;
@@ -91,22 +89,23 @@ public class AllPageTitles extends BaseQuery<String> {
   /**
    * Generates the next MediaWiki-request (GetMethod) and adds it to msgs.
    *
-   * @param from      page title to start from, may be null
-   * @param prefix    restricts search to titles that begin with this value, may be null
-   * @param rf        include redirects in the list
+   * @param from page title to start from, may be null
+   * @param prefix restricts search to titles that begin with this value, may be null
+   * @param rf include redirects in the list
    * @param namespace the namespace(s) that will be searched for links, as a string of numbers
-   *                  separated by '|'; if null, this parameter is omitted
+   *     separated by '|'; if null, this parameter is omitted
    * @return a
    */
-  protected Get generateRequest(Optional<String> from, String prefix, RedirectFilter rf,
-      String namespace) {
-    RequestBuilder requestBuilder = new ApiRequestBuilder() //
-        .action("query") //
-        .paramNewContinue(bot().getVersion()) //
-        .formatXml() //
-        .param("list", "allpages") //
-        .param("apfilterredir", findRedirectFilterValue(rf)) //
-        .param("aplimit", LIMIT) //
+  protected Get generateRequest(
+      Optional<String> from, String prefix, RedirectFilter rf, String namespace) {
+    RequestBuilder requestBuilder =
+        new ApiRequestBuilder() //
+            .action("query") //
+            .paramNewContinue(bot().getVersion()) //
+            .formatXml() //
+            .param("list", "allpages") //
+            .param("apfilterredir", findRedirectFilterValue(rf)) //
+            .param("aplimit", LIMIT) //
         ;
 
     if (from.isPresent()) {
@@ -163,21 +162,15 @@ public class AllPageTitles extends BaseQuery<String> {
     return parseXmlHasMore(xml, "allpages", "apfrom", "apcontinue");
   }
 
-  /**
-   * {@inheritDoc}
-   */
+  /** {@inheritDoc} */
   @Override
   protected HttpAction prepareNextRequest() {
     return generateRequest(nextPageInfoOpt(), prefix, rf, MWAction.createNsString(namespaces));
-
   }
 
-  /**
-   * {@inheritDoc}
-   */
+  /** {@inheritDoc} */
   @Override
   protected Iterator<String> copy() {
     return new AllPageTitles(bot(), from, prefix, rf, namespaces);
   }
-
 }

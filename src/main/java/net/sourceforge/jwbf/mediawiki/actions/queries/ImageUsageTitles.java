@@ -21,8 +21,12 @@ package net.sourceforge.jwbf.mediawiki.actions.queries;
 
 import java.util.Iterator;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
+
 import net.sourceforge.jwbf.core.actions.RequestBuilder;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.mapper.XmlConverter;
@@ -31,8 +35,6 @@ import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
 import net.sourceforge.jwbf.mediawiki.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * action class using the MediaWiki-api's "list=imagelinks" and later imageUsage.
@@ -56,8 +58,8 @@ public class ImageUsageTitles extends BaseQuery<String> {
     this(bot, 50, imageName, MWAction.nullSafeCopyOf(namespaces));
   }
 
-  ImageUsageTitles(MediaWikiBot bot, int limit, String imageName,
-      ImmutableList<Integer> namespaces) {
+  ImageUsageTitles(
+      MediaWikiBot bot, int limit, String imageName, ImmutableList<Integer> namespaces) {
     super(bot);
     this.bot = bot;
     this.limit = limit;
@@ -99,29 +101,26 @@ public class ImageUsageTitles extends BaseQuery<String> {
 
   @Override
   protected HttpAction prepareNextRequest() {
-    RequestBuilder requestBuilder = new ApiRequestBuilder() //
-        .action("query") //
-        .paramNewContinue(bot.getVersion()) //
-        .formatXml() //
-        .param("iutitle", MediaWiki.urlEncode(imageName)) //
-        .param("list", "imageusage") //
-        .param("iulimit", limit) //
-        .param("iunamespace", MediaWiki.urlEncodedNamespace(namespaces));
+    RequestBuilder requestBuilder =
+        new ApiRequestBuilder() //
+            .action("query") //
+            .paramNewContinue(bot.getVersion()) //
+            .formatXml() //
+            .param("iutitle", MediaWiki.urlEncode(imageName)) //
+            .param("list", "imageusage") //
+            .param("iulimit", limit) //
+            .param("iunamespace", MediaWiki.urlEncodedNamespace(namespaces));
 
     Optional<String> ilcontinue = nextPageInfoOpt();
     if (ilcontinue.isPresent()) {
       requestBuilder.param("iucontinue", MediaWiki.urlEncode(ilcontinue.get()));
     }
     return requestBuilder.buildGet();
-
   }
 
-  /**
-   * {@inheritDoc}
-   */
+  /** {@inheritDoc} */
   @Override
   protected Iterator<String> copy() {
     return new ImageUsageTitles(bot, limit, imageName, namespaces);
   }
-
 }

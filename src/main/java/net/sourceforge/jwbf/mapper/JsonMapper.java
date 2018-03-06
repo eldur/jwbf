@@ -1,11 +1,12 @@
 package net.sourceforge.jwbf.mapper;
 
-import javax.annotation.Nonnull;
-
 import java.io.IOException;
+
+import javax.annotation.Nonnull;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import net.sourceforge.jwbf.core.internal.Checked;
 
 public class JsonMapper {

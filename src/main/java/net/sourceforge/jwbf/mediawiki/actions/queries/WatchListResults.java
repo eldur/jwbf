@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+
 import net.sourceforge.jwbf.core.internal.Checked;
 
 @JsonNaming(PropertyNamingStrategy.LowerCaseStrategy.class)
@@ -43,7 +44,9 @@ public class WatchListResults {
     private final String moreInfo;
 
     @JsonCreator
-    public Error(@JsonProperty("code") String code, @JsonProperty("info") String message,
+    public Error(
+        @JsonProperty("code") String code,
+        @JsonProperty("info") String message,
         @JsonProperty("*") String moreInfo) {
       this.code = code;
       this.message = message;
@@ -69,8 +72,10 @@ public class WatchListResults {
   private final Query query;
 
   @JsonCreator
-  public WatchListResults(@JsonProperty("continue") WatchContinue watchContinue,
-      @JsonProperty("batchcomplete") String batchComplete, @JsonProperty("error") Error error,
+  public WatchListResults(
+      @JsonProperty("continue") WatchContinue watchContinue,
+      @JsonProperty("batchcomplete") String batchComplete,
+      @JsonProperty("error") Error error,
       @JsonProperty("query") Query query) {
     this.watchContinue = watchContinue;
     this.batchComplete = batchComplete;
@@ -97,5 +102,4 @@ public class WatchListResults {
   public List<WatchResponse> getResults() {
     return query.results;
   }
-
 }

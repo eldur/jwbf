@@ -18,13 +18,17 @@
  */
 package net.sourceforge.jwbf.mediawiki.actions.queries;
 
+import java.util.List;
+
 import javax.annotation.Nonnull;
 
-import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
+
 import net.sourceforge.jwbf.core.actions.Get;
 import net.sourceforge.jwbf.core.actions.RequestBuilder;
 import net.sourceforge.jwbf.core.internal.Checked;
@@ -36,31 +40,27 @@ import net.sourceforge.jwbf.mediawiki.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 import net.sourceforge.jwbf.mediawiki.contentRep.CategoryItem;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * A abstract action class using the MediaWiki-api's "list=categorymembers ".
  *
  * @author Thomas Stock
  * @see <a href= "http://www.mediawiki.org/wiki/API:Query_-_Lists#categorymembers_.2F_cm">API
- * documentation</a>
+ *     documentation</a>
  */
 abstract class CategoryMembers extends BaseQuery<CategoryItem> {
 
   private static final Logger log = LoggerFactory.getLogger(CategoryMembers.class);
 
-  /**
-   * constant value for the bllimit-parameter. *
-   */
+  /** constant value for the bllimit-parameter. * */
   protected static final int LIMIT = 50;
 
   final String categoryName;
   private final String namespaceStr;
   final ImmutableList<Integer> namespace;
 
-  protected CategoryMembers(MediaWikiBot bot, String categoryName,
-      ImmutableList<Integer> namespaces) {
+  protected CategoryMembers(
+      MediaWikiBot bot, String categoryName, ImmutableList<Integer> namespaces) {
     super(bot);
     this.namespace = Checked.nonNull(namespaces, "namespaces");
     this.namespaceStr = MWAction.createNsString(namespaces);
@@ -81,7 +81,7 @@ abstract class CategoryMembers extends BaseQuery<CategoryItem> {
    * generates the next MediaWiki-request (GetMethod) and adds it to msgs.
    *
    * @param cmcontinue the value for the blcontinue parameter, null for the generation of the
-   *                   initial request
+   *     initial request
    * @return a
    */
   Get generateContinueRequest(String cmcontinue) {
@@ -109,7 +109,6 @@ abstract class CategoryMembers extends BaseQuery<CategoryItem> {
   @Override
   public ImmutableList<CategoryItem> parseElements(String xml) {
     return parseArticles(xml, toCategoryItem());
-
   }
 
   private NonnullFunction<XmlElement, CategoryItem> toCategoryItem() {
@@ -121,7 +120,6 @@ abstract class CategoryMembers extends BaseQuery<CategoryItem> {
         int namespace = Integer.parseInt(input.getAttributeValueNonNull("ns"));
         int pageId = Integer.parseInt(input.getAttributeValueNonNull("pageid"));
         return new CategoryItem(title, namespace, pageId);
-
       }
     };
   }
@@ -149,9 +147,8 @@ abstract class CategoryMembers extends BaseQuery<CategoryItem> {
         .param("list", "categorymembers") //
         .param("cmlimit", LIMIT) //
         .param("cmtitle", "Category:" + MediaWiki.urlEncode(categoryName)) //
-        // TODO: do not add Category: - instead, change other methods' descs (e.g.
-        // in MediaWikiBot)
-        ;
+    // TODO: do not add Category: - instead, change other methods' descs (e.g.
+    // in MediaWikiBot)
+    ;
   }
-
 }

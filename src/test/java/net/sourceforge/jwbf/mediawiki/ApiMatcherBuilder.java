@@ -14,6 +14,7 @@ import com.github.dreamhead.moco.RequestExtractor;
 import com.github.dreamhead.moco.RequestMatcher;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
+
 import net.sourceforge.jwbf.core.actions.ParamTuple;
 
 public class ApiMatcherBuilder {
@@ -35,8 +36,9 @@ public class ApiMatcherBuilder {
   }
 
   public RequestMatcher build() {
-    RequestMatcherBuilder apiBuilder = new RequestMatcherBuilder() //
-        .with(by(uri("/api.php")));
+    RequestMatcherBuilder apiBuilder =
+        new RequestMatcherBuilder() //
+            .with(by(uri("/api.php")));
 
     ImmutableSet.Builder<String> paramNames = ImmutableSet.builder();
     for (Map.Entry<String, String> param : params.build().entrySet()) {
@@ -72,7 +74,6 @@ public class ApiMatcherBuilder {
       ImmutableSet<String> keys = queries.keySet();
       return params.equals(keys);
     }
-
   }
 
   private abstract class HttpRequestMatcher implements RequestMatcher {

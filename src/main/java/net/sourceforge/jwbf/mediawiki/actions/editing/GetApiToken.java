@@ -2,9 +2,13 @@ package net.sourceforge.jwbf.mediawiki.actions.editing;
 
 import javax.annotation.Nonnull;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
+
 import net.sourceforge.jwbf.core.Optionals;
 import net.sourceforge.jwbf.core.actions.Get;
 import net.sourceforge.jwbf.core.actions.ParamTuple;
@@ -15,8 +19,6 @@ import net.sourceforge.jwbf.mapper.XmlElement;
 import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
 import net.sourceforge.jwbf.mediawiki.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.util.DequeMWAction;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * This class get the token for some actions like delete or edit.
@@ -58,9 +60,7 @@ public class GetApiToken extends DequeMWAction<GetApiToken.TokenResponse> {
 
   public interface TokenResponse {
 
-    /**
-     * @deprecated prefer {@link #token()} with postPram.
-     */
+    /** @deprecated prefer {@link #token()} with postPram. */
     @Deprecated
     ParamTuple<String> urlEncodedToken();
 
@@ -69,14 +69,19 @@ public class GetApiToken extends DequeMWAction<GetApiToken.TokenResponse> {
 
   private static final Logger log = LoggerFactory.getLogger(GetApiToken.class);
 
-  /**
-   * Types that need a urlEncodedToken. See API field intoken.
-   */
+  /** Types that need a urlEncodedToken. See API field intoken. */
   // TODO this does not feel the elegant way.
   // Probably put complete request URIs into this enum objects
   // to support different URIs for different actions.
   public enum Intoken {
-    DELETE, EDIT, MOVE, PROTECT, EMAIL, BLOCK, UNBLOCK, IMPORT
+    DELETE,
+    EDIT,
+    MOVE,
+    PROTECT,
+    EMAIL,
+    BLOCK,
+    UNBLOCK,
+    IMPORT
   }
 
   private static final ImmutableMap<Intoken, Function<XmlElement, String>> TOKEN_FUNCTIONS =
@@ -101,20 +106,19 @@ public class GetApiToken extends DequeMWAction<GetApiToken.TokenResponse> {
    * Constructs a new <code>GetToken</code> action.
    *
    * @param intoken type to get the token for
-   * @param title   title of the article to generate the token for
+   * @param title title of the article to generate the token for
    */
   public GetApiToken(Intoken intoken, String title) {
     super(generateTokenRequest(intoken, title));
     this.intoken = intoken;
     msg = actions.getFirst(); // XXX realy nesessary?
-
   }
 
   /**
    * Generates the next MediaWiki API urlEncodedToken and adds it to <code>msgs</code>.
    *
    * @param intoken type to get the urlEncodedToken for
-   * @param title   title of the article to generate the urlEncodedToken for
+   * @param title title of the article to generate the urlEncodedToken for
    */
   private static Get generateTokenRequest(Intoken intoken, String title) {
     return new ApiRequestBuilder() //
@@ -124,12 +128,9 @@ public class GetApiToken extends DequeMWAction<GetApiToken.TokenResponse> {
         .param("intoken", intoken.toString().toLowerCase()) //
         .param("titles", MediaWiki.urlEncode(title)) //
         .buildGet();
-
   }
 
-  /**
-   * {@inheritDoc}
-   */
+  /** {@inheritDoc} */
   @Override
   public void processReturningText(String s, HttpAction hm) {
     if (hm.getRequest().equals(msg.getRequest())) {
@@ -143,8 +144,10 @@ public class GetApiToken extends DequeMWAction<GetApiToken.TokenResponse> {
         // TODO check catch
       } catch (IllegalArgumentException e) {
         if (s.startsWith("unknown_action:")) {
-          log.error("Adding '$wgEnableWriteAPI = true;' " +
-              "to your MediaWiki's LocalSettings.php might remove this problem.", e);
+          log.error(
+              "Adding '$wgEnableWriteAPI = true;' "
+                  + "to your MediaWiki's LocalSettings.php might remove this problem.",
+              e);
         } else {
           log.error(e.getMessage(), e);
         }
@@ -162,5 +165,4 @@ public class GetApiToken extends DequeMWAction<GetApiToken.TokenResponse> {
       }
     };
   }
-
 }

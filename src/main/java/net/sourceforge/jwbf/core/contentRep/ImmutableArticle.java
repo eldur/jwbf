@@ -139,5 +139,4 @@ public class ImmutableArticle implements ArticleMeta, ContentAccessable {
       return this;
     }
   }
-
 }

@@ -4,11 +4,14 @@ import static org.hamcrest.CoreMatchers.endsWith;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.startsWith;
 
+import java.util.Map;
+import java.util.Set;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import java.util.Map;
-import java.util.Set;
+import org.junit.Assert;
+import org.junit.ComparisonFailure;
 
 import com.google.common.base.Function;
 import com.google.common.base.Functions;
@@ -21,9 +24,8 @@ import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Ordering;
+
 import net.sourceforge.jwbf.core.internal.NonnullFunction;
-import org.junit.Assert;
-import org.junit.ComparisonFailure;
 
 public class GAssert {
 
@@ -39,8 +41,8 @@ public class GAssert {
     return ImmutableList.copyOf(Splitter.on("\n").split(bs));
   }
 
-  public static void assertEquals(ImmutableMultimap<?, ?> expected,
-      ImmutableMultimap<?, ?> actual) {
+  public static void assertEquals(
+      ImmutableMultimap<?, ?> expected, ImmutableMultimap<?, ?> actual) {
     assertEquals(expected.asMap(), actual.asMap());
   }
 
@@ -106,13 +108,13 @@ public class GAssert {
     return Joiner.on("\n").join(parts);
   }
 
-  private static ImmutableList<String> toList(ImmutableList<?> list,
-      Function<Object, String> toStringFn) {
+  private static ImmutableList<String> toList(
+      ImmutableList<?> list, Function<Object, String> toStringFn) {
     return toTransformed(list, toStringFn).toList();
   }
 
-  private static FluentIterable<String> toTransformed(ImmutableList<?> list,
-      Function<Object, String> toString) {
+  private static FluentIterable<String> toTransformed(
+      ImmutableList<?> list, Function<Object, String> toString) {
     return FluentIterable.from(list).transform(toString);
   }
 
@@ -150,8 +152,11 @@ public class GAssert {
           Object value = entry.getValue();
           if (value instanceof ImmutableList) {
             ImmutableList<?> list = (ImmutableList<?>) value;
-            return toClassString(key) + "=" + Joiner.on("\n  ") //
-                .join(Iterables.transform(list, TO_CLASS_STRING)) + "\n";
+            return toClassString(key)
+                + "="
+                + Joiner.on("\n  ") //
+                    .join(Iterables.transform(list, TO_CLASS_STRING))
+                + "\n";
           } else {
             return toClassString(key) + "=" + toClassString(value);
           }
@@ -162,7 +167,6 @@ public class GAssert {
           return input.toString();
         }
       }
-
     };
   }
 
@@ -170,41 +174,46 @@ public class GAssert {
     return "{" + o.toString() + " [" + o.getClass().getCanonicalName() + "]}";
   }
 
-  static final Function<Object, String> TO_TYPE_STRING = new NonnullFunction<Object, String>() {
-    @Nonnull
-    @Override
-    protected String applyNonnull(@Nonnull Object input) {
-      if (input instanceof Map.Entry) {
-        Map.Entry<?, ?> entry = (Map.Entry<?, ?>) input;
-        Object key = entry.getKey();
-        Object value = entry.getValue();
-        if (value instanceof ImmutableList) {
-          ImmutableList<?> list = (ImmutableList<?>) value;
-          return key.getClass().getCanonicalName() + "=" + Joiner.on(",") //
-              .join(Iterables.transform(list, TO_CLASSES));
-        } else {
-          return key.getClass().getCanonicalName() + "=" + value.getClass().getCanonicalName();
+  static final Function<Object, String> TO_TYPE_STRING =
+      new NonnullFunction<Object, String>() {
+        @Nonnull
+        @Override
+        protected String applyNonnull(@Nonnull Object input) {
+          if (input instanceof Map.Entry) {
+            Map.Entry<?, ?> entry = (Map.Entry<?, ?>) input;
+            Object key = entry.getKey();
+            Object value = entry.getValue();
+            if (value instanceof ImmutableList) {
+              ImmutableList<?> list = (ImmutableList<?>) value;
+              return key.getClass().getCanonicalName()
+                  + "="
+                  + Joiner.on(",") //
+                      .join(Iterables.transform(list, TO_CLASSES));
+            } else {
+              return key.getClass().getCanonicalName() + "=" + value.getClass().getCanonicalName();
+            }
+          }
+          return input.getClass().getCanonicalName();
         }
-      }
-      return input.getClass().getCanonicalName();
-    }
-  };
+      };
 
-  static final Function<Object, String> TO_CLASS_STRING = new Function<Object, String>() {
-    @Nullable
-    @Override
-    public String apply(@Nullable Object input) {
-      return toClassString(input);
-    }
-  };
+  static final Function<Object, String> TO_CLASS_STRING =
+      new Function<Object, String>() {
+        @Nullable
+        @Override
+        public String apply(@Nullable Object input) {
+          return toClassString(input);
+        }
+      };
 
-  static final Function<Object, String> TO_CLASSES = new NonnullFunction<Object, String>() {
-    @Nonnull
-    @Override
-    public String applyNonnull(@Nonnull Object input) {
-      return input.getClass().getCanonicalName();
-    }
-  };
+  static final Function<Object, String> TO_CLASSES =
+      new NonnullFunction<Object, String>() {
+        @Nonnull
+        @Override
+        public String applyNonnull(@Nonnull Object input) {
+          return input.getClass().getCanonicalName();
+        }
+      };
 
   public static void assertNotEndsWith(final String expected, String actual) {
     try {

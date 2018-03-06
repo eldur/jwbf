@@ -19,9 +19,7 @@ public class ApiRequestBuilder extends RequestBuilder {
     return this;
   }
 
-  /**
-   * @deprecated prefer json format
-   */
+  /** @deprecated prefer json format */
   @Deprecated
   public ApiRequestBuilder formatXml() {
     param("format", "xml");

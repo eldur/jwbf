@@ -2,8 +2,12 @@ package net.sourceforge.jwbf.mediawiki.actions.editing;
 
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Strings;
+
 import net.sourceforge.jwbf.core.actions.RequestBuilder;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.core.actions.util.PermissionException;
@@ -13,12 +17,11 @@ import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
 import net.sourceforge.jwbf.mediawiki.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Action class using the MediaWiki-API's to allow your bot to move articles in your MediaWiki add
  * the following line to your MediaWiki's LocalSettings.php:<br>
+ *
  * <pre>
  * $wgEnableWriteAPI = true;
  * $wgGroupPermissions['bot']['move'] = true;
@@ -26,7 +29,9 @@ import org.slf4j.LoggerFactory;
  * $wgGroupPermissions['bot']['move-subpages'] = true;       // optional
  * $wgGroupPermissions['bot']['move-rootuserpages'] = true;  // optional
  * </pre>
+ *
  * Move an article with
+ *
  * <pre>
  * String oldtitle = ...
  * String newtitle = ...
@@ -55,15 +60,20 @@ public class MovePage extends MWAction {
   /**
    * Constructs a new <code>MovePage</code> action.
    *
-   * @param bot          the MediaWikiBot
-   * @param oldtitle     title to move
-   * @param newtitle     new title
-   * @param reason       reason why to move
+   * @param bot the MediaWikiBot
+   * @param oldtitle title to move
+   * @param newtitle new title
+   * @param reason reason why to move
    * @param withsubpages if <b>TRUE</b> also move the subpages
-   * @param noredirect   if <b>TRUE</b> create no redirects
+   * @param noredirect if <b>TRUE</b> create no redirects
    */
-  public MovePage(MediaWikiBot bot, String oldtitle, String newtitle, String reason,
-      boolean withsubpages, boolean noredirect) {
+  public MovePage(
+      MediaWikiBot bot,
+      String oldtitle,
+      String newtitle,
+      String reason,
+      boolean withsubpages,
+      boolean noredirect) {
     token = new GetApiToken(GetApiToken.Intoken.MOVE, oldtitle);
     this.oldtitle = Checked.nonBlank(oldtitle, "oldtitle");
     this.newtitle = Checked.nonBlank(newtitle, "newtitle");
@@ -77,29 +87,30 @@ public class MovePage extends MWAction {
   @VisibleForTesting
   void checkPermissions(Set<String> permissions, boolean withSubPages) {
     if (!permissions.contains("move")) {
-      throw new PermissionException("The given user doesn't have the rights to move. " +
-          "Add '$wgGroupPermissions['bot']['move'] = true;' " +
-          "to your MediaWikis LocalSettings.php might solve this problem.");
+      throw new PermissionException(
+          "The given user doesn't have the rights to move. "
+              + "Add '$wgGroupPermissions['bot']['move'] = true;' "
+              + "to your MediaWikis LocalSettings.php might solve this problem.");
     }
 
     if (withSubPages && !permissions.contains("move-subpages")) {
-      throw new PermissionException("The given user doesn't have the rights to move subpages. " +
-          "Add '$wgGroupPermissions['bot']['move-subpages'] = true;' " +
-          "to your MediaWikis LocalSettings.php might solve this problem.");
+      throw new PermissionException(
+          "The given user doesn't have the rights to move subpages. "
+              + "Add '$wgGroupPermissions['bot']['move-subpages'] = true;' "
+              + "to your MediaWikis LocalSettings.php might solve this problem.");
     }
   }
 
-  /**
-   * @return the delete action
-   */
+  /** @return the delete action */
   private HttpAction getSecondRequest() {
-    RequestBuilder requestBuilder = new ApiRequestBuilder() //
-        .action("move") //
-        .formatXml() //
-        .param("from", MediaWiki.urlEncode(oldtitle)) //
-        .param("to", MediaWiki.urlEncode(newtitle)) //
-        .postParam(token.get().token()) //
-        .param("movetalk", "") // XXX
+    RequestBuilder requestBuilder =
+        new ApiRequestBuilder() //
+            .action("move") //
+            .formatXml() //
+            .param("from", MediaWiki.urlEncode(oldtitle)) //
+            .param("to", MediaWiki.urlEncode(newtitle)) //
+            .postParam(token.get().token()) //
+            .param("movetalk", "") // XXX
         ;
 
     if (withsubpages) {
@@ -115,9 +126,7 @@ public class MovePage extends MWAction {
     return requestBuilder.buildPost();
   }
 
-  /**
-   * {@inheritDoc}
-   */
+  /** {@inheritDoc} */
   @Override
   public String processReturningText(String xml, HttpAction hm) {
     XmlConverter.failOnError(xml);
@@ -132,9 +141,7 @@ public class MovePage extends MWAction {
     return "";
   }
 
-  /**
-   * {@inheritDoc}
-   */
+  /** {@inheritDoc} */
   @Override
   public HttpAction getNextMessage() {
     if (token.hasMoreActions()) {

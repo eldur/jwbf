@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+
 import net.sourceforge.jwbf.core.internal.Checked;
 
 @JsonNaming(PropertyNamingStrategy.LowerCaseStrategy.class)
@@ -18,8 +19,8 @@ public class SearchResultList {
     private final String continueToken;
 
     @JsonCreator
-    public SearchContinue(@JsonProperty("sroffset") int offset,
-        @JsonProperty("continue") String continueToken) {
+    public SearchContinue(
+        @JsonProperty("sroffset") int offset, @JsonProperty("continue") String continueToken) {
       this.offset = offset;
       this.continueToken = continueToken;
     }
@@ -42,8 +43,8 @@ public class SearchResultList {
     private final String suggestion;
 
     @JsonCreator
-    public SearchInfo(@JsonProperty("totalhits") int totalHits,
-        @JsonProperty("suggestion") String suggestion) {
+    public SearchInfo(
+        @JsonProperty("totalhits") int totalHits, @JsonProperty("suggestion") String suggestion) {
       this.totalHits = totalHits;
       this.suggestion = suggestion;
     }
@@ -62,7 +63,8 @@ public class SearchResultList {
     private final List<SearchResult> results;
 
     @JsonCreator
-    public Query(@JsonProperty("searchinfo") SearchInfo searchInfo,
+    public Query(
+        @JsonProperty("searchinfo") SearchInfo searchInfo,
         @JsonProperty("search") List<SearchResult> results) {
       this.searchInfo = Checked.nonNull(searchInfo, "search info");
       this.results = Checked.nonNull(results, "search results");
@@ -74,8 +76,10 @@ public class SearchResultList {
   private final Query query;
 
   @JsonCreator
-  public SearchResultList(@JsonProperty("continue") SearchContinue searchContinue,
-      @JsonProperty("batchcomplete") String batchComplete, @JsonProperty("query") Query query) {
+  public SearchResultList(
+      @JsonProperty("continue") SearchContinue searchContinue,
+      @JsonProperty("batchcomplete") String batchComplete,
+      @JsonProperty("query") Query query) {
     this.searchContinue = searchContinue;
     this.batchComplete = batchComplete;
     this.query = Checked.nonNull(query, "search query");
@@ -104,5 +108,4 @@ public class SearchResultList {
   public List<SearchResult> getResults() {
     return query.results;
   }
-
 }

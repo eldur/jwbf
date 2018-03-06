@@ -5,12 +5,13 @@ import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import org.junit.Test;
+
 import net.sourceforge.jwbf.TestHelper;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.mediawiki.actions.util.ApiException;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 import net.sourceforge.jwbf.mediawiki.contentRep.SimpleFile;
-import org.junit.Test;
 
 public class FileUploadTest {
 
@@ -36,9 +37,11 @@ public class FileUploadTest {
       fail();
     } catch (ApiException e) {
       // THEN
-      assertEquals("API ERROR CODE: mustposttoken VALUE: The 'token' parameter was found " + //
-          "in the query string, but must be in the POST body", e.getMessage());
+      assertEquals(
+          "API ERROR CODE: mustposttoken VALUE: The 'token' parameter was found "
+              + //
+              "in the query string, but must be in the POST body",
+          e.getMessage());
     }
   }
-
 }

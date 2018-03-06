@@ -2,8 +2,9 @@ package net.sourceforge.jwbf.mediawiki;
 
 import static org.junit.Assert.assertEquals;
 
-import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import org.junit.Test;
+
+import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 
 public class NsTest {
 
@@ -25,5 +26,4 @@ public class NsTest {
     t = "\"";
     assertEquals(t, MediaWiki.htmlUnescape(s));
   }
-
 }

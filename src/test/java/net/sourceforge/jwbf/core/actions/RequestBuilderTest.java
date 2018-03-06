@@ -4,44 +4,61 @@ import static net.sourceforge.jwbf.core.actions.RequestBuilder.HashCodeEqualsMem
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
+import org.junit.Ignore;
+import org.junit.Test;
+
 import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
 import com.google.common.collect.ImmutableMultimap;
+
 import net.sourceforge.jwbf.GAssert;
-import org.junit.Ignore;
-import org.junit.Test;
 
 public class RequestBuilderTest {
 
   @Test
   public void testBuild() {
-    assertEquals("a", new RequestBuilder("a") //
-        .build());
-    assertEquals("/a?b=c", new RequestBuilder("/a") //
-        .param("b", "c") //
-        .build());
-    assertEquals("/a?b=c&b=e", new RequestBuilder("/a") //
-        .param(null, (String) null) //
-        .param("b", "e") //
-        .param("b", "c") //
-        .build());
-    assertEquals("/a?b=c&llun=None&q=None", new RequestBuilder("/a") //
-        .param("llun", (String) null) //
-        .param("b", "c") //
-        .param("q", "") //
-        .param("", "z") //
-        .param("", Suppliers.ofInstance("t")) //
-        .buildPost().getRequest());
-    assertEquals("/a?b=1&d=e", new RequestBuilder("/a") //
-        .param("d", "e") //
-        .param(null, "null") //
-        .param("b", 1) //
-        .param("d", "e") //
-        .buildGet().getRequest());
-    assertEquals("/a?a=true&b=false", new RequestBuilder("/a") //
-        .param("a", true) //
-        .param("b", false) //
-        .buildGet().getRequest());
+    assertEquals(
+        "a",
+        new RequestBuilder("a") //
+            .build());
+    assertEquals(
+        "/a?b=c",
+        new RequestBuilder("/a") //
+            .param("b", "c") //
+            .build());
+    assertEquals(
+        "/a?b=c&b=e",
+        new RequestBuilder("/a") //
+            .param(null, (String) null) //
+            .param("b", "e") //
+            .param("b", "c") //
+            .build());
+    assertEquals(
+        "/a?b=c&llun=None&q=None",
+        new RequestBuilder("/a") //
+            .param("llun", (String) null) //
+            .param("b", "c") //
+            .param("q", "") //
+            .param("", "z") //
+            .param("", Suppliers.ofInstance("t")) //
+            .buildPost()
+            .getRequest());
+    assertEquals(
+        "/a?b=1&d=e",
+        new RequestBuilder("/a") //
+            .param("d", "e") //
+            .param(null, "null") //
+            .param("b", 1) //
+            .param("d", "e") //
+            .buildGet()
+            .getRequest());
+    assertEquals(
+        "/a?a=true&b=false",
+        new RequestBuilder("/a") //
+            .param("a", true) //
+            .param("b", false) //
+            .buildGet()
+            .getRequest());
   }
 
   private String lazyVal = "AAA";
@@ -49,12 +66,13 @@ public class RequestBuilderTest {
   @Test
   public void testLazyBuild() {
     // GIVEN
-    Supplier<String> lazyParamValue = new Supplier<String>() {
-      @Override
-      public String get() {
-        return lazyVal;
-      }
-    };
+    Supplier<String> lazyParamValue =
+        new Supplier<String>() {
+          @Override
+          public String get() {
+            return lazyVal;
+          }
+        };
 
     // WHEN
     Get result = new RequestBuilder("/a").param("a", lazyParamValue).buildGet();
@@ -69,12 +87,13 @@ public class RequestBuilderTest {
   @Test
   public void testLazyBuildMemorize() {
     // GIVEN
-    Supplier<String> lazyParamValue = new Supplier<String>() {
-      @Override
-      public String get() {
-        return lazyValMemo;
-      }
-    };
+    Supplier<String> lazyParamValue =
+        new Supplier<String>() {
+          @Override
+          public String get() {
+            return lazyValMemo;
+          }
+        };
 
     // WHEN
     Get result = new RequestBuilder("/a").param("a", lazyParamValue).buildGet();
@@ -92,9 +111,10 @@ public class RequestBuilderTest {
   @Test
   public void testRegenerateNewBuilderGet() {
     // GIVEN
-    Get get = RequestBuilder.of("/index.html") //
-        .param("a", "b") //
-        .buildGet();
+    Get get =
+        RequestBuilder.of("/index.html") //
+            .param("a", "b") //
+            .buildGet();
 
     // WHEN
     RequestBuilder builder = get.toBuilder();
@@ -108,9 +128,10 @@ public class RequestBuilderTest {
   @Test
   public void testRegenerateNewBuilderPost() {
     // GIVEN
-    Post post = RequestBuilder.of("/index.html") //
-        .param("a", "b") //
-        .buildPost();
+    Post post =
+        RequestBuilder.of("/index.html") //
+            .param("a", "b") //
+            .buildPost();
 
     // WHEN
     RequestBuilder builder = post.toBuilder();
@@ -123,10 +144,11 @@ public class RequestBuilderTest {
   @Test
   public void testRegenerateNewBuilderPostWithParams() {
     // GIVEN
-    Post post = RequestBuilder.of("/index.html") //
-        .param("a", "b") //
-        .postParam("c", "d") //
-        .buildPost() //
+    Post post =
+        RequestBuilder.of("/index.html") //
+            .param("a", "b") //
+            .postParam("c", "d") //
+            .buildPost() //
         ;
 
     // WHEN
@@ -137,17 +159,18 @@ public class RequestBuilderTest {
     assertEquals("/index.html?a=b UTF-8 {c=[d]}", post.toString());
     assertEquals(post, newPost);
 
-    assertEquals("/index.html?a=b&c=e UTF-8 {c=[d]}",
-        builder.param("c", "e").buildPost().toString());
+    assertEquals(
+        "/index.html?a=b&c=e UTF-8 {c=[d]}", builder.param("c", "e").buildPost().toString());
   }
 
   @Test
   public void testRegenerateNewBuilderPostWithOtherParams() {
     // GIVEN
-    Post post = RequestBuilder.of("/index.php") //
-        .param("c", "d") //
-        .postParam("e", "f") //
-        .buildPost() //
+    Post post =
+        RequestBuilder.of("/index.php") //
+            .param("c", "d") //
+            .postParam("e", "f") //
+            .buildPost() //
         ;
 
     // WHEN
@@ -162,15 +185,16 @@ public class RequestBuilderTest {
   @Test
   public void testRegenerateNewBuilderWithEmptyParams() {
     // GIVEN
-    Post post = RequestBuilder.of("/index.php") //
-        .param("c", "") //
-        .postParam("e", "") //
-        .param("f") //
-        .postParam("g") //
-        .postParam(null, (String) null) //
-        .postParam(null, "null") //
-        .postParam("llun", (String) null) //
-        .buildPost() //
+    Post post =
+        RequestBuilder.of("/index.php") //
+            .param("c", "") //
+            .postParam("e", "") //
+            .param("f") //
+            .postParam("g") //
+            .postParam(null, (String) null) //
+            .postParam(null, "null") //
+            .postParam("llun", (String) null) //
+            .buildPost() //
         ;
 
     // WHEN
@@ -185,16 +209,18 @@ public class RequestBuilderTest {
   @Test
   public void testBuildPostWithParams() {
     // GIVEN
-    Post post = RequestBuilder.of("/index.html") //
-        .param("a", "b") //
-        .buildPost() //
-        .postParam("c", "d") //
+    Post post =
+        RequestBuilder.of("/index.html") //
+            .param("a", "b") //
+            .buildPost() //
+            .postParam("c", "d") //
         ;
 
-    Post post2 = RequestBuilder.of("/index.html") //
-        .param(new ParamTuple("a", "b")) //
-        .postParam(new ParamTuple("c", "d")) //
-        .buildPost() //
+    Post post2 =
+        RequestBuilder.of("/index.html") //
+            .param(new ParamTuple("a", "b")) //
+            .postParam(new ParamTuple("c", "d")) //
+            .buildPost() //
         ;
 
     // WHEN / THEN
@@ -209,10 +235,11 @@ public class RequestBuilderTest {
     ParamTuple b = new ParamTuple("c", 4);
 
     // WHEN
-    Post post2 = RequestBuilder.of("/") //
-        //.param(a) // TODO test for both
-        .postParam(b) // TODO - " -
-        .buildPost() //
+    Post post2 =
+        RequestBuilder.of("/") //
+            // .param(a) // TODO test for both
+            .postParam(b) // TODO - " -
+            .buildPost() //
         ;
 
     // THEN
@@ -244,5 +271,4 @@ public class RequestBuilderTest {
     a.equals(null);
     fail();
   }
-
 }

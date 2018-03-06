@@ -10,9 +10,13 @@ import static org.mockito.Mockito.when;
 
 import java.util.Set;
 
+import org.junit.Before;
+import org.junit.Test;
+
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
+
 import net.sourceforge.jwbf.core.actions.ParamTuple;
 import net.sourceforge.jwbf.core.actions.Post;
 import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
@@ -20,8 +24,6 @@ import net.sourceforge.jwbf.core.contentRep.Userinfo;
 import net.sourceforge.jwbf.mediawiki.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.actions.util.VersionException;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
-import org.junit.Before;
-import org.junit.Test;
 
 public class PostModifyContentTest {
 
@@ -29,8 +31,7 @@ public class PostModifyContentTest {
   private PostModifyContent testee;
   private MediaWikiBot bot;
   private Userinfo userinfo;
-  private static ImmutableSet<String> rights =
-      of(Userinfo.RIGHT_WRITEAPI, Userinfo.RIGHT_EDIT);
+  private static ImmutableSet<String> rights = of(Userinfo.RIGHT_WRITEAPI, Userinfo.RIGHT_EDIT);
   private SimpleArticle simpleArticle;
 
   @Before
@@ -41,16 +42,17 @@ public class PostModifyContentTest {
     when(bot.getUserinfo()).thenReturn(userinfo);
     simpleArticle = new SimpleArticle();
     simpleArticle.setTitle("Test");
-    testee = new PostModifyContent(bot, simpleArticle) {
-      @Override
-      GetApiToken newTokenRequest() {
-        GetApiToken mockToken = mock(GetApiToken.class);
-        GetApiToken.TokenResponse tokenResponse = mock(GetApiToken.TokenResponse.class);
-        when(tokenResponse.token()).thenReturn(new ParamTuple("token", "!testToken"));
-        when(mockToken.get()).thenReturn(tokenResponse);
-        return mockToken;
-      }
-    };
+    testee =
+        new PostModifyContent(bot, simpleArticle) {
+          @Override
+          GetApiToken newTokenRequest() {
+            GetApiToken mockToken = mock(GetApiToken.class);
+            GetApiToken.TokenResponse tokenResponse = mock(GetApiToken.TokenResponse.class);
+            when(tokenResponse.token()).thenReturn(new ParamTuple("token", "!testToken"));
+            when(mockToken.get()).thenReturn(tokenResponse);
+            return mockToken;
+          }
+        };
   }
 
   @Test
@@ -100,8 +102,8 @@ public class PostModifyContentTest {
   public void testGetNextMessageBotEdit() {
     when(userinfo.getGroups()).thenReturn(of("bot", "user"));
     ImmutableMultimap<String, Object> params = getParams();
-    assertEquals("{summary=[], text=[], bot=[], notminor=[], token=[!testToken]}",
-        params.toString());
+    assertEquals(
+        "{summary=[], text=[], bot=[], notminor=[], token=[!testToken]}", params.toString());
   }
 
   private ImmutableMultimap<String, Object> getParams() {

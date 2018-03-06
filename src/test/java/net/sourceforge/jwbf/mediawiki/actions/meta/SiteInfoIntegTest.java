@@ -3,15 +3,17 @@ package net.sourceforge.jwbf.mediawiki.actions.meta;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.github.dreamhead.moco.RequestMatcher;
+
 import net.sourceforge.jwbf.GAssert;
 import net.sourceforge.jwbf.mediawiki.ApiMatcherBuilder;
 import net.sourceforge.jwbf.mediawiki.ConfKey;
 import net.sourceforge.jwbf.mediawiki.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.MocoIntegTest;
-import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class SiteInfoIntegTest extends MocoIntegTest {
 
@@ -26,7 +28,7 @@ public class SiteInfoIntegTest extends MocoIntegTest {
         .param("action", "query") //
         .param("meta", "siteinfo") //
         .param("format", "xml") //
-        ;
+    ;
   }
 
   public static RequestMatcher newSiteinfoWithProperties() {
@@ -39,9 +41,11 @@ public class SiteInfoIntegTest extends MocoIntegTest {
   public void doTest() {
     // GIVEN
     // TODO json?
-    server.request(newSiteInfoMatcherBuilder().build()) //
+    server
+        .request(newSiteInfoMatcherBuilder().build()) //
         .response(mwFileOf(version(), "siteinfo.xml"));
-    server.request(newSiteinfoWithProperties()) //
+    server
+        .request(newSiteinfoWithProperties()) //
         .response(mwFileOf(version(), "siteinfo_detail.xml"));
 
     // WHEN
@@ -49,8 +53,11 @@ public class SiteInfoIntegTest extends MocoIntegTest {
 
     // THEN
     assertEquals(
-        "http://localhost/loki/mediawiki/mw-" + version().getNumberVariation() + "/index.php/" +
-            confOf(ConfKey.MAINPAGE).replace(" ", "_"), gv.getBase()); // XXX
+        "http://localhost/loki/mediawiki/mw-"
+            + version().getNumberVariation()
+            + "/index.php/"
+            + confOf(ConfKey.MAINPAGE).replace(" ", "_"),
+        gv.getBase()); // XXX
 
     assertEquals("first-letter", gv.getCase());
     GAssert.assertStartsWith("MediaWiki " + version().getNumber() + ".", gv.getGenerator());
@@ -65,7 +72,5 @@ public class SiteInfoIntegTest extends MocoIntegTest {
     assertEquals(confOf(ConfKey.MAINPAGE), gv.getMainpage());
     log.debug(si.getNamespaces().toString());
     assertTrue("shuld have namespaces", si.getNamespaces().size() > 15);
-
   }
-
 }

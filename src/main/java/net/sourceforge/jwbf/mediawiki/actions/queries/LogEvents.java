@@ -18,15 +18,19 @@
  */
 package net.sourceforge.jwbf.mediawiki.actions.queries;
 
-import javax.annotation.Nonnull;
-
 import java.util.Iterator;
 import java.util.List;
+
+import javax.annotation.Nonnull;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
+
 import net.sourceforge.jwbf.core.actions.RequestBuilder;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.core.internal.NonnullFunction;
@@ -37,8 +41,6 @@ import net.sourceforge.jwbf.mediawiki.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 import net.sourceforge.jwbf.mediawiki.contentRep.LogItem;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * List log events, filtered by time range, event type, user type, or the page it applies to.
@@ -89,20 +91,23 @@ public class LogEvents extends BaseQuery<LogItem> {
   }
 
   /**
-   * @param limit  of events
-   * @param first  of like {@link #MOVE}
+   * @param limit of events
+   * @param first of like {@link #MOVE}
    * @param others like {@link #DELETE}
    */
   public LogEvents(MediaWikiBot bot, int limit, String first, String... others) {
-    this(bot, limit, ImmutableList.<String>builder() //
-        .add(first) //
-        .addAll(MWAction.nullSafeCopyOf(others)) //
-        .build());
+    this(
+        bot,
+        limit,
+        ImmutableList.<String>builder() //
+            .add(first) //
+            .addAll(MWAction.nullSafeCopyOf(others)) //
+            .build());
   }
 
   /**
    * @param limit of events
-   * @param type  of like {@link #MOVE}
+   * @param type of like {@link #MOVE}
    * @deprecated
    */
   @Deprecated
@@ -119,12 +124,13 @@ public class LogEvents extends BaseQuery<LogItem> {
 
   private RequestBuilder generateRequest(ImmutableList<String> logtypes) {
 
-    RequestBuilder requestBuilder = new ApiRequestBuilder() //
-        .action("query") //
-        .paramNewContinue(bot().getVersion()) //
-        .formatXml() //
-        .param("list", "logevents") //
-        .param("lelimit", limit) //
+    RequestBuilder requestBuilder =
+        new ApiRequestBuilder() //
+            .action("query") //
+            .paramNewContinue(bot().getVersion()) //
+            .formatXml() //
+            .param("list", "logevents") //
+            .param("lelimit", limit) //
         ;
 
     if (logtypes.size() > 0) {
@@ -145,11 +151,9 @@ public class LogEvents extends BaseQuery<LogItem> {
         String typeOf = item.getAttributeValue("type");
         String user = item.getAttributeValue("user");
         builder.add(new LogItem(title, typeOf, user));
-
       }
     }
     return builder.build();
-
   }
 
   @Override
@@ -171,7 +175,6 @@ public class LogEvents extends BaseQuery<LogItem> {
     } else {
       return generateRequest(type).buildGet();
     }
-
   }
 
   @Override

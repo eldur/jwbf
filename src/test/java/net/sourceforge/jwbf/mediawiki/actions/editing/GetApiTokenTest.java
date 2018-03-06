@@ -5,11 +5,12 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import org.junit.Test;
+
 import net.sourceforge.jwbf.TestHelper;
 import net.sourceforge.jwbf.core.actions.ParamTuple;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.mediawiki.actions.editing.GetApiToken.Intoken;
-import org.junit.Test;
 
 public class GetApiTokenTest {
 
@@ -46,7 +47,6 @@ public class GetApiTokenTest {
       // THEN
       assertEquals("attribute value for key: deletetoken must not be null", e.getMessage());
     }
-
   }
 
   @Test
@@ -76,9 +76,8 @@ public class GetApiTokenTest {
 
     // THEN
     assertFalse(testee.hasMoreActions());
-    assertEquals("/api.php?action=query&format=xml&intoken=move&prop=info&titles=" + title,
+    assertEquals(
+        "/api.php?action=query&format=xml&intoken=move&prop=info&titles=" + title,
         first.getRequest());
-
   }
-
 }

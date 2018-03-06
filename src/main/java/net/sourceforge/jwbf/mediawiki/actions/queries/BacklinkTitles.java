@@ -22,8 +22,12 @@ package net.sourceforge.jwbf.mediawiki.actions.queries;
 import java.util.Iterator;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
+
 import net.sourceforge.jwbf.core.actions.Get;
 import net.sourceforge.jwbf.core.actions.RequestBuilder;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
@@ -35,8 +39,6 @@ import net.sourceforge.jwbf.mediawiki.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.actions.util.RedirectFilter;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * action class using the MediaWiki-api's "list=backlinks".
@@ -57,8 +59,12 @@ public class BacklinkTitles extends BaseQuery<String> {
   private final RedirectFilter redirectFilter;
   private final ImmutableList<Integer> namespaces;
 
-  BacklinkTitles(MediaWikiBot bot, String articleName, int backlinksPerRequestLimit,
-      RedirectFilter redirectFilter, ImmutableList<Integer> namespaces) {
+  BacklinkTitles(
+      MediaWikiBot bot,
+      String articleName,
+      int backlinksPerRequestLimit,
+      RedirectFilter redirectFilter,
+      ImmutableList<Integer> namespaces) {
     super(bot);
     this.backlinksPerRequestLimit = backlinksPerRequestLimit;
 
@@ -66,7 +72,6 @@ public class BacklinkTitles extends BaseQuery<String> {
     this.articleName = Checked.nonNull(articleName, "articleName");
     this.redirectFilter = Checked.nonNull(redirectFilter, "redirectFilter");
     this.namespaces = namespaces;
-
   }
 
   /**
@@ -74,27 +79,26 @@ public class BacklinkTitles extends BaseQuery<String> {
    * msgs. When it is answered, the method processAllReturningText will be called (from outside this
    * class).
    *
-   * @param articleName    the title of the article, != null
-   * @param namespaces     the namespace(s) that will be searched for links, as a string of numbers
-   *                       separated by '|'; if null, this parameter is omitted. See for e.g. {@link
-   *                       MediaWiki#NS_ALL}.
+   * @param articleName the title of the article, != null
+   * @param namespaces the namespace(s) that will be searched for links, as a string of numbers
+   *     separated by '|'; if null, this parameter is omitted. See for e.g. {@link
+   *     MediaWiki#NS_ALL}.
    * @param redirectFilter filter that determines how to handle redirects, must be all for MW
-   *                       versions before 1.11; != null
+   *     versions before 1.11; != null
    */
-  public BacklinkTitles(MediaWikiBot bot, String articleName, RedirectFilter redirectFilter,
-      int... namespaces) {
+  public BacklinkTitles(
+      MediaWikiBot bot, String articleName, RedirectFilter redirectFilter, int... namespaces) {
     this(bot, articleName, 50, redirectFilter, MWAction.nullSafeCopyOf(namespaces));
   }
 
   public BacklinkTitles(MediaWikiBot bot, String articleName) {
     this(bot, articleName, RedirectFilter.all);
-
   }
 
   @Override
   protected Iterator<String> copy() {
-    return new BacklinkTitles(bot, articleName, backlinksPerRequestLimit, redirectFilter,
-        namespaces);
+    return new BacklinkTitles(
+        bot, articleName, backlinksPerRequestLimit, redirectFilter, namespaces);
   }
 
   /**
@@ -106,7 +110,6 @@ public class BacklinkTitles extends BaseQuery<String> {
   @Override
   protected Optional<String> parseHasMore(final String xml) {
     return parseXmlHasMore(xml, "backlinks", "blcontinue", "blcontinue");
-
   }
 
   /**
@@ -125,38 +128,40 @@ public class BacklinkTitles extends BaseQuery<String> {
       }
     }
     return titleCollection.build();
-
   }
 
-  private RequestBuilder newRequestBuilder(String title, RedirectFilter redirectFilter,
-      ImmutableList<Integer> namespaces) {
+  private RequestBuilder newRequestBuilder(
+      String title, RedirectFilter redirectFilter, ImmutableList<Integer> namespaces) {
 
-    RequestBuilder builder = new ApiRequestBuilder() //
-        .action("query") //
-        .paramNewContinue(bot.getVersion()) //
-        .formatXml() //
-        .param("list", "backlinks") //
-        .param("bllimit", backlinksPerRequestLimit) //
-        .param("bltitle", MediaWiki.urlEncode(title)) //
-        .param("blfilterredir", MediaWiki.urlEncode(redirectFilter.toString()));
+    RequestBuilder builder =
+        new ApiRequestBuilder() //
+            .action("query") //
+            .paramNewContinue(bot.getVersion()) //
+            .formatXml() //
+            .param("list", "backlinks") //
+            .param("bllimit", backlinksPerRequestLimit) //
+            .param("bltitle", MediaWiki.urlEncode(title)) //
+            .param("blfilterredir", MediaWiki.urlEncode(redirectFilter.toString()));
 
     if (!namespaces.isEmpty()) {
       builder.param("blnamespace", MediaWiki.urlEncode(MWAction.createNsString(namespaces)));
     }
 
     return builder;
-
   }
 
-  private Get newInitialRequest(String articleName, RedirectFilter redirectFilter,
-      ImmutableList<Integer> namespace) {
+  private Get newInitialRequest(
+      String articleName, RedirectFilter redirectFilter, ImmutableList<Integer> namespace) {
     RequestBuilder requestBuilder = newRequestBuilder(articleName, redirectFilter, namespace);
 
     return requestBuilder.buildGet();
   }
 
-  private Get newContinueRequest(String articleName, RedirectFilter redirectFilter,
-      ImmutableList<Integer> namespaces, String blcontinue) {
+  private Get newContinueRequest(
+      String articleName,
+      RedirectFilter redirectFilter,
+      ImmutableList<Integer> namespaces,
+      String blcontinue) {
     return newRequestBuilder(articleName, redirectFilter, namespaces) //
         .param("blcontinue", MediaWiki.urlEncode(blcontinue)) //
         .buildGet();
@@ -170,5 +175,4 @@ public class BacklinkTitles extends BaseQuery<String> {
       return newInitialRequest(articleName, redirectFilter, namespaces);
     }
   }
-
 }

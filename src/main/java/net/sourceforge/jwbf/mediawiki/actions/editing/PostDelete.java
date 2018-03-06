@@ -1,8 +1,12 @@
 package net.sourceforge.jwbf.mediawiki.actions.editing;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Optional;
 import com.google.common.base.Strings;
+
 import net.sourceforge.jwbf.core.actions.Post;
 import net.sourceforge.jwbf.core.actions.RequestBuilder;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
@@ -16,17 +20,18 @@ import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
 import net.sourceforge.jwbf.mediawiki.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.util.ApiException;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Action class using the MediaWiki-API's to allow your bot to delete articles in your MediaWiki add
- * the following line to your MediaWiki's  LocalSettings.php:<br>
+ * the following line to your MediaWiki's LocalSettings.php:<br>
+ *
  * <pre>
  * $wgEnableWriteAPI = true;
  * $wgGroupPermissions['bot']['delete'] = true;
  * </pre>
+ *
  * Delete an article with
+ *
  * <pre>
  * String name = ...
  * MediaWikiBot bot = ...
@@ -61,32 +66,32 @@ public class PostDelete extends MWAction {
   /**
    * Constructs a new <code>PostDelete</code> action.
    *
-   * @param title  the title of the page to delete
+   * @param title the title of the page to delete
    * @param reason reason for the deletion (may be null) in case of a precessing exception in case
-   *               of an action exception
+   *     of an action exception
    */
   public PostDelete(Userinfo userinfo, String title, String reason) {
     this.title = Checked.nonBlank(title, "title");
 
     if (!userinfo.getRights().contains("delete")) {
-      throw new PermissionException("The given user doesn't have the rights to delete. " +
-          "Add '$wgGroupPermissions['bot']['delete'] = true;' " +
-          "to your MediaWiki's LocalSettings.php might solve this problem.");
+      throw new PermissionException(
+          "The given user doesn't have the rights to delete. "
+              + "Add '$wgGroupPermissions['bot']['delete'] = true;' "
+              + "to your MediaWiki's LocalSettings.php might solve this problem.");
     }
     tokenAction = new GetApiToken(GetApiToken.Intoken.DELETE, title);
     this.reason = Strings.emptyToNull(reason);
   }
 
-  /**
-   * @return the delete action
-   */
+  /** @return the delete action */
   private HttpAction getSecondRequest() {
     log.trace("enter PostDelete.generateDeleteRequest(String)");
-    RequestBuilder requestBuilder = new ApiRequestBuilder() //
-        .action("delete") //
-        .formatXml() //
-        .postParam(tokenAction.get().token()) //
-        .param("title", MediaWiki.urlEncode(title)) //
+    RequestBuilder requestBuilder =
+        new ApiRequestBuilder() //
+            .action("delete") //
+            .formatXml() //
+            .postParam(tokenAction.get().token()) //
+            .param("title", MediaWiki.urlEncode(title)) //
         ;
 
     if (reason != null) {
@@ -98,9 +103,7 @@ public class PostDelete extends MWAction {
     return msg;
   }
 
-  /**
-   * {@inheritDoc}
-   */
+  /** {@inheritDoc} */
   @Override
   public String processReturningText(String s, HttpAction hm) {
     super.processReturningText(s, hm);
@@ -121,8 +124,9 @@ public class PostDelete extends MWAction {
     log.debug("Got returning text: \"{}\"", xml);
     try {
       XmlElement doc = XmlConverter.getRootElementWithError(xml);
-      Optional<ApiException> exceptionOptional = doc.getErrorElement() //
-          .transform(XmlConverter.toApiException());
+      Optional<ApiException> exceptionOptional =
+          doc.getErrorElement() //
+              .transform(XmlConverter.toApiException());
       if (exceptionOptional.isPresent()) {
         ApiException apiException = exceptionOptional.get();
         String code = apiException.getCode();
@@ -130,8 +134,10 @@ public class PostDelete extends MWAction {
           log.warn("{}", apiException.getValue());
           // XXX ignore this error
         } else if ("inpermissiondenied".equals(code)) {
-          log.error("Adding '$wgGroupPermissions['bot']['delete'] = true;'" + //
-              " to your MediaWiki's LocalSettings.php might remove this problem.");
+          log.error(
+              "Adding '$wgGroupPermissions['bot']['delete'] = true;'"
+                  + //
+                  " to your MediaWiki's LocalSettings.php might remove this problem.");
           throw apiException;
         } else {
           throw apiException;
@@ -142,8 +148,10 @@ public class PostDelete extends MWAction {
       String msg = e.getMessage();
       log.error(msg, e);
       if (xml.startsWith("unknown_action:")) {
-        String eMsg = "unknown_action; Adding '$wgEnableWriteAPI = true;' to your MediaWiki's " + //
-            "LocalSettings.php might remove this problem.";
+        String eMsg =
+            "unknown_action; Adding '$wgEnableWriteAPI = true;' to your MediaWiki's "
+                + //
+                "LocalSettings.php might remove this problem.";
         throw new ProcessException(eMsg);
       }
       throw new ProcessException(msg);
@@ -167,9 +175,7 @@ public class PostDelete extends MWAction {
     log.debug("Deleted article '{}'  with reason '{}'", title, reason);
   }
 
-  /**
-   * {@inheritDoc}
-   */
+  /** {@inheritDoc} */
   @Override
   public HttpAction getNextMessage() {
     if (tokenAction.hasMoreActions()) {
@@ -178,5 +184,4 @@ public class PostDelete extends MWAction {
     }
     return getSecondRequest();
   }
-
 }

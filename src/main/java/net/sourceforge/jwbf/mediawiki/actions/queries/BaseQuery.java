@@ -2,10 +2,14 @@ package net.sourceforge.jwbf.mediawiki.actions.queries;
 
 import java.util.Iterator;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.common.annotations.Beta;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
+
 import net.sourceforge.jwbf.core.Optionals;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.core.internal.Checked;
@@ -13,8 +17,6 @@ import net.sourceforge.jwbf.mapper.XmlConverter;
 import net.sourceforge.jwbf.mapper.XmlElement;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * @param <T> of
@@ -67,9 +69,7 @@ public abstract class BaseQuery<T> implements Iterable<T>, Iterator<T>, Cloneabl
     return ImmutableList.copyOf(Iterables.limit(lazy(), count));
   }
 
-  /**
-   * {@inheritDoc}
-   */
+  /** {@inheritDoc} */
   @Override
   public final Iterator<T> iterator() {
     return copy();
@@ -77,38 +77,30 @@ public abstract class BaseQuery<T> implements Iterable<T>, Iterator<T>, Cloneabl
 
   protected abstract Iterator<T> copy();
 
-  /**
-   * {@inheritDoc}
-   */
+  /** {@inheritDoc} */
   @Override
   public boolean hasNext() {
     doCollection();
     return titleIterator.hasNext();
   }
 
-  /**
-   * {@inheritDoc}
-   */
+  /** {@inheritDoc} */
   @Override
   public T next() {
     doCollection();
     return titleIterator.next();
   }
 
-  /**
-   * {@inheritDoc}
-   */
+  /** {@inheritDoc} */
   @Override
   public void remove() {
     throw new UnsupportedOperationException("do not change this iteration");
   }
 
-  /**
-   * XML related methods will be removed.
-   */
+  /** XML related methods will be removed. */
   @Deprecated
-  protected Optional<String> parseXmlHasMore(String xml, String elementName, String attributeKey,
-      String newContinueKey) {
+  protected Optional<String> parseXmlHasMore(
+      String xml, String elementName, String attributeKey, String newContinueKey) {
     XmlElement rootElement = XmlConverter.getRootElement(xml);
     Optional<XmlElement> aContinue = rootElement.getChildOpt("continue");
     if (aContinue.isPresent()) {
@@ -121,8 +113,8 @@ public abstract class BaseQuery<T> implements Iterable<T>, Iterator<T>, Cloneabl
   }
 
   /**
-   * @return the first and all following requests; depends on {@link #parseHasMore(String)}.
-   * Its implementation may ask {@link #nextPageInfoOpt()} for continuation value.
+   * @return the first and all following requests; depends on {@link #parseHasMore(String)}. Its
+   *     implementation may ask {@link #nextPageInfoOpt()} for continuation value.
    */
   protected abstract HttpAction prepareNextRequest();
 
@@ -137,8 +129,8 @@ public abstract class BaseQuery<T> implements Iterable<T>, Iterator<T>, Cloneabl
   }
 
   /**
-   * @param s content form the remote api; maybe xml or json.
-   *          It depends on {@link #prepareNextRequest()}
+   * @param s content form the remote api; maybe xml or json. It depends on {@link
+   *     #prepareNextRequest()}
    * @return elements that was found in the given string
    */
   protected abstract ImmutableList<T> parseElements(String s);
@@ -158,17 +150,13 @@ public abstract class BaseQuery<T> implements Iterable<T>, Iterator<T>, Cloneabl
     private HttpAction msg;
     private boolean init = true;
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public HttpAction getNextMessage() {
       return msg;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public final String processAllReturningText(final String s) {
       ImmutableList<T> newTitles = parseElements(s);

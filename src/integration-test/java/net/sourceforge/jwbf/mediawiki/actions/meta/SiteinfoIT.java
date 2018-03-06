@@ -25,22 +25,21 @@ import static net.sourceforge.jwbf.mediawiki.BotFactory.getWikiUser;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import net.sourceforge.jwbf.core.contentRep.Article;
 import net.sourceforge.jwbf.mediawiki.BotFactory;
 import net.sourceforge.jwbf.mediawiki.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 import net.sourceforge.jwbf.mediawiki.live.AbstractMediaWikiBotIT;
-import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class SiteinfoIT extends AbstractMediaWikiBotIT {
 
   private static final Logger log = LoggerFactory.getLogger(SiteinfoIT.class);
 
-  /**
-   * Test get siteinfo on Wikipedia DE.
-   */
+  /** Test get siteinfo on Wikipedia DE. */
   @Test
   public final void siteInfoWikipediaDe() {
     // GIVEN
@@ -57,6 +56,7 @@ public class SiteinfoIT extends AbstractMediaWikiBotIT {
   /**
    * Test get siteinfo on a MW. Prepare a the wiki, that the siteinfopage is only readable if user
    * is logged in.
+   *
    * <pre>
    * $wgGroupPermissions['*']['read'] = false;
    * </pre>
@@ -88,8 +88,8 @@ public class SiteinfoIT extends AbstractMediaWikiBotIT {
 
     // THEN
     Version latestVersion = Version.getLatest();
-    assertTrue(a.getText() + " should contains " + latestVersion.getNumber(),
+    assertTrue(
+        a.getText() + " should contains " + latestVersion.getNumber(),
         a.getText().contains(latestVersion.getNumber()));
   }
-
 }

@@ -10,11 +10,12 @@ public class GetRevisionTest {
   public void testGetDataProperties() {
     assertEquals("comment", GetRevision.getDataProperties(GetRevision.COMMENT));
 
-    assertEquals("content%7Ccomment", //
+    assertEquals(
+        "content%7Ccomment", //
         GetRevision.getDataProperties(GetRevision.CONTENT | GetRevision.COMMENT));
 
-    assertEquals("user%7Cids", //
+    assertEquals(
+        "user%7Cids", //
         GetRevision.getDataProperties(GetRevision.IDS | GetRevision.USER | GetRevision.IDS));
-
   }
 }

@@ -22,6 +22,5 @@ public class Checked {
       throw new IllegalArgumentException("The argument '" + msg + "' must not be null or empty");
     }
     return string;
-
   }
 }

@@ -5,9 +5,6 @@ import static org.mockito.Mockito.when;
 
 import java.util.Set;
 
-import com.google.common.collect.ImmutableSet;
-import net.sourceforge.jwbf.TestHelper;
-import net.sourceforge.jwbf.core.contentRep.Userinfo;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,11 +12,15 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import com.google.common.collect.ImmutableSet;
+
+import net.sourceforge.jwbf.TestHelper;
+import net.sourceforge.jwbf.core.contentRep.Userinfo;
+
 @RunWith(MockitoJUnitRunner.class)
 public class PostDeleteTest {
 
-  @Mock
-  private Userinfo userinfo;
+  @Mock private Userinfo userinfo;
 
   private PostDelete testee;
 
@@ -37,7 +38,6 @@ public class PostDeleteTest {
 
     // WHEN
     testee.parseXml(xml);
-
   }
 
   @Test
@@ -49,8 +49,10 @@ public class PostDeleteTest {
     testee.parseXml(xml);
 
     // THEN
-    Mockito.verify(testee).logDeleted("Delete0", "content was: \"A\" " +
-        "(and the only contributor was \"[[Special:Contributions/Admin|Admin]]\")");
-
+    Mockito.verify(testee)
+        .logDeleted(
+            "Delete0",
+            "content was: \"A\" "
+                + "(and the only contributor was \"[[Special:Contributions/Admin|Admin]]\")");
   }
 }

@@ -7,9 +7,10 @@ import static org.mockito.Mockito.mock;
 
 import java.util.Date;
 
-import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 import org.joda.time.DateTime;
 import org.junit.Test;
+
+import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 
 public class ImmutableArticleTest {
 
@@ -52,7 +53,6 @@ public class ImmutableArticleTest {
     assertEquals(SimpleArticle.newZeroDate(), immutable.getEditTimestamp());
     assertFalse(immutable.isMinorEdit());
     assertFalse(immutable.isRedirect());
-
   }
 
   @Test
@@ -84,7 +84,5 @@ public class ImmutableArticleTest {
     assertEquals(time, immutable.getEditTimestamp().getTime());
     assertTrue(immutable.isMinorEdit());
     assertTrue(immutable.isRedirect());
-
   }
-
 }

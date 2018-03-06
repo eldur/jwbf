@@ -9,10 +9,12 @@ import static org.junit.Assert.fail;
 import java.io.File;
 import java.util.Locale;
 
+import org.junit.Test;
+
 import com.google.common.base.Suppliers;
 import com.google.common.collect.ImmutableMultimap;
+
 import net.sourceforge.jwbf.GAssert;
-import org.junit.Test;
 
 public class PostTest {
 
@@ -85,9 +87,11 @@ public class PostTest {
     String url = "http://localhost/";
 
     // WHEN
-    ImmutableMultimap<String, Object> postWithInt = RequestBuilder.of(url) //
-        .postParam("a", 5) //
-        .buildPost().getParams();
+    ImmutableMultimap<String, Object> postWithInt =
+        RequestBuilder.of(url) //
+            .postParam("a", 5) //
+            .buildPost()
+            .getParams();
 
     // THEN
     GAssert.assertEquals(ImmutableMultimap.of("a", "5"), postWithInt);
@@ -99,9 +103,11 @@ public class PostTest {
     String url = "http://localhost/";
 
     // WHEN
-    ImmutableMultimap<String, Object> postWithDouble = RequestBuilder.of(url) //
-        .postParam("a", 5d, Locale.US, "%1.0f") //
-        .buildPost().getParams();
+    ImmutableMultimap<String, Object> postWithDouble =
+        RequestBuilder.of(url) //
+            .postParam("a", 5d, Locale.US, "%1.0f") //
+            .buildPost()
+            .getParams();
 
     // THEN
     GAssert.assertEquals(ImmutableMultimap.of("a", "5"), postWithDouble);
@@ -113,9 +119,11 @@ public class PostTest {
     String url = "http://localhost/";
 
     // WHEN
-    ImmutableMultimap<String, Object> postWithDouble = RequestBuilder.of(url) //
-        .postParam("a", 5.000_00d, Locale.US, "%4.3f") //
-        .buildPost().getParams();
+    ImmutableMultimap<String, Object> postWithDouble =
+        RequestBuilder.of(url) //
+            .postParam("a", 5.000_00d, Locale.US, "%4.3f") //
+            .buildPost()
+            .getParams();
 
     // THEN
     GAssert.assertEquals(ImmutableMultimap.of("a", "5.000"), postWithDouble);
@@ -127,9 +135,11 @@ public class PostTest {
     String url = "http://localhost/";
 
     // WHEN
-    ImmutableMultimap<String, Object> postWithDouble = RequestBuilder.of(url) //
-        .postParam("a", 5.000_1d, Locale.GERMANY, "%.4f") //
-        .buildPost().getParams();
+    ImmutableMultimap<String, Object> postWithDouble =
+        RequestBuilder.of(url) //
+            .postParam("a", 5.000_1d, Locale.GERMANY, "%.4f") //
+            .buildPost()
+            .getParams();
 
     // THEN
     GAssert.assertEquals(ImmutableMultimap.of("a", "5,0001"), postWithDouble);
@@ -142,9 +152,11 @@ public class PostTest {
     File file = new File("test");
 
     // WHEN
-    ImmutableMultimap<String, Object> postWithInt = RequestBuilder.of(url) //
-        .postParam("a", file) //
-        .buildPost().getParams();
+    ImmutableMultimap<String, Object> postWithInt =
+        RequestBuilder.of(url) //
+            .postParam("a", file) //
+            .buildPost()
+            .getParams();
 
     // THEN
     GAssert.assertEquals(ImmutableMultimap.of("a", file), postWithInt);
@@ -154,10 +166,11 @@ public class PostTest {
   public void testWithSameParams() {
     // GIVEN
     String url = "http://localhost/";
-    Post post = new Post(url) //
-        .postParam("a", "b") //
-        .postParam("a", "b") //
-        .postParam("a", "c") //
+    Post post =
+        new Post(url) //
+            .postParam("a", "b") //
+            .postParam("a", "b") //
+            .postParam("a", "c") //
         ;
 
     // WHEN

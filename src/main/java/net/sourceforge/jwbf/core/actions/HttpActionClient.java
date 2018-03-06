@@ -19,8 +19,6 @@
 
 package net.sourceforge.jwbf.core.actions;
 
-import javax.annotation.Nonnull;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -35,23 +33,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import com.google.common.annotations.Beta;
-import com.google.common.annotations.VisibleForTesting;
-import com.google.common.base.Function;
-import com.google.common.base.Joiner;
-import com.google.common.base.Optional;
-import com.google.common.base.Predicates;
-import com.google.common.base.Strings;
-import com.google.common.collect.ImmutableMultimap;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
-import com.google.common.io.CharStreams;
-import com.google.common.util.concurrent.RateLimiter;
-import net.sourceforge.jwbf.JWBF;
-import net.sourceforge.jwbf.core.Transform;
-import net.sourceforge.jwbf.core.actions.util.HttpAction;
-import net.sourceforge.jwbf.core.internal.Checked;
-import net.sourceforge.jwbf.core.internal.NonnullFunction;
+import javax.annotation.Nonnull;
+
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -67,6 +50,25 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.VersionInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.google.common.annotations.Beta;
+import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Function;
+import com.google.common.base.Joiner;
+import com.google.common.base.Optional;
+import com.google.common.base.Predicates;
+import com.google.common.base.Strings;
+import com.google.common.collect.ImmutableMultimap;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
+import com.google.common.io.CharStreams;
+import com.google.common.util.concurrent.RateLimiter;
+
+import net.sourceforge.jwbf.JWBF;
+import net.sourceforge.jwbf.core.Transform;
+import net.sourceforge.jwbf.core.actions.util.HttpAction;
+import net.sourceforge.jwbf.core.internal.Checked;
+import net.sourceforge.jwbf.core.internal.NonnullFunction;
 
 /**
  * The main interaction class.
@@ -91,9 +93,7 @@ public class HttpActionClient {
     this(HttpClientBuilder.create(), url);
   }
 
-  /**
-   * @param url like "http://host/of/wiki/"
-   */
+  /** @param url like "http://host/of/wiki/" */
   public HttpActionClient(final HttpClientBuilder clientBuilder, final URL url) {
     this.url = url;
     path = pathOf(url);
@@ -124,9 +124,7 @@ public class HttpActionClient {
     }
   }
 
-  /**
-   * @return message, never null
-   */
+  /** @return message, never null */
   @Nonnull
   public synchronized String performAction(ContentProcessable contentProcessable) {
     String out = "";
@@ -178,8 +176,11 @@ public class HttpActionClient {
   }
 
   @VisibleForTesting
-  String post(HttpRequestBase requestBase //
-      , ReturningTextProcessor contentProcessable, HttpAction ha) {
+  String post(
+      HttpRequestBase requestBase //
+          ,
+      ReturningTextProcessor contentProcessable,
+      HttpAction ha) {
     Post post = (Post) ha;
     Charset charset = Charset.forName(post.getCharset());
     MultipartEntityBuilder entityBuilder = MultipartEntityBuilder.create();
@@ -193,7 +194,10 @@ public class HttpActionClient {
   }
 
   @VisibleForTesting
-  void applyToEntityBuilder(String key, Collection<Object> values, Charset charset,
+  void applyToEntityBuilder(
+      String key,
+      Collection<Object> values,
+      Charset charset,
       MultipartEntityBuilder entityBuilder) {
     for (Object content : Iterables.filter(values, Predicates.notNull())) {
       if (content instanceof String) {
@@ -204,9 +208,11 @@ public class HttpActionClient {
         entityBuilder.addBinaryBody(key, file);
       } else {
         String canonicalName = content.getClass().getCanonicalName();
-        throw new UnsupportedOperationException("No Handler found for " + canonicalName +
-            ". Only String or File is accepted, " +
-            "because http parameters knows no other types.");
+        throw new UnsupportedOperationException(
+            "No Handler found for "
+                + canonicalName
+                + ". Only String or File is accepted, "
+                + "because http parameters knows no other types.");
       }
     }
   }
@@ -230,12 +236,16 @@ public class HttpActionClient {
     }
   }
 
-  private String executeAndProcess(HttpRequestBase requestBase, ReturningTextProcessor cp,
-      HttpAction ha) {
+  private String executeAndProcess(
+      HttpRequestBase requestBase, ReturningTextProcessor cp, HttpAction ha) {
 
-    log.debug("message {} is: " + //
-        "\n\t hostPath : {} " + //
-        "\n\t queryPath: {}", debug(requestBase, ha, cp));
+    log.debug(
+        "message {} is: "
+            + //
+            "\n\t hostPath : {} "
+            + //
+            "\n\t queryPath: {}",
+        debug(requestBase, ha, cp));
     HttpResponse res = execute(requestBase);
 
     final String out = writeToString(ha, res);
@@ -255,11 +265,10 @@ public class HttpActionClient {
   String writeToString(HttpAction ha, HttpResponse res) {
     Charset charSet = Charset.forName(ha.getCharset());
 
-    try (
-        InputStream content = res.getEntity().getContent();
+    try (InputStream content = res.getEntity().getContent();
         InputStreamReader inputStreamReader = new InputStreamReader(content, charSet); //
         BufferedReader br = new BufferedReader(inputStreamReader); //
-    ) {
+        ) {
       return toString(br);
     } catch (IOException e) {
       throw new IllegalStateException(e);
@@ -296,7 +305,7 @@ public class HttpActionClient {
     if (cp != null) {
       final String path = debugRequestPathOf(request);
       final String type = debugTypeOf(ha, cp);
-      return new String[] { type, path, ha.getRequest() };
+      return new String[] {type, path, ha.getRequest()};
     }
     return new String[0];
   }
@@ -320,16 +329,12 @@ public class HttpActionClient {
     }
   }
 
-  /**
-   * @return like http://localhost
-   */
+  /** @return like http://localhost */
   String getHostUrl() {
     return host.toURI();
   }
 
-  /**
-   * @return like http://localhost/a/b?c=d
-   */
+  /** @return like http://localhost/a/b?c=d */
   public String getUrl() {
     return url.toExternalForm();
   }
@@ -354,11 +359,10 @@ public class HttpActionClient {
     private Optional<RateLimiter> rateLimiter = Optional.absent();
     private HttpClient client;
     private URL url;
-    @VisibleForTesting
-    List<UserAgentPart> userAgentParts = Lists.newArrayList();
+    @VisibleForTesting List<UserAgentPart> userAgentParts = Lists.newArrayList();
 
-    public Builder withUserAgent(String userAgentName, String userAgentVersion,
-        String userAgentComment) {
+    public Builder withUserAgent(
+        String userAgentName, String userAgentVersion, String userAgentComment) {
       String nonNullUserAgentName = Checked.nonNull(userAgentName, "User-Agent name");
       String nonNullUserAgentVersion = Checked.nonNull(userAgentVersion, "User-Agent version");
       String nonNullUserAgentComment = Checked.nonNull(userAgentComment, "User-Agent comment");
@@ -394,9 +398,11 @@ public class HttpActionClient {
     }
 
     private static String makeUserAgentString(List<UserAgentPart> userAgentParts) {
-      String userAgent = Joiner.on(" ") //
-          .join(Transform.the(userAgentParts, TO_STRING)) + " " +
-          httpClientVersion();
+      String userAgent =
+          Joiner.on(" ") //
+                  .join(Transform.the(userAgentParts, TO_STRING))
+              + " "
+              + httpClientVersion();
       return userAgent.trim();
     }
 
@@ -427,14 +433,14 @@ public class HttpActionClient {
 
   private static String trimAndRemoveWhitespace(String in) {
     String changed = in.trim().replaceAll("[\r\n()]+", "");
-    return logIfDifferent(in, changed,
-        "\"{}\" was changed to \"{}\"; because of User-Agent " + "comment rules");
+    return logIfDifferent(
+        in, changed, "\"{}\" was changed to \"{}\"; because of User-Agent " + "comment rules");
   }
 
   private static String trimAndReplaceWhitespaceLogged(String in) {
     String changed = trimAndReplaceWhitespace(in);
-    return logIfDifferent(in, changed,
-        "\"{}\" was changed to \"{}\"; because of User-Agent " + "name/version rules");
+    return logIfDifferent(
+        in, changed, "\"{}\" was changed to \"{}\"; because of User-Agent " + "name/version rules");
   }
 
   private static String trimAndReplaceWhitespace(String in) {
@@ -444,8 +450,8 @@ public class HttpActionClient {
   private static String toISO8859(String toEncode) {
     byte[] array = StandardCharsets.ISO_8859_1.encode(toEncode).array();
     String encoded = new String(array, StandardCharsets.UTF_8);
-    return logIfDifferent(toEncode, encoded,
-        "\"{}\" was encoded to \"{}\"; because only iso8859 is supported");
+    return logIfDifferent(
+        toEncode, encoded, "\"{}\" was encoded to \"{}\"; because only iso8859 is supported");
   }
 
   private static String emptyToUnknown(String changed) {
@@ -507,8 +513,7 @@ public class HttpActionClient {
 
   @VisibleForTesting
   public static String httpClientVersion() {
-    return VersionInfo
-        .getUserAgent("Apache-HttpClient", "org.apache.http.client", HttpClientBuilder.class);
+    return VersionInfo.getUserAgent(
+        "Apache-HttpClient", "org.apache.http.client", HttpClientBuilder.class);
   }
-
 }

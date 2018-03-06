@@ -6,20 +6,22 @@ import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 
-import javax.annotation.Nonnull;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.Map;
+
+import javax.annotation.Nonnull;
+
+import org.junit.Before;
+import org.junit.Test;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Charsets;
 import com.google.common.io.Files;
 import com.google.common.io.Resources;
+
 import net.sourceforge.jwbf.JWBF;
-import org.junit.Before;
-import org.junit.Test;
 
 public class JsonMapperTest {
 
@@ -57,14 +59,15 @@ public class JsonMapperTest {
   @Test
   public void testNullResponse() {
     // GIVEN
-    JsonMapper.ToJsonFunction nullFunction = new JsonMapper.ToJsonFunction() {
+    JsonMapper.ToJsonFunction nullFunction =
+        new JsonMapper.ToJsonFunction() {
 
-      @Nonnull
-      @Override
-      public Object toJson(@Nonnull String jsonString, Class<?> clazz) {
-        return null;
-      }
-    };
+          @Nonnull
+          @Override
+          public Object toJson(@Nonnull String jsonString, Class<?> clazz) {
+            return null;
+          }
+        };
     testee = new JsonMapper(nullFunction);
     try {
       // WHEN
@@ -78,18 +81,19 @@ public class JsonMapperTest {
   @Test(expected = IllegalArgumentException.class)
   public void testGet_withException() {
     // GIVEN
-    JsonMapper.JacksonToJsonFunction testee = new JsonMapper.JacksonToJsonFunction() {
-      @Override
-      ObjectMapper newObjectMapper() {
-        ObjectMapper mock = mock(ObjectMapper.class);
-        try {
-          doThrow(IOException.class).when(mock).readValue(isA(String.class), isA(Class.class));
-        } catch (IOException e) {
-          fail();
-        }
-        return mock;
-      }
-    };
+    JsonMapper.JacksonToJsonFunction testee =
+        new JsonMapper.JacksonToJsonFunction() {
+          @Override
+          ObjectMapper newObjectMapper() {
+            ObjectMapper mock = mock(ObjectMapper.class);
+            try {
+              doThrow(IOException.class).when(mock).readValue(isA(String.class), isA(Class.class));
+            } catch (IOException e) {
+              fail();
+            }
+            return mock;
+          }
+        };
 
     // WHEN / THEN
     testee.toJson("", Object.class);
@@ -125,7 +129,5 @@ public class JsonMapperTest {
     String getMainpage() {
       return mainpage;
     }
-
   }
-
 }

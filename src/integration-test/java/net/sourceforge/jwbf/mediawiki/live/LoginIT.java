@@ -25,13 +25,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLException;
-import javax.net.ssl.SSLSession;
-import javax.net.ssl.SSLSocket;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
-
 import java.io.IOException;
 import java.net.URL;
 import java.security.KeyManagementException;
@@ -39,13 +32,13 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
 
-import net.sourceforge.jwbf.JettyServer;
-import net.sourceforge.jwbf.TestHelper;
-import net.sourceforge.jwbf.core.actions.HttpActionClient;
-import net.sourceforge.jwbf.core.actions.util.ActionException;
-import net.sourceforge.jwbf.mediawiki.BotFactory;
-import net.sourceforge.jwbf.mediawiki.MediaWiki.Version;
-import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLException;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.SSLSocket;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
+
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.auth.AuthScope;
@@ -65,6 +58,14 @@ import org.apache.http.params.HttpParams;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import net.sourceforge.jwbf.JettyServer;
+import net.sourceforge.jwbf.TestHelper;
+import net.sourceforge.jwbf.core.actions.HttpActionClient;
+import net.sourceforge.jwbf.core.actions.util.ActionException;
+import net.sourceforge.jwbf.mediawiki.BotFactory;
+import net.sourceforge.jwbf.mediawiki.MediaWiki.Version;
+import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
+
 /**
  * Test Login.
  *
@@ -72,22 +73,19 @@ import org.junit.Test;
  */
 public class LoginIT extends AbstractMediaWikiBotIT {
 
-  /**
-   * Test login on Wikipedia.
-   */
+  /** Test login on Wikipedia. */
   @Test
   public final void loginWikipedia1() {
     String liveUrl = getValueOrSkip("login_wikipedia1_url");
     assumeReachable(liveUrl);
     bot = new MediaWikiBot(liveUrl);
-    bot.login(getValueOrSkip("login_wikipedia1_user_valid"),
+    bot.login(
+        getValueOrSkip("login_wikipedia1_user_valid"),
         getValueOrSkip("login_wikipedia1_pass_valid"));
     assertTrue(bot.isLoggedIn());
   }
 
-  /**
-   * Test login on Wikipedia.
-   */
+  /** Test login on Wikipedia. */
   @Test
   public final void loginWikipedia1Urlformats() {
 
@@ -96,14 +94,13 @@ public class LoginIT extends AbstractMediaWikiBotIT {
     liveUrl = liveUrl.substring(0, lastSlash + 1);
     assumeReachable(liveUrl);
     bot = new MediaWikiBot(liveUrl);
-    bot.login(getValueOrSkip("login_wikipedia1_user_valid"),
+    bot.login(
+        getValueOrSkip("login_wikipedia1_user_valid"),
         getValueOrSkip("login_wikipedia1_pass_valid"));
     assertTrue(bot.isLoggedIn());
   }
 
-  /**
-   * Test FAIL login on Wikipedia.
-   */
+  /** Test FAIL login on Wikipedia. */
   @Test(expected = ActionException.class)
   public final void loginWikipedia1Fail() {
 
@@ -112,12 +109,9 @@ public class LoginIT extends AbstractMediaWikiBotIT {
     bot = new MediaWikiBot(liveUrl);
     bot.login("Klhjfd", "4sdf");
     assertFalse("Login does not exist", bot.isLoggedIn());
-
   }
 
-  /**
-   * Test login on a Mediawiki.
-   */
+  /** Test login on a Mediawiki. */
   @Test
   @Ignore("1.09 is to old")
   public final void loginWikiMW1x09Urlformats() {
@@ -149,9 +143,7 @@ public class LoginIT extends AbstractMediaWikiBotIT {
     }
   }
 
-  /**
-   * Login on last MW with SSL and htaccess.
-   */
+  /** Login on last MW with SSL and htaccess. */
   @Test
   public final void loginWikiMWLastSSLAndHtaccess() throws Exception {
 
@@ -167,9 +159,12 @@ public class LoginIT extends AbstractMediaWikiBotIT {
     TestHelper.assumeReachable(u);
     checkAuthenticationRequired(httpClient, u, port);
 
-    httpClient.getCredentialsProvider().setCredentials(new AuthScope(u.getHost(), port),
-        new UsernamePasswordCredentials(BotFactory.getWikiUser(latest),
-            BotFactory.getWikiPass(latest)));
+    httpClient
+        .getCredentialsProvider()
+        .setCredentials(
+            new AuthScope(u.getHost(), port),
+            new UsernamePasswordCredentials(
+                BotFactory.getWikiUser(latest), BotFactory.getWikiPass(latest)));
 
     HttpClientBuilder clientBuilder = HttpClientBuilder.create();
     HttpActionClient sslFakeClient = new HttpActionClient(clientBuilder, u);
@@ -193,41 +188,42 @@ public class LoginIT extends AbstractMediaWikiBotIT {
   private AbstractHttpClient getSSLFakeHttpClient()
       throws NoSuchAlgorithmException, KeyManagementException {
     SSLContext sslContext = SSLContext.getInstance("SSL");
-    sslContext.init(null, new TrustManager[] { new X509TrustManager() {
-      @Override
-      public X509Certificate[] getAcceptedIssuers() {
-        return null;
-      }
+    sslContext.init(
+        null,
+        new TrustManager[] {
+          new X509TrustManager() {
+            @Override
+            public X509Certificate[] getAcceptedIssuers() {
+              return null;
+            }
 
-      @Override
-      public void checkClientTrusted(X509Certificate[] certs, String authType) {
-      }
+            @Override
+            public void checkClientTrusted(X509Certificate[] certs, String authType) {}
 
-      @Override
-      public void checkServerTrusted(X509Certificate[] certs, String authType) {
-      }
-    } }, new SecureRandom());
+            @Override
+            public void checkServerTrusted(X509Certificate[] certs, String authType) {}
+          }
+        },
+        new SecureRandom());
 
     SSLSocketFactory sf = new SSLSocketFactory(sslContext);
-    sf.setHostnameVerifier(new X509HostnameVerifier() {
+    sf.setHostnameVerifier(
+        new X509HostnameVerifier() {
 
-      @Override
-      public boolean verify(String hostname, SSLSession session) {
-        return true;
-      }
+          @Override
+          public boolean verify(String hostname, SSLSession session) {
+            return true;
+          }
 
-      @Override
-      public void verify(String host, String[] cns, String[] subjectAlts) throws SSLException {
-      }
+          @Override
+          public void verify(String host, String[] cns, String[] subjectAlts) throws SSLException {}
 
-      @Override
-      public void verify(String host, X509Certificate cert) throws SSLException {
-      }
+          @Override
+          public void verify(String host, X509Certificate cert) throws SSLException {}
 
-      @Override
-      public void verify(String host, SSLSocket ssl) throws IOException {
-      }
-    });
+          @Override
+          public void verify(String host, SSLSocket ssl) throws IOException {}
+        });
     Scheme httpsScheme = new Scheme("https", sf, 443);
     SchemeRegistry schemeRegistry = new SchemeRegistry();
     schemeRegistry.register(httpsScheme);
@@ -239,5 +235,4 @@ public class LoginIT extends AbstractMediaWikiBotIT {
     DefaultHttpClient httpClient = new DefaultHttpClient(cm, params);
     return httpClient;
   }
-
 }

@@ -20,6 +20,9 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
 import java.util.jar.Manifest;
 
+import org.junit.Before;
+import org.junit.Test;
+
 import com.google.common.base.Function;
 import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
@@ -30,11 +33,10 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Ordering;
 import com.google.common.jimfs.Configuration;
 import com.google.common.jimfs.Jimfs;
+
 import net.sourceforge.jwbf.JWBF.ContainerEntry;
 import net.sourceforge.jwbf.core.actions.HttpActionClient;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
-import org.junit.Before;
-import org.junit.Test;
 
 public class JWBFTest {
 
@@ -107,10 +109,14 @@ public class JWBFTest {
     Path manifestFile = tempDirectory.resolveSibling("MANIFEST.MF");
     String expectedVersion = "999.0.0-SNAPSHOT-${buildNumber}";
     String expectedTitle = "jwbf";
-    byte[] bytes = Joiner.on("\n").join("Manifest-Version: 1.0", //
-        "Implementation-Title: " + expectedTitle, //
-        "Implementation-Version: " + expectedVersion, "") //
-        .getBytes();
+    byte[] bytes =
+        Joiner.on("\n")
+            .join(
+                "Manifest-Version: 1.0", //
+                "Implementation-Title: " + expectedTitle, //
+                "Implementation-Version: " + expectedVersion,
+                "") //
+            .getBytes();
     new NioUnchecked().writeBytes(manifestFile, bytes);
     // ---
 
@@ -131,11 +137,11 @@ public class JWBFTest {
     Map<String, String> result = JWBF.init(packageName, tempDirectory.toUri());
 
     // THEN
-    Map<String, String> expected = ImmutableMap.<String, String>builder() //
-        .put(JWBF.DEVEL_NAME + "-mediawiki", JWBF.DEVEL_VERSION) //
-        .build();
+    Map<String, String> expected =
+        ImmutableMap.<String, String>builder() //
+            .put(JWBF.DEVEL_NAME + "-mediawiki", JWBF.DEVEL_VERSION) //
+            .build();
     assertEquals(expected, result);
-
   }
 
   private Path getTargetDir() {
@@ -163,9 +169,10 @@ public class JWBFTest {
   @Test
   public void testGetVersions() {
     // GIVEN
-    JWBF.cache = ImmutableMap.<String, String>builder() //
-        .put("jwbf-generic-mediawiki", JWBF.DEVEL_VERSION) //
-        .build();
+    JWBF.cache =
+        ImmutableMap.<String, String>builder() //
+            .put("jwbf-generic-mediawiki", JWBF.DEVEL_VERSION) //
+            .build();
 
     // WHEN
     String version = JWBF.getVersion(MediaWikiBot.class);
@@ -177,9 +184,10 @@ public class JWBFTest {
   @Test
   public void testGetPartId() {
     // GIVEN
-    JWBF.cache = ImmutableMap.<String, String>builder() //
-        .put("jwbf-generic-mediawiki", "anyVersion") //
-        .build();
+    JWBF.cache =
+        ImmutableMap.<String, String>builder() //
+            .put("jwbf-generic-mediawiki", "anyVersion") //
+            .build();
 
     // WHEN
     String partId = JWBF.getPartId(MediaWikiBot.class);
@@ -191,9 +199,10 @@ public class JWBFTest {
   @Test
   public void testGetPartId_core() {
     // GIVEN
-    JWBF.cache = ImmutableMap.<String, String>builder() //
-        .put("jwbf-generic-core", "anyVersion") //
-        .build();
+    JWBF.cache =
+        ImmutableMap.<String, String>builder() //
+            .put("jwbf-generic-core", "anyVersion") //
+            .build();
     // WHEN
     String partId = JWBF.getPartId(HttpActionClient.class);
 
@@ -204,20 +213,21 @@ public class JWBFTest {
   @Test
   public void testMakeVersionMap() {
     // GIVEN
-    List<ContainerEntry> elements = ImmutableList.of(//
-        new ContainerEntry("META-INF/", true), //
-        new ContainerEntry("META-INF/MANIFEST.MF", false), //
-        new ContainerEntry("net/", true), //
-        new ContainerEntry("net/sourceforge/", true), //
-        new ContainerEntry("net/sourceforge/jwbf/", true), //
-        new ContainerEntry("net/sourceforge/jwbf/trac/", true), //
-        new ContainerEntry("net/sourceforge/jwbf/trac/actions/", true), //
-        new ContainerEntry("net/sourceforge/jwbf/mediawiki/", true), //
-        new ContainerEntry("net/sourceforge/jwbf/mediawiki/actions/", true), //
-        new ContainerEntry("net/sourceforge/jwbf/trac/actions/GetRevision.class", false), //
-        new ContainerEntry("net/sourceforge/jwbf/mediawiki/actions/queries/BacklinkTitles$1.class",
-            false) //
-    );
+    List<ContainerEntry> elements =
+        ImmutableList.of( //
+            new ContainerEntry("META-INF/", true), //
+            new ContainerEntry("META-INF/MANIFEST.MF", false), //
+            new ContainerEntry("net/", true), //
+            new ContainerEntry("net/sourceforge/", true), //
+            new ContainerEntry("net/sourceforge/jwbf/", true), //
+            new ContainerEntry("net/sourceforge/jwbf/trac/", true), //
+            new ContainerEntry("net/sourceforge/jwbf/trac/actions/", true), //
+            new ContainerEntry("net/sourceforge/jwbf/mediawiki/", true), //
+            new ContainerEntry("net/sourceforge/jwbf/mediawiki/actions/", true), //
+            new ContainerEntry("net/sourceforge/jwbf/trac/actions/GetRevision.class", false), //
+            new ContainerEntry(
+                "net/sourceforge/jwbf/mediawiki/actions/queries/BacklinkTitles$1.class", false) //
+            );
     String packageName = "net/sourceforge/jwbf";
 
     // WHEN
@@ -225,10 +235,11 @@ public class JWBFTest {
         JWBF.makeVersionMap(packageName, elements, "DEVEL", "jwbf-generic");
 
     // THEN
-    Map<String, String> expected = ImmutableMap.<String, String>builder() //
-        .put("jwbf-generic-mediawiki", "DEVEL") //
-        .put("jwbf-generic-trac", "DEVEL") //
-        .build();
+    Map<String, String> expected =
+        ImmutableMap.<String, String>builder() //
+            .put("jwbf-generic-mediawiki", "DEVEL") //
+            .put("jwbf-generic-trac", "DEVEL") //
+            .build();
     assertEquals(expected, result);
   }
 
@@ -298,22 +309,22 @@ public class JWBFTest {
             if (input == null) {
               return null;
             }
-            return new ContainerEntry(input.getName().replaceAll("[0-9]+", ""),
-                input.isDirectory());
+            return new ContainerEntry(
+                input.getName().replaceAll("[0-9]+", ""), input.isDirectory());
           }
         };
     // THEN
     ImmutableList<ContainerEntry> mutated =
         Ordering.usingToString().immutableSortedCopy(Lists.transform(result, function));
 
-    ImmutableList<ContainerEntry> expected = ImmutableList.<ContainerEntry>builder() //
-        .add(new ContainerEntry("META-INF/MANIFEST.MF", false)) //
-        .add(new ContainerEntry("target/jarfile-test/jarContent/", true)) //
-        .add(new ContainerEntry("target/jarfile-test/jarContent/first/", true)) //
-        .add(new ContainerEntry("target/jarfile-test/jarContent/first/second/", true)) //
-        .build();
+    ImmutableList<ContainerEntry> expected =
+        ImmutableList.<ContainerEntry>builder() //
+            .add(new ContainerEntry("META-INF/MANIFEST.MF", false)) //
+            .add(new ContainerEntry("target/jarfile-test/jarContent/", true)) //
+            .add(new ContainerEntry("target/jarfile-test/jarContent/first/", true)) //
+            .add(new ContainerEntry("target/jarfile-test/jarContent/first/second/", true)) //
+            .build();
     GAssert.assertEquals(expected, mutated);
-
   }
 
   synchronized Path newTestJar() {
@@ -376,7 +387,7 @@ public class JWBFTest {
       JarEntry entry = makeEntry(source);
       target.putNextEntry(entry);
 
-      try (BufferedInputStream in = new BufferedInputStream(Files.newInputStream(source));) {
+      try (BufferedInputStream in = new BufferedInputStream(Files.newInputStream(source)); ) {
 
         byte[] buffer = new byte[1024];
         while (true) {
@@ -501,7 +512,8 @@ public class JWBFTest {
     String versionText = JWBF.formatVersionText();
 
     ImmutableList<String> expected = //
-        ImmutableList.of("jwbf-generic-core => DEVEL", //
+        ImmutableList.of(
+            "jwbf-generic-core => DEVEL", //
             "jwbf-generic-mediawiki => DEVEL");
     GAssert.assertEquals(expected, splitVersionText(versionText));
   }
@@ -509,5 +521,4 @@ public class JWBFTest {
   public static ImmutableList<String> splitVersionText(String versionText) {
     return ImmutableList.copyOf(Splitter.on("\n").omitEmptyStrings().split(versionText));
   }
-
 }

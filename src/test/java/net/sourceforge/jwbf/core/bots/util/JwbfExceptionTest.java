@@ -38,7 +38,6 @@ public class JwbfExceptionTest {
 
     // THEN
     assertTrue(getString(baos).contains(needleToFind));
-
   }
 
   @Test
@@ -87,5 +86,4 @@ public class JwbfExceptionTest {
       throw new IllegalStateException(e);
     }
   }
-
 }

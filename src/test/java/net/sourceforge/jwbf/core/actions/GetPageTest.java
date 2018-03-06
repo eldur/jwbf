@@ -2,8 +2,9 @@ package net.sourceforge.jwbf.core.actions;
 
 import static org.junit.Assert.assertEquals;
 
-import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import org.junit.Test;
+
+import net.sourceforge.jwbf.core.actions.util.HttpAction;
 
 public class GetPageTest {
 
@@ -32,5 +33,4 @@ public class GetPageTest {
     HttpAction expected = RequestBuilder.of("http://localhost/wiki/index.php?key=value").buildGet();
     assertEquals(expected, testee.getNextMessage());
   }
-
 }

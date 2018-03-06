@@ -21,9 +21,13 @@ package net.sourceforge.jwbf.mediawiki.actions.queries;
 import java.util.Iterator;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
+
 import net.sourceforge.jwbf.core.actions.RequestBuilder;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.mapper.XmlConverter;
@@ -32,8 +36,6 @@ import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
 import net.sourceforge.jwbf.mediawiki.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Gets a list of pages recently changed, ordered by modification timestamp. Parameters: rcfrom
@@ -47,9 +49,7 @@ public class RecentchangeTitles extends BaseQuery<String> {
 
   private static final Logger log = LoggerFactory.getLogger(RecentchangeTitles.class);
 
-  /**
-   * value for the bllimit-parameter. *
-   */
+  /** value for the bllimit-parameter. * */
   private static final int LIMIT = 50;
 
   private final MediaWikiBot bot;
@@ -60,16 +60,17 @@ public class RecentchangeTitles extends BaseQuery<String> {
    * generates the next MediaWiki-request (GetMethod) and adds it to msgs.
    *
    * @param namespace the namespace(s) that will be searched for links, as a string of numbers
-   *                  separated by '|'; if null, this parameter is omitted
-   * @param rcstart   timestamp
+   *     separated by '|'; if null, this parameter is omitted
+   * @param rcstart timestamp
    */
   private HttpAction generateRequest(int[] namespace, String rcstart) {
 
-    RequestBuilder requestBuilder = new ApiRequestBuilder() //
-        .action("query") //
-        .formatXml() //
-        .param("list", "recentchanges") //
-        .param("rclimit", LIMIT) //
+    RequestBuilder requestBuilder =
+        new ApiRequestBuilder() //
+            .action("query") //
+            .formatXml() //
+            .param("list", "recentchanges") //
+            .param("rclimit", LIMIT) //
         ;
     if (namespace != null) {
       requestBuilder.param("rcnamespace", MediaWiki.urlEncode(MWAction.createNsString(namespace)));
@@ -79,26 +80,20 @@ public class RecentchangeTitles extends BaseQuery<String> {
     }
 
     return requestBuilder.buildGet();
-
   }
 
   private HttpAction generateRequest(int[] namespace) {
     return generateRequest(namespace, "");
   }
 
-  /**
-   *
-   */
+  /** */
   public RecentchangeTitles(MediaWikiBot bot, int... ns) {
     super(bot);
     namespaces = ns;
     this.bot = bot;
-
   }
 
-  /**
-   *
-   */
+  /** */
   public RecentchangeTitles(MediaWikiBot bot) {
     this(bot, MediaWiki.NS_ALL);
   }
@@ -114,7 +109,6 @@ public class RecentchangeTitles extends BaseQuery<String> {
     List<String> titleCollection = Lists.newArrayList();
     findContent(root, titleCollection);
     return ImmutableList.copyOf(titleCollection);
-
   }
 
   private void findContent(final XmlElement root, List<String> titleCollection) {
@@ -126,7 +120,6 @@ public class RecentchangeTitles extends BaseQuery<String> {
       } else {
         findContent(xmlElement, titleCollection);
       }
-
     }
   }
 
@@ -137,7 +130,6 @@ public class RecentchangeTitles extends BaseQuery<String> {
     } else {
       return generateRequest(namespaces);
     }
-
   }
 
   @Override
@@ -149,5 +141,4 @@ public class RecentchangeTitles extends BaseQuery<String> {
   protected Optional<String> parseHasMore(String s) {
     return Optional.absent();
   }
-
 }

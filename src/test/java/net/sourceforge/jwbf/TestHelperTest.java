@@ -54,7 +54,5 @@ public class TestHelperTest {
 
     // THEN
     assertEquals("Z[\\", result);
-
   }
-
 }

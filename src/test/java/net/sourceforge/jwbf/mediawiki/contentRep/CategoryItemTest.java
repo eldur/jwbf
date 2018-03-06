@@ -34,5 +34,4 @@ public class CategoryItemTest {
 
     assertNotEquals(a.hashCode(), b.hashCode());
   }
-
 }

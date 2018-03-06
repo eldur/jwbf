@@ -2,9 +2,12 @@ package net.sourceforge.jwbf.mediawiki.actions.queries;
 
 import static org.junit.Assert.fail;
 
+import org.junit.Test;
+
 import com.github.dreamhead.moco.RequestMatcher;
 import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableList;
+
 import net.sourceforge.jwbf.AbstractIntegTest;
 import net.sourceforge.jwbf.GAssert;
 import net.sourceforge.jwbf.Logging;
@@ -13,7 +16,6 @@ import net.sourceforge.jwbf.mediawiki.ApiMatcherBuilder;
 import net.sourceforge.jwbf.mediawiki.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.MocoIntegTest;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
-import org.junit.Test;
 
 public class BaseQueryIntegTest extends AbstractIntegTest {
 
@@ -61,7 +63,6 @@ public class BaseQueryIntegTest extends AbstractIntegTest {
       // THEN
       GAssert.assertStartsWith("invalid status: HTTP/1.1 400 Bad Request;", e.getMessage());
     }
-
   }
 
   @Test
@@ -82,7 +83,6 @@ public class BaseQueryIntegTest extends AbstractIntegTest {
     // THEN
     String warn = "[WARN] previous response has same payload";
     GAssert.assertEquals(ImmutableList.of(warn, warn), logLinesSupplier.get());
-
   }
 
   @Test
@@ -99,5 +99,4 @@ public class BaseQueryIntegTest extends AbstractIntegTest {
     // will fail if lazy is not lazy ;-)
 
   }
-
 }

@@ -2,16 +2,18 @@ package net.sourceforge.jwbf.mediawiki.actions.queries;
 
 import static org.junit.Assert.fail;
 
+import org.junit.Test;
+
 import com.github.dreamhead.moco.RequestMatcher;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
+
 import net.sourceforge.jwbf.GAssert;
 import net.sourceforge.jwbf.mediawiki.ApiMatcherBuilder;
 import net.sourceforge.jwbf.mediawiki.ConfKey;
 import net.sourceforge.jwbf.mediawiki.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.MocoIntegTest;
 import net.sourceforge.jwbf.mediawiki.contentRep.LogItem;
-import org.junit.Test;
 
 public class LogEventsIntegTest extends MocoIntegTest {
 
@@ -27,11 +29,12 @@ public class LogEventsIntegTest extends MocoIntegTest {
         .param("lelimit", "1") //
         .param("letype", "delete") //
         .param("list", "logevents") //
-        ;
+    ;
   }
 
-  RequestMatcher logEvents0 = newBaseMatcher() //
-      .build();
+  RequestMatcher logEvents0 =
+      newBaseMatcher() //
+          .build();
 
   @Test
   public void test() {
@@ -40,12 +43,18 @@ public class LogEventsIntegTest extends MocoIntegTest {
     applySiteinfoXmlToServer();
     server.request(logEvents0).response(mwFileOf(version(), "logEventsDelete0.xml"));
     if (version().greaterEqThen(MediaWiki.Version.MW1_23)) {
-      server.request(newBaseMatcher() //
-          .param("lecontinue", "20141005135252|17680") //
-          .build()).response(mwFileOf(version(), "logEventsDelete1.xml"));
-      server.request(newBaseMatcher() //
-          .param("lecontinue", "20141005135252|17678") //
-          .build()).response(mwFileOf(version(), "logEventsDelete2.xml"));
+      server
+          .request(
+              newBaseMatcher() //
+                  .param("lecontinue", "20141005135252|17680") //
+                  .build())
+          .response(mwFileOf(version(), "logEventsDelete1.xml"));
+      server
+          .request(
+              newBaseMatcher() //
+                  .param("lecontinue", "20141005135252|17678") //
+                  .build())
+          .response(mwFileOf(version(), "logEventsDelete2.xml"));
     }
 
     // WHEN
@@ -53,9 +62,11 @@ public class LogEventsIntegTest extends MocoIntegTest {
 
     // THEN
     ImmutableList<String> expected = splittedConfigOfString(ConfKey.LOGEVENTS_DELETE_PAGES);
-    GAssert.assertEquals(expected, FluentIterable.from(actual) //
-        .transform(LogEvents.toTitles()) //
-        .toList());
+    GAssert.assertEquals(
+        expected,
+        FluentIterable.from(actual) //
+            .transform(LogEvents.toTitles()) //
+            .toList());
   }
 
   @Test

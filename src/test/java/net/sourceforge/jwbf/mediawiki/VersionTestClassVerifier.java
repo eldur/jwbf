@@ -2,9 +2,6 @@ package net.sourceforge.jwbf.mediawiki;
 
 import static org.junit.Assert.assertEquals;
 
-import javax.annotation.Nullable;
-import javax.inject.Provider;
-
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -15,13 +12,9 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.google.common.base.Predicate;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
-import net.sourceforge.jwbf.mediawiki.MediaWiki.Version;
-import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
+import javax.annotation.Nullable;
+import javax.inject.Provider;
+
 import org.junit.Assert;
 import org.junit.Assume;
 import org.junit.rules.Verifier;
@@ -29,6 +22,15 @@ import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
+
+import net.sourceforge.jwbf.mediawiki.MediaWiki.Version;
+import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 
 public class VersionTestClassVerifier extends Verifier {
 
@@ -61,13 +63,16 @@ public class VersionTestClassVerifier extends Verifier {
 
     final Set<Version> testedKeys = Sets.newHashSet(testedVersions.values());
 
-    versions = Iterables.filter(versions, new Predicate<Version>() {
+    versions =
+        Iterables.filter(
+            versions,
+            new Predicate<Version>() {
 
-      @Override
-      public boolean apply(@Nullable Version version) {
-        return !testedKeys.contains(version);
-      }
-    });
+              @Override
+              public boolean apply(@Nullable Version version) {
+                return !testedKeys.contains(version);
+              }
+            });
 
     return Lists.newArrayList(versions);
   }
@@ -83,9 +88,7 @@ public class VersionTestClassVerifier extends Verifier {
     return data;
   }
 
-  /**
-   * Use in a valid testcase.
-   */
+  /** Use in a valid testcase. */
   private void registerTestedVersion(Class<?> clazz, Version v) {
     if (v != Version.DEVELOPMENT) {
       testedVersions.put(clazz.getCanonicalName() + "-" + v, v);
@@ -112,7 +115,9 @@ public class VersionTestClassVerifier extends Verifier {
   }
 
   private void assertAllTestedVersionsAreDocumented() {
-    assertEquals("There are undocumented tests for versions. ", "",
+    assertEquals(
+        "There are undocumented tests for versions. ",
+        "",
         fmt(getTestedButUndocmentedVersions().entrySet()));
   }
 
@@ -126,7 +131,9 @@ public class VersionTestClassVerifier extends Verifier {
       }
     }
     assumeNoIgnoredVersions();
-    assertEquals("not all documented versions are tested ", fmt(documentedVersions.entrySet()),
+    assertEquals(
+        "not all documented versions are tested ",
+        fmt(documentedVersions.entrySet()),
         fmt(testedAndDocumentedVersions.entrySet()));
   }
 
@@ -137,14 +144,15 @@ public class VersionTestClassVerifier extends Verifier {
   private String fmt(Iterable<Entry<String, Version>> elements) {
     StringBuilder sb = new StringBuilder();
     List<Entry<String, Version>> entrySet = Lists.newArrayList(elements);
-    Collections.sort(entrySet, new Comparator<Entry<String, Version>>() {
+    Collections.sort(
+        entrySet,
+        new Comparator<Entry<String, Version>>() {
 
-      @Override
-      public int compare(Entry<String, Version> o1, Entry<String, Version> o2) {
-        return o1.getKey().compareTo(o2.getKey());
-      }
-
-    });
+          @Override
+          public int compare(Entry<String, Version> o1, Entry<String, Version> o2) {
+            return o1.getKey().compareTo(o2.getKey());
+          }
+        });
     for (Entry<String, Version> entry : entrySet) {
       sb.append(shortForm(entry.getKey()));
       sb.append(" : ");
@@ -168,7 +176,6 @@ public class VersionTestClassVerifier extends Verifier {
       }
       m1.appendTail(sb);
       return sb.toString().replaceFirst("[\\.].$", "." + last);
-
     }
     return key;
   }
@@ -204,7 +211,5 @@ public class VersionTestClassVerifier extends Verifier {
 
   public void addIgnoredVersion(Version v) {
     ignoredVersions.add(v);
-
   }
-
 }

@@ -1,16 +1,18 @@
 package net.sourceforge.jwbf.mediawiki.actions.queries;
 
+import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.github.dreamhead.moco.RequestMatcher;
 import com.google.common.collect.ImmutableList;
+
 import net.sourceforge.jwbf.GAssert;
 import net.sourceforge.jwbf.mediawiki.ApiMatcherBuilder;
 import net.sourceforge.jwbf.mediawiki.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.MocoIntegTest;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
-import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class TemplateUserTitlesIntegTest extends MocoIntegTest {
 
@@ -29,12 +31,13 @@ public class TemplateUserTitlesIntegTest extends MocoIntegTest {
         .param("format", "xml") //
         .param("list", "embeddedin") //
         .paramNewContinue(version()) //
-        ;
+    ;
   }
 
-  RequestMatcher embeddedinTwo = newBaseMatcher() //
-      .param("eicontinue", "10|TestTemplate|5743") //
-      .build();
+  RequestMatcher embeddedinTwo =
+      newBaseMatcher() //
+          .param("eicontinue", "10|TestTemplate|5743") //
+          .build();
 
   RequestMatcher embeddedinOne = newBaseMatcher().build();
 
@@ -48,8 +51,9 @@ public class TemplateUserTitlesIntegTest extends MocoIntegTest {
     MediaWikiBot bot = new MediaWikiBot(host());
 
     // WHEN
-    TemplateUserTitles testee = new TemplateUserTitles(bot, 3, "Template:TestTemplate",
-        MWAction.nullSafeCopyOf(MediaWiki.NS_ALL));
+    TemplateUserTitles testee =
+        new TemplateUserTitles(
+            bot, 3, "Template:TestTemplate", MWAction.nullSafeCopyOf(MediaWiki.NS_ALL));
     ImmutableList<String> resultList = testee.getCopyOf(4);
 
     // THEN
@@ -57,7 +61,5 @@ public class TemplateUserTitlesIntegTest extends MocoIntegTest {
         ImmutableList.of("TestTemplate0", "TestTemplate1", "TestTemplate2", "TestTemplate3");
 
     GAssert.assertEquals(expected, resultList);
-
   }
-
 }

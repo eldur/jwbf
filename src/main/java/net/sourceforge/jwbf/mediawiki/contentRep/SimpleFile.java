@@ -35,7 +35,7 @@ public class SimpleFile extends SimpleArticle {
 
   /**
    * @param label new file
-   * @param file  local file
+   * @param file local file
    */
   public SimpleFile(final String label, String file) {
     this(label, new File(file));
@@ -43,7 +43,7 @@ public class SimpleFile extends SimpleArticle {
 
   /**
    * @param label new file
-   * @param file  local file
+   * @param file local file
    */
   public SimpleFile(final String label, File file) {
     setText("");
@@ -51,23 +51,17 @@ public class SimpleFile extends SimpleArticle {
     this.file = file;
   }
 
-  /**
-   * @param file local file
-   */
+  /** @param file local file */
   public SimpleFile(File file) {
     this(file.getName(), file);
   }
 
-  /**
-   * @param filename local file
-   */
+  /** @param filename local file */
   public SimpleFile(String filename) {
     this(new File(filename));
   }
 
-  /**
-   * @return the
-   */
+  /** @return the */
   public File getFile() {
     return this.file;
   }

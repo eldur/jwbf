@@ -11,17 +11,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.google.common.annotations.VisibleForTesting;
-import com.google.common.base.Stopwatch;
-import com.google.common.collect.Lists;
-import net.sourceforge.jwbf.core.actions.util.ActionException;
-import net.sourceforge.jwbf.core.contentRep.Article;
-import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
-import net.sourceforge.jwbf.mediawiki.BotFactory;
-import net.sourceforge.jwbf.mediawiki.MediaWiki.Version;
-import net.sourceforge.jwbf.mediawiki.VersionTestClassVerifier;
-import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
-import net.sourceforge.jwbf.mediawiki.live.auto.ParamHelper;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.ClassRule;
@@ -32,19 +21,30 @@ import org.junit.runners.Parameterized.Parameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Stopwatch;
+import com.google.common.collect.Lists;
+
+import net.sourceforge.jwbf.core.actions.util.ActionException;
+import net.sourceforge.jwbf.core.contentRep.Article;
+import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
+import net.sourceforge.jwbf.mediawiki.BotFactory;
+import net.sourceforge.jwbf.mediawiki.MediaWiki.Version;
+import net.sourceforge.jwbf.mediawiki.VersionTestClassVerifier;
+import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
+import net.sourceforge.jwbf.mediawiki.live.auto.ParamHelper;
+
 public class RecentchangeTitlesIT extends ParamHelper {
 
   private static final Logger log = LoggerFactory.getLogger(RecentchangeTitlesIT.class);
   private static final int COUNT = 3;
   private static final int LIMIT = COUNT * 2;
 
-  @ClassRule
-  @VisibleForTesting
+  @ClassRule @VisibleForTesting
   public static VersionTestClassVerifier classVerifier =
       new VersionTestClassVerifier(RecentchangeTitles.class);
 
-  @Rule
-  public Verifier successRegister = classVerifier.getSuccessRegister(this);
+  @Rule public Verifier successRegister = classVerifier.getSuccessRegister(this);
 
   private Stopwatch watch;
 
@@ -86,7 +86,6 @@ public class RecentchangeTitlesIT extends ParamHelper {
       bot.writeContent(a);
     }
     log.debug("end prepare " + watch.elapsed(TimeUnit.MILLISECONDS));
-
   }
 
   private void doSpecialCharTest(MediaWikiBot bot) {
@@ -128,7 +127,6 @@ public class RecentchangeTitlesIT extends ParamHelper {
     }
 
     assertTrue("tc sould be empty but is: " + specialChars, specialChars.isEmpty());
-
   }
 
   private void doRegularTest(MediaWikiBot bot) {
@@ -152,7 +150,6 @@ public class RecentchangeTitlesIT extends ParamHelper {
     }
     assertTrue("shuld be empty but is : " + vi, vi.isEmpty());
     assertTrue("i is: " + i, i > COUNT - 1);
-
   }
 
   private final Pattern changePattern = Pattern.compile("%Change ([0-9]+)");

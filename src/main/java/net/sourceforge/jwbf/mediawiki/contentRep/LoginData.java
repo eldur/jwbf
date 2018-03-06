@@ -26,9 +26,7 @@ import com.google.common.collect.Maps;
  * TODO API related, use only if posting data works. http://www.mediawiki.org/wiki
  * /API#Posting_Data_.2F_needs_major_editPage.php_rewrite
  *
- * @author Thomas Stock
- *         TODO change to immutable
- *         FIXME check usage
+ * @author Thomas Stock TODO change to immutable FIXME check usage
  */
 public class LoginData {
 
@@ -60,5 +58,4 @@ public class LoginData {
   public String getUserName() {
     return userName;
   }
-
 }

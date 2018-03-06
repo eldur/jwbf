@@ -4,29 +4,27 @@ import static com.github.dreamhead.moco.Runner.runner;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-import com.github.dreamhead.moco.HttpRequest;
-import com.github.dreamhead.moco.HttpServer;
-import com.github.dreamhead.moco.Moco;
-import com.github.dreamhead.moco.MocoConfig;
-import com.github.dreamhead.moco.Request;
-import com.github.dreamhead.moco.RequestMatcher;
-import com.github.dreamhead.moco.Runner;
-import com.github.dreamhead.moco.matcher.AndRequestMatcher;
-import com.github.dreamhead.moco.matcher.CompositeRequestMatcher;
-import com.github.dreamhead.moco.monitor.AbstractMonitor;
-import com.google.common.annotations.VisibleForTesting;
-import com.google.common.collect.ImmutableList;
 import org.junit.After;
 import org.junit.Before;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.github.dreamhead.moco.HttpRequest;
+import com.github.dreamhead.moco.HttpServer;
+import com.github.dreamhead.moco.Moco;
+import com.github.dreamhead.moco.Request;
+import com.github.dreamhead.moco.RequestMatcher;
+import com.github.dreamhead.moco.Runner;
+import com.github.dreamhead.moco.matcher.CompositeRequestMatcher;
+import com.github.dreamhead.moco.monitor.AbstractMonitor;
+import com.google.common.annotations.VisibleForTesting;
+import com.google.common.collect.ImmutableList;
+
 public abstract class AbstractIntegTest {
 
   private Runner runner;
   private int port;
-  @VisibleForTesting
-  protected HttpServer server;
+  @VisibleForTesting protected HttpServer server;
 
   @Before
   public void before() {
@@ -89,7 +87,6 @@ public abstract class AbstractIntegTest {
     protected boolean doMatch(Request request, Iterable<RequestMatcher> iterable) {
       return this.matchers.equals(iterable);
     }
-
   }
 
   private static class IntegMonitor extends AbstractMonitor {

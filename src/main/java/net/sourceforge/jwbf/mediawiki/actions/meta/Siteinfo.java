@@ -4,6 +4,7 @@ import java.util.Map;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
+
 import net.sourceforge.jwbf.core.actions.Get;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.mapper.XmlElement;
@@ -40,30 +41,24 @@ public class Siteinfo extends GetVersion {
   // # rightsinfo: Get information about the license governing the wiki's
   // content
 
-  /**
-   * inits with parameters {@link #GENERAL}, {@link #NAMESPACES}, {@link #INTERWIKIMAP}.
-   */
+  /** inits with parameters {@link #GENERAL}, {@link #NAMESPACES}, {@link #INTERWIKIMAP}. */
   public Siteinfo() {
     this(GENERAL, NAMESPACES, INTERWIKIMAP);
   }
 
-  /**
-   * @param types the, see {@link #GENERAL}, {@link #INTERWIKIMAP}, ...
-   */
+  /** @param types the, see {@link #GENERAL}, {@link #INTERWIKIMAP}, ... */
   public Siteinfo(String... types) {
     String result = MediaWiki.pipeJoined(types);
-    msg = new ApiRequestBuilder() //
-        .action("query") //
-        .formatXml() //
-        .param("meta", "siteinfo") //
-        .param("siprop", MediaWiki.urlEncode(result)) //
-        .buildGet();
-
+    msg =
+        new ApiRequestBuilder() //
+            .action("query") //
+            .formatXml() //
+            .param("meta", "siteinfo") //
+            .param("siprop", MediaWiki.urlEncode(result)) //
+            .buildGet();
   }
 
-  /**
-   * {@inheritDoc}
-   */
+  /** {@inheritDoc} */
   @Override
   public HttpAction getNextMessage() {
     return msg;
@@ -90,18 +85,13 @@ public class Siteinfo extends GetVersion {
     }
   }
 
-  /**
-   * @return of
-   */
+  /** @return of */
   public ImmutableMap<Integer, String> getNamespaces() {
     return ImmutableMap.copyOf(namespaces);
   }
 
-  /**
-   * @return of
-   */
+  /** @return of */
   public ImmutableMap<String, String> getInterwikis() {
     return ImmutableMap.copyOf(interwiki);
   }
-
 }

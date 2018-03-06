@@ -6,8 +6,14 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+import org.junit.Test;
+import org.junit.runners.Parameterized.Parameters;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
+
 import net.sourceforge.jwbf.GAssert;
 import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
 import net.sourceforge.jwbf.mediawiki.BotFactory;
@@ -15,10 +21,6 @@ import net.sourceforge.jwbf.mediawiki.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.actions.util.RedirectFilter;
 import net.sourceforge.jwbf.mediawiki.live.auto.ParamHelper;
-import org.junit.Test;
-import org.junit.runners.Parameterized.Parameters;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class BacklinkTitlesIT extends ParamHelper {
 
@@ -54,8 +56,9 @@ public class BacklinkTitlesIT extends ParamHelper {
   @Test
   public final void testAll() {
 
-    ImmutableList<String> expected = ImmutableList
-        .of("Back0", "Back1", "Back2", "Back3", "Back4", "Back5", "Back6", "Back7", "Back8",
+    ImmutableList<String> expected =
+        ImmutableList.of(
+            "Back0", "Back1", "Back2", "Back3", "Back4", "Back5", "Back6", "Back7", "Back8",
             "Back9");
     doTest(expected, RedirectFilter.all);
   }
@@ -63,8 +66,9 @@ public class BacklinkTitlesIT extends ParamHelper {
   @Test
   public final void testRedirects() {
 
-    ImmutableList<String> expected = ImmutableList
-        .of("Back0", "Back2", "Back4", "Back6", "Back8", "Back10", "Back12", "Back14", "Back16",
+    ImmutableList<String> expected =
+        ImmutableList.of(
+            "Back0", "Back2", "Back4", "Back6", "Back8", "Back10", "Back12", "Back14", "Back16",
             "Back18");
     doTest(expected, RedirectFilter.redirects);
   }
@@ -72,8 +76,9 @@ public class BacklinkTitlesIT extends ParamHelper {
   @Test
   public final void testNonRedirects() {
 
-    ImmutableList<String> expected = ImmutableList
-        .of("Back1", "Back3", "Back5", "Back7", "Back9", "Back11", "Back13", "Back15", "Back17",
+    ImmutableList<String> expected =
+        ImmutableList.of(
+            "Back1", "Back3", "Back5", "Back7", "Back9", "Back11", "Back13", "Back15", "Back17",
             "Back19");
     doTest(expected, RedirectFilter.nonredirects);
   }
@@ -119,5 +124,4 @@ public class BacklinkTitlesIT extends ParamHelper {
     assertTrue("Fail: " + i + " < " + COUNT, i > COUNT - 1);
     GAssert.assertEquals(expected, actual.build());
   }
-
 }

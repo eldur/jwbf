@@ -43,9 +43,7 @@ import java.util.Objects;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
-/**
- * @author Thomas Stock
- */
+/** @author Thomas Stock */
 public final class JWBF {
 
   // visible only for internal testing
@@ -155,8 +153,11 @@ public final class JWBF {
     return uri.toString();
   }
 
-  static Map<String, String> makeVersionMap(String packageName, List<ContainerEntry> elements,
-      String implementationVersion, String implementationTitle) {
+  static Map<String, String> makeVersionMap(
+      String packageName,
+      List<ContainerEntry> elements,
+      String implementationVersion,
+      String implementationTitle) {
 
     Map<String, String> parts = new HashMap<>();
     for (ContainerEntry element : elements) {
@@ -246,8 +247,8 @@ public final class JWBF {
     return getPartInfo(lazyVersion(), clazz, "No Module for " + clazz.getName()).id;
   }
 
-  private static PartContainer getPartInfo(Map<String, String> versionDetails, Class<?> clazz,
-      String fallbackValue) {
+  private static PartContainer getPartInfo(
+      Map<String, String> versionDetails, Class<?> clazz, String fallbackValue) {
     String[] packageParts = clazz.getPackage().getName().split("\\.");
     if (packageParts.length > 3) {
       String classContainer = packageParts[3];
@@ -270,9 +271,7 @@ public final class JWBF {
     }
   }
 
-  /**
-   * Prints the JWBF Version.
-   */
+  /** Prints the JWBF Version. */
   public static void printVersion() {
     System.out.println("JWBF.");
     System.out.println(formatVersionText());
@@ -298,9 +297,7 @@ public final class JWBF {
     printVersion();
   }
 
-  /**
-   * @return the JWBF Version.
-   */
+  /** @return the JWBF Version. */
   public static Map<String, String> getVersions() {
     return Collections.unmodifiableMap(lazyVersion());
   }
@@ -369,14 +366,14 @@ public final class JWBF {
         return true;
       } else if (obj instanceof ContainerEntry) {
         ContainerEntry that = (ContainerEntry) obj;
-        return Objects.equals(this.name, that.name) && //
+        return Objects.equals(this.name, that.name)
+            && //
             Objects.equals(this.directory, that.directory) //
-            ;
+        ;
       } else {
         return false;
       }
     }
-
   }
 
   public static URL newURLWithoutHandler(final String url) {
@@ -401,7 +398,6 @@ public final class JWBF {
     protected URLConnection openConnection(URL u) throws IOException {
       throw new UnsupportedOperationException();
     }
-
   }
 
   static Path uriToPath(URI uri) {

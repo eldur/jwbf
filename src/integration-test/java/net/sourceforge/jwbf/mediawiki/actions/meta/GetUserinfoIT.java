@@ -5,12 +5,13 @@ import static org.junit.Assert.assertFalse;
 import java.util.Collection;
 import java.util.Set;
 
+import org.junit.Test;
+import org.junit.runners.Parameterized;
+
 import net.sourceforge.jwbf.core.contentRep.Userinfo;
 import net.sourceforge.jwbf.mediawiki.BotFactory;
 import net.sourceforge.jwbf.mediawiki.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.live.auto.ParamHelper;
-import org.junit.Test;
-import org.junit.runners.Parameterized;
 
 public class GetUserinfoIT extends ParamHelper {
 
@@ -31,5 +32,4 @@ public class GetUserinfoIT extends ParamHelper {
 
     assertFalse(rights.isEmpty());
   }
-
 }

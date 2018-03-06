@@ -3,10 +3,14 @@ package net.sourceforge.jwbf.mediawiki.actions.queries;
 import java.util.Date;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.common.primitives.Ints;
+
 import net.sourceforge.jwbf.core.actions.RequestBuilder;
 import net.sourceforge.jwbf.core.actions.util.ActionException;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
@@ -15,16 +19,14 @@ import net.sourceforge.jwbf.mapper.JsonMapper;
 import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
 import net.sourceforge.jwbf.mediawiki.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * A query class to get a list of pages on the current user's watchlist that were changed within the
  * given time period.
- * <p/>
- * You must be logged in or pass a user name and his watchlist token to use this class.
- * <p/>
- * See also: <a href="https://www.mediawiki.org/wiki/API:Watchlist">API:Watchlist</a>
+ *
+ * <p>You must be logged in or pass a user name and his watchlist token to use this class.
+ *
+ * <p>See also: <a href="https://www.mediawiki.org/wiki/API:Watchlist">API:Watchlist</a>
  *
  * @author Rabah Meradi.
  */
@@ -35,53 +37,29 @@ class WatchList extends BaseQuery<WatchResponse> {
     return TimeConverter.valueOf(date);
   }
 
-  /**
-   * The properties that could be returned with WatchList request.
-   */
+  /** The properties that could be returned with WatchList request. */
   public enum WatchListProperties {
-    /**
-     * The user who made the change
-     */
+    /** The user who made the change */
     USER("user"),
-    /**
-     * The title of page
-     */
+    /** The title of page */
     TITLE("title"),
-    /**
-     * The edit/log comment
-     */
+    /** The edit/log comment */
     COMMENT("comment"),
-    /**
-     * The edit/log comment in HTML format
-     */
+    /** The edit/log comment in HTML format */
     PARSED_COMMENT("parsedcomment"),
-    /**
-     * The time and date of the change
-     */
+    /** The time and date of the change */
     TIMESTAMP("timestamp"),
-    /**
-     * Adds timestamp of when the user was last notified about the edit
-     */
+    /** Adds timestamp of when the user was last notified about the edit */
     NOTIFICATION_TIMESTAMP("notificationtimestamp"),
-    /**
-     * The page ID and revision ID
-     */
+    /** The page ID and revision ID */
     IDS("ids"),
-    /**
-     * The page size before and after the change
-     */
+    /** The page size before and after the change */
     SIZES("sizes"),
-    /**
-     * Whether the change is patrolled.
-     */
+    /** Whether the change is patrolled. */
     PATROL("patrol"),
-    /**
-     * The flags associated with the change (bot edit, minor edit ...)
-     */
+    /** The flags associated with the change (bot edit, minor edit ...) */
     FLAGS("flags");
-    /**
-     * The name of the property like it's used by MW
-     */
+    /** The name of the property like it's used by MW */
     private String name;
 
     private WatchListProperties(String name) {
@@ -94,25 +72,15 @@ class WatchList extends BaseQuery<WatchResponse> {
   }
 
   public enum EditType {
-    /**
-     * Regular page edits
-     */
+    /** Regular page edits */
     EDIT("edit"),
-    /**
-     * External edits
-     */
+    /** External edits */
     EXTERNAL("external"),
-    /**
-     * Pages creation
-     */
+    /** Pages creation */
     NEW("new"),
-    /**
-     * Log entries
-     */
+    /** Log entries */
     LOG("log");
-    /**
-     * The name of the property like it's used by MW
-     */
+    /** The name of the property like it's used by MW */
     private String name;
 
     private EditType(String name) {
@@ -125,17 +93,11 @@ class WatchList extends BaseQuery<WatchResponse> {
   }
 
   public enum Direction {
-    /**
-     * Older edits first
-     */
+    /** Older edits first */
     OLDER("older"),
-    /**
-     * Newer edits first
-     */
+    /** Newer edits first */
     NEWER("newer");
-    /**
-     * the name used by MW
-     */
+    /** the name used by MW */
     private String name;
 
     private Direction(String name) {
@@ -206,16 +168,18 @@ class WatchList extends BaseQuery<WatchResponse> {
     return WatchList.from(bot()) //
         .excludeUser(watchList.excludeUser) //
         .onlyTypes(watchList.editType) //
-        // TODO complete this self builder
-        ;
+    // TODO complete this self builder
+    ;
   }
 
   @Override
   protected HttpAction prepareNextRequest() {
-    RequestBuilder requestBuilder = new ApiRequestBuilder().action("query") //
-        .formatJson() //
-        .param("continue", MediaWiki.urlEncode("-||")) //
-        .param("list", "watchlist");
+    RequestBuilder requestBuilder =
+        new ApiRequestBuilder()
+            .action("query") //
+            .formatJson() //
+            .param("continue", MediaWiki.urlEncode("-||")) //
+            .param("list", "watchlist");
     requestBuilder.param("wlnamespace", MediaWiki.urlEncodedNamespace(namespaces));
     if (!properties.isEmpty()) {
       requestBuilder.param("wlprop", joinedAndEncodedParams(Lists.newArrayList(properties)));
@@ -314,25 +278,19 @@ class WatchList extends BaseQuery<WatchResponse> {
       this.bot = bot;
     }
 
-    /**
-     * How many results to return per request. Do not set it to return the maximum.
-     */
+    /** How many results to return per request. Do not set it to return the maximum. */
     public Builder withLimit(int limit) {
       this.limit = Optional.of(limit);
       return this;
     }
 
-    /**
-     * Only list pages in these namespaces
-     */
+    /** Only list pages in these namespaces */
     public Builder withNamespaces(int... namespaces) {
       this.namespaces = ImmutableList.copyOf(Ints.asList(namespaces));
       return this;
     }
 
-    /**
-     * Which properties to get.
-     */
+    /** Which properties to get. */
     public Builder withProperties(WatchListProperties... properties) {
       this.properties = ImmutableList.copyOf(properties);
       return this;
@@ -406,7 +364,7 @@ class WatchList extends BaseQuery<WatchResponse> {
      * The user whose watchlist you want
      *
      * @param ownerUser the user
-     * @param token     the wtahclist token of the user
+     * @param token the wtahclist token of the user
      */
     public Builder owner(String ownerUser, String token) {
       if (owner != null && token == null) {
@@ -448,7 +406,6 @@ class WatchList extends BaseQuery<WatchResponse> {
      *
      * @param dir the direction
      */
-
     public Builder withDir(Direction dir) {
       this.dir = dir;
       return this;
@@ -459,10 +416,8 @@ class WatchList extends BaseQuery<WatchResponse> {
      *
      * @return the watchlist query
      */
-
     public WatchList build() {
       return new WatchList(this);
     }
   }
-
 }

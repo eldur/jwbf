@@ -22,20 +22,22 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.Collection;
 
+import org.junit.Test;
+import org.junit.runners.Parameterized.Parameters;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
+
 import net.sourceforge.jwbf.GAssert;
 import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
 import net.sourceforge.jwbf.mediawiki.BotFactory;
 import net.sourceforge.jwbf.mediawiki.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.contentRep.CategoryItem;
 import net.sourceforge.jwbf.mediawiki.live.auto.ParamHelper;
-import org.junit.Test;
-import org.junit.runners.Parameterized.Parameters;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class CategoryMembersIT extends ParamHelper {
 
@@ -64,7 +66,8 @@ public class CategoryMembersIT extends ParamHelper {
     // THEN
     assertEquals(limitSize, categoryItems.size());
     assertEquals(limitSize, categoryTitles.size());
-    GAssert.assertEquals(categoryTitles, //
+    GAssert.assertEquals(
+        categoryTitles, //
         FluentIterable.from(categoryItems) //
             .transform(CategoryItem.toTitleStringFunction()) //
             .toList());
@@ -101,5 +104,4 @@ public class CategoryMembersIT extends ParamHelper {
   public static <T> ImmutableList<T> copyOfWithLimit(Iterable<T> elements, int limitSize) {
     return ImmutableList.copyOf(Iterables.limit(elements, limitSize));
   }
-
 }

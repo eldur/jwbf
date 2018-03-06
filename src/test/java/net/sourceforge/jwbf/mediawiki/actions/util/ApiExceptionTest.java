@@ -13,7 +13,5 @@ public class ApiExceptionTest {
 
     // WHEN / THEN
     assertEquals("API ERROR CODE: a VALUE: b", testee.getMessage());
-
   }
-
 }

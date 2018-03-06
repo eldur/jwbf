@@ -4,17 +4,19 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import com.google.common.base.Optional;
-import com.google.common.collect.ImmutableList;
-import net.sourceforge.jwbf.GAssert;
-import net.sourceforge.jwbf.core.actions.util.HttpAction;
-import net.sourceforge.jwbf.core.internal.NonnullFunction;
-import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
+
+import com.google.common.base.Optional;
+import com.google.common.collect.ImmutableList;
+
+import net.sourceforge.jwbf.GAssert;
+import net.sourceforge.jwbf.core.actions.util.HttpAction;
+import net.sourceforge.jwbf.core.internal.NonnullFunction;
+import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CategoryMembersSimpleTest {
@@ -23,8 +25,7 @@ public class CategoryMembersSimpleTest {
 
   private MediaWikiBot bot = mock(MediaWikiBot.class);
 
-  @Spy
-  private CategoryMembersSimple testee = new CategoryMembersSimple(bot, categoryMembers);
+  @Spy private CategoryMembersSimple testee = new CategoryMembersSimple(bot, categoryMembers);
 
   @Test
   public void testPrepareCollection() {
@@ -37,7 +38,6 @@ public class CategoryMembersSimpleTest {
 
     // THEN
     assertEquals(expected, result);
-
   }
 
   @Test
@@ -52,7 +52,6 @@ public class CategoryMembersSimpleTest {
 
     // THEN
     GAssert.assertEquals(ImmutableList.of("a title"), result);
-
   }
 
   @Test
@@ -65,6 +64,5 @@ public class CategoryMembersSimpleTest {
 
     // THEN
     assertEquals(Optional.of("a"), result);
-
   }
 }

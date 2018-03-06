@@ -13,14 +13,16 @@ import static org.junit.Assert.assertNotNull;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import com.google.common.base.Joiner;
-import com.google.common.collect.ImmutableList;
-import net.sourceforge.jwbf.JWBF;
-import net.sourceforge.jwbf.JettyServer;
-import net.sourceforge.jwbf.core.actions.HttpActionClient;
 import org.eclipse.jetty.server.handler.ContextHandler;
 import org.junit.After;
 import org.junit.Test;
+
+import com.google.common.base.Joiner;
+import com.google.common.collect.ImmutableList;
+
+import net.sourceforge.jwbf.JWBF;
+import net.sourceforge.jwbf.JettyServer;
+import net.sourceforge.jwbf.core.actions.HttpActionClient;
 
 public class HttpBotTest {
 
@@ -69,10 +71,11 @@ public class HttpBotTest {
     String userAgent = "myUserAgent";
     String userAgentVersion = "1.0";
 
-    HttpActionClient client = HttpActionClient.builder() //
-        .withUrl(url) //
-        .withUserAgent(userAgent, userAgentVersion) //
-        .build();
+    HttpActionClient client =
+        HttpActionClient.builder() //
+            .withUrl(url) //
+            .withUserAgent(userAgent, userAgentVersion) //
+            .build();
 
     // WHEN
     String result = HttpBot.getPage(client);
@@ -103,12 +106,18 @@ public class HttpBotTest {
 
   private String userAgentHeaderOf(String userAgentString) {
     ImmutableList<String> expected =
-        ImmutableList.<String>builder().add(entry(ACCEPT_ENCODING, "gzip,deflate")) //
+        ImmutableList.<String>builder()
+            .add(entry(ACCEPT_ENCODING, "gzip,deflate")) //
             .add(entry(CONNECTION, "keep-alive")) //
             .add(entry(HOST, "localhost:????")) //
-            .add(entry(USER_AGENT, userAgentString +
-                "JWBF/" + JWBF.getVersion(HttpActionClient.class) + " " +
-                HttpActionClient.httpClientVersion())) //
+            .add(
+                entry(
+                    USER_AGENT,
+                    userAgentString
+                        + "JWBF/"
+                        + JWBF.getVersion(HttpActionClient.class)
+                        + " "
+                        + HttpActionClient.httpClientVersion())) //
             .build();
 
     return Joiner.on("\n").join(expected) + "\n";
@@ -118,5 +127,4 @@ public class HttpBotTest {
   public void afterClass() {
     server.stopSilent();
   }
-
 }

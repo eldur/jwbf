@@ -5,27 +5,27 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.Collection;
 
-import com.google.common.annotations.VisibleForTesting;
-import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
-import net.sourceforge.jwbf.mediawiki.BotFactory;
-import net.sourceforge.jwbf.mediawiki.MediaWiki.Version;
-import net.sourceforge.jwbf.mediawiki.VersionTestClassVerifier;
-import net.sourceforge.jwbf.mediawiki.actions.editing.PostModifyContent;
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Verifier;
 import org.junit.runners.Parameterized.Parameters;
 
+import com.google.common.annotations.VisibleForTesting;
+
+import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
+import net.sourceforge.jwbf.mediawiki.BotFactory;
+import net.sourceforge.jwbf.mediawiki.MediaWiki.Version;
+import net.sourceforge.jwbf.mediawiki.VersionTestClassVerifier;
+import net.sourceforge.jwbf.mediawiki.actions.editing.PostModifyContent;
+
 public class EditIT extends ParamHelper {
 
-  @ClassRule
-  @VisibleForTesting
+  @ClassRule @VisibleForTesting
   public static VersionTestClassVerifier classVerifier =
       new VersionTestClassVerifier(PostModifyContent.class);
 
-  @Rule
-  public Verifier successRegister = classVerifier.getSuccessRegister(this);
+  @Rule public Verifier successRegister = classVerifier.getSuccessRegister(this);
 
   @Parameters(name = "{0}")
   public static Collection<?> stableWikis() {
@@ -44,7 +44,5 @@ public class EditIT extends ParamHelper {
 
     bot.getPerformedAction(pmc);
     assertTrue("i is: ", 50 > 3); // FIXME WTF
-
   }
-
 }

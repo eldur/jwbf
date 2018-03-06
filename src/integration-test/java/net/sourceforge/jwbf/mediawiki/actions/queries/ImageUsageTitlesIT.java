@@ -4,7 +4,13 @@ import static net.sourceforge.jwbf.TestHelper.getRandom;
 
 import java.util.Collection;
 
+import org.junit.Test;
+import org.junit.runners.Parameterized;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.common.collect.ImmutableList;
+
 import net.sourceforge.jwbf.GAssert;
 import net.sourceforge.jwbf.TestHelper;
 import net.sourceforge.jwbf.core.contentRep.Article;
@@ -12,14 +18,8 @@ import net.sourceforge.jwbf.mediawiki.BotFactory;
 import net.sourceforge.jwbf.mediawiki.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.live.auto.ParamHelper;
-import org.junit.Test;
-import org.junit.runners.Parameterized;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-/**
- * @author Thomas Stock
- */
+/** @author Thomas Stock */
 public class ImageUsageTitlesIT extends ParamHelper {
 
   private static final Logger log = LoggerFactory.getLogger(ImageUsageTitlesIT.class);
@@ -53,7 +53,6 @@ public class ImageUsageTitlesIT extends ParamHelper {
 
     // THEN
     GAssert.assertEquals(expectedTitles, pageTitles);
-
   }
 
   private void prepare(ImmutableList<String> expectedTitles) {
@@ -64,5 +63,4 @@ public class ImageUsageTitlesIT extends ParamHelper {
       a.save();
     }
   }
-
 }

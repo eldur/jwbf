@@ -4,26 +4,29 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.List;
 
+import org.junit.Test;
+
 import com.github.dreamhead.moco.RequestMatcher;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+
 import net.sourceforge.jwbf.AbstractIntegTest;
 import net.sourceforge.jwbf.GAssert;
 import net.sourceforge.jwbf.TestHelper;
 import net.sourceforge.jwbf.mediawiki.ApiMatcherBuilder;
 import net.sourceforge.jwbf.mediawiki.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
-import org.junit.Test;
 
 public class RecentchangeTitlesIntegTest extends AbstractIntegTest {
 
-  RequestMatcher embeddedinTwo = ApiMatcherBuilder.of() //
-      .param("action", "query") //
-      .param("format", "xml") //
-      .param("list", "recentchanges") //
-      .param("rclimit", "50") //
-      .param("rcnamespace", "0") //
-      .build();
+  RequestMatcher embeddedinTwo =
+      ApiMatcherBuilder.of() //
+          .param("action", "query") //
+          .param("format", "xml") //
+          .param("list", "recentchanges") //
+          .param("rclimit", "50") //
+          .param("rcnamespace", "0") //
+          .build();
 
   @Test
   public void test() {
@@ -37,12 +40,15 @@ public class RecentchangeTitlesIntegTest extends AbstractIntegTest {
     List<String> resultList = testee.getCopyOf(15); // query-continue is not implemented
 
     // THEN
-    ImmutableList<String> expected = ImmutableList
-        .of("List of tallest buildings in Pakistan", "Grace Stoermer",
-            "Corpus Christi Catholic College", "Submarine Squadron 4", "Jonathan Lee Riches");
+    ImmutableList<String> expected =
+        ImmutableList.of(
+            "List of tallest buildings in Pakistan",
+            "Grace Stoermer",
+            "Corpus Christi Catholic College",
+            "Submarine Squadron 4",
+            "Jonathan Lee Riches");
     GAssert.assertEquals(expected, ImmutableList.copyOf(resultList));
     assertEquals(resultList.size(), ImmutableSet.copyOf(resultList).size());
-
   }
 
   @Test
@@ -60,7 +66,5 @@ public class RecentchangeTitlesIntegTest extends AbstractIntegTest {
     ImmutableList<String> expected = ImmutableList.of("List of tallest buildings in Pakistan");
     GAssert.assertEquals(expected, ImmutableList.copyOf(resultList));
     assertEquals(resultList.size(), ImmutableSet.copyOf(resultList).size());
-
   }
-
 }

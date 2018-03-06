@@ -15,36 +15,35 @@
  */
 package net.sourceforge.jwbf.mediawiki.actions.queries;
 
-/**
- *
- * @author Marco Ammon <ammon.marco@t-online.de>
- */
-
+/** @author Marco Ammon <ammon.marco@t-online.de> */
 
 import static org.junit.Assert.assertEquals;
 
 import java.util.List;
 
+import org.junit.Test;
+
 import com.github.dreamhead.moco.RequestMatcher;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+
 import net.sourceforge.jwbf.AbstractIntegTest;
 import net.sourceforge.jwbf.GAssert;
 import net.sourceforge.jwbf.TestHelper;
 import net.sourceforge.jwbf.mediawiki.ApiMatcherBuilder;
 import net.sourceforge.jwbf.mediawiki.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
-import org.junit.Test;
 
 public class ReviewedPagesTitlesIntegTest extends AbstractIntegTest {
 
-  RequestMatcher embeddedinTwo = ApiMatcherBuilder.of() //
-      .param("action", "query") //
-      .param("format", "xml") //
-      .param("list", "reviewedpages") //
-      .param("rplimit", "50") //
-      .param("rpnamespace", "0") //
-      .build();
+  RequestMatcher embeddedinTwo =
+      ApiMatcherBuilder.of() //
+          .param("action", "query") //
+          .param("format", "xml") //
+          .param("list", "reviewedpages") //
+          .param("rplimit", "50") //
+          .param("rpnamespace", "0") //
+          .build();
 
   @Test
   public void test() {
@@ -58,12 +57,12 @@ public class ReviewedPagesTitlesIntegTest extends AbstractIntegTest {
     List<String> resultList = testee.getCopyOf(15); // query-continue is not implemented
 
     // THEN
-    ImmutableList<String> expected = ImmutableList
-        .of("Main Page", "Units/WoL",
+    ImmutableList<String> expected =
+        ImmutableList.of(
+            "Main Page", "Units/WoL",
             "SCV (Wings of Liberty and Heart of the Swarm)", "Terran Units/WoL");
     GAssert.assertEquals(expected, ImmutableList.copyOf(resultList));
     assertEquals(resultList.size(), ImmutableSet.copyOf(resultList).size());
-
   }
 
   @Test
@@ -81,7 +80,5 @@ public class ReviewedPagesTitlesIntegTest extends AbstractIntegTest {
     ImmutableList<String> expected = ImmutableList.of("Main Page");
     GAssert.assertEquals(expected, ImmutableList.copyOf(resultList));
     assertEquals(resultList.size(), ImmutableSet.copyOf(resultList).size());
-
   }
-
 }

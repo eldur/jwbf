@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.google.common.base.MoreObjects;
+
 import net.sourceforge.jwbf.mediawiki.actions.queries.WatchList.EditType;
 
 /**
@@ -36,18 +37,29 @@ public class WatchResponse {
   private final boolean newFlag;
 
   @SuppressWarnings("checkstyle:parameternumber")
-  public WatchResponse(@JsonProperty("ns") int ns, @JsonProperty("title") String title,
-      @JsonProperty("user") String user, @JsonProperty("comment") String comment,
-      @JsonProperty("parsedcomment") String parsedComment, @JsonProperty("timestamp") //
-  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'hh:mm:ss'Z'") //
-      Date timestamp, @JsonProperty("notificationtimestamp") //
-  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'hh:mm:ss'Z'") //
-      Date notificationTimestamp, @JsonProperty("pageid") int pageid,
-      @JsonProperty("revid") int revid, @JsonProperty("old_revid") int oldRevid,
-      @JsonProperty("oldlen") int oldLen, @JsonProperty("newlen") int newLen,
-      @JsonProperty("patrolled") boolean patrolled, @JsonProperty("type") String type,
-      @JsonProperty("anon") String anon, @JsonProperty("minor") String minor,
-      @JsonProperty("bot") String bot, @JsonProperty("new") String newFlag) {
+  public WatchResponse(
+      @JsonProperty("ns") int ns,
+      @JsonProperty("title") String title,
+      @JsonProperty("user") String user,
+      @JsonProperty("comment") String comment,
+      @JsonProperty("parsedcomment") String parsedComment,
+      @JsonProperty("timestamp") //
+          @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'hh:mm:ss'Z'") //
+          Date timestamp,
+      @JsonProperty("notificationtimestamp") //
+          @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'hh:mm:ss'Z'") //
+          Date notificationTimestamp,
+      @JsonProperty("pageid") int pageid,
+      @JsonProperty("revid") int revid,
+      @JsonProperty("old_revid") int oldRevid,
+      @JsonProperty("oldlen") int oldLen,
+      @JsonProperty("newlen") int newLen,
+      @JsonProperty("patrolled") boolean patrolled,
+      @JsonProperty("type") String type,
+      @JsonProperty("anon") String anon,
+      @JsonProperty("minor") String minor,
+      @JsonProperty("bot") String bot,
+      @JsonProperty("new") String newFlag) {
     this.ns = ns;
     this.title = title;
     this.user = user;

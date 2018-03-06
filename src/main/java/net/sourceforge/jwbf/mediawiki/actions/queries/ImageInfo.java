@@ -1,15 +1,19 @@
 package net.sourceforge.jwbf.mediawiki.actions.queries;
 
-import javax.imageio.ImageIO;
-
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Collections;
 import java.util.Map;
 
+import javax.imageio.ImageIO;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
+
 import net.sourceforge.jwbf.JWBF;
 import net.sourceforge.jwbf.core.actions.Get;
 import net.sourceforge.jwbf.core.actions.RequestBuilder;
@@ -22,8 +26,6 @@ import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
 import net.sourceforge.jwbf.mediawiki.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Action to receive the full address of an image. Like "Img.gif" to
@@ -65,11 +67,12 @@ public class ImageInfo extends MWAction {
 
   private void prepareMsg(String name) {
 
-    RequestBuilder requestBuilder = new ApiRequestBuilder() //
-        .action("query") //
-        .formatXml() //
-        .param("iiprop", "url") //
-        .param("prop", "imageinfo") //
+    RequestBuilder requestBuilder =
+        new ApiRequestBuilder() //
+            .action("query") //
+            .formatXml() //
+            .param("iiprop", "url") //
+            .param("prop", "imageinfo") //
         ;
 
     int width = intOrZero(params.get(WIDTH)).or(0);
@@ -98,9 +101,7 @@ public class ImageInfo extends MWAction {
     }
   }
 
-  /**
-   * @return position like "http://server.tld/path/to/Test.gif"
-   */
+  /** @return position like "http://server.tld/path/to/Test.gif" */
   public String getUrlAsString() {
     return getUrl().toExternalForm();
   }
@@ -138,9 +139,7 @@ public class ImageInfo extends MWAction {
     return ImageIO.read(getUrl());
   }
 
-  /**
-   * {@inheritDoc}
-   */
+  /** {@inheritDoc} */
   @Override
   public String processAllReturningText(String xml) {
     Optional<XmlElement> child = //
@@ -151,9 +150,7 @@ public class ImageInfo extends MWAction {
     return "";
   }
 
-  /**
-   * {@inheritDoc}
-   */
+  /** {@inheritDoc} */
   @Override
   public HttpAction getNextMessage() {
     return msg;

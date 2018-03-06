@@ -1,12 +1,14 @@
 package net.sourceforge.jwbf.mediawiki.actions.queries;
 
+import org.junit.Test;
+
 import com.github.dreamhead.moco.RequestMatcher;
 import com.google.common.collect.ImmutableList;
+
 import net.sourceforge.jwbf.GAssert;
 import net.sourceforge.jwbf.mediawiki.ApiMatcherBuilder;
 import net.sourceforge.jwbf.mediawiki.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.MocoIntegTest;
-import org.junit.Test;
 
 public class ImageUsageTitlesIntegTest extends MocoIntegTest {
 
@@ -23,15 +25,17 @@ public class ImageUsageTitlesIntegTest extends MocoIntegTest {
         .param("iunamespace", "0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15") //
         .param("iutitle", "Any.gif") //
         .param("list", "imageusage") //
-        ;
+    ;
   }
 
-  RequestMatcher imageUsageTitles0 = newBaseMatcher() //
-      .build();
+  RequestMatcher imageUsageTitles0 =
+      newBaseMatcher() //
+          .build();
 
-  RequestMatcher imageUsageTitles1 = newBaseMatcher() //
-      .param("iucontinue", "6|Any.gif|5962") //
-      .build();
+  RequestMatcher imageUsageTitles1 =
+      newBaseMatcher() //
+          .param("iucontinue", "6|Any.gif|5962") //
+          .build();
 
   @Test
   public void test() {

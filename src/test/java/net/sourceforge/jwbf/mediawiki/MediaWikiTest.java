@@ -5,12 +5,14 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import org.junit.Test;
+
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
+
 import net.sourceforge.jwbf.GAssert;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
-import org.junit.Test;
 
 public class MediaWikiTest {
 
@@ -85,30 +87,33 @@ public class MediaWikiTest {
     ImmutableList<MediaWiki.Version> versions = MediaWiki.Version.valuesStable();
 
     // THEN
-    ImmutableList<MediaWiki.Version> expected = ImmutableList.<MediaWiki.Version>builder() //
-        .add(MediaWiki.Version.MW1_19) //
-        .add(MediaWiki.Version.MW1_23) //
-        .add(MediaWiki.Version.MW1_24) //
-        .build();
+    ImmutableList<MediaWiki.Version> expected =
+        ImmutableList.<MediaWiki.Version>builder() //
+            .add(MediaWiki.Version.MW1_19) //
+            .add(MediaWiki.Version.MW1_23) //
+            .add(MediaWiki.Version.MW1_24) //
+            .build();
 
     GAssert.assertEquals(expected, versions);
 
-    ImmutableList<MediaWiki.Version> unstable = ImmutableList.<MediaWiki.Version>builder() //
-        .add(MediaWiki.Version.MW1_14) //
-        .add(MediaWiki.Version.MW1_15) //
-        .add(MediaWiki.Version.MW1_16) //
-        .add(MediaWiki.Version.MW1_17) //
-        .add(MediaWiki.Version.MW1_18) //
-        .add(MediaWiki.Version.MW1_20) //
-        .add(MediaWiki.Version.MW1_21) //
-        .add(MediaWiki.Version.MW1_22) //
+    ImmutableList<MediaWiki.Version> unstable =
+        ImmutableList.<MediaWiki.Version>builder() //
+            .add(MediaWiki.Version.MW1_14) //
+            .add(MediaWiki.Version.MW1_15) //
+            .add(MediaWiki.Version.MW1_16) //
+            .add(MediaWiki.Version.MW1_17) //
+            .add(MediaWiki.Version.MW1_18) //
+            .add(MediaWiki.Version.MW1_20) //
+            .add(MediaWiki.Version.MW1_21) //
+            .add(MediaWiki.Version.MW1_22) //
             // --
-        .add(MediaWiki.Version.MW1_25) //
-        .build();
+            .add(MediaWiki.Version.MW1_25) //
+            .build();
 
     assertFalse("there should be unstable versions as reference test", unstable.isEmpty());
-    Sets.SetView<MediaWiki.Version> intersection = Sets //
-        .intersection(ImmutableSet.copyOf(versions), ImmutableSet.copyOf(unstable));
+    Sets.SetView<MediaWiki.Version> intersection =
+        Sets //
+            .intersection(ImmutableSet.copyOf(versions), ImmutableSet.copyOf(unstable));
     assertTrue("no unstable versions should be found:\n" + intersection, intersection.isEmpty());
 
     ImmutableSet<MediaWiki.Version> allVersions = ImmutableSet.copyOf(MediaWiki.Version.values());
@@ -209,5 +214,4 @@ public class MediaWikiTest {
     // THEN
     assertEquals("0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15", nsString);
   }
-
 }

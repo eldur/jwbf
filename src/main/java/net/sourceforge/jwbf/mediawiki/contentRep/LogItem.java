@@ -27,5 +27,4 @@ public class LogItem {
   public String toString() {
     return "* " + getTitle() + " was " + getType() + " by " + getUser();
   }
-
 }

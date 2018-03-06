@@ -4,10 +4,14 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.common.base.Joiner;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import com.google.common.primitives.Ints;
+
 import net.sourceforge.jwbf.core.actions.RequestBuilder;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.core.contentRep.SearchResult;
@@ -16,90 +20,61 @@ import net.sourceforge.jwbf.mapper.JsonMapper;
 import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
 import net.sourceforge.jwbf.mediawiki.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class Search extends BaseQuery<SearchResult> {
   private static final Joiner PARAM_JOINER = Joiner.on('|');
 
   public static final int DEFAULT_NS = 0;
 
-  /**
-   * What metadata to return
-   */
+  /** What metadata to return */
   public enum SearchInfo {
-    totalhits, suggestion;
+    totalhits,
+    suggestion;
 
     public static final Set<SearchInfo> DEFAULT = EnumSet.of(totalhits, suggestion);
   }
 
-  /**
-   * Which type of search to perform.
-   */
+  /** Which type of search to perform. */
   public enum SearchWhat {
-    /**
-     * Search in page titles
-     */
+    /** Search in page titles */
     title,
-    /**
-     * Search in page text
-     */
+    /** Search in page text */
     text,
-    /**
-     * Search for the exact title
-     */
+    /** Search for the exact title */
     nearmatch;
 
     public static final Set<SearchWhat> DEFAULT = EnumSet.of(title);
   }
 
   public enum SearchProps {
-    /**
-     * size of the page in bytes.
-     */
+    /** size of the page in bytes. */
     size,
-    /**
-     * word count of the page.
-     */
+    /** word count of the page. */
     wordcount,
-    /**
-     * timestamp of when the page was last edited.
-     */
+    /** timestamp of when the page was last edited. */
     timestamp,
-    /**
-     * parsed snippet of the page.
-     */
+    /** parsed snippet of the page. */
     snippet,
-    /**
-     * parsed snippet of the page title.
-     */
+    /** parsed snippet of the page title. */
     titlesnippet,
-    /**
-     * parsed snippet of the redirect title.
-     */
+    /** parsed snippet of the redirect title. */
     redirectsnippet,
-    /**
-     * title of the matching redirect.
-     */
+    /** title of the matching redirect. */
     redirecttitle,
-    /**
-     * parsed snippet of the matching section title.
-     */
+    /** parsed snippet of the matching section title. */
     sectionsnippet,
-    /**
-     * title of the matching section.
-     */
-    sectiontitle, title;
+    /** title of the matching section. */
+    sectiontitle,
+    title;
 
     public static final Set<SearchProps> DEFAULT = EnumSet.of(size, wordcount, timestamp, snippet);
   }
 
   private static final Logger log = LoggerFactory.getLogger(Search.class);
 
-  /**
-   * Constant value for the srlimit-parameter.
-   */
+  /** Constant value for the srlimit-parameter. */
   private static final int LIMIT = 50;
+
   private final JsonMapper mapper = new JsonMapper();
   private final String query;
 
@@ -116,19 +91,29 @@ public class Search extends BaseQuery<SearchResult> {
   /**
    * Create a search request
    *
-   * @param query      Search for all page titles (or content) that have this value.
-   * @param what       Which type of search to perform.
+   * @param query Search for all page titles (or content) that have this value.
+   * @param what Which type of search to perform.
    * @param searchInfo Which metadata to return.
-   * @param props      Which properties to return.
+   * @param props Which properties to return.
    * @param namespaces Search only within these namespaces.
    */
-  public Search(MediaWikiBot bot, String query, Set<SearchWhat> what, Set<SearchInfo> searchInfo,
-      Set<SearchProps> props, int... namespaces) {
+  public Search(
+      MediaWikiBot bot,
+      String query,
+      Set<SearchWhat> what,
+      Set<SearchInfo> searchInfo,
+      Set<SearchProps> props,
+      int... namespaces) {
     this(bot, query, what, searchInfo, props, Ints.asList(namespaces));
   }
 
-  public Search(MediaWikiBot bot, String query, Set<SearchWhat> what, Set<SearchInfo> searchInfo,
-      Set<SearchProps> props, List<Integer> namespaces) {
+  public Search(
+      MediaWikiBot bot,
+      String query,
+      Set<SearchWhat> what,
+      Set<SearchInfo> searchInfo,
+      Set<SearchProps> props,
+      List<Integer> namespaces) {
     super(bot);
     this.query = query;
     this.what = what;
@@ -148,16 +133,18 @@ public class Search extends BaseQuery<SearchResult> {
 
   @Override
   protected HttpAction prepareNextRequest() {
-    RequestBuilder requestBuilder = new ApiRequestBuilder().action("query") //
-        .formatJson() //
-        .param("continue", MediaWiki.urlEncode("-||")) //
-        .param("list", "search") //
-        .param("srsearch", MediaWiki.urlEncode(query)) //
-        .param("srnamespace", MediaWiki.urlEncodedNamespace(namespaces)) //
-        .param("srwhat", joinParam(what)) //
-        .param("srinfo", joinParam(searchInfo)) //
-        .param("srprop", joinParam(props)) //
-        .param("srlimit", LIMIT);
+    RequestBuilder requestBuilder =
+        new ApiRequestBuilder()
+            .action("query") //
+            .formatJson() //
+            .param("continue", MediaWiki.urlEncode("-||")) //
+            .param("list", "search") //
+            .param("srsearch", MediaWiki.urlEncode(query)) //
+            .param("srnamespace", MediaWiki.urlEncodedNamespace(namespaces)) //
+            .param("srwhat", joinParam(what)) //
+            .param("srinfo", joinParam(searchInfo)) //
+            .param("srprop", joinParam(props)) //
+            .param("srlimit", LIMIT);
 
     if (hasNextPageInfo()) {
       requestBuilder.param("sroffset", getNextPageInfo());
@@ -193,5 +180,4 @@ public class Search extends BaseQuery<SearchResult> {
   public String getSuggestion() {
     return resultList.getSuggestion();
   }
-
 }

@@ -1,7 +1,5 @@
 package net.sourceforge.jwbf;
 
-import javax.annotation.Nullable;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -10,6 +8,12 @@ import java.net.URL;
 import java.util.Random;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
+
+import javax.annotation.Nullable;
+
+import org.junit.Assume;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Charsets;
@@ -24,10 +28,8 @@ import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Range;
 import com.google.common.io.Resources;
+
 import net.sourceforge.jwbf.mediawiki.MediaWiki;
-import org.junit.Assume;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class TestHelper {
 
@@ -35,8 +37,7 @@ public class TestHelper {
 
   private static Random wheel = new Random();
 
-  private TestHelper() {
-  }
+  private TestHelper() {}
 
   public static String getRandomAlpha(int length) {
     return getRandomAlph(length);
@@ -73,27 +74,28 @@ public class TestHelper {
     return out.toString();
   }
 
-  private static LoadingCache<URL, Boolean> reachableCache = CacheBuilder.newBuilder() //
-      .expireAfterAccess(30, TimeUnit.SECONDS) //
-      .build(new CacheLoader<URL, Boolean>() {
+  private static LoadingCache<URL, Boolean> reachableCache =
+      CacheBuilder.newBuilder() //
+          .expireAfterAccess(30, TimeUnit.SECONDS) //
+          .build(
+              new CacheLoader<URL, Boolean>() {
 
-        @Override
-        public Boolean load(URL url) throws Exception {
-          try {
-            HttpURLConnection c = (HttpURLConnection) url.openConnection();
-            c.setConnectTimeout(2000);
-            c.connect();
-            String headerField = c.getHeaderField(0);
-            return headerField.endsWith("200 OK");
+                @Override
+                public Boolean load(URL url) throws Exception {
+                  try {
+                    HttpURLConnection c = (HttpURLConnection) url.openConnection();
+                    c.setConnectTimeout(2000);
+                    c.connect();
+                    String headerField = c.getHeaderField(0);
+                    return headerField.endsWith("200 OK");
 
-          } catch (Exception e) {
-            log.warn(e.getMessage());
-            log.trace("", e);
-
-          }
-          return Boolean.FALSE;
-        }
-      });
+                  } catch (Exception e) {
+                    log.warn(e.getMessage());
+                    log.trace("", e);
+                  }
+                  return Boolean.FALSE;
+                }
+              });
 
   public static void assumeReachable(URL url) {
     try {
@@ -102,7 +104,6 @@ public class TestHelper {
     } catch (ExecutionException e1) {
       throw new IllegalStateException(e1);
     }
-
   }
 
   public static void assumeReachable(String... urls) {
@@ -153,13 +154,15 @@ public class TestHelper {
   public static ImmutableList<String> createNames(final String prefix, int limit) {
     Range<Integer> range = Range.closedOpen(0, limit);
     ImmutableList<Integer> list = ContiguousSet.create(range, DiscreteDomain.integers()).asList();
-    return FluentIterable.from(list).transform(new Function<Integer, String>() {
-      @Nullable
-      @Override
-      public String apply(@Nullable Integer input) {
-        return prefix + input;
-      }
-    }).toList();
+    return FluentIterable.from(list)
+        .transform(
+            new Function<Integer, String>() {
+              @Nullable
+              @Override
+              public String apply(@Nullable Integer input) {
+                return prefix + input;
+              }
+            })
+        .toList();
   }
-
 }

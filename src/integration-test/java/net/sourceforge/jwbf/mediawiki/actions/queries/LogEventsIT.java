@@ -6,9 +6,15 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.Collection;
 
+import org.junit.Test;
+import org.junit.runners.Parameterized.Parameters;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
+
 import net.sourceforge.jwbf.GAssert;
 import net.sourceforge.jwbf.core.contentRep.Article;
 import net.sourceforge.jwbf.mediawiki.BotFactory;
@@ -16,10 +22,6 @@ import net.sourceforge.jwbf.mediawiki.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 import net.sourceforge.jwbf.mediawiki.contentRep.LogItem;
 import net.sourceforge.jwbf.mediawiki.live.auto.ParamHelper;
-import org.junit.Test;
-import org.junit.runners.Parameterized.Parameters;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class LogEventsIT extends ParamHelper {
 
@@ -47,13 +49,15 @@ public class LogEventsIT extends ParamHelper {
     // THEN
     ImmutableList<String> expected = ImmutableList.copyOf(Lists.reverse(deletedTitles));
     if (bot.getVersion().greaterEqThen(Version.MW1_23)) {
-      GAssert.assertEquals(expected, FluentIterable.from(items) //
-          .transform(LogEvents.toTitles()) //
-          .toList());
+      GAssert.assertEquals(
+          expected,
+          FluentIterable.from(items) //
+              .transform(LogEvents.toTitles()) //
+              .toList());
     } else {
-      GAssert.assertEquals(expected.subList(0, 1),
+      GAssert.assertEquals(
+          expected.subList(0, 1),
           FluentIterable.from(items).transform(LogEvents.toTitles()).toList());
-
     }
   }
 
@@ -71,5 +75,4 @@ public class LogEventsIT extends ParamHelper {
     }
     return builder.build();
   }
-
 }

@@ -1,13 +1,18 @@
 package net.sourceforge.jwbf.mediawiki;
 
+import java.util.concurrent.TimeUnit;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import java.util.concurrent.TimeUnit;
+import org.mockito.Mockito;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+
 import net.sourceforge.jwbf.JWBF;
 import net.sourceforge.jwbf.TestHelper;
 import net.sourceforge.jwbf.core.actions.HttpActionClient;
@@ -16,9 +21,6 @@ import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.core.bots.HttpBot;
 import net.sourceforge.jwbf.mediawiki.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
-import org.mockito.Mockito;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class BotFactory {
 
@@ -26,13 +28,15 @@ public class BotFactory {
     // do nothing
   }
 
-  private static Injector masterInjector = Guice.createInjector(new AbstractModule() {
+  private static Injector masterInjector =
+      Guice.createInjector(
+          new AbstractModule() {
 
-    @Override
-    protected void configure() {
-      bind(WireRegister.class);
-    }
-  });
+            @Override
+            protected void configure() {
+              bind(WireRegister.class);
+            }
+          });
 
   public static MediaWikiBot getMediaWikiBot(final Version v, final boolean login) {
     return getIntegMediaWikiBot(v, login);
@@ -46,16 +50,18 @@ public class BotFactory {
   public static Injector getBotInjector(Version v, boolean login) {
     final String wikiUrl = getWikiUrl(v, LiveTestFather.getValue("localwikihost"));
     TestHelper.assumeReachable(wikiUrl);
-    Injector injector = masterInjector.createChildInjector(new AbstractModule() {
+    Injector injector =
+        masterInjector.createChildInjector(
+            new AbstractModule() {
 
-      @Override
-      protected void configure() {
-        bind(CacheActionClient.class) //
-            .toInstance(Mockito.spy(new CacheActionClient(wikiUrl, new WireRegister())));
-        bind(HttpBot.class).to(CacheHttpBot.class);
-        bind(MediaWikiBot.class).asEagerSingleton();
-      }
-    });
+              @Override
+              protected void configure() {
+                bind(CacheActionClient.class) //
+                    .toInstance(Mockito.spy(new CacheActionClient(wikiUrl, new WireRegister())));
+                bind(HttpBot.class).to(CacheHttpBot.class);
+                bind(MediaWikiBot.class).asEagerSingleton();
+              }
+            });
     MediaWikiBot bot = injector.getInstance(MediaWikiBot.class);
     if (login) {
       bot.login(getWikiUser(v), getWikiPass(v));
@@ -113,12 +119,15 @@ public class BotFactory {
   public static MediaWikiBot newWikimediaBot(String liveUrl, Class<?> clazz) {
 
     String self = getUrlForWikimedia(clazz);
-    HttpActionClient client = HttpActionClient.builder() //
-        .withUrl(liveUrl) //
-        .withUserAgent("JwbfIntegTest", "A", "could be found at " + self +
-            " or at any fork of this project") //
-        .withRequestsPerUnit(10, TimeUnit.MINUTES) //
-        .build();
+    HttpActionClient client =
+        HttpActionClient.builder() //
+            .withUrl(liveUrl) //
+            .withUserAgent(
+                "JwbfIntegTest",
+                "A",
+                "could be found at " + self + " or at any fork of this project") //
+            .withRequestsPerUnit(10, TimeUnit.MINUTES) //
+            .build();
     return new MediaWikiBot(client);
   }
 
@@ -126,5 +135,4 @@ public class BotFactory {
     String prefix = "https://github.com/eldur/jwbf/blob/master/src/integration-test/java/";
     return prefix + clazz.getCanonicalName().replace('.', '/') + ".java";
   }
-
 }

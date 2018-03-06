@@ -43,18 +43,14 @@ public class SimpleArticleTest {
 
   private SimpleArticle article;
 
-  /**
-   * setup.
-   */
+  /** setup. */
   @Before
   public void setUp() {
 
     article = new SimpleArticle();
   }
 
-  /**
-   * Tests edit summary.
-   */
+  /** Tests edit summary. */
   @Test
   public void testEditSummary() {
     article.setEditSummary("test");
@@ -95,23 +91,25 @@ public class SimpleArticleTest {
 
   @Test
   public void testInitWithArticleMeta() {
-    SimpleArticle sa = new SimpleArticle(new MetaAdapter() {
+    SimpleArticle sa =
+        new SimpleArticle(
+            new MetaAdapter() {
 
-      @Override
-      public boolean isRedirect() {
-        return false;
-      }
+              @Override
+              public boolean isRedirect() {
+                return false;
+              }
 
-      @Override
-      public Date getEditTimestamp() {
-        return null;
-      }
+              @Override
+              public Date getEditTimestamp() {
+                return null;
+              }
 
-      @Override
-      public String getRevisionId() {
-        return null;
-      }
-    });
+              @Override
+              public String getRevisionId() {
+                return null;
+              }
+            });
 
     // THEN
     assertEquals("", sa.getEditor());
@@ -123,23 +121,25 @@ public class SimpleArticleTest {
 
   @Test
   public void testInitWithArticleMeta_nonnull() {
-    SimpleArticle sa = new SimpleArticle(new MetaAdapter() {
+    SimpleArticle sa =
+        new SimpleArticle(
+            new MetaAdapter() {
 
-      @Override
-      public boolean isRedirect() {
-        return false;
-      }
+              @Override
+              public boolean isRedirect() {
+                return false;
+              }
 
-      @Override
-      public Date getEditTimestamp() {
-        return new Date(7);
-      }
+              @Override
+              public Date getEditTimestamp() {
+                return new Date(7);
+              }
 
-      @Override
-      public String getRevisionId() {
-        return "5";
-      }
-    });
+              @Override
+              public String getRevisionId() {
+                return "5";
+              }
+            });
 
     // THEN
     assertEquals("", sa.getEditor());
@@ -152,38 +152,38 @@ public class SimpleArticleTest {
 
   @Test
   public void testNoNullpointer() {
-    ContentAccessable ca = new ContentAccessable() {
+    ContentAccessable ca =
+        new ContentAccessable() {
 
-      @Override
-      public boolean isMinorEdit() {
-        return false;
-      }
+          @Override
+          public boolean isMinorEdit() {
+            return false;
+          }
 
-      @Override
-      public String getText() {
-        return null;
-      }
+          @Override
+          public String getText() {
+            return null;
+          }
 
-      @Override
-      public String getTitle() {
-        return null;
-      }
+          @Override
+          public String getTitle() {
+            return null;
+          }
 
-      @Override
-      public String getEditor() {
-        return null;
-      }
+          @Override
+          public String getEditor() {
+            return null;
+          }
 
-      @Override
-      public String getEditSummary() {
-        return null;
-      }
+          @Override
+          public String getEditSummary() {
+            return null;
+          }
 
-      public Date getEditTimestamp() {
-        return null;
-      }
-
-    };
+          public Date getEditTimestamp() {
+            return null;
+          }
+        };
 
     SimpleArticle sa = new SimpleArticle(ca);
     assertEquals("", sa.getEditor());
@@ -191,39 +191,38 @@ public class SimpleArticleTest {
     assertEquals("", sa.getTitle());
     assertEquals("", sa.getText());
     assertNotNull(sa.getEditTimestamp());
-
   }
 
   @Test
   public void testNoNullpointer1() {
-    ContentAccessable ca = new ContentAccessable() {
+    ContentAccessable ca =
+        new ContentAccessable() {
 
-      @Override
-      public boolean isMinorEdit() {
-        return false;
-      }
+          @Override
+          public boolean isMinorEdit() {
+            return false;
+          }
 
-      @Override
-      public String getText() {
-        return "test";
-      }
+          @Override
+          public String getText() {
+            return "test";
+          }
 
-      @Override
-      public String getTitle() {
-        return "MyTest";
-      }
+          @Override
+          public String getTitle() {
+            return "MyTest";
+          }
 
-      @Override
-      public String getEditor() {
-        return null;
-      }
+          @Override
+          public String getEditor() {
+            return null;
+          }
 
-      @Override
-      public String getEditSummary() {
-        return null;
-      }
-
-    };
+          @Override
+          public String getEditSummary() {
+            return null;
+          }
+        };
 
     SimpleArticle sa = new SimpleArticle(ca);
 
@@ -244,7 +243,6 @@ public class SimpleArticleTest {
     assertNotNull(sa.getEditTimestamp());
     assertFalse(sa.isRedirect());
     assertFalse(sa.isMinorEdit());
-
   }
 
   @Test
@@ -253,7 +251,6 @@ public class SimpleArticleTest {
 
     assertEquals("b", sa.getTitle());
     assertEquals("a", sa.getText());
-
   }
 
   @Test
@@ -401,7 +398,5 @@ public class SimpleArticleTest {
     public String getText() {
       return null;
     }
-
   }
-
 }

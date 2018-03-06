@@ -4,11 +4,13 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 
+import org.junit.Test;
+
 import com.google.common.base.Optional;
 import com.google.common.io.Resources;
+
 import net.sourceforge.jwbf.TestHelper;
 import net.sourceforge.jwbf.mediawiki.actions.queries.BaseQueryTest;
-import org.junit.Test;
 
 public class XmlConverterTest {
 

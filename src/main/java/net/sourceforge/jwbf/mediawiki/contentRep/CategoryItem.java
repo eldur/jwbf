@@ -35,7 +35,6 @@ public class CategoryItem {
       @Override
       public String applyNonnull(@Nonnull CategoryItem input) {
         return input.getTitle();
-
       }
     };
   }
@@ -75,8 +74,10 @@ public class CategoryItem {
   public boolean equals(Object obj) {
     if (obj instanceof CategoryItem) {
       CategoryItem that = (CategoryItem) obj;
-      return Objects.equals(that.getTitle(), this.getTitle()) && //
-          Objects.equals(that.getPageid(), this.getPageid()) && //
+      return Objects.equals(that.getTitle(), this.getTitle())
+          && //
+          Objects.equals(that.getPageid(), this.getPageid())
+          && //
           Objects.equals(that.getNamespace(), this.getNamespace());
     } else {
       return false;

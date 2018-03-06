@@ -5,39 +5,43 @@ import static org.junit.Assert.fail;
 
 import java.util.Date;
 
+import org.junit.Test;
+
 import com.github.dreamhead.moco.RequestMatcher;
 import com.google.common.base.Optional;
 import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableList;
+
 import net.sourceforge.jwbf.AbstractIntegTest;
 import net.sourceforge.jwbf.GAssert;
 import net.sourceforge.jwbf.Logging;
 import net.sourceforge.jwbf.TestHelper;
 import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
 import net.sourceforge.jwbf.mediawiki.ApiMatcherBuilder;
-import org.junit.Test;
 
 public class MediaWikiBotIntegTest extends AbstractIntegTest {
 
-  RequestMatcher revisions = ApiMatcherBuilder.of() //
-      .param("action", "query") //
-      .param("format", "xml") //
-      .param("prop", "revisions") //
-      .param("rvlimit", "1") //
-      .param("rvprop", "content|comment|timestamp|user|ids|flags") //
-      .param("rvdir", "older") //
-      .param("titles", "A|B") //
-      .build();
+  RequestMatcher revisions =
+      ApiMatcherBuilder.of() //
+          .param("action", "query") //
+          .param("format", "xml") //
+          .param("prop", "revisions") //
+          .param("rvlimit", "1") //
+          .param("rvprop", "content|comment|timestamp|user|ids|flags") //
+          .param("rvdir", "older") //
+          .param("titles", "A|B") //
+          .build();
 
-  RequestMatcher revision = ApiMatcherBuilder.of() //
-      .param("action", "query") //
-      .param("format", "xml") //
-      .param("prop", "revisions") //
-      .param("rvlimit", "1") //
-      .param("rvprop", "content|comment|timestamp|user|ids|flags") //
-      .param("rvdir", "older") //
-      .param("titles", "B") //
-      .build();
+  RequestMatcher revision =
+      ApiMatcherBuilder.of() //
+          .param("action", "query") //
+          .param("format", "xml") //
+          .param("prop", "revisions") //
+          .param("rvlimit", "1") //
+          .param("rvprop", "content|comment|timestamp|user|ids|flags") //
+          .param("rvdir", "older") //
+          .param("titles", "B") //
+          .build();
 
   @Test
   public void testreadData() {
@@ -98,7 +102,6 @@ public class MediaWikiBotIntegTest extends AbstractIntegTest {
       // THEN
       GAssert.assertStartsWith("expected one element but was", e.getMessage());
     }
-
   }
 
   @Test

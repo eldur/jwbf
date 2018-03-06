@@ -1,13 +1,17 @@
 package net.sourceforge.jwbf.mediawiki.bots;
 
+import java.net.URL;
+
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
-import java.net.URL;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
+
 import net.sourceforge.jwbf.core.actions.ContentProcessable;
 import net.sourceforge.jwbf.core.actions.HttpActionClient;
 import net.sourceforge.jwbf.core.actions.util.ActionException;
@@ -27,25 +31,29 @@ import net.sourceforge.jwbf.mediawiki.actions.meta.GetUserinfo;
 import net.sourceforge.jwbf.mediawiki.actions.meta.GetVersion;
 import net.sourceforge.jwbf.mediawiki.actions.meta.Siteinfo;
 import net.sourceforge.jwbf.mediawiki.contentRep.LoginData;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * This class helps you to interact with each <a href="http://www.mediawiki.org"
  * target="_blank">MediaWiki</a>. This class offers a <b>basic set</b> of methods which are defined
  * in the package net.sourceforge.jwbf.actions.mw.* How to use:
+ *
  * <pre>
  * MediaWikiBot b = new MediaWikiBot(&quot;http://yourwiki.org&quot;);
  * b.login(&quot;Username&quot;, &quot;Password&quot;);
  * System.out.println(b.readContent(&quot;Main Page&quot;).getText());
  * </pre>
- * <b>How to find the correct wikiurl</b> <p> The correct wikiurl is sometimes not easy to find,
- * because some wiki admins uses url rewriting rules. In this cases the correct url is the one,
- * which gives you access to <code>api.php</code>. E.g. Compare
+ *
+ * <b>How to find the correct wikiurl</b>
+ *
+ * <p>The correct wikiurl is sometimes not easy to find, because some wiki admins uses url rewriting
+ * rules. In this cases the correct url is the one, which gives you access to <code>api.php</code>.
+ * E.g. Compare
+ *
  * <pre>
  * http://www.mediawiki.org/wiki/api.php
  * http://www.mediawiki.org/w/api.php
  * </pre>
+ *
  * Thus the correct wikiurl is: <code>http://www.mediawiki.org/w/</code> Since MediaWiki 1.20, the
  * wikiurl can be found on the wiki's Special:Version page.
  *
@@ -65,34 +73,28 @@ public class MediaWikiBot implements WikiBot {
   private boolean loginChangeUserInfo = false;
   private boolean loginChangeVersion = false;
 
-  @Inject
-  private HttpBot bot;
+  @Inject private HttpBot bot;
 
   private HttpActionClient client;
 
-  /**
-   * These chars are not allowed in article names.
-   */
+  /** These chars are not allowed in article names. */
   @VisibleForTesting
   public static char[] invalidLabelChars() {
     return "[]{}<>|".toCharArray();
   }
 
   private static final int DEFAULT_READ_PROPERTIES =
-      GetRevision.CONTENT | GetRevision.COMMENT | GetRevision.USER | GetRevision.TIMESTAMP |
-          GetRevision.IDS |
-          GetRevision.FLAGS;
+      GetRevision.CONTENT
+          | GetRevision.COMMENT
+          | GetRevision.USER
+          | GetRevision.TIMESTAMP
+          | GetRevision.IDS
+          | GetRevision.FLAGS;
 
-  /**
-   * use this constructor, if you want to work with IoC.
-   */
-  public MediaWikiBot() {
+  /** use this constructor, if you want to work with IoC. */
+  public MediaWikiBot() {}
 
-  }
-
-  /**
-   * @param u wikihosturl like "http://www.mediawiki.org/w/"
-   */
+  /** @param u wikihosturl like "http://www.mediawiki.org/w/" */
   public MediaWikiBot(final URL u) {
     this(HttpActionClient.of(u));
   }
@@ -106,7 +108,6 @@ public class MediaWikiBot implements WikiBot {
    * @param url wikihosturl like "http://www.mediawiki.org/w/"
    * @throws IllegalArgumentException if param url does not represent a well-formed url
    */
-
   public MediaWikiBot(final String url) {
     if (!(url.endsWith(".php") || url.endsWith("/"))) {
       throw new IllegalArgumentException("(" + url + ") url must end with slash or .php");
@@ -116,7 +117,7 @@ public class MediaWikiBot implements WikiBot {
   }
 
   /**
-   * @param url               wikihosturl like "http://www.mediawiki.org/w/"
+   * @param url wikihosturl like "http://www.mediawiki.org/w/"
    * @param testHostReachable if true, test if host reachable
    */
   public MediaWikiBot(URL url, boolean testHostReachable) {
@@ -130,9 +131,8 @@ public class MediaWikiBot implements WikiBot {
    * Performs a Login.
    *
    * @param username the username
-   * @param passwd   the password
-   * @param domain   login domain (Special for LDAPAuth extention to authenticate against LDAP
-   *                 users)
+   * @param passwd the password
+   * @param domain login domain (Special for LDAPAuth extention to authenticate against LDAP users)
    * @see PostLogin
    */
   public void login(String username, String passwd, String domain) {
@@ -148,7 +148,7 @@ public class MediaWikiBot implements WikiBot {
    * #writeContent(net.sourceforge.jwbf.core.contentRep.SimpleArticle)}
    *
    * @param username the username
-   * @param passwd   the password
+   * @param passwd the password
    * @see PostLogin
    */
   @Override
@@ -157,7 +157,7 @@ public class MediaWikiBot implements WikiBot {
   }
 
   /**
-   * @param name       of article in a mediawiki like "Main Page"
+   * @param name of article in a mediawiki like "Main Page"
    * @param properties {@link GetRevision}
    * @return a content representation of requested article, never null
    * @see GetRevision
@@ -168,9 +168,7 @@ public class MediaWikiBot implements WikiBot {
     return new Article(this, readData(properties, name));
   }
 
-  /**
-   * @deprecated use {@link #readData(String)}
-   */
+  /** @deprecated use {@link #readData(String)} */
   @Override
   // TODO 'data' is not very descriptive
   public SimpleArticle readData(String name, int properties) {
@@ -192,9 +190,7 @@ public class MediaWikiBot implements WikiBot {
     return getPerformedAction(new GetRevision(names, DEFAULT_READ_PROPERTIES)).asList();
   }
 
-  /**
-   * {@inheritDoc}
-   */
+  /** {@inheritDoc} */
   @Override
   // TODO 'data' is not very descriptive
   public SimpleArticle readData(String name) {
@@ -225,9 +221,7 @@ public class MediaWikiBot implements WikiBot {
     return getArticle(name, DEFAULT_READ_PROPERTIES);
   }
 
-  /**
-   * {@inheritDoc}
-   */
+  /** {@inheritDoc} */
   @Override
   public void writeContent(final SimpleArticle simpleArticle) {
     if (!isLoggedIn()) {
@@ -253,16 +247,12 @@ public class MediaWikiBot implements WikiBot {
     return Optional.of(title);
   }
 
-  /**
-   * @return true if
-   */
+  /** @return true if */
   public boolean isLoggedIn() {
     return login != null && login.isLoggedIn();
   }
 
-  /**
-   * {@inheritDoc}
-   */
+  /** {@inheritDoc} */
   @Override
   public Userinfo getUserinfo() {
     if (ui == null || loginChangeUserInfo) {
@@ -272,24 +262,18 @@ public class MediaWikiBot implements WikiBot {
     return ui;
   }
 
-  /**
-   * {@inheritDoc}
-   */
+  /** {@inheritDoc} */
   @Override
   public void delete(String title) {
     delete(title, null);
   }
 
-  /**
-   * deletes an article with a reason
-   */
+  /** deletes an article with a reason */
   public void delete(String title, String reason) {
     getPerformedAction(new PostDelete(getUserinfo(), title, reason));
   }
 
-  /**
-   * @deprecated use {@link #getPerformedAction(ContentProcessable)} instead
-   */
+  /** @deprecated use {@link #getPerformedAction(ContentProcessable)} instead */
   @Deprecated
   synchronized String performAction(ContentProcessable a) {
     if (a.isSelfExecuter()) {
@@ -318,15 +302,15 @@ public class MediaWikiBot implements WikiBot {
   @VisibleForTesting
   HttpBot bot() {
     if (bot == null) {
-      throw new IllegalStateException("please use another constructor or inject " + //
-          HttpBot.class.getCanonicalName());
+      throw new IllegalStateException(
+          "please use another constructor or inject "
+              + //
+              HttpBot.class.getCanonicalName());
     }
     return bot;
   }
 
-  /**
-   * @see #getSiteinfo()
-   */
+  /** @see #getSiteinfo() */
   @Nonnull
   public Version getVersion() {
     if (version == null || loginChangeVersion) {
@@ -348,12 +332,9 @@ public class MediaWikiBot implements WikiBot {
     return getPerformedAction(Siteinfo.class);
   }
 
-  /**
-   * {@inheritDoc}
-   */
+  /** {@inheritDoc} */
   @Override
   public final String getWikiType() {
     return MediaWiki.class.getSimpleName() + " " + getVersion();
   }
-
 }

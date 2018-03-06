@@ -18,9 +18,6 @@
  */
 package net.sourceforge.jwbf.mediawiki;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
 import java.net.URLDecoder;
@@ -32,6 +29,11 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import org.apache.commons.lang3.StringEscapeUtils;
+
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Joiner;
 import com.google.common.base.Predicate;
@@ -40,13 +42,11 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.primitives.Ints;
+
 import net.sourceforge.jwbf.core.NotReleased;
 import net.sourceforge.jwbf.core.internal.Checked;
-import org.apache.commons.lang3.StringEscapeUtils;
 
-/**
- * @author Thomas Stock
- */
+/** @author Thomas Stock */
 public final class MediaWiki {
 
   static final Charset CHARSET = StandardCharsets.UTF_8;
@@ -91,11 +91,8 @@ public final class MediaWiki {
           .add(NS_CATEGORY_TALK) //
           .build();
 
-  /**
-   * @deprecated prefer {@link #NS_EVERY}
-   */
-  @Deprecated
-  public static final int[] NS_ALL = Ints.toArray(NS_EVERY);
+  /** @deprecated prefer {@link #NS_EVERY} */
+  @Deprecated public static final int[] NS_ALL = Ints.toArray(NS_EVERY);
 
   public static final Set<String> BOT_GROUPS;
 
@@ -121,90 +118,84 @@ public final class MediaWiki {
    * @author Thomas Stock
    */
   public enum Version {
-    /**
-     * TODO add enum value
-     */
+    /** TODO add enum value */
     UNKNOWN
-    /**
-     *
-     */
-    , @Deprecated MW1_14
-    /**
-     * Released 2009-06
-     */
-    , @Deprecated MW1_15
-    /**
-     * Released 2010-07
-     */
-    , @Deprecated MW1_16
-    /**
-     * Released 2011-06
-     */
-    , @Deprecated MW1_17
-    /**
-     * Released 2011-11
-     */
-    , @Deprecated MW1_18
-    /**
-     * Released 2012-05
-     */
-    , MW1_19
-    /**
-     * Released 2012-11
-     */
-    , @Deprecated MW1_20
-    /**
-     * Released 2013-05-25
-     */
-    , @Deprecated MW1_21
-    /**
-     * Released 2013-12-06
-     */
-    , @Deprecated MW1_22
-    /**
-     * Released 2014-06-05
-     */
-    , MW1_23
-    /**
-     * Released 2014-11-26
-     */
-    , MW1_24
-    /**
-     * TODO Not released
-     */
-    , @NotReleased MW1_25
-    /**
-     *
-     */
-    , DEVELOPMENT;
+    /** */
+    ,
+    @Deprecated
+    MW1_14
+    /** Released 2009-06 */
+    ,
+    @Deprecated
+    MW1_15
+    /** Released 2010-07 */
+    ,
+    @Deprecated
+    MW1_16
+    /** Released 2011-06 */
+    ,
+    @Deprecated
+    MW1_17
+    /** Released 2011-11 */
+    ,
+    @Deprecated
+    MW1_18
+    /** Released 2012-05 */
+    ,
+    MW1_19
+    /** Released 2012-11 */
+    ,
+    @Deprecated
+    MW1_20
+    /** Released 2013-05-25 */
+    ,
+    @Deprecated
+    MW1_21
+    /** Released 2013-12-06 */
+    ,
+    @Deprecated
+    MW1_22
+    /** Released 2014-06-05 */
+    ,
+    MW1_23
+    /** Released 2014-11-26 */
+    ,
+    MW1_24
+    /** TODO Not released */
+    ,
+    @NotReleased
+    MW1_25
+    /** */
+    ,
+    DEVELOPMENT;
 
-    private static final ImmutableList<Version> STABLE_VERSIONS = FluentIterable //
-        .from(Arrays.asList(Version.values())) //
-        .filter(new Predicate<Version>() {
-          @Override
-          public boolean apply(@Nullable Version version) {
-            return isStableVersion(version);
-          }
-        }) //
-        .toSortedList(new Comparator<Version>() {
-          @Override
-          public int compare(Version o1, Version o2) {
-            return Integer.valueOf(o1.getIntValue()).compareTo(Integer.valueOf(o2.getIntValue()));
-          }
-        });
+    private static final ImmutableList<Version> STABLE_VERSIONS =
+        FluentIterable //
+            .from(Arrays.asList(Version.values())) //
+            .filter(
+                new Predicate<Version>() {
+                  @Override
+                  public boolean apply(@Nullable Version version) {
+                    return isStableVersion(version);
+                  }
+                }) //
+            .toSortedList(
+                new Comparator<Version>() {
+                  @Override
+                  public int compare(Version o1, Version o2) {
+                    return Integer.valueOf(o1.getIntValue())
+                        .compareTo(Integer.valueOf(o2.getIntValue()));
+                  }
+                });
 
     private static final Version LATEST_VERSION = Iterables.getLast(valuesStable());
 
-    /**
-     * @return a, like 1.15
-     */
+    /** @return a, like 1.15 */
     public String getNumber() {
       return name().replace("MW", "").replace("_0", "_").replace("_", ".");
     }
 
-    /**
-     * @return like 1-15
-     */
+    /** @return like 1-15 */
     public String getNumberVariation() {
       return getNumber().replace(".", "-");
     }
@@ -220,9 +211,7 @@ public final class MediaWiki {
       }
     }
 
-    /**
-     * @return the latest version
-     */
+    /** @return the latest version */
     public static Version getLatest() {
       return LATEST_VERSION;
     }
@@ -239,16 +228,12 @@ public final class MediaWiki {
       }
     }
 
-    /**
-     * @return true if
-     */
+    /** @return true if */
     public boolean greaterEqThen(Version v) {
       return v.getIntValue() <= getIntValue();
     }
 
-    /**
-     * @return all known stable MW Versions
-     */
+    /** @return all known stable MW Versions */
     public static ImmutableList<Version> valuesStable() {
       return STABLE_VERSIONS;
     }
@@ -338,5 +323,4 @@ public final class MediaWiki {
   public static String urlEncodedNamespace(ImmutableList<Integer> namespaces) {
     return MediaWiki.urlEncode(createNsString(namespaces));
   }
-
 }

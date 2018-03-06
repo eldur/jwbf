@@ -4,15 +4,17 @@ import java.io.File;
 import java.io.Serializable;
 import java.util.Locale;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.common.base.Charsets;
 import com.google.common.base.Optional;
 import com.google.common.base.Strings;
 import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
 import com.google.common.collect.ImmutableMultimap;
+
 import net.sourceforge.jwbf.core.internal.Checked;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class RequestBuilder {
 
@@ -41,7 +43,9 @@ public class RequestBuilder {
     return param(paramTuple.key, paramTuple.valueSupplier);
   }
 
-  private <T> RequestBuilder applyKeyValueTo(String key, Supplier<?> stringSupplier,
+  private <T> RequestBuilder applyKeyValueTo(
+      String key,
+      Supplier<?> stringSupplier,
       ImmutableMultimap.Builder<String, Supplier<T>> toParams) {
     if (!Strings.isNullOrEmpty(key)) {
       Checked.nonNull(stringSupplier, "stringSupplier");

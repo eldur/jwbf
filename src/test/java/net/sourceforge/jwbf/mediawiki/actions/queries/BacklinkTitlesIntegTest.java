@@ -2,14 +2,16 @@ package net.sourceforge.jwbf.mediawiki.actions.queries;
 
 import static org.junit.Assert.fail;
 
+import org.junit.Test;
+
 import com.github.dreamhead.moco.RequestMatcher;
 import com.google.common.collect.ImmutableList;
+
 import net.sourceforge.jwbf.GAssert;
 import net.sourceforge.jwbf.mediawiki.ApiMatcherBuilder;
 import net.sourceforge.jwbf.mediawiki.ConfKey;
 import net.sourceforge.jwbf.mediawiki.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.MocoIntegTest;
-import org.junit.Test;
 
 public class BacklinkTitlesIntegTest extends MocoIntegTest {
 
@@ -26,18 +28,20 @@ public class BacklinkTitlesIntegTest extends MocoIntegTest {
         .param("format", "xml") //
         .param("list", "backlinks") //
         .paramNewContinue(version()) //
-        ;
+    ;
   }
 
   RequestMatcher backlinks0 = newBaseMatcher().build();
 
-  RequestMatcher backlinks1 = newBaseMatcher() //
-      .param("blcontinue", confOf(ConfKey.BACKLINKS_CONT_1)) //
-      .build();
+  RequestMatcher backlinks1 =
+      newBaseMatcher() //
+          .param("blcontinue", confOf(ConfKey.BACKLINKS_CONT_1)) //
+          .build();
 
-  RequestMatcher backlinks2 = newBaseMatcher() //
-      .param("blcontinue", confOf(ConfKey.BACKLINKS_CONT_2)) //
-      .build();
+  RequestMatcher backlinks2 =
+      newBaseMatcher() //
+          .param("blcontinue", confOf(ConfKey.BACKLINKS_CONT_2)) //
+          .build();
 
   @Test
   public void test() {
@@ -70,5 +74,4 @@ public class BacklinkTitlesIntegTest extends MocoIntegTest {
       GAssert.assertStartsWith("invalid status: HTTP", e.getMessage());
     }
   }
-
 }

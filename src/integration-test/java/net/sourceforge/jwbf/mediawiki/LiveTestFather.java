@@ -31,18 +31,17 @@ import java.util.List;
 import java.util.Properties;
 import java.util.TimeZone;
 
+import org.junit.Assume;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.io.Files;
-import org.junit.Assume;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-/**
- * @author Thomas Stock
- */
+/** @author Thomas Stock */
 public class LiveTestFather {
 
   private final SimpleMap data;
@@ -90,9 +89,7 @@ public class LiveTestFather {
     return Preconditions.checkNotNull(instance, "do not run integ tests within normal testrun");
   }
 
-  /**
-   * @return the current UTC
-   */
+  /** @return the current UTC */
   public static Date getCurrentUTC() {
     long currentDate = System.currentTimeMillis();
     TimeZone tz = TimeZone.getDefault();
@@ -100,7 +97,6 @@ public class LiveTestFather {
     localCal.setTimeInMillis(currentDate - tz.getOffset(currentDate));
 
     return new Date(localCal.getTimeInMillis());
-
   }
 
   private String getVal(String key) {
@@ -112,9 +108,7 @@ public class LiveTestFather {
     return data.get(key);
   }
 
-  /**
-   * @deprecated avoid if possible
-   */
+  /** @deprecated avoid if possible */
   @Deprecated
   public static String getValueOrSkip(final String key) {
     skipIfIsNoIntegTest();
@@ -208,7 +202,6 @@ public class LiveTestFather {
       write(filename);
       return result;
     }
-
   }
 
   public static Collection<String> getSpecialChars() {
@@ -218,5 +211,4 @@ public class LiveTestFather {
   public static void skipIfIsNoIntegTest() {
     Assume.assumeTrue(LiveTestFather.executeLiveTests());
   }
-
 }

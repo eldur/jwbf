@@ -5,11 +5,12 @@ import static org.junit.Assert.assertNotNull;
 
 import java.util.Collection;
 
+import org.junit.Test;
+import org.junit.runners.Parameterized.Parameters;
+
 import net.sourceforge.jwbf.mediawiki.BotFactory;
 import net.sourceforge.jwbf.mediawiki.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.live.auto.ParamHelper;
-import org.junit.Test;
-import org.junit.runners.Parameterized.Parameters;
 
 public class RandomPageTitlesIT extends ParamHelper {
 
@@ -29,5 +30,4 @@ public class RandomPageTitlesIT extends ParamHelper {
     assertNotNull(title);
     assertEquals(title, random.getTitle());
   }
-
 }

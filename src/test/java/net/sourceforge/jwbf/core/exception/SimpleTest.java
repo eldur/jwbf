@@ -6,13 +6,12 @@ import static org.junit.Assert.assertTrue;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
-import net.sourceforge.jwbf.JWBF;
-import net.sourceforge.jwbf.core.actions.util.ActionException;
 import org.junit.Test;
 
-/**
- * @author Thomas Stock
- */
+import net.sourceforge.jwbf.JWBF;
+import net.sourceforge.jwbf.core.actions.util.ActionException;
+
+/** @author Thomas Stock */
 public class SimpleTest {
 
   @Test
@@ -29,7 +28,5 @@ public class SimpleTest {
       assertTrue(result.contains(JWBF.getPartId(getClass())));
       assertTrue(result.contains(JWBF.getVersion(getClass())));
     }
-
   }
-
 }

@@ -1,6 +1,4 @@
-/**
- *
- */
+/** */
 package net.sourceforge.jwbf.mediawiki.live.auto;
 
 import static net.sourceforge.jwbf.mediawiki.BotFactory.getMediaWikiBot;
@@ -9,12 +7,6 @@ import static net.sourceforge.jwbf.mediawiki.BotFactory.getWikiUser;
 
 import java.util.Collection;
 
-import com.google.common.annotations.VisibleForTesting;
-import net.sourceforge.jwbf.core.contentRep.Userinfo;
-import net.sourceforge.jwbf.mediawiki.MediaWiki.Version;
-import net.sourceforge.jwbf.mediawiki.VersionTestClassVerifier;
-import net.sourceforge.jwbf.mediawiki.actions.meta.GetUserinfo;
-import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 import org.junit.Assert;
 import org.junit.ClassRule;
 import org.junit.Ignore;
@@ -23,9 +15,15 @@ import org.junit.Test;
 import org.junit.rules.Verifier;
 import org.junit.runners.Parameterized.Parameters;
 
-/**
- * @author Thomas
- */
+import com.google.common.annotations.VisibleForTesting;
+
+import net.sourceforge.jwbf.core.contentRep.Userinfo;
+import net.sourceforge.jwbf.mediawiki.MediaWiki.Version;
+import net.sourceforge.jwbf.mediawiki.VersionTestClassVerifier;
+import net.sourceforge.jwbf.mediawiki.actions.meta.GetUserinfo;
+import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
+
+/** @author Thomas */
 public class UserinfoIT extends ParamHelper {
 
   private Version v;
@@ -35,13 +33,11 @@ public class UserinfoIT extends ParamHelper {
     this.v = v;
   }
 
-  @ClassRule
-  @VisibleForTesting
+  @ClassRule @VisibleForTesting
   public static VersionTestClassVerifier classVerifier =
       new VersionTestClassVerifier(GetUserinfo.class);
 
-  @Rule
-  public Verifier successRegister = classVerifier.getSuccessRegister(this);
+  @Rule public Verifier successRegister = classVerifier.getSuccessRegister(this);
 
   @Parameters(name = "{0}")
   public static Collection<?> stableWikis() {
@@ -54,7 +50,6 @@ public class UserinfoIT extends ParamHelper {
 
     Assert.assertFalse("User has no groups", u.getGroups().isEmpty());
     Assert.assertTrue("User has no read rights", u.getRights().contains("read"));
-
   }
 
   @Test
@@ -67,8 +62,8 @@ public class UserinfoIT extends ParamHelper {
   public final void userInfoWikiMW1x17Rights() throws Exception {
     bot = getMediaWikiBot(Version.MW1_17, false);
 
-    Assert.assertTrue("Wrong Wiki Version " + bot.getVersion(),
-        Version.MW1_17.equals(bot.getVersion()));
+    Assert.assertTrue(
+        "Wrong Wiki Version " + bot.getVersion(), Version.MW1_17.equals(bot.getVersion()));
 
     Userinfo u = bot.getUserinfo();
     Assert.assertNotSame("unknown", u.getUsername());
@@ -81,7 +76,5 @@ public class UserinfoIT extends ParamHelper {
     Assert.assertEquals(getWikiUser(Version.MW1_17), u.getUsername());
     Assert.assertFalse("User has no groups", u.getGroups().isEmpty());
     Assert.assertTrue("User has no read rights", u.getRights().contains("read"));
-
   }
-
 }

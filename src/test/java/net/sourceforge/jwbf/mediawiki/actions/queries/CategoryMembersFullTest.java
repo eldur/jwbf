@@ -4,11 +4,13 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.fail;
 
-import com.google.common.collect.ImmutableList;
-import net.sourceforge.jwbf.GAssert;
-import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 import org.junit.Test;
 import org.mockito.Mockito;
+
+import com.google.common.collect.ImmutableList;
+
+import net.sourceforge.jwbf.GAssert;
+import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 
 public class CategoryMembersFullTest {
 
@@ -26,7 +28,6 @@ public class CategoryMembersFullTest {
     assertEquals("Test_It", testee.categoryName);
     GAssert.assertEquals(ImmutableList.<Integer>of(), testee.namespace);
     assertFalse(testee.iterator().hasNext());
-
   }
 
   @Test
@@ -50,5 +51,4 @@ public class CategoryMembersFullTest {
       assertEquals(exception, e);
     }
   }
-
 }

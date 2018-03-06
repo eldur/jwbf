@@ -5,6 +5,9 @@ import static org.junit.Assert.assertTrue;
 import java.util.Collection;
 import java.util.Iterator;
 
+import org.junit.Test;
+import org.junit.runners.Parameterized.Parameters;
+
 import net.sourceforge.jwbf.TestHelper;
 import net.sourceforge.jwbf.core.actions.util.ActionException;
 import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
@@ -15,8 +18,6 @@ import net.sourceforge.jwbf.mediawiki.MediaWiki.Version;
 import net.sourceforge.jwbf.mediawiki.actions.util.RedirectFilter;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 import net.sourceforge.jwbf.mediawiki.live.auto.ParamHelper;
-import org.junit.Test;
-import org.junit.runners.Parameterized.Parameters;
 
 public class AllPageTitlesIT extends ParamHelper {
 
@@ -79,7 +80,5 @@ public class AllPageTitlesIT extends ParamHelper {
 
     assertTrue("tc sould be empty but is: " + specialChars, specialChars.isEmpty());
     assertTrue("i is: " + i + " but should be greater than", i > 50);
-
   }
-
 }

@@ -2,8 +2,12 @@ package net.sourceforge.jwbf.mediawiki.actions.meta;
 
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
+
 import net.sourceforge.jwbf.core.actions.Get;
 import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import net.sourceforge.jwbf.core.contentRep.Userinfo;
@@ -12,12 +16,8 @@ import net.sourceforge.jwbf.mapper.XmlElement;
 import net.sourceforge.jwbf.mediawiki.ApiRequestBuilder;
 import net.sourceforge.jwbf.mediawiki.MediaWiki;
 import net.sourceforge.jwbf.mediawiki.actions.util.MWAction;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-/**
- * @author Thomas Stock
- */
+/** @author Thomas Stock */
 public class GetUserinfo extends MWAction implements Userinfo {
 
   private static final Logger log = LoggerFactory.getLogger(GetUserinfo.class);
@@ -30,12 +30,13 @@ public class GetUserinfo extends MWAction implements Userinfo {
   public GetUserinfo() {
     String properties = //
         MediaWiki.urlEncode("blockinfo|hasmsg|groups|rights|options|editcount|ratelimits");
-    msg = new ApiRequestBuilder() //
-        .action("query") //
-        .formatXml() //
-        .param("meta", "userinfo") //
-        .param("uiprop", properties) //
-        .buildGet();
+    msg =
+        new ApiRequestBuilder() //
+            .action("query") //
+            .formatXml() //
+            .param("meta", "userinfo") //
+            .param("uiprop", properties) //
+            .buildGet();
   }
 
   private void parse(final String xml) {
@@ -45,34 +46,26 @@ public class GetUserinfo extends MWAction implements Userinfo {
     findContent(XmlConverter.getRootElement(xml));
   }
 
-  /**
-   * {@inheritDoc}
-   */
+  /** {@inheritDoc} */
   @Override
   public final String processAllReturningText(final String s) {
     parse(s);
     return "";
   }
 
-  /**
-   * {@inheritDoc}
-   */
+  /** {@inheritDoc} */
   @Override
   public ImmutableSet<String> getRights() {
     return ImmutableSet.copyOf(rights);
   }
 
-  /**
-   * {@inheritDoc}
-   */
+  /** {@inheritDoc} */
   @Override
   public ImmutableSet<String> getGroups() {
     return ImmutableSet.copyOf(groups);
   }
 
-  /**
-   * {@inheritDoc}
-   */
+  /** {@inheritDoc} */
   @Override
   public String getUsername() {
     return username;
@@ -99,9 +92,7 @@ public class GetUserinfo extends MWAction implements Userinfo {
     return xmlElement.getQualifiedName().equals(elementName);
   }
 
-  /**
-   * {@inheritDoc}
-   */
+  /** {@inheritDoc} */
   @Override
   public HttpAction getNextMessage() {
     return msg;

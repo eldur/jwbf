@@ -7,7 +7,14 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.Collection;
 
+import org.junit.ClassRule;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.Verifier;
+import org.junit.runners.Parameterized.Parameters;
+
 import com.google.common.annotations.VisibleForTesting;
+
 import net.sourceforge.jwbf.core.contentRep.ArticleMeta;
 import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
 import net.sourceforge.jwbf.mediawiki.MediaWiki.Version;
@@ -15,24 +22,15 @@ import net.sourceforge.jwbf.mediawiki.VersionTestClassVerifier;
 import net.sourceforge.jwbf.mediawiki.actions.editing.GetApiToken;
 import net.sourceforge.jwbf.mediawiki.actions.editing.GetRevision;
 import net.sourceforge.jwbf.mediawiki.actions.editing.PostModifyContent;
-import org.junit.ClassRule;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.Verifier;
-import org.junit.runners.Parameterized.Parameters;
 
-/**
- * @author Thomas Stock
- */
+/** @author Thomas Stock */
 public class RevisionIT extends ParamHelper {
 
-  @ClassRule
-  @VisibleForTesting
+  @ClassRule @VisibleForTesting
   public static VersionTestClassVerifier classVerifier =
       new VersionTestClassVerifier(GetRevision.class, PostModifyContent.class, GetApiToken.class);
 
-  @Rule
-  public Verifier successRegister = classVerifier.getSuccessRegister(this);
+  @Rule public Verifier successRegister = classVerifier.getSuccessRegister(this);
 
   @Parameters(name = "{0}")
   public static Collection<?> stableWikis() {
@@ -43,9 +41,7 @@ public class RevisionIT extends ParamHelper {
     super(v, classVerifier);
   }
 
-  /**
-   * Test write and read.
-   */
+  /** Test write and read. */
   @Test
   public void doTest() throws Exception {
 
@@ -71,7 +67,5 @@ public class RevisionIT extends ParamHelper {
     a = bot.getArticle(newTitle);
 
     assertEquals("", a.getText());
-
   }
-
 }

@@ -18,17 +18,18 @@
  */
 package net.sourceforge.jwbf.core.contentRep;
 
-import javax.annotation.Nullable;
-
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
+import javax.annotation.Nullable;
+
 import com.google.common.annotations.Beta;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Optional;
+
 import net.sourceforge.jwbf.core.internal.TimeConverter;
 
 /**
@@ -48,28 +49,33 @@ public class SimpleArticle implements ArticleMeta, Serializable, ContentSetable 
   private long editTimestamp = newZeroDate().getTime();
   private String revId = "";
 
-  private static Pattern redirectPattern = Pattern //
-      .compile("#(.*)redirect (.*)" //
-          , Pattern.CASE_INSENSITIVE);
+  private static Pattern redirectPattern =
+      Pattern //
+          .compile(
+          "#(.*)redirect (.*)" //
+          ,
+          Pattern.CASE_INSENSITIVE);
 
   @VisibleForTesting
   public static Date newZeroDate() {
     return new Date(0);
   }
 
-  /**
-   *
-   *
-   */
+  /** */
   public SimpleArticle() {
     // do nothing
   }
 
   public SimpleArticle(ContentAccessable ca) {
     if (ca instanceof Article) {
-      throw new IllegalArgumentException("do not convert an " + //
-          Article.class.getCanonicalName() + " to a " + //
-          getClass().getCanonicalName() + ", because its very expensive");
+      throw new IllegalArgumentException(
+          "do not convert an "
+              + //
+              Article.class.getCanonicalName()
+              + " to a "
+              + //
+              getClass().getCanonicalName()
+              + ", because its very expensive");
     }
     title = Optional.fromNullable(ca.getTitle()).or("");
     text = Optional.fromNullable(ca.getText()).or("");
@@ -77,7 +83,6 @@ public class SimpleArticle implements ArticleMeta, Serializable, ContentSetable 
     editor = Optional.fromNullable(ca.getEditor()).or("");
 
     setMinorEdit(ca.isMinorEdit());
-
   }
 
   public SimpleArticle(ArticleMeta sa) {
@@ -93,7 +98,7 @@ public class SimpleArticle implements ArticleMeta, Serializable, ContentSetable 
   }
 
   /**
-   * @param text  of article
+   * @param text of article
    * @param title of article
    * @deprecated use {@link #SimpleArticle(String)} and {@link #setText(String)} instead.
    */
@@ -103,16 +108,12 @@ public class SimpleArticle implements ArticleMeta, Serializable, ContentSetable 
     this.text = text;
   }
 
-  /**
-   * @param title of article
-   */
+  /** @param title of article */
   public SimpleArticle(final String title) {
     this.title = title;
   }
 
-  /**
-   * {@inheritDoc}
-   */
+  /** {@inheritDoc} */
   @Override
   public String getEditSummary() {
     return editSummary;
@@ -123,9 +124,7 @@ public class SimpleArticle implements ArticleMeta, Serializable, ContentSetable 
     editSummary = s;
   }
 
-  /**
-   * {@inheritDoc}
-   */
+  /** {@inheritDoc} */
   @Override
   public boolean isMinorEdit() {
     return minorEdit;
@@ -145,9 +144,7 @@ public class SimpleArticle implements ArticleMeta, Serializable, ContentSetable 
     return getTitle();
   }
 
-  /**
-   * {@inheritDoc}
-   */
+  /** {@inheritDoc} */
   @Override
   public String getTitle() {
     return title;
@@ -167,9 +164,7 @@ public class SimpleArticle implements ArticleMeta, Serializable, ContentSetable 
     this.title = title;
   }
 
-  /**
-   * {@inheritDoc}
-   */
+  /** {@inheritDoc} */
   @Override
   public String getText() {
     return text;
@@ -202,9 +197,7 @@ public class SimpleArticle implements ArticleMeta, Serializable, ContentSetable 
     this.editor = editor;
   }
 
-  /**
-   * doesn't work correct
-   */
+  /** doesn't work correct */
   @Beta
   @Override
   public boolean isRedirect() {
@@ -240,11 +233,14 @@ public class SimpleArticle implements ArticleMeta, Serializable, ContentSetable 
   public boolean equals(Object obj) {
     if (obj instanceof SimpleArticle) {
       SimpleArticle that = (SimpleArticle) obj;
-      return Objects.equals(this.editTimestamp, that.editTimestamp) && //
-          Objects.equals(this.revId, that.revId) && //
-          Objects.equals(this.text, that.text) && //
+      return Objects.equals(this.editTimestamp, that.editTimestamp)
+          && //
+          Objects.equals(this.revId, that.revId)
+          && //
+          Objects.equals(this.text, that.text)
+          && //
           Objects.equals(this.title, that.title) //
-          ;
+      ;
     } else {
       return false;
     }
@@ -268,17 +264,13 @@ public class SimpleArticle implements ArticleMeta, Serializable, ContentSetable 
     return Objects.hash(editTimestamp, revId, text, title);
   }
 
-  /**
-   * {@inheritDoc}
-   */
+  /** {@inheritDoc} */
   @Override
   public String getRevisionId() {
     return revId;
   }
 
-  /**
-   * @param revId the
-   */
+  /** @param revId the */
   public void setRevisionId(String revId) {
     this.revId = revId;
   }

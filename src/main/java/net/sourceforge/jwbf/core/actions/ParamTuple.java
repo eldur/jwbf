@@ -5,6 +5,7 @@ import java.util.Objects;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
+
 import net.sourceforge.jwbf.core.internal.Checked;
 
 public final class ParamTuple<T> {
@@ -24,7 +25,8 @@ public final class ParamTuple<T> {
   public boolean equals(Object o) {
     if (o instanceof ParamTuple) {
       ParamTuple that = (ParamTuple) o;
-      return Objects.equals(that.key, this.key) && //
+      return Objects.equals(that.key, this.key)
+          && //
           Objects.equals(that.valueSupplier, this.valueSupplier);
     }
     return false;

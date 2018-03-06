@@ -11,10 +11,17 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.Mockito;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
+
 import com.google.common.collect.ImmutableList;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+
 import net.sourceforge.jwbf.GAssert;
 import net.sourceforge.jwbf.JWBF;
 import net.sourceforge.jwbf.JettyServer;
@@ -29,11 +36,6 @@ import net.sourceforge.jwbf.mediawiki.actions.editing.PostModifyContent;
 import net.sourceforge.jwbf.mediawiki.actions.login.PostLogin;
 import net.sourceforge.jwbf.mediawiki.actions.meta.GetVersion;
 import net.sourceforge.jwbf.mediawiki.actions.meta.Siteinfo;
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.Mockito;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 
 public class MediaWikiBotTest {
 
@@ -237,7 +239,6 @@ public class MediaWikiBotTest {
     } catch (ActionException e) {
       assertEquals("Invalid character \"[\" in label \"A[B\"", e.getMessage());
     }
-
   }
 
   @Test
@@ -272,23 +273,24 @@ public class MediaWikiBotTest {
   public void testReadDataOneTitle() {
     // GIVEN
     final String title = "Test";
-    testee = new MediaWikiBot(client) {
-      @Override
-      public <T extends ContentProcessable> T getPerformedAction(T answer) {
-        if (answer instanceof GetRevision) {
-          GetRevision mockAnswer = mock(GetRevision.class);
-          ImmutableList<SimpleArticle> articles = ImmutableList.of(new SimpleArticle(title));
-          when(mockAnswer.asList()).thenReturn(articles);
-          when(mockAnswer.getArticle()).thenCallRealMethod();
-          return (T) mockAnswer;
-        } else if (answer instanceof GetVersion) {
-          return answer;
-        } else {
-          fail(answer.getClass().getCanonicalName());
-          return null;
-        }
-      }
-    };
+    testee =
+        new MediaWikiBot(client) {
+          @Override
+          public <T extends ContentProcessable> T getPerformedAction(T answer) {
+            if (answer instanceof GetRevision) {
+              GetRevision mockAnswer = mock(GetRevision.class);
+              ImmutableList<SimpleArticle> articles = ImmutableList.of(new SimpleArticle(title));
+              when(mockAnswer.asList()).thenReturn(articles);
+              when(mockAnswer.getArticle()).thenCallRealMethod();
+              return (T) mockAnswer;
+            } else if (answer instanceof GetVersion) {
+              return answer;
+            } else {
+              fail(answer.getClass().getCanonicalName());
+              return null;
+            }
+          }
+        };
 
     // WHEN
     SimpleArticle result = testee.readData(title);
@@ -300,25 +302,26 @@ public class MediaWikiBotTest {
   @Test
   public void testReadDataTwoTitles() {
     // GIVEN
-    String[] titles = { "Test A", "Test B" };
+    String[] titles = {"Test A", "Test B"};
     final ImmutableList<SimpleArticle> articles =
         ImmutableList.of(new SimpleArticle("Test A"), new SimpleArticle("Test B"));
-    testee = new MediaWikiBot(client) {
-      @Override
-      public <T extends ContentProcessable> T getPerformedAction(T answer) {
-        if (answer instanceof GetRevision) {
-          GetRevision mockAnswer = mock(GetRevision.class);
+    testee =
+        new MediaWikiBot(client) {
+          @Override
+          public <T extends ContentProcessable> T getPerformedAction(T answer) {
+            if (answer instanceof GetRevision) {
+              GetRevision mockAnswer = mock(GetRevision.class);
 
-          when(mockAnswer.asList()).thenReturn(articles);
-          return (T) mockAnswer;
-        } else if (answer instanceof GetVersion) {
-          return answer;
-        } else {
-          fail(answer.getClass().getCanonicalName());
-          return null;
-        }
-      }
-    };
+              when(mockAnswer.asList()).thenReturn(articles);
+              return (T) mockAnswer;
+            } else if (answer instanceof GetVersion) {
+              return answer;
+            } else {
+              fail(answer.getClass().getCanonicalName());
+              return null;
+            }
+          }
+        };
 
     // WHEN
     ImmutableList<SimpleArticle> result = testee.readData(titles);
@@ -330,24 +333,26 @@ public class MediaWikiBotTest {
   @Test
   public void testReadDataThreeTitles() {
     // GIVEN
-    final ImmutableList<SimpleArticle> articles = ImmutableList
-        .of(new SimpleArticle("Test A"), new SimpleArticle("Test B"), new SimpleArticle("Test C"));
+    final ImmutableList<SimpleArticle> articles =
+        ImmutableList.of(
+            new SimpleArticle("Test A"), new SimpleArticle("Test B"), new SimpleArticle("Test C"));
     ImmutableList<String> titles = ImmutableList.of("Test A", "Test B", "Test C");
-    testee = new MediaWikiBot(client) {
-      @Override
-      public <T extends ContentProcessable> T getPerformedAction(T answer) {
-        if (answer instanceof GetRevision) {
-          GetRevision mockAnswer = mock(GetRevision.class);
-          when(mockAnswer.asList()).thenReturn(articles);
-          return (T) mockAnswer;
-        } else if (answer instanceof GetVersion) {
-          return answer;
-        } else {
-          fail(answer.getClass().getCanonicalName());
-          return null;
-        }
-      }
-    };
+    testee =
+        new MediaWikiBot(client) {
+          @Override
+          public <T extends ContentProcessable> T getPerformedAction(T answer) {
+            if (answer instanceof GetRevision) {
+              GetRevision mockAnswer = mock(GetRevision.class);
+              when(mockAnswer.asList()).thenReturn(articles);
+              return (T) mockAnswer;
+            } else if (answer instanceof GetVersion) {
+              return answer;
+            } else {
+              fail(answer.getClass().getCanonicalName());
+              return null;
+            }
+          }
+        };
 
     // WHEN
     ImmutableList<SimpleArticle> result = testee.readData(titles);
@@ -357,18 +362,21 @@ public class MediaWikiBotTest {
   }
 
   private void mockValidLogin(final String username, HttpActionClient mockClient) {
-    doAnswer(new Answer<Void>() {
-      @Override
-      public Void answer(InvocationOnMock invocation) throws Throwable {
-        Object[] args = invocation.getArguments();
-        if (args[0] instanceof PostLogin) {
-          PostLogin out = (PostLogin) args[0];
-          out.getLoginData().setup(username, true);
-          // XXX ^ do not mutate this value
-        }
-        return null;
-      }
-    }).when(mockClient).performAction(isA(PostLogin.class));
+    doAnswer(
+            new Answer<Void>() {
+              @Override
+              public Void answer(InvocationOnMock invocation) throws Throwable {
+                Object[] args = invocation.getArguments();
+                if (args[0] instanceof PostLogin) {
+                  PostLogin out = (PostLogin) args[0];
+                  out.getLoginData().setup(username, true);
+                  // XXX ^ do not mutate this value
+                }
+                return null;
+              }
+            })
+        .when(mockClient)
+        .performAction(isA(PostLogin.class));
   }
 
   @Test(expected = IllegalArgumentException.class)
@@ -386,12 +394,14 @@ public class MediaWikiBotTest {
   @Test
   public void testInitIoC() {
     // GIVEN
-    Injector injector = Guice.createInjector(new AbstractModule() {
-      @Override
-      protected void configure() {
-        bind(HttpBot.class).toInstance(new HttpBot("http://192.0.2.2/"));
-      }
-    });
+    Injector injector =
+        Guice.createInjector(
+            new AbstractModule() {
+              @Override
+              protected void configure() {
+                bind(HttpBot.class).toInstance(new HttpBot("http://192.0.2.2/"));
+              }
+            });
 
     // WHEN
     MediaWikiBot instance = injector.getInstance(MediaWikiBot.class);
@@ -399,5 +409,4 @@ public class MediaWikiBotTest {
     // THEN
     instance.bot(); // no exception
   }
-
 }
