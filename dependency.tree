@@ -40,7 +40,7 @@ net.sourceforge:jwbf:jar:4.0.1-SNAPSHOT
 |  \- org.freemarker:freemarker:jar:2.3.27-incubating:test
 +- com.typesafe:config:jar:1.3.3:test
 +- com.google.code.findbugs:jsr305:jar:3.0.2:compile
-+- org.jacoco:org.jacoco.agent:jar:runtime:0.8.0:test
++- org.jacoco:org.jacoco.agent:jar:runtime:0.8.1:test
 +- ch.qos.logback:logback-classic:jar:1.2.3:test
 |  \- ch.qos.logback:logback-core:jar:1.2.3:test
 +- org.eclipse.jetty:jetty-server:jar:9.4.8.v20171121:test

@@ -413,7 +413,8 @@ public class HttpActionClientTest {
         ImmutableList.<String>of(
             "[WARN] \" name\\r //with \" was changed to \"name_with\"; because of User-Agent"
                 + " name/version rules",
-            "[WARN] \" version/\\n\\n with \" was changed to \"version_with\"; because of User-Agent"
+            "[WARN] \" version/\\n\\n with \" was changed to \"version_with\";"
+                + " because of User-Agent"
                 + " name/version rules",
             "[WARN] \" comment/of (me) \" was changed to \"comment/of me\"; because of User-Agent"
                 + " comment rules"),
