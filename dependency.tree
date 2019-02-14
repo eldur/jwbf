@@ -1,7 +1,7 @@
 net.sourceforge:jwbf:jar:4.0.1-SNAPSHOT
 +- org.jdom:jdom2:jar:2.0.6:compile
-+- com.fasterxml.jackson.core:jackson-core:jar:2.9.4:compile
-+- com.fasterxml.jackson.core:jackson-databind:jar:2.9.4:compile
++- com.fasterxml.jackson.core:jackson-core:jar:2.9.8:compile
++- com.fasterxml.jackson.core:jackson-databind:jar:2.9.8:compile
 |  \- com.fasterxml.jackson.core:jackson-annotations:jar:2.9.0:compile
 +- org.apache.httpcomponents:httpclient:jar:4.5.5:compile
 |  +- org.apache.httpcomponents:httpcore:jar:4.4.9:compile
@@ -43,13 +43,13 @@ net.sourceforge:jwbf:jar:4.0.1-SNAPSHOT
 +- org.jacoco:org.jacoco.agent:jar:runtime:0.8.1:test
 +- ch.qos.logback:logback-classic:jar:1.2.3:test
 |  \- ch.qos.logback:logback-core:jar:1.2.3:test
-+- org.eclipse.jetty:jetty-server:jar:9.4.8.v20171121:test
++- org.eclipse.jetty:jetty-server:jar:9.4.14.v20181114:test
 |  +- javax.servlet:javax.servlet-api:jar:3.1.0:test
-|  +- org.eclipse.jetty:jetty-http:jar:9.4.8.v20171121:test
-|  |  \- org.eclipse.jetty:jetty-util:jar:9.4.8.v20171121:test
-|  \- org.eclipse.jetty:jetty-io:jar:9.4.8.v20171121:test
-+- org.eclipse.jetty:jetty-servlet:jar:9.4.8.v20171121:test
-|  \- org.eclipse.jetty:jetty-security:jar:9.4.8.v20171121:test
+|  +- org.eclipse.jetty:jetty-http:jar:9.4.14.v20181114:test
+|  |  \- org.eclipse.jetty:jetty-util:jar:9.4.14.v20181114:test
+|  \- org.eclipse.jetty:jetty-io:jar:9.4.14.v20181114:test
++- org.eclipse.jetty:jetty-servlet:jar:9.4.14.v20181114:test
+|  \- org.eclipse.jetty:jetty-security:jar:9.4.14.v20181114:test
 +- joda-time:joda-time:jar:2.9.9:test
 +- com.google.jimfs:jimfs:jar:1.1:test
 \- org.hamcrest:hamcrest-library:jar:1.3:test
