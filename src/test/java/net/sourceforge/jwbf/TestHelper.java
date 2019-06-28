@@ -1,20 +1,5 @@
 package net.sourceforge.jwbf;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Random;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-
-import javax.annotation.Nullable;
-
-import org.junit.Assume;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Charsets;
 import com.google.common.base.Function;
@@ -22,14 +7,23 @@ import com.google.common.base.Throwables;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
-import com.google.common.collect.ContiguousSet;
-import com.google.common.collect.DiscreteDomain;
-import com.google.common.collect.FluentIterable;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Range;
+import com.google.common.collect.*;
 import com.google.common.io.Resources;
-
 import net.sourceforge.jwbf.mediawiki.MediaWiki;
+import org.junit.Assume;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.annotation.Nullable;
+import java.io.File;
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.Socket;
+import java.net.URL;
+import java.util.Random;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 
 public class TestHelper {
 
@@ -96,6 +90,14 @@ public class TestHelper {
                   return Boolean.FALSE;
                 }
               });
+
+  public static int getFreePort() {
+    try (Socket s = new Socket()) {
+      return s.getPort();
+    } catch (IOException e) {
+      throw new IllegalStateException(e);
+    }
+  }
 
   public static void assumeReachable(URL url) {
     try {

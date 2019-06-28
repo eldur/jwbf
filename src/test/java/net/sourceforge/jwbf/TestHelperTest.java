@@ -7,8 +7,6 @@ import com.github.dreamhead.moco.Runner;
 import org.junit.Test;
 import org.junit.internal.AssumptionViolatedException;
 
-import java.io.IOException;
-import java.net.Socket;
 import java.util.Random;
 
 import static org.junit.Assert.assertEquals;
@@ -19,11 +17,8 @@ import static org.mockito.Mockito.when;
 public class TestHelperTest {
 
   @Test
-  public void testOff() throws IOException {
-    Socket s = new Socket();
-    int port = s.getPort();
-    String url = "http://localhost:" + port;
-    s.close();
+  public void testOff() {
+    String url = "http://localhost:" + TestHelper.getFreePort();
     try {
       TestHelper.assumeReachable(url);
     } catch (AssumptionViolatedException e) {
