@@ -1,21 +1,15 @@
 package net.sourceforge.jwbf.core.contentRep;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.hamcrest.Matchers.hasSize;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import com.google.common.io.Resources;
+import net.sourceforge.jwbf.mapper.JsonMapper;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
-import org.junit.Before;
-import org.junit.Test;
-
-import com.google.common.io.Resources;
-
-import net.sourceforge.jwbf.mapper.JsonMapper;
+import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.*;
 
 public class SearchResultListTest {
 
@@ -42,7 +36,7 @@ public class SearchResultListTest {
     assertThat(srl.getBatchComplete(), is(""));
     assertThat(srl.getTotalHits(), is(193));
     assertThat(srl.getSuggestion(), is("meeting"));
-    assertThat(srl.getResults(), hasSize(5));
+    assertEquals(5, srl.getResults().size());
 
     SearchResult result = srl.getResults().get(0);
     assertThat(result, notNullValue());

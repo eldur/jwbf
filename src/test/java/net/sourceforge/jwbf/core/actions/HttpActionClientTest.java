@@ -1,30 +1,19 @@
 package net.sourceforge.jwbf.core.actions;
 
-import static com.google.common.net.HttpHeaders.ACCEPT_ENCODING;
-import static com.google.common.net.HttpHeaders.CONNECTION;
-import static com.google.common.net.HttpHeaders.CONTENT_LENGTH;
-import static com.google.common.net.HttpHeaders.CONTENT_TYPE;
-import static com.google.common.net.HttpHeaders.HOST;
-import static com.google.common.net.HttpHeaders.USER_AGENT;
-import static net.sourceforge.jwbf.JettyServer.entry;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
-
+import com.google.common.base.Charsets;
+import com.google.common.base.Function;
+import com.google.common.base.Joiner;
+import com.google.common.base.Supplier;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableList.Builder;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Range;
+import com.google.common.io.ByteSource;
+import net.sourceforge.jwbf.GAssert;
+import net.sourceforge.jwbf.JWBF;
+import net.sourceforge.jwbf.JettyServer;
+import net.sourceforge.jwbf.Logging;
+import net.sourceforge.jwbf.core.actions.util.HttpAction;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -36,21 +25,20 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import com.google.common.base.Charsets;
-import com.google.common.base.Function;
-import com.google.common.base.Joiner;
-import com.google.common.base.Supplier;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableList.Builder;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Range;
-import com.google.common.io.ByteSource;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
-import net.sourceforge.jwbf.GAssert;
-import net.sourceforge.jwbf.JWBF;
-import net.sourceforge.jwbf.JettyServer;
-import net.sourceforge.jwbf.Logging;
-import net.sourceforge.jwbf.core.actions.util.HttpAction;
+import static com.google.common.net.HttpHeaders.*;
+import static net.sourceforge.jwbf.JettyServer.entry;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 public class HttpActionClientTest {
 
@@ -277,7 +265,7 @@ public class HttpActionClientTest {
 
   private String apacheHttpClientVersion() {
     String version = System.getProperty("java.runtime.version");
-    return "Apache-HttpClient/4.5.5 (Java/" + version.replaceFirst("\\-[^\\-]*$", "") + ")";
+    return "Apache-HttpClient/4.5.9 (Java/" + version.replaceFirst("\\-[^\\-]*$", "") + ")";
   }
 
   @Test

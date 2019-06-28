@@ -1,18 +1,18 @@
 package net.sourceforge.jwbf;
 
+import org.junit.Test;
+import org.junit.internal.AssumptionViolatedException;
+
+import java.util.Random;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import java.util.Random;
-
-import org.junit.Test;
-import org.junit.internal.AssumptionViolatedException;
-
 public class TestHelperTest {
 
-  @Test
+  @Test(timeout = 100)
   public void testOff() {
     String url = "http://192.0.2.1/";
     try {
@@ -23,7 +23,7 @@ public class TestHelperTest {
     fail(url + " is reachable");
   }
 
-  @Test
+  @Test(timeout = 100)
   public void testOffRetry() {
     for (int i = 0; i < 50; i++) {
       testOff();
