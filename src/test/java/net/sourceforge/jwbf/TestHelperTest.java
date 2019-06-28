@@ -1,8 +1,14 @@
 package net.sourceforge.jwbf;
 
+import com.github.dreamhead.moco.HttpServer;
+import com.github.dreamhead.moco.Moco;
+import com.github.dreamhead.moco.RequestMatcher;
+import com.github.dreamhead.moco.Runner;
 import org.junit.Test;
 import org.junit.internal.AssumptionViolatedException;
 
+import java.io.IOException;
+import java.net.Socket;
 import java.util.Random;
 
 import static org.junit.Assert.assertEquals;
@@ -12,9 +18,12 @@ import static org.mockito.Mockito.when;
 
 public class TestHelperTest {
 
-  @Test(timeout = 100)
-  public void testOff() {
-    String url = "http://192.0.2.1/";
+  @Test
+  public void testOff() throws IOException {
+    Socket s = new Socket();
+    int port = s.getPort();
+    String url = "http://localhost:" + port;
+    s.close();
     try {
       TestHelper.assumeReachable(url);
     } catch (AssumptionViolatedException e) {
@@ -23,23 +32,21 @@ public class TestHelperTest {
     fail(url + " is reachable");
   }
 
-  @Test(timeout = 100)
-  public void testOffRetry() {
-    for (int i = 0; i < 50; i++) {
-      testOff();
-      testOn();
-    }
-  }
-
   @Test
   public void testOn() {
-    String url = "http://www.google.com/";
+    HttpServer server = Moco.httpServer();
+    server.request(RequestMatcher.ANY_REQUEST_MATCHER).response("fine");
+    Runner runner = Runner.runner(server);
+    runner.start();
+    String url = "http://localhost:" + server.port();
     try {
       TestHelper.assumeReachable(url);
     } catch (AssumptionViolatedException e) {
+      runner.stop();
       fail(url + " is not reachable");
       throw e;
     }
+    runner.stop();
   }
 
   @Test

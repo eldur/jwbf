@@ -1,24 +1,16 @@
 package net.sourceforge.jwbf;
 
-import static com.github.dreamhead.moco.Runner.runner;
-
-import java.util.concurrent.atomic.AtomicInteger;
-
+import com.github.dreamhead.moco.*;
+import com.github.dreamhead.moco.matcher.CompositeRequestMatcher;
+import com.github.dreamhead.moco.monitor.AbstractMonitor;
+import com.google.common.annotations.VisibleForTesting;
+import com.google.common.collect.ImmutableList;
 import org.junit.After;
 import org.junit.Before;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.github.dreamhead.moco.HttpRequest;
-import com.github.dreamhead.moco.HttpServer;
-import com.github.dreamhead.moco.Moco;
-import com.github.dreamhead.moco.Request;
-import com.github.dreamhead.moco.RequestMatcher;
-import com.github.dreamhead.moco.Runner;
-import com.github.dreamhead.moco.matcher.CompositeRequestMatcher;
-import com.github.dreamhead.moco.monitor.AbstractMonitor;
-import com.google.common.annotations.VisibleForTesting;
-import com.google.common.collect.ImmutableList;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public abstract class AbstractIntegTest {
 
@@ -29,7 +21,7 @@ public abstract class AbstractIntegTest {
   @Before
   public void before() {
     server = Moco.httpServer(); // new IntegMonitor());
-    runner = runner(server);
+    runner = Runner.runner(server);
     runner.start();
     port = server.port();
   }
