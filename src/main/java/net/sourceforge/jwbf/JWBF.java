@@ -20,26 +20,10 @@ package net.sourceforge.jwbf;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.JarURLConnection;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.net.URLConnection;
-import java.net.URLStreamHandler;
-import java.nio.file.DirectoryStream;
-import java.nio.file.FileSystemNotFoundException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.net.*;
+import java.nio.file.*;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Objects;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -217,14 +201,18 @@ public final class JWBF {
     URI jarSimpleName = stripJarSuffix(jarFileName);
 
     if (jarSimpleName != null) {
-      try (JarFile jar = new JarFile(new File(jarSimpleName))) {
-        Enumeration<JarEntry> je = jar.entries();
-        while (je.hasMoreElements()) {
-          JarEntry jarEntry = je.nextElement();
-          boolean directory = jarEntry.isDirectory();
-          result.add(new ContainerEntry(jarEntry.getName(), directory));
+      try {
+        try (JarFile jar = new JarFile(new File(jarSimpleName))) {
+          Enumeration<JarEntry> je = jar.entries();
+          while (je.hasMoreElements()) {
+            JarEntry jarEntry = je.nextElement();
+            boolean directory = jarEntry.isDirectory();
+            result.add(new ContainerEntry(jarEntry.getName(), directory));
+          }
+        } catch (IOException e) {
+          e.printStackTrace();
         }
-      } catch (IOException e) {
+      } catch (RuntimeException e) {
         e.printStackTrace();
       }
     }

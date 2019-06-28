@@ -1,8 +1,16 @@
 package net.sourceforge.jwbf;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
+import com.google.common.base.Function;
+import com.google.common.base.Joiner;
+import com.google.common.base.Splitter;
+import com.google.common.collect.*;
+import com.google.common.jimfs.Configuration;
+import com.google.common.jimfs.Jimfs;
+import net.sourceforge.jwbf.JWBF.ContainerEntry;
+import net.sourceforge.jwbf.core.actions.HttpActionClient;
+import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -20,23 +28,7 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
 import java.util.jar.Manifest;
 
-import org.junit.Before;
-import org.junit.Test;
-
-import com.google.common.base.Function;
-import com.google.common.base.Joiner;
-import com.google.common.base.Splitter;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Ordering;
-import com.google.common.jimfs.Configuration;
-import com.google.common.jimfs.Jimfs;
-
-import net.sourceforge.jwbf.JWBF.ContainerEntry;
-import net.sourceforge.jwbf.core.actions.HttpActionClient;
-import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
+import static org.junit.Assert.*;
 
 public class JWBFTest {
 
@@ -290,6 +282,11 @@ public class JWBFTest {
     assertEquals(2, JWBF.countSlashes("//"));
     assertEquals(3, JWBF.countSlashes("/a/./"));
     assertEquals(3, JWBF.countSlashes("/a/.-/"));
+  }
+
+  @Test
+  public void testJarToEntriesEmpty()  {
+    JWBF.jarToEntries(URI.create("file:://invalid"));
   }
 
   @Test
