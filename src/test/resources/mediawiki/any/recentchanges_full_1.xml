@@ -1,0 +1,25 @@
+<api batchcomplete="">
+  <continue rccontinue="20190218182625|1131171779" continue="-||"/>
+  <query>
+    <recentchanges>
+      <rc type="edit" ns="3" title="User talk:Troll" pageid="60008248" revid="883961999" old_revid="883961612"
+          rcid="1131171831" user="Thanos" userid="31143093" oldlen="2623" newlen="3194" timestamp="2019-02-18T18:26:42Z"
+          comment="Things and stuff"/>
+      <rc type="categorize" ns="14" title="Category:Items" pageid="176846" revid="883961997" old_revid="883961959"
+          rcid="1131171832" user="Thanos" userid="31143093" oldlen="0" newlen="0" timestamp="2019-02-18T18:26:41Z"
+          comment="[[:Infinity stone]] added to category"/>
+      <rc type="edit" ns="0" title="Iron Man" pageid="176846" revid="883961997" old_revid="883961959"
+          rcid="1131171828" user="Thanos" userid="31143093" minor="" oldlen="25012" newlen="25007" timestamp="2019-02-18T18:26:41Z"
+          comment="Reverted edits by [[Special:Contributions/Troll|Troll]]"/>
+      <rc type="categorize" ns="14" title="Category:Characters" pageid="60008350" revid="883961992" old_revid="0"
+          rcid="1131171823" user="Thor" userid="23052847" oldlen="0" newlen="0" timestamp="2019-02-18T18:26:39Z"
+          comment="[[:File:Myself.png]] added to category"/>
+      <rc type="log" ns="6" title="File:Myself.png" pageid="60008350" revid="883961992" old_revid="0"
+          rcid="1131171820" user="Thor" userid="23052847" oldlen="0" newlen="0" timestamp="2019-02-18T18:26:39Z"
+          comment="Uploading a photo of myself"/>
+      <rc type="new" ns="0" title="Guardians" pageid="60008351" revid="883961993" old_revid="0"
+          rcid="1131171819" user="Rocket" userid="7611264" bot="" new="" oldlen="0" newlen="299" timestamp="2019-02-18T18:26:39Z"
+          comment="Redirecting to [[:Guardians of the Galaxy]]"/>
+    </recentchanges>
+  </query>
+</api>
