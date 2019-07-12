@@ -7,31 +7,52 @@ services:
     volumes:
       - ./mediawiki/latest/data/:/var/www/data
       # - ./mediawiki/latest/LocalSettings.php:/var/www/html/LocalSettings.php
+  mw-1-33:
+    image: "mediawiki:1.33"
+    ports:
+      - 7007:80
+    volumes:
+      - ./mediawiki/1-33/data/:/var/www/data
+#      - ./mediawiki/1-33/LocalSettings.php:/var/www/html/LocalSettings.php
+  mw-1-32:
+    image: "mediawiki:1.32"
+    ports:
+      - 7006:80
+    volumes:
+      - ./mediawiki/1-32/data/:/var/www/data
+#      - ./mediawiki/1-32/LocalSettings.php:/var/www/html/LocalSettings.php
+  mw-1-31:
+    image: "mediawiki:1.31"
+    ports:
+      - 7005:80
+    volumes:
+      - ./mediawiki/1-31/data/:/var/www/data
+#      - ./mediawiki/1-31/LocalSettings.php:/var/www/html/LocalSettings.php
   mw-1-30:
     image: "mediawiki:1.30"
     ports:
-      - 7001:80
+      - 7004:80
     volumes:
       - ./mediawiki/1-30/data/:/var/www/data
       - ./mediawiki/1-30/LocalSettings.php:/var/www/html/LocalSettings.php
   mw-1-29:
     image: "mediawiki:1.29"
     ports:
-      - 7002:80
+      - 7003:80
     volumes:
       - ./mediawiki/1-29/data/:/var/www/data
       - ./mediawiki/1-29/LocalSettings.php:/var/www/html/LocalSettings.php
   mw-1-28:
     image: "mediawiki:1.28"
     ports:
-      - 7003:80
+      - 7002:80
     volumes:
       - ./mediawiki/1-28/data/:/var/www/data
       - ./mediawiki/1-28/LocalSettings.php:/var/www/html/LocalSettings.php
   mw-1-27:
     image: "mediawiki:1.27"
     ports:
-      - 7004:80
+      - 7001:80
     volumes:
       - ./mediawiki/1-27/data/:/var/www/data
       - ./mediawiki/1-27/LocalSettings.php:/var/www/html/LocalSettings.php
