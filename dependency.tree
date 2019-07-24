@@ -1,7 +1,7 @@
 net.sourceforge:jwbf:jar:4.0.1-SNAPSHOT
 +- org.jdom:jdom2:jar:2.0.6:compile
 +- com.fasterxml.jackson.core:jackson-core:jar:2.9.9:compile
-+- com.fasterxml.jackson.core:jackson-databind:jar:2.9.9:compile
++- com.fasterxml.jackson.core:jackson-databind:jar:2.9.9.1:compile
 |  \- com.fasterxml.jackson.core:jackson-annotations:jar:2.9.0:compile
 +- org.apache.httpcomponents:httpclient:jar:4.5.9:compile
 |  +- org.apache.httpcomponents:httpcore:jar:4.4.11:compile
@@ -52,6 +52,6 @@ net.sourceforge:jwbf:jar:4.0.1-SNAPSHOT
 |  \- org.eclipse.jetty:jetty-io:jar:9.4.19.v20190610:test
 +- org.eclipse.jetty:jetty-servlet:jar:9.4.19.v20190610:test
 |  \- org.eclipse.jetty:jetty-security:jar:9.4.19.v20190610:test
-+- joda-time:joda-time:jar:2.10.2:test
++- joda-time:joda-time:jar:2.10.3:test
 +- com.google.jimfs:jimfs:jar:1.1:test
 \- org.hamcrest:hamcrest-library:jar:2.1:test
