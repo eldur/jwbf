@@ -22,6 +22,7 @@ import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.util.VersionInfo;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -264,9 +265,8 @@ public class HttpActionClientTest {
   }
 
   private String apacheHttpClientVersion() {
-    String version = System.getProperty("java.runtime.version");
-    String httpClientVersion = "4.5.9";
-    return "Apache-HttpClient/" + httpClientVersion + " (Java/" + version.replaceFirst("\\-[^\\-]*$", "") + ")";
+    return VersionInfo.getUserAgent("Apache-HttpClient", "org.apache.http.client",
+            HttpClientBuilder.class);
   }
 
   @Test
