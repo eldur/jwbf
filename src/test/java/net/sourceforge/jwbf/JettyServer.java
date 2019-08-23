@@ -169,7 +169,7 @@ public class JettyServer extends Server implements AutoCloseable {
       if (false
           && request.getContentType() != null
           && request.getContentType().startsWith("multipart/form-data")) {
-        req.setAttribute(Request.__MULTIPART_CONFIG_ELEMENT, MULTI_PART_CONFIG);
+        req.setAttribute(Request.MULTIPART_CONFIG_ELEMENT, MULTI_PART_CONFIG);
         writer //
             .println(
             joiner.join(
