@@ -16,6 +16,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Charsets;
 import com.google.common.io.Files;
@@ -87,8 +88,9 @@ public class JsonMapperTest {
           ObjectMapper newObjectMapper() {
             ObjectMapper mock = mock(ObjectMapper.class);
             try {
-              doThrow(IOException.class).when(mock).readValue(isA(String.class), isA(Class.class));
-            } catch (IOException e) {
+              doThrow(JsonProcessingException.class).when(mock)
+                  .readValue(isA(String.class), isA(Class.class));
+            } catch (JsonProcessingException e) {
               fail();
             }
             return mock;

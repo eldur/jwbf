@@ -1,16 +1,22 @@
 package net.sourceforge.jwbf;
 
-import com.github.dreamhead.moco.*;
-import com.github.dreamhead.moco.matcher.CompositeRequestMatcher;
-import com.github.dreamhead.moco.monitor.AbstractMonitor;
-import com.google.common.annotations.VisibleForTesting;
-import com.google.common.collect.ImmutableList;
+import java.util.concurrent.atomic.AtomicInteger;
+
 import org.junit.After;
 import org.junit.Before;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.concurrent.atomic.AtomicInteger;
+import com.github.dreamhead.moco.HttpRequest;
+import com.github.dreamhead.moco.HttpServer;
+import com.github.dreamhead.moco.Moco;
+import com.github.dreamhead.moco.Request;
+import com.github.dreamhead.moco.RequestMatcher;
+import com.github.dreamhead.moco.Runner;
+import com.github.dreamhead.moco.matcher.CompositeRequestMatcher;
+import com.github.dreamhead.moco.monitor.AbstractMonitor;
+import com.google.common.annotations.VisibleForTesting;
+import com.google.common.collect.ImmutableList;
 
 public abstract class AbstractIntegTest {
 
@@ -61,7 +67,7 @@ public abstract class AbstractIntegTest {
     }
 
     @Override
-    public boolean match(Request request) {
+    protected boolean doMatch(Request request, Iterable<RequestMatcher> iterable) {
       if (countdown.get() != 0) {
         for (RequestMatcher matcher : matchers) {
           if (!matcher.match(request)) {
@@ -73,11 +79,6 @@ public abstract class AbstractIntegTest {
       } else {
         return false;
       }
-    }
-
-    @Override
-    protected boolean doMatch(Request request, Iterable<RequestMatcher> iterable) {
-      return this.matchers.equals(iterable);
     }
   }
 
