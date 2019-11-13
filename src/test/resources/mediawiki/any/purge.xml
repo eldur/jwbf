@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<api>
+  <purge>
+    <page ns="0" title="Main Page" purged="" />
+    <page ns="0" title="Nonexistent" missing="" />
+    <page title="Talk:" invalid="" />
+  </purge>
+</api>
