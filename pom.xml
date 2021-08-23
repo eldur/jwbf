@@ -193,6 +193,7 @@
         <artifactId>maven-surefire-plugin</artifactId>
         <version>2.22.2</version>
         <configuration>
+          <parallel>all</parallel>
           <systemPropertyVariables>
             <jacoco-agent.destfile>target/jacoco.exec</jacoco-agent.destfile>
           </systemPropertyVariables>
@@ -200,7 +201,7 @@
           <argLine>${surefireArgLine}</argLine>
           <skipTests>${skip.unit.tests}</skipTests>
         </configuration>
-      <configuration><parallel>all</parallel></configuration></plugin>
+        </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-failsafe-plugin</artifactId>
