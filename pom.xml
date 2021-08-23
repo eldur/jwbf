@@ -1,5 +1,4 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<?xml version="1.0" encoding="UTF-8"?><project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>net.sourceforge</groupId>
   <artifactId>jwbf</artifactId>
@@ -194,6 +193,7 @@
         <artifactId>maven-surefire-plugin</artifactId>
         <version>2.22.2</version>
         <configuration>
+          <parallel>all</parallel>
           <systemPropertyVariables>
             <jacoco-agent.destfile>target/jacoco.exec</jacoco-agent.destfile>
           </systemPropertyVariables>
@@ -201,7 +201,7 @@
           <argLine>${surefireArgLine}</argLine>
           <skipTests>${skip.unit.tests}</skipTests>
         </configuration>
-      </plugin>
+        </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-failsafe-plugin</artifactId>
@@ -279,7 +279,11 @@
         <artifactId>coveralls-maven-plugin</artifactId>
         <version>4.3.0</version>
         <configuration>
-          <!-- FIXME jenkins exports timestamp value in milliseconds -->
+          
+
+<!-- FIXME jenkins exports timestamp value in milliseconds -->
+
+
           <timestamp>2014-01-01 00:00:00</timestamp>
           <jacocoReports>
             <param>${project.reporting.outputDirectory}/jacoco/jacoco.xml</param>
@@ -374,11 +378,7 @@
       <artifactId>httpclient</artifactId>
       <version>4.5.10</version>
     </dependency>
-    <dependency>
-      <groupId>org.apache.httpcomponents</groupId>
-      <artifactId>fluent-hc</artifactId>
-      <version>4.5.10</version>
-    </dependency>
+    
     <dependency>
       <groupId>org.apache.httpcomponents</groupId>
       <artifactId>httpmime</artifactId>
@@ -464,12 +464,7 @@
       <version>9.4.20.v20190813</version>
       <scope>test</scope>
     </dependency>
-    <dependency>
-      <groupId>org.eclipse.jetty</groupId>
-      <artifactId>jetty-servlet</artifactId>
-      <version>9.4.20.v20190813</version>
-      <scope>test</scope>
-    </dependency>
+    
     <dependency>
       <groupId>joda-time</groupId>
       <artifactId>joda-time</artifactId>
@@ -482,11 +477,6 @@
       <version>1.1</version>
       <scope>test</scope>
     </dependency>
-    <dependency>
-      <groupId>org.hamcrest</groupId>
-      <artifactId>hamcrest-library</artifactId>
-      <version>2.1</version>
-      <scope>test</scope>
-    </dependency>
+    
   </dependencies>
 </project>
